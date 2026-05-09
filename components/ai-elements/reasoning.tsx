@@ -156,12 +156,12 @@ export type ReasoningTriggerProps = ComponentProps<
 
 const defaultGetThinkingMessage = (isStreaming: boolean, duration?: number) => {
   if (isStreaming || duration === 0) {
-    return <Shimmer className="font-medium" duration={1}>Thinking...</Shimmer>;
+    return <Shimmer className="font-medium" duration={1}>Réflexion...</Shimmer>;
   }
   if (duration === undefined) {
-    return <p>Thought for a few seconds</p>;
+    return <p>Pensé pendant quelques secondes</p>;
   }
-  return <p>Thought for {duration} seconds</p>;
+  return <p>Pensé pendant {duration} secondes</p>;
 };
 
 export const ReasoningTrigger = memo(
@@ -197,14 +197,15 @@ export const ReasoningTrigger = memo(
   }
 );
 
-export type ReasoningContentProps = HTMLAttributes<HTMLDivElement> & {
+export type ReasoningContentProps = {
+  className?: string;
   children: string;
 };
 
 const streamdownPlugins = { cjk, code, math, mermaid };
 
 export const ReasoningContent = memo(
-  ({ className, children, ...props }: ReasoningContentProps) => {
+  ({ className, children }: ReasoningContentProps) => {
     const { isStreaming, isOpen } = useReasoning();
     const scrollRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
@@ -227,7 +228,7 @@ export const ReasoningContent = memo(
           ref={scrollRef}
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          <Streamdown plugins={streamdownPlugins} {...props}>
+          <Streamdown plugins={streamdownPlugins}>
             {children}
           </Streamdown>
         </div>

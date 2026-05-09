@@ -2,6 +2,7 @@ import type { InferSelectModel } from "drizzle-orm";
 import {
   boolean,
   foreignKey,
+  integer,
   json,
   pgTable,
   primaryKey,
@@ -35,6 +36,7 @@ export const chat = pgTable("Chat", {
   visibility: varchar("visibility", { enum: ["public", "private"] })
     .notNull()
     .default("private"),
+  isArchived: boolean("isArchived").notNull().default(false),
 });
 
 export type Chat = InferSelectModel<typeof chat>;
@@ -134,3 +136,59 @@ export const stream = pgTable(
 );
 
 export type Stream = InferSelectModel<typeof stream>;
+
+export const studioImage = pgTable("StudioImage", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
+  prompt: text("prompt").notNull(),
+  model: text("model").notNull(),
+  provider: text("provider").notNull(),
+  url: text("url").notNull(),
+  ratio: varchar("ratio", { length: 16 }),
+  favorite: boolean("favorite").notNull().default(false),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  userId: uuid("userId")
+    .notNull()
+    .references(() => user.id),
+  style: text("style"),
+  loras: json("loras"),
+  denoisingStrength: text("denoisingStrength"),
+  sourceImageUrl: text("sourceImageUrl"),
+});
+
+export type StudioImage = InferSelectModel<typeof studioImage>;
+
+export const userXP = pgTable("UserXP", {
+  userId: uuid("userId").primaryKey().notNull().references(() => user.id),
+  xp: integer("xp").notNull().default(0),
+  level: integer("level").notNull().default(1),
+  updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+});
+
+export type UserXP = InferSelectModel<typeof userXP>;
+
+export const userBadges = pgTable("UserBadges", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
+  userId: uuid("userId").notNull().references(() => user.id),
+  badgeId: integer("badgeId").notNull(),
+  unlockedAt: timestamp("unlockedAt").notNull().defaultNow(),
+});
+
+export type UserBadges = InferSelectModel<typeof userBadges>;
+
+export const xpHistory = pgTable("XPHistory", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
+  userId: uuid("userId").notNull().references(() => user.id),
+  amount: integer("amount").notNull(),
+  reason: text("reason").notNull(),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+});
+
+export type XPHistory = InferSelectModel<typeof xpHistory>;
+
+export const userCredits = pgTable("UserCredits", {
+  userId: uuid("userId").primaryKey().notNull().references(() => user.id),
+  credits: integer("credits").notNull().default(100),
+  updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+});
+
+export type UserCredits = InferSelectModel<typeof userCredits>;

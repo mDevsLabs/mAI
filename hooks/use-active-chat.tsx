@@ -22,6 +22,7 @@ import { getChatHistoryPaginationKey } from "@/components/chat/sidebar-history";
 import { toast } from "@/components/chat/toast";
 import type { VisibilityType } from "@/components/chat/visibility-selector";
 import { useAutoResume } from "@/hooks/use-auto-resume";
+import { addNotification } from "@/lib/notifications";
 import { DEFAULT_CHAT_MODEL } from "@/lib/ai/models";
 import type { Vote } from "@/lib/db/schema";
 import { ChatbotError } from "@/lib/errors";
@@ -47,6 +48,8 @@ type ActiveChatContextValue = {
   setCurrentModelId: (id: string) => void;
   showCreditCardAlert: boolean;
   setShowCreditCardAlert: Dispatch<SetStateAction<boolean>>;
+  ghostMode: boolean;
+  setGhostMode: Dispatch<SetStateAction<boolean>>;
 };
 
 const ActiveChatContext = createContext<ActiveChatContextValue | null>(null);
@@ -81,6 +84,11 @@ export function ActiveChatProvider({ children }: { children: ReactNode }) {
 
   const [input, setInput] = useState("");
   const [showCreditCardAlert, setShowCreditCardAlert] = useState(false);
+  const [ghostMode, setGhostMode] = useState(false);
+  const ghostModeRef = useRef(ghostMode);
+  useEffect(() => {
+    ghostModeRef.current = ghostMode;
+  }, [ghostMode]);
 
   const { data: chatData, isLoading } = useSWR(
     isNewChat
@@ -146,6 +154,7 @@ export function ActiveChatProvider({ children }: { children: ReactNode }) {
               : { message: lastMessage }),
             selectedChatModel: currentModelIdRef.current,
             selectedVisibilityType: visibility,
+            ghost: ghostModeRef.current,
             ...request.body,
           },
         };
@@ -156,6 +165,7 @@ export function ActiveChatProvider({ children }: { children: ReactNode }) {
     },
     onFinish: () => {
       mutate(unstable_serialize(getChatHistoryPaginationKey));
+      addNotification("L'IA a répondu à votre message.");
     },
     onError: (error) => {
       if (error.message?.includes("AI Gateway requires a valid credit card")) {
@@ -264,6 +274,8 @@ export function ActiveChatProvider({ children }: { children: ReactNode }) {
       setCurrentModelId,
       showCreditCardAlert,
       setShowCreditCardAlert,
+      ghostMode,
+      setGhostMode,
     }),
     [
       chatId,

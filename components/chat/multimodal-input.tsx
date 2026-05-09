@@ -9,6 +9,13 @@ import {
   EyeIcon,
   LockIcon,
   WrenchIcon,
+  PlusIcon,
+  GlobeIcon,
+  ImageIcon,
+  HelpCircleIcon,
+  FileEditIcon,
+  GraduationCapIcon,
+  CloudSunIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
@@ -593,6 +600,7 @@ function PureAttachmentsButton({
   status: UseChatHelpers<ChatMessage>["status"];
   selectedModelId: string;
 }) {
+  const [open, setOpen] = useState(false);
   const { data: modelsResponse } = useSWR(
     `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/api/models`,
     (url: string) => fetch(url).then((r) => r.json()),
@@ -604,23 +612,123 @@ function PureAttachmentsButton({
   const hasVision = caps?.[selectedModelId]?.vision ?? false;
 
   return (
-    <Button
-      className={cn(
-        "h-7 w-7 rounded-lg border border-border/40 p-1 transition-colors",
-        hasVision
-          ? "text-foreground hover:border-border hover:text-foreground"
-          : "text-muted-foreground/30 cursor-not-allowed"
+    <div className="relative">
+      <Button
+        className={cn(
+          "h-7 w-7 rounded-lg border border-border/40 p-1 transition-colors",
+          status === "ready"
+            ? "text-foreground hover:border-border hover:text-foreground"
+            : "text-muted-foreground/30 cursor-not-allowed"
+        )}
+        data-testid="plus-button"
+        disabled={status !== "ready"}
+        onClick={(event) => {
+          event.preventDefault();
+          setOpen(!open);
+        }}
+        variant="ghost"
+      >
+        <PlusIcon size={14} style={{ width: 14, height: 14 }} />
+      </Button>
+      
+      {open && (
+        <div className="absolute bottom-full left-0 z-50 mb-1 w-56 overflow-auto rounded-xl border border-border/50 bg-card p-2 shadow-[var(--shadow-float)]">
+          {/* Ajouter photos/fichiers */}
+          <button
+            className={`flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-left transition-colors ${hasVision ? "text-foreground hover:bg-muted" : "text-muted-foreground/30 cursor-not-allowed"}`}
+            onClick={() => {
+              if (hasVision) {
+                fileInputRef.current?.click();
+                setOpen(false);
+              }
+            }}
+            type="button"
+            disabled={!hasVision}
+          >
+            <PaperclipIcon size={14} />
+            <span>Ajouter photos/fichiers</span>
+          </button>
+          
+          {/* Recherche sur le web */}
+          <button
+            className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-left text-foreground hover:bg-muted"
+            onClick={() => {
+              toast.info("Recherche Web activée");
+              setOpen(false);
+            }}
+            type="button"
+          >
+            <GlobeIcon size={14} />
+            <span>Recherche sur le web</span>
+          </button>
+          
+          {/* Création d'images */}
+          <button
+            className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-left text-foreground hover:bg-muted"
+            onClick={() => {
+              toast.info("Création d'images");
+              setOpen(false);
+            }}
+            type="button"
+          >
+            <ImageIcon size={14} />
+            <span>Création d'images</span>
+          </button>
+          
+          {/* Quiz */}
+          <button
+            className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-left text-foreground hover:bg-muted"
+            onClick={() => {
+              toast.info("Génération de Quiz");
+              setOpen(false);
+            }}
+            type="button"
+          >
+            <HelpCircleIcon size={14} />
+            <span>Quiz</span>
+          </button>
+          
+          {/* Canevas */}
+          <button
+            className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-left text-foreground hover:bg-muted"
+            onClick={() => {
+              toast.info("Ouverture du Canevas");
+              setOpen(false);
+            }}
+            type="button"
+          >
+            <FileEditIcon size={14} />
+            <span>Canevas</span>
+          </button>
+          
+          {/* Apprendre & Étudier */}
+          <button
+            className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-left text-foreground hover:bg-muted"
+            onClick={() => {
+              toast.info("Mode Apprendre & Étudier");
+              setOpen(false);
+            }}
+            type="button"
+          >
+            <GraduationCapIcon size={14} />
+            <span>Apprendre & Étudier</span>
+          </button>
+          
+          {/* Météo */}
+          <button
+            className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-left text-foreground hover:bg-muted"
+            onClick={() => {
+              toast.info("Recherche météo");
+              setOpen(false);
+            }}
+            type="button"
+          >
+            <CloudSunIcon size={14} />
+            <span>Météo</span>
+          </button>
+        </div>
       )}
-      data-testid="attachments-button"
-      disabled={status !== "ready" || !hasVision}
-      onClick={(event) => {
-        event.preventDefault();
-        fileInputRef.current?.click();
-      }}
-      variant="ghost"
-    >
-      <PaperclipIcon size={14} style={{ width: 14, height: 14 }} />
-    </Button>
+    </div>
   );
 }
 
@@ -634,6 +742,15 @@ function PureModelSelectorCompact({
   onModelChange?: (modelId: string) => void;
 }) {
   const [open, setOpen] = useState(false);
+  
+  const getLogoProvider = (id: string) => {
+    const p = id.split("/")[0];
+    if (p.startsWith("gpt")) return "openai";
+    if (p.startsWith("claude")) return "anthropic";
+    if (p.startsWith("deepseek")) return "deepseek";
+    return p;
+  };
+
   const { data: modelsData } = useSWR(
     `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/api/models`,
     (url: string) => fetch(url).then((r) => r.json()),
@@ -642,14 +759,33 @@ function PureModelSelectorCompact({
 
   const capabilities: Record<string, ModelCapabilities> | undefined =
     modelsData?.capabilities ?? modelsData;
-  const dynamicModels: ChatModel[] | undefined = modelsData?.models;
-  const activeModels = dynamicModels ?? chatModels;
 
   const selectedModel =
-    activeModels.find((m: ChatModel) => m.id === selectedModelId) ??
-    activeModels.find((m: ChatModel) => m.id === DEFAULT_CHAT_MODEL) ??
-    activeModels[0];
+    chatModels.find((m: ChatModel) => m.id === selectedModelId) ??
+    chatModels.find((m: ChatModel) => m.id === DEFAULT_CHAT_MODEL) ??
+    chatModels[0];
   const [provider] = selectedModel.id.split("/");
+
+  // Noms des catégories pour l'affichage
+  const categoryNames: Record<string, string> = {
+    francestudent: "FranceStudent",
+    "ai-gateway": "AI Gateway",
+    "ai-horde": "AI Horde",
+  };
+
+  // Grouper les modèles par catégorie
+  const grouped: Record<string, ChatModel[]> = {};
+  for (const model of chatModels) {
+    const key = model.category ?? "ai-gateway";
+    if (!grouped[key]) {
+      grouped[key] = [];
+    }
+    grouped[key].push(model);
+  }
+
+  // Ordre d'affichage des catégories
+  const categoryOrder = ["francestudent", "ai-gateway", "ai-horde"];
+  const sortedKeys = categoryOrder.filter((k) => grouped[k]?.length > 0);
 
   return (
     <ModelSelector onOpenChange={setOpen} open={open}>
@@ -664,125 +800,55 @@ function PureModelSelectorCompact({
         </Button>
       </ModelSelectorTrigger>
       <ModelSelectorContent>
-        <ModelSelectorInput placeholder="Search models..." />
+        <ModelSelectorInput placeholder="Rechercher des modèles..." />
         <ModelSelectorList>
-          {(() => {
-            const curatedIds = new Set(chatModels.map((m) => m.id));
-            const allModels = dynamicModels
-              ? [
-                  ...chatModels,
-                  ...dynamicModels.filter((m) => !curatedIds.has(m.id)),
-                ]
-              : chatModels;
-
-            const grouped: Record<
-              string,
-              { model: ChatModel; curated: boolean }[]
-            > = {};
-            for (const model of allModels) {
-              const key = curatedIds.has(model.id)
-                ? "_available"
-                : model.provider;
-              if (!grouped[key]) {
-                grouped[key] = [];
-              }
-              grouped[key].push({ model, curated: curatedIds.has(model.id) });
-            }
-
-            const sortedKeys = Object.keys(grouped).sort((a, b) => {
-              if (a === "_available") {
-                return -1;
-              }
-              if (b === "_available") {
-                return 1;
-              }
-              return a.localeCompare(b);
-            });
-
-            const providerNames: Record<string, string> = {
-              alibaba: "Alibaba",
-              anthropic: "Anthropic",
-              "arcee-ai": "Arcee AI",
-              bytedance: "ByteDance",
-              cohere: "Cohere",
-              deepseek: "DeepSeek",
-              google: "Google",
-              inception: "Inception",
-              kwaipilot: "Kwaipilot",
-              meituan: "Meituan",
-              meta: "Meta",
-              minimax: "MiniMax",
-              mistral: "Mistral",
-              moonshotai: "Moonshot",
-              morph: "Morph",
-              nvidia: "Nvidia",
-              openai: "OpenAI",
-              perplexity: "Perplexity",
-              "prime-intellect": "Prime Intellect",
-              xiaomi: "Xiaomi",
-              xai: "xAI",
-              zai: "Zai",
-            };
-
-            return sortedKeys.map((key) => (
-              <ModelSelectorGroup
-                heading={
-                  key === "_available"
-                    ? "Available"
-                    : (providerNames[key] ?? key)
-                }
-                key={key}
-              >
-                {grouped[key].map(({ model, curated }) => {
-                  const logoProvider = model.id.split("/")[0];
-                  return (
-                    <ModelSelectorItem
-                      className={cn(
-                        "flex w-full",
-                        model.id === selectedModel.id &&
-                          "border-b border-dashed border-foreground/50",
-                        !curated && "opacity-40 cursor-default"
+          {sortedKeys.map((key) => (
+            <ModelSelectorGroup
+              heading={categoryNames[key] ?? key}
+              key={key}
+            >
+              {grouped[key].map((model) => {
+                const logoProvider = getLogoProvider(model.id);
+                return (
+                  <ModelSelectorItem
+                    className={cn(
+                      "flex w-full",
+                      model.id === selectedModel.id &&
+                        "bg-muted/50 font-medium"
+                    )}
+                    key={model.id}
+                    onSelect={() => {
+                      onModelChange?.(model.id);
+                      setCookie("chat-model", model.id);
+                      setOpen(false);
+                      setTimeout(() => {
+                        document
+                          .querySelector<HTMLTextAreaElement>(
+                            "[data-testid='multimodal-input']"
+                          )
+                          ?.focus();
+                      }, 50);
+                    }}
+                    value={model.id}
+                  >
+                    <ModelSelectorLogo provider={logoProvider} />
+                    <ModelSelectorName>{model.name}</ModelSelectorName>
+                    <div className="ml-auto flex items-center gap-2 text-foreground/70">
+                      {capabilities?.[model.id]?.tools && (
+                        <WrenchIcon className="size-3.5" />
                       )}
-                      key={model.id}
-                      onSelect={() => {
-                        if (!curated) {
-                          return;
-                        }
-                        onModelChange?.(model.id);
-                        setCookie("chat-model", model.id);
-                        setOpen(false);
-                        setTimeout(() => {
-                          document
-                            .querySelector<HTMLTextAreaElement>(
-                              "[data-testid='multimodal-input']"
-                            )
-                            ?.focus();
-                        }, 50);
-                      }}
-                      value={model.id}
-                    >
-                      <ModelSelectorLogo provider={logoProvider} />
-                      <ModelSelectorName>{model.name}</ModelSelectorName>
-                      <div className="ml-auto flex items-center gap-2 text-foreground/70">
-                        {capabilities?.[model.id]?.tools && (
-                          <WrenchIcon className="size-3.5" />
-                        )}
-                        {capabilities?.[model.id]?.vision && (
-                          <EyeIcon className="size-3.5" />
-                        )}
-                        {capabilities?.[model.id]?.reasoning && (
-                          <BrainIcon className="size-3.5" />
-                        )}
-                        {!curated && (
-                          <LockIcon className="size-3 text-muted-foreground/50" />
-                        )}
-                      </div>
-                    </ModelSelectorItem>
-                  );
-                })}
-              </ModelSelectorGroup>
-            ));
-          })()}
+                      {capabilities?.[model.id]?.vision && (
+                        <EyeIcon className="size-3.5" />
+                      )}
+                      {capabilities?.[model.id]?.reasoning && (
+                        <BrainIcon className="size-3.5" />
+                      )}
+                    </div>
+                  </ModelSelectorItem>
+                );
+              })}
+            </ModelSelectorGroup>
+          ))}
         </ModelSelectorList>
       </ModelSelectorContent>
     </ModelSelector>

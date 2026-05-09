@@ -3,6 +3,7 @@
 import { ChevronUp } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type { User } from "next-auth";
+import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
 import {
@@ -85,6 +86,22 @@ export function SidebarUserNav({ user }: { user: User }) {
             >
               {`Toggle ${resolvedTheme === "light" ? "dark" : "light"} mode`}
             </DropdownMenuItem>
+            
+            <DropdownMenuItem asChild>
+              <Link href="/settings" className="w-full cursor-pointer text-[13px]">
+                Paramètres
+              </Link>
+            </DropdownMenuItem>
+            
+            <DropdownMenuItem
+              className="cursor-pointer text-[13px]"
+              onSelect={() => {
+                window.location.href = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/api/export`;
+              }}
+            >
+              Exporter les données
+            </DropdownMenuItem>
+
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild data-testid="user-nav-item-auth">
               <button

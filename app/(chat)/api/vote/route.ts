@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { auth } from "@/app/(auth)/auth";
-import { getChatById, getVotesByChatId, voteMessage } from "@/lib/db/queries";
+import { getChatById, getVotesByChatId, voteMessage, creditXP, checkAndUnlockBadges } from "@/lib/db/queries";
 import { ChatbotError } from "@/lib/errors";
 
 const voteSchema = z.object({
@@ -79,6 +79,16 @@ export async function PATCH(request: Request) {
     messageId,
     type,
   });
+
+  // Créditer 3 XP à l'utilisateur pour le vote
+  await creditXP({
+    userId: session.user.id,
+    amount: 3,
+    reason: `Vote ${type === "up" ? "positif" : "négatif"}`,
+  }).catch(err => console.error("Failed to credit XP for vote:", err));
+
+  // Vérifier et débloquer les badges
+  await checkAndUnlockBadges(session.user.id);
 
   return new Response("Message voted", { status: 200 });
 }

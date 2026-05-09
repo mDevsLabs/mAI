@@ -1,11 +1,26 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { suggestions } from "@/lib/constants";
+import { getRandomSuggestions } from "@/lib/suggestions";
 import { SparklesIcon } from "./icons";
+import { useState, useEffect, useMemo } from "react";
 
 export function Preview() {
   const router = useRouter();
+  const [greeting, setGreeting] = useState("Bonjour, comment puis-je vous aider ?");
+  // Suggestions aléatoires chargées côté client uniquement (évite Math.random SSR)
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+
+  useEffect(() => {
+    const greetings = [
+      "Bonsoir, que puis-je faire pour vous ?",
+      "Bonjour, comment puis-je vous aider ?",
+      "Hello ! Que faisons-nous aujourd'hui ?",
+      "Bienvenue ! De quoi souhaitez-vous discuter ?",
+    ];
+    setGreeting(greetings[Math.floor(Math.random() * greetings.length)]);
+    setSuggestions(getRandomSuggestions(4));
+  }, []);
 
   const handleAction = (query?: string) => {
     const url = query ? `/?query=${encodeURIComponent(query)}` : "/";
@@ -18,16 +33,24 @@ export function Preview() {
         <div className="flex size-5 items-center justify-center rounded bg-muted/60 ring-1 ring-border/50">
           <SparklesIcon size={10} />
         </div>
-        <span className="text-[13px] text-muted-foreground">Chatbot</span>
+        <span className="text-[13px] text-muted-foreground">mAI</span>
       </div>
 
       <div className="flex flex-1 flex-col items-center justify-center gap-8 px-8">
-        <div className="text-center">
+        <div className="flex flex-col items-center text-center">
+          {/* Logo en haut de la page d'accueil */}
+          <img src="/logo.png" alt="mAI Logo" className="size-16 mb-4" />
+          
+          {/* Badge Alpha */}
+          <span className="mb-2 rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-300">
+            Alpha
+          </span>
+
           <h2 className="text-xl font-semibold tracking-tight">
-            What can I help with?
+            {greeting}
           </h2>
           <p className="mt-1.5 text-sm text-muted-foreground">
-            Ask a question, write code, or explore ideas.
+            Posez une question, écrivez du code ou explorez des idées.
           </p>
         </div>
 
@@ -51,7 +74,7 @@ export function Preview() {
           onClick={() => handleAction()}
           type="button"
         >
-          Ask anything...
+          Demandez n'importe quoi...
         </button>
       </div>
     </div>

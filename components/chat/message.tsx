@@ -312,6 +312,7 @@ const PurePreviewMessage = ({
       message={message}
       onEdit={onEdit ? () => onEdit(message) : undefined}
       vote={vote}
+      regenerate={_regenerate}
     />
   );
 

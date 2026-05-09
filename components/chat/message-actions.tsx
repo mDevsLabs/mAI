@@ -1,6 +1,7 @@
 import equal from "fast-deep-equal";
 import { memo } from "react";
 import { toast } from "sonner";
+import { Volume2, RotateCcw, AlertTriangle } from "lucide-react";
 import { useSWRConfig } from "swr";
 import { useCopyToClipboard } from "usehooks-ts";
 import type { Vote } from "@/lib/db/schema";
@@ -17,12 +18,14 @@ export function PureMessageActions({
   vote,
   isLoading,
   onEdit,
+  regenerate,
 }: {
   chatId: string;
   message: ChatMessage;
   vote: Vote | undefined;
   isLoading: boolean;
   onEdit?: () => void;
+  regenerate: () => void;
 }) {
   const { mutate } = useSWRConfig();
   const [_, copyToClipboard] = useCopyToClipboard();
@@ -67,6 +70,18 @@ export function PureMessageActions({
             tooltip="Copy"
           >
             <CopyIcon />
+          </Action>
+          <Action
+            className="size-7 text-muted-foreground/50 hover:text-foreground"
+            onClick={() => {
+              const speech = new SpeechSynthesisUtterance(textFromParts);
+              speech.lang = "fr-FR";
+              window.speechSynthesis.speak(speech);
+              toast.success("Lecture en cours...");
+            }}
+            tooltip="Écouter"
+          >
+            <Volume2 className="size-4" />
           </Action>
         </div>
       </Actions>
@@ -187,6 +202,40 @@ export function PureMessageActions({
         tooltip="Downvote Response"
       >
         <ThumbDownIcon />
+      </Action>
+
+      <Action
+        className="text-muted-foreground/50 hover:text-foreground"
+        onClick={() => {
+          const speech = new SpeechSynthesisUtterance(textFromParts);
+          speech.lang = "fr-FR";
+          window.speechSynthesis.speak(speech);
+          toast.success("Lecture en cours...");
+        }}
+        tooltip="Écouter"
+      >
+        <Volume2 className="size-4" />
+      </Action>
+
+      <Action
+        className="text-muted-foreground/50 hover:text-foreground"
+        onClick={() => {
+          regenerate();
+          toast.success("Régénération lancée...");
+        }}
+        tooltip="Réécrire"
+      >
+        <RotateCcw className="size-4" />
+      </Action>
+
+      <Action
+        className="text-muted-foreground/50 hover:text-foreground"
+        onClick={() => {
+          toast.success("Message signalé");
+        }}
+        tooltip="Signaler"
+      >
+        <AlertTriangle className="size-4" />
       </Action>
     </Actions>
   );

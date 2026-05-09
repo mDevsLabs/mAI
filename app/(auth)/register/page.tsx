@@ -24,16 +24,16 @@ export default function Page() {
   // biome-ignore lint/correctness/useExhaustiveDependencies: router and updateSession are stable refs
   useEffect(() => {
     if (state.status === "user_exists") {
-      toast({ type: "error", description: "Account already exists!" });
+      toast({ type: "error", description: "Le compte existe déjà !" });
     } else if (state.status === "failed") {
-      toast({ type: "error", description: "Failed to create account!" });
+      toast({ type: "error", description: "Échec de la création du compte !" });
     } else if (state.status === "invalid_data") {
       toast({
         type: "error",
-        description: "Failed validating your submission!",
+        description: "Échec de la validation de votre soumission !",
       });
     } else if (state.status === "success") {
-      toast({ type: "success", description: "Account created!" });
+      toast({ type: "success", description: "Compte créé !" });
       setIsSuccessful(true);
       updateSession();
       router.refresh();
@@ -47,17 +47,17 @@ export default function Page() {
 
   return (
     <>
-      <h1 className="text-2xl font-semibold tracking-tight">Create account</h1>
-      <p className="text-sm text-muted-foreground">Get started for free</p>
+      <h1 className="text-2xl font-semibold tracking-tight">Créer un compte</h1>
+      <p className="text-sm text-muted-foreground">Commencez gratuitement</p>
       <AuthForm action={handleSubmit} defaultEmail={email}>
-        <SubmitButton isSuccessful={isSuccessful}>Sign up</SubmitButton>
+        <SubmitButton isSuccessful={isSuccessful}>S'inscrire</SubmitButton>
         <p className="text-center text-[13px] text-muted-foreground">
-          {"Have an account? "}
+          {"Vous avez déjà un compte ? "}
           <Link
             className="text-foreground underline-offset-4 hover:underline"
             href="/login"
           >
-            Sign in
+            Se connecter
           </Link>
         </p>
       </AuthForm>

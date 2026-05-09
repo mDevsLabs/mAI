@@ -1,3 +1,10 @@
+/**
+ * Layout principal du groupe (chat)
+ * Gère la sidebar, le chat shell et les nouvelles pages (Projets, Bibliothèque, Applications)
+ * Le ChatShell ne s'affiche que pour les routes / et /chat/[id]
+ * 
+ * @version 0.0.2
+ */
 import { cookies } from "next/headers";
 import Script from "next/script";
 import { Suspense } from "react";

@@ -36,6 +36,8 @@ import {
   saveMessages,
   updateChatTitleById,
   updateMessage,
+  creditXP,
+  checkAndUnlockBadges,
 } from "@/lib/db/queries";
 import type { DBMessage } from "@/lib/db/schema";
 import { ChatbotError } from "@/lib/errors";
@@ -68,7 +70,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { id, message, messages, selectedChatModel, selectedVisibilityType } =
+    const { id, message, messages, selectedChatModel, selectedVisibilityType, ghost } =
       requestBody;
 
     const [, session] = await Promise.all([
@@ -108,7 +110,7 @@ export async function POST(request: Request) {
         return new ChatbotError("forbidden:chat").toResponse();
       }
       messagesFromDb = await getMessagesByChatId({ id });
-    } else if (message?.role === "user") {
+    } else if (message?.role === "user" && !ghost) {
       await saveChat({
         id,
         userId: session.user.id,
@@ -251,40 +253,52 @@ export async function POST(request: Request) {
       },
       generateId: generateUUID,
       onFinish: async ({ messages: finishedMessages }) => {
-        if (isToolApprovalFlow) {
-          for (const finishedMsg of finishedMessages) {
-            const existingMsg = uiMessages.find((m) => m.id === finishedMsg.id);
-            if (existingMsg) {
-              await updateMessage({
-                id: finishedMsg.id,
-                parts: finishedMsg.parts,
-              });
-            } else {
-              await saveMessages({
-                messages: [
-                  {
-                    id: finishedMsg.id,
-                    role: finishedMsg.role,
-                    parts: finishedMsg.parts,
-                    createdAt: new Date(),
-                    attachments: [],
-                    chatId: id,
-                  },
-                ],
-              });
+        if (!ghost) {
+          if (isToolApprovalFlow) {
+            for (const finishedMsg of finishedMessages) {
+              const existingMsg = uiMessages.find((m) => m.id === finishedMsg.id);
+              if (existingMsg) {
+                await updateMessage({
+                  id: finishedMsg.id,
+                  parts: finishedMsg.parts,
+                });
+              } else {
+                await saveMessages({
+                  messages: [
+                    {
+                      id: finishedMsg.id,
+                      role: finishedMsg.role,
+                      parts: finishedMsg.parts,
+                      createdAt: new Date(),
+                      attachments: [],
+                      chatId: id,
+                    },
+                  ],
+                });
+              }
             }
+          } else if (finishedMessages.length > 0) {
+            await saveMessages({
+              messages: finishedMessages.map((currentMessage) => ({
+                id: currentMessage.id,
+                role: currentMessage.role,
+                parts: currentMessage.parts,
+                createdAt: new Date(),
+                attachments: [],
+                chatId: id,
+              })),
+            });
+
+            // Créditer 5 XP à l'utilisateur
+            await creditXP({
+              userId: session.user.id,
+              amount: 5,
+              reason: "Message envoyé",
+            });
+
+            // Vérifier et débloquer les badges
+            await checkAndUnlockBadges(session.user.id);
           }
-        } else if (finishedMessages.length > 0) {
-          await saveMessages({
-            messages: finishedMessages.map((currentMessage) => ({
-              id: currentMessage.id,
-              role: currentMessage.role,
-              parts: currentMessage.parts,
-              createdAt: new Date(),
-              attachments: [],
-              chatId: id,
-            })),
-          });
         }
       },
       onError: (error) => {

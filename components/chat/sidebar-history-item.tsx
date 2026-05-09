@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { memo } from "react";
 import { useChatVisibility } from "@/hooks/use-chat-visibility";
+import { Pencil, Copy, Download, Bookmark, Archive, FolderPlus, AlertTriangle } from "lucide-react";
 import type { Chat } from "@/lib/db/schema";
 import {
   DropdownMenu,
@@ -65,11 +66,24 @@ const PureChatItem = ({
           </SidebarMenuAction>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent align="end" side="bottom">
+        <DropdownMenuContent align="end" side="bottom" className="w-48">
+          <DropdownMenuItem className="cursor-pointer">
+            <Pencil className="size-4 mr-2" />
+            <span>Renommer</span>
+          </DropdownMenuItem>
+
+          <DropdownMenuItem className="cursor-pointer" onClick={() => {
+            navigator.clipboard.writeText(chat.id);
+            alert("ID copié !");
+          }}>
+            <Copy className="size-4 mr-2" />
+            <span>Copier l'ID</span>
+          </DropdownMenuItem>
+
           <DropdownMenuSub>
             <DropdownMenuSubTrigger className="cursor-pointer">
               <ShareIcon />
-              <span>Share</span>
+              <span>Partager</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
               <DropdownMenuSubContent>
@@ -81,7 +95,7 @@ const PureChatItem = ({
                 >
                   <div className="flex flex-row items-center gap-2">
                     <LockIcon size={12} />
-                    <span>Private</span>
+                    <span>Privé</span>
                   </div>
                   {visibilityType === "private" ? (
                     <CheckCircleFillIcon />
@@ -103,12 +117,47 @@ const PureChatItem = ({
             </DropdownMenuPortal>
           </DropdownMenuSub>
 
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger className="cursor-pointer">
+              <Download className="size-4 mr-2" />
+              <span>Exporter</span>
+            </DropdownMenuSubTrigger>
+            <DropdownMenuPortal>
+              <DropdownMenuSubContent>
+                <DropdownMenuItem className="cursor-pointer">JSON</DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer">MarkDown</DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer">TXT</DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuPortal>
+          </DropdownMenuSub>
+
+          <DropdownMenuItem className="cursor-pointer">
+            <Bookmark className="size-4 mr-2" />
+            <span>Épingler</span>
+          </DropdownMenuItem>
+
+          <DropdownMenuItem className="cursor-pointer">
+            <Archive className="size-4 mr-2" />
+            <span>Archiver</span>
+          </DropdownMenuItem>
+
+          <DropdownMenuItem className="cursor-pointer">
+            <FolderPlus className="size-4 mr-2" />
+            <span>Ajouter au projet</span>
+          </DropdownMenuItem>
+
+          <DropdownMenuItem className="cursor-pointer">
+            <AlertTriangle className="size-4 mr-2" />
+            <span>Signaler</span>
+          </DropdownMenuItem>
+
           <DropdownMenuItem
             onSelect={() => onDelete(chat.id)}
             variant="destructive"
+            className="cursor-pointer"
           >
             <TrashIcon />
-            <span>Delete</span>
+            <span>Supprimer</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

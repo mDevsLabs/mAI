@@ -1,9 +1,15 @@
+/**
+ * Composant de suggestions d'actions pour la page d'accueil
+ * Affiche 4 suggestions aléatoires depuis le fichier de suggestions
+ * 
+ * @version 0.0.2
+ */
 "use client";
 
 import type { UseChatHelpers } from "@ai-sdk/react";
 import { motion } from "framer-motion";
-import { memo } from "react";
-import { suggestions } from "@/lib/constants";
+import { memo, useEffect, useState } from "react";
+import { getRandomSuggestions } from "@/lib/suggestions";
 import type { ChatMessage } from "@/lib/types";
 import { Suggestion } from "../ai-elements/suggestion";
 import type { VisibilityType } from "./visibility-selector";
@@ -15,7 +21,12 @@ type SuggestedActionsProps = {
 };
 
 function PureSuggestedActions({ chatId, sendMessage }: SuggestedActionsProps) {
-  const suggestedActions = suggestions;
+  // Suggestions aléatoires chargées côté client uniquement (évite Math.random SSR)
+  const [suggestedActions, setSuggestedActions] = useState<string[]>([]);
+
+  useEffect(() => {
+    setSuggestedActions(getRandomSuggestions(4));
+  }, []);
 
   return (
     <div
