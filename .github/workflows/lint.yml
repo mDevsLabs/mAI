@@ -22,4 +22,4 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Run check
-        run: pnpm check
+        run: pnpm run lint
