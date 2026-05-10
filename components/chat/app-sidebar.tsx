@@ -11,7 +11,6 @@ import {
   BookOpenIcon,
   FolderIcon,
   LayoutGridIcon,
-  PanelLeftIcon,
   PenSquareIcon,
   TrashIcon,
 } from "lucide-react";
@@ -53,7 +52,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "../ui/alert-dialog";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+
 
 // Liens de navigation principaux
 const navLinks = [
@@ -80,7 +79,7 @@ const navLinks = [
 export function AppSidebar({ user }: { user: User | undefined }) {
   const router = useRouter();
   const pathname = usePathname();
-  const { setOpenMobile, toggleSidebar } = useSidebar();
+  const { setOpenMobile } = useSidebar();
   const { mutate } = useSWRConfig();
   const [showDeleteAllDialog, setShowDeleteAllDialog] = useState(false);
 
@@ -103,37 +102,39 @@ export function AppSidebar({ user }: { user: User | undefined }) {
     <>
       <Sidebar collapsible="icon">
         <SidebarHeader className="pb-0 pt-3">
-          <SidebarMenu>
-            <SidebarMenuItem className="flex flex-row items-center justify-between">
-              <div className="group/logo relative flex items-center justify-center">
-                <SidebarMenuButton
-                  asChild
-                  className="size-8 !px-0 items-center justify-center group-data-[collapsible=icon]:group-hover/logo:opacity-0"
-                  tooltip="mAI"
-                >
-                  <Link href="/" onClick={() => setOpenMobile(false)}>
-                    <Image alt="mAI" className="size-4" src="/logo.png" width={16} height={16} />
-                  </Link>
-                </SidebarMenuButton>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <SidebarMenuButton
-                      className="pointer-events-none absolute inset-0 size-8 opacity-0 group-data-[collapsible=icon]:pointer-events-auto group-data-[collapsible=icon]:group-hover/logo:opacity-100"
-                      onClick={() => toggleSidebar()}
-                    >
-                      <PanelLeftIcon className="size-4" />
-                    </SidebarMenuButton>
-                  </TooltipTrigger>
-                  <TooltipContent className="hidden md:block" side="right">
-                    Ouvrir la sidebar
-                  </TooltipContent>
-                </Tooltip>
-              </div>
-              <div className="group-data-[collapsible=icon]:hidden">
-                <SidebarTrigger className="text-sidebar-foreground/60 transition-colors duration-150 hover:text-sidebar-foreground" />
-              </div>
-            </SidebarMenuItem>
-          </SidebarMenu>
+          <div className="flex items-center gap-2 px-2">
+            {/* Logo/Étoile */}
+            <div className="size-8 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center shrink-0">
+              <Image alt="Logo" className="size-5" src="/logo.png" width={20} height={20} />
+            </div>
+            
+            {/* Barre de recherche */}
+            <div className="relative flex-1 group-data-[collapsible=icon]:hidden">
+              <input
+                type="text"
+                placeholder="Recherche globale... (Ctrl+K)"
+                className="w-full h-8 pl-8 pr-2 bg-gray-100 dark:bg-gray-800 border-none rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-primary"
+              />
+              <svg
+                className="absolute left-2.5 top-2.5 size-3 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </div>
+            
+            {/* Trigger pour replier (visible si non replié) */}
+            <div className="group-data-[collapsible=icon]:hidden ml-auto">
+              <SidebarTrigger className="text-sidebar-foreground/60 transition-colors duration-150 hover:text-sidebar-foreground" />
+            </div>
+          </div>
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup className="pt-1">
@@ -142,15 +143,15 @@ export function AppSidebar({ user }: { user: User | undefined }) {
                 {/* Nouvelle discussion */}
                 <SidebarMenuItem>
                   <SidebarMenuButton
-                    className="h-8 rounded-lg border border-sidebar-border text-[13px] text-sidebar-foreground/70 transition-colors duration-150 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
+                    className="h-10 rounded-full border border-sidebar-border text-[14px] text-sidebar-foreground/80 transition-colors duration-150 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-sidebar-foreground"
                     onClick={() => {
                       setOpenMobile(false);
                       router.push("/");
                     }}
                     tooltip="Nouvelle discussion"
                   >
-                    <PenSquareIcon className="size-4" />
-                    <span className="font-medium">Nouvelle discussion</span>
+                    <PenSquareIcon className="size-5" />
+                    <span className="font-semibold">Nouvelle discussion</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
 
@@ -161,10 +162,10 @@ export function AppSidebar({ user }: { user: User | undefined }) {
                     <SidebarMenuItem key={link.href}>
                       <SidebarMenuButton
                         asChild
-                        className={`rounded-lg text-[13px] transition-colors duration-150 ${
+                        className={`h-10 rounded-full text-[14px] transition-colors duration-150 ${
                           isActive
-                            ? "bg-sidebar-accent/80 text-sidebar-foreground font-medium"
-                            : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
+                            ? "bg-gray-100 dark:bg-gray-800 text-sidebar-foreground font-semibold"
+                            : "text-sidebar-foreground/70 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-sidebar-foreground"
                         }`}
                         tooltip={link.tooltip}
                       >
@@ -172,7 +173,7 @@ export function AppSidebar({ user }: { user: User | undefined }) {
                           href={link.href}
                           onClick={() => setOpenMobile(false)}
                         >
-                          <link.icon className="size-4" />
+                          <link.icon className="size-5" />
                           <span>{link.label}</span>
                         </Link>
                       </SidebarMenuButton>

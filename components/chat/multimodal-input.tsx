@@ -10,19 +10,27 @@ import type { UIMessage } from "ai";
 import equal from "fast-deep-equal";
 import {
   ArrowUpIcon,
-  BrainIcon,
-  EyeIcon,
-  WrenchIcon,
   PlusIcon,
   GlobeIcon,
   ImageIcon,
-  HelpCircleIcon,
-  FileEditIcon,
   GraduationCapIcon,
-  CloudSunIcon,
+  LightbulbIcon,
+  SearchIcon,
+  XIcon,
+  FolderIcon,
+  BookOpenIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
+} from "@/components/ui/dropdown-menu";
 import {
   type ChangeEvent,
   type Dispatch,
@@ -34,25 +42,7 @@ import {
   useState,
 } from "react";
 import { toast } from "sonner";
-import useSWR from "swr";
 import { useLocalStorage, useWindowSize } from "usehooks-ts";
-import {
-  ModelSelector,
-  ModelSelectorContent,
-  ModelSelectorGroup,
-  ModelSelectorInput,
-  ModelSelectorItem,
-  ModelSelectorList,
-  ModelSelectorLogo,
-  ModelSelectorName,
-  ModelSelectorTrigger,
-} from "@/components/ai-elements/model-selector";
-import {
-  type ChatModel,
-  chatModels,
-  DEFAULT_CHAT_MODEL,
-  type ModelCapabilities,
-} from "@/lib/ai/models";
 import type { Attachment, ChatMessage } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import {
@@ -73,11 +63,7 @@ import {
 import { SuggestedActions } from "./suggested-actions";
 import type { VisibilityType } from "./visibility-selector";
 
-function setCookie(name: string, value: string) {
-  const maxAge = 60 * 60 * 24 * 365;
-  // biome-ignore lint/suspicious/noDocumentCookie: needed for client-side cookie setting
-  document.cookie = `${name}=${encodeURIComponent(value)}; path=/; max-age=${maxAge}`;
-}
+
 
 function PureMultimodalInput({
   chatId,
@@ -92,8 +78,6 @@ function PureMultimodalInput({
   sendMessage,
   className,
   selectedVisibilityType,
-  selectedModelId,
-  onModelChange,
   editingMessage,
   onCancelEdit,
   isLoading,
@@ -112,8 +96,6 @@ function PureMultimodalInput({
     | (() => Promise<void>);
   className?: string;
   selectedVisibilityType: VisibilityType;
-  selectedModelId: string;
-  onModelChange?: (modelId: string) => void;
   editingMessage?: ChatMessage | null;
   onCancelEdit?: () => void;
   isLoading?: boolean;
@@ -137,6 +119,8 @@ function PureMultimodalInput({
     "input",
     ""
   );
+
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -233,6 +217,13 @@ function PureMultimodalInput({
       `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/chat/${chatId}`
     );
 
+    let textToSend = input;
+    if (selectedOption === "reflect") {
+      textToSend += "\n\n[Instruction: Réfléchis longuement sur ce message et détaille ton raisonnement.]";
+    } else if (selectedOption === "deep-search") {
+      textToSend += "\n\n[Instruction: Effectue une recherche approfondie sur le web (via Tavily si possible) et fournis un rapport détaillé.]";
+    }
+
     sendMessage({
       role: "user",
       parts: [
@@ -244,7 +235,7 @@ function PureMultimodalInput({
         })),
         {
           type: "text",
-          text: input,
+          text: textToSend,
         },
       ],
     });
@@ -252,6 +243,7 @@ function PureMultimodalInput({
     setAttachments([]);
     setLocalStorageInput("");
     setInput("");
+    setSelectedOption(null); // Reset option after sending
 
     if (width && width > 768) {
       textareaRef.current?.focus();
@@ -265,6 +257,7 @@ function PureMultimodalInput({
     setLocalStorageInput,
     width,
     chatId,
+    selectedOption,
   ]);
 
   const uploadFile = useCallback(async (file: File) => {
@@ -528,15 +521,84 @@ function PureMultimodalInput({
         />
         <PromptInputFooter className="px-3 pb-3">
           <PromptInputTools>
-            <AttachmentsButton
-              fileInputRef={fileInputRef}
-              selectedModelId={selectedModelId}
-              status={status}
-            />
-            <ModelSelectorCompact
-              onModelChange={onModelChange}
-              selectedModelId={selectedModelId}
-            />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
+                  <PlusIcon className="size-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-56">
+                <DropdownMenuItem onClick={() => fileInputRef.current?.click()}>
+                  <PaperclipIcon className="size-4 mr-2" />
+                  Ajouter photos/fichiers
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setSelectedOption("image")}>
+                  <ImageIcon className="size-4 mr-2" />
+                  Créer une image
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setSelectedOption("reflect")}>
+                  <LightbulbIcon className="size-4 mr-2" />
+                  Réfléchis
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setSelectedOption("deep-search")}>
+                  <SearchIcon className="size-4 mr-2" />
+                  Recherche approfondie
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setSelectedOption("web-search")}>
+                  <GlobeIcon className="size-4 mr-2" />
+                  Recherche sur le Web
+                </DropdownMenuItem>
+                
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger>
+                    <PlusIcon className="size-4 mr-2" />
+                    Plus
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuSubContent>
+                    <DropdownMenuItem onClick={() => setSelectedOption("learn")}>
+                      <GraduationCapIcon className="size-4 mr-2" />
+                      Apprendre
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setSelectedOption("study")}>
+                      <BookOpenIcon className="size-4 mr-2" />
+                      Étudier
+                    </DropdownMenuItem>
+                  </DropdownMenuSubContent>
+                </DropdownMenuSub>
+
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger>
+                    <FolderIcon className="size-4 mr-2" />
+                    Projets
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuSubContent>
+                    <DropdownMenuItem onClick={() => setSelectedOption("add-to-project")}>
+                      Ajouter au projet...
+                    </DropdownMenuItem>
+                  </DropdownMenuSubContent>
+                </DropdownMenuSub>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Option sélectionnée */}
+            {selectedOption && (
+              <div className="flex items-center gap-1 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full text-xs font-medium text-sidebar-foreground">
+                {selectedOption === "reflect" && <LightbulbIcon className="size-3 text-yellow-500" />}
+                {selectedOption === "deep-search" && <SearchIcon className="size-3 text-blue-500" />}
+                {selectedOption === "web-search" && <GlobeIcon className="size-3 text-green-500" />}
+                {selectedOption === "image" && <ImageIcon className="size-3 text-purple-500" />}
+                {selectedOption === "learn" && <GraduationCapIcon className="size-3 text-indigo-500" />}
+                {selectedOption === "study" && <BookOpenIcon className="size-3 text-pink-500" />}
+                <span className="capitalize">{selectedOption.replace("-", " ")}</span>
+                <button
+                  type="button"
+                  onClick={() => setSelectedOption(null)}
+                  className="ml-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+                >
+                  <XIcon className="size-3" />
+                </button>
+              </div>
+            )}
           </PromptInputTools>
 
           {status === "submitted" ? (
@@ -578,9 +640,6 @@ export const MultimodalInput = memo(
     if (prevProps.selectedVisibilityType !== nextProps.selectedVisibilityType) {
       return false;
     }
-    if (prevProps.selectedModelId !== nextProps.selectedModelId) {
-      return false;
-    }
     if (prevProps.editingMessage !== nextProps.editingMessage) {
       return false;
     }
@@ -595,271 +654,7 @@ export const MultimodalInput = memo(
   }
 );
 
-function PureAttachmentsButton({
-  fileInputRef,
-  status,
-  selectedModelId,
-}: {
-  fileInputRef: React.MutableRefObject<HTMLInputElement | null>;
-  status: UseChatHelpers<ChatMessage>["status"];
-  selectedModelId: string;
-}) {
-  const [open, setOpen] = useState(false);
-  const { data: modelsResponse } = useSWR(
-    `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/api/models`,
-    (url: string) => fetch(url).then((r) => r.json()),
-    { revalidateOnFocus: false, dedupingInterval: 3_600_000 }
-  );
 
-  const caps: Record<string, ModelCapabilities> | undefined =
-    modelsResponse?.capabilities ?? modelsResponse;
-  const hasVision = caps?.[selectedModelId]?.vision ?? false;
-
-  return (
-    <div className="relative">
-      <Button
-        className={cn(
-          "h-7 w-7 rounded-lg border border-border/40 p-1 transition-colors",
-          status === "ready"
-            ? "text-foreground hover:border-border hover:text-foreground"
-            : "text-muted-foreground/30 cursor-not-allowed"
-        )}
-        data-testid="plus-button"
-        disabled={status !== "ready"}
-        onClick={(event) => {
-          event.preventDefault();
-          setOpen(!open);
-        }}
-        variant="ghost"
-      >
-        <PlusIcon size={14} style={{ width: 14, height: 14 }} />
-      </Button>
-      
-      {open && (
-        <div className="absolute bottom-full left-0 z-50 mb-1 w-56 overflow-auto rounded-xl border border-border/50 bg-card p-2 shadow-[var(--shadow-float)]">
-          {/* Ajouter photos/fichiers */}
-          <button
-            className={`flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-left transition-colors ${hasVision ? "text-foreground hover:bg-muted" : "text-muted-foreground/30 cursor-not-allowed"}`}
-            onClick={() => {
-              if (hasVision) {
-                fileInputRef.current?.click();
-                setOpen(false);
-              }
-            }}
-            type="button"
-            disabled={!hasVision}
-          >
-            <PaperclipIcon size={14} />
-            <span>Ajouter photos/fichiers</span>
-          </button>
-          
-          {/* Recherche sur le web */}
-          <button
-            className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-left text-foreground hover:bg-muted"
-            onClick={() => {
-              toast.info("Recherche Web activée");
-              setOpen(false);
-            }}
-            type="button"
-          >
-            <GlobeIcon size={14} />
-            <span>Recherche sur le web</span>
-          </button>
-          
-          {/* Création d'images */}
-          <button
-            className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-left text-foreground hover:bg-muted"
-            onClick={() => {
-              toast.info("Création d'images");
-              setOpen(false);
-            }}
-            type="button"
-          >
-            <ImageIcon size={14} />
-            <span>Création d'images</span>
-          </button>
-          
-          {/* Quiz */}
-          <button
-            className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-left text-foreground hover:bg-muted"
-            onClick={() => {
-              toast.info("Génération de Quiz");
-              setOpen(false);
-            }}
-            type="button"
-          >
-            <HelpCircleIcon size={14} />
-            <span>Quiz</span>
-          </button>
-          
-          {/* Canevas */}
-          <button
-            className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-left text-foreground hover:bg-muted"
-            onClick={() => {
-              toast.info("Ouverture du Canevas");
-              setOpen(false);
-            }}
-            type="button"
-          >
-            <FileEditIcon size={14} />
-            <span>Canevas</span>
-          </button>
-          
-          {/* Apprendre & Étudier */}
-          <button
-            className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-left text-foreground hover:bg-muted"
-            onClick={() => {
-              toast.info("Mode Apprendre & Étudier");
-              setOpen(false);
-            }}
-            type="button"
-          >
-            <GraduationCapIcon size={14} />
-            <span>Apprendre & Étudier</span>
-          </button>
-          
-          {/* Météo */}
-          <button
-            className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-left text-foreground hover:bg-muted"
-            onClick={() => {
-              toast.info("Recherche météo");
-              setOpen(false);
-            }}
-            type="button"
-          >
-            <CloudSunIcon size={14} />
-            <span>Météo</span>
-          </button>
-        </div>
-      )}
-    </div>
-  );
-}
-
-const AttachmentsButton = memo(PureAttachmentsButton);
-
-function PureModelSelectorCompact({
-  selectedModelId,
-  onModelChange,
-}: {
-  selectedModelId: string;
-  onModelChange?: (modelId: string) => void;
-}) {
-  const [open, setOpen] = useState(false);
-  
-  const getLogoProvider = (id: string) => {
-    const p = id.split("/")[0];
-    if (p.startsWith("gpt")) { return "openai"; }
-    if (p.startsWith("claude")) { return "anthropic"; }
-    if (p.startsWith("deepseek")) { return "deepseek"; }
-    return p;
-  };
-
-  const { data: modelsData } = useSWR(
-    `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/api/models`,
-    (url: string) => fetch(url).then((r) => r.json()),
-    { revalidateOnFocus: false, dedupingInterval: 3_600_000 }
-  );
-
-  const capabilities: Record<string, ModelCapabilities> | undefined =
-    modelsData?.capabilities ?? modelsData;
-
-  const selectedModel =
-    chatModels.find((m: ChatModel) => m.id === selectedModelId) ??
-    chatModels.find((m: ChatModel) => m.id === DEFAULT_CHAT_MODEL) ??
-    chatModels[0];
-  const [provider] = selectedModel.id.split("/");
-
-  // Noms des catégories pour l'affichage
-  const categoryNames: Record<string, string> = {
-    francestudent: "FranceStudent",
-    "ai-gateway": "AI Gateway",
-    "ai-horde": "AI Horde",
-  };
-
-  // Grouper les modèles par catégorie
-  const grouped: Record<string, ChatModel[]> = {};
-  for (const model of chatModels) {
-    const key = model.category ?? "ai-gateway";
-    if (!grouped[key]) {
-      grouped[key] = [];
-    }
-    grouped[key].push(model);
-  }
-
-  // Ordre d'affichage des catégories
-  const categoryOrder = ["francestudent", "ai-gateway", "ai-horde"];
-  const sortedKeys = categoryOrder.filter((k) => grouped[k]?.length > 0);
-
-  return (
-    <ModelSelector onOpenChange={setOpen} open={open}>
-      <ModelSelectorTrigger asChild>
-        <Button
-          className="h-7 max-w-[200px] justify-between gap-1.5 rounded-lg px-2 text-[12px] text-muted-foreground transition-colors hover:text-foreground"
-          data-testid="model-selector"
-          variant="ghost"
-        >
-          {provider && <ModelSelectorLogo provider={provider} />}
-          <ModelSelectorName>{selectedModel.name}</ModelSelectorName>
-        </Button>
-      </ModelSelectorTrigger>
-      <ModelSelectorContent>
-        <ModelSelectorInput placeholder="Rechercher des modèles..." />
-        <ModelSelectorList>
-          {sortedKeys.map((key) => (
-            <ModelSelectorGroup
-              heading={categoryNames[key] ?? key}
-              key={key}
-            >
-              {grouped[key].map((model) => {
-                const logoProvider = getLogoProvider(model.id);
-                return (
-                  <ModelSelectorItem
-                    className={cn(
-                      "flex w-full",
-                      model.id === selectedModel.id &&
-                        "bg-muted/50 font-medium"
-                    )}
-                    key={model.id}
-                    onSelect={() => {
-                      onModelChange?.(model.id);
-                      setCookie("chat-model", model.id);
-                      setOpen(false);
-                      setTimeout(() => {
-                        document
-                          .querySelector<HTMLTextAreaElement>(
-                            "[data-testid='multimodal-input']"
-                          )
-                          ?.focus();
-                      }, 50);
-                    }}
-                    value={model.id}
-                  >
-                    <ModelSelectorLogo provider={logoProvider} />
-                    <ModelSelectorName>{model.name}</ModelSelectorName>
-                    <div className="ml-auto flex items-center gap-2 text-foreground/70">
-                      {capabilities?.[model.id]?.tools && (
-                        <WrenchIcon className="size-3.5" />
-                      )}
-                      {capabilities?.[model.id]?.vision && (
-                        <EyeIcon className="size-3.5" />
-                      )}
-                      {capabilities?.[model.id]?.reasoning && (
-                        <BrainIcon className="size-3.5" />
-                      )}
-                    </div>
-                  </ModelSelectorItem>
-                );
-              })}
-            </ModelSelectorGroup>
-          ))}
-        </ModelSelectorList>
-      </ModelSelectorContent>
-    </ModelSelector>
-  );
-}
-
-const ModelSelectorCompact = memo(PureModelSelectorCompact);
 
 function PureStopButton({
   stop,

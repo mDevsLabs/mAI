@@ -120,8 +120,6 @@ export function ChatShell() {
                     setEditingMessage(null);
                     setInput("");
                   }}
-                  onModelChange={setCurrentModelId}
-                  selectedModelId={currentModelId}
                   selectedVisibilityType={visibilityType}
                   sendMessage={
                     editingMessage

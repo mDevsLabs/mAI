@@ -188,6 +188,7 @@ export type XPHistory = InferSelectModel<typeof xpHistory>;
 export const userCredits = pgTable("UserCredits", {
   userId: uuid("userId").primaryKey().notNull().references(() => user.id),
   credits: integer("credits").notNull().default(100),
+  plan: varchar("plan", { length: 20 }).notNull().default("free"),
   updatedAt: timestamp("updatedAt").notNull().defaultNow(),
 });
 

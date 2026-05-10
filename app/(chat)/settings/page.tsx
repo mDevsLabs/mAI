@@ -1,8 +1,9 @@
 /**
  * Page des paramètres de mAI
  * Permet de gérer les préférences, le compte, les crédits et les notifications.
+ * Mis à jour avec les modèles par défaut et le profil.
  * 
- * @version 0.0.8
+ * @version 0.1.3
  */
 "use client";
 
@@ -10,6 +11,7 @@ import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { DiscIcon as Discord, SendIcon as Telegram, ShieldIcon, CreditCardIcon, AccessibilityIcon } from "lucide-react";
 import { useState } from "react";
+import Image from "next/image";
 
 export default function SettingsPage() {
   const { setTheme, theme } = useTheme();
@@ -22,6 +24,79 @@ export default function SettingsPage() {
   return (
     <div className="flex flex-col gap-6 p-6 max-w-4xl mx-auto w-full overflow-auto text-foreground">
       <h1 className="text-3xl font-bold">Paramètres</h1>
+      
+      {/* Modèles par défaut */}
+      <div className="bg-card/50 backdrop-blur-xl border border-border/50 rounded-2xl p-6 shadow-[var(--shadow-float)]">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label htmlFor="defaultTextModel" className="text-sm text-muted-foreground mb-1 block">Texte</label>
+            <select id="defaultTextModel" className="w-full bg-muted border border-border/50 rounded-lg p-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary">
+              <option>GPT-5.5</option>
+              <option>Gemini 2.5 Pro</option>
+              <option>FranceStudent</option>
+            </select>
+          </div>
+          <div>
+            <label htmlFor="defaultImageModel" className="text-sm text-muted-foreground mb-1 block">Images (Studio)</label>
+            <select id="defaultImageModel" className="w-full bg-muted border border-border/50 rounded-lg p-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary">
+              <option>Stable Diffusion</option>
+              <option>Midjourney</option>
+              <option>DALL-E 3</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      {/* Installation PWA */}
+      <div className="bg-card/50 backdrop-blur-xl border border-border/50 rounded-2xl p-6 shadow-[var(--shadow-float)]">
+        <div className="font-semibold mb-1">Installation PWA</div>
+        <div className="text-sm text-muted-foreground mb-4">Installez mAI sur l'écran d'accueil pour un usage natif.</div>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" className="rounded-lg gap-2">
+            <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+            Installer mAI en PWA
+          </Button>
+          <Button variant="ghost" size="sm" className="rounded-lg">Fermer</Button>
+        </div>
+      </div>
+
+      {/* Profil */}
+      <div className="bg-card/50 backdrop-blur-xl border border-border/50 rounded-2xl p-6 shadow-[var(--shadow-float)]">
+        <div className="flex flex-col md:flex-row items-start md:items-center gap-4 mb-6">
+          <div className="size-16 bg-muted rounded-full flex items-center justify-center font-bold text-2xl relative shrink-0">
+            <Image alt="Logo" className="size-10" src="/logo.png" width={40} height={40} />
+            <button type="button" className="absolute bottom-0 right-0 bg-white dark:bg-gray-800 rounded-full p-1 border border-border shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700">
+              <svg className="size-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+            </button>
+          </div>
+          <div className="flex-1 w-full">
+            <label htmlFor="profileName" className="text-sm text-muted-foreground mb-1 block">Nom de profil</label>
+            <input id="profileName" type="text" placeholder="Ex: Dr. Lemaire" className="w-full bg-muted border border-border/50 rounded-lg p-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary" />
+            <div className="text-xs text-muted-foreground mt-1">Ce nom est utilisé dans les en-têtes et interactions personnalisées.</div>
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label htmlFor="aiName" className="text-sm text-muted-foreground mb-1 block">Nom (comment l'IA doit vous appeler)</label>
+            <input id="aiName" type="text" placeholder="Ex: Alex" className="w-full bg-muted border border-border/50 rounded-lg p-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary" />
+          </div>
+          <div>
+            <label htmlFor="profession" className="text-sm text-muted-foreground mb-1 block">Profession</label>
+            <input id="profession" type="text" placeholder="Ex: Product Designer" className="w-full bg-muted border border-border/50 rounded-lg p-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary" />
+          </div>
+        </div>
+      </div>
+
+      {/* Affichage du compteur de saisie */}
+      <div className="bg-card/50 backdrop-blur-xl border border-border/50 rounded-2xl p-6 shadow-[var(--shadow-float)]">
+        <div className="font-semibold mb-1">Affichage du compteur de saisie</div>
+        <div className="text-sm text-muted-foreground mb-4">Affiche/masque les mots et caractères dans la barre de chat.</div>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" className="rounded-lg">Afficher</Button>
+          <Button variant="default" size="sm" className="rounded-lg">Masquer</Button>
+        </div>
+      </div>
       
       {/* Profil & Compte */}
       <div className="bg-card/50 backdrop-blur-xl border border-border/50 rounded-2xl p-6 shadow-[var(--shadow-float)]">
