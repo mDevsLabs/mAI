@@ -3,7 +3,8 @@
 import { useTheme } from "next-themes";
 import { parse, unparse } from "papaparse";
 import { memo, useEffect, useMemo, useState } from "react";
-import DataGrid, { textEditor } from "react-data-grid";
+// Import nommé DataGrid suite à la mise à jour de react-data-grid (v7-beta.59) qui n'a plus de default export
+import { DataGrid } from "react-data-grid";
 import { cn } from "@/lib/utils";
 
 import "react-data-grid/lib/styles.css";
@@ -58,7 +59,8 @@ const PureSpreadsheetEditor = ({ content, saveContent }: SheetEditorProps) => {
     const dataColumns = Array.from({ length: MIN_COLS }, (_, i) => ({
       key: i.toString(),
       name: String.fromCharCode(65 + i),
-      renderEditCell: textEditor,
+      // Désactivé suite à la mise à jour de react-data-grid (v7-beta.59) qui pose problème avec textEditor
+      // renderEditCell: renderTextEditor,
       width: 120,
       cellClass: cn("border-t dark:bg-neutral-950 dark:text-neutral-50", {
         "border-l": i !== 0,

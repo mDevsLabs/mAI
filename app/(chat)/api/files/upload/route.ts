@@ -37,7 +37,8 @@ export async function POST(request: Request) {
     const validatedFile = FileSchema.safeParse({ file });
 
     if (!validatedFile.success) {
-      const errorMessage = validatedFile.error.errors
+      // Correction pour Zod suite à la mise à jour : utiliser issues au lieu de errors
+      const errorMessage = validatedFile.error.issues
         .map((error) => error.message)
         .join(", ");
 

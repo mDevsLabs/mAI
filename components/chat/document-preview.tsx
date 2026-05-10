@@ -154,12 +154,13 @@ const LoadingSkeleton = ({ artifactKind }: { artifactKind: ArtifactKind }) => (
   </div>
 );
 
+// Correction du type de hitboxRef pour accepter null, évitant ainsi l'erreur de type lors du build
 const PureHitboxLayer = ({
   hitboxRef,
   result,
   setArtifact,
 }: {
-  hitboxRef: React.RefObject<HTMLDivElement>;
+  hitboxRef: React.RefObject<HTMLDivElement | null>;
   result?: Partial<DocumentToolOutput>;
   setArtifact: (
     updaterFn: UIArtifact | ((currentArtifact: UIArtifact) => UIArtifact)

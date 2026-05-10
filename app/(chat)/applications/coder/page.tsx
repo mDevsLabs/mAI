@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import { 
   FolderIcon, FileIcon, FolderPlusIcon, FilePlusIcon, 
   PlayIcon, SparklesIcon, DownloadIcon, TrashIcon, 
-  TerminalIcon, GithubIcon, DatabaseIcon, BarChartIcon,
+  TerminalIcon, DatabaseIcon, BarChartIcon,
   CodeIcon, SaveIcon, UploadIcon, ArchiveIcon, 
   RefreshCcwIcon, ListIcon, ClockIcon, GitBranchIcon,
   XIcon, CheckIcon, ChevronRightIcon, ChevronDownIcon,

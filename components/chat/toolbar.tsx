@@ -320,13 +320,16 @@ const PureToolbar = ({
   artifactActions?: ReactNode;
   onClose?: () => void;
 }) => {
+  // Retour à HTMLDivElement pour satisfaire motion.div ref
   const toolbarRef = useRef<HTMLDivElement>(null);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  // Ajout de undefined comme valeur initiale pour éviter l'erreur de type
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  useOnClickOutside(toolbarRef, () => {
+  // Cast pour éviter l'erreur de type avec useOnClickOutside qui attend RefObject<HTMLElement>
+  useOnClickOutside(toolbarRef as unknown as React.RefObject<HTMLElement>, () => {
     setIsToolbarVisible(false);
     setSelectedTool(null);
   });
