@@ -1,4 +1,10 @@
+/**
+ * Item d'historique dans la sidebar
+ * 
+ * @version 0.0.1
+ */
 import Link from "next/link";
+import { toast } from "sonner";
 import { memo } from "react";
 import { useChatVisibility } from "@/hooks/use-chat-visibility";
 import { Pencil, Copy, Download, Bookmark, Archive, FolderPlus, AlertTriangle } from "lucide-react";
@@ -74,7 +80,7 @@ const PureChatItem = ({
 
           <DropdownMenuItem className="cursor-pointer" onClick={() => {
             navigator.clipboard.writeText(chat.id);
-            alert("ID copié !");
+            toast.success("ID copié !");
           }}>
             <Copy className="size-4 mr-2" />
             <span>Copier l'ID</span>

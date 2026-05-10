@@ -3,7 +3,7 @@
  * Contient la navigation, les liens vers Projets/Bibliothèque/Applications,
  * l'historique des conversations et les actions globales.
  * 
- * @version 0.0.2
+ * @version 0.0.3
  */
 "use client";
 
@@ -11,12 +11,12 @@ import {
   BookOpenIcon,
   FolderIcon,
   LayoutGridIcon,
-  MessageSquareIcon,
   PanelLeftIcon,
   PenSquareIcon,
   TrashIcon,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import type { User } from "next-auth";
 import { useState } from "react";
@@ -112,7 +112,7 @@ export function AppSidebar({ user }: { user: User | undefined }) {
                   tooltip="mAI"
                 >
                   <Link href="/" onClick={() => setOpenMobile(false)}>
-                    <img alt="mAI" className="size-4" src="/logo.png" />
+                    <Image alt="mAI" className="size-4" src="/logo.png" width={16} height={16} />
                   </Link>
                 </SidebarMenuButton>
                 <Tooltip>

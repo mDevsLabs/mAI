@@ -2,7 +2,7 @@
  * API Route pour la génération d'images via Studio
  * Supporte FranceStudent (SDK OpenAI) et AI Horde (REST API)
  * 
- * @version 0.0.4
+ * @version 0.0.6
  */
 import { auth } from "@/app/(auth)/auth";
 import { allImageModels } from "@/lib/ai/models-images";
@@ -106,7 +106,7 @@ async function generateWithFranceStudent({
     }
 
     const data = await response.json();
-    const savedImages = [];
+    const savedImages: any[] = [];
     for (const img of data.data ?? []) {
       let imageUrl = img.url ?? `data:image/png;base64,${img.b64_json}`;
       
@@ -257,7 +257,7 @@ async function generateWithAIHorde({
           `https://aihorde.net/api/v2/generate/status/${id}`
         );
         const resultData = await resultRes.json();
-        const savedImages = [];
+        const savedImages: any[] = [];
         for (const gen of resultData.generations ?? []) {
           let imageUrl = gen.img;
           
@@ -332,7 +332,6 @@ function ratioToSize(ratio: string): string {
       return "1792x1024";
     case "4:5":
       return "1024x1280";
-    case "1:1":
     default:
       return "1024x1024";
   }
@@ -347,7 +346,6 @@ function ratioToDimensions(ratio: string): { width: number; height: number } {
       return { width: 1024, height: 576 };
     case "4:5":
       return { width: 512, height: 640 };
-    case "1:1":
     default:
       return { width: 512, height: 512 };
   }

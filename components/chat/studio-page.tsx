@@ -4,7 +4,7 @@
  * Navigation latérale, filtres, galerie, prompt avec options.
  * Stockage des images générées en localStorage.
  * 
- * @version 0.0.3
+ * @version 0.0.6
  */
 "use client";
 
@@ -16,14 +16,11 @@ import {
   ImageIcon,
   LayoutGridIcon,
   PaletteIcon,
-  PlusIcon,
   SearchIcon,
-  SendIcon,
   SettingsIcon,
   SparklesIcon,
   TrashIcon,
   XIcon,
-  UploadIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -33,7 +30,6 @@ import {
   DEFAULT_IMAGE_MODEL,
   franceStudentImageModels,
   aiHordeImageModels,
-  type ImageModel,
 } from "@/lib/ai/models-images";
 
 // Type d'une image générée
@@ -73,8 +69,8 @@ const availableStyles = [
 ];
 
 // Chargement depuis localStorage
-function loadImages(): StudioImage[] {
-  if (typeof window === "undefined") return [];
+function _loadImages(): StudioImage[] {
+  if (typeof window === "undefined") { return []; }
   try {
     const data = localStorage.getItem(STORAGE_KEY);
     return data ? JSON.parse(data) : [];
@@ -84,8 +80,8 @@ function loadImages(): StudioImage[] {
 }
 
 // Sauvegarde dans localStorage
-function saveImages(images: StudioImage[]) {
-  if (typeof window === "undefined") return;
+function _saveImages(images: StudioImage[]) {
+  if (typeof window === "undefined") { return; }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(images));
 }
 
@@ -162,9 +158,9 @@ export function StudioPage() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            prompt: selectedStyle !== "none" 
-              ? `${prompt.trim()}, ${availableStyles.find(s => s.id === selectedStyle)?.prompt}`
-              : prompt.trim(),
+            prompt: selectedStyle === "none" 
+              ? prompt.trim()
+              : `${prompt.trim()}, ${availableStyles.find(s => s.id === selectedStyle)?.prompt}`,
             model: selectedModel,
             ratio: selectedRatio,
             variants: selectedVariants,
@@ -209,7 +205,7 @@ export function StudioPage() {
   const toggleFavorite = useCallback(
     async (id: string) => {
       const img = images.find((i) => i.id === id);
-      if (!img) return;
+      if (!img) { return; }
       
       const newFavorite = !img.favorite;
       
@@ -224,7 +220,7 @@ export function StudioPage() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ favorite: newFavorite }),
         });
-        if (!res.ok) throw new Error();
+        if (!res.ok) { throw new Error("Failed to update favorite"); }
       } catch {
         setImages(images);
         toast.error("Impossible de mettre à jour le favori");
@@ -243,7 +239,7 @@ export function StudioPage() {
         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/api/studio/${id}`, {
           method: "DELETE",
         });
-        if (!res.ok) throw new Error();
+        if (!res.ok) { throw new Error("Failed to delete image"); }
         toast.success("Image supprimée");
       } catch {
         setImages(images);
@@ -259,10 +255,10 @@ export function StudioPage() {
       setPrompt(img.prompt);
       setSelectedModel(img.model);
       setSelectedRatio(img.ratio);
-      if (img.style) setSelectedStyle(img.style);
-      if (img.loras) setLoras(img.loras as any);
-      if (img.denoisingStrength) setDenoisingStrength(parseFloat(img.denoisingStrength));
-      if (img.sourceImageUrl) setSourceImage(img.sourceImageUrl);
+      if (img.style) { setSelectedStyle(img.style); }
+      if (img.loras) { setLoras(img.loras as any); }
+      if (img.denoisingStrength) { setDenoisingStrength(Number.parseFloat(img.denoisingStrength)); }
+      if (img.sourceImageUrl) { setSourceImage(img.sourceImageUrl); }
       
       toast.success("Paramètres de l'image rechargés !");
     },
@@ -306,6 +302,8 @@ export function StudioPage() {
           break;
         case "month":
           cutoff.setMonth(now.getMonth() - 1);
+          break;
+        default:
           break;
       }
       result = result.filter((img) => new Date(img.createdAt) >= cutoff);
@@ -471,17 +469,19 @@ export function StudioPage() {
                   className="group relative overflow-hidden rounded-xl bg-card shadow-[var(--shadow-card)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-float)]"
                   key={img.id}
                 >
-                  <div 
-                    className="aspect-square overflow-hidden cursor-pointer"
+                  <button 
+                    type="button"
+                    className="aspect-square overflow-hidden cursor-pointer w-full"
                     onClick={() => reloadImageState(img)}
                   >
+                    {/* biome-ignore lint/performance/noImgElement: ai generated images */}
                     <img
                       alt={img.prompt}
                       className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
                       loading="lazy"
                       src={img.url}
                     />
-                  </div>
+                  </button>
 
                   {/* Overlay actions */}
                   <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100">
@@ -560,6 +560,7 @@ export function StudioPage() {
               {/* Aperçu de l'image source */}
               {sourceImage && (
                 <div className="relative size-8 shrink-0 overflow-hidden rounded-lg border border-border/50">
+                  {/* biome-ignore lint/performance/noImgElement: source image preview */}
                   <img src={sourceImage} alt="Ref" className="size-full object-cover" />
                   <button
                     className="absolute right-0 top-0 rounded-full bg-black/60 p-0.5 text-white hover:bg-black/80"
@@ -707,7 +708,7 @@ export function StudioPage() {
               {/* Boutons outils */}
               <div className="relative ml-auto">
                 <button
-                  className={`rounded-lg px-2.5 py-1 text-[10px] transition-colors ${selectedStyle !== "none" ? "bg-muted text-foreground font-medium" : "text-muted-foreground hover:bg-muted/50"}`}
+                  className={`rounded-lg px-2.5 py-1 text-[10px] transition-colors ${selectedStyle === "none" ? "text-muted-foreground hover:bg-muted/50" : "bg-muted text-foreground font-medium"}`}
                   onClick={() => setShowStyleSelect(!showStyleSelect)}
                   type="button"
                 >
@@ -774,6 +775,7 @@ export function StudioPage() {
                     </div>
                     <div className="space-y-1 max-h-32 overflow-auto">
                       {loras.map((lora, idx) => (
+                        // biome-ignore lint/suspicious/noArrayIndexKey: loras can be duplicate
                         <div key={idx} className="flex items-center justify-between text-[11px] bg-muted/50 p-1.5 rounded-lg">
                           <span className="truncate flex-1">{lora.name}</span>
                           <div className="flex items-center gap-1">
@@ -783,7 +785,7 @@ export function StudioPage() {
                               value={lora.model}
                               step={0.1}
                               onChange={(e) => {
-                                const val = parseFloat(e.target.value);
+                                const val = Number.parseFloat(e.target.value);
                                 setLoras(loras.map((l, i) => i === idx ? { ...l, model: val } : l));
                               }}
                             />
@@ -812,7 +814,7 @@ export function StudioPage() {
                     max="0.9"
                     step="0.1"
                     value={denoisingStrength}
-                    onChange={(e) => setDenoisingStrength(parseFloat(e.target.value))}
+                    onChange={(e) => setDenoisingStrength(Number.parseFloat(e.target.value))}
                     className="w-16 h-1 bg-muted rounded-full appearance-none [&::-webkit-slider-thumb]:size-2.5 [&::-webkit-slider-thumb]:bg-foreground [&::-webkit-slider-thumb]:rounded-full"
                   />
                   <span>{denoisingStrength}</span>

@@ -1,9 +1,15 @@
+/**
+ * Composant de prévisualisation (page d'accueil)
+ * 
+ * @version 0.0.1
+ */
 "use client";
 
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { getRandomSuggestions } from "@/lib/suggestions";
 import { SparklesIcon } from "./icons";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, } from "react";
 
 export function Preview() {
   const router = useRouter();
@@ -39,7 +45,7 @@ export function Preview() {
       <div className="flex flex-1 flex-col items-center justify-center gap-8 px-8">
         <div className="flex flex-col items-center text-center">
           {/* Logo en haut de la page d'accueil */}
-          <img src="/logo.png" alt="mAI Logo" className="size-16 mb-4" />
+          <Image src="/logo.png" alt="mAI Logo" className="size-16 mb-4" width={64} height={64} />
           
           {/* Badge Alpha */}
           <span className="mb-2 rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-300">

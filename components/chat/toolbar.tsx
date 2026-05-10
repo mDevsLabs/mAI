@@ -252,8 +252,7 @@ export const Tools = ({
   sendMessage: UseChatHelpers<ChatMessage>["sendMessage"];
   isAnimating: boolean;
   tools: ArtifactToolbarItem[];
-}) => {
-  return (
+}) => (
     <motion.div
       animate={{ opacity: 1, scale: 1 }}
       className="flex flex-col gap-1.5"
@@ -274,7 +273,6 @@ export const Tools = ({
       ))}
     </motion.div>
   );
-};
 
 const createFixErrorTool = (
   consoleOutput: string,
@@ -351,13 +349,11 @@ const PureToolbar = ({
     }
   };
 
-  useEffect(() => {
-    return () => {
+  useEffect(() => () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
-    };
-  }, []);
+    }, []);
 
   useEffect(() => {
     if (status === "streaming") {

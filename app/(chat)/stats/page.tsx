@@ -2,7 +2,7 @@
  * Page des Statistiques de mAI
  * Affiche le niveau, l'XP, les tokens et les badges débloqués.
  * 
- * @version 0.0.7
+ * @version 0.0.9
  */
 "use client";
 
@@ -10,7 +10,7 @@ import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { SearchIcon, TrophyIcon, LockIcon, InfoIcon, XIcon, CheckCircle2Icon } from "lucide-react";
+import { SearchIcon, TrophyIcon, LockIcon, XIcon, CheckCircle2Icon } from "lucide-react";
 
 type BadgeData = {
   id: number;
@@ -34,7 +34,7 @@ const badges: BadgeData[] = [
   { id: 20, category: "🔥 Streaks & Fidélité", name: "Flamme Naissante", emoji: "🔥", condition: "Streak 7 jours", rarity: "Commun", xp: 100 },
 ];
 
-const rarityXP = {
+const _rarityXP = {
   "Commun": 100,
   "Peu commun": 200,
   "Rare": 300,
@@ -76,8 +76,8 @@ export default function StatsPage() {
                           badge.category.toLowerCase().includes(search.toLowerCase());
     const isUnlocked = unlockedBadges.includes(badge.id);
     
-    if (filter === "Débloqués") return matchesSearch && isUnlocked;
-    if (filter === "Verrouillés") return matchesSearch && !isUnlocked;
+    if (filter === "Débloqués") { return matchesSearch && isUnlocked; }
+    if (filter === "Verrouillés") { return matchesSearch && !isUnlocked; }
     return matchesSearch;
   });
 
@@ -242,8 +242,8 @@ export default function StatsPage() {
             
             <div className="overflow-auto p-4 space-y-2">
               {history.length > 0 ? (
-                history.map((item, index) => (
-                  <div key={index} className={`flex justify-between items-center p-2 rounded-lg ${item.reason.includes('Badge') ? 'bg-emerald-500/10' : 'bg-muted/50'}`}>
+                history.map((item) => (
+                  <div key={item.createdAt} className={`flex justify-between items-center p-2 rounded-lg ${item.reason.includes('Badge') ? 'bg-emerald-500/10' : 'bg-muted/50'}`}>
                     <div>
                       <div className="text-sm font-medium flex items-center gap-1">
                         {item.reason.includes('Badge') && <CheckCircle2Icon className="size-3" />}

@@ -1,5 +1,4 @@
 import { auth } from "@/app/(auth)/auth";
-import { getChatById, getMessagesByChatId } from "@/lib/db/queries";
 import { ChatbotError } from "@/lib/errors";
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db/queries";
@@ -8,7 +7,7 @@ import { eq } from "drizzle-orm";
 
 /**
  * API pour exporter toutes les données de l'utilisateur en JSON
- * @version 0.0.5
+ * @version 0.0.6
  */
 export async function GET() {
   const session = await auth();
@@ -24,7 +23,7 @@ export async function GET() {
       .from(chatTable)
       .where(eq(chatTable.userId, session.user.id));
 
-    const exportData = [];
+    const exportData: any[] = [];
 
     // Pour chaque conversation, récupérer les messages
     for (const chat of userChats) {

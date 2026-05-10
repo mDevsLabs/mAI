@@ -2,7 +2,7 @@
  * Application de Traduction de mAI
  * Permet de traduire dans plusieurs langues et propose une analyse lexicale.
  * 
- * @version 0.0.7
+ * @version 0.0.8
  */
 "use client";
 
@@ -26,7 +26,7 @@ const languages = [
 
 export default function TranslationPage() {
   const [text, setText] = useState("");
-  const [sourceLang, setSourceLang] = useState("fr");
+  const [sourceLang, _setSourceLang] = useState("fr");
   const [targetLangs, setTargetLangs] = useState<string[]>(["en"]);
   const [results, setResults] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
@@ -50,7 +50,7 @@ export default function TranslationPage() {
           body: JSON.stringify({
             q: text,
             source: sourceLang,
-            target: target,
+            target,
             format: "text"
           })
         });

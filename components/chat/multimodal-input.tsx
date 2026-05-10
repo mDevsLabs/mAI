@@ -1,3 +1,8 @@
+/**
+ * Input multimodal pour le chat
+ * 
+ * @version 0.0.1
+ */
 "use client";
 
 import type { UseChatHelpers } from "@ai-sdk/react";
@@ -7,7 +12,6 @@ import {
   ArrowUpIcon,
   BrainIcon,
   EyeIcon,
-  LockIcon,
   WrenchIcon,
   PlusIcon,
   GlobeIcon,
@@ -288,7 +292,7 @@ function PureMultimodalInput({
       }
       const { error } = await response.json();
       toast.error(error);
-    } catch (_error) {
+    } catch {
       toast.error("Failed to upload file, please try again!");
     }
   }, []);
@@ -310,7 +314,7 @@ function PureMultimodalInput({
           ...currentAttachments,
           ...successfullyUploadedAttachments,
         ]);
-      } catch (_error) {
+      } catch {
         toast.error("Failed to upload files");
       } finally {
         setUploadQueue([]);
@@ -356,7 +360,7 @@ function PureMultimodalInput({
           ...curr,
           ...(successfullyUploadedAttachments as Attachment[]),
         ]);
-      } catch (_error) {
+      } catch {
         toast.error("Failed to upload pasted image(s)");
       } finally {
         setUploadQueue([]);
@@ -745,9 +749,9 @@ function PureModelSelectorCompact({
   
   const getLogoProvider = (id: string) => {
     const p = id.split("/")[0];
-    if (p.startsWith("gpt")) return "openai";
-    if (p.startsWith("claude")) return "anthropic";
-    if (p.startsWith("deepseek")) return "deepseek";
+    if (p.startsWith("gpt")) { return "openai"; }
+    if (p.startsWith("claude")) { return "anthropic"; }
+    if (p.startsWith("deepseek")) { return "deepseek"; }
     return p;
   };
 

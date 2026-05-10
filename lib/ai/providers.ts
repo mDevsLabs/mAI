@@ -2,7 +2,7 @@
  * Providers IA pour mAI
  * Support : AI Gateway (Vercel), FranceStudent (SDK OpenAI), AI Horde (REST)
  * 
- * @version 0.0.2
+ * @version 0.0.3
  */
 import { createOpenAI } from "@ai-sdk/openai";
 import { customProvider, gateway } from "ai";
@@ -57,7 +57,6 @@ export function getLanguageModel(modelId: string) {
       // (l'API Horde sera gérée via des appels REST dans les routes API)
       return franceStudent(modelId);
 
-    case "ai-gateway":
     default:
       // AI Gateway (Vercel)
       return gateway.languageModel(modelId);

@@ -14,13 +14,13 @@ export type Notification = {
 const STORAGE_KEY = "mai-notifications";
 
 function getStoredNotifications(): Notification[] {
-  if (typeof window === "undefined") return [];
+  if (typeof window === "undefined") { return []; }
   const stored = localStorage.getItem(STORAGE_KEY);
   return stored ? JSON.parse(stored) : [];
 }
 
 function setStoredNotifications(notifs: Notification[]) {
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined") { return; }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(notifs));
 }
 
@@ -52,7 +52,7 @@ export function subscribeToNotifications(listener: (notifs: Notification[]) => v
   // Retourner une fonction pour se désabonner
   return () => {
     const index = listeners.indexOf(listener);
-    if (index > -1) listeners.splice(index, 1);
+    if (index > -1) { listeners.splice(index, 1); }
   };
 }
 

@@ -2,8 +2,7 @@ import Form from "next/form";
 
 import { signOut } from "@/app/(auth)/auth";
 
-export const SignOutForm = () => {
-  return (
+export const SignOutForm = () => (
     <Form
       action={async () => {
         "use server";
@@ -22,4 +21,3 @@ export const SignOutForm = () => {
       </button>
     </Form>
   );
-};

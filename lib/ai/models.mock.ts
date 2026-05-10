@@ -28,8 +28,7 @@ function getResponseForPrompt(prompt: unknown): string {
   return mockResponses.default;
 }
 
-const createMockModel = (): LanguageModel => {
-  return {
+const createMockModel = (): LanguageModel => ({
     specificationVersion: "v3",
     provider: "mock",
     modelId: "mock-model",
@@ -70,11 +69,9 @@ const createMockModel = (): LanguageModel => {
         }),
       };
     },
-  } as unknown as LanguageModel;
-};
+  } as unknown as LanguageModel);
 
-const createMockTitleModel = (): LanguageModel => {
-  return {
+const createMockTitleModel = (): LanguageModel => ({
     specificationVersion: "v3",
     provider: "mock",
     modelId: "mock-title-model",
@@ -116,8 +113,7 @@ const createMockTitleModel = (): LanguageModel => {
         },
       }),
     }),
-  } as unknown as LanguageModel;
-};
+  } as unknown as LanguageModel);
 
 export const chatModel = createMockModel();
 export const titleModel = createMockTitleModel();

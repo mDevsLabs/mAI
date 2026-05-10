@@ -1,7 +1,7 @@
 /**
  * API Route pour mettre à jour ou supprimer une image du Studio
  * 
- * @version 0.0.4
+ * @version 0.0.5
  */
 import { auth } from "@/app/(auth)/auth";
 import { deleteStudioImage, toggleStudioImageFavorite } from "@/lib/db/queries";
@@ -31,7 +31,7 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  request: Request,
+  _request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await auth();

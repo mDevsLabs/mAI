@@ -2,9 +2,10 @@
  * Composant de greeting pour la page d'accueil de mAI
  * Affiche le logo étoile animé, un titre et un sous-titre en français
  * 
- * @version 0.0.2
+ * @version 0.0.3
  */
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 export const Greeting = () => {
   return (
@@ -16,10 +17,12 @@ export const Greeting = () => {
         initial={{ opacity: 0, scale: 0.5, rotate: -20 }}
         transition={{ delay: 0.15, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
-        <img
+        <Image
           alt="mAI"
           className="size-12 drop-shadow-lg"
           src="/logo.png"
+          width={48}
+          height={48}
         />
       </motion.div>
 

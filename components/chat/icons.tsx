@@ -1,5 +1,4 @@
-export const BotIcon = () => {
-  return (
+export const BotIcon = () => (
     <svg
       height="16"
       strokeLinejoin="round"
@@ -15,10 +14,8 @@ export const BotIcon = () => {
       />
     </svg>
   );
-};
 
-export const UserIcon = () => {
-  return (
+export const UserIcon = () => (
     <svg
       data-testid="geist-icon"
       height="16"
@@ -35,10 +32,8 @@ export const UserIcon = () => {
       />
     </svg>
   );
-};
 
-export const AttachmentIcon = () => {
-  return (
+export const AttachmentIcon = () => (
     <svg
       height="16"
       strokeLinejoin="round"
@@ -54,10 +49,8 @@ export const AttachmentIcon = () => {
       />
     </svg>
   );
-};
 
-export const VercelIcon = ({ size = 17 }) => {
-  return (
+export const VercelIcon = ({ size = 17 }) => (
     <svg
       height={size}
       strokeLinejoin="round"
@@ -73,10 +66,8 @@ export const VercelIcon = ({ size = 17 }) => {
       />
     </svg>
   );
-};
 
-export const GitIcon = () => {
-  return (
+export const GitIcon = () => (
     <svg
       height="16"
       strokeLinejoin="round"
@@ -99,10 +90,8 @@ export const GitIcon = () => {
       </defs>
     </svg>
   );
-};
 
-export const BoxIcon = ({ size = 16 }: { size: number }) => {
-  return (
+export const BoxIcon = ({ size = 16 }: { size: number }) => (
     <svg
       height={size}
       strokeLinejoin="round"
@@ -118,10 +107,8 @@ export const BoxIcon = ({ size = 16 }: { size: number }) => {
       />
     </svg>
   );
-};
 
-export const HomeIcon = ({ size = 16 }: { size: number }) => {
-  return (
+export const HomeIcon = ({ size = 16 }: { size: number }) => (
     <svg
       height={size}
       strokeLinejoin="round"
@@ -137,10 +124,8 @@ export const HomeIcon = ({ size = 16 }: { size: number }) => {
       />
     </svg>
   );
-};
 
-export const GPSIcon = ({ size = 16 }: { size: number }) => {
-  return (
+export const GPSIcon = ({ size = 16 }: { size: number }) => (
     <svg
       height={size}
       strokeLinejoin="round"
@@ -158,10 +143,8 @@ export const GPSIcon = ({ size = 16 }: { size: number }) => {
       />
     </svg>
   );
-};
 
-export const InvoiceIcon = ({ size = 16 }: { size: number }) => {
-  return (
+export const InvoiceIcon = ({ size = 16 }: { size: number }) => (
     <svg
       height={size}
       strokeLinejoin="round"
@@ -177,10 +160,8 @@ export const InvoiceIcon = ({ size = 16 }: { size: number }) => {
       />
     </svg>
   );
-};
 
-export const LogoOpenAI = ({ size = 16 }: { size?: number }) => {
-  return (
+export const LogoOpenAI = ({ size = 16 }: { size?: number }) => (
     <svg
       height={size}
       strokeLinejoin="round"
@@ -194,10 +175,8 @@ export const LogoOpenAI = ({ size = 16 }: { size?: number }) => {
       />
     </svg>
   );
-};
 
-export const LogoGoogle = ({ size = 16 }: { size?: number }) => {
-  return (
+export const LogoGoogle = ({ size = 16 }: { size?: number }) => (
     <svg
       data-testid="geist-icon"
       height={size}
@@ -224,10 +203,8 @@ export const LogoGoogle = ({ size = 16 }: { size?: number }) => {
       />
     </svg>
   );
-};
 
-export const LogoAnthropic = () => {
-  return (
+export const LogoAnthropic = () => (
     <svg
       height="18px"
       style={{ color: "currentcolor", fill: "currentcolor" }}
@@ -244,10 +221,8 @@ export const LogoAnthropic = () => {
       />
     </svg>
   );
-};
 
-export const RouteIcon = ({ size = 16 }: { size?: number }) => {
-  return (
+export const RouteIcon = ({ size = 16 }: { size?: number }) => (
     <svg
       height={size}
       strokeLinejoin="round"
@@ -263,10 +238,8 @@ export const RouteIcon = ({ size = 16 }: { size?: number }) => {
       />
     </svg>
   );
-};
 
-export const FileIcon = ({ size = 16 }: { size?: number }) => {
-  return (
+export const FileIcon = ({ size = 16 }: { size?: number }) => (
     <svg
       height={size}
       strokeLinejoin="round"
@@ -282,10 +255,8 @@ export const FileIcon = ({ size = 16 }: { size?: number }) => {
       />
     </svg>
   );
-};
 
-export const LoaderIcon = ({ size = 16 }: { size?: number }) => {
-  return (
+export const LoaderIcon = ({ size = 16 }: { size?: number }) => (
     <svg
       height={size}
       strokeLinejoin="round"
@@ -357,10 +328,8 @@ export const LoaderIcon = ({ size = 16 }: { size?: number }) => {
       </defs>
     </svg>
   );
-};
 
-export const UploadIcon = ({ size = 16 }: { size?: number }) => {
-  return (
+export const UploadIcon = ({ size = 16 }: { size?: number }) => (
     <svg
       data-testid="geist-icon"
       height={size}
@@ -377,10 +346,8 @@ export const UploadIcon = ({ size = 16 }: { size?: number }) => {
       />
     </svg>
   );
-};
 
-export const MenuIcon = ({ size = 16 }: { size?: number }) => {
-  return (
+export const MenuIcon = ({ size = 16 }: { size?: number }) => (
     <svg
       height={size}
       strokeLinejoin="round"
@@ -396,10 +363,8 @@ export const MenuIcon = ({ size = 16 }: { size?: number }) => {
       />
     </svg>
   );
-};
 
-export const PencilEditIcon = ({ size = 16 }: { size?: number }) => {
-  return (
+export const PencilEditIcon = ({ size = 16 }: { size?: number }) => (
     <svg
       height={size}
       strokeLinejoin="round"
@@ -415,10 +380,8 @@ export const PencilEditIcon = ({ size = 16 }: { size?: number }) => {
       />
     </svg>
   );
-};
 
-export const CheckedSquare = ({ size = 16 }: { size?: number }) => {
-  return (
+export const CheckedSquare = ({ size = 16 }: { size?: number }) => (
     <svg
       height={size}
       strokeLinejoin="round"
@@ -434,10 +397,8 @@ export const CheckedSquare = ({ size = 16 }: { size?: number }) => {
       />
     </svg>
   );
-};
 
-export const UncheckedSquare = ({ size = 16 }: { size?: number }) => {
-  return (
+export const UncheckedSquare = ({ size = 16 }: { size?: number }) => (
     <svg
       height={size}
       strokeLinejoin="round"
@@ -456,10 +417,8 @@ export const UncheckedSquare = ({ size = 16 }: { size?: number }) => {
       />
     </svg>
   );
-};
 
-export const MoreIcon = ({ size = 16 }: { size?: number }) => {
-  return (
+export const MoreIcon = ({ size = 16 }: { size?: number }) => (
     <svg
       height={size}
       strokeLinejoin="round"
@@ -475,10 +434,8 @@ export const MoreIcon = ({ size = 16 }: { size?: number }) => {
       />
     </svg>
   );
-};
 
-export const TrashIcon = ({ size = 16 }: { size?: number }) => {
-  return (
+export const TrashIcon = ({ size = 16 }: { size?: number }) => (
     <svg
       height={size}
       strokeLinejoin="round"
@@ -494,10 +451,8 @@ export const TrashIcon = ({ size = 16 }: { size?: number }) => {
       />
     </svg>
   );
-};
 
-export const InfoIcon = ({ size = 16 }: { size?: number }) => {
-  return (
+export const InfoIcon = ({ size = 16 }: { size?: number }) => (
     <svg
       height={size}
       strokeLinejoin="round"
@@ -513,13 +468,11 @@ export const InfoIcon = ({ size = 16 }: { size?: number }) => {
       />
     </svg>
   );
-};
 
 export const ArrowUpIcon = ({
   size = 16,
   ...props
-}: { size?: number } & React.SVGProps<SVGSVGElement>) => {
-  return (
+}: { size?: number } & React.SVGProps<SVGSVGElement>) => (
     <svg
       height={size}
       strokeLinejoin="round"
@@ -536,13 +489,11 @@ export const ArrowUpIcon = ({
       />
     </svg>
   );
-};
 
 export const StopIcon = ({
   size = 16,
   ...props
-}: { size?: number } & React.SVGProps<SVGSVGElement>) => {
-  return (
+}: { size?: number } & React.SVGProps<SVGSVGElement>) => (
     <svg
       height={size}
       style={{ color: "currentcolor", ...props.style }}
@@ -558,13 +509,11 @@ export const StopIcon = ({
       />
     </svg>
   );
-};
 
 export const PaperclipIcon = ({
   size = 16,
   ...props
-}: { size?: number } & React.SVGProps<SVGSVGElement>) => {
-  return (
+}: { size?: number } & React.SVGProps<SVGSVGElement>) => (
     <svg
       className="-rotate-45"
       height={size}
@@ -582,10 +531,8 @@ export const PaperclipIcon = ({
       />
     </svg>
   );
-};
 
-export const MoreHorizontalIcon = ({ size = 16 }: { size?: number }) => {
-  return (
+export const MoreHorizontalIcon = ({ size = 16 }: { size?: number }) => (
     <svg
       height={size}
       strokeLinejoin="round"
@@ -601,10 +548,8 @@ export const MoreHorizontalIcon = ({ size = 16 }: { size?: number }) => {
       />
     </svg>
   );
-};
 
-export const MessageIcon = ({ size = 16 }: { size?: number }) => {
-  return (
+export const MessageIcon = ({ size = 16 }: { size?: number }) => (
     <svg
       height={size}
       strokeLinejoin="round"
@@ -620,7 +565,6 @@ export const MessageIcon = ({ size = 16 }: { size?: number }) => {
       />
     </svg>
   );
-};
 
 export const CrossIcon = ({ size = 16 }: { size?: number }) => (
   <svg
@@ -893,8 +837,7 @@ export const SparklesIcon = ({ size = 16 }: { size?: number }) => (
   </svg>
 );
 
-export const CheckCircleFillIcon = ({ size = 16 }: { size?: number }) => {
-  return (
+export const CheckCircleFillIcon = ({ size = 16 }: { size?: number }) => (
     <svg
       height={size}
       strokeLinejoin="round"
@@ -910,10 +853,8 @@ export const CheckCircleFillIcon = ({ size = 16 }: { size?: number }) => {
       />
     </svg>
   );
-};
 
-export const GlobeIcon = ({ size = 16 }: { size?: number }) => {
-  return (
+export const GlobeIcon = ({ size = 16 }: { size?: number }) => (
     <svg
       height={size}
       strokeLinejoin="round"
@@ -929,10 +870,8 @@ export const GlobeIcon = ({ size = 16 }: { size?: number }) => {
       />
     </svg>
   );
-};
 
-export const LockIcon = ({ size = 16 }: { size?: number }) => {
-  return (
+export const LockIcon = ({ size = 16 }: { size?: number }) => (
     <svg
       height={size}
       strokeLinejoin="round"
@@ -948,10 +887,8 @@ export const LockIcon = ({ size = 16 }: { size?: number }) => {
       />
     </svg>
   );
-};
 
-export const EyeIcon = ({ size = 16 }: { size?: number }) => {
-  return (
+export const EyeIcon = ({ size = 16 }: { size?: number }) => (
     <svg
       height={size}
       strokeLinejoin="round"
@@ -967,10 +904,8 @@ export const EyeIcon = ({ size = 16 }: { size?: number }) => {
       />
     </svg>
   );
-};
 
-export const ShareIcon = ({ size = 16 }: { size?: number }) => {
-  return (
+export const ShareIcon = ({ size = 16 }: { size?: number }) => (
     <svg
       height={size}
       strokeLinejoin="round"
@@ -986,10 +921,8 @@ export const ShareIcon = ({ size = 16 }: { size?: number }) => {
       />
     </svg>
   );
-};
 
-export const CodeIcon = ({ size = 16 }: { size?: number }) => {
-  return (
+export const CodeIcon = ({ size = 16 }: { size?: number }) => (
     <svg
       height={size}
       strokeLinejoin="round"
@@ -1005,10 +938,8 @@ export const CodeIcon = ({ size = 16 }: { size?: number }) => {
       />
     </svg>
   );
-};
 
-export const PlayIcon = ({ size = 16 }: { size?: number }) => {
-  return (
+export const PlayIcon = ({ size = 16 }: { size?: number }) => (
     <svg
       height={size}
       strokeLinejoin="round"
@@ -1024,10 +955,8 @@ export const PlayIcon = ({ size = 16 }: { size?: number }) => {
       />
     </svg>
   );
-};
 
-export const PythonIcon = ({ size = 16 }: { size?: number }) => {
-  return (
+export const PythonIcon = ({ size = 16 }: { size?: number }) => (
     <svg
       height={size}
       strokeLinejoin="round"
@@ -1045,10 +974,8 @@ export const PythonIcon = ({ size = 16 }: { size?: number }) => {
       />
     </svg>
   );
-};
 
-export const TerminalWindowIcon = ({ size = 16 }: { size?: number }) => {
-  return (
+export const TerminalWindowIcon = ({ size = 16 }: { size?: number }) => (
     <svg
       height={size}
       strokeLinejoin="round"
@@ -1064,10 +991,8 @@ export const TerminalWindowIcon = ({ size = 16 }: { size?: number }) => {
       />
     </svg>
   );
-};
 
-export const TerminalIcon = ({ size = 16 }: { size?: number }) => {
-  return (
+export const TerminalIcon = ({ size = 16 }: { size?: number }) => (
     <svg
       height={size}
       strokeLinejoin="round"
@@ -1083,10 +1008,8 @@ export const TerminalIcon = ({ size = 16 }: { size?: number }) => {
       />
     </svg>
   );
-};
 
-export const ClockRewind = ({ size = 16 }: { size?: number }) => {
-  return (
+export const ClockRewind = ({ size = 16 }: { size?: number }) => (
     <svg
       height={size}
       strokeLinejoin="round"
@@ -1102,10 +1025,8 @@ export const ClockRewind = ({ size = 16 }: { size?: number }) => {
       />
     </svg>
   );
-};
 
-export const LogsIcon = ({ size = 16 }: { size?: number }) => {
-  return (
+export const LogsIcon = ({ size = 16 }: { size?: number }) => (
     <svg
       height={size}
       strokeLinejoin="round"
@@ -1121,10 +1042,8 @@ export const LogsIcon = ({ size = 16 }: { size?: number }) => {
       />
     </svg>
   );
-};
 
-export const ImageIcon = ({ size = 16 }: { size?: number }) => {
-  return (
+export const ImageIcon = ({ size = 16 }: { size?: number }) => (
     <svg
       height={size}
       strokeLinejoin="round"
@@ -1140,7 +1059,6 @@ export const ImageIcon = ({ size = 16 }: { size?: number }) => {
       />
     </svg>
   );
-};
 
 export const FullscreenIcon = ({ size = 16 }: { size?: number }) => (
   <svg
@@ -1193,8 +1111,7 @@ export const LineChartIcon = ({ size = 16 }: { size?: number }) => (
   </svg>
 );
 
-export const WarningIcon = ({ size = 16 }: { size?: number }) => {
-  return (
+export const WarningIcon = ({ size = 16 }: { size?: number }) => (
     <svg
       height={size}
       strokeLinejoin="round"
@@ -1210,4 +1127,3 @@ export const WarningIcon = ({ size = 16 }: { size?: number }) => {
       />
     </svg>
   );
-};

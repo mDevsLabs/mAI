@@ -1,3 +1,8 @@
+/**
+ * Context Provider pour le chat actif
+ * 
+ * @version 0.0.1
+ */
 "use client";
 
 import type { UseChatHelpers } from "@ai-sdk/react";
@@ -294,6 +299,7 @@ export function ActiveChatProvider({ children }: { children: ReactNode }) {
       votes,
       currentModelId,
       showCreditCardAlert,
+      ghostMode,
     ]
   );
 

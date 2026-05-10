@@ -14,8 +14,7 @@ export const SuggestionDialog = ({
   suggestion: UISuggestion;
   onApply: () => void;
   onClose: () => void;
-}) => {
-  return (
+}) => (
     <AnimatePresence>
       <div className="sticky inset-0 z-40 h-full w-full">
         <div
@@ -75,4 +74,3 @@ export const SuggestionDialog = ({
       </div>
     </AnimatePresence>
   );
-};

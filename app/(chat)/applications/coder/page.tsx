@@ -2,23 +2,20 @@
  * Application Coder de mAI
  * Un environnement de développement intégré avec IA, terminal et gestion de fichiers.
  * 
- * @version 0.0.8
+ * @version 0.0.12
  */
 "use client";
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { 
   FolderIcon, FileIcon, FolderPlusIcon, FilePlusIcon, 
   PlayIcon, SparklesIcon, DownloadIcon, TrashIcon, 
   TerminalIcon, DatabaseIcon, BarChartIcon,
-  CodeIcon, SaveIcon, UploadIcon, ArchiveIcon, 
-  RefreshCcwIcon, ListIcon, ClockIcon, GitBranchIcon,
-  XIcon, CheckIcon, ChevronRightIcon, ChevronDownIcon,
-  Maximize2Icon, Minimize2Icon
+  CodeIcon, SaveIcon, UploadIcon, ArchiveIcon, ListIcon, ClockIcon, GitBranchIcon,
+  XIcon, ChevronDownIcon,
 } from "lucide-react";
 
 export default function CoderPage() {
@@ -42,17 +39,17 @@ export default function CoderPage() {
   
   // États pour les fonctionnalités "plus de 20"
   const [minimap, setMinimap] = useState(true);
-  const [files, setFiles] = useState([
+  const [_files, _setFiles] = useState([
     { name: "main.py", type: "file", content: code },
     { name: "utils.py", type: "file", content: "# Fonctions utilitaires" },
     { name: "data", type: "folder", children: [
       { name: "users.csv", type: "file", content: "id,name\n1,Alice\n2,Bob" }
     ]}
   ]);
-  const [snippets, setSnippets] = useState([
+  const [_snippets, _setSnippets] = useState([
     { name: "Fibonacci", code: "def fib(n):\n  return n if n < 2 else fib(n-1) + fib(n-2)" }
   ]);
-  const [history, setHistory] = useState([
+  const [_history, _setHistory] = useState([
     { time: "10:30", command: "python main.py", status: "success" }
   ]);
 
@@ -82,19 +79,19 @@ export default function CoderPage() {
 
   const handleTerminalSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!terminalInput.trim()) return;
+    if (!terminalInput.trim()) { return; }
     
     setTerminalOutput(prev => [
       ...prev,
       `$ ${terminalInput}`,
       terminalInput === "clear" ? "Terminal réinitialisé." : `Commande '${terminalInput}' exécutée.`
     ]);
-    if (terminalInput === "clear") setTerminalOutput(["Terminal réinitialisé."]);
+    if (terminalInput === "clear") { setTerminalOutput(["Terminal réinitialisé."]); }
     setTerminalInput("");
   };
 
   const askAI = async () => {
-    if (!aiPrompt.trim()) return;
+    if (!aiPrompt.trim()) { return; }
     if (credits < 10) {
       toast.error("Crédits insuffisants !");
       return;
@@ -127,16 +124,16 @@ export default function CoderPage() {
         }),
       });
       
-      if (!response.ok) throw new Error("Failed to fetch");
+      if (!response.ok) { throw new Error("Failed to fetch"); }
       
       const reader = response.body?.getReader();
       const decoder = new TextDecoder();
       
-      if (!reader) return;
+      if (!reader) { return; }
       
       while (true) {
         const { done, value } = await reader.read();
-        if (done) break;
+        if (done) { break; }
         const chunk = decoder.decode(value);
         
         // Nettoyage sommaire du protocole stream de AI SDK (ex: 0:"texte")
@@ -179,7 +176,8 @@ export default function CoderPage() {
           {/* Onglets */}
           <div className="flex bg-[#161820] border-b border-[#232634] overflow-x-auto">
             {["main.py", "utils.py", "+ Nouveau"].map((tab) => (
-              <div 
+              <button 
+                type="button"
                 key={tab}
                 className={`px-4 py-2 text-xs cursor-pointer border-r border-[#232634] flex items-center gap-2 ${
                   activeTab === tab ? "bg-[#0F1015] text-white" : "text-gray-500 hover:bg-[#1C1F2C]"
@@ -189,7 +187,7 @@ export default function CoderPage() {
                 {tab !== "+ Nouveau" && <FileIcon className="size-3 text-blue-400" />}
                 {tab}
                 {tab !== "+ Nouveau" && <XIcon className="size-3 text-gray-600 hover:text-red-400" />}
-              </div>
+              </button>
             ))}
           </div>
 
@@ -274,7 +272,8 @@ export default function CoderPage() {
           <div className="flex justify-between items-center bg-[#161820] border-b border-[#232634] px-4">
             <div className="flex">
               {(["Output", "Data Explorer"] as const).map((tab) => (
-                <div 
+                <button 
+                  type="button"
                   key={tab}
                   className={`px-4 py-2 text-xs cursor-pointer ${
                     outputTab === tab ? "border-b-2 border-purple-500 text-white" : "text-gray-500 hover:text-gray-300"
@@ -282,7 +281,7 @@ export default function CoderPage() {
                   onClick={() => setOutputTab(tab)}
                 >
                   {tab}
-                </div>
+                </button>
               ))}
             </div>
             <div className="flex gap-2">
@@ -364,6 +363,7 @@ export default function CoderPage() {
                   </div>
                   <div className="flex-1 font-mono text-xs text-green-400 overflow-auto mb-2 space-y-1">
                     {terminalOutput.map((line, i) => (
+                      // biome-ignore lint/suspicious/noArrayIndexKey: terminal lines can be duplicate
                       <div key={i}>{line}</div>
                     ))}
                   </div>

@@ -26,8 +26,7 @@ export const sheetArtifact = new Artifact<"sheet", Metadata>({
       }));
     }
   },
-  content: ({ content, currentVersionIndex, onSaveContent, status }) => {
-    return (
+  content: ({ content, currentVersionIndex, onSaveContent, status }) => (
       <SpreadsheetEditor
         content={content}
         currentVersionIndex={currentVersionIndex}
@@ -35,8 +34,7 @@ export const sheetArtifact = new Artifact<"sheet", Metadata>({
         saveContent={onSaveContent}
         status={status}
       />
-    );
-  },
+    ),
   actions: [
     {
       icon: <UndoIcon size={18} />,

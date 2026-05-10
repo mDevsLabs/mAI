@@ -90,8 +90,7 @@ export const codeArtifact = new Artifact<"code", Metadata>({
       }));
     }
   },
-  content: ({ metadata, setMetadata, ...props }) => {
-    return (
+  content: ({ metadata, setMetadata, ...props }) => (
       <>
         <div className="relative min-h-[200px]">
           <CodeEditor {...props} />
@@ -109,8 +108,7 @@ export const codeArtifact = new Artifact<"code", Metadata>({
           />
         )}
       </>
-    );
-  },
+    ),
   actions: [
     {
       icon: <PlayIcon size={18} />,

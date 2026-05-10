@@ -1,12 +1,12 @@
 /**
  * API Route pour récupérer les images du Studio
  * 
- * @version 0.0.4
+ * @version 0.0.5
  */
 import { auth } from "@/app/(auth)/auth";
 import { getStudioImages } from "@/lib/db/queries";
 
-export async function GET(request: Request) {
+export async function GET(_request: Request) {
   const session = await auth();
 
   if (!session?.user?.id) {

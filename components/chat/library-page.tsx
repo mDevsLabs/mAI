@@ -3,7 +3,7 @@
  * Permet d'importer, rechercher, filtrer, favoriser et gérer des fichiers.
  * Stockage en localStorage.
  * 
- * @version 0.0.2
+ * @version 0.0.3
  */
 "use client";
 
@@ -42,7 +42,7 @@ const MAX_FILES = 100;
 
 // Chargement depuis localStorage
 function loadFiles(): LibraryFile[] {
-  if (typeof window === "undefined") return [];
+  if (typeof window === "undefined") { return []; }
   try {
     const data = localStorage.getItem(STORAGE_KEY);
     return data ? JSON.parse(data) : [];
@@ -53,7 +53,7 @@ function loadFiles(): LibraryFile[] {
 
 // Sauvegarde dans localStorage
 function saveFiles(files: LibraryFile[]) {
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined") { return; }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(files));
 }
 
@@ -79,7 +79,7 @@ export function LibraryPage() {
 
   // Import de fichier
   const handleImport = useCallback(
-    async (event: React.ChangeEvent<HTMLInputElement>) => {
+    (event: React.ChangeEvent<HTMLInputElement>) => {
       const selectedFiles = Array.from(event.target.files || []);
       if (files.length + selectedFiles.length > MAX_FILES) {
         toast.error(`Limite de ${MAX_FILES} fichiers atteinte`);
@@ -108,7 +108,7 @@ export function LibraryPage() {
       toast.success(`${newFiles.length} fichier(s) importé(s)`);
 
       // Reset input
-      if (fileInputRef.current) fileInputRef.current.value = "";
+      if (fileInputRef.current) { fileInputRef.current.value = ""; }
     },
     [files]
   );
@@ -151,7 +151,7 @@ export function LibraryPage() {
   // Renommer un fichier
   const renameFile = useCallback(
     (id: string) => {
-      if (!renameValue.trim()) return;
+      if (!renameValue.trim()) { return; }
       const updated = files.map((f) =>
         f.id === id ? { ...f, name: renameValue.trim() } : f
       );
@@ -172,7 +172,7 @@ export function LibraryPage() {
         return;
       }
       const original = files.find((f) => f.id === id);
-      if (!original) return;
+      if (!original) { return; }
       const copy: LibraryFile = {
         ...original,
         id: crypto.randomUUID(),
@@ -211,14 +211,13 @@ export function LibraryPage() {
     // Tri
     result.sort((a, b) => {
       // Épinglés en premier
-      if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
+      if (a.pinned !== b.pinned) { return a.pinned ? -1 : 1; }
 
       switch (sortBy) {
         case "name":
           return a.name.localeCompare(b.name);
         case "size":
           return b.size - a.size;
-        case "date":
         default:
           return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
       }
@@ -364,6 +363,7 @@ export function LibraryPage() {
                 {viewType === "grid" && (
                   <div className="mb-3 flex aspect-[4/3] items-center justify-center overflow-hidden rounded-xl bg-muted/30">
                     {file.type === "image" && file.previewUrl ? (
+                      // biome-ignore lint/performance/noImgElement: blob url preview
                       <img
                         alt={file.name}
                         className="size-full object-cover"
@@ -386,8 +386,8 @@ export function LibraryPage() {
                         className="flex-1 rounded-lg border border-border/50 bg-background px-2 py-1 text-xs"
                         onChange={(e) => setRenameValue(e.target.value)}
                         onKeyDown={(e) => {
-                          if (e.key === "Enter") renameFile(file.id);
-                          if (e.key === "Escape") setRenamingId(null);
+                          if (e.key === "Enter") { renameFile(file.id); }
+                          if (e.key === "Escape") { setRenamingId(null); }
                         }}
                         value={renameValue}
                       />

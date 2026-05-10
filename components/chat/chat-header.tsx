@@ -1,11 +1,14 @@
+/**
+ * Header du Chat
+ * 
+ * @version 0.0.1
+ */
 "use client";
 
 import { PanelLeftIcon, GhostIcon, BellIcon } from "lucide-react";
-import Link from "next/link";
 import { memo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";
-import { VercelIcon } from "./icons";
 import { VisibilitySelector, type VisibilityType } from "./visibility-selector";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { toast } from "sonner";
@@ -93,6 +96,7 @@ function PureChatHeader({
               <h3 className="font-semibold text-sm">Notifications</h3>
               {notifications.length > 0 && (
                 <button 
+                  type="button"
                   className="text-xs text-muted-foreground hover:text-foreground transition-colors"
                   onClick={() => clearNotifications()}
                 >
@@ -120,10 +124,8 @@ function PureChatHeader({
   );
 }
 
-export const ChatHeader = memo(PureChatHeader, (prevProps, nextProps) => {
-  return (
+export const ChatHeader = memo(PureChatHeader, (prevProps, nextProps) => (
     prevProps.chatId === nextProps.chatId &&
     prevProps.selectedVisibilityType === nextProps.selectedVisibilityType &&
     prevProps.isReadonly === nextProps.isReadonly
-  );
-});
+  ));

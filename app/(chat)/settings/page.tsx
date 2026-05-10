@@ -2,13 +2,12 @@
  * Page des paramètres de mAI
  * Permet de gérer les préférences, le compte, les crédits et les notifications.
  * 
- * @version 0.0.7
+ * @version 0.0.8
  */
 "use client";
 
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { DiscIcon as Discord, SendIcon as Telegram, ShieldIcon, CreditCardIcon, AccessibilityIcon } from "lucide-react";
 import { useState } from "react";
 
@@ -113,6 +112,7 @@ export default function SettingsPage() {
               <div className="text-sm text-muted-foreground">Émettre un son lors d'une réponse de l'IA</div>
             </div>
             <button 
+              type="button"
               className={`w-11 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${notifSound ? 'bg-primary' : 'bg-muted'}`}
               onClick={() => setNotifSound(!notifSound)}
             >
@@ -126,6 +126,7 @@ export default function SettingsPage() {
               <div className="text-sm text-muted-foreground">Afficher les notifications du navigateur</div>
             </div>
             <button 
+              type="button"
               className={`w-11 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${notifBrowser ? 'bg-primary' : 'bg-muted'}`}
               onClick={() => setNotifBrowser(!notifBrowser)}
             >
@@ -139,6 +140,7 @@ export default function SettingsPage() {
               <div className="text-sm text-muted-foreground">Recevoir les nouveautés par mail</div>
             </div>
             <button 
+              type="button"
               className={`w-11 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${notifEmail ? 'bg-primary' : 'bg-muted'}`}
               onClick={() => setNotifEmail(!notifEmail)}
             >

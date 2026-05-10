@@ -4,14 +4,13 @@
  * les personnaliser (nom, icône emoji) et les gérer.
  * Stockage en localStorage.
  * 
- * @version 0.0.2
+ * @version 0.0.3
  */
 "use client";
 
 import {
   EditIcon,
   FolderIcon,
-  PlusIcon,
   TrashIcon,
   XIcon,
 } from "lucide-react";
@@ -36,7 +35,7 @@ const quickEmojis = ["📁", "🚀", "💡", "🎨", "📊", "🔬", "📝", "�
 
 // Chargement depuis localStorage
 function loadProjects(): Project[] {
-  if (typeof window === "undefined") return [];
+  if (typeof window === "undefined") { return []; }
   try {
     const data = localStorage.getItem(STORAGE_KEY);
     return data ? JSON.parse(data) : [];
@@ -47,7 +46,7 @@ function loadProjects(): Project[] {
 
 // Sauvegarde dans localStorage
 function saveProjects(projects: Project[]) {
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined") { return; }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
 }
 
@@ -101,7 +100,7 @@ export function ProjectsPage() {
 
   // Mise à jour d'un projet
   const updateProject = useCallback(() => {
-    if (!editingProject) return;
+    if (!editingProject) { return; }
     const updated = projects.map((p) =>
       p.id === editingProject.id
         ? {
@@ -234,9 +233,9 @@ export function ProjectsPage() {
 
             {/* Sélection emoji */}
             <div className="mb-4">
-              <label className="mb-1.5 block text-xs font-medium text-muted-foreground">
+              <div className="mb-1.5 block text-xs font-medium text-muted-foreground">
                 Icône
-              </label>
+              </div>
               <div className="flex flex-wrap gap-1.5">
                 {quickEmojis.map((emoji) => (
                   <button
@@ -257,10 +256,11 @@ export function ProjectsPage() {
 
             {/* Nom */}
             <div className="mb-3">
-              <label className="mb-1.5 block text-xs font-medium text-muted-foreground">
+              <label htmlFor="project-name" className="mb-1.5 block text-xs font-medium text-muted-foreground">
                 Nom du projet
               </label>
               <input
+                id="project-name"
                 className="w-full rounded-xl border border-border/50 bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/40 focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/20"
                 onChange={(e) => setNewName(e.target.value)}
                 placeholder="Mon projet..."
@@ -270,10 +270,11 @@ export function ProjectsPage() {
 
             {/* Description */}
             <div className="mb-5">
-              <label className="mb-1.5 block text-xs font-medium text-muted-foreground">
+              <label htmlFor="project-desc" className="mb-1.5 block text-xs font-medium text-muted-foreground">
                 Description (optionnel)
               </label>
               <textarea
+                id="project-desc"
                 className="w-full resize-none rounded-xl border border-border/50 bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/40 focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/20"
                 onChange={(e) => setNewDesc(e.target.value)}
                 placeholder="Description du projet..."

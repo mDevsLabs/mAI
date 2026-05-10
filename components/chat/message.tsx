@@ -363,8 +363,7 @@ const PurePreviewMessage = ({
 
 export const PreviewMessage = PurePreviewMessage;
 
-export const ThinkingMessage = () => {
-  return (
+export const ThinkingMessage = () => (
     <div
       className="group/message w-full"
       data-role="assistant"
@@ -385,4 +384,3 @@ export const ThinkingMessage = () => {
       </div>
     </div>
   );
-};

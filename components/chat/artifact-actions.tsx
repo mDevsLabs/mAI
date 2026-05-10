@@ -1,3 +1,8 @@
+/**
+ * Actions pour les artifacts
+ * 
+ * @version 0.0.1
+ */
 import { memo, useState } from "react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -74,7 +79,7 @@ function PureArtifactActions({
 
                   try {
                     await Promise.resolve(action.onClick(actionContext));
-                  } catch (_error) {
+                  } catch {
                     toast.error("Failed to execute action");
                   } finally {
                     setIsLoading(false);
