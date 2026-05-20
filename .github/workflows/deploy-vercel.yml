@@ -16,6 +16,24 @@ jobs:
       - name: Checkout du code 📦
         uses: actions/checkout@v4
 
+      - name: Vérifier les secrets Vercel 🔑
+        run: |
+          if [ -z "${{ secrets.VERCEL_TOKEN }}" ]; then
+            echo "::error::Le secret VERCEL_TOKEN est manquant dans les paramètres GitHub !"
+            exit 1
+          fi
+          if [ -z "${{ secrets.VERCEL_ORG_ID }}" ]; then
+            echo "::error::Le secret VERCEL_ORG_ID est manquant dans les paramètres GitHub !"
+            exit 1
+          fi
+          if [ -z "${{ secrets.VERCEL_PROJECT_ID }}" ]; then
+            echo "::error::Le secret VERCEL_PROJECT_ID est manquant dans les paramètres GitHub !"
+            exit 1
+          fi
+
+      - name: Nettoyer le dossier .vercel résiduel 🧹
+        run: rm -rf .vercel
+
       - name: Setup Environment (Node.js, pnpm & Bun) 🛠️
         uses: ./.github/actions/setup-env
         with:
