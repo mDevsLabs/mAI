@@ -1,0 +1,15 @@
+{
+  "name": "@lobechat/prompts",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "scripts": {
+    "test": "vitest",
+    "test:coverage": "vitest --coverage --silent='passed-only'",
+    "test:update": "vitest -u"
+  },
+  "devDependencies": {
+    "@lobechat/types": "workspace:*",
+    "tsx": "^4.20.6"
+  }
+}

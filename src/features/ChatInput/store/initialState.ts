@@ -1,0 +1,88 @@
+import { type OpenAIChatMessage } from '@lobechat/types';
+import { type IEditor, type SlashOptions } from '@lobehub/editor';
+import { type ChatInputProps } from '@lobehub/editor/react';
+import { type MenuProps } from '@lobehub/ui';
+
+import { type ActionKeys } from '@/features/ChatInput';
+
+export type SendButtonHandler = (params: {
+  clearContent: () => void;
+  editor: IEditor;
+  getEditorData: () => Record<string, any> | undefined;
+  getMarkdownContent: () => string;
+}) => Promise<void> | void;
+
+export interface SendButtonProps {
+  disabled?: boolean;
+  generating: boolean;
+  onStop: (params: { editor: IEditor }) => void;
+  shape?: 'round' | 'default';
+  size?: number;
+}
+
+export const initialSendButtonState: SendButtonProps = {
+  disabled: false,
+  generating: false,
+  onStop: () => {},
+};
+
+export type SlashPlacement = 'top' | 'bottom';
+
+export interface ContextWindowMessage {
+  content: string;
+}
+
+export interface ChatInputFeature {
+  inputCompletion?: boolean;
+  mention?: boolean;
+  slash?: boolean;
+}
+
+export const DEFAULT_CHAT_INPUT_FEATURE = {
+  inputCompletion: true,
+  mention: true,
+  slash: true,
+} as const satisfies Required<ChatInputFeature>;
+
+export interface PublicState {
+  agentId?: string;
+  allowExpand?: boolean;
+  contextWindowMessages?: ContextWindowMessage[];
+  draftKey?: string;
+  expand?: boolean;
+  feature?: ChatInputFeature;
+  getMessages?: () => OpenAIChatMessage[];
+  leftActions: ActionKeys[];
+  mentionItems?: SlashOptions['items'];
+  mobile?: boolean;
+  onMarkdownContentChange?: (content: string) => void;
+  onSend?: SendButtonHandler;
+  rightActions: ActionKeys[];
+  sendButtonProps?: SendButtonProps;
+  sendMenu?: MenuProps;
+  showTypoBar?: boolean;
+  /**
+   * Slash menu placement: 'bottom' for home page (input in center), 'top' for page input (at bottom)
+   */
+  slashPlacement?: SlashPlacement;
+}
+
+export interface State extends PublicState {
+  _savedEditorState?: Record<string, any>;
+  editor?: IEditor;
+  isContentEmpty: boolean;
+  markdownContent: string;
+  slashMenuRef: ChatInputProps['slashMenuRef'];
+}
+
+export const initialState: State = {
+  allowExpand: true,
+  expand: false,
+  feature: DEFAULT_CHAT_INPUT_FEATURE,
+  isContentEmpty: false,
+  leftActions: [],
+  markdownContent: '',
+  rightActions: [],
+  slashMenuRef: { current: null },
+  slashPlacement: 'top',
+};
