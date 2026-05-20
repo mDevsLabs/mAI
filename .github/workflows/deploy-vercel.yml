@@ -3,6 +3,8 @@ name: Deploy to Vercel via GitHub Actions
 env:
   VERCEL_ORG_ID: team_FrWCLgOWgA8lhnjoPqVaTYWZ
   VERCEL_PROJECT_ID: prj_lv918tBsloOAWWgNlmJCN2o1zUR8
+  KEY_VAULTS_SECRET: ofQiJCXLF8mYemwfMWLOHoHimlPu91YmLfU7YZ4lreQ=
+  AUTH_SECRET: Kix2wcUONd4CX51E/ZPAd36BqM4wzJgKjPtz2sGztqQ=
 
 on:
   push:
