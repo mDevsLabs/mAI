@@ -2,15 +2,15 @@
 
 <!-- For change type, change [ ] to [x]. -->
 
-- [ ] ✨ feat
-- [ ] 🐛 fix
-- [ ] ♻️ refactor
-- [ ] 💄 style
-- [ ] 👷 build
-- [ ] ⚡️ perf
-- [ ] ✅ test
-- [ ] 📝 docs
-- [ ] 🔨 chore
+- [ ] ✨ Mise à jour
+- [ ] 🐛 Correction
+- [ ] ♻️ Autres
+- [ ] 💄 Design
+- [ ] 👷 Build
+- [ ] ⚡️ Performances
+- [ ] ✅ Tests
+- [ ] 📝 Documents
+- [ ] 🔨 Coeur
 
 #### 🔗 Related Issue
 
@@ -28,7 +28,7 @@
 
 <!-- For AI features, please include test prompts or scenarios -->
 
-- [ ] Tested locally
+- [ ] Testé
 - [ ] Added/updated tests
 - [ ] No tests needed
 
