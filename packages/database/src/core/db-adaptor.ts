@@ -7,18 +7,43 @@ import { getDBInstance } from './web-server';
  */
 let cachedDB: LobeChatDatabase | null = null;
 
-export const getServerDB = async (): Promise<LobeChatDatabase> => {
-  // If there's already a cached instance, return it directly
+const getLazyDB = (): LobeChatDatabase => {
   if (cachedDB) return cachedDB;
-
-  try {
-    // Select the appropriate database instance based on the environment
-    cachedDB = getDBInstance();
-    return cachedDB;
-  } catch (error) {
-    console.error('❌ Failed to initialize database:', error);
-    throw error;
-  }
+  cachedDB = getDBInstance();
+  return cachedDB;
 };
 
-export const serverDB = getDBInstance();
+export const getServerDB = async (): Promise<LobeChatDatabase> => {
+  return getLazyDB();
+};
+
+export const serverDB = new Proxy({} as LobeChatDatabase, {
+  get(target, prop) {
+    const db = getLazyDB();
+    const value = Reflect.get(db, prop);
+    if (typeof value === 'function') {
+      return value.bind(db);
+    }
+    return value;
+  },
+  set(target, prop, value) {
+    const db = getLazyDB();
+    return Reflect.set(db, prop, value);
+  },
+  has(target, prop) {
+    const db = getLazyDB();
+    return Reflect.has(db, prop);
+  },
+  ownKeys(target) {
+    const db = getLazyDB();
+    return Reflect.ownKeys(db);
+  },
+  getOwnPropertyDescriptor(target, prop) {
+    const db = getLazyDB();
+    return Reflect.getOwnPropertyDescriptor(db, prop);
+  },
+  getPrototypeOf(target) {
+    const db = getLazyDB();
+    return Reflect.getPrototypeOf(db);
+  }
+});
