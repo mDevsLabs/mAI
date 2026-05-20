@@ -1,6 +1,6 @@
 {
-  "name": "@lobehub/desktop-ipc-typings",
-  "version": "1.0.0",
+  "name": "mai",
+  "version": "0.0.1",
   "private": true,
   "exports": {
     ".": "./exports.d.ts"

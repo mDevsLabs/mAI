@@ -1,4 +1,4 @@
-name: Deploy to Vercel via GitHub Actions 🚀
+name: Deploy to Vercel via GitHub Actions
 
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -6,8 +6,8 @@ env:
 
 on:
   push:
-    branches:
-      - canary
+  pull_request:
+  workflow_dispatch:
 
 jobs:
   Deploy-Production:
