@@ -1,6 +1,6 @@
 {
-  "name": "mai",
-  "version": "0.0.1",
+  "name": "@lobechat/chat-adapter-feishu",
+  "version": "0.1.0",
   "description": "Lark/Feishu adapter for chat SDK",
   "type": "module",
   "exports": {

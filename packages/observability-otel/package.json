@@ -1,6 +1,6 @@
 {
-  "name": "mai",
-  "version": "0.0.1",
+  "name": "@lobechat/observability-otel",
+  "version": "1.0.0",
   "private": true,
   "exports": {
     "./node": "./src/node.ts",

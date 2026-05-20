@@ -1,6 +1,6 @@
 {
-  "name": "mai",
-  "version": "0.0.1",
+  "name": "@lobechat/business-const",
+  "version": "0.0.0",
   "private": true,
   "exports": {
     ".": "./src/index.ts"

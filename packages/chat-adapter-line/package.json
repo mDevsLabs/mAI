@@ -1,6 +1,6 @@
 {
-  "name": "mai",
-  "version": "0.0.1",
+  "name": "@lobechat/chat-adapter-line",
+  "version": "0.1.0",
   "description": "LINE Messaging API Bot adapter for chat SDK",
   "type": "module",
   "exports": {

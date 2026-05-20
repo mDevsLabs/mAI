@@ -1,6 +1,6 @@
 {
-  "name": "mai",
-  "version": "0.0.1",
+  "name": "@lobechat/fetch-sse",
+  "version": "1.0.0",
   "private": true,
   "description": "SSE fetch utilities with streaming support",
   "exports": {
