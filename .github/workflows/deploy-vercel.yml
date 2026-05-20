@@ -1,8 +1,8 @@
 name: Deploy to Vercel via GitHub Actions
 
 env:
-  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  VERCEL_ORG_ID: team_FrWCLgOWgA8lhnjoPqVaTYWZ
+  VERCEL_PROJECT_ID: prj_lv918tBsloOAWWgNlmJCN2o1zUR8
 
 on:
   push:
@@ -22,12 +22,12 @@ jobs:
             echo "::error::Le secret VERCEL_TOKEN est manquant dans les paramètres GitHub !"
             exit 1
           fi
-          if [ -z "${{ secrets.VERCEL_ORG_ID }}" ]; then
-            echo "::error::Le secret VERCEL_ORG_ID est manquant dans les paramètres GitHub !"
+          if [ -z "${{ env.VERCEL_ORG_ID }}" ]; then
+            echo "::error::La variable VERCEL_ORG_ID est manquante dans le workflow !"
             exit 1
           fi
-          if [ -z "${{ secrets.VERCEL_PROJECT_ID }}" ]; then
-            echo "::error::Le secret VERCEL_PROJECT_ID est manquant dans les paramètres GitHub !"
+          if [ -z "${{ env.VERCEL_PROJECT_ID }}" ]; then
+            echo "::error::La variable VERCEL_PROJECT_ID est manquante dans le workflow !"
             exit 1
           fi
 
