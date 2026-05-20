@@ -48,6 +48,15 @@ jobs:
       - name: Pull Vercel Environment Information 🌍
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
+      - name: Copy Vercel environment variables to root 📦
+        run: |
+          if [ -f .vercel/.env.production.local ]; then
+            cp .vercel/.env.production.local .env.production.local
+            echo "✅ Variables d'environnement copiées avec succès vers .env.production.local !"
+          else
+            echo "⚠️ Fichier .vercel/.env.production.local non trouvé"
+          fi
+
       - name: Build Project Artifacts 🏗️
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
 
