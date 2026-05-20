@@ -114,26 +114,6 @@ const config = {
 
     console.info('📦 Downloading agent-browser binary...');
     execSync('node scripts/download-agent-browser.mjs', { stdio: 'inherit', cwd: __dirname });
-
-    // Build and copy CLI bundle for embedding
-    console.info('📦 Building CLI for embedding...');
-    execSync('npm run build:cli', { stdio: 'inherit', cwd: __dirname });
-    const cliSrc = path.resolve(__dirname, '../cli/dist/index.js');
-    const cliDest = path.resolve(__dirname, 'resources/bin/lobe-cli.js');
-    await fs.copyFile(cliSrc, cliDest);
-
-    // Write a minimal package.json next to the CLI bundle so that
-    // createRequire('../package.json') resolves correctly in the packaged app.
-    // The CLI script lives at Resources/bin/lobe-cli.js, so '../package.json'
-    // resolves to Resources/package.json.
-    const cliPkg = JSON.parse(
-      await fs.readFile(path.resolve(__dirname, '../cli/package.json'), 'utf8'),
-    );
-    await fs.writeFile(
-      path.resolve(__dirname, 'resources/cli-package.json'),
-      JSON.stringify({ name: cliPkg.name, type: 'module', version: cliPkg.version }),
-    );
-    console.info('✅ CLI bundle copied to resources/bin/lobe-cli.js');
   },
   /**
    * AfterPack hook for post-processing:
@@ -326,7 +306,6 @@ const config = {
 
   extraResources: [
     { from: 'resources/bin', to: 'bin' },
-    { from: 'resources/cli-package.json', to: 'package.json' },
   ],
 
   win: {
