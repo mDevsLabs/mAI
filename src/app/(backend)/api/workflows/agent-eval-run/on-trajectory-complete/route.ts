@@ -1,4 +1,4 @@
-import debug from 'debug';
+// import debug from 'debug'; // 🛑 Ligne commentée pour le test
 import { NextResponse } from 'next/server';
 
 import { AgentEvalRunModel } from '@/database/models/agentEval';
@@ -9,7 +9,7 @@ import {
   type OnTrajectoryCompletePayload,
 } from '@/server/workflows/agentEvalRun';
 
-const log = debug('lobe-server:workflows:on-trajectory-complete');
+// const log = debug('lobe-server:workflows:on-trajectory-complete'); // 🛑 Ligne commentée pour le test
 
 /**
  * On-trajectory-complete webhook handler
@@ -44,7 +44,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    log(
+    // ✅ Remplacement par console.log
+    console.log(
       'Received: runId=%s testCaseId=%s operationId=%s reason=%s status=%s cost=%s duration=%s steps=%s totalTokens=%s',
       runId,
       testCaseId,
@@ -63,7 +64,8 @@ export async function POST(req: Request) {
     const runModel = new AgentEvalRunModel(db, userId);
     const run = await runModel.findById(runId);
     if (run?.status === 'aborted') {
-      log('Run aborted, skipping: runId=%s testCaseId=%s', runId, testCaseId);
+      // ✅ Remplacement par console.log
+      console.log('Run aborted, skipping: runId=%s testCaseId=%s', runId, testCaseId);
       return NextResponse.json({ cancelled: true });
     }
 
@@ -86,7 +88,8 @@ export async function POST(req: Request) {
       testCaseId,
     });
 
-    log('Completion check: %d completed, allDone=%s', completedCount, allDone);
+    // ✅ Remplacement par console.log
+    console.log('Completion check: %d completed, allDone=%s', completedCount, allDone);
 
     if (allDone) {
       console.info(
