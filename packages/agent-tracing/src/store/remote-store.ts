@@ -5,7 +5,8 @@ import { zstdDecompress } from 'node:zlib';
 
 import type { ExecutionSnapshot } from '../types';
 
-const decompressZstd = promisify(zstdDecompress);
+const hasZstdDecompress = typeof zstdDecompress === 'function';
+const decompressZstd = hasZstdDecompress ? promisify(zstdDecompress) : null;
 
 const REMOTE_DIR = '_remote';
 const ENV_FILE = '.env';
@@ -121,7 +122,12 @@ export class RemoteSnapshotStore {
     // Sniff the zstd frame magic so the body is decoded by content, not URL
     // suffix — keeps legacy `.json` snapshots working alongside compressed ones.
     const body = Buffer.from(await res.arrayBuffer());
-    const decoded = isZstdFrame(body) ? await decompressZstd(body) : body;
+    if (isZstdFrame(body) && !decompressZstd) {
+      throw new Error(
+        'Zstd decompression is unavailable on this Node.js runtime. Use Node.js v22+ or fetch a legacy .json snapshot.',
+      );
+    }
+    const decoded = isZstdFrame(body) ? await decompressZstd!(body) : body;
     const snapshot = JSON.parse(decoded.toString('utf8')) as ExecutionSnapshot;
 
     // Cache locally as plain JSON for easy inspection.
