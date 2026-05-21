@@ -6,8 +6,10 @@ import debug from 'debug';
 
 import { FileS3 } from '@/server/modules/S3';
 
-const compressZstd = promisify(zstdCompress);
-const decompressZstd = promisify(zstdDecompress);
+const hasZstdCompress = typeof zstdCompress === 'function';
+const hasZstdDecompress = typeof zstdDecompress === 'function';
+const compressZstd = hasZstdCompress ? promisify(zstdCompress) : null;
+const decompressZstd = hasZstdDecompress ? promisify(zstdDecompress) : null;
 
 const log = debug('lobe-server:agent-tracing:s3');
 
@@ -63,10 +65,16 @@ export class S3SnapshotStore implements ISnapshotStore {
   }
 
   private async encodeSnapshot(value: unknown): Promise<Buffer> {
+    if (!compressZstd) {
+      throw new Error('Zstd compression is unavailable on this Node.js runtime. Use Node.js v22+.');
+    }
     return compressZstd(Buffer.from(JSON.stringify(value)));
   }
 
   private async decodeSnapshot<T>(bytes: Uint8Array): Promise<T> {
+    if (!decompressZstd) {
+      throw new Error('Zstd decompression is unavailable on this Node.js runtime. Use Node.js v22+.');
+    }
     const buf = await decompressZstd(Buffer.from(bytes));
     return JSON.parse(buf.toString('utf8')) as T;
   }

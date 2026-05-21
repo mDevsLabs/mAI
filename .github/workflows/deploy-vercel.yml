@@ -71,7 +71,8 @@ jobs:
         run: vercel build --prod --token=${{ env.VERCEL_TOKEN }}
 
       - name: Deploy Project Artifacts to Vercel 🌐
-        run: vercel deploy --prebuilt --prod --token=${{ env.VERCEL_TOKEN }}
+        # --archive=tgz évite la limite API "files > 15000" en envoyant une archive unique
+        run: vercel deploy --prebuilt --archive=tgz --prod --token=${{ env.VERCEL_TOKEN }}
 
   Deploy-Preview:
     # Se lance sur PR, déclenchement manuel, ou push sur une branche autre que canary
@@ -129,4 +130,5 @@ jobs:
 
       - name: Deploy Project Artifacts to Vercel 🌐
         # Pas de flag --prod pour déployer en preview
-        run: vercel deploy --prebuilt --token=${{ env.VERCEL_TOKEN }}
+        # --archive=tgz évite la limite API "files > 15000" en envoyant une archive unique
+        run: vercel deploy --prebuilt --archive=tgz --token=${{ env.VERCEL_TOKEN }}
