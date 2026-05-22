@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { ActionIcon, Block, DropdownMenu, Flexbox, Icon, stopPropagation } from '@lobehub/ui';
 import { App } from 'antd';
@@ -19,7 +19,7 @@ interface ItemProps {
   label: string;
   onOpenDetail?: () => void;
   serverName?: Klavis.McpServerName;
-  type: 'klavis' | 'lobehub';
+  type: 'klavis' | 'mAI';
 }
 
 const Item = memo<ItemProps>(

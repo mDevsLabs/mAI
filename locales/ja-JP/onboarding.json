@@ -1,4 +1,4 @@
-{
+﻿{
   "agent.banner.label": "エージェントオンボーディング",
   "agent.completion.sentence.readyWhenYouAre": "準備ができたらいつでもどうぞ :)",
   "agent.completion.sentence.readyWithName": "{{name}}です。準備できています！",
@@ -57,7 +57,7 @@
   "agent.telemetryHint": "独自の言葉で答えることもできます。",
   "agent.title": "会話型オンボーディング",
   "agent.welcome": "...ん？今起きたばかりで、頭が真っ白です。あなたは誰ですか？それと、私の名前は何にしますか？",
-  "agent.welcome.footer": "あなたの Lobe AI エージェントを設定してください。エージェントはあなたのサーバー上で稼働し、すべてのやり取りから学習し、稼働時間が長くなるほどより高性能になります。",
+  "agent.welcome.footer": "あなたの May エージェントを設定してください。エージェントはあなたのサーバー上で稼働し、すべてのやり取りから学習し、稼働時間が長くなるほどより高性能になります。",
   "agent.welcome.guide.growTogether.desc": "チャットを重ねるごとにあなたのことをより理解し、時間とともに頼れる仲間になります。",
   "agent.welcome.guide.growTogether.title": "一緒に成長",
   "agent.welcome.guide.knowYou.desc": "最近何に取り組んでいますか？少し背景を教えていただければ、より適切にサポートできます。",

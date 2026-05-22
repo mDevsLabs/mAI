@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { memo } from 'react';
 
@@ -19,12 +19,12 @@ const getPluginSource = (request: McpInstallRequest): PluginSource => {
   const { marketId } = request;
 
   // Official LobeHub plugin
-  if (marketId === 'lobehub') {
+  if (marketId === 'mAI') {
     return PluginSource.OFFICIAL;
   }
 
   // Third-party marketplace plugin (including trusted and untrusted)
-  if (marketId && marketId !== 'lobehub') {
+  if (marketId && marketId !== 'mAI') {
     return PluginSource.MARKETPLACE;
   }
 

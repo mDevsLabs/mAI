@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { DEFAULT_INBOX_AVATAR, SESSION_CHAT_URL } from '@lobechat/const';
 import { Avatar, Icon } from '@lobehub/ui';
@@ -60,7 +60,7 @@ const InboxItem = memo<InboxItemProps>(({ className, style }) => {
   const inboxAgentAvatar = inboxMeta.avatar || DEFAULT_INBOX_AVATAR;
   const inboxUrl = SESSION_CHAT_URL(inboxAgentId, false);
 
-  // Prefetch agent layout chunk and data eagerly since Lobe AI is almost always clicked
+  // Prefetch agent layout chunk and data eagerly since May is almost always clicked
   prefetchRoute(inboxUrl);
   prefetchAgent(inboxAgentId!);
 

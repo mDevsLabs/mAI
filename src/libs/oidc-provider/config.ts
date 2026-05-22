@@ -1,4 +1,4 @@
-import { type ClientMetadata } from 'oidc-provider';
+﻿import { type ClientMetadata } from 'oidc-provider';
 import urlJoin from 'url-join';
 
 import { appEnv } from '@/envs/app';
@@ -65,7 +65,7 @@ export const defaultClients: ClientMetadata[] = [
   {
     application_type: 'web',
     client_id: 'lobehub-market',
-    client_name: 'LobeHub Marketplace',
+    client_name: 'mAI Marketplace',
     grant_types: ['authorization_code', 'refresh_token'],
     logo_uri: 'https://hub-apac-1.lobeobjects.space/lobehub-desktop-icon.png',
     post_logout_redirect_uris: [

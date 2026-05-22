@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { type AnchorHTMLAttributes, type FC } from 'react';
 import { Link } from 'react-router-dom';
@@ -11,7 +11,7 @@ interface LinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
 
 const A: FC<LinkProps> = ({ href = '', children, ...props }) => {
   const isOutbound = EXTERNAL_HREF_REGEX.test(href as string);
-  const isOfficial = String(href).includes('lobechat') || String(href).includes('lobehub');
+  const isOfficial = String(href).includes('lobechat') || String(href).includes('mAI');
 
   // External links use native <a> tag
   if (isOutbound) {

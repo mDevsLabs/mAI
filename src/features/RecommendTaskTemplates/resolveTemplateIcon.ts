@@ -1,4 +1,4 @@
-import type { IconType } from '@icons-pack/react-simple-icons';
+﻿import type { IconType } from '@icons-pack/react-simple-icons';
 import { SiGithub } from '@icons-pack/react-simple-icons';
 import type { TaskTemplate, TaskTemplateIcon, TaskTemplateSkillRequirement } from '@lobechat/const';
 import { type LucideIcon, Sparkles } from 'lucide-react';
@@ -57,7 +57,7 @@ export const getMainIconProvider = (
 ): TaskTemplateSkillRequirement | undefined => {
   // The self-icon union is currently the single lobehub provider id 'github';
   // expand `SELF_ICON_MAP` and this mapping together when more are added.
-  if (template.icon) return { provider: template.icon, source: 'lobehub' };
+  if (template.icon) return { provider: template.icon, source: 'mAI' };
 
   for (const spec of [template.requiresSkills?.[0], template.optionalSkills?.[0]]) {
     if (!spec) continue;

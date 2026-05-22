@@ -1,4 +1,4 @@
-{
+﻿{
   "_cloud.officialProvider": "{{name}} 官方模型服務",
   "about.title": "關於",
   "accountDeletion.cancelButton": "取消刪除",
@@ -688,7 +688,7 @@
   "settingOpening.title": "開場設定",
   "settingPlugin.title": "插件列表",
   "settingSelfIteration.enabled.desc": "允許此助手在自我迭代工作流程運行時檢查最近的信號並改進其自身技能。",
-  "settingSelfIteration.enabled.managedDesc": "當自我迭代功能可用時，Lobe AI 將始終啟用。",
+  "settingSelfIteration.enabled.managedDesc": "當自我迭代功能可用時，May 將始終啟用。",
   "settingSelfIteration.enabled.title": "啟用自我迭代",
   "settingSelfIteration.title": "自我迭代",
   "settingSystem.oauth.info.desc": "已登錄",

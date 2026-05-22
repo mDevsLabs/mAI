@@ -1,4 +1,4 @@
-import { type ChatModelCard } from '@lobechat/types';
+﻿import { type ChatModelCard } from '@lobechat/types';
 import { type IconAvatarProps } from '@lobehub/icons';
 import { LobeHub, ModelIcon, ProviderIcon } from '@lobehub/icons';
 import { type FlexboxProps } from '@lobehub/ui';
@@ -348,7 +348,7 @@ export const ProviderItemRender = memo<ProviderItemRenderProps>(
             style={isMono ? { filter: 'grayscale(1)' } : {}}
             title={name}
           />
-        ) : provider === 'lobehub' ? (
+        ) : provider === 'mAI' ? (
           <LobeHub.Morden size={size} />
         ) : (
           <ProviderIcon provider={provider} size={size} type={type} />

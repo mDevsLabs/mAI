@@ -1,4 +1,4 @@
-{
+﻿{
   "ModelSwitch.title": "Model",
   "active": "Actief",
   "agentBuilder.installPlugin.authRequired": "Cloud MCP vereist inloggen om door te gaan",
@@ -217,7 +217,7 @@
   "historySummary": "Samenvatting van historische berichten",
   "inactive": "Inactief",
   "inbox.desc": "Werk samen in één werkruimte en zet ideeën om in resultaten.",
-  "inbox.title": "Lobe AI",
+  "inbox.title": "May",
   "input.addAi": "AI-bericht toevoegen",
   "input.addUser": "Gebruikersbericht toevoegen",
   "input.costEstimate.creditsPerMillionTokens": "{{credits}} credits/M tokens",
@@ -643,7 +643,7 @@
   "taskList.orderBy.updatedAt": "Bijgewerkt op",
   "taskList.title": "Taken",
   "taskList.unassigned": "Niet toegewezen",
-  "taskList.unassignedHint": "Lobe AI voert deze taak uit wanneer er geen verantwoordelijke is ingesteld",
+  "taskList.unassignedHint": "May voert deze taak uit wanneer er geen verantwoordelijke is ingesteld",
   "taskList.view.board": "Bord",
   "taskList.view.list": "Lijst",
   "taskList.viewAll": "Alles bekijken",

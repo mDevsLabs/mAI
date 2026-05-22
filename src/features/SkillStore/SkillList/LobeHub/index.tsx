@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { KLAVIS_SERVER_TYPES, LOBEHUB_SKILL_PROVIDERS } from '@lobechat/const';
 import { type BuiltinSkill, type LobeToolMeta } from '@lobechat/types';
@@ -34,7 +34,7 @@ const getBuiltinToolsOnly = (s: ToolStoreState): LobeToolMeta[] => {
   return s.builtinTools
     .filter((item) => !item.hidden)
     .map((t) => ({
-      author: 'LobeHub',
+      author: 'mAI',
       identifier: t.identifier,
       meta: t.manifest.meta,
       type: 'builtin' as const,
@@ -75,7 +75,7 @@ export const LobeHubList = memo<LobeHubListProps>(({ keywords }) => {
 
   const filteredItems = useMemo(() => {
     const items: Array<
-      | { provider: (typeof LOBEHUB_SKILL_PROVIDERS)[number]; type: 'lobehub' }
+      | { provider: (typeof LOBEHUB_SKILL_PROVIDERS)[number]; type: 'mAI' }
       | { serverType: (typeof KLAVIS_SERVER_TYPES)[number]; type: 'klavis' }
       | { skill: BuiltinSkill; type: 'builtinAgentSkill' }
       | { tool: LobeToolMeta; type: 'builtin' }
@@ -94,7 +94,7 @@ export const LobeHubList = memo<LobeHubListProps>(({ keywords }) => {
     // Add LobeHub skills
     if (isLobehubSkillEnabled) {
       for (const provider of LOBEHUB_SKILL_PROVIDERS) {
-        items.push({ provider, type: 'lobehub' });
+        items.push({ provider, type: 'mAI' });
       }
     }
 
@@ -120,7 +120,7 @@ export const LobeHubList = memo<LobeHubListProps>(({ keywords }) => {
         const identifier = item.tool.identifier?.toLowerCase() || '';
         return title.includes(lowerKeywords) || identifier.includes(lowerKeywords);
       }
-      const label = item.type === 'lobehub' ? item.provider.label : item.serverType.label;
+      const label = item.type === 'mAI' ? item.provider.label : item.serverType.label;
       return label.toLowerCase().includes(lowerKeywords);
     });
   }, [keywords, isLobehubSkillEnabled, isKlavisEnabled, builtinTools, builtinSkills]);
@@ -173,7 +173,7 @@ export const LobeHubList = memo<LobeHubListProps>(({ keywords }) => {
               />
             );
           }
-          if (item.type === 'lobehub') {
+          if (item.type === 'mAI') {
             const server = getLobehubSkillServerByProvider(item.provider.id);
             const isConnected = server?.status === LobehubSkillStatus.CONNECTED;
             return (
@@ -184,7 +184,7 @@ export const LobeHubList = memo<LobeHubListProps>(({ keywords }) => {
                 isConnected={isConnected}
                 key={item.provider.id}
                 label={item.provider.label}
-                type="lobehub"
+                type="mAI"
                 onOpenDetail={() => createLobehubSkillDetailModal({ identifier: item.provider.id })}
               />
             );

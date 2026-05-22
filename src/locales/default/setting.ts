@@ -1,4 +1,4 @@
-export default {
+﻿export default {
   '_cloud.officialProvider': '{{name}} Official Model Service',
   'about.title': 'About',
   'accountDeletion.cancelButton': 'Cancel Deletion',
@@ -1112,7 +1112,7 @@ When I am ___, I need ___
     'Manage connections to your desktop devices. List online devices, activate a device for remote operations, and check connection status.',
   'tools.builtins.lobe-remote-device.title': 'Remote Device',
   'tools.builtins.lobe-skill-store.description':
-    'Browse and install agent skills from the LobeHub marketplace. Use this when you need extended capabilities or want to install a specific skill.',
+    'Browse and install agent skills from the mAI Marketplace. Use this when you need extended capabilities or want to install a specific skill.',
   'tools.builtins.lobe-skill-store.title': 'Skill Store',
   'tools.builtins.lobe-skills.description': 'Activate and use reusable skill packages',
   'tools.builtins.lobe-skills.title': 'Skills',
@@ -1142,7 +1142,7 @@ When I am ___, I need ___
   'tools.builtins.lobe-agent-browser.title': 'Agent Browser',
   'tools.builtins.lobehub.description':
     'Manage the LobeHub platform via CLI — knowledge bases, memory, agents, files, search, generation, and more.',
-  'tools.builtins.lobehub.title': 'LobeHub',
+  'tools.builtins.lobehub.title': 'mAI',
   'tools.builtins.task.description':
     'Task management and execution — create, track, review, and complete tasks via CLI.',
   'tools.builtins.task.title': 'Task',

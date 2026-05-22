@@ -1,4 +1,4 @@
-import { expo } from '@better-auth/expo';
+﻿import { expo } from '@better-auth/expo';
 import { passkey } from '@better-auth/passkey';
 import { ENABLE_BUSINESS_FEATURES } from '@lobechat/business-const';
 import { createNanoId, idGenerator, serverDB } from '@lobechat/database';
@@ -291,7 +291,7 @@ export function defineConfig(customOptions: CustomBetterAuthOptions) {
         },
       }),
       passkey({
-        rpName: 'LobeHub',
+        rpName: 'mAI',
         // Extract rpID from auth URL (e.g., 'lobehub.com' from 'https://lobehub.com')
         // Returns undefined if AUTH_URL is not set (e.g., in e2e tests)
         rpID: getPasskeyRpID(),

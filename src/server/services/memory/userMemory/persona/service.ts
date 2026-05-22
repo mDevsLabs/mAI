@@ -1,4 +1,4 @@
-import {
+﻿import {
   type UserPersonaDocument,
   type UserPersonaDocumentHistoriesItem,
 } from '@lobechat/database/schemas';
@@ -79,7 +79,7 @@ export class UserPersonaService {
       {} as ProviderKeyVaultMap,
     );
 
-    const hooks = getBusinessModelRuntimeHooks(payload.userId, 'lobehub');
+    const hooks = getBusinessModelRuntimeHooks(payload.userId, 'mAI');
 
     const runtime = await resolveRuntimeAgentConfig(
       { ...this.agentConfig },

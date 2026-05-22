@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { type ToolStatus } from '@lobechat/electron-client-ipc';
 import { type FormGroupItemType } from '@lobehub/ui';
@@ -19,7 +19,7 @@ const TOOL_CATEGORIES = {
     descKey: 'settingSystemTools.category.runtimeEnvironment.desc',
     titleKey: 'settingSystemTools.category.runtimeEnvironment',
     tools: [
-      { descKey: 'settingSystemTools.tools.lobehub.desc', name: 'lobehub' },
+      { descKey: 'settingSystemTools.tools.lobehub.desc', name: 'mAI' },
       { descKey: 'settingSystemTools.tools.node.desc', name: 'node' },
       { descKey: 'settingSystemTools.tools.python.desc', name: 'python' },
       { descKey: 'settingSystemTools.tools.npm.desc', name: 'npm' },

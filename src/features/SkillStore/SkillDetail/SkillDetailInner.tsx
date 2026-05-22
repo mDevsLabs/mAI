@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { Flexbox, Skeleton } from '@lobehub/ui';
 import { lazy, memo, Suspense, useState } from 'react';
@@ -18,7 +18,7 @@ const TabSkeleton = () => (
 );
 
 interface SkillDetailInnerProps {
-  type: 'builtin' | 'klavis' | 'lobehub';
+  type: 'builtin' | 'klavis' | 'mAI';
 }
 
 const SkillDetailInner = memo<SkillDetailInnerProps>(({ type }) => {

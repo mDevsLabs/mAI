@@ -17,14 +17,13 @@ import { serverConfigSelectors, useServerConfigStore } from '@/store/serverConfi
 import BotIntegrationBanner, { BOT_INTEGRATION_BANNER_ID } from './BotIntegrationBanner';
 import { stripMarkdownLinks } from './hintFormat';
 import MessengerBanner, { MESSENGER_BANNER_ID } from './MessengerBanner';
-import SkillInstallBanner, { SKILL_INSTALL_BANNER_ID } from './SkillInstallBanner';
 import StarterList from './StarterList';
 import { useSend } from './useSend';
 
 const leftActions: ActionKeys[] = ['agentMode', 'plus'];
 const rightActions: ActionKeys[] = ['modelLabel'];
 
-type BannerKind = 'skill' | 'botIntegration' | 'messenger';
+type BannerKind = 'botIntegration' | 'messenger';
 
 const InputArea = () => {
   const { loading, send, agentId } = useSend();
@@ -40,12 +39,7 @@ const InputArea = () => {
     agentByIdSelectors.isAgentConfigLoadingById(agentId ?? '')(s),
   );
   const inboxAgentId = useAgentStore(builtinAgentSelectors.inboxAgentId);
-  const isLobehubSkillEnabled = useServerConfigStore(serverConfigSelectors.enableLobehubSkill);
-  const isKlavisEnabled = useServerConfigStore(serverConfigSelectors.enableKlavis);
   const serverConfigInit = useServerConfigStore((s) => s.serverConfigInit);
-  const isSkillBannerDismissed = useGlobalStore(
-    systemStatusSelectors.isBannerDismissed(SKILL_INSTALL_BANNER_ID),
-  );
   const isBotIntegrationBannerDismissed = useGlobalStore(
     systemStatusSelectors.isBannerDismissed(BOT_INTEGRATION_BANNER_ID),
   );
@@ -67,27 +61,19 @@ const InputArea = () => {
     if (!serverConfigInit || !inboxAgentId) return;
 
     const candidates: BannerKind[] = [];
-    if ((isLobehubSkillEnabled || isKlavisEnabled) && !isSkillBannerDismissed) {
-      candidates.push('skill');
-    }
     if (!isBotIntegrationBannerDismissed) candidates.push('botIntegration');
     if (!isMessengerBannerDismissed) candidates.push('messenger');
     if (candidates.length === 0) return;
 
     hasPickedRef.current = true;
     setActiveBanner(candidates[Math.floor(Math.random() * candidates.length)]);
-  }, [
     inboxAgentId,
     isBotIntegrationBannerDismissed,
-    isKlavisEnabled,
-    isLobehubSkillEnabled,
     isMessengerBannerDismissed,
-    isSkillBannerDismissed,
     serverConfigInit,
   ]);
 
   const isActiveBannerDismissed =
-    (activeBanner === 'skill' && isSkillBannerDismissed) ||
     (activeBanner === 'botIntegration' && isBotIntegrationBannerDismissed) ||
     (activeBanner === 'messenger' && isMessengerBannerDismissed);
   const visibleBanner = isActiveBannerDismissed ? null : activeBanner;
@@ -128,7 +114,6 @@ const InputArea = () => {
         ref={chatInputRef}
         style={{ paddingBottom: visibleBanner ? 32 : 0, position: 'relative' }}
       >
-        {visibleBanner === 'skill' && <SkillInstallBanner />}
         {visibleBanner === 'botIntegration' && <BotIntegrationBanner />}
         {visibleBanner === 'messenger' && <MessengerBanner />}
         <DragUploadZone

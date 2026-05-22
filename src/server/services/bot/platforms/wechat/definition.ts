@@ -1,4 +1,4 @@
-import type { PlatformDefinition } from '../types';
+﻿import type { PlatformDefinition } from '../types';
 import { WechatClientFactory } from './client';
 import { schema } from './schema';
 
@@ -8,7 +8,7 @@ export const wechat: PlatformDefinition = {
   connectionMode: 'polling',
   description: 'Connect a WeChat bot via iLink API',
   documentation: {
-    setupGuideUrl: 'https://lobehub.com/docs/usage/channels/wechat',
+    setupGuideUrl: 'https://mprojects.odoo.com/docs/usage/channels/wechat',
   },
   schema,
   supportsMessageEdit: false,

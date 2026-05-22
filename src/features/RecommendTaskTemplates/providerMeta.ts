@@ -1,4 +1,4 @@
-import type {
+﻿import type {
   LobehubSkillProviderType,
   TaskTemplateSkillRequirement,
   TaskTemplateSkillSource,
@@ -15,10 +15,10 @@ export interface SkillProviderMeta {
 export const getProviderMeta = (
   spec: TaskTemplateSkillRequirement,
 ): SkillProviderMeta | undefined => {
-  if (spec.source === 'lobehub') {
+  if (spec.source === 'mAI') {
     const p = getLobehubSkillProviderById(spec.provider);
     if (!p) return undefined;
-    return { icon: p.icon, label: p.label, provider: spec.provider, source: 'lobehub' };
+    return { icon: p.icon, label: p.label, provider: spec.provider, source: 'mAI' };
   }
   const p = getKlavisServerByServerIdentifier(spec.provider);
   if (!p) return undefined;

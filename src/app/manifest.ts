@@ -1,4 +1,4 @@
-import { type MetadataRoute } from 'next';
+﻿import { type MetadataRoute } from 'next';
 
 const manifest = async (): Promise<MetadataRoute.Manifest> => {
   // Skip heavy module compilation in development
@@ -14,8 +14,8 @@ const manifest = async (): Promise<MetadataRoute.Manifest> => {
           type: 'image/png',
         },
       ],
-      name: 'LobeHub',
-      short_name: 'LobeHub',
+      name: 'mAI',
+      short_name: 'mAI',
       start_url: '/',
       theme_color: '#000000',
     };

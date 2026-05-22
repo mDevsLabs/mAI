@@ -1,4 +1,4 @@
-import { type FormItemProps } from '@lobehub/ui';
+﻿import { type FormItemProps } from '@lobehub/ui';
 import { Form, Input, TextArea } from '@lobehub/ui';
 import { type FormInstance } from 'antd';
 import { memo } from 'react';
@@ -56,7 +56,7 @@ const LocalForm = memo<{ form: FormInstance; mode?: 'edit' | 'create' }>(({ form
       name: ['manifest', 'meta', 'description'],
     },
     {
-      children: <Input placeholder={'LobeHub'} />,
+      children: <Input placeholder={'mAI'} />,
       desc: t('dev.meta.author.desc'),
       label: t('dev.meta.author.label'),
       name: ['manifest', 'author'],

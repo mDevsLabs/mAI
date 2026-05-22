@@ -1,4 +1,4 @@
-import { Icon, Tag } from '@lobehub/ui';
+﻿import { Icon, Tag } from '@lobehub/ui';
 import { BadgeCheck, CircleUser, Package } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -17,7 +17,7 @@ const PluginTag = memo<PluginTagProps>(
   ({ showIcon = true, author, type, showText = true, isMCP }) => {
     const { t } = useTranslation('plugin');
     const isCustom = type === 'customPlugin';
-    const isOfficial = author === 'LobeHub';
+    const isOfficial = author === 'mAI';
 
     const customTag = (
       <Tag color={'warning'} icon={showIcon && <Icon icon={Package} />} size={'small'}>

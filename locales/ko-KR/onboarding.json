@@ -1,4 +1,4 @@
-{
+﻿{
   "agent.banner.label": "에이전트 온보딩",
   "agent.completion.sentence.readyWhenYouAre": "준비되시면 말씀하세요 :)",
   "agent.completion.sentence.readyWithName": "{{name}}입니다 — 준비됐어요!",
@@ -57,7 +57,7 @@
   "agent.telemetryHint": "자신의 말로 대답할 수도 있습니다.",
   "agent.title": "대화형 온보딩",
   "agent.welcome": "...음? 방금 깨어났어요 — 머리가 텅 비었네요. 당신은 누구시죠? 그리고 — 저를 뭐라고 불러야 할까요? 저도 이름이 필요해요.",
-  "agent.welcome.footer": "Lobe AI 에이전트를 구성하세요. 이 에이전트는 서버에 상주하며 모든 상호작용에서 학습하여 실행할수록 더 강력해집니다.",
+  "agent.welcome.footer": "May 에이전트를 구성하세요. 이 에이전트는 서버에 상주하며 모든 상호작용에서 학습하여 실행할수록 더 강력해집니다.",
   "agent.welcome.guide.growTogether.desc": "대화를 나눌수록 더 잘 이해하게 되어 시간이 지날수록 든든한 동료가 될게요.",
   "agent.welcome.guide.growTogether.title": "함께 성장하기",
   "agent.welcome.guide.knowYou.desc": "요즘 어떤 일을 하고 계신가요? 상황을 조금 알려주시면 더 잘 도와드릴 수 있어요.",

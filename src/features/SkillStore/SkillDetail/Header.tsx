@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { Avatar, Flexbox, Icon, Text, useModalContext } from '@lobehub/ui';
 import { Button } from 'antd';
@@ -25,7 +25,7 @@ const isEmojiOrText = (str: string): boolean => {
 };
 
 interface HeaderProps {
-  type: 'builtin' | 'klavis' | 'lobehub';
+  type: 'builtin' | 'klavis' | 'mAI';
 }
 
 const Header = memo<HeaderProps>(({ type }) => {
@@ -43,7 +43,7 @@ const Header = memo<HeaderProps>(({ type }) => {
   } = useSkillConnect({
     identifier,
     serverName,
-    type: isBuiltin ? 'lobehub' : type, // Use lobehub as fallback for builtin
+    type: isBuiltin ? 'mAI' : type, // Use lobehub as fallback for builtin
   });
 
   // Builtin tool installation state (global, stored in tool store)

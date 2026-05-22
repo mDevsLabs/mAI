@@ -1,4 +1,4 @@
-import {
+﻿import {
   DropdownMenuGroup,
   DropdownMenuGroupLabel,
   DropdownMenuItem,
@@ -104,7 +104,7 @@ export const MultipleProvidersModelItem = memo<MultipleProvidersModelItemProps>(
                 </DropdownMenuGroupLabel>
                 {data.providers.map((p) => {
                   const key = menuKey(p.id, data.model.id);
-                  const isProviderActive = isActive ? activeKey === key : p.id === 'lobehub';
+                  const isProviderActive = isActive ? activeKey === key : p.id === 'mAI';
                   const providerRestricted = isModelRestricted?.(data.model.id, p.id);
 
                   return (

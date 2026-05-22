@@ -1,4 +1,4 @@
-import { SUPPORT_TEXT_LIST } from '../file';
+﻿import { SUPPORT_TEXT_LIST } from '../file';
 import { SUPPORTED_LANGUAGES, type SupportedLanguage } from '../splitter';
 import { type DocumentChunk, type FileLoaderType } from '../types';
 import { CodeLoader } from './code';
@@ -66,7 +66,7 @@ export class ChunkingLoader {
 
         default: {
           throw new Error(
-            `Unsupported file type [${type}], please check your file is supported, or create report issue here: https://github.com/lobehub/lobe-chat/discussions/3550`,
+            `Unsupported file type [${type}], please check your file is supported, or create report issue here: https://github.com/mDevsLabs/mAI/discussions/3550`,
           );
         }
       }

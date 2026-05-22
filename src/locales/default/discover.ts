@@ -1,4 +1,4 @@
-export default {
+﻿export default {
   'assistant.favorite': 'Save',
   'assistant.favoriteFailed': 'Failed to save',
   'assistant.favoriteSuccess': 'Saved',
@@ -1064,7 +1064,7 @@ export default {
     'Run the install command in your terminal to download and configure this skill for Cursor.',
 
   'skills.details.sidebar.platform.steps.lobehub':
-    'Install directly from the LobeHub marketplace with one click.',
+    'Install directly from the mAI Marketplace with one click.',
 
   'skills.details.sidebar.platform.steps.vscode':
     'Run the install command in your terminal to download and configure this skill for VS Code.',

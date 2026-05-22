@@ -1,4 +1,4 @@
-import type { PlatformDefinition } from '../types';
+﻿import type { PlatformDefinition } from '../types';
 import { QQClientFactory } from './client';
 import { DEFAULT_QQ_CONNECTION_MODE } from './const';
 import { schema } from './schema';
@@ -10,7 +10,7 @@ export const qq: PlatformDefinition = {
   description: 'Connect a QQ bot',
   documentation: {
     portalUrl: 'https://q.qq.com/',
-    setupGuideUrl: 'https://lobehub.com/docs/usage/channels/qq',
+    setupGuideUrl: 'https://mprojects.odoo.com/docs/usage/channels/qq',
   },
   schema,
   supportsMarkdown: false,

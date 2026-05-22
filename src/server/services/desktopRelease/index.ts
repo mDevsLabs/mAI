@@ -1,4 +1,4 @@
-import urlJoin from 'url-join';
+﻿import urlJoin from 'url-join';
 import { parse } from 'yaml';
 
 import { FetchCacheTag } from '@/const/cacheControl';
@@ -115,7 +115,7 @@ export const getLatestDesktopReleaseFromGithub = async (options?: {
   repo?: string;
   token?: string;
 }): Promise<GithubRelease> => {
-  const owner = options?.owner || 'lobehub';
+  const owner = options?.owner || 'mAI';
   const repo = options?.repo || 'lobe-chat';
   const token = options?.token || process.env.GITHUB_TOKEN;
 

@@ -1,4 +1,4 @@
-import isEqual from 'fast-deep-equal';
+﻿import isEqual from 'fast-deep-equal';
 import { useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -127,7 +127,7 @@ export const useMarketGroupPublish = ({ action, onSuccess }: UseMarketGroupPubli
         name: agent.title || 'Untitled Agent',
         role: agent.isSupervisor ? ('supervisor' as const) : ('participant' as const),
         // TODO: Construct proper A2A URL for the agent
-        url: `https://api.lobehub.com/a2a/agents/${agent.id}`,
+        url: `https://mprojects.odoo.com/api/a2a/agents/${agent.id}`,
       }));
 
       // Use tRPC publishOrCreate

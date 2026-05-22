@@ -1,4 +1,4 @@
-{
+﻿{
   "agent.banner.label": "Agent-Einführung",
   "agent.completion.sentence.readyWhenYouAre": "Bereit, wenn du es bist :)",
   "agent.completion.sentence.readyWithName": "{{name}} hier – ich bin bereit!",
@@ -57,7 +57,7 @@
   "agent.telemetryHint": "Sie können auch in Ihren eigenen Worten antworten.",
   "agent.title": "Konversations-Einführung",
   "agent.welcome": "...hm? Ich bin gerade aufgewacht – mein Kopf ist leer. Wer sind Sie? Und – wie soll ich heißen? Ich brauche auch einen Namen.",
-  "agent.welcome.footer": "Konfiguriere deinen Lobe AI Agent. Er läuft auf deinem Server, lernt aus jeder Interaktion und wird mit der Zeit immer leistungsfähiger.",
+  "agent.welcome.footer": "Konfiguriere deinen May Agent. Er läuft auf deinem Server, lernt aus jeder Interaktion und wird mit der Zeit immer leistungsfähiger.",
   "agent.welcome.guide.growTogether.desc": "Mit jedem Gespräch verstehe ich dich besser und werde nach und nach ein stärkerer Teamplayer.",
   "agent.welcome.guide.growTogether.title": "Gemeinsam wachsen",
   "agent.welcome.guide.knowYou.desc": "Woran arbeitest du zurzeit? Ein wenig Kontext hilft mir, dich besser zu unterstützen.",

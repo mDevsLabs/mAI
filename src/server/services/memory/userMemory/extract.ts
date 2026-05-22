@@ -1,4 +1,4 @@
-import {
+﻿import {
   DEFAULT_USER_MEMORY_EMBEDDING_DIMENSIONS,
   DEFAULT_USER_MEMORY_EMBEDDING_MODEL_ITEM,
 } from '@lobechat/const';
@@ -496,7 +496,7 @@ export const resolveRuntimeAgentConfig = (
   );
 
   for (const provider of providerOrder) {
-    if (provider === 'lobehub') {
+    if (provider === 'mAI') {
       debugRuntimeInit(agent, {
         provider,
         source: 'user-vault' as const,
@@ -2302,7 +2302,7 @@ export class MemoryExtractionExecutor {
       userId,
     };
 
-    const hooks = getBusinessModelRuntimeHooks(userId, 'lobehub');
+    const hooks = getBusinessModelRuntimeHooks(userId, 'mAI');
 
     const runtimes: RuntimeBundle = {
       embeddings: await resolveRuntimeAgentConfig(

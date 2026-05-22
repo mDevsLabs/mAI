@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { ProviderIcon } from '@lobehub/icons';
 import { ActionIcon, Block, Flexbox, Icon, Tooltip, TooltipGroup } from '@lobehub/ui';
@@ -139,7 +139,7 @@ const ProviderList = memo(() => {
               dataIndex: 'action',
               key: 'action',
               render: (_, record) => {
-                const isLobeHub = record.id === 'lobehub';
+                const isLobeHub = record.id === 'mAI';
                 return (
                   <Flexbox horizontal align="center" gap={4} justify={'flex-end'}>
                     {isLobeHub && (

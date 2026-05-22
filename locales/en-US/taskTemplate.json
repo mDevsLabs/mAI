@@ -1,11 +1,11 @@
-{
+﻿{
   "action.connect.button": "Connect {{provider}}",
   "action.connect.error": "Connection failed, please try again.",
   "action.connect.popupBlocked": "Connection popup blocked. Allow popups in your browser to continue.",
   "action.connect.short": "Connect",
   "action.connecting": "Waiting for authorization…",
   "action.create.error": "Failed to create task. Please try again.",
-  "action.create.success": "Scheduled task added. Find it in Lobe AI.",
+  "action.create.success": "Scheduled task added. Find it in May.",
   "action.createButton": "Add task",
   "action.creating": "Creating...",
   "action.dismiss.error": "Failed to dismiss. Please try again.",

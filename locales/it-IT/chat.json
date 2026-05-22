@@ -1,4 +1,4 @@
-{
+﻿{
   "ModelSwitch.title": "Modello",
   "active": "Attivo",
   "agentBuilder.installPlugin.authRequired": "Cloud MCP richiede l'accesso per continuare",
@@ -217,7 +217,7 @@
   "historySummary": "Riepilogo Messaggi Storici",
   "inactive": "Inattivo",
   "inbox.desc": "Collabora in un unico Spazio di Lavoro e trasforma le idee in risultati.",
-  "inbox.title": "Lobe AI",
+  "inbox.title": "May",
   "input.addAi": "Aggiungi un messaggio AI",
   "input.addUser": "Aggiungi un messaggio utente",
   "input.costEstimate.creditsPerMillionTokens": "{{credits}} crediti/M token",
@@ -643,7 +643,7 @@
   "taskList.orderBy.updatedAt": "Data di aggiornamento",
   "taskList.title": "Attività",
   "taskList.unassigned": "Non assegnata",
-  "taskList.unassignedHint": "Lobe AI eseguirà questo task quando non è assegnato a nessuno",
+  "taskList.unassignedHint": "May eseguirà questo task quando non è assegnato a nessuno",
   "taskList.view.board": "Bacheca",
   "taskList.view.list": "Lista",
   "taskList.viewAll": "Mostra tutto",

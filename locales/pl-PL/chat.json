@@ -1,4 +1,4 @@
-{
+﻿{
   "ModelSwitch.title": "Model",
   "active": "Aktywny",
   "agentBuilder.installPlugin.authRequired": "Aby kontynuować, zaloguj się do Cloud MCP",
@@ -217,7 +217,7 @@
   "historySummary": "Podsumowanie wiadomości historycznych",
   "inactive": "Nieaktywny",
   "inbox.desc": "Współpracuj w jednym środowisku i przekształcaj pomysły w rezultaty.",
-  "inbox.title": "Lobe AI",
+  "inbox.title": "May",
   "input.addAi": "Dodaj wiadomość AI",
   "input.addUser": "Dodaj wiadomość użytkownika",
   "input.costEstimate.creditsPerMillionTokens": "{{credits}} kredytów/M tokenów",
@@ -643,7 +643,7 @@
   "taskList.orderBy.updatedAt": "Data aktualizacji",
   "taskList.title": "Zadania",
   "taskList.unassigned": "Nieprzypisane",
-  "taskList.unassignedHint": "Lobe AI uruchomi to zadanie, gdy nie ma przypisanego wykonawcy",
+  "taskList.unassignedHint": "May uruchomi to zadanie, gdy nie ma przypisanego wykonawcy",
   "taskList.view.board": "Tablica",
   "taskList.view.list": "Lista",
   "taskList.viewAll": "Wyświetl wszystkie",

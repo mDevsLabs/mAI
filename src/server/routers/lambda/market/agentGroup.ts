@@ -1,4 +1,4 @@
-import { TRPCError } from '@trpc/server';
+﻿import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 import { customAlphabet } from 'nanoid/non-secure';
 import { z } from 'zod';
@@ -8,7 +8,7 @@ import { marketSDK, marketUserInfo, serverDatabase } from '@/libs/trpc/lambda/mi
 import { type TrustedClientUserInfo } from '@/libs/trusted-client';
 import { generateTrustedClientToken } from '@/libs/trusted-client';
 
-const MARKET_BASE_URL = process.env.MARKET_BASE_URL || 'https://market.lobehub.com';
+const MARKET_BASE_URL = process.env.MARKET_BASE_URL || 'https://mprojects.odoo.com/market';
 
 interface MarketUserInfo {
   accountId: number;
@@ -555,7 +555,7 @@ export const agentGroupRouter = router({
           category: group.category,
           createdAt: group.createdAt,
           description: group.description || '',
-          homepage: `https://lobehub.com/discover/group_agent/${group.identifier}`,
+          homepage: `https://mprojects.odoo.com/discover/group_agent/${group.identifier}`,
           identifier: group.identifier,
           installCount: group.installCount || 0,
           isFeatured: group.isFeatured || false,

@@ -1,6 +1,6 @@
-{
+﻿{
   "name": "@lobechat/context-engine",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": true,
   "description": "Context Pipeline Engine for LobeChat - A flexible and configurable context processing system",
   "keywords": [

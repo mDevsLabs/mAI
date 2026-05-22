@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { KLAVIS_SERVER_TYPES, LOBEHUB_SKILL_PROVIDERS } from '@lobechat/const';
 import { type ItemType } from '@lobehub/ui';
@@ -603,7 +603,7 @@ const AgentTool = memo<AgentToolProps>(
           ? [
               {
                 children: builtinItems,
-                key: 'lobehub',
+                key: 'mAI',
                 label: t('skillStore.tabs.lobehub'),
                 type: 'group' as const,
               },

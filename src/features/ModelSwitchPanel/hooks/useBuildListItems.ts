@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+﻿import { useMemo } from 'react';
 
 import { type EnabledProviderWithModels } from '@/types/aiProvider';
 
@@ -22,8 +22,8 @@ export const useBuildListItems = (
 
     // lobehub first, then others
     const sortedProviders = [...enabledList].sort((a, b) => {
-      const aIsLobehub = a.id === 'lobehub';
-      const bIsLobehub = b.id === 'lobehub';
+      const aIsLobehub = a.id === 'mAI';
+      const bIsLobehub = b.id === 'mAI';
       if (aIsLobehub && !bIsLobehub) return -1;
       if (!aIsLobehub && bIsLobehub) return 1;
       return 0;
@@ -62,8 +62,8 @@ export const useBuildListItems = (
       const modelArray = Array.from(modelMap.values());
       for (const model of modelArray) {
         model.providers.sort((a, b) => {
-          const aIsLobehub = a.id === 'lobehub';
-          const bIsLobehub = b.id === 'lobehub';
+          const aIsLobehub = a.id === 'mAI';
+          const bIsLobehub = b.id === 'mAI';
           if (aIsLobehub && !bIsLobehub) return -1;
           if (!aIsLobehub && bIsLobehub) return 1;
           return 0;

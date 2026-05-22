@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { SOCIAL_URL } from '@lobechat/business-const';
 import { Flexbox, Icon, Tabs } from '@lobehub/ui';
@@ -69,7 +69,7 @@ const Nav = memo<NavProps>(({ mobile, setActiveTab, activeTab = ModelNavKey.Over
         </a>
         <a
           className={styles.link}
-          href="https://github.com/lobehub/lobe-chat/tree/main/src/config/aiModels"
+          href="https://github.com/mDevsLabs/mAI/tree/main/src/config/aiModels"
           rel="noreferrer"
           target="_blank"
         >
@@ -77,7 +77,7 @@ const Nav = memo<NavProps>(({ mobile, setActiveTab, activeTab = ModelNavKey.Over
         </a>
         <a
           className={styles.link}
-          href="https://github.com/lobehub/lobe-chat/issues/new/choose"
+          href="https://github.com/mDevsLabs/mAI/issues/new/choose"
           rel="noreferrer"
           target="_blank"
         >

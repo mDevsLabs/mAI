@@ -1,4 +1,4 @@
-import { TRPCError } from '@trpc/server';
+﻿import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 import { z } from 'zod';
 
@@ -7,7 +7,7 @@ import { marketSDK, marketUserInfo, serverDatabase } from '@/libs/trpc/lambda/mi
 
 const log = debug('lambda-router:market:socialProfile');
 
-const MARKET_BASE_URL = process.env.MARKET_BASE_URL || 'https://market.lobehub.com';
+const MARKET_BASE_URL = process.env.MARKET_BASE_URL || 'https://mprojects.odoo.com/market';
 
 // Authenticated procedure for social profile operations
 const socialProfileAuthProcedure = authedProcedure

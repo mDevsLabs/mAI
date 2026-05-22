@@ -1,4 +1,4 @@
-import { Icon, Tag } from '@lobehub/ui';
+﻿import { Icon, Tag } from '@lobehub/ui';
 import { createStaticStyles, cx } from 'antd-style';
 import { BadgeCheck, CircleUser, Package } from 'lucide-react';
 import { memo } from 'react';
@@ -41,7 +41,7 @@ interface PluginTagProps extends Pick<InstallPluginMeta, 'author' | 'type'> {
 const PluginTag = memo<PluginTagProps>(({ showIcon = true, author, type, showText = true }) => {
   const { t } = useTranslation('plugin');
   const isCustom = type === 'customPlugin';
-  const isOfficial = author === 'LobeHub';
+  const isOfficial = author === 'mAI';
 
   return (
     <Tag

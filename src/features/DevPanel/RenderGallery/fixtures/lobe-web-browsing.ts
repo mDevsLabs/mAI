@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { defineFixtures, single, variants } from './_helpers';
 
@@ -16,7 +16,7 @@ export default defineFixtures({
             data: {
               content: 'LobeHub ships desktop and web experiences for AI collaboration.',
               description: 'Product homepage',
-              title: 'LobeHub',
+              title: 'mAI',
               url: 'https://lobehub.com',
             },
             originalUrl: 'https://lobehub.com',

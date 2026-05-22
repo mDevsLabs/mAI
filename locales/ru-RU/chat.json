@@ -1,4 +1,4 @@
-{
+﻿{
   "ModelSwitch.title": "Модель",
   "active": "Активен",
   "agentBuilder.installPlugin.authRequired": "Для продолжения требуется вход в Cloud MCP",
@@ -217,7 +217,7 @@
   "historySummary": "Сводка исторических сообщений",
   "inactive": "Неактивен",
   "inbox.desc": "Сотрудничайте в одном рабочем пространстве и превращайте идеи в результат.",
-  "inbox.title": "Lobe AI",
+  "inbox.title": "May",
   "input.addAi": "Добавить сообщение от ИИ",
   "input.addUser": "Добавить сообщение пользователя",
   "input.costEstimate.creditsPerMillionTokens": "{{credits}} кредитов/М токенов",
@@ -643,7 +643,7 @@
   "taskList.orderBy.updatedAt": "Дата обновления",
   "taskList.title": "Задачи",
   "taskList.unassigned": "Не назначено",
-  "taskList.unassignedHint": "Lobe AI выполнит эту задачу, если исполнитель не назначен",
+  "taskList.unassignedHint": "May выполнит эту задачу, если исполнитель не назначен",
   "taskList.view.board": "Доска",
   "taskList.view.list": "Список",
   "taskList.viewAll": "Посмотреть все",

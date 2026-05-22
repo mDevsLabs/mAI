@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import isEqual from 'fast-deep-equal';
 import { type ReactNode, useMemo } from 'react';
@@ -39,7 +39,7 @@ export const BuiltinAgentSkillDetailProvider = ({
   });
 
   const value: DetailContextValue = {
-    author: 'LobeHub',
+    author: 'mAI',
     authorUrl: 'https://lobehub.com',
     config: null as any,
     description: skill.description,

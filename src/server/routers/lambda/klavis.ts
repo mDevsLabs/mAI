@@ -1,4 +1,4 @@
-import { type ToolManifest } from '@lobechat/types';
+﻿import { type ToolManifest } from '@lobechat/types';
 import { z } from 'zod';
 
 import { PluginModel } from '@/database/models/plugin';
@@ -58,7 +58,7 @@ export const klavisRouter = router({
         identifier,
         meta: {
           avatar: '🔌',
-          description: `LobeHub Mcp Server: ${serverName}`,
+          description: `mAI Mcp Server: ${serverName}`,
           title: serverName,
         },
         type: 'default',
@@ -241,7 +241,7 @@ export const klavisRouter = router({
         identifier,
         meta: existingPlugin?.manifest?.meta || {
           avatar: '🔌',
-          description: `LobeHub Mcp Server: ${serverName}`,
+          description: `mAI Mcp Server: ${serverName}`,
           title: serverName,
         },
         type: 'default',

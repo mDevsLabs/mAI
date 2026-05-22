@@ -1,11 +1,11 @@
-{
+﻿{
   "action.connect.button": "Подключить {{provider}}",
   "action.connect.error": "Не удалось подключиться, пожалуйста, попробуйте снова.",
   "action.connect.popupBlocked": "Всплывающее окно подключения заблокировано. Разрешите всплывающие окна в вашем браузере, чтобы продолжить.",
   "action.connect.short": "Подключить",
   "action.connecting": "Ожидание авторизации…",
   "action.create.error": "Не удалось создать задачу. Пожалуйста, попробуйте снова.",
-  "action.create.success": "Запланированная задача добавлена. Найдите её в Lobe AI.",
+  "action.create.success": "Запланированная задача добавлена. Найдите её в May.",
   "action.createButton": "Добавить задачу",
   "action.creating": "Создание...",
   "action.dismiss.error": "Не удалось отклонить. Пожалуйста, попробуйте снова.",

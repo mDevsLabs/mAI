@@ -1,6 +1,6 @@
-{
+﻿{
   "name": "@lobechat/agent-gateway-client",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": true,
   "description": "Browser-compatible WebSocket client for the LobeHub Agent Gateway",
   "exports": {

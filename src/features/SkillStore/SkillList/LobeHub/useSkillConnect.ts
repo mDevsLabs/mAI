@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { getLobehubSkillProviderById } from '@lobechat/const';
 import { type Klavis } from 'klavis';
@@ -17,7 +17,7 @@ const POLL_TIMEOUT_MS = 15_000;
 interface UseSkillConnectOptions {
   identifier: string;
   serverName?: Klavis.McpServerName;
-  type: 'klavis' | 'lobehub';
+  type: 'klavis' | 'mAI';
 }
 
 export const useSkillConnect = ({ identifier, serverName, type }: UseSkillConnectOptions) => {
@@ -67,7 +67,7 @@ export const useSkillConnect = ({ identifier, serverName, type }: UseSkillConnec
 
   useEffect(() => {
     const connected =
-      type === 'lobehub'
+      type === 'mAI'
         ? lobehubServer?.status === LobehubSkillStatus.CONNECTED
         : klavisServer?.status === KlavisServerStatus.CONNECTED;
 
@@ -78,7 +78,7 @@ export const useSkillConnect = ({ identifier, serverName, type }: UseSkillConnec
 
   // Listen for OAuth success message from popup window (for LobeHub skills)
   useEffect(() => {
-    if (type !== 'lobehub') return;
+    if (type !== 'mAI') return;
 
     const handleMessage = async (event: MessageEvent) => {
       if (event.origin !== window.location.origin) return;
@@ -102,7 +102,7 @@ export const useSkillConnect = ({ identifier, serverName, type }: UseSkillConnec
 
       pollIntervalRef.current = setInterval(async () => {
         try {
-          if (type === 'lobehub') {
+          if (type === 'mAI') {
             await checkLobehubStatus(serverIdOrName);
           } else {
             await refreshKlavisServerTools(serverIdOrName);
@@ -134,7 +134,7 @@ export const useSkillConnect = ({ identifier, serverName, type }: UseSkillConnec
             }
             oauthWindowRef.current = null;
             // Check status and then reset waiting state
-            if (type === 'lobehub') {
+            if (type === 'mAI') {
               await checkLobehubStatus(serverIdOrName);
             } else {
               await refreshKlavisServerTools(serverIdOrName);
@@ -226,10 +226,10 @@ export const useSkillConnect = ({ identifier, serverName, type }: UseSkillConnec
     openOAuthWindow,
   ]);
 
-  const handleConnect = type === 'lobehub' ? handleLobehubConnect : handleKlavisConnect;
+  const handleConnect = type === 'mAI' ? handleLobehubConnect : handleKlavisConnect;
 
   const handleDisconnect = useCallback(async () => {
-    if (type === 'lobehub' && lobehubServer) {
+    if (type === 'mAI' && lobehubServer) {
       await revokeLobehubConnect(lobehubServer.identifier);
     } else if (type === 'klavis' && klavisServer) {
       await removeKlavisServer(klavisServer.identifier);
@@ -237,7 +237,7 @@ export const useSkillConnect = ({ identifier, serverName, type }: UseSkillConnec
   }, [type, lobehubServer, klavisServer, revokeLobehubConnect, removeKlavisServer]);
 
   const isConnected =
-    type === 'lobehub'
+    type === 'mAI'
       ? lobehubServer?.status === LobehubSkillStatus.CONNECTED
       : klavisServer?.status === KlavisServerStatus.CONNECTED;
 

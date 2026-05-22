@@ -1,4 +1,4 @@
-{
+﻿{
   "ModelSwitch.title": "Modelo",
   "active": "Activo",
   "agentBuilder.installPlugin.authRequired": "Cloud MCP requiere iniciar sesión para continuar",
@@ -217,7 +217,7 @@
   "historySummary": "Resumen de mensajes históricos",
   "inactive": "Inactivo",
   "inbox.desc": "Colabora en un solo espacio de trabajo y convierte ideas en resultados.",
-  "inbox.title": "Lobe AI",
+  "inbox.title": "May",
   "input.addAi": "Agregar mensaje de IA",
   "input.addUser": "Agregar mensaje de usuario",
   "input.costEstimate.creditsPerMillionTokens": "{{credits}} créditos/M tokens",
@@ -643,7 +643,7 @@
   "taskList.orderBy.updatedAt": "Actualizada el",
   "taskList.title": "Tareas",
   "taskList.unassigned": "Sin asignar",
-  "taskList.unassignedHint": "Lobe AI ejecutará esta tarea cuando no haya ningún asignado",
+  "taskList.unassignedHint": "May ejecutará esta tarea cuando no haya ningún asignado",
   "taskList.view.board": "Tablero",
   "taskList.view.list": "Lista",
   "taskList.viewAll": "Ver todo",

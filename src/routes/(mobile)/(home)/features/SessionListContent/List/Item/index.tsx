@@ -1,4 +1,4 @@
-import { ModelTag } from '@lobehub/icons';
+﻿import { ModelTag } from '@lobehub/icons';
 import { Flexbox } from '@lobehub/ui';
 import React, { memo, useMemo, useState } from 'react';
 import { shallow } from 'zustand/shallow';
@@ -53,7 +53,7 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
       ];
     });
 
-  // Only hide the model tag for the inbox session itself (Lobe AI)
+  // Only hide the model tag for the inbox session itself (May)
   const showModel = sessionType === 'agent' && model && id !== INBOX_SESSION_ID;
 
   const handleDoubleClick = () => {

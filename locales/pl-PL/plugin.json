@@ -1,4 +1,4 @@
-{
+﻿{
   "arguments.moreParams": "Łącznie {{count}} parametrów",
   "arguments.title": "Argumenty",
   "builtins.lobe-activator.apiName.activateTools": "Aktywuj Narzędzia",
@@ -701,7 +701,7 @@
   "skillDetail.tools": "Narzędzia",
   "skillDetail.trustWarning": "Używaj konektorów tylko od zaufanych deweloperów. LobeHub nie kontroluje, jakie narzędzia są udostępniane przez deweloperów i nie może zagwarantować, że będą działać zgodnie z oczekiwaniami ani że nie ulegną zmianie.",
   "skillInstallBanner.dismiss": "Zamknij",
-  "skillInstallBanner.title": "Połącz ulubione aplikacje z Lobe AI",
+  "skillInstallBanner.title": "Połącz ulubione aplikacje z May",
   "store.actions.cancel": "Anuluj",
   "store.actions.configure": "Konfiguruj",
   "store.actions.confirmUninstall": "Odinstalowanie usunie konfigurację Umiejętności. Kontynuować?",

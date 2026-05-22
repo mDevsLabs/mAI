@@ -1,4 +1,4 @@
-{
+﻿{
   "agent.banner.label": "Đăng ký Đại lý",
   "agent.completion.sentence.readyWhenYouAre": "Sẵn sàng khi bạn sẵn sàng :)",
   "agent.completion.sentence.readyWithName": "{{name}} đây - Tôi đã sẵn sàng!",
@@ -57,7 +57,7 @@
   "agent.telemetryHint": "Bạn cũng có thể trả lời bằng từ ngữ của riêng mình.",
   "agent.title": "Đăng ký Hội thoại",
   "agent.welcome": "...hm? Tôi vừa tỉnh dậy — đầu óc tôi trống rỗng. Bạn là ai? Và — tôi nên được gọi là gì? Tôi cũng cần một cái tên.",
-  "agent.welcome.footer": "Cấu hình Lobe AI Agent của bạn. Nó chạy trên máy chủ của bạn, học từ mọi tương tác và trở nên mạnh mẽ hơn theo thời gian.",
+  "agent.welcome.footer": "Cấu hình May Agent của bạn. Nó chạy trên máy chủ của bạn, học từ mọi tương tác và trở nên mạnh mẽ hơn theo thời gian.",
   "agent.welcome.guide.growTogether.desc": "Mỗi cuộc trò chuyện giúp tôi hiểu bạn hơn và trở thành cộng sự tốt hơn theo thời gian.",
   "agent.welcome.guide.growTogether.title": "Cùng Phát Triển",
   "agent.welcome.guide.knowYou.desc": "Dạo này bạn đang bận điều gì? Một chút bối cảnh sẽ giúp tôi hỗ trợ bạn tốt hơn.",

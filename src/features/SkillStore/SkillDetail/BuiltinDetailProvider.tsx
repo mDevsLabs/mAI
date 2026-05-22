@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import isEqual from 'fast-deep-equal';
 import { type ReactNode } from 'react';
@@ -57,7 +57,7 @@ export const BuiltinDetailProvider = ({ children, identifier }: BuiltinDetailPro
   });
 
   const value: DetailContextValue = {
-    author: 'LobeHub',
+    author: 'mAI',
     authorUrl: 'https://lobehub.com',
     config: null as any, // Builtin tools don't have provider config
     description: meta?.description || '',

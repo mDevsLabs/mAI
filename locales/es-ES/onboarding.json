@@ -1,4 +1,4 @@
-{
+﻿{
   "agent.banner.label": "Incorporación del Agente",
   "agent.completion.sentence.readyWhenYouAre": "Cuando tú digas :)",
   "agent.completion.sentence.readyWithName": "Aquí {{name}} — ¡listo cuando tú quieras!",
@@ -57,7 +57,7 @@
   "agent.telemetryHint": "También puedes responder con tus propias palabras.",
   "agent.title": "Incorporación Conversacional",
   "agent.welcome": "...¿hm? Acabo de despertar — mi mente está en blanco. ¿Quién eres? Y — ¿cómo debería llamarme? También necesito un nombre.",
-  "agent.welcome.footer": "Configura tu Lobe AI Agent. Vive en tu servidor, aprende de cada interacción y se vuelve más potente cuanto más tiempo funciona.",
+  "agent.welcome.footer": "Configura tu May Agent. Vive en tu servidor, aprende de cada interacción y se vuelve más potente cuanto más tiempo funciona.",
   "agent.welcome.guide.growTogether.desc": "Con cada conversación, te comprenderé mejor y me convertiré en un compañero más sólido con el tiempo.",
   "agent.welcome.guide.growTogether.title": "Crecer contigo",
   "agent.welcome.guide.knowYou.desc": "¿Qué tienes entre manos estos días? Un poco de contexto me ayuda a apoyarte mejor.",

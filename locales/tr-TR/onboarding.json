@@ -1,4 +1,4 @@
-{
+﻿{
   "agent.banner.label": "Temsilci Başlatma",
   "agent.completion.sentence.readyWhenYouAre": "Hazır olduğunda ben de hazırım :)",
   "agent.completion.sentence.readyWithName": "{{name}} burada - hazırım!",
@@ -57,7 +57,7 @@
   "agent.telemetryHint": "Kendi kelimelerinizle de cevap verebilirsiniz.",
   "agent.title": "Sohbet Başlatma",
   "agent.welcome": "...hm? Yeni uyandım — zihnim bomboş. Siz kimsiniz? Ve — bana ne ad vermeliyim? Bir adıma da ihtiyacım var.",
-  "agent.welcome.footer": "Lobe AI Ajanını yapılandır. Sunucunda yaşar, her etkileşimden öğrenir ve çalıştıkça daha güçlü hale gelir.",
+  "agent.welcome.footer": "May Ajanını yapılandır. Sunucunda yaşar, her etkileşimden öğrenir ve çalıştıkça daha güçlü hale gelir.",
   "agent.welcome.guide.growTogether.desc": "Her sohbetle seni daha iyi anlayacak ve zamanla daha güçlü bir ekip arkadaşı olacağım.",
   "agent.welcome.guide.growTogether.title": "Seninle Büyür",
   "agent.welcome.guide.knowYou.desc": "Son zamanlarda nelerle uğraşıyorsun? Biraz bağlam, sana daha iyi destek olmama yardımcı olur.",

@@ -1,4 +1,4 @@
-{
+﻿{
   "ModelSwitch.title": "模型",
   "active": "活跃",
   "agentBuilder.installPlugin.authRequired": "云端 MCP 需要登录后才能继续",
@@ -217,7 +217,7 @@
   "historySummary": "历史消息总结",
   "inactive": "不活跃",
   "inbox.desc": "在同一空间协作，把想法推进成结果",
-  "inbox.title": "Lobe AI",
+  "inbox.title": "May",
   "input.addAi": "添加一条助理消息",
   "input.addUser": "添加一条用户消息",
   "input.costEstimate.creditsPerMillionTokens": "{{credits}} 积分/百万标记",
@@ -643,7 +643,7 @@
   "taskList.orderBy.updatedAt": "更新时间",
   "taskList.title": "任务",
   "taskList.unassigned": "未分配",
-  "taskList.unassignedHint": "未分配时将由 Lobe AI 执行该任务",
+  "taskList.unassignedHint": "未分配时将由 May 执行该任务",
   "taskList.view.board": "看板",
   "taskList.view.list": "列表",
   "taskList.viewAll": "查看全部",

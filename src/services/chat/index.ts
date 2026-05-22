@@ -1,4 +1,4 @@
-import { AgentBuilderIdentifier } from '@lobechat/builtin-tool-agent-builder';
+﻿import { AgentBuilderIdentifier } from '@lobechat/builtin-tool-agent-builder';
 import {
   KLAVIS_SERVER_TYPES,
   LOBEHUB_SKILL_PROVIDERS,
@@ -238,7 +238,7 @@ class ChatService {
           const server = allKlavisServers.find((s) => s.identifier === klavisType.identifier);
 
           officialTools.push({
-            description: `LobeHub Mcp Server: ${klavisType.label}`,
+            description: `mAI Mcp Server: ${klavisType.label}`,
             enabled: enabledPlugins.includes(klavisType.identifier),
             identifier: klavisType.identifier,
             installed: !!server,

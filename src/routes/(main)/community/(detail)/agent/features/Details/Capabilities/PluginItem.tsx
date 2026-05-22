@@ -1,4 +1,4 @@
-import { builtinTools } from '@lobechat/builtin-tools';
+﻿import { builtinTools } from '@lobechat/builtin-tools';
 import {
   getLobehubSkillProviderById,
   KLAVIS_SERVER_TYPES,
@@ -104,7 +104,7 @@ const PluginItem = memo<PluginItemProps>(({ identifier }) => {
         avatar: '', // Avatar will be rendered by BuiltinToolIcon component
         category: undefined,
         createdAt: '',
-        description: `LobeHub Mcp Server: ${klavisTool.label}`,
+        description: `mAI Mcp Server: ${klavisTool.label}`,
         homepage: 'https://klavis.ai',
         identifier: klavisTool.identifier,
         manifest: undefined,
@@ -138,7 +138,7 @@ const PluginItem = memo<PluginItemProps>(({ identifier }) => {
     // Check builtin tools (like lobe-cloud-sandbox, lobe-memory, etc.)
     if (builtinTool) {
       return {
-        author: 'LobeHub',
+        author: 'mAI',
         avatar: builtinTool.manifest.meta.avatar || '',
         category: undefined,
         createdAt: '',

@@ -1,4 +1,4 @@
-{
+﻿{
   "_cloud.officialProvider": "{{name}} Officiële Modeldienst",
   "about.title": "Over",
   "accountDeletion.cancelButton": "Verwijdering annuleren",
@@ -688,7 +688,7 @@
   "settingOpening.title": "Openingsinstellingen",
   "settingPlugin.title": "Vaardighedenlijst",
   "settingSelfIteration.enabled.desc": "Sta deze assistent toe om recente signalen te beoordelen en zijn eigen vaardigheden te verbeteren wanneer de zelf-iteratieworkflow wordt uitgevoerd.",
-  "settingSelfIteration.enabled.managedDesc": "Altijd ingeschakeld voor Lobe AI zolang Zelf-Iteratie beschikbaar is.",
+  "settingSelfIteration.enabled.managedDesc": "Altijd ingeschakeld voor May zolang Zelf-Iteratie beschikbaar is.",
   "settingSelfIteration.enabled.title": "Zelf-Iteratie Inschakelen",
   "settingSelfIteration.title": "Zelf-Iteratie",
   "settingSystem.oauth.info.desc": "Ingelogd",

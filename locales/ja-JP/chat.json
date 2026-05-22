@@ -1,4 +1,4 @@
-{
+﻿{
   "ModelSwitch.title": "モデル",
   "active": "アクティブ",
   "agentBuilder.installPlugin.authRequired": "クラウド MCP を使用するにはログインが必要です",
@@ -217,7 +217,7 @@
   "historySummary": "履歴メッセージの要約",
   "inactive": "非アクティブ",
   "inbox.desc": "同一空間で協力し、アイデアを結果に推進します",
-  "inbox.title": "Lobe AI",
+  "inbox.title": "May",
   "input.addAi": "アシスタントメッセージを追加",
   "input.addUser": "ユーザーメッセージを追加",
   "input.costEstimate.creditsPerMillionTokens": "{{credits}} クレジット/Mトークン",
@@ -643,7 +643,7 @@
   "taskList.orderBy.updatedAt": "更新日時",
   "taskList.title": "タスク",
   "taskList.unassigned": "未割り当て",
-  "taskList.unassignedHint": "担当者が設定されていない場合、Lobe AI がこのタスクを実行します",
+  "taskList.unassignedHint": "担当者が設定されていない場合、May がこのタスクを実行します",
   "taskList.view.board": "ボード",
   "taskList.view.list": "リスト",
   "taskList.viewAll": "すべて表示",

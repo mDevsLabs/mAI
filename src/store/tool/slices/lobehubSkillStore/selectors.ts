@@ -1,4 +1,4 @@
-import { type ToolStoreState } from '../../initialState';
+﻿import { type ToolStoreState } from '../../initialState';
 import { type LobehubSkillServer } from './types';
 import { LobehubSkillStatus } from './types';
 
@@ -95,8 +95,8 @@ export const lobehubSkillStoreSelectors = {
           identifier: server.identifier,
           manifest: {
             api: apis,
-            author: 'LobeHub Market',
-            homepage: 'https://lobehub.com/market',
+            author: 'mAI Market',
+            homepage: 'https://mprojects.odoo.com/market',
             identifier: server.identifier,
             meta: {
               avatar: server.icon || '🔗',

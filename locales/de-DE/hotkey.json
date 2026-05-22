@@ -1,4 +1,4 @@
-{
+﻿{
   "addUserMessage.desc": "Füge die aktuelle Eingabe als Benutzernachricht hinzu, ohne die Generierung auszulösen",
   "addUserMessage.title": "Benutzernachricht hinzufügen",
   "commandPalette.desc": "Öffne die globale Befehlspalette für schnellen Zugriff auf Funktionen",
@@ -17,7 +17,7 @@
   "desktop.showApp.title": "Hauptfenster ein-/ausblenden",
   "editMessage.desc": "Bearbeitungsmodus aktivieren, indem Sie Alt gedrückt halten und doppelt auf die Nachricht klicken",
   "editMessage.title": "Nachricht bearbeiten",
-  "navigateToChat.desc": "Wechsle zum Chat-Tab und öffne Lobe AI",
+  "navigateToChat.desc": "Wechsle zum Chat-Tab und öffne May",
   "navigateToChat.title": "Zum Standard-Chat wechseln",
   "openChatSettings.desc": "Einstellungen für das aktuelle Gespräch anzeigen und ändern",
   "openChatSettings.title": "Chat-Einstellungen öffnen",

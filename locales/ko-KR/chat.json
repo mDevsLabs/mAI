@@ -1,4 +1,4 @@
-{
+﻿{
   "ModelSwitch.title": "모델",
   "active": "활성",
   "agentBuilder.installPlugin.authRequired": "클라우드 MCP를 사용하려면 로그인이 필요합니다",
@@ -217,7 +217,7 @@
   "historySummary": "기록 메시지 요약",
   "inactive": "비활성",
   "inbox.desc": "동일한 공간에서 협력하여 아이디어를 결과로 만듭니다",
-  "inbox.title": "Lobe AI",
+  "inbox.title": "May",
   "input.addAi": "도우미 메시지 추가",
   "input.addUser": "사용자 메시지 추가",
   "input.costEstimate.creditsPerMillionTokens": "{{credits}} 크레딧/M 토큰",
@@ -643,7 +643,7 @@
   "taskList.orderBy.updatedAt": "수정일",
   "taskList.title": "작업",
   "taskList.unassigned": "미할당",
-  "taskList.unassignedHint": "담당자가 배정되지 않은 경우 Lobe AI가 이 작업을 실행합니다",
+  "taskList.unassignedHint": "담당자가 배정되지 않은 경우 May가 이 작업을 실행합니다",
   "taskList.view.board": "보드",
   "taskList.view.list": "목록",
   "taskList.viewAll": "전체 보기",

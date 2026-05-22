@@ -1,4 +1,4 @@
-import { BRANDING_EMAIL, BRANDING_NAME, SOCIAL_URL } from '@lobechat/business-const';
+﻿import { BRANDING_EMAIL, BRANDING_NAME, SOCIAL_URL } from '@lobechat/business-const';
 import { isString } from 'es-toolkit/compat';
 import qs from 'query-string';
 import urlJoin from 'url-join';
@@ -27,8 +27,8 @@ export const AUTHOR_LIST = {
   lobehub: {
     avatar: 'https://avatars.githubusercontent.com/u/131470832?v=4',
     desc: 'Official Account',
-    name: 'LobeHub',
-    url: 'https://github.com/lobehub',
+    name: 'mAI',
+    url: 'https://github.com/mDevsLabs/mAI',
   },
 };
 
@@ -87,7 +87,7 @@ export class Ld {
     return {
       '@id': this.getId(OFFICIAL_URL, '#organization'),
       '@type': 'Organization',
-      'alternateName': 'LobeHub',
+      'alternateName': 'mAI',
       'contactPoint': {
         '@type': 'ContactPoint',
         'contactType': 'customer support',
@@ -105,7 +105,7 @@ export class Ld {
         'url': urlJoin(OFFICIAL_SITE, '/icon-512x512.png'),
         'width': 512,
       },
-      'name': 'LobeHub',
+      'name': 'mAI',
       'sameAs': [SOCIAL_URL.x, SOCIAL_URL.github, SOCIAL_URL.medium, SOCIAL_URL.youtube],
       'url': OFFICIAL_SITE,
     };
@@ -117,8 +117,8 @@ export class Ld {
       '@type': 'Organization',
     };
     if (!ids || ids.length === 0) return defaultAuthor;
-    if (ids.length === 1 && ids[0] === 'lobehub') return defaultAuthor;
-    const personId = ids.find((id) => id !== 'lobehub');
+    if (ids.length === 1 && ids[0] === 'mAI') return defaultAuthor;
+    const personId = ids.find((id) => id !== 'mAI');
     if (!personId) return defaultAuthor;
     const person = (AUTHOR_LIST as any)?.[personId];
     if (!person) return defaultAuthor;
@@ -256,7 +256,7 @@ export class Ld {
         '@id': this.getId(fixedUrl, '#primaryimage'),
       },
       'inLanguage': locale,
-      'keywords': tags?.join(' ') || 'LobeHub',
+      'keywords': tags?.join(' ') || 'mAI',
       'mainEntityOfPage': fixedUrl,
       'name': title,
       'publisher': {

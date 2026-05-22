@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { Github, ProviderCombine } from '@lobehub/icons';
 import { ActionIcon, Flexbox, stopPropagation } from '@lobehub/ui';
@@ -55,7 +55,7 @@ const Header = memo<{ mobile?: boolean }>(({ mobile: isMobile }) => {
             rel="noreferrer"
             target="_blank"
             href={urlJoin(
-              'https://github.com/lobehub/lobe-chat-agents/tree/main/locales',
+              'https://github.com/mDevsLabs/mAI-agents/tree/main/locales',
               identifier as string,
             )}
             onClick={stopPropagation}

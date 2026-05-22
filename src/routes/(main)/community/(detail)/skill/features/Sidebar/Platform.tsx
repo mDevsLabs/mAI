@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { DEFAULT_INBOX_AVATAR, SESSION_CHAT_URL } from '@lobechat/const';
 import { Claude, Cline, Cursor, OpenAI } from '@lobehub/icons';
@@ -35,7 +35,7 @@ enum PlatformType {
   Cline = 'cline',
   Codex = 'codex',
   Cursor = 'cursor',
-  LobeHub = 'lobehub',
+  LobeHub = 'mAI',
   VsCode = 'vscode',
 }
 
@@ -62,7 +62,7 @@ const genInstallCommand = (identifier?: string, platform?: PlatformType) => {
     [PlatformType.Claude]: 'claude-code',
     [PlatformType.Cline]: 'cline',
     [PlatformType.Cursor]: 'cursor',
-    [PlatformType.LobeHub]: 'lobehub',
+    [PlatformType.LobeHub]: 'mAI',
     [PlatformType.Codex]: 'codex',
     [PlatformType.VsCode]: 'vscode',
   };
@@ -154,7 +154,7 @@ const Platform = memo<PlatformProps>(
       switch (active) {
         case PlatformType.LobeHub: {
           return {
-            platform: 'LobeHub',
+            platform: 'mAI',
             steps: t('skills.details.sidebar.platform.steps.lobehub'),
           };
         }

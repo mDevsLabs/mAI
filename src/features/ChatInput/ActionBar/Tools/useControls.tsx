@@ -1,4 +1,4 @@
-import {
+﻿import {
   KLAVIS_SERVER_TYPES,
   LOBEHUB_SKILL_PROVIDERS,
   RECOMMENDED_SKILLS,
@@ -61,7 +61,7 @@ const SKILL_ICON_SIZE = 18;
 const CLOSE_TOOL_DETAIL_POPOVER_EVENT = 'lobe-chat-tool-detail-popover-close';
 
 const officialTag = (
-  <Tooltip placement={'top'} title={'LobeHub'}>
+  <Tooltip placement={'top'} title={'mAI'}>
     <Tag color={'success'} icon={<Icon icon={BadgeCheck} />} size={'small'} />
   </Tooltip>
 );
@@ -786,7 +786,7 @@ export const useControls = () => {
                   displayName: type.label,
                   onDelete: () => removeKlavisServer(server.identifier),
                 },
-                extraTag: type.author === 'LobeHub' ? officialTag : undefined,
+                extraTag: type.author === 'mAI' ? officialTag : undefined,
                 icon,
                 id: server.identifier,
                 popoverContent,
@@ -855,7 +855,7 @@ export const useControls = () => {
             if (server?.status === LobehubSkillStatus.CONNECTED || server?.isConnected) {
               return createManagedSkillItem({
                 badge: <Icon icon={McpIcon} size={12} />,
-                extraTag: provider.author === 'LobeHub' ? officialTag : undefined,
+                extraTag: provider.author === 'mAI' ? officialTag : undefined,
                 icon,
                 id: server.identifier,
                 popoverContent,
@@ -1136,7 +1136,7 @@ export const useControls = () => {
         <Tag color={'warning'} icon={<Icon icon={Package} />} size={'small'}>
           {t('store.customPlugin', { ns: 'plugin' })}
         </Tag>
-      ) : item.author === 'LobeHub' ? (
+      ) : item.author === 'mAI' ? (
         officialTag
       ) : undefined,
       icon,

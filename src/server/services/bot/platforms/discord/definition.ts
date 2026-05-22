@@ -1,4 +1,4 @@
-import type { PlatformDefinition } from '../types';
+﻿import type { PlatformDefinition } from '../types';
 import { DiscordClientFactory } from './client';
 import { DEFAULT_DISCORD_CONNECTION_MODE } from './const';
 import { schema } from './schema';
@@ -10,7 +10,7 @@ export const discord: PlatformDefinition = {
   description: 'Connect a Discord bot',
   documentation: {
     portalUrl: 'https://discord.com/developers/applications',
-    setupGuideUrl: 'https://lobehub.com/docs/usage/channels/discord',
+    setupGuideUrl: 'https://mprojects.odoo.com/docs/usage/channels/discord',
   },
   schema,
   clientFactory: new DiscordClientFactory(),

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { ProviderIcon } from '@lobehub/icons';
 import { Button, DropdownMenu, Icon } from '@lobehub/ui';
@@ -23,9 +23,9 @@ const styles = createStaticStyles(({ css }) => ({
 const ChatWithModel = memo(() => {
   const { t } = useTranslation('discover');
   const { providers = [] } = useDetailContext();
-  const includeLobeHub = providers.some((item) => item.id === 'lobehub');
+  const includeLobeHub = providers.some((item) => item.id === 'mAI');
   const navigate = useNavigate();
-  const list = providers.filter((provider) => provider.id !== 'lobehub');
+  const list = providers.filter((provider) => provider.id !== 'mAI');
 
   const items = list.map((item) => ({
     icon: <ProviderIcon provider={item.id} size={20} type={'avatar'} />,

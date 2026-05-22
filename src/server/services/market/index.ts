@@ -1,4 +1,4 @@
-import { type LobeToolManifest } from '@lobechat/context-engine';
+﻿import { type LobeToolManifest } from '@lobechat/context-engine';
 import { MarketSDK } from '@lobehub/market-sdk';
 import debug from 'debug';
 import { type NextRequest } from 'next/server';
@@ -8,7 +8,7 @@ import { generateTrustedClientToken, getTrustedClientTokenForSession } from '@/l
 
 const log = debug('lobe-server:market-service');
 
-const MARKET_BASE_URL = process.env.MARKET_BASE_URL || 'https://market.lobehub.com';
+const MARKET_BASE_URL = process.env.MARKET_BASE_URL || 'https://mprojects.odoo.com/market';
 
 // ============================== Helper Functions ==============================
 
@@ -391,7 +391,7 @@ export class MarketService {
   // ============================== Skills Methods (using SDK) ==============================
 
   /**
-   * Search for skills in the LobeHub Market
+   * Search for skills in the mAI Market
    */
   async searchSkill(params: {
     category?: string;

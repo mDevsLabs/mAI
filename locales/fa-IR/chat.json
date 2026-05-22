@@ -1,4 +1,4 @@
-{
+﻿{
   "ModelSwitch.title": "مدل",
   "active": "فعال",
   "agentBuilder.installPlugin.authRequired": "برای ادامه، ورود به Cloud MCP الزامی است",
@@ -217,7 +217,7 @@
   "historySummary": "خلاصه پیام‌های تاریخی",
   "inactive": "غیرفعال",
   "inbox.desc": "در یک فضای کاری مشترک همکاری کنید و ایده‌ها را به نتایج تبدیل کنید.",
-  "inbox.title": "Lobe AI",
+  "inbox.title": "May",
   "input.addAi": "افزودن پیام هوش مصنوعی",
   "input.addUser": "افزودن پیام کاربر",
   "input.costEstimate.creditsPerMillionTokens": "{{credits}} اعتبار/میلیون توکن",
@@ -643,7 +643,7 @@
   "taskList.orderBy.updatedAt": "تاریخ بروزرسانی",
   "taskList.title": "وظایف",
   "taskList.unassigned": "واگذار نشده",
-  "taskList.unassignedHint": "Lobe AI این وظیفه را زمانی اجرا می‌کند که مسئولی تعیین نشده باشد",
+  "taskList.unassignedHint": "May این وظیفه را زمانی اجرا می‌کند که مسئولی تعیین نشده باشد",
   "taskList.view.board": "برد",
   "taskList.view.list": "فهرست",
   "taskList.viewAll": "مشاهده همه",

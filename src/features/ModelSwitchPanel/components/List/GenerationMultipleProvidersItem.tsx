@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import {
   DropdownMenuPopup,
@@ -81,7 +81,7 @@ const GenerationMultipleProvidersItem = memo<GenerationMultipleProvidersItemProp
                   </Flexbox>
                   {item.data.providers.map((p) => {
                     const pKey = menuKey(p.id, item.data.model.id);
-                    const isProviderActive = isActive ? activeKey === pKey : p.id === 'lobehub';
+                    const isProviderActive = isActive ? activeKey === pKey : p.id === 'mAI';
                     return (
                       <Flexbox
                         horizontal

@@ -1,4 +1,4 @@
-import { TRPCError } from '@trpc/server';
+﻿import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 import { customAlphabet } from 'nanoid/non-secure';
 import { z } from 'zod';
@@ -10,7 +10,7 @@ import { generateTrustedClientToken } from '@/libs/trusted-client';
 import { normalizeLocale } from '@/locales/resources';
 import type { AgentForkBatchResult, AgentForkResponse } from '@/types/discover';
 
-const MARKET_BASE_URL = process.env.MARKET_BASE_URL || 'https://market.lobehub.com';
+const MARKET_BASE_URL = process.env.MARKET_BASE_URL || 'https://mprojects.odoo.com/market';
 
 interface MarketUserInfo {
   accountId: number;

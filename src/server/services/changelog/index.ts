@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+﻿import dayjs from 'dayjs';
 import { template } from 'es-toolkit/compat';
 import matter from 'gray-matter';
 import semver from 'semver';
@@ -39,7 +39,7 @@ export class ChangelogService {
     repo: 'lobe-chat',
     type: 'cloud',
     urlTemplate: process.env.CHANGELOG_URL_TEMPLATE || URL_TEMPLATE,
-    user: 'lobehub',
+    user: 'mAI',
   };
 
   async getLatestChangelogId() {

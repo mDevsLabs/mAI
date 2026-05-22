@@ -1,4 +1,4 @@
-import { INBOX_SESSION_ID } from '@lobechat/const';
+﻿import { INBOX_SESSION_ID } from '@lobechat/const';
 import { HotkeyEnum } from '@lobechat/const/hotkeys';
 import { useLocation } from 'react-router-dom';
 
@@ -22,7 +22,7 @@ export const isTaskPanelRoute = (pathname: string) =>
 export const isAgentProfilePanelRoute = (pathname: string) =>
   /^\/agent\/[^/]+\/profile\/?$/.test(pathname);
 
-// Switch to chat tab (and focus on Lobe AI)
+// Switch to chat tab (and focus on May)
 export const useNavigateToChatHotkey = () => {
   const navigateToAgent = useNavigateToAgent();
   const [, { unpinAgent }] = usePinnedAgentState();

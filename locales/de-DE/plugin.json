@@ -1,4 +1,4 @@
-{
+﻿{
   "arguments.moreParams": "{{count}} Parameter insgesamt",
   "arguments.title": "Argumente",
   "builtins.lobe-activator.apiName.activateTools": "Werkzeuge aktivieren",
@@ -701,7 +701,7 @@
   "skillDetail.tools": "Werkzeuge",
   "skillDetail.trustWarning": "Verwenden Sie nur Connectoren von vertrauenswürdigen Entwicklern. LobeHub hat keine Kontrolle darüber, welche Werkzeuge von Entwicklern bereitgestellt werden, und kann nicht garantieren, dass diese wie beabsichtigt funktionieren oder unverändert bleiben.",
   "skillInstallBanner.dismiss": "Schließen",
-  "skillInstallBanner.title": "Verbinde deine Lieblings-Apps mit Lobe AI",
+  "skillInstallBanner.title": "Verbinde deine Lieblings-Apps mit May",
   "store.actions.cancel": "Abbrechen",
   "store.actions.configure": "Konfigurieren",
   "store.actions.confirmUninstall": "Durch Deinstallation wird die Skill-Konfiguration gelöscht. Fortfahren?",

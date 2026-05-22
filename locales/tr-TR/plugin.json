@@ -1,4 +1,4 @@
-{
+﻿{
   "arguments.moreParams": "Toplam {{count}} parametre",
   "arguments.title": "Argümanlar",
   "builtins.lobe-activator.apiName.activateTools": "Araçları Etkinleştir",
@@ -701,7 +701,7 @@
   "skillDetail.tools": "Araçlar",
   "skillDetail.trustWarning": "Yalnızca güvendiğiniz geliştiricilerin bağlayıcılarını kullanın. LobeHub, geliştiricilerin hangi araçları sunduğunu kontrol etmez ve bu araçların beklendiği gibi çalışacağını veya değişmeyeceğini garanti edemez.",
   "skillInstallBanner.dismiss": "Kapat",
-  "skillInstallBanner.title": "Favori uygulamalarınızı Lobe AI'a bağlayın",
+  "skillInstallBanner.title": "Favori uygulamalarınızı May'a bağlayın",
   "store.actions.cancel": "İptal",
   "store.actions.configure": "Yapılandır",
   "store.actions.confirmUninstall": "Skill yapılandırması silinecek. Devam edilsin mi?",

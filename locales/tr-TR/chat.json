@@ -1,4 +1,4 @@
-{
+﻿{
   "ModelSwitch.title": "Model",
   "active": "Aktif",
   "agentBuilder.installPlugin.authRequired": "Cloud MCP devam etmek için oturum açmanızı gerektirir",
@@ -217,7 +217,7 @@
   "historySummary": "Geçmiş Mesaj Özeti",
   "inactive": "Pasif",
   "inbox.desc": "Tek bir Çalışma Alanında iş birliği yapın ve fikirleri sonuca dönüştürün.",
-  "inbox.title": "Lobe AI",
+  "inbox.title": "May",
   "input.addAi": "Yapay Zeka mesajı ekle",
   "input.addUser": "Kullanıcı mesajı ekle",
   "input.costEstimate.creditsPerMillionTokens": "{{credits}} kredi/M token",
@@ -643,7 +643,7 @@
   "taskList.orderBy.updatedAt": "Güncellenme zamanı",
   "taskList.title": "Görevler",
   "taskList.unassigned": "Atanmamış",
-  "taskList.unassignedHint": "Atanan olmadığında Lobe AI bu görevi çalıştırır",
+  "taskList.unassignedHint": "Atanan olmadığında May bu görevi çalıştırır",
   "taskList.view.board": "Pano",
   "taskList.view.list": "Liste",
   "taskList.viewAll": "Tümünü görüntüle",
