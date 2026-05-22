@@ -11,4 +11,5 @@ packages:
   - '../../packages/local-file-shell'
   - './stubs/business-const'
   - './stubs/types'
+  - './src/main'
   - '.'
