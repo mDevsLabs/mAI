@@ -1,0 +1,150 @@
+import {
+  LobeActivatorInspectors,
+  LobeActivatorManifest,
+} from '@lobechat/builtin-tool-activator/client';
+import {
+  AgentBuilderInspectors,
+  AgentBuilderManifest,
+} from '@lobechat/builtin-tool-agent-builder/client';
+import {
+  AgentDocumentsInspectors,
+  AgentDocumentsManifest,
+} from '@lobechat/builtin-tool-agent-documents/client';
+import {
+  AgentManagementInspectors,
+  AgentManagementManifest,
+} from '@lobechat/builtin-tool-agent-management/client';
+import {
+  ClaudeCodeIdentifier,
+  ClaudeCodeInspectors,
+} from '@lobechat/builtin-tool-claude-code/client';
+import {
+  CloudSandboxIdentifier,
+  CloudSandboxInspectors,
+} from '@lobechat/builtin-tool-cloud-sandbox/client';
+import {
+  GroupAgentBuilderInspectors,
+  GroupAgentBuilderManifest,
+} from '@lobechat/builtin-tool-group-agent-builder/client';
+import {
+  GroupManagementInspectors,
+  GroupManagementManifest,
+} from '@lobechat/builtin-tool-group-management/client';
+import {
+  KnowledgeBaseInspectors,
+  KnowledgeBaseManifest,
+} from '@lobechat/builtin-tool-knowledge-base/client';
+import { LobeAgentInspectors, LobeAgentManifest } from '@lobechat/builtin-tool-lobe-agent/client';
+import {
+  LocalSystemInspectors,
+  LocalSystemManifest,
+} from '@lobechat/builtin-tool-local-system/client';
+import { MemoryInspectors, MemoryManifest } from '@lobechat/builtin-tool-memory/client';
+import { MessageInspectors, MessageManifest } from '@lobechat/builtin-tool-message/client';
+import { PageAgentInspectors, PageAgentManifest } from '@lobechat/builtin-tool-page-agent/client';
+import {
+  SelfFeedbackIntentInspectors,
+  selfFeedbackIntentManifest,
+} from '@lobechat/builtin-tool-self-iteration/client';
+import {
+  SkillStoreInspectors,
+  SkillStoreManifest,
+} from '@lobechat/builtin-tool-skill-store/client';
+import { SkillsInspectors, SkillsManifest } from '@lobechat/builtin-tool-skills/client';
+import { TaskInspectors, TaskManifest } from '@lobechat/builtin-tool-task/client';
+import {
+  WebBrowsingInspectors,
+  WebBrowsingManifest,
+} from '@lobechat/builtin-tool-web-browsing/client';
+import {
+  WebOnboardingInspectors,
+  WebOnboardingManifest,
+} from '@lobechat/builtin-tool-web-onboarding/client';
+import { createRunCommandInspector } from '@lobechat/shared-tool-ui/inspectors';
+import type { BuiltinInspector } from '@lobechat/types';
+
+import { CodexInspectors } from './codex';
+import { GithubIdentifier, GithubInspectors } from './github';
+import { LinearIdentifier, LinearInspectors } from './linear';
+
+/**
+ * Builtin tools inspector registry
+ * Organized by toolset (identifier) -> API name
+ *
+ * Inspector components are used to customize the title/header area
+ * of tool calls in the conversation UI.
+ */
+const BuiltinToolInspectors: Record<string, Record<string, BuiltinInspector>> = {
+  [AgentBuilderManifest.identifier]: AgentBuilderInspectors as Record<string, BuiltinInspector>,
+  [AgentDocumentsManifest.identifier]: AgentDocumentsInspectors as Record<string, BuiltinInspector>,
+  [AgentManagementManifest.identifier]: AgentManagementInspectors as Record<
+    string,
+    BuiltinInspector
+  >,
+  [ClaudeCodeIdentifier]: ClaudeCodeInspectors as Record<string, BuiltinInspector>,
+  [CloudSandboxIdentifier]: CloudSandboxInspectors as Record<string, BuiltinInspector>,
+  [GroupAgentBuilderManifest.identifier]: GroupAgentBuilderInspectors as Record<
+    string,
+    BuiltinInspector
+  >,
+  [GroupManagementManifest.identifier]: GroupManagementInspectors as Record<
+    string,
+    BuiltinInspector
+  >,
+  [KnowledgeBaseManifest.identifier]: KnowledgeBaseInspectors as Record<string, BuiltinInspector>,
+  [LobeAgentManifest.identifier]: LobeAgentInspectors as Record<string, BuiltinInspector>,
+  [LocalSystemManifest.identifier]: LocalSystemInspectors as Record<string, BuiltinInspector>,
+  [MemoryManifest.identifier]: MemoryInspectors as Record<string, BuiltinInspector>,
+  [MessageManifest.identifier]: MessageInspectors as Record<string, BuiltinInspector>,
+  [PageAgentManifest.identifier]: PageAgentInspectors as Record<string, BuiltinInspector>,
+  [LobeActivatorManifest.identifier]: LobeActivatorInspectors as Record<string, BuiltinInspector>,
+  [selfFeedbackIntentManifest.identifier]: SelfFeedbackIntentInspectors as Record<
+    string,
+    BuiltinInspector
+  >,
+  [SkillStoreManifest.identifier]: SkillStoreInspectors as Record<string, BuiltinInspector>,
+  [SkillsManifest.identifier]: SkillsInspectors as Record<string, BuiltinInspector>,
+  [TaskManifest.identifier]: TaskInspectors as Record<string, BuiltinInspector>,
+  [WebBrowsingManifest.identifier]: WebBrowsingInspectors as Record<string, BuiltinInspector>,
+  [WebOnboardingManifest.identifier]: WebOnboardingInspectors as Record<string, BuiltinInspector>,
+  codex: {
+    ...CodexInspectors,
+    command_execution: createRunCommandInspector('Run') as BuiltinInspector,
+  },
+  [GithubIdentifier]: GithubInspectors,
+  [LinearIdentifier]: LinearInspectors,
+};
+
+export interface BuiltinInspectorRegistryEntry {
+  apiName: string;
+  identifier: string;
+  inspector: BuiltinInspector;
+}
+
+export const listBuiltinInspectorEntries = (): BuiltinInspectorRegistryEntry[] =>
+  Object.entries(BuiltinToolInspectors).flatMap(([identifier, toolset]) =>
+    Object.entries(toolset)
+      .filter((entry): entry is [string, BuiltinInspector] => !!entry[1])
+      .map(([apiName, inspector]) => ({
+        apiName,
+        identifier,
+        inspector,
+      })),
+  );
+
+/**
+ * Get builtin inspector component for a specific API
+ * @param identifier - Tool identifier (e.g., 'lobe-code-interpreter')
+ * @param apiName - API name (e.g., 'executeCode')
+ */
+export const getBuiltinInspector = (
+  identifier?: string,
+  apiName?: string,
+): BuiltinInspector | undefined => {
+  if (!identifier || !apiName) return undefined;
+
+  const toolset = BuiltinToolInspectors[identifier];
+  if (!toolset) return undefined;
+
+  return toolset[apiName];
+};

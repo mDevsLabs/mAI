@@ -1,0 +1,6 @@
+{
+  "name": "@lobechat/agent-templates",
+  "version": "0.0.2",
+  "private": true,
+  "main": "./src/index.ts"
+}

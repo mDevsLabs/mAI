@@ -1,0 +1,10 @@
+{
+  "name": "@lobehub/desktop-ipc-typings",
+  "version": "0.0.2",
+  "private": true,
+  "exports": {
+    ".": "./exports.d.ts"
+  },
+  "main": "./exports.d.ts",
+  "types": "./exports.d.ts"
+}

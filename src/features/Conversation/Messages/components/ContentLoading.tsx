@@ -1,0 +1,94 @@
+import { HETEROGENEOUS_TYPE_LABELS } from '@lobechat/heterogeneous-agents';
+import { Flexbox } from '@lobehub/ui';
+import { memo, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import BubblesLoading from '@/components/BubblesLoading';
+import NeuralNetworkLoading from '@/components/NeuralNetworkLoading';
+import { useChatStore } from '@/store/chat';
+import { operationSelectors } from '@/store/chat/selectors';
+import { type OperationType } from '@/store/chat/slices/operation/types';
+import { elapsedTimeStyles, shinyTextStyles } from '@/styles/loading';
+
+const ELAPSED_TIME_THRESHOLD = 2100; // Show elapsed time after 2 seconds
+
+const NO_NEED_SHOW_DOT_OP_TYPES = new Set<OperationType>(['reasoning']);
+
+interface ContentLoadingProps {
+  id: string;
+}
+
+const ContentLoading = memo<ContentLoadingProps>(({ id }) => {
+  const { t } = useTranslation('chat');
+  const runningOp = useChatStore(operationSelectors.getDeepestRunningOperationByMessage(id));
+
+  const startTime = runningOp?.metadata?.startTime;
+  const operationType = runningOp?.type as OperationType | undefined;
+
+  const [elapsedSeconds, setElapsedSeconds] = useState(() =>
+    startTime ? Math.floor((Date.now() - startTime) / 1000) : 0,
+  );
+
+  useEffect(() => {
+    if (!startTime) {
+      setElapsedSeconds(0);
+      return;
+    }
+
+    const updateElapsed = () => {
+      setElapsedSeconds(Math.floor((Date.now() - startTime) / 1000));
+    };
+
+    updateElapsed();
+    const interval = setInterval(updateElapsed, 1000);
+
+    return () => clearInterval(interval);
+  }, [startTime]);
+
+  // Heterogeneous agents interpolate their display name (e.g. "Claude Code is running")
+  // so the user can tell which external agent is working.
+  const getOperationLabel = () => {
+    if (!operationType) return undefined;
+    if (operationType !== 'execHeterogeneousAgent') {
+      return t(`operation.${operationType}` as any) as string;
+    }
+    const heterogeneousType = runningOp?.metadata?.heterogeneousType as string | undefined;
+    const name = heterogeneousType
+      ? (HETEROGENEOUS_TYPE_LABELS[heterogeneousType] ?? heterogeneousType)
+      : t('operation.heterogeneousAgentFallback');
+    return t('operation.execHeterogeneousAgent', { name });
+  };
+  const operationLabel = getOperationLabel();
+
+  const showElapsedTime = elapsedSeconds >= ELAPSED_TIME_THRESHOLD / 1000;
+
+  if (operationType && NO_NEED_SHOW_DOT_OP_TYPES.has(operationType)) return null;
+
+  if (operationType === 'contextCompression') {
+    return (
+      <Flexbox horizontal align={'center'} gap={8}>
+        <NeuralNetworkLoading size={16} />
+        <span className={shinyTextStyles.shinyText}>{t('operation.contextCompression')}</span>
+      </Flexbox>
+    );
+  }
+
+  if (operationLabel) {
+    return (
+      <Flexbox horizontal align={'center'} gap={4}>
+        <span className={shinyTextStyles.shinyText}>{operationLabel}...</span>
+        {showElapsedTime && (
+          <span className={elapsedTimeStyles.elapsedTime}>({elapsedSeconds}s)</span>
+        )}
+      </Flexbox>
+    );
+  }
+
+  return (
+    <Flexbox horizontal align={'center'}>
+      <BubblesLoading />
+    </Flexbox>
+  );
+});
+
+export default ContentLoading;
