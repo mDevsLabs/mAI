@@ -1,6 +1,6 @@
 ﻿{
   "name": "@lobechat/agent-signal",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "private": true,
   "description": "Shared AgentSignal producer helpers and contracts",
   "type": "module",

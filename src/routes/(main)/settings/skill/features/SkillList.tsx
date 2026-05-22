@@ -13,9 +13,7 @@ import AddSkillButton from '@/features/SkillStore/SkillList/AddSkillButton';
 import { useFetchInstalledPlugins } from '@/hooks/useFetchInstalledPlugins';
 import { serverConfigSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useToolStore } from '@/store/tool';
-import {
-  agentSkillsSelectors,
-  builtinToolSelectors,
+import { agentSkillsSelectors, builtinToolSelectors } from '@/store/tool/selectors';
 import { type LobeToolType } from '@/types/tool/tool';
 
 import AgentSkillItem from './AgentSkillItem';

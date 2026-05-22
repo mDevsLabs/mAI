@@ -2,6 +2,16 @@
 
 # Changelog
 
+## Version 0.0.4
+
+<sup>Released on **2026-05-22**</sup>
+
+#### 🐛 Corrections de bugs
+
+- Correction d'une erreur de syntaxe dans `InputArea/index.tsx` (parenthèse fermante et tableau de dépendances manquants dans `useEffect`).
+- Correction d'un import cassé dans `SkillList.tsx` pour `agentSkillsSelectors` et `builtinToolSelectors`.
+- Passage de tous les packages à la version **0.0.4** conformément aux règles de mise à jour.
+
 ## Version 0.0.3
 
 <sup>Released on **2026-05-22**</sup>

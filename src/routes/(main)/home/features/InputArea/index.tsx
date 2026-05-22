@@ -67,6 +67,7 @@ const InputArea = () => {
 
     hasPickedRef.current = true;
     setActiveBanner(candidates[Math.floor(Math.random() * candidates.length)]);
+  }, [
     inboxAgentId,
     isBotIntegrationBannerDismissed,
     isMessengerBannerDismissed,
