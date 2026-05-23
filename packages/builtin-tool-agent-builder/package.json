@@ -9,13 +9,13 @@
   },
   "main": "./src/index.ts",
   "dependencies": {
-    "@lobechat/agent-manager-runtime": "workspace:*",
-    "@lobechat/const": "workspace:*",
-    "@lobechat/prompts": "workspace:*",
+    "@lobechat/agent-manager-runtime": "latest",
+    "@lobechat/const": "latest",
+    "@lobechat/prompts": "latest",
     "type-fest": "^4.18.3"
   },
   "devDependencies": {
-    "@lobechat/types": "workspace:*"
+    "@lobechat/types": "latest"
   },
   "peerDependencies": {
     "@lobehub/ui": "^5",

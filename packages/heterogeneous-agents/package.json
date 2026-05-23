@@ -14,13 +14,13 @@
     "test:coverage": "vitest --coverage --silent='passed-only'"
   },
   "dependencies": {
-    "@lobechat/agent-gateway-client": "workspace:*",
+    "@lobechat/agent-gateway-client": "latest",
     "@lobehub/icons": "^5.4.0",
     "@modelcontextprotocol/sdk": "^1.26.0",
     "diff": "^8.0.4",
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@lobechat/types": "workspace:*"
+    "@lobechat/types": "latest"
   }
 }

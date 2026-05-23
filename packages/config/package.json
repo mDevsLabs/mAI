@@ -7,10 +7,10 @@
   },
   "main": "./src/index.ts",
   "dependencies": {
-    "@lobechat/business-config": "workspace:*",
-    "@lobechat/const": "workspace:*"
+    "@lobechat/business-config": "latest",
+    "@lobechat/const": "latest"
   },
   "devDependencies": {
-    "@lobechat/types": "workspace:*"
+    "@lobechat/types": "latest"
   }
 }

@@ -11,8 +11,8 @@
     "test": "vitest run --silent='passed-only'"
   },
   "dependencies": {
-    "@lobechat/agent-gateway-client": "workspace:*",
-    "@lobechat/agent-tracing": "workspace:*"
+    "@lobechat/agent-gateway-client": "latest",
+    "@lobechat/agent-tracing": "latest"
   },
   "devDependencies": {
     "vitest": "^3.0.0"

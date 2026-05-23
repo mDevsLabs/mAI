@@ -95,7 +95,7 @@
     "test:coverage": "vitest --coverage --silent='passed-only'"
   },
   "dependencies": {
-    "@lobechat/business-const": "workspace:*",
+    "@lobechat/business-const": "latest",
     "type-fest": "^5.2.0"
   },
   "devDependencies": {

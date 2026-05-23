@@ -26,7 +26,7 @@
     "test:coverage": "vitest --coverage --silent='passed-only'"
   },
   "dependencies": {
-    "@lobechat/types": "workspace:*",
+    "@lobechat/types": "latest",
     "ajv": "^8.17.1"
   },
   "devDependencies": {

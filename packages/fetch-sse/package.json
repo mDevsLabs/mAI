@@ -24,12 +24,12 @@
     "test:coverage": "vitest --coverage --silent='passed-only'"
   },
   "dependencies": {
-    "@lobechat/const": "workspace:*",
-    "@lobechat/model-runtime": "workspace:*",
-    "@lobechat/utils": "workspace:*",
+    "@lobechat/const": "latest",
+    "@lobechat/model-runtime": "latest",
+    "@lobechat/utils": "latest",
     "i18next": "^24.2.3"
   },
   "devDependencies": {
-    "@lobechat/types": "workspace:*"
+    "@lobechat/types": "latest"
   }
 }

@@ -7,7 +7,7 @@
   },
   "main": "./src/index.ts",
   "dependencies": {
-    "@lobechat/prompts": "workspace:*"
+    "@lobechat/prompts": "latest"
   },
   "devDependencies": {
     "lexical": "^0.42.0"

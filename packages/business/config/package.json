@@ -8,11 +8,11 @@
   },
   "main": "./src/index.ts",
   "dependencies": {
-    "@lobechat/business-const": "workspace:*",
-    "@lobechat/const": "workspace:*",
-    "model-bank": "workspace:*"
+    "@lobechat/business-const": "latest",
+    "@lobechat/const": "latest",
+    "model-bank": "latest"
   },
   "devDependencies": {
-    "@lobechat/types": "workspace:*"
+    "@lobechat/types": "latest"
   }
 }

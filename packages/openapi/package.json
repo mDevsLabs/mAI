@@ -8,8 +8,8 @@
   },
   "dependencies": {
     "@hono/zod-validator": "^0.7.6",
-    "@lobechat/model-runtime": "workspace:*",
-    "@lobechat/types": "workspace:*",
+    "@lobechat/model-runtime": "latest",
+    "@lobechat/types": "latest",
     "debug": "^4.4.3",
     "drizzle-orm": "^0.45.1",
     "formidable": "^3.5.0",

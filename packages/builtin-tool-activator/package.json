@@ -10,7 +10,7 @@
   },
   "main": "./src/index.ts",
   "devDependencies": {
-    "@lobechat/prompts": "workspace:*",
-    "@lobechat/types": "workspace:*"
+    "@lobechat/prompts": "latest",
+    "@lobechat/types": "latest"
   }
 }

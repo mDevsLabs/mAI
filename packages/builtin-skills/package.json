@@ -9,6 +9,6 @@
   "main": "./src/index.ts",
   "dependencies": {},
   "devDependencies": {
-    "@lobechat/types": "workspace:*"
+    "@lobechat/types": "latest"
   }
 }

@@ -7,8 +7,8 @@
   },
   "main": "./src/index.ts",
   "dependencies": {
-    "@lobechat/const": "workspace:*",
-    "@lobechat/prompts": "workspace:*",
-    "@lobechat/types": "workspace:*"
+    "@lobechat/const": "latest",
+    "@lobechat/prompts": "latest",
+    "@lobechat/types": "latest"
   }
 }

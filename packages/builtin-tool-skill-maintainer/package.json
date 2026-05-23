@@ -8,6 +8,6 @@
   },
   "main": "./src/index.ts",
   "devDependencies": {
-    "@lobechat/types": "workspace:*"
+    "@lobechat/types": "latest"
   }
 }

@@ -8,6 +8,6 @@
     "test:coverage": "vitest --coverage --silent='passed-only'"
   },
   "devDependencies": {
-    "@lobechat/types": "workspace:*"
+    "@lobechat/types": "latest"
   }
 }

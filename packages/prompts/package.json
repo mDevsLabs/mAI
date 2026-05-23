@@ -9,7 +9,7 @@
     "test:update": "vitest -u"
   },
   "devDependencies": {
-    "@lobechat/types": "workspace:*",
+    "@lobechat/types": "latest",
     "tsx": "^4.20.6"
   }
 }

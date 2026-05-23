@@ -10,12 +10,12 @@
   },
   "main": "./src/index.ts",
   "dependencies": {
-    "@lobechat/const": "workspace:*",
-    "@lobechat/prompts": "workspace:*",
-    "@lobechat/shared-tool-ui": "workspace:*"
+    "@lobechat/const": "latest",
+    "@lobechat/prompts": "latest",
+    "@lobechat/shared-tool-ui": "latest"
   },
   "devDependencies": {
-    "@lobechat/types": "workspace:*"
+    "@lobechat/types": "latest"
   },
   "peerDependencies": {
     "@lobehub/ui": "^5",

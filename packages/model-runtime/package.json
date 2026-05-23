@@ -19,16 +19,16 @@
     "@fal-ai/client": "^1.7.2",
     "@google/genai": "^1.43.0",
     "@huggingface/inference": "^4.13.4",
-    "@lobechat/business-model-runtime": "workspace:*",
-    "@lobechat/const": "workspace:*",
-    "@lobechat/utils": "workspace:*",
+    "@lobechat/business-model-runtime": "latest",
+    "@lobechat/const": "latest",
+    "@lobechat/utils": "latest",
     "async-retry": "^1.3.3",
     "dayjs": "^1.11.19",
     "debug": "^4.4.3",
     "immer": "^10.2.0",
     "langfuse": "^3.38.6",
     "langfuse-core": "^3.38.6",
-    "model-bank": "workspace:*",
+    "model-bank": "latest",
     "nanoid": "^5.1.6",
     "ollama": "^0.6.2",
     "openai": "^4.104.0",
@@ -38,7 +38,7 @@
     "url-join": "^5.0.0"
   },
   "devDependencies": {
-    "@lobechat/types": "workspace:*"
+    "@lobechat/types": "latest"
   },
   "peerDependencies": {
     "zod": "^3.25.76"

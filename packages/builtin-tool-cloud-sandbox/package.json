@@ -10,12 +10,12 @@
   },
   "main": "./src/index.ts",
   "dependencies": {
-    "@lobechat/builtin-tool-local-system": "workspace:*",
-    "@lobechat/shared-tool-ui": "workspace:*",
-    "@lobechat/tool-runtime": "workspace:*"
+    "@lobechat/builtin-tool-local-system": "latest",
+    "@lobechat/shared-tool-ui": "latest",
+    "@lobechat/tool-runtime": "latest"
   },
   "devDependencies": {
-    "@lobechat/types": "workspace:*"
+    "@lobechat/types": "latest"
   },
   "peerDependencies": {
     "@lobehub/ui": "^5",

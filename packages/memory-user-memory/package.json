@@ -16,10 +16,10 @@
     "type-check": "tsgo --noEmit -p tsconfig.json"
   },
   "dependencies": {
-    "@lobechat/context-engine": "workspace:*",
-    "@lobechat/model-runtime": "workspace:*",
-    "@lobechat/prompts": "workspace:*",
-    "@lobechat/types": "workspace:*",
+    "@lobechat/context-engine": "latest",
+    "@lobechat/model-runtime": "latest",
+    "@lobechat/prompts": "latest",
+    "@lobechat/types": "latest",
     "dayjs": "^1.11.11",
     "dotenv": "^17.2.3",
     "ora": "^9.0.0",

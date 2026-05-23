@@ -12,13 +12,13 @@
   },
   "main": "./src/index.ts",
   "dependencies": {
-    "@lobechat/const": "workspace:*",
-    "@lobechat/markdown-patch": "workspace:*",
-    "@lobechat/prompts": "workspace:*",
+    "@lobechat/const": "latest",
+    "@lobechat/markdown-patch": "latest",
+    "@lobechat/prompts": "latest",
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@lobechat/types": "workspace:*"
+    "@lobechat/types": "latest"
   },
   "peerDependencies": {
     "@lobehub/ui": "^5",

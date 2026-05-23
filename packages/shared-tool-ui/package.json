@@ -11,10 +11,10 @@
     "./styles": "./src/styles.ts"
   },
   "dependencies": {
-    "@lobechat/tool-runtime": "workspace:*"
+    "@lobechat/tool-runtime": "latest"
   },
   "devDependencies": {
-    "@lobechat/types": "workspace:*"
+    "@lobechat/types": "latest"
   },
   "peerDependencies": {
     "@lobehub/ui": "^5",

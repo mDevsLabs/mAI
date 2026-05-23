@@ -7,6 +7,6 @@
   },
   "main": "./src/index.ts",
   "dependencies": {
-    "model-bank": "workspace:*"
+    "model-bank": "latest"
   }
 }

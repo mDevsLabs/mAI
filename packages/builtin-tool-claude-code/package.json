@@ -9,10 +9,10 @@
   },
   "main": "./src/index.ts",
   "dependencies": {
-    "@lobechat/shared-tool-ui": "workspace:*"
+    "@lobechat/shared-tool-ui": "latest"
   },
   "devDependencies": {
-    "@lobechat/types": "workspace:*"
+    "@lobechat/types": "latest"
   },
   "peerDependencies": {
     "@lobehub/ui": "^5",

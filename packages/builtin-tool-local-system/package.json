@@ -9,12 +9,12 @@
   },
   "main": "./src/index.ts",
   "dependencies": {
-    "@lobechat/electron-client-ipc": "workspace:*",
-    "@lobechat/shared-tool-ui": "workspace:*",
-    "@lobechat/tool-runtime": "workspace:*"
+    "@lobechat/electron-client-ipc": "latest",
+    "@lobechat/shared-tool-ui": "latest",
+    "@lobechat/tool-runtime": "latest"
   },
   "devDependencies": {
-    "@lobechat/types": "workspace:*"
+    "@lobechat/types": "latest"
   },
   "peerDependencies": {
     "@lobehub/ui": "^5",

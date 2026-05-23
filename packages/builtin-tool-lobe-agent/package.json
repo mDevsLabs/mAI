@@ -13,12 +13,12 @@
     "test:update": "vitest -u"
   },
   "dependencies": {
-    "@lobechat/const": "workspace:*",
-    "@lobechat/prompts": "workspace:*",
-    "@lobechat/utils": "workspace:*"
+    "@lobechat/const": "latest",
+    "@lobechat/prompts": "latest",
+    "@lobechat/utils": "latest"
   },
   "devDependencies": {
-    "@lobechat/types": "workspace:*"
+    "@lobechat/types": "latest"
   },
   "peerDependencies": {
     "@lobehub/editor": "^4",
