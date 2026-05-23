@@ -1,0 +1,137 @@
+name: Deploy to Vercel via GitHub Actions
+
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+  KEY_VAULTS_SECRET: ${{ secrets.KEY_VAULTS_SECRET }}
+  AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+  QSTASH_URL: ${{ secrets.QSTASH_URL }}
+  QSTASH_TOKEN: ${{ secrets.QSTASH_TOKEN }}
+  QSTASH_NEXT_SIGNING_KEY: ${{ secrets.QSTASH_NEXT_SIGNING_KEY }}
+  QSTASH_CURRENT_SIGNING_KEY: ${{ secrets.QSTASH_CURRENT_SIGNING_KEY }}
+  S3_ENDPOINT: ${{ secrets.S3_ENDPOINT }}
+
+on:
+  push:
+    branches:
+      - canary
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  Deploy-Production:
+    # Se lance UNIQUEMENT sur un push vers la branche canary
+    if: github.event_name == 'push' && github.ref == 'refs/heads/canary'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout du code 📦
+        uses: actions/checkout@v4
+
+      - name: Vérifier les secrets Vercel 🔑
+        run: |
+          if [ -z "${{ env.VERCEL_TOKEN }}" ]; then
+            echo "::error::Le secret VERCEL_TOKEN est manquant dans les paramètres GitHub !"
+            exit 1
+          fi
+          if [ -z "${{ env.VERCEL_ORG_ID }}" ]; then
+            echo "::error::La variable VERCEL_ORG_ID est manquante dans le workflow !"
+            exit 1
+          fi
+          if [ -z "${{ env.VERCEL_PROJECT_ID }}" ]; then
+            echo "::error::La variable VERCEL_PROJECT_ID est manquante dans le workflow !"
+            exit 1
+          fi
+
+      - name: Nettoyer le dossier .vercel résiduel 🧹
+        run: rm -rf .vercel
+
+      - name: Setup Environment (Node.js, pnpm & Bun) 🛠️
+        uses: ./.github/actions/setup-env
+        with:
+          node-version: 20
+
+      - name: Install Vercel CLI 🚀
+        run: npm install --global vercel@latest
+
+      - name: Install des dépendances 📥
+        run: pnpm install
+
+      - name: Pull Vercel Environment Information 🌍
+        run: vercel pull --yes --environment=production --token=${{ env.VERCEL_TOKEN }}
+
+      - name: Copy Vercel environment variables to root 📦
+        run: |
+          if [ -f .vercel/.env.production.local ]; then
+            cp .vercel/.env.production.local .env.production.local
+            echo "✅ Variables d'environnement copiées avec succès vers .env.production.local !"
+          else
+            echo "⚠️ Fichier .vercel/.env.production.local non trouvé"
+          fi
+
+      - name: Build Project Artifacts 🏗️
+        run: vercel build --prod --token=${{ env.VERCEL_TOKEN }}
+
+      - name: Deploy Project Artifacts to Vercel 🌐
+        # --archive=tgz évite la limite API "files > 15000" en envoyant une archive unique
+        run: vercel deploy --prebuilt --archive=tgz --prod --token=${{ env.VERCEL_TOKEN }}
+
+  Deploy-Preview:
+    # Se lance sur PR, déclenchement manuel, ou push sur une branche autre que canary (donc ici, sur 'main')
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref != 'refs/heads/canary')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout du code 📦
+        uses: actions/checkout@v4
+
+      - name: Vérifier les secrets Vercel 🔑
+        run: |
+          if [ -z "${{ env.VERCEL_TOKEN }}" ]; then
+            echo "::error::Le secret VERCEL_TOKEN est manquant dans les paramètres GitHub !"
+            exit 1
+          fi
+          if [ -z "${{ env.VERCEL_ORG_ID }}" ]; then
+            echo "::error::La variable VERCEL_ORG_ID est manquante dans le workflow !"
+            exit 1
+          fi
+          if [ -z "${{ env.VERCEL_PROJECT_ID }}" ]; then
+            echo "::error::La variable VERCEL_PROJECT_ID est manquante dans le workflow !"
+            exit 1
+          fi
+
+      - name: Nettoyer le dossier .vercel résiduel 🧹
+        run: rm -rf .vercel
+
+      - name: Setup Environment (Node.js, pnpm & Bun) 🛠️
+        uses: ./.github/actions/setup-env
+        with:
+          node-version: 20
+
+      - name: Install Vercel CLI 🚀
+        run: npm install --global vercel@latest
+
+      - name: Install des dépendances 📥
+        run: pnpm install
+
+      - name: Pull Vercel Environment Information 🌍
+        # On pull l'environnement preview ici
+        run: vercel pull --yes --environment=preview --token=${{ env.VERCEL_TOKEN }}
+
+      - name: Copy Vercel environment variables to root 📦
+        run: |
+          if [ -f .vercel/.env.preview.local ]; then
+            cp .vercel/.env.preview.local .env.preview.local
+            echo "✅ Variables d'environnement copiées avec succès vers .env.preview.local !"
+          else
+            echo "⚠️ Fichier .vercel/.env.preview.local non trouvé"
+          fi
+
+      - name: Build Project Artifacts 🏗️
+        # Pas de flag --prod
+        run: vercel build --token=${{ env.VERCEL_TOKEN }}
+
+      - name: Deploy Project Artifacts to Vercel 🌐
+        # Pas de flag --prod pour déployer en preview
+        # --archive=tgz évite la limite API "files > 15000" en envoyant une archive unique
+        run: vercel deploy --prebuilt --archive=tgz --token=${{ env.VERCEL_TOKEN }}
