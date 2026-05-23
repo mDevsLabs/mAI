@@ -1,10 +1,9 @@
-import { and, eq } from 'drizzle-orm';
 import { type NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
-import { account } from '@/database/schemas/betterAuth';
-import { users } from '@/database/schemas/user';
-import { serverDB } from '@/database/server';
+
+
+export const dynamic = 'force-dynamic';
 
 export interface CheckUserResponseData {
   exists: boolean;
@@ -24,6 +23,13 @@ export async function POST(req: NextRequest) {
     if (!email || typeof email !== 'string') {
       return NextResponse.json({ error: 'Email is required', exists: false }, { status: 400 });
     }
+
+    const [{ and, eq }, { account }, { users }, { serverDB }] = await Promise.all([
+      import('drizzle-orm'),
+      import('@/database/schemas/betterAuth'),
+      import('@/database/schemas/user'),
+      import('@/database/server'),
+    ]);
 
     // Query database for user with this email
     const [user] = await serverDB
