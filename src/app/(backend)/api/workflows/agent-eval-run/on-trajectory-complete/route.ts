@@ -4,10 +4,7 @@ import { NextResponse } from 'next/server';
 import { AgentEvalRunModel } from '@/database/models/agentEval';
 import { getServerDB } from '@/database/server';
 import { AgentEvalRunService } from '@/server/services/agentEvalRun';
-import {
-  AgentEvalRunWorkflow,
-  type OnTrajectoryCompletePayload,
-} from '@/server/workflows/agentEvalRun';
+import type { OnTrajectoryCompletePayload } from '@/server/workflows/agentEvalRun';
 
 const log = debug('lobe-server:workflows:on-trajectory-complete');
 
@@ -93,6 +90,7 @@ export async function POST(req: Request) {
         '[on-trajectory-complete] All test cases done for run %s, triggering finalize',
         runId,
       );
+      const { AgentEvalRunWorkflow } = await import('@/server/workflows/agentEvalRun');
       await AgentEvalRunWorkflow.triggerFinalizeRun({ runId, userId });
     }
 
