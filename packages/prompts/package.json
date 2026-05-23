@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@lobechat/prompts",
   "version": "0.0.4",
   "private": true,
@@ -9,7 +9,7 @@
     "test:update": "vitest -u"
   },
   "devDependencies": {
-    "@lobechat/types": "latest",
+    "@lobechat/types": "workspace:*",
     "tsx": "^4.20.6"
   }
 }

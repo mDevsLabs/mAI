@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@lobechat/builtin-tool-group-agent-builder",
   "version": "0.0.4",
   "private": true,
@@ -10,11 +10,11 @@
   },
   "main": "./src/index.ts",
   "dependencies": {
-    "@lobechat/agent-manager-runtime": "latest",
-    "@lobechat/builtin-tool-agent-builder": "latest"
+    "@lobechat/agent-manager-runtime": "workspace:*",
+    "@lobechat/builtin-tool-agent-builder": "workspace:*"
   },
   "devDependencies": {
-    "@lobechat/types": "latest"
+    "@lobechat/types": "workspace:*"
   },
   "peerDependencies": {
     "@lobehub/ui": "^5",

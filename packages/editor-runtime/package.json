@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@lobechat/editor-runtime",
   "version": "0.0.4",
   "private": true,
@@ -7,7 +7,7 @@
   },
   "main": "./src/index.ts",
   "dependencies": {
-    "@lobechat/prompts": "latest"
+    "@lobechat/prompts": "workspace:*"
   },
   "devDependencies": {
     "lexical": "^0.42.0"

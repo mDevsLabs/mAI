@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@lobechat/fetch-sse",
   "version": "0.0.4",
   "private": true,
@@ -24,12 +24,12 @@
     "test:coverage": "vitest --coverage --silent='passed-only'"
   },
   "dependencies": {
-    "@lobechat/const": "latest",
-    "@lobechat/model-runtime": "latest",
-    "@lobechat/utils": "latest",
+    "@lobechat/const": "workspace:*",
+    "@lobechat/model-runtime": "workspace:*",
+    "@lobechat/utils": "workspace:*",
     "i18next": "^24.2.3"
   },
   "devDependencies": {
-    "@lobechat/types": "latest"
+    "@lobechat/types": "workspace:*"
   }
 }

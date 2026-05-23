@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@lobechat/memory-user-memory",
   "version": "0.0.4",
   "private": true,
@@ -16,10 +16,10 @@
     "type-check": "tsgo --noEmit -p tsconfig.json"
   },
   "dependencies": {
-    "@lobechat/context-engine": "latest",
-    "@lobechat/model-runtime": "latest",
-    "@lobechat/prompts": "latest",
-    "@lobechat/types": "latest",
+    "@lobechat/context-engine": "workspace:*",
+    "@lobechat/model-runtime": "workspace:*",
+    "@lobechat/prompts": "workspace:*",
+    "@lobechat/types": "workspace:*",
     "dayjs": "^1.11.11",
     "dotenv": "^17.2.3",
     "ora": "^9.0.0",

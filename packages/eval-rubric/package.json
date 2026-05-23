@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@lobechat/eval-rubric",
   "version": "0.0.4",
   "private": true,
@@ -26,7 +26,7 @@
     "test:coverage": "vitest --coverage --silent='passed-only'"
   },
   "dependencies": {
-    "@lobechat/types": "latest",
+    "@lobechat/types": "workspace:*",
     "ajv": "^8.17.1"
   },
   "devDependencies": {

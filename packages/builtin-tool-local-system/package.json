@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@lobechat/builtin-tool-local-system",
   "version": "0.0.4",
   "private": true,
@@ -9,12 +9,12 @@
   },
   "main": "./src/index.ts",
   "dependencies": {
-    "@lobechat/electron-client-ipc": "latest",
-    "@lobechat/shared-tool-ui": "latest",
-    "@lobechat/tool-runtime": "latest"
+    "@lobechat/electron-client-ipc": "workspace:*",
+    "@lobechat/shared-tool-ui": "workspace:*",
+    "@lobechat/tool-runtime": "workspace:*"
   },
   "devDependencies": {
-    "@lobechat/types": "latest"
+    "@lobechat/types": "workspace:*"
   },
   "peerDependencies": {
     "@lobehub/ui": "^5",

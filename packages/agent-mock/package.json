@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@lobechat/agent-mock",
   "version": "0.0.4",
   "private": true,
@@ -11,8 +11,8 @@
     "test": "vitest run --silent='passed-only'"
   },
   "dependencies": {
-    "@lobechat/agent-gateway-client": "latest",
-    "@lobechat/agent-tracing": "latest"
+    "@lobechat/agent-gateway-client": "workspace:*",
+    "@lobechat/agent-tracing": "workspace:*"
   },
   "devDependencies": {
     "vitest": "^3.0.0"

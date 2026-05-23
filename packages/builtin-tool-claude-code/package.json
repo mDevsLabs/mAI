@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@lobechat/builtin-tool-claude-code",
   "version": "0.0.4",
   "private": true,
@@ -9,10 +9,10 @@
   },
   "main": "./src/index.ts",
   "dependencies": {
-    "@lobechat/shared-tool-ui": "latest"
+    "@lobechat/shared-tool-ui": "workspace:*"
   },
   "devDependencies": {
-    "@lobechat/types": "latest"
+    "@lobechat/types": "workspace:*"
   },
   "peerDependencies": {
     "@lobehub/ui": "^5",

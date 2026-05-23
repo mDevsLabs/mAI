@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@lobechat/business-config",
   "version": "0.0.4",
   "private": true,
@@ -8,11 +8,11 @@
   },
   "main": "./src/index.ts",
   "dependencies": {
-    "@lobechat/business-const": "latest",
-    "@lobechat/const": "latest",
-    "model-bank": "latest"
+    "@lobechat/business-const": "workspace:*",
+    "@lobechat/const": "workspace:*",
+    "model-bank": "workspace:*"
   },
   "devDependencies": {
-    "@lobechat/types": "latest"
+    "@lobechat/types": "workspace:*"
   }
 }

@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@lobechat/builtin-tool-creds",
   "version": "0.0.4",
   "private": true,
@@ -11,6 +11,6 @@
   "main": "./src/index.ts",
   "dependencies": {},
   "devDependencies": {
-    "@lobechat/types": "latest"
+    "@lobechat/types": "workspace:*"
   }
 }

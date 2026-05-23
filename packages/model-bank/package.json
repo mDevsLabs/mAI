@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "model-bank",
   "version": "0.0.4",
   "private": true,
@@ -95,7 +95,7 @@
     "test:coverage": "vitest --coverage --silent='passed-only'"
   },
   "dependencies": {
-    "@lobechat/business-const": "latest",
+    "@lobechat/business-const": "workspace:*",
     "type-fest": "^5.2.0"
   },
   "devDependencies": {

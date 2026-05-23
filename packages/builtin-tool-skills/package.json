@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@lobechat/builtin-tool-skills",
   "version": "0.0.4",
   "private": true,
@@ -10,12 +10,12 @@
   },
   "main": "./src/index.ts",
   "dependencies": {
-    "@lobechat/const": "latest",
-    "@lobechat/prompts": "latest",
-    "@lobechat/shared-tool-ui": "latest"
+    "@lobechat/const": "workspace:*",
+    "@lobechat/prompts": "workspace:*",
+    "@lobechat/shared-tool-ui": "workspace:*"
   },
   "devDependencies": {
-    "@lobechat/types": "latest"
+    "@lobechat/types": "workspace:*"
   },
   "peerDependencies": {
     "@lobehub/ui": "^5",

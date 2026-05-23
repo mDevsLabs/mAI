@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@lobechat/const",
   "version": "0.0.4",
   "private": true,
@@ -10,12 +10,12 @@
   },
   "main": "./src/index.ts",
   "dependencies": {
-    "@lobechat/business-const": "latest",
+    "@lobechat/business-const": "workspace:*",
     "query-string": "^9.3.1",
     "url-join": "^5.0.0"
   },
   "devDependencies": {
-    "@lobechat/types": "latest"
+    "@lobechat/types": "workspace:*"
   },
   "peerDependencies": {
     "@icons-pack/react-simple-icons": "^13.8.0",

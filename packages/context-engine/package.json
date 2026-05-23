@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@lobechat/context-engine",
   "version": "0.0.4",
   "private": true,
@@ -18,9 +18,9 @@
     "test:update": "vitest -u"
   },
   "dependencies": {
-    "@lobechat/database": "latest",
-    "@lobechat/prompts": "latest",
-    "@lobechat/utils": "latest",
+    "@lobechat/database": "workspace:*",
+    "@lobechat/prompts": "workspace:*",
+    "@lobechat/utils": "workspace:*",
     "debug": "^4.4.3",
     "es-toolkit": "^1.43.0",
     "immer": "^10.2.0",
@@ -31,7 +31,7 @@
     "xastscript": "^4.0.0"
   },
   "devDependencies": {
-    "@lobechat/types": "latest",
+    "@lobechat/types": "workspace:*",
     "@types/debug": "^4.1.12"
   }
 }

@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@lobechat/edge-config",
   "version": "0.0.4",
   "private": true,
@@ -7,6 +7,6 @@
   },
   "main": "./src/index.ts",
   "dependencies": {
-    "@lobechat/business-config": "latest"
+    "@lobechat/business-config": "workspace:*"
   }
 }

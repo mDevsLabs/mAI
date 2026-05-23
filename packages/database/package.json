@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@lobechat/database",
   "version": "0.0.4",
   "private": true,
@@ -14,12 +14,12 @@
     "test:server-db": "vitest run --config vitest.config.server.mts"
   },
   "dependencies": {
-    "@lobechat/agent-templates": "latest",
-    "@lobechat/business-const": "latest",
-    "@lobechat/const": "latest",
-    "@lobechat/conversation-flow": "latest",
-    "@lobechat/types": "latest",
-    "@lobechat/utils": "latest",
+    "@lobechat/agent-templates": "workspace:*",
+    "@lobechat/business-const": "workspace:*",
+    "@lobechat/const": "workspace:*",
+    "@lobechat/conversation-flow": "workspace:*",
+    "@lobechat/types": "workspace:*",
+    "@lobechat/utils": "workspace:*",
     "random-words": "^2.0.1",
     "ts-md5": "^2.0.1",
     "type-fest": "^5.2.0",

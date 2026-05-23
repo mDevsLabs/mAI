@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@lobechat/builtin-tool-skill-store",
   "version": "0.0.4",
   "private": true,
@@ -10,7 +10,7 @@
   },
   "main": "./src/index.ts",
   "devDependencies": {
-    "@lobechat/types": "latest"
+    "@lobechat/types": "workspace:*"
   },
   "peerDependencies": {
     "@lobehub/ui": "^5",

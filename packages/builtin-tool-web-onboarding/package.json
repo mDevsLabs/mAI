@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@lobechat/builtin-tool-web-onboarding",
   "version": "0.0.4",
   "private": true,
@@ -12,13 +12,13 @@
   },
   "main": "./src/index.ts",
   "dependencies": {
-    "@lobechat/const": "latest",
-    "@lobechat/markdown-patch": "latest",
-    "@lobechat/prompts": "latest",
+    "@lobechat/const": "workspace:*",
+    "@lobechat/markdown-patch": "workspace:*",
+    "@lobechat/prompts": "workspace:*",
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@lobechat/types": "latest"
+    "@lobechat/types": "workspace:*"
   },
   "peerDependencies": {
     "@lobehub/ui": "^5",

@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@lobechat/agent-manager-runtime",
   "version": "0.0.4",
   "private": true,
@@ -7,8 +7,8 @@
   },
   "main": "./src/index.ts",
   "dependencies": {
-    "@lobechat/const": "latest",
-    "@lobechat/prompts": "latest",
-    "@lobechat/types": "latest"
+    "@lobechat/const": "workspace:*",
+    "@lobechat/prompts": "workspace:*",
+    "@lobechat/types": "workspace:*"
   }
 }

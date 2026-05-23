@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@lobechat/builtin-tool-self-iteration",
   "version": "0.0.4",
   "private": true,
@@ -10,8 +10,8 @@
   },
   "main": "./src/index.ts",
   "devDependencies": {
-    "@lobechat/context-engine": "latest",
-    "@lobechat/types": "latest"
+    "@lobechat/context-engine": "workspace:*",
+    "@lobechat/types": "workspace:*"
   },
   "peerDependencies": {
     "@lobehub/ui": "^5",

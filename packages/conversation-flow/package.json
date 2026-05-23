@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@lobechat/conversation-flow",
   "version": "0.0.4",
   "description": "Scalable complex conversation flow rendering engine",
@@ -8,6 +8,6 @@
     "test:coverage": "vitest --coverage --silent='passed-only'"
   },
   "devDependencies": {
-    "@lobechat/types": "latest"
+    "@lobechat/types": "workspace:*"
   }
 }

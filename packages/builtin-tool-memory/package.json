@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@lobechat/builtin-tool-memory",
   "version": "0.0.4",
   "private": true,
@@ -12,11 +12,11 @@
   "main": "./src/index.ts",
   "scripts": {},
   "dependencies": {
-    "@lobechat/memory-user-memory": "latest",
-    "@lobechat/prompts": "latest"
+    "@lobechat/memory-user-memory": "workspace:*",
+    "@lobechat/prompts": "workspace:*"
   },
   "devDependencies": {
-    "@lobechat/types": "latest",
+    "@lobechat/types": "workspace:*",
     "@types/json-schema": "^7.0.15"
   },
   "peerDependencies": {

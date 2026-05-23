@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@lobechat/builtin-tool-web-browsing",
   "version": "0.0.4",
   "private": true,
@@ -9,10 +9,10 @@
   },
   "main": "./src/index.ts",
   "dependencies": {
-    "@lobechat/prompts": "latest"
+    "@lobechat/prompts": "workspace:*"
   },
   "devDependencies": {
-    "@lobechat/types": "latest"
+    "@lobechat/types": "workspace:*"
   },
   "peerDependencies": {
     "@lobehub/ui": "^5",

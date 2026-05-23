@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@lobechat/agent-runtime",
   "version": "0.0.4",
   "private": true,
@@ -12,8 +12,8 @@
     "p-map": "^7.0.4"
   },
   "devDependencies": {
-    "@lobechat/context-engine": "latest",
-    "@lobechat/types": "latest",
+    "@lobechat/context-engine": "workspace:*",
+    "@lobechat/types": "workspace:*",
     "openai": "^4.104.0"
   }
 }

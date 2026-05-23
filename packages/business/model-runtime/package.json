@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@lobechat/business-model-runtime",
   "version": "0.0.4",
   "private": true,
@@ -7,6 +7,6 @@
   },
   "main": "./src/index.ts",
   "dependencies": {
-    "model-bank": "latest"
+    "model-bank": "workspace:*"
   }
 }

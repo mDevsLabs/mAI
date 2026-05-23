@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@lobechat/builtin-tool-agent-management",
   "version": "0.0.4",
   "private": true,
@@ -9,12 +9,12 @@
   },
   "main": "./src/index.ts",
   "dependencies": {
-    "@lobechat/agent-manager-runtime": "latest",
-    "@lobechat/const": "latest",
+    "@lobechat/agent-manager-runtime": "workspace:*",
+    "@lobechat/const": "workspace:*",
     "lucide-react": "*",
     "react-router-dom": "*"
   },
   "devDependencies": {
-    "@lobechat/types": "latest"
+    "@lobechat/types": "workspace:*"
   }
 }
