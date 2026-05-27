@@ -65,6 +65,11 @@ jobs:
         run: |
           if [ -f .vercel/.env.production.local ]; then
             cp .vercel/.env.production.local .env.production.local
+            # Ensure runtime-only GitHub Actions secrets are available to dotenvx during `bun run build:vercel`
+            # (vercel pull may not include every sensitive variable in the downloaded env file).
+            if ! grep -q '^KEY_VAULTS_SECRET=' .env.production.local; then
+              echo "KEY_VAULTS_SECRET=${{ env.KEY_VAULTS_SECRET }}" >> .env.production.local
+            fi
             echo "✅ Variables d'environnement copiées avec succès vers .env.production.local !"
           else
             echo "⚠️ Fichier .vercel/.env.production.local non trouvé"
@@ -122,6 +127,11 @@ jobs:
         run: |
           if [ -f .vercel/.env.preview.local ]; then
             cp .vercel/.env.preview.local .env.preview.local
+            # Ensure runtime-only GitHub Actions secrets are available to dotenvx during `bun run build:vercel`
+            # (vercel pull may not include every sensitive variable in the downloaded env file).
+            if ! grep -q '^KEY_VAULTS_SECRET=' .env.preview.local; then
+              echo "KEY_VAULTS_SECRET=${{ env.KEY_VAULTS_SECRET }}" >> .env.preview.local
+            fi
             echo "✅ Variables d'environnement copiées avec succès vers .env.preview.local !"
           else
             echo "⚠️ Fichier .vercel/.env.preview.local non trouvé"
