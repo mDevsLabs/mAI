@@ -6,8 +6,14 @@ import debug from 'debug';
 
 import { FileS3 } from '@/server/modules/S3';
 
-const compressZstd = promisify(zstdCompress);
-const decompressZstd = promisify(zstdDecompress);
+const compressZstd = zstdCompress ? promisify(zstdCompress) : null;
+const decompressZstd = zstdDecompress ? promisify(zstdDecompress) : null;
+
+const ensureZstd = () => {
+  if (!compressZstd || !decompressZstd) {
+    throw new Error('Zstd compression requires Node.js v22.x LTS or later.');
+  }
+};
 
 const log = debug('lobe-server:agent-tracing:s3');
 
@@ -63,11 +69,13 @@ export class S3SnapshotStore implements ISnapshotStore {
   }
 
   private async encodeSnapshot(value: unknown): Promise<Buffer> {
-    return compressZstd(Buffer.from(JSON.stringify(value)));
+    ensureZstd();
+    return compressZstd!(Buffer.from(JSON.stringify(value)));
   }
 
   private async decodeSnapshot<T>(bytes: Uint8Array): Promise<T> {
-    const buf = await decompressZstd(Buffer.from(bytes));
+    ensureZstd();
+    const buf = await decompressZstd!(Buffer.from(bytes));
     return JSON.parse(buf.toString('utf8')) as T;
   }
 
