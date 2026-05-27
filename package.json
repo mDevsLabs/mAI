@@ -14,16 +14,16 @@
     "tts",
     "stt"
   ],
-  "homepage": "https://github.com/lobehub/lobehub",
+  "homepage": "https://github.com/mDevsLabs/mAI",
   "bugs": {
-    "url": "https://github.com/lobehub/lobehub/issues/new/choose"
+    "url": "https://github.com/mDevsLabs/mAI/issues/new/choose"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/lobehub/lobehub.git"
+    "url": "https://github.com/mDevsLabs/mAI.git"
   },
   "license": "MIT",
-  "author": "LobeHub <i@lobehub.com>",
+  "author": "mDevlopers",
   "sideEffects": [
     "./src/initialize.ts"
   ],
