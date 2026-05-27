@@ -61,21 +61,31 @@ jobs:
       - name: Pull Vercel Environment Information 🌍
         run: vercel pull --yes --environment=production --token=${{ env.VERCEL_TOKEN }}
 
-      - name: Copy Vercel environment variables to root 📦
+      - name: Copy/patch Vercel environment variables to root 📦
         run: |
+          touch .env.production.local
+
           if [ -f .vercel/.env.production.local ]; then
             cp .vercel/.env.production.local .env.production.local
-            # Ensure runtime-only GitHub Actions secrets are available to dotenvx during `bun run build:vercel`
-            # (vercel pull may not include every sensitive variable in the downloaded env file).
-            if ! grep -q '^KEY_VAULTS_SECRET=' .env.production.local; then
-              echo "KEY_VAULTS_SECRET=${{ env.KEY_VAULTS_SECRET }}" >> .env.production.local
-            fi
-            echo "✅ Variables d'environnement copiées avec succès vers .env.production.local !"
+            echo "✅ Variables d'environnement Vercel copiées vers .env.production.local"
           else
-            echo "⚠️ Fichier .vercel/.env.production.local non trouvé"
+            echo "⚠️ Fichier .vercel/.env.production.local non trouvé, fallback GitHub Secrets uniquement"
+          fi
+
+          if [ -z "${{ env.KEY_VAULTS_SECRET }}" ]; then
+            echo "::error::Le secret GitHub KEY_VAULTS_SECRET est vide ou introuvable"
+            exit 1
+          fi
+
+          if grep -q '^KEY_VAULTS_SECRET=' .env.production.local; then
+            sed -i "s|^KEY_VAULTS_SECRET=.*$|KEY_VAULTS_SECRET=${{ env.KEY_VAULTS_SECRET }}|" .env.production.local
+          else
+            echo "KEY_VAULTS_SECRET=${{ env.KEY_VAULTS_SECRET }}" >> .env.production.local
           fi
 
       - name: Build Project Artifacts 🏗️
+        env:
+          KEY_VAULTS_SECRET: ${{ env.KEY_VAULTS_SECRET }}
         run: vercel build --prod --token=${{ env.VERCEL_TOKEN }}
 
       - name: Deploy Project Artifacts to Vercel 🌐
@@ -123,21 +133,31 @@ jobs:
         # On pull l'environnement preview ici
         run: vercel pull --yes --environment=preview --token=${{ env.VERCEL_TOKEN }}
 
-      - name: Copy Vercel environment variables to root 📦
+      - name: Copy/patch Vercel environment variables to root 📦
         run: |
+          touch .env.preview.local
+
           if [ -f .vercel/.env.preview.local ]; then
             cp .vercel/.env.preview.local .env.preview.local
-            # Ensure runtime-only GitHub Actions secrets are available to dotenvx during `bun run build:vercel`
-            # (vercel pull may not include every sensitive variable in the downloaded env file).
-            if ! grep -q '^KEY_VAULTS_SECRET=' .env.preview.local; then
-              echo "KEY_VAULTS_SECRET=${{ env.KEY_VAULTS_SECRET }}" >> .env.preview.local
-            fi
-            echo "✅ Variables d'environnement copiées avec succès vers .env.preview.local !"
+            echo "✅ Variables d'environnement Vercel copiées vers .env.preview.local"
           else
-            echo "⚠️ Fichier .vercel/.env.preview.local non trouvé"
+            echo "⚠️ Fichier .vercel/.env.preview.local non trouvé, fallback GitHub Secrets uniquement"
+          fi
+
+          if [ -z "${{ env.KEY_VAULTS_SECRET }}" ]; then
+            echo "::error::Le secret GitHub KEY_VAULTS_SECRET est vide ou introuvable"
+            exit 1
+          fi
+
+          if grep -q '^KEY_VAULTS_SECRET=' .env.preview.local; then
+            sed -i "s|^KEY_VAULTS_SECRET=.*$|KEY_VAULTS_SECRET=${{ env.KEY_VAULTS_SECRET }}|" .env.preview.local
+          else
+            echo "KEY_VAULTS_SECRET=${{ env.KEY_VAULTS_SECRET }}" >> .env.preview.local
           fi
 
       - name: Build Project Artifacts 🏗️
+        env:
+          KEY_VAULTS_SECRET: ${{ env.KEY_VAULTS_SECRET }}
         # Pas de flag --prod
         run: vercel build --token=${{ env.VERCEL_TOKEN }}
 
