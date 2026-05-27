@@ -250,7 +250,7 @@ describe('RuntimeExecutors', () => {
       );
     });
 
-    it('should throw ConversationParentMissing if parent preflight misses (LOBE-7158)', async () => {
+    it('should throw ConversationParentMissing if parent preflight misses ()', async () => {
       // parent existence preflight — if the parent row was deleted between
       // operation kickoff and call_llm, fail fast before spending LLM tokens
       // on a chain that would hit a FK violation anyway.
@@ -1377,6 +1377,140 @@ describe('RuntimeExecutors', () => {
         expect(callArgs).not.toHaveProperty('onboardingContext');
       });
     });
+
+    // Cancel/interrupt mid-stream — the model-runtime call is
+    // aborted before the post-stream finalize at line 1078, so the DB row
+    // would normally stay at LOADING_FLAT placeholder. The executor's
+    // inner catch must persist whatever partial content the streaming
+    // callbacks already accumulated so (a) reload doesn't lose the user's
+    // streamed answer and (b) any later uiMessages snapshot reflects real
+    // content instead of placeholder.
+    describe('interrupted mid-stream partial finalize', () => {
+      it('persists accumulated content + reasoning when stream throws and operation is interrupted', async () => {
+        const mockChat = vi.fn().mockImplementation(async (_payload, options) => {
+          await options?.callback?.onText?.('Hello, this is a partial ');
+          await options?.callback?.onText?.('streamed answer.');
+          await options?.callback?.onThinking?.('Let me think step by step. ');
+          await options?.callback?.onThinking?.('First, consider the context.');
+          throw new Error('AbortError: stream aborted');
+        });
+        vi.mocked(initModelRuntimeFromDB).mockResolvedValueOnce({ chat: mockChat } as any);
+
+        // Make isOperationInterrupted return true so the catch hits the
+        // partial-finalize branch instead of the retry path.
+        const interruptedCtx: RuntimeExecutorContext = {
+          ...ctx,
+          loadAgentState: vi.fn().mockResolvedValue({ status: 'interrupted' }),
+        };
+        mockMessageModel.create.mockResolvedValueOnce({ id: 'asst-interrupted' });
+
+        const executors = createRuntimeExecutors(interruptedCtx);
+        const state = createMockState();
+
+        await expect(
+          executors.call_llm!(
+            {
+              payload: {
+                messages: [{ content: 'Hi', role: 'user' }],
+                model: 'gpt-4',
+                provider: 'openai',
+                tools: [],
+              },
+              type: 'call_llm' as const,
+            },
+            state,
+          ),
+        ).rejects.toThrow();
+
+        // The success-path update at line 1078 is unreachable when the
+        // stream throws — only the cancel-path partial-finalize remains.
+        expect(mockMessageModel.update).toHaveBeenCalledWith(
+          'asst-interrupted',
+          expect.objectContaining({
+            content: 'Hello, this is a partial streamed answer.',
+            reasoning: { content: 'Let me think step by step. First, consider the context.' },
+            metadata: expect.objectContaining({ interruptedMidStream: true }),
+          }),
+        );
+      });
+
+      it('does NOT persist when interrupted but no content was streamed (avoid empty-content noise)', async () => {
+        const mockChat = vi.fn().mockImplementation(async () => {
+          throw new Error('AbortError: stream aborted before any chunks');
+        });
+        vi.mocked(initModelRuntimeFromDB).mockResolvedValueOnce({ chat: mockChat } as any);
+
+        const interruptedCtx: RuntimeExecutorContext = {
+          ...ctx,
+          loadAgentState: vi.fn().mockResolvedValue({ status: 'interrupted' }),
+        };
+        mockMessageModel.create.mockResolvedValueOnce({ id: 'asst-empty-interrupt' });
+
+        const executors = createRuntimeExecutors(interruptedCtx);
+        const state = createMockState();
+
+        await expect(
+          executors.call_llm!(
+            {
+              payload: {
+                messages: [{ content: 'Hi', role: 'user' }],
+                model: 'gpt-4',
+                provider: 'openai',
+                tools: [],
+              },
+              type: 'call_llm' as const,
+            },
+            state,
+          ),
+        ).rejects.toThrow();
+
+        // No content / reasoning / tools accumulated — skip the update so
+        // we don't overwrite the placeholder with another empty record
+        // (and don't bump `updated_at` for no functional reason).
+        expect(mockMessageModel.update).not.toHaveBeenCalled();
+      });
+
+      it('does NOT persist partial content on non-interrupt errors (preserves existing retry/error flow)', async () => {
+        // Use a stop-classified error (status 400) so the retry loop exits
+        // immediately and the test doesn't burn the timeout on backoff sleeps.
+        const mockChat = vi.fn().mockImplementation(async (_payload, options) => {
+          await options?.callback?.onText?.('Partial before crash');
+          const err: any = new Error('invalid_request_error: bad input');
+          err.errorType = 'ProviderBizError';
+          err.status = 400;
+          throw err;
+        });
+        vi.mocked(initModelRuntimeFromDB).mockResolvedValue({ chat: mockChat } as any);
+
+        // loadAgentState returns running — not interrupted — so the partial-
+        // finalize branch should be skipped even with accumulated content.
+        const runningCtx: RuntimeExecutorContext = {
+          ...ctx,
+          loadAgentState: vi.fn().mockResolvedValue({ status: 'running' }),
+        };
+        mockMessageModel.create.mockResolvedValueOnce({ id: 'asst-error' });
+
+        const executors = createRuntimeExecutors(runningCtx);
+        const state = createMockState();
+
+        await expect(
+          executors.call_llm!(
+            {
+              payload: {
+                messages: [{ content: 'Hi', role: 'user' }],
+                model: 'gpt-4',
+                provider: 'openai',
+                tools: [],
+              },
+              type: 'call_llm' as const,
+            },
+            state,
+          ),
+        ).rejects.toThrow();
+
+        expect(mockMessageModel.update).not.toHaveBeenCalled();
+      });
+    });
   });
 
   describe('call_tool executor', () => {
@@ -1521,8 +1655,8 @@ describe('RuntimeExecutors', () => {
       expect(result.nextContext!.phase).toBe('tool_result');
     });
 
-    it('should re-throw when messageModel.create fails (LOBE-7158: no silent swallow)', async () => {
-      // Before LOBE-7158 we silently swallowed this error and returned
+    it('should re-throw when messageModel.create fails (no silent swallow)', async () => {
+      // Before we silently swallowed this error and returned
       // `parentMessageId: undefined`, which let the operation continue into
       // the next step and re-hit the same failure without context. The fix
       // requires the executor to propagate so the whole step fails.
@@ -1548,7 +1682,7 @@ describe('RuntimeExecutors', () => {
       await expect(executors.call_tool!(instruction, state)).rejects.toThrow('Database error');
     });
 
-    it('should throw ConversationParentMissing on a parent_id FK violation (LOBE-7158)', async () => {
+    it('should throw ConversationParentMissing on a parent_id FK violation ()', async () => {
       // Simulate the drizzle + postgres-js wrapped error shape.
       const fkError: any = new Error(
         'Failed query: insert into "messages" ... violates foreign key constraint',
@@ -2330,8 +2464,8 @@ describe('RuntimeExecutors', () => {
       expect(result.nextContext!.phase).toBe('tools_batch_result');
     });
 
-    it('should propagate persist failures instead of silently falling back (LOBE-7158)', async () => {
-      // Before LOBE-7158 we fell back to the original parentMessageId here,
+    it('should propagate persist failures instead of silently falling back ()', async () => {
+      // Before we fell back to the original parentMessageId here,
       // which was itself the deleted parent that caused the failure — so the
       // next step would hit the same FK violation with no context. The fix
       // requires the batch to short-circuit on persist failure.
@@ -2361,7 +2495,7 @@ describe('RuntimeExecutors', () => {
       );
     });
 
-    it('should throw ConversationParentMissing on a parent_id FK violation (LOBE-7158)', async () => {
+    it('should throw ConversationParentMissing on a parent_id FK violation ()', async () => {
       const fkError: any = new Error(
         'Failed query: insert into "messages" ... violates foreign key constraint',
       );
@@ -2447,8 +2581,8 @@ describe('RuntimeExecutors', () => {
       expect(result.nextContext!.phase).toBe('tools_batch_result');
     });
 
-    it('should fail the batch if tool message creation fails for any tool (LOBE-7158)', async () => {
-      // Before LOBE-7158 we swallowed per-tool persist failures and kept
+    it('should fail the batch if tool message creation fails for any tool ()', async () => {
+      // Before we swallowed per-tool persist failures and kept
       // going. The fix requires the batch to abort — a FK violation on one
       // tool means every concurrent tool has the same doomed parent.
       mockMessageModel.create
@@ -2614,7 +2748,7 @@ describe('RuntimeExecutors', () => {
       );
     });
 
-    // LOBE-5143: After DB refresh, state.messages stores raw UIChatMessage[]
+    // After DB refresh, state.messages stores raw UIChatMessage[]
     // and call_llm re-injects context via serverMessagesEngine on each invocation
     it('should store raw UIChatMessage[] from DB after refresh (context re-injected by call_llm)', async () => {
       // DB only stores raw user/assistant/tool messages, NOT MessagesEngine injections
@@ -3229,8 +3363,8 @@ describe('RuntimeExecutors', () => {
       });
     });
 
-    it('should propagate persist failures instead of silently swallowing (LOBE-7158)', async () => {
-      // The pre-LOBE-7158 behavior logged the error and kept walking the
+    it('should propagate persist failures instead of silently swallowing ()', async () => {
+      // The pre-behavior logged the error and kept walking the
       // aborted-tool list. That left a half-persisted state and hid the real
       // cause from ops. Now we fail fast.
       mockMessageModel.create

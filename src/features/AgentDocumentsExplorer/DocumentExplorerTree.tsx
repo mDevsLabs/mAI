@@ -4,7 +4,6 @@ import { Trash2Icon } from 'lucide-react';
 import type { CSSProperties } from 'react';
 import { memo, useCallback, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useMatch, useNavigate } from 'react-router-dom';
 import type { KeyedMutator } from 'swr';
 
 import type {
@@ -12,7 +11,7 @@ import type {
   ExplorerTreeHandle,
   ExplorerTreeNode,
 } from '@/features/ExplorerTree';
-import { ExplorerTree, FOLDER_ICON_CSS } from '@/features/ExplorerTree';
+import { ExplorerTree, FOLDER_ICON_CSS, getExplorerTreeStyleVars } from '@/features/ExplorerTree';
 import { useChatStore } from '@/store/chat';
 
 import DocumentExplorerToolbar from './DocumentExplorerToolbar';
@@ -21,7 +20,6 @@ import type { AgentDocumentItem } from './types';
 import { isOrphanSkillBundleItem } from './types';
 import { canDropDocument } from './utils/canDrop';
 
-const PAGE_ROUTE_PATTERN = '/agent/:aid/:topicId/page/:docId?';
 const SKILL_INDEX_FILENAME = 'SKILL.md';
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
@@ -53,8 +51,6 @@ interface Props {
 
 const DocumentExplorerTree = memo<Props>(({ agentId, data, mutate, style }) => {
   const { t } = useTranslation(['chat', 'common']);
-  const navigate = useNavigate();
-  const pageMatch = useMatch(PAGE_ROUTE_PATTERN);
   const openDocument = useChatStore((s) => s.openDocument);
   const treeRef = useRef<ExplorerTreeHandle | null>(null);
 
@@ -62,12 +58,7 @@ const DocumentExplorerTree = memo<Props>(({ agentId, data, mutate, style }) => {
     treeRef.current?.startRenaming(id);
   }, []);
 
-  const ops = useDocumentTreeOps({
-    agentId,
-    data,
-    mutate,
-    topicId: pageMatch?.params.topicId,
-  });
+  const ops = useDocumentTreeOps({ agentId, data, mutate });
 
   const documents = useMemo(() => data.filter((doc) => doc.category !== 'web'), [data]);
 
@@ -103,6 +94,10 @@ const DocumentExplorerTree = memo<Props>(({ agentId, data, mutate, style }) => {
     () => nodes.filter((node) => node.isFolder && node.parentId == null).map((node) => node.id),
     [nodes],
   );
+  const treeStyleVars = useMemo(
+    () => getExplorerTreeStyleVars({ reserveChevronSlot: nodes.some((node) => node.isFolder) }),
+    [nodes],
+  );
 
   const parentMap = useMemo(() => {
     const map = new Map<string, string | null>();
@@ -136,15 +131,9 @@ const DocumentExplorerTree = memo<Props>(({ agentId, data, mutate, style }) => {
     (node: ExplorerTreeNode<AgentDocumentItem>) => {
       const doc = node.data;
       if (!doc || node.isFolder) return;
-      if (pageMatch?.params.aid && pageMatch.params.topicId) {
-        navigate(
-          `/agent/${pageMatch.params.aid}/${pageMatch.params.topicId}/page/${doc.documentId}`,
-        );
-        return;
-      }
-      openDocument(doc.documentId);
+      openDocument(doc.documentId, doc.id);
     },
-    [navigate, openDocument, pageMatch?.params.aid, pageMatch?.params.topicId],
+    [openDocument],
   );
 
   const handleCommitRename = useCallback(
@@ -194,9 +183,17 @@ const DocumentExplorerTree = memo<Props>(({ agentId, data, mutate, style }) => {
       const isFolder = !!node.isFolder;
       const targetParentId = isFolder ? node.id : (node.parentId ?? null);
 
+      // Right-click on a row that's part of the current multi-selection acts
+      // on the whole selection; otherwise it targets only the right-clicked
+      // row (which matches typical file-tree UX where right-clicking outside
+      // the selection narrows the action).
+      const selectedIds = treeRef.current?.getSelectedIds() ?? [];
+      const isMulti = selectedIds.length > 1 && selectedIds.includes(node.id);
+      const deleteIds = isMulti ? selectedIds : [node.id];
+
       const items: NonNullable<MenuProps['items']> = [];
 
-      if (isFolder && !isSkill) {
+      if (isFolder && !isSkill && !isMulti) {
         items.push(
           {
             key: 'new-folder',
@@ -212,7 +209,7 @@ const DocumentExplorerTree = memo<Props>(({ agentId, data, mutate, style }) => {
         );
       }
 
-      if (!isSkill) {
+      if (!isSkill && !isMulti) {
         items.push({
           key: 'rename',
           label: t('workingPanel.resources.tree.rename'),
@@ -224,8 +221,10 @@ const DocumentExplorerTree = memo<Props>(({ agentId, data, mutate, style }) => {
         danger: true,
         icon: <Trash2Icon size={14} />,
         key: 'delete',
-        label: t('delete', { ns: 'common' }),
-        onClick: () => ops.deleteDocument(node.id),
+        label: isMulti
+          ? t('workingPanel.resources.tree.deleteSelected', { count: deleteIds.length })
+          : t('delete', { ns: 'common' }),
+        onClick: () => ops.deleteDocuments(deleteIds),
       });
 
       return items;
@@ -234,14 +233,13 @@ const DocumentExplorerTree = memo<Props>(({ agentId, data, mutate, style }) => {
   );
 
   return (
-    <div className={styles.tree} style={style}>
+    <div className={styles.tree} style={{ ...style, ...treeStyleVars }}>
       <ExplorerTree<AgentDocumentItem>
         iconsColored
         canDrag={canDrag}
         canDrop={canDrop}
         canRename={canRename}
         defaultExpandedIds={defaultExpandedIds}
-        density="compact"
         getContextMenuItems={getContextMenuItems}
         iconSet="complete"
         nodes={nodes}

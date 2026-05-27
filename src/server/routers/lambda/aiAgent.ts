@@ -146,12 +146,6 @@ const ExecAgentSchema = z
       .optional(),
     /** Whether to auto-start execution after creating operation */
     autoStart: z.boolean().optional().default(true),
-    /**
-     * Runtime of the client initiating this request.
-     * 'desktop' enables `executor: 'client'` tools (local-system, stdio MCP)
-     * to be dispatched over the Agent Gateway WS.
-     */
-    clientRuntime: z.enum(['desktop', 'web']).optional(),
     /** Explicit device ID to bind to the topic and activate for this run */
     deviceId: z.string().optional(),
     /** Optional existing message IDs to include in context */
@@ -385,10 +379,14 @@ const AgentStreamEventSchema = z.object({
 /**
  * Schema for `aiAgent.heteroIngest` — accepts a batch of producer-side
  * `AgentStreamEvent`s from `lh hetero exec`. `topicId` is required (operationId
- * → topic reverse-lookup is unreliable per LOBE-8516 design decision).
+ * → topic reverse-lookup is unreliable per design decision).
  */
 const HeteroIngestSchema = z.object({
   agentType: z.enum(['claude-code', 'codex']),
+  /** Initial assistant placeholder message id forwarded from the sandbox env var.
+   * When present, `loadOrCreateState` uses it directly and skips the DB read of
+   * topic.metadata.runningOperation, eliminating the replica-lag race condition. */
+  assistantMessageId: z.string().min(1).optional(),
   events: z.array(AgentStreamEventSchema).min(1),
   operationId: z.string().min(1),
   topicId: z.string().min(1),
@@ -633,7 +631,6 @@ export const aiAgentRouter = router({
       prompt,
       appContext,
       autoStart = true,
-      clientRuntime,
       deviceId,
       existingMessageIds = [],
       fileIds,
@@ -651,7 +648,6 @@ export const aiAgentRouter = router({
         agentId,
         appContext,
         autoStart,
-        clientRuntime,
         deviceId,
         existingMessageIds,
         fileIds,
@@ -1178,7 +1174,7 @@ export const aiAgentRouter = router({
    * unchanged. Phase 2a: pub/sub only — no DB persistence (phase 2b adds it).
    */
   heteroIngest: heteroAgentProcedure.input(HeteroIngestSchema).mutation(async ({ input, ctx }) => {
-    const { agentType, events, operationId, topicId } = input;
+    const { agentType, assistantMessageId, events, operationId, topicId } = input;
 
     log(
       'heteroIngest: topic=%s op=%s type=%s count=%d',
@@ -1194,6 +1190,7 @@ export const aiAgentRouter = router({
       // the shared `AgentStreamEvent` type or the service signature.
       await ctx.heterogeneousAgentService.heteroIngest({
         agentType,
+        assistantMessageId,
         events: events as AgentStreamEvent[],
         operationId,
         topicId,

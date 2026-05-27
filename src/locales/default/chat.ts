@@ -36,8 +36,8 @@ export default {
   'agentSignal.receipts.memory.detail': 'Saved this for future replies',
   'agentSignal.receipts.memory.title': 'Memory saved',
   'agentSignal.receipts.recentActivity': 'Recent activity',
-  'agentSignal.receipts.skill.detail': 'Improved how this assistant handles similar requests',
-  'agentSignal.receipts.skill.title': 'Skill updated',
+  'agentSignal.receipts.skill.detail': 'Self-refined how this agent handles similar requests',
+  'agentSignal.receipts.skill.title': 'Auto-learned a new skill',
   'agents': 'Agents',
   'artifact.generating': 'Generating',
   'artifact.inThread':
@@ -175,6 +175,19 @@ export default {
   'heteroAgent.cloudRepo.notSet': 'No repo selected',
   'heteroAgent.cloudRepo.noRepos': 'No repositories configured. Add them in agent settings.',
   'heteroAgent.cloudRepo.multiSelected': '{{count}} repos selected',
+  'heteroAgent.executionTarget.infoTooltip':
+    'Pick a remote device to drive that machine from the web. "This device" runs the agent locally and is only available inside the desktop app.',
+  'heteroAgent.executionTarget.loading': 'Loading devices…',
+  'heteroAgent.executionTarget.local': 'This device',
+  'heteroAgent.executionTarget.localDesc': 'Run as a local process on this desktop app',
+  'heteroAgent.executionTarget.noDevices':
+    'No remote devices yet. Install the desktop app or run `lh connect` on another machine.',
+  'heteroAgent.executionTarget.offline': 'Offline',
+  'heteroAgent.executionTarget.online': 'Online',
+  'heteroAgent.executionTarget.sandbox': 'Cloud sandbox',
+  'heteroAgent.executionTarget.sandboxDesc': 'Run in an ephemeral cloud sandbox',
+  'heteroAgent.executionTarget.title': 'Execution Device',
+  'heteroAgent.executionTarget.unknownDevice': 'Unknown device',
   'hideForYou':
     "Direct message content is hidden. Please enable 'Show Direct Message Content' in settings to view.",
   'history.title': 'The Agent will keep only the latest {{count}} messages.',
@@ -361,6 +374,8 @@ export default {
   // Platform agent: per-platform descriptions shown in step 0 of the creation modal
   'platformAgent.create.desc.openclaw': 'Connect to OpenClaw running on one of your devices',
   'platformAgent.create.desc.hermes': 'Connect to Hermes running on one of your devices',
+  'platformAgent.create.desc.amp': 'Connect to Amp running on one of your devices',
+  'platformAgent.create.desc.opencode': 'Connect to OpenCode running on one of your devices',
 
   // Platform agent: shared device status label (used in Select option labels)
   'platformAgent.device.online': 'Online',
@@ -884,7 +899,7 @@ export default {
   'toolAuth.authorize': 'Authorize',
   'toolAuth.authorizing': 'Authorizing...',
   'toolAuth.hint':
-    'Without authorization or configuration, Skills may not work. This can limit the Agent or cause errors.',
+    "When Skills aren't authorized or configured, the related Skills won't work and the Agent's capabilities may be limited or run into errors.",
   'task.title': 'Tasks',
   'toolAuth.signIn': 'Sign In',
   'toolAuth.title': 'Authorize Skills for this Agent',
@@ -1019,6 +1034,7 @@ export default {
   'workingPanel.resources.deleteError': 'Failed to delete document',
   'workingPanel.resources.deleteSuccess': 'Document deleted',
   'workingPanel.resources.deleteTitle': 'Delete document?',
+  'workingPanel.resources.deleteTitleMulti': 'Delete {{count}} items?',
   'workingPanel.resources.empty': 'No webpages. Webpages crawled in this agent will show up here.',
   'workingPanel.resources.error': 'Failed to load resources',
   'workingPanel.resources.filter.documents': 'Documents',
@@ -1031,6 +1047,7 @@ export default {
   'workingPanel.resources.renameError': 'Failed to rename document',
   'workingPanel.resources.renameSuccess': 'Document renamed',
   'workingPanel.resources.tree.createError': 'Failed to create',
+  'workingPanel.resources.tree.deleteSelected': 'Delete selected ({{count}})',
   'workingPanel.resources.tree.moveError': 'Failed to move',
   'workingPanel.resources.tree.parentMissing': 'Parent folder is unavailable',
   'workingPanel.resources.tree.newDocument': 'New document',
@@ -1074,13 +1091,16 @@ export default {
   'workingPanel.review.copied': 'Path copied',
   'workingPanel.review.copyPath': 'Copy file path',
   'workingPanel.review.revealInTree': 'Reveal in tree',
-  'workingPanel.review.revealNotFound': 'File not found in project index',
   'workingPanel.review.empty': 'No working tree changes',
   'workingPanel.review.empty.branch': 'No changes vs {{baseRef}}',
   'workingPanel.review.empty.noBaseRef':
     "Couldn't determine the remote default branch. Run `git remote set-head origin --auto` in your terminal.",
   'workingPanel.review.error': "Couldn't load this file's diff",
   'workingPanel.review.expandAll': 'Expand all',
+  'workingPanel.review.group.collapseDiffs': 'Collapse all diffs in this group',
+  'workingPanel.review.group.expandDiffs': 'Expand all diffs in this group',
+  'workingPanel.review.group.fileCount': '{{count}} files',
+  'workingPanel.review.group.submoduleClean': 'No internal changes',
   'workingPanel.review.mode.branch': 'Branch',
   'workingPanel.review.mode.unstaged': 'Unstaged',
   'workingPanel.review.more': 'More options',

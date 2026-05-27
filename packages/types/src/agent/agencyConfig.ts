@@ -8,7 +8,7 @@
  * - **Local CLI** (`claude-code` | `codex`): spawned as a child process on the
  *   desktop; uses `command`, `args`, `env`, `systemContext`.
  *
- * - **Remote device** (`openclaw` | `hermes`): dispatched to a machine
+ * - **Remote device** (`openclaw` | `hermes` | `amp` | `opencode`): dispatched to a machine
  *   connected via `lh connect`; device is identified by `LobeAgentAgencyConfig.boundDeviceId`.
  *   `platformAgentId` selects the named agent on the remote platform (defaults to `'main'`).
  */
@@ -33,21 +33,34 @@ export interface HeterogeneousProviderConfig {
    */
   systemContext?: string;
   /** Agent runtime type. */
-  type: 'claude-code' | 'codex' | 'hermes' | 'openclaw';
+  type: 'amp' | 'claude-code' | 'codex' | 'hermes' | 'opencode' | 'openclaw';
 }
+
+/**
+ * Where a hetero agent runs.
+ * - `local`   : in-process spawn on the user's Electron desktop (desktop only)
+ * - `device`  : dispatched to an `lh connect` device identified by `boundDeviceId`
+ * - `sandbox` : server-spawned cloud sandbox
+ *
+ * Remote hetero agents (`openclaw` | `hermes`) are always `device`.
+ */
+export type HeteroExecutionTarget = 'device' | 'local' | 'sandbox';
 
 /**
  * Agent agency configuration.
  * Contains settings for agent execution modes and device binding.
- *
- * For remote hetero agents (`type: 'openclaw' | 'hermes'`), `boundDeviceId`
- * identifies the target `lh connect` device and is required.
  */
 export interface LobeAgentAgencyConfig {
   /**
    * Device ID of the machine connected via `lh connect`.
-   * Required when `heterogeneousProvider.type` is `'openclaw'` or `'hermes'`.
+   * Required when `executionTarget === 'device'` (and always set for remote
+   * hetero agents `openclaw` / `hermes`).
    */
   boundDeviceId?: string;
+  /**
+   * Execution target for the hetero agent. When omitted, the server falls back
+   * to `'sandbox'` (or `'device'` for remote hetero providers).
+   */
+  executionTarget?: HeteroExecutionTarget;
   heterogeneousProvider?: HeterogeneousProviderConfig;
 }

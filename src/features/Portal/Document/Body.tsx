@@ -7,9 +7,13 @@ import type { ChangeEvent } from 'react';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import FloatingChatPanel from '@/features/FloatingChatPanel';
+import { useAgentStore } from '@/store/agent';
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/selectors';
 import { useDocumentStore } from '@/store/document';
+import { useUserStore } from '@/store/user';
+import { labPreferSelectors } from '@/store/user/selectors';
 import {
   getSkillMarkdownMetadataError,
   parseSkillMarkdownFrontmatterFields,
@@ -192,6 +196,12 @@ const SkillFrontmatterBlock = memo<SkillFrontmatterBlockProps>(({ documentId, fr
 
 const DocumentBody = memo(() => {
   const documentId = useChatStore(chatPortalSelectors.portalDocumentId);
+  const agentDocumentId = useChatStore(chatPortalSelectors.portalAgentDocumentId);
+  const activeAgentId = useAgentStore((s) => s.activeAgentId);
+  const activeTopicId = useChatStore((s) => s.activeTopicId);
+  const enableFloatingChatPanel = useUserStore(
+    labPreferSelectors.enableAgentDocumentFloatingChatPanel,
+  );
   const [skillFrontmatter, contentFormat] = useDocumentStore((s) =>
     documentId
       ? [s.documents[documentId]?.skillFrontmatter ?? '', s.documents[documentId]?.contentFormat]
@@ -208,6 +218,15 @@ const DocumentBody = memo(() => {
         <EditorCanvas />
       </div>
       <TodoList />
+      {enableFloatingChatPanel && activeAgentId && (
+        <FloatingChatPanel
+          agentDocumentId={agentDocumentId}
+          agentId={activeAgentId}
+          documentId={documentId ?? undefined}
+          key={`${activeAgentId}:${activeTopicId ?? 'none'}:${documentId ?? 'none'}`}
+          topicId={activeTopicId ?? null}
+        />
+      )}
     </Flexbox>
   );
 });
