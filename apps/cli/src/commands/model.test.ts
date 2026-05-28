@@ -89,7 +89,7 @@ describe('model command', () => {
       mockTrpcClient.aiModel.getAiProviderModelList.query.mockResolvedValue([
         ...visibleModels,
         {
-          displayName: 'LobeHub Onboarding',
+          displayName: 'mAI Onboarding',
           id: 'lobehub-onboarding-v1',
           visible: false,
         },

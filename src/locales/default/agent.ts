@@ -13,7 +13,7 @@ export default {
   'channel.copied': 'Copied to clipboard',
   'channel.comingSoon': 'Coming Soon',
   'channel.comingSoonDesc':
-    'We are working on bringing this integration to LobeHub. Stay tuned for updates.',
+    'We are working on bringing this integration to mAI. Stay tuned for updates.',
   'channel.comingSoonTitle': '{{name}} integration is coming soon',
   'channel.copy': 'Copy',
   'channel.deleteAllChannels': 'Remove All Channels',
@@ -33,7 +33,7 @@ export default {
     'Connect this assistant to Discord server for channel chat and direct messages.',
   'channel.documentation': 'Documentation',
   'channel.messengerPromo.action': 'Try Messenger',
-  'channel.messengerPromo.desc': 'No bot setup. Chat with LobeHub on Slack, Discord, Telegram.',
+  'channel.messengerPromo.desc': 'No bot setup. Chat with mAI on Slack, Discord, Telegram.',
   'channel.messengerPromo.dismiss': 'Dismiss',
   'channel.messengerPromo.title': 'Skip the setup',
   'channel.exportConfig': 'Export Configuration',
