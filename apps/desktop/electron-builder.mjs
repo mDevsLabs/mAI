@@ -273,7 +273,7 @@ const config = {
       CFBundleIconName: 'AppIcon',
       CFBundleURLTypes: [
         {
-          CFBundleURLName: 'LobeHub Protocol',
+          CFBundleURLName: 'mAI Protocol',
           CFBundleURLSchemes: [protocolScheme],
         },
       ],
@@ -311,7 +311,7 @@ const config = {
   },
   protocols: [
     {
-      name: 'LobeHub Protocol',
+      name: 'mAI Protocol',
       schemes: [protocolScheme],
     },
   ],
@@ -330,7 +330,7 @@ const config = {
   ],
 
   win: {
-    executableName: 'LobeHub',
+    executableName: 'mAI',
   },
 };
 

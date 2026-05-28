@@ -1,6 +1,6 @@
 'use client';
 
-import { COPYRIGHT_FULL } from '@lobechat/business-const';
+import { COPYRIGHT_FULL, BRANDING_NAME } from '@lobechat/business-const';
 import { Center, Flexbox, Text } from '@lobehub/ui';
 import { Divider } from 'antd';
 import { cx } from 'antd-style';
@@ -31,7 +31,7 @@ const AuthContainer: FC<PropsWithChildren> = ({ children }) => {
           padding={16}
           width={'100%'}
         >
-          <Link aria-label={'LobeHub'} href={'/'} style={{ display: 'inline-flex' }}>
+          <Link aria-label={BRANDING_NAME} href={'/'} style={{ display: 'inline-flex' }}>
             <ProductLogo size={40} />
           </Link>
           <Flexbox horizontal align={'center'}>
