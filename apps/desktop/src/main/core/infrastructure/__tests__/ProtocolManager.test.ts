@@ -12,7 +12,7 @@ const { mockApp, mockGetProtocolScheme, mockParseProtocolUrl } = vi.hoisted(() =
     getPath: vi.fn().mockReturnValue('/mock/exe/path'),
     isDefaultProtocolClient: vi.fn().mockReturnValue(true),
     isReady: vi.fn().mockReturnValue(true),
-    name: 'LobeHub',
+    name: 'mAI',
     on: vi.fn(),
     setAsDefaultProtocolClient: vi.fn().mockReturnValue(true),
   },

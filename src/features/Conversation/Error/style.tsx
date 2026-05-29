@@ -4,12 +4,12 @@ import { createStaticStyles, cssVar, cx } from 'antd-style';
 import { type ReactNode } from 'react';
 import { memo } from 'react';
 
+import { glassStyles } from '@/styles/glass';
+
 export const styles = createStaticStyles(({ css, cssVar }) => ({
   container: css`
-    border: 1px solid ${cssVar.colorSplit};
-    border-radius: 8px;
+    border-radius: 16px;
     color: ${cssVar.colorText};
-    background: ${cssVar.colorBgContainer};
   `,
   desc: css`
     color: ${cssVar.colorTextTertiary};
@@ -23,12 +23,18 @@ export const styles = createStaticStyles(({ css, cssVar }) => ({
       max-width: 90%;
     }
   `,
+  glass: glassStyles.surface,
 }));
 
 export const ErrorActionContainer = memo<CenterProps>(
   ({ children, className, gap = 24, padding = 24, ...rest }) => {
     return (
-      <Center className={cx(styles.container, className)} gap={gap} padding={padding} {...rest}>
+      <Center
+        className={cx(styles.container, styles.glass, className)}
+        gap={gap}
+        padding={padding}
+        {...rest}
+      >
         {children}
       </Center>
     );
@@ -56,7 +62,7 @@ export const FormAction = memo<
     ...rest
   }) => {
     return (
-      <Center className={cx(styles.form, className)} gap={gap} {...rest}>
+      <Center className={cx(styles.form, styles.glass, className)} gap={gap} {...rest}>
         <Avatar
           animation={animation}
           avatar={avatar}
