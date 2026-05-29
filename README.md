@@ -2,9 +2,9 @@
 
 [![][image-banner]][vercel-link]
 
-# LobeHub
+# mAI
 
-LobeHub organizes your agents into 7×24 operation.
+mAI organizes your agents into 7×24 operation.
 
 It hires, schedules, reports on your entire AI team.
 
@@ -28,7 +28,7 @@ You stay in charge — without staying online.
 [![][github-issues-shield]][github-issues-link]
 [![][github-license-shield]][github-license-link]<br>
 
-**Share LobeHub Repository**
+**Share mAI Repository**
 
 [![][share-x-shield]][share-x-link]
 [![][share-telegram-shield]][share-telegram-link]
@@ -40,7 +40,7 @@ You stay in charge — without staying online.
 
 <sup>Your Chief Agent Operator</sup>
 
-<a href="https://www.producthunt.com/products/lobehub?embed=true&amp;utm_source=badge-top-post-badge&amp;utm_medium=badge&amp;utm_campaign=badge-lobehub-2" target="_blank" rel="noopener noreferrer"><img alt="LobeHub - Your Chief Agent Operator for multi-agent work | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/top-post-badge.svg?post_id=1147569&amp;theme=light&amp;period=daily&amp;t=1779247564355"></a> <a href="https://trendshift.io/repositories/19224" target="_blank"><img src="https://trendshift.io/api/badge/repositories/19224" alt="lobehub%2Flobehub | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+<a href="https://www.producthunt.com/products/mAI?embed=true&amp;utm_source=badge-top-post-badge&amp;utm_medium=badge&amp;utm_campaign=badge-mAI-2" target="_blank" rel="noopener noreferrer"><img alt="mAI - Your Chief Agent Operator for multi-agent work | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/top-post-badge.svg?post_id=1147569&amp;theme=light&amp;period=daily&amp;t=1779247564355"></a> <a href="https://trendshift.io/repositories/19224" target="_blank"><img src="https://trendshift.io/api/badge/repositories/19224" alt="mAI%2FmAI | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 
 [![](https://vercel.com/oss/program-badge.svg)](https://vercel.com/oss)
 
@@ -83,11 +83,11 @@ You stay in charge — without staying online.
 We are a group of e/acc design-engineers, hoping to provide modern design components and tools for AIGC.
 By adopting the Bootstrapping approach, we aim to provide developers and users with a more open, transparent, and user-friendly product ecosystem.
 
-Whether for users or professional developers, LobeHub will be your AI Agent playground. Please be aware that LobeHub is currently under active development, and feedback is welcome for any [issues][issues-link] encountered.
+Whether for users or professional developers, mAI will be your AI Agent playground. Please be aware that mAI is currently under active development, and feedback is welcome for any [issues][issues-link] encountered.
 
-| [![](https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1065874&theme=light&t=1769347414733)](https://www.producthunt.com/products/lobehub?launch=lobehub-2&embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-lobehub) | We are live on Product Hunt! We are thrilled to bring LobeHub to the world. If you believe in a future where humans and agents co-evolve, please support our journey. |
+| [![](https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1065874&theme=light&t=1769347414733)](https://www.producthunt.com/products/mAI?launch=mAI-2&embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-mAI) | We are live on Product Hunt! We are thrilled to bring mAI to the world. If you believe in a future where humans and agents co-evolve, please support our journey. |
 | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [![][discord-shield-badge]][discord-link]                                                                                                                                                                                                                          | Join our Discord community! This is where you can connect with developers and other enthusiastic users of LobeHub.                                                    |
+| [![][discord-shield-badge]][discord-link]                                                                                                                                                                                                                          | Join our Discord community! This is where you can connect with developers and other enthusiastic users of mAI.                                                    |
 
 > \[!IMPORTANT]
 >
@@ -98,8 +98,8 @@ Whether for users or professional developers, LobeHub will be your AI Agent play
 <details>
   <summary><kbd>Star History</kbd></summary>
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=lobehub%2Flobehub&theme=dark&type=Date">
-    <img width="100%" src="https://api.star-history.com/svg?repos=lobehub%2Flobehub&type=Date">
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=mAI%2FmAI&theme=dark&type=Date">
+    <img width="100%" src="https://api.star-history.com/svg?repos=mAI%2FmAI&type=Date">
   </picture>
 </details>
 
@@ -107,9 +107,9 @@ Whether for users or professional developers, LobeHub will be your AI Agent play
 
 Today’s agents are one-off, task-driven tools. They lack context, live in isolation, and require manual hand-offs between different windows and models. While some maintain memory, it is often global, shallow, and impersonal. In this mode, users are forced to toggle between fragmented conversations, making it difficult to form structured productivity.
 
-**LobeHub changes everything.**
+**mAI changes everything.**
 
-LobeHub is a work-and-lifestyle space to find, build, and collaborate with agent teammates that grow with you. In LobeHub, we treat **Agents as the unit of work**, providing an infrastructure where humans and agents co-evolve.
+mAI is a work-and-lifestyle space to find, build, and collaborate with agent teammates that grow with you. In mAI, we treat **Agents as the unit of work**, providing an infrastructure where humans and agents co-evolve.
 
 ![](https://github.com/user-attachments/assets/89d1c402-a62b-4794-82ea-17e5ee1a6165)
 
@@ -153,7 +153,7 @@ Building a personalized AI team starts with the **Agent Builder**. You can descr
 
 ### Collaborate: Scale New Forms of Collaboration Networks
 
-LobeHub introduces **Agent Groups**, allowing you to work with agents like real teammates. The system assembles the right agents for the task, enabling parallel collaboration and iterative improvement.
+mAI introduces **Agent Groups**, allowing you to work with agents like real teammates. The system assembles the right agents for the task, enabling parallel collaboration and iterative improvement.
 
 - **Pages**: Write and refine content with multiple agents in one place with a shared context.
 - **Schedule**: Schedule runs and let agents do the work at the right time, even while you are away.
@@ -174,7 +174,7 @@ LobeHub introduces **Agent Groups**, allowing you to work with agents like real 
 
 ### Evolve: Co-evolution of Humans and Agents
 
-The best AI is one that understands you deeply. LobeHub features **Personal Memory** that builds a clear understanding of your needs.
+The best AI is one that understands you deeply. mAI features **Personal Memory** that builds a clear understanding of your needs.
 
 - **Continual Learning**: Your agents learn from how you work, adapting their behavior to act at the right moment.
 - **White-Box Memory**: We believe in transparency. Your agents use structured, editable memory, giving you full control over what they remember.
@@ -187,7 +187,7 @@ The best AI is one that understands you deeply. LobeHub features **Personal Memo
 
 </div>
 
-> ✨ more features will be added when LobeHub evolve.
+> ✨ more features will be added when mAI evolve.
 
 <div align="right">
 
@@ -197,11 +197,11 @@ The best AI is one that understands you deeply. LobeHub features **Personal Memo
 
 ## 🛳 Self Hosting
 
-LobeHub provides Self-Hosted Version with Vercel, Alibaba Cloud, and [Docker Image][docker-release-link]. This allows you to deploy your own chatbot within a few minutes without any prior knowledge.
+mAI provides Self-Hosted Version with Vercel, Alibaba Cloud, and [Docker Image][docker-release-link]. This allows you to deploy your own chatbot within a few minutes without any prior knowledge.
 
 > \[!TIP]
 >
-> Learn more about [📘 Build your own LobeHub][docs-self-hosting] by checking it out.
+> Learn more about [📘 Build your own mAI][docs-self-hosting] by checking it out.
 
 ### `A` Deploying with Vercel, Zeabur , Sealos or Alibaba Cloud
 
@@ -240,21 +240,21 @@ If you have deployed your own project following the one-click deployment steps i
 [![][docker-size-shield]][docker-size-link]
 [![][docker-pulls-shield]][docker-pulls-link]
 
-We provide a Docker image for deploying the LobeHub service on your own private device. Use the following command to start the LobeHub service:
+We provide a Docker image for deploying the mAI service on your own private device. Use the following command to start the mAI service:
 
 1. create a folder to for storage files
 
 ```fish
-$ mkdir lobehub-db && cd lobehub-db
+$ mkdir mAI-db && cd mAI-db
 ```
 
-2. init the LobeHub infrastructure
+2. init the mAI infrastructure
 
 ```fish
 bash <(curl -fsSL https://lobe.li/setup.sh)
 ```
 
-3. Start the LobeHub service
+3. Start the mAI service
 
 ```fish
 docker compose up -d
@@ -290,10 +290,10 @@ This project provides some additional configuration items set with environment v
 
 | NPM                               | Repository                              | Description                                                                                           | Version                                   |
 | --------------------------------- | --------------------------------------- | ----------------------------------------------------------------------------------------------------- | ----------------------------------------- |
-| [@lobehub/ui][lobe-ui-link]       | [lobehub/lobe-ui][lobe-ui-github]       | Open-source UI component library dedicated to building AIGC web applications.                         | [![][lobe-ui-shield]][lobe-ui-link]       |
-| [@lobehub/icons][lobe-icons-link] | [lobehub/lobe-icons][lobe-icons-github] | Popular AI / LLM Model Brand SVG Logo and Icon Collection.                                            | [![][lobe-icons-shield]][lobe-icons-link] |
-| [@lobehub/tts][lobe-tts-link]     | [lobehub/lobe-tts][lobe-tts-github]     | High-quality & reliable TTS/STT React Hooks library                                                   | [![][lobe-tts-shield]][lobe-tts-link]     |
-| [@lobehub/lint][lobe-lint-link]   | [lobehub/lobe-lint][lobe-lint-github]   | Configurations for ESlint, Stylelint, Commitlint, Prettier, Remark, and Semantic Release for LobeHub. | [![][lobe-lint-shield]][lobe-lint-link]   |
+| [@mAI/ui][lobe-ui-link]       | [mAI/lobe-ui][lobe-ui-github]       | Open-source UI component library dedicated to building AIGC web applications.                         | [![][lobe-ui-shield]][lobe-ui-link]       |
+| [@mAI/icons][lobe-icons-link] | [mAI/lobe-icons][lobe-icons-github] | Popular AI / LLM Model Brand SVG Logo and Icon Collection.                                            | [![][lobe-icons-shield]][lobe-icons-link] |
+| [@mAI/tts][lobe-tts-link]     | [mAI/lobe-tts][lobe-tts-github]     | High-quality & reliable TTS/STT React Hooks library                                                   | [![][lobe-tts-shield]][lobe-tts-link]     |
+| [@mAI/lint][lobe-lint-link]   | [mAI/lobe-lint][lobe-lint-github]   | Configurations for ESlint, Stylelint, Commitlint, Prettier, Remark, and Semantic Release for mAI. | [![][lobe-lint-shield]][lobe-lint-link]   |
 
 <div align="right">
 
@@ -303,20 +303,20 @@ This project provides some additional configuration items set with environment v
 
 ## 🧩 Plugins
 
-Plugins provide a means to extend the [Function Calling][docs-function-call] capabilities of LobeHub. They can be used to introduce new function calls and even new ways to render message results. If you are interested in plugin development, please refer to our [📘 Plugin Development Guide][docs-plugin-dev] in the Wiki.
+Plugins provide a means to extend the [Function Calling][docs-function-call] capabilities of mAI. They can be used to introduce new function calls and even new ways to render message results. If you are interested in plugin development, please refer to our [📘 Plugin Development Guide][docs-plugin-dev] in the Wiki.
 
-- [lobe-chat-plugins][lobe-chat-plugins]: This is the plugin index for LobeHub. It accesses index.json from this repository to display a list of available plugins for LobeHub to the user.
-- [chat-plugin-template][chat-plugin-template]: This is the plugin template for LobeHub plugin development.
-- [@lobehub/chat-plugin-sdk][chat-plugin-sdk]: The LobeHub Plugin SDK assists you in creating exceptional chat plugins for LobeHub.
-- [@lobehub/chat-plugins-gateway][chat-plugins-gateway]: The LobeHub Plugins Gateway is a backend service that provides a gateway for LobeHub plugins. We deploy this service using Vercel. The primary API POST /api/v1/runner is deployed as an Edge Function.
+- [lobe-chat-plugins][lobe-chat-plugins]: This is the plugin index for mAI. It accesses index.json from this repository to display a list of available plugins for mAI to the user.
+- [chat-plugin-template][chat-plugin-template]: This is the plugin template for mAI plugin development.
+- [@mAI/chat-plugin-sdk][chat-plugin-sdk]: The mAI Plugin SDK assists you in creating exceptional chat plugins for mAI.
+- [@mAI/chat-plugins-gateway][chat-plugins-gateway]: The mAI Plugins Gateway is a backend service that provides a gateway for mAI plugins. We deploy this service using Vercel. The primary API POST /api/v1/runner is deployed as an Edge Function.
 
 > \[!NOTE]
 >
 > The plugin system is currently undergoing major development. You can learn more in the following issues:
 >
-> - [x] [**Plugin Phase 1**](https://github.com/lobehub/lobehub/issues/73): Implement separation of the plugin from the main body, split the plugin into an independent repository for maintenance, and realize dynamic loading of the plugin.
-> - [x] [**Plugin Phase 2**](https://github.com/lobehub/lobehub/issues/97): The security and stability of the plugin's use, more accurately presenting abnormal states, the maintainability of the plugin architecture, and developer-friendly.
-> - [x] [**Plugin Phase 3**](https://github.com/lobehub/lobehub/issues/149): Higher-level and more comprehensive customization capabilities, support for plugin authentication, and examples.
+> - [x] [**Plugin Phase 1**](https://github.com/mAI/mAI/issues/73): Implement separation of the plugin from the main body, split the plugin into an independent repository for maintenance, and realize dynamic loading of the plugin.
+> - [x] [**Plugin Phase 2**](https://github.com/mAI/mAI/issues/97): The security and stability of the plugin's use, more accurately presenting abnormal states, the maintainability of the plugin architecture, and developer-friendly.
+> - [x] [**Plugin Phase 3**](https://github.com/mAI/mAI/issues/149): Higher-level and more comprehensive customization capabilities, support for plugin authentication, and examples.
 
 <div align="right">
 
@@ -333,15 +333,15 @@ You can use GitHub Codespaces for online development:
 Or clone it for local development:
 
 ```fish
-$ git clone https://github.com/lobehub/lobehub.git
-$ cd lobehub
+$ git clone https://github.com/mAI/mAI.git
+$ cd mAI
 $ pnpm install
 $ pnpm dev          # Full-stack (Next.js + Vite SPA)
 $ bun run dev:spa   # SPA frontend only (port 9876)
 ```
 
 > **Debug Proxy**: After running `dev:spa`, the terminal prints a proxy URL like
-> `https://app.lobehub.com/_dangerous_local_dev_proxy?debug-host=http%3A%2F%2Flocalhost%3A9876`.
+> `https://app.mAI.com/_dangerous_local_dev_proxy?debug-host=http%3A%2F%2Flocalhost%3A9876`.
 > Open it to develop locally against the production backend with HMR.
 
 If you would like to learn more details, please feel free to look at our [📘 Development Guide][docs-dev-guide].
@@ -360,7 +360,7 @@ Contributions of all types are more than welcome; if you are interested in contr
 >
 > We are creating a technology-driven forum, fostering knowledge interaction and the exchange of ideas that may culminate in mutual inspiration and collaborative innovation.
 >
-> Help us make LobeHub better. Welcome to provide product design feedback, user experience discussions directly to us.
+> Help us make mAI better. Welcome to provide product design feedback, user experience discussions directly to us.
 >
 > **Principal Maintainers:** [@arvinxx](https://github.com/arvinxx) [@canisminor1990](https://github.com/canisminor1990)
 
@@ -368,11 +368,11 @@ Contributions of all types are more than welcome; if you are interested in contr
 [![][submit-agents-shield]][submit-agents-link]
 [![][submit-plugin-shield]][submit-plugin-link]
 
-<a href="https://github.com/lobehub/lobehub/graphs/contributors" target="_blank">
+<a href="https://github.com/mAI/mAI/graphs/contributors" target="_blank">
   <table>
     <tr>
       <th colspan="2">
-        <br><img src="https://contrib.rocks/image?repo=lobehub/lobehub"><br><br>
+        <br><img src="https://contrib.rocks/image?repo=mAI/mAI"><br><br>
       </th>
     </tr>
     <tr>
@@ -410,10 +410,10 @@ Contributions of all types are more than welcome; if you are interested in contr
 
 Every bit counts and your one-time donation sparkles in our galaxy of support! You're a shooting star, making a swift and bright impact on our journey. Thank you for believing in us – your generosity guides us toward our mission, one brilliant flash at a time.
 
-<a href="https://opencollective.com/lobehub" target="_blank">
+<a href="https://opencollective.com/mAI" target="_blank">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/lobehub/.github/blob/main/static/sponsor-dark.png?raw=true">
-    <img  src="https://github.com/lobehub/.github/blob/main/static/sponsor-light.png?raw=true">
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/mAI/.github/blob/main/static/sponsor-dark.png?raw=true">
+    <img  src="https://github.com/mAI/.github/blob/main/static/sponsor-light.png?raw=true">
   </picture>
 </a>
 
@@ -444,110 +444,111 @@ Every bit counts and your one-time donation sparkles in our galaxy of support! Y
 
 </details>
 
-Copyright © 2026 [LobeHub][profile-link]. <br />
-This project is [LobeHub Community License](./LICENSE) licensed.
+Copyright © 2026 [mAI][profile-link]. <br />
+This project is [mAI Community License](./LICENSE) licensed.
 
 <!-- LINK GROUP -->
 
 [back-to-top]: https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square
-[blog]: https://lobehub.com/blog
-[changelog]: https://lobehub.com/changelog
-[chat-plugin-sdk]: https://github.com/lobehub/chat-plugin-sdk
-[chat-plugin-template]: https://github.com/lobehub/chat-plugin-template
-[chat-plugins-gateway]: https://github.com/lobehub/chat-plugins-gateway
-[codecov-link]: https://codecov.io/gh/lobehub/lobehub
-[codecov-shield]: https://img.shields.io/codecov/c/github/lobehub/lobehub?labelColor=black&style=flat-square&logo=codecov&logoColor=white
-[codespaces-link]: https://codespaces.new/lobehub/lobehub
+[blog]: https://mAI.com/blog
+[changelog]: https://mAI.com/changelog
+[chat-plugin-sdk]: https://github.com/mAI/chat-plugin-sdk
+[chat-plugin-template]: https://github.com/mAI/chat-plugin-template
+[chat-plugins-gateway]: https://github.com/mAI/chat-plugins-gateway
+[codecov-link]: https://codecov.io/gh/mAI/mAI
+[codecov-shield]: https://img.shields.io/codecov/c/github/mAI/mAI?labelColor=black&style=flat-square&logo=codecov&logoColor=white
+[codespaces-link]: https://codespaces.new/mAI/mAI
 [codespaces-shield]: https://github.com/codespaces/badge.svg
 [deploy-button-image]: https://vercel.com/button
-[deploy-link]: https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobehub&env=OPENAI_API_KEY&envDescription=Find%20your%20OpenAI%20API%20Key%20by%20click%20the%20right%20Learn%20More%20button.&envLink=https%3A%2F%2Fplatform.openai.com%2Faccount%2Fapi-keys&project-name=lobehub&repository-name=lobehub
+[deploy-link]: https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FmAI%2FmAI&env=OPENAI_API_KEY&envDescription=Find%20your%20OpenAI%20API%20Key%20by%20click%20the%20right%20Learn%20More%20button.&envLink=https%3A%2F%2Fplatform.openai.com%2Faccount%2Fapi-keys&project-name=mAI&repository-name=mAI
 [deploy-on-alibaba-cloud-button-image]: https://service-info-public.oss-cn-hangzhou.aliyuncs.com/computenest-en.svg
-[deploy-on-alibaba-cloud-link]: https://computenest.console.aliyun.com/service/instance/create/default?type=user&ServiceName=LobeHub%E7%A4%BE%E5%8C%BA%E7%89%88
+[deploy-on-alibaba-cloud-link]: https://computenest.console.aliyun.com/service/instance/create/default?type=user&ServiceName=mAI%E7%A4%BE%E5%8C%BA%E7%89%88
 [deploy-on-repocloud-button-image]: https://d16t0pc4846x52.cloudfront.net/deploylobe.svg
 [deploy-on-repocloud-link]: https://repocloud.io/details/?app_id=248
 [deploy-on-sealos-button-image]: https://raw.githubusercontent.com/labring-actions/templates/main/Deploy-on-Sealos.svg
-[deploy-on-sealos-link]: https://template.usw.sealos.io/deploy?templateName=lobehub-db
+[deploy-on-sealos-link]: https://template.usw.sealos.io/deploy?templateName=mAI-db
 [deploy-on-zeabur-button-image]: https://zeabur.com/button.svg
 [deploy-on-zeabur-link]: https://zeabur.com/templates/VZGGTI
 [discord-link]: https://discord.gg/AYFPHvv2jT
 [discord-shield]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=flat-square
 [discord-shield-badge]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=for-the-badge
-[docker-pulls-link]: https://hub.docker.com/r/lobehub/lobehub
-[docker-pulls-shield]: https://img.shields.io/docker/pulls/lobehub/lobehub?color=45cc11&labelColor=black&style=flat-square&sort=semver
-[docker-release-link]: https://hub.docker.com/r/lobehub/lobehub
-[docker-release-shield]: https://img.shields.io/docker/v/lobehub/lobehub?color=369eff&label=docker&labelColor=black&logo=docker&logoColor=white&style=flat-square&sort=semver
-[docker-size-link]: https://hub.docker.com/r/lobehub/lobehub
-[docker-size-shield]: https://img.shields.io/docker/image-size/lobehub/lobehub?color=369eff&labelColor=black&style=flat-square&sort=semver
-[docs]: https://lobehub.com/docs/usage/start
-[docs-dev-guide]: https://lobehub.com/docs/development/start
-[docs-docker]: https://lobehub.com/docs/self-hosting/server-database/docker-compose
-[docs-env-var]: https://lobehub.com/docs/self-hosting/environment-variables
-[docs-function-call]: https://lobehub.com/blog/openai-function-call
-[docs-plugin-dev]: https://lobehub.com/docs/usage/plugins/development
-[docs-self-hosting]: https://lobehub.com/docs/self-hosting/start
-[docs-upstream-sync]: https://lobehub.com/docs/self-hosting/advanced/upstream-sync
-[fossa-license-link]: https://app.fossa.com/projects/git%2Bgithub.com%2Flobehub%2Flobehub
-[fossa-license-shield]: https://app.fossa.com/api/projects/git%2Bgithub.com%2Flobehub%2Flobehub.svg?type=large
-[github-action-release-link]: https://github.com/actions/workflows/lobehub/lobehub/release.yml
-[github-action-release-shield]: https://img.shields.io/github/actions/workflow/status/lobehub/lobehub/release.yml?label=release&labelColor=black&logo=githubactions&logoColor=white&style=flat-square
-[github-action-test-link]: https://github.com/actions/workflows/lobehub/lobehub/test.yml
-[github-action-test-shield]: https://img.shields.io/github/actions/workflow/status/lobehub/lobehub/test.yml?label=test&labelColor=black&logo=githubactions&logoColor=white&style=flat-square
-[github-contributors-link]: https://github.com/lobehub/lobehub/graphs/contributors
-[github-contributors-shield]: https://img.shields.io/github/contributors/lobehub/lobehub?color=c4f042&labelColor=black&style=flat-square
-[github-forks-link]: https://github.com/lobehub/lobehub/network/members
-[github-forks-shield]: https://img.shields.io/github/forks/lobehub/lobehub?color=8ae8ff&labelColor=black&style=flat-square
-[github-issues-link]: https://github.com/lobehub/lobehub/issues
-[github-issues-shield]: https://img.shields.io/github/issues/lobehub/lobehub?color=ff80eb&labelColor=black&style=flat-square
-[github-license-link]: https://github.com/lobehub/lobehub/blob/main/LICENSE
+[docker-pulls-link]: https://hub.docker.com/r/mAI/mAI
+[docker-pulls-shield]: https://img.shields.io/docker/pulls/mAI/mAI?color=45cc11&labelColor=black&style=flat-square&sort=semver
+[docker-release-link]: https://hub.docker.com/r/mAI/mAI
+[docker-release-shield]: https://img.shields.io/docker/v/mAI/mAI?color=369eff&label=docker&labelColor=black&logo=docker&logoColor=white&style=flat-square&sort=semver
+[docker-size-link]: https://hub.docker.com/r/mAI/mAI
+[docker-size-shield]: https://img.shields.io/docker/image-size/mAI/mAI?color=369eff&labelColor=black&style=flat-square&sort=semver
+[docs]: https://mAI.com/docs/usage/start
+[docs-dev-guide]: https://mAI.com/docs/development/start
+[docs-docker]: https://mAI.com/docs/self-hosting/server-database/docker-compose
+[docs-env-var]: https://mAI.com/docs/self-hosting/environment-variables
+[docs-function-call]: https://mAI.com/blog/openai-function-call
+[docs-plugin-dev]: https://mAI.com/docs/usage/plugins/development
+[docs-self-hosting]: https://mAI.com/docs/self-hosting/start
+[docs-upstream-sync]: https://mAI.com/docs/self-hosting/advanced/upstream-sync
+[fossa-license-link]: https://app.fossa.com/projects/git%2Bgithub.com%2FmAI%2FmAI
+[fossa-license-shield]: https://app.fossa.com/api/projects/git%2Bgithub.com%2FmAI%2FmAI.svg?type=large
+[github-action-release-link]: https://github.com/actions/workflows/mAI/mAI/release.yml
+[github-action-release-shield]: https://img.shields.io/github/actions/workflow/status/mAI/mAI/release.yml?label=release&labelColor=black&logo=githubactions&logoColor=white&style=flat-square
+[github-action-test-link]: https://github.com/actions/workflows/mAI/mAI/test.yml
+[github-action-test-shield]: https://img.shields.io/github/actions/workflow/status/mAI/mAI/test.yml?label=test&labelColor=black&logo=githubactions&logoColor=white&style=flat-square
+[github-contributors-link]: https://github.com/mAI/mAI/graphs/contributors
+[github-contributors-shield]: https://img.shields.io/github/contributors/mAI/mAI?color=c4f042&labelColor=black&style=flat-square
+[github-forks-link]: https://github.com/mAI/mAI/network/members
+[github-forks-shield]: https://img.shields.io/github/forks/mAI/mAI?color=8ae8ff&labelColor=black&style=flat-square
+[github-issues-link]: https://github.com/mAI/mAI/issues
+[github-issues-shield]: https://img.shields.io/github/issues/mAI/mAI?color=ff80eb&labelColor=black&style=flat-square
+[github-license-link]: https://github.com/mAI/mAI/blob/main/LICENSE
 [github-license-shield]: https://img.shields.io/badge/license-apache%202.0-white?labelColor=black&style=flat-square
-[github-project-link]: https://github.com/lobehub/lobehub/projects
-[github-release-link]: https://github.com/lobehub/lobehub/releases
-[github-release-shield]: https://img.shields.io/github/v/release/lobehub/lobehub?color=369eff&labelColor=black&logo=github&style=flat-square
-[github-releasedate-link]: https://github.com/lobehub/lobehub/releases
-[github-releasedate-shield]: https://img.shields.io/github/release-date/lobehub/lobehub?labelColor=black&style=flat-square
-[github-stars-link]: https://github.com/lobehub/lobehub/stargazers
-[github-stars-shield]: https://img.shields.io/github/stars/lobehub/lobehub?color=ffcb47&labelColor=black&style=flat-square
+[github-project-link]: https://github.com/mAI/mAI/projects
+[github-release-link]: https://github.com/mAI/mAI/releases
+[github-release-shield]: https://img.shields.io/github/v/release/mAI/mAI?color=369eff&labelColor=black&logo=github&style=flat-square
+[github-releasedate-link]: https://github.com/mAI/mAI/releases
+[github-releasedate-shield]: https://img.shields.io/github/release-date/mAI/mAI?labelColor=black&style=flat-square
+[github-stars-link]: https://github.com/mAI/mAI/stargazers
+[github-stars-shield]: https://img.shields.io/github/stars/mAI/mAI?color=ffcb47&labelColor=black&style=flat-square
 [image-banner]: https://github.com/user-attachments/assets/5f78ae58-ed4f-4d38-8037-96109fbba58c
 [image-star]: https://github.com/user-attachments/assets/3216e25b-186f-4a54-9cb4-2f124aec0471
-[issues-link]: https://img.shields.io/github/issues/lobehub/lobehub.svg?style=flat
-[lobe-chat-plugins]: https://github.com/lobehub/lobe-chat-plugins
-[lobe-commit]: https://github.com/lobehub/lobe-commit/tree/master/packages/lobe-commit
-[lobe-i18n]: https://github.com/lobehub/lobe-commit/tree/master/packages/lobe-i18n
-[lobe-icons-github]: https://github.com/lobehub/lobe-icons
-[lobe-icons-link]: https://www.npmjs.com/package/@lobehub/icons
-[lobe-icons-shield]: https://img.shields.io/npm/v/@lobehub/icons?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
-[lobe-lint-github]: https://github.com/lobehub/lobe-lint
-[lobe-lint-link]: https://www.npmjs.com/package/@lobehub/lint
-[lobe-lint-shield]: https://img.shields.io/npm/v/@lobehub/lint?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
-[lobe-midjourney-webui]: https://github.com/lobehub/lobe-midjourney-webui
-[lobe-theme]: https://github.com/lobehub/sd-webui-lobe-theme
-[lobe-tts-github]: https://github.com/lobehub/lobe-tts
-[lobe-tts-link]: https://www.npmjs.com/package/@lobehub/tts
-[lobe-tts-shield]: https://img.shields.io/npm/v/@lobehub/tts?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
-[lobe-ui-github]: https://github.com/lobehub/lobe-ui
-[lobe-ui-link]: https://www.npmjs.com/package/@lobehub/ui
-[lobe-ui-shield]: https://img.shields.io/npm/v/@lobehub/ui?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
-[official-site]: https://lobehub.com
-[pr-welcome-link]: https://github.com/lobehub/lobehub/pulls
+[issues-link]: https://img.shields.io/github/issues/mAI/mAI.svg?style=flat
+[lobe-chat-plugins]: https://github.com/mAI/lobe-chat-plugins
+[lobe-commit]: https://github.com/mAI/lobe-commit/tree/master/packages/lobe-commit
+[lobe-i18n]: https://github.com/mAI/lobe-commit/tree/master/packages/lobe-i18n
+[lobe-icons-github]: https://github.com/mAI/lobe-icons
+[lobe-icons-link]: https://www.npmjs.com/package/@mAI/icons
+[lobe-icons-shield]: https://img.shields.io/npm/v/@mAI/icons?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
+[lobe-lint-github]: https://github.com/mAI/lobe-lint
+[lobe-lint-link]: https://www.npmjs.com/package/@mAI/lint
+[lobe-lint-shield]: https://img.shields.io/npm/v/@mAI/lint?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
+[lobe-midjourney-webui]: https://github.com/mAI/lobe-midjourney-webui
+[lobe-theme]: https://github.com/mAI/sd-webui-lobe-theme
+[lobe-tts-github]: https://github.com/mAI/lobe-tts
+[lobe-tts-link]: https://www.npmjs.com/package/@mAI/tts
+[lobe-tts-shield]: https://img.shields.io/npm/v/@mAI/tts?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
+[lobe-ui-github]: https://github.com/mAI/lobe-ui
+[lobe-ui-link]: https://www.npmjs.com/package/@mAI/ui
+[lobe-ui-shield]: https://img.shields.io/npm/v/@mAI/ui?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
+[official-site]: https://mAI.com
+[pr-welcome-link]: https://github.com/mAI/mAI/pulls
 [pr-welcome-shield]: https://img.shields.io/badge/🤯_pr_welcome-%E2%86%92-ffcb47?labelColor=black&style=for-the-badge
-[profile-link]: https://github.com/lobehub
+[profile-link]: https://github.com/mAI
 [share-linkedin-link]: https://linkedin.com/feed
 [share-linkedin-shield]: https://img.shields.io/badge/-share%20on%20linkedin-black?labelColor=black&logo=linkedin&logoColor=white&style=flat-square
-[share-mastodon-link]: https://mastodon.social/share?text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeHub%20-%20An%20open-source,%20extensible%20%28Function%20Calling%29,%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20https://github.com/lobehub/lobehub%20#chatbot%20#chatGPT%20#openAI
+[share-mastodon-link]: https://mastodon.social/share?text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20mAI%20-%20An%20open-source,%20extensible%20%28Function%20Calling%29,%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20https://github.com/mAI/mAI%20#chatbot%20#chatGPT%20#openAI
 [share-mastodon-shield]: https://img.shields.io/badge/-share%20on%20mastodon-black?labelColor=black&logo=mastodon&logoColor=white&style=flat-square
-[share-reddit-link]: https://www.reddit.com/submit?title=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeHub%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20%23chatbot%20%23chatGPT%20%23openAI&url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobehub
+[share-reddit-link]: https://www.reddit.com/submit?title=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20mAI%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20%23chatbot%20%23chatGPT%20%23openAI&url=https%3A%2F%2Fgithub.com%2FmAI%2FmAI
 [share-reddit-shield]: https://img.shields.io/badge/-share%20on%20reddit-black?labelColor=black&logo=reddit&logoColor=white&style=flat-square
-[share-telegram-link]: https://t.me/share/url"?text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeHub%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20%23chatbot%20%23chatGPT%20%23openAI&url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobehub
+[share-telegram-link]: https://t.me/share/url"?text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20mAI%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20%23chatbot%20%23chatGPT%20%23openAI&url=https%3A%2F%2Fgithub.com%2FmAI%2FmAI
 [share-telegram-shield]: https://img.shields.io/badge/-share%20on%20telegram-black?labelColor=black&logo=telegram&logoColor=white&style=flat-square
-[share-weibo-link]: http://service.weibo.com/share/share.php?sharesource=weibo&title=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeHub%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20%23chatbot%20%23chatGPT%20%23openAI&url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobehub
+[share-weibo-link]: http://service.weibo.com/share/share.php?sharesource=weibo&title=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20mAI%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20%23chatbot%20%23chatGPT%20%23openAI&url=https%3A%2F%2Fgithub.com%2FmAI%2FmAI
 [share-weibo-shield]: https://img.shields.io/badge/-share%20on%20weibo-black?labelColor=black&logo=sinaweibo&logoColor=white&style=flat-square
-[share-whatsapp-link]: https://api.whatsapp.com/send?text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeHub%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20https%3A%2F%2Fgithub.com%2Flobehub%2Flobehub%20%23chatbot%20%23chatGPT%20%23openAI
+[share-whatsapp-link]: https://api.whatsapp.com/send?text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20mAI%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20https%3A%2F%2Fgithub.com%2FmAI%2FmAI%20%23chatbot%20%23chatGPT%20%23openAI
 [share-whatsapp-shield]: https://img.shields.io/badge/-share%20on%20whatsapp-black?labelColor=black&logo=whatsapp&logoColor=white&style=flat-square
-[share-x-link]: https://x.com/intent/tweet?hashtags=chatbot%2CchatGPT%2CopenAI&text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeHub%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.&url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobehub
+[share-x-link]: https://x.com/intent/tweet?hashtags=chatbot%2CchatGPT%2CopenAI&text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20mAI%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.&url=https%3A%2F%2Fgithub.com%2FmAI%2FmAI
 [share-x-shield]: https://img.shields.io/badge/-share%20on%20x-black?labelColor=black&logo=x&logoColor=white&style=flat-square
-[submit-agents-link]: https://github.com/lobehub/lobe-chat-agents
+[submit-agents-link]: https://github.com/mAI/lobe-chat-agents
 [submit-agents-shield]: https://img.shields.io/badge/🤖/🏪_submit_agent-%E2%86%92-c4f042?labelColor=black&style=for-the-badge
-[submit-plugin-link]: https://github.com/lobehub/lobe-chat-plugins
+[submit-plugin-link]: https://github.com/mAI/lobe-chat-plugins
 [submit-plugin-shield]: https://img.shields.io/badge/🧩/🏪_submit_plugin-%E2%86%92-95f3d9?labelColor=black&style=for-the-badge
-[vercel-link]: https://app.lobehub.com
+[vercel-link]: https://app.mAI.com
 [vercel-shield]: https://img.shields.io/badge/vercel-online-55b467?labelColor=black&logo=vercel&style=flat-square
+
