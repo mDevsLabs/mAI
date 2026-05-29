@@ -1,7 +1,7 @@
 {
   "name": "@lobehub/lobehub",
-  "version": "0.0.4",
-  "description": "mAI - an open-source,comprehensive AI Agent framework that supports speech synthesis, multimodal, and extensible Function Call plugin system. Supports one-click free deployment of your private ChatGPT/LLM web application.",
+  "version": "0.0.5",
+  "description": "Avec mAI, passez à la vitesse supérieure !",
   "keywords": [
     "framework",
     "chatbot",

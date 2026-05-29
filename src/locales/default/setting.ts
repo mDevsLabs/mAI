@@ -1371,7 +1371,7 @@ When I am ___, I need ___
   'tools.lobehubSkill.disconnected': 'Disconnected',
 
   'tools.lobehubSkill.error': 'Error',
-  // LobeHub Skill Providers i18n
+  // mAI Skill Providers i18n
   'tools.lobehubSkill.providers.github.description':
     'GitHub is a platform for version control and collaboration, enabling developers to host, review, and manage code repositories.',
   'tools.lobehubSkill.providers.github.readme':
