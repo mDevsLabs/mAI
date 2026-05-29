@@ -724,9 +724,9 @@ export default {
   'skillDetail.tabs.tools': 'Capabilities',
   'skillDetail.tools': 'Tools',
   'skillDetail.trustWarning':
-    "Only use connectors from developers you trust. LobeHub does not control which tools developers make available and cannot verify that they will work as intended or that they won't change.",
+    "Only use connectors from developers you trust. mAI does not control which tools developers make available and cannot verify that they will work as intended or that they won't change.",
   'skillInstallBanner.dismiss': 'Dismiss',
-  'skillInstallBanner.title': 'Connect your favorite apps to Lobe AI',
+  'skillInstallBanner.title': 'Connect your favorite apps to May',
   'store.actions.cancel': 'Cancel',
   'store.actions.configure': 'Configure',
   'store.actions.confirmUninstall': 'Uninstalling will clear Skill config. Continue?',
