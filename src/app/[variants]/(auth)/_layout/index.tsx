@@ -31,7 +31,7 @@ const AuthContainer: FC<PropsWithChildren> = ({ children }) => {
           padding={16}
           width={'100%'}
         >
-          <Link aria-label={BRANDING_NAME} href={'/'} style={{ display: 'inline-flex' }}>
+          <Link aria-label={'mAI'} href={'/'} style={{ display: 'inline-flex' }}>
             <ProductLogo size={40} />
           </Link>
           <Flexbox horizontal align={'center'}>

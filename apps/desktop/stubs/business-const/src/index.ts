@@ -1,4 +1,4 @@
-export const BRANDING_LOGO_URL = '/avatars/may.PNG';
+export const BRANDING_LOGO_URL = '';
 export const BRANDING_NAME = 'mAI';
 export const DEFAULT_EMBEDDING_PROVIDER = 'openai';
 export const DEFAULT_MINI_MODEL = 'gpt-5.4-mini';

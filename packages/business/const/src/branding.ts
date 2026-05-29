@@ -5,7 +5,7 @@
 export const LOBE_CHAT_CLOUD = 'mAI Cloud';
 
 export const BRANDING_NAME = 'mAI';
-export const BRANDING_LOGO_URL = '/avatars/may.PNG';
+export const BRANDING_LOGO_URL = '';
 
 export const ORG_NAME = 'mAI';
 
