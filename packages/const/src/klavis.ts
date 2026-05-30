@@ -239,18 +239,6 @@ export const KLAVIS_SERVER_TYPES: KlavisServerType[] = [
   {
     author: 'Klavis',
     authorUrl: 'https://klavis.io',
-    description:
-      'YouTube is a video-sharing platform where users can upload, share, and discover content. Access video information, transcripts, and metadata programmatically.',
-    icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/youtube.svg',
-    identifier: 'youtube',
-    readme:
-      'Connect to YouTube to search videos, access transcripts, and retrieve video information. Analyze content, extract metadata, and discover videos through natural conversation.',
-    label: 'YouTube',
-    serverName: Klavis.McpServerName.Youtube,
-  },
-  {
-    author: 'Klavis',
-    authorUrl: 'https://klavis.io',
     description: 'Zendesk is a customer service software company',
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/zendesk.svg',
     identifier: 'zendesk',

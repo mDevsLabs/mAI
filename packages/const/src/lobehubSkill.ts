@@ -1,5 +1,5 @@
 import type { IconType } from '@icons-pack/react-simple-icons';
-import { SiGithub, SiLinear, SiVercel, SiX } from '@icons-pack/react-simple-icons';
+import { SiGithub, SiLinear, SiVercel } from '@icons-pack/react-simple-icons';
 
 export interface LobehubSkillProviderType {
   /**
@@ -91,18 +91,6 @@ export const LOBEHUB_SKILL_PROVIDERS: LobehubSkillProviderType[] = [
     readme:
       'Connect to Notion to access and manage your workspace. Create pages, search content, update databases, and organize your knowledge base—all through natural conversation with your AI assistant.',
     label: 'Notion',
-  },
-  {
-    author: 'mAI',
-    authorUrl: 'https://lobehub.com',
-    defaultVisible: true,
-    description:
-      'X (Twitter) is a social media platform for sharing real-time updates, news, and engaging with your audience through posts, replies, and direct messages.',
-    icon: SiX,
-    id: 'twitter',
-    readme:
-      'Connect to X (Twitter) to post tweets, manage your timeline, and engage with your audience. Create content, schedule posts, monitor mentions, and build your social media presence through conversational AI.',
-    label: 'X (Twitter)',
   },
   {
     author: 'mAI',
