@@ -1,0 +1,188 @@
+---
+title: Agente
+description: >-
+  Crea un Agente de IA personalizado: configura su rol, modelo, Habilidades, base de conocimientos
+  y Memoria en un solo lugar.
+tags:
+  - mAI
+  - Agente
+  - Configuración del Agente
+  - Prompt del Sistema
+  - Base de conocimientos
+  - Memoria
+  - Habilidades
+---
+
+# Agente
+
+Cada Agente en mAI es un colaborador persistente, no una conversación única. Construye un Agente de traducción que recuerde tu terminología, un Agente de programación adaptado a tu entorno técnico, o un Agente de redacción que adopte tu tono de voz. Configura su rol, modelo, Habilidades y base de conocimientos una vez, y deja que aprenda a partir de ahí.
+
+Esta guía te guiará en la creación y configuración de tu primer Agente.
+
+## Qué compone a un Agente
+
+Cada Agente se construye a partir de seis componentes:
+
+| Componente | Propósito |
+| :--- | :--- |
+| **Rol del Sistema** | La personalidad, experiencia y directrices de comportamiento del Agente. |
+| **Modelo de IA** | El LLM que alimenta al Agente: GPT-4o, Claude, Gemini y más. |
+| **Habilidades** | Capacidades como búsqueda web, ejecución de código y generación de imágenes. |
+| **Integraciones** | Conexiones MCP e integraciones con servicios externos. |
+| **Base de conocimientos** | Documentos y datos que el Agente puede buscar y consultar. |
+| **Memoria** | Contexto personal que el Agente aprende y conserva en todas las sesiones. |
+
+Empieza de forma sencilla: un Rol de Sistema y un modelo es todo lo que necesitas. Añade Habilidades, Integraciones y Bases de conocimientos a medida que tu trabajo lo requiera.
+
+## Tipos de Agentes
+
+- **Agentes Integrados** — Creador de Agentes (te ayuda a crear Agentes), Agente de Páginas (escritura), Agente de Memoria (gestiona tu Memoria personal).
+- **Agentes Personalizados** — Agentes que creas y configuras para tus flujos de trabajo específicos.
+- **Agentes Comunitarios** — Agentes listos para usar compartidos por la comunidad mAI (se añaden con un solo clic).
+
+## Crear un Nuevo Agente
+
+Tres formas de obtener tu primer Agente: creación inteligente con el Creador de Agentes, construir uno desde cero, o añadir uno desde la Comunidad. Las tres te permiten afinar cada detalle después.
+
+### Creación Inteligente con el Creador de Agentes
+
+<Steps>
+  ### Abre el Creador de Agentes
+
+  Haz clic en **Crear Agente** en la barra lateral izquierda, o usa la opción **Crear Agente** debajo de la entrada de chat.
+
+  ### Describe tu objetivo
+
+  En la página de Perfil del Agente, conversa con el Creador de Agentes en el panel derecho. Describe lo que necesitas en lenguaje natural: el Creador de Agentes generará los ajustes de rol, prompt del sistema y configuración de Habilidades automáticamente.
+
+  ### Revisa y ajusta
+
+  Revisa la configuración generada y ajusta cualquier cosa que no encaje.
+</Steps>
+
+![Creación Inteligente con Creador de Agentes](/blog/assets2964497066067ca0588a7767eb4c1709.webp)
+
+### Crear un Agente Personalizado
+
+Para un control total: define el avatar, nombre, prompt del sistema, modelo e Integraciones tú mismo en la página de Perfil del Agente. Comienza con el prompt del sistema; todo lo demás vendrá después.
+
+### Añadir desde la Comunidad
+
+La Comunidad cuenta con miles de Agentes listos para usar: expertos en diseño, asistentes de programación, redactores, tutores académicos y más.
+
+- Ve a **Comunidad → Agentes** en la barra lateral izquierda, o desplázate hacia abajo en la pantalla principal hasta **Agentes Comunitarios**.
+- Abre la página de detalles de un Agente y haz clic en **Añadir Agente y Chatear** para comenzar de inmediato.
+
+![Añadir Agente desde la Comunidad](/blog/assetsbcd98b0913d2dfc30d5a2b5523115d33.webp)
+
+### Conectar Habilidades e Integraciones
+
+Después de crear un Agente, amplía sus capacidades añadiendo Habilidades y enlazando servicios externos.
+
+Ve a **Perfil del Agente → + Añadir Habilidad** en la barra lateral izquierda.
+
+![Añadir Habilidad desde Perfil del Agente](/blog/assetsdc6362a2c6db476fc1b7b9d6bf443af2.webp)
+
+### Editar Información del Agente
+
+Tu Agente debe evolucionar a medida que lo hace tu trabajo. Abre una conversación, haz clic en **Perfil del Agente** en la barra lateral izquierda y actualiza cualquier detalle (nombre, rol, modelo o Habilidades) en cualquier momento.
+
+### Vincular una Base de conocimientos
+
+Vincula una base de conocimientos para que tu Agente responda a partir de tus propios datos (documentos, especificaciones o investigaciones) y no solo de su entrenamiento general.
+
+En la interfaz de chat, utiliza el botón de Base de conocimientos para seleccionar y adjuntar una base de conocimientos.
+
+![Vincular Base de conocimientos en Chat](/blog/assetsc89931ace11a936d87d0b87a6bca1069.webp)
+
+<Callout type="info">
+  Para saber más sobre las bases de conocimientos, consulta la [Biblioteca de Recursos](/docs/usage/getting-started/resource).
+</Callout>
+
+## Escribir Prompts del Sistema Efectivos
+
+El prompt del sistema es la parte más importante de tu Agente. Define la experiencia, el comportamiento y el estilo de comunicación del Agente. Un prompt del sistema bien escrito produce resultados consistentes y de alta calidad.
+
+**Ejemplo de estructura:**
+
+```
+Eres un experto [ROL] especializado en [DOMINIO].
+
+Tu experiencia incluye:
+- [Área específica 1]
+- [Área específica 2]
+- [Área específica 3]
+
+Al responder:
+- [Directriz de comunicación 1]
+- [Directriz de comunicación 2]
+- [Preferencia de formato]
+```
+
+**Consejos para escribir buenos prompts:**
+
+- **Sé específico sobre la experiencia** — "Eres un ingeniero senior de TypeScript especializado en React y optimización del rendimiento" es mucho más útil que "Eres un asistente de programación".
+- **Define el estilo de comunicación** — Especifica el tono (profesional, informal), la longitud de la respuesta (concisa/detallada) y el formato (markdown, viñetas, prosa).
+- **Incluye directrices específicas del dominio** — Para un Agente de redacción jurídica: "Cita las leyes pertinentes cuando corresponda. Advierte cuando el consejo requiera asesoramiento legal profesional".
+- **Empieza de forma sencilla e itera** — Comienza con un prompt básico y refínalo según las respuestas reales del Agente.
+
+## Elegir el Modelo Adecuado
+
+Diferentes modelos tienen diferentes fortalezas:
+
+| Modelo | Ideal para |
+| :--- | :--- |
+| GPT-4o, Claude Sonnet | Rendimiento equilibrado, programación, análisis |
+| Claude Opus, GPT-o1 | Razonamiento complejo, tareas matizadas |
+| Gemini | Tareas multimodales, contexto largo |
+| GPT-4o-mini, Claude Haiku | Respuestas rápidas, tareas sencillas, eficiencia de costes |
+| Ollama (local) | Tareas sensibles a la privacidad, uso sin conexión |
+
+Adapta el modelo a la complejidad de la tarea y a tu presupuesto. Para Agentes que realizan tareas rutinarias, un modelo más pequeño suele ser suficiente y más rápido.
+
+## Buenas Prácticas
+
+- **Prueba tus prompts** — Después de crear un Agente, realiza algunas conversaciones de prueba para verificar que se comporta como esperas. Refina el prompt del sistema basándote en lo que no funcione.
+- **Una responsabilidad por Agente** — Los Agentes especializados superan a los generalistas. Crea Agentes independientes para programar, escribir e investigar en lugar de un solo Agente para todo.
+- **Actualiza tus Agentes a medida que cambien tus necesidades** — Los Agentes no son algo fijo. Vuelve a revisar el prompt del sistema cuando tus flujos de trabajo o requisitos cambien.
+- **Usa el Creador de Agentes para configuraciones complejas** — Para Agentes que requieren múltiples Habilidades y un prompt del sistema sofisticado, deja que el Creador de Agentes haga la configuración inicial y luego refínala manualmente.
+
+## Gestionar Agentes
+
+Cuando tienes muchos Agentes y Chats de Grupo, organizarlos en Grupos mantiene limpia la barra lateral y facilita el cambio entre ellos.
+
+### Crear un Grupo
+
+En la página de inicio de mAI, abre el menú de la lista de Agentes y selecciona **Añadir nuevo grupo**.
+
+![Añadir Nuevo Grupo en la Lista de Agentes](/blog/assets98cddf4b80b8bac0c250a5236062d198.webp)
+
+### Mover a un Grupo
+
+Selecciona un Agente o Chat de Grupo existente y haz clic en **Mover al grupo**. También puedes crear nuevos Agentes o Chats de Grupo directamente dentro de un Grupo.
+
+### Gestionar Grupos
+
+Ve a la lista de Agentes o al menú de Grupos y selecciona **Gestionar grupos** para cambiarles el nombre o reordenarlos.
+
+### Anclar Agentes de Uso Frecuente
+
+Ancla un Agente en la parte superior de la lista para un acceso más rápido. Selecciona el Agente y elige **Anclar** en el menú. Los Agentes anclados permanecerán en la parte superior.
+
+## Crear una Copia
+
+Duplica un Agente para explorar diferentes configuraciones sin modificar el original. Selecciona el Agente y elige **Crear copia** en el menú.
+
+## Eliminar un Agente
+
+Selecciona el Agente, elige **Eliminar** en el menú y confirma. El Agente será eliminado.
+
+<Cards>
+  <Card href={'/docs/usage/agent/agent-team'} title={'Grupos de Agentes'} />
+
+  <Card href={'/docs/usage/agent/scheduled-task'} title={'Tareas Programadas'} />
+
+  <Card href={'/docs/usage/getting-started/memory'} title={'Memoria'} />
+
+  <Card href={'/docs/usage/community/publish-agent'} title={'Publicar un Agente'} />
+</Cards>

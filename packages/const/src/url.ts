@@ -2,15 +2,15 @@ import urlJoin from 'url-join';
 
 const isDev = process.env.NODE_ENV === 'development';
 
-export const OFFICIAL_URL = 'https://app.lobehub.com';
-export const OFFICIAL_SITE = 'https://lobehub.com';
-export const OFFICIAL_DOMAIN = 'lobehub.com';
+export const OFFICIAL_URL = 'https://m-ai-officiel.vercel.app';
+export const OFFICIAL_SITE = 'https://mprojects.odoo.com';
+export const OFFICIAL_DOMAIN = 'mprojects.odoo.com';
 
 export const OG_URL = '/og/og.webp?v=1';
 
-export const GITHUB = 'https://github.com/lobehub/lobe-chat';
+export const GITHUB = 'https://github.com/mDevsLabs/mAI';
 export const GITHUB_ISSUES = urlJoin(GITHUB, 'issues/new/choose');
-export const CHANGELOG = 'https://lobehub.com/changelog';
+export const CHANGELOG = 'https://mprojects.odoo.com/changelog';
 
 export const DOCUMENTS = urlJoin(OFFICIAL_SITE, '/docs');
 export const USAGE_DOCUMENTS = urlJoin(DOCUMENTS, '/usage');
