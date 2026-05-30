@@ -1,6 +1,6 @@
 {
   "name": "@lobechat/eval-dataset-parser",
-  "version": "1.0.0",
+  "version": "0.0.8",
   "private": true,
   "description": "Parse CSV, XLSX, JSON, and JSONL files into structured dataset records",
   "keywords": ["dataset", "parser", "csv", "xlsx", "jsonl", "lobehub"],
@@ -31,3 +31,4 @@
     "typescript": ">=5"
   }
 }
+

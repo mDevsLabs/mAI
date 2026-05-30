@@ -79,6 +79,8 @@ import MemoryPreferencesPage from '@/routes/(main)/memory/preferences';
 import PageIndexPage from '@/routes/(main)/page';
 import DesktopPageLayout from '@/routes/(main)/page/_layout';
 import PageDetailPage from '@/routes/(main)/page/[id]';
+import QuizzlyPage from '@/routes/(main)/quizzly';
+import DesktopQuizzlyLayout from '@/routes/(main)/quizzly/_layout';
 import ResourceLayout from '@/routes/(main)/resource/_layout';
 import ResourceHomePage from '@/routes/(main)/resource/(home)';
 import ResourceHomeLayout from '@/routes/(main)/resource/(home)/_layout';
@@ -562,6 +564,22 @@ export const desktopRoutes: RouteObject[] = [
         element: <DesktopPageLayout />,
         errorElement: <ErrorBoundary />,
         path: 'page',
+      },
+
+      // Quizzly route
+      {
+        children: [
+          {
+            element: <QuizzlyPage />,
+            handle: {
+              meta: routeMeta({ icon: ShapesIcon, titleKey: 'Quizzly' }),
+            },
+            index: true,
+          },
+        ],
+        element: <DesktopQuizzlyLayout />,
+        errorElement: <ErrorBoundary />,
+        path: 'quizzly',
       },
 
       // Default route - home page (handled by persistent layout)

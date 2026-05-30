@@ -2,7 +2,19 @@
 
 # Changelog
 
-### Version 0.0.6
+### Version 0.0.8
+
+<sup>Released on **2026-05-30**</sup>
+
+#### 🚀 Features
+- **docs**: Mise à jour de l'image principale du README vers `@public/avatars/may.PNG` et traduction en français.
+- **docs**: Ajout des versions `en-US`, `es-ES` et `de-DE` du README.
+- **docs**: Traduction de `CONTRIBUTING.md` en français.
+- **extension**: Création de la première extension Quizzly, un jeu vidéo d'apprentissage connecté aux modèles d'IA, avec les interfaces Jouer, Profil, et Boutique, développée avec `@lobehub/ui`.
+- **extension**: Quizzly v2 avec de vrais appels IA (OpenAI), une Boutique, des Ligues, animations Framer Motion, et effets sonores.
+
+
+### Version 0.0.7
 
 <sup>Released on **2026-05-30**</sup>
 

@@ -1,6 +1,6 @@
 {
   "name": "@lobechat/tool-runtime",
-  "version": "1.0.0",
+  "version": "0.0.8",
   "private": true,
   "exports": {
     ".": "./src/index.ts"
@@ -13,3 +13,4 @@
     "@lobechat/types": "workspace:*"
   }
 }
+
