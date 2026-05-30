@@ -1,6 +1,6 @@
 {
   "name": "@lobechat/python-interpreter",
-  "version": "1.0.0",
+  "version": "0.0.8",
   "private": true,
   "main": "src/index.ts",
   "scripts": {
@@ -13,3 +13,4 @@
     "url-join": "^5.0.0"
   }
 }
+

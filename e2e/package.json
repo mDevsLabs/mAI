@@ -1,6 +1,6 @@
 {
   "name": "@lobechat/e2e-tests",
-  "version": "0.1.0",
+  "version": "0.0.8",
   "private": true,
   "description": "E2E tests for LobeChat using Cucumber and Playwright",
   "scripts": {
@@ -27,3 +27,4 @@
     "typescript": "^5.9.3"
   }
 }
+

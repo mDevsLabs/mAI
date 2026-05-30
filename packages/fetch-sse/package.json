@@ -1,6 +1,6 @@
 {
   "name": "@lobechat/fetch-sse",
-  "version": "1.0.0",
+  "version": "0.0.8",
   "private": true,
   "description": "SSE fetch utilities with streaming support",
   "exports": {
@@ -33,3 +33,4 @@
     "@lobechat/types": "workspace:*"
   }
 }
+

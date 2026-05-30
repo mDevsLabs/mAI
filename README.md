@@ -1,16 +1,16 @@
 <div align="center"><a name="readme-top"></a>
 
-[![][image-banner]][vercel-link]
+[![mAI Banner](./public/avatars/may.PNG)][vercel-link]
 
 # mAI
 
-mAI organizes your agents into 7×24 operation.
+mAI organise vos agents pour opérer 24h/24 et 7j/7.
 
-It hires, schedules, reports on your entire AI team.
+Il recrute, planifie et gère les rapports de toute votre équipe d'IA.
 
-You stay in charge — without staying online.
+Vous gardez le contrôle — sans avoir besoin de rester en ligne.
 
-**English** · [简体中文](./README.zh-CN.md) · [Official Site][official-site] · [Changelog][changelog] · [Documents][docs] · [Blog][blog] · [Feedback][github-issues-link]
+**Français** · [English](./README.en-US.md) · [Español](./README.es-ES.md) · [Deutsch](./README.de-DE.md) · [Site Officiel][official-site] · [Changelog][changelog] · [Documents][docs] · [Blog][blog] · [Feedback][github-issues-link]
 
 <!-- SHIELD GROUP -->
 
@@ -28,7 +28,7 @@ You stay in charge — without staying online.
 [![][github-issues-shield]][github-issues-link]
 [![][github-license-shield]][github-license-link]<br>
 
-**Share mAI Repository**
+**Partager le Dépôt mAI**
 
 [![][share-x-shield]][share-x-link]
 [![][share-telegram-shield]][share-telegram-link]
@@ -38,7 +38,7 @@ You stay in charge — without staying online.
 [![][share-mastodon-shield]][share-mastodon-link]
 [![][share-linkedin-shield]][share-linkedin-link]
 
-<sup>Your Chief Agent Operator</sup>
+<sup>Votre Opérateur Principal d'Agents</sup>
 
 <a href="https://www.producthunt.com/products/mAI?embed=true&amp;utm_source=badge-top-post-badge&amp;utm_medium=badge&amp;utm_campaign=badge-mAI-2" target="_blank" rel="noopener noreferrer"><img alt="mAI - Your Chief Agent Operator for multi-agent work | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/top-post-badge.svg?post_id=1147569&amp;theme=light&amp;period=daily&amp;t=1779247564355"></a> <a href="https://trendshift.io/repositories/19224" target="_blank"><img src="https://trendshift.io/api/badge/repositories/19224" alt="mAI%2FmAI | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 
@@ -47,26 +47,26 @@ You stay in charge — without staying online.
 </div>
 
 <details>
-<summary><kbd>Table of contents</kbd></summary>
+<summary><kbd>Table des matières</kbd></summary>
 
 #### TOC
 
-- [👋🏻 Getting Started & Join Our Community](#-getting-started--join-our-community)
-- [✨ Features](#-features)
-  - [Operator: Agents as the Unit of Work](#operator-agents-as-the-unit-of-work)
-  - [Create: Agents as the Unit of Work](#create-agents-as-the-unit-of-work)
-  - [Collaborate: Scale New Forms of Collaboration Networks](#collaborate-scale-new-forms-of-collaboration-networks)
-  - [Evolve: Co-evolution of Humans and Agents](#evolve-co-evolution-of-humans-and-agents)
-- [🛳 Self Hosting](#-self-hosting)
-  - [`A` Deploying with Vercel, Zeabur , Sealos or Alibaba Cloud](#a-deploying-with-vercel-zeabur--sealos-or-alibaba-cloud)
-  - [`B` Deploying with Docker](#b-deploying-with-docker)
-  - [Environment Variable](#environment-variable)
-- [📦 Ecosystem](#-ecosystem)
+- [👋🏻 Démarrage & Rejoindre notre Communauté](#-démarrage--rejoindre-notre-communauté)
+- [✨ Fonctionnalités](#-fonctionnalités)
+  - [Opérateur : Les Agents comme Unité de Travail](#opérateur--les-agents-comme-unité-de-travail)
+  - [Créer : Des Agents sur mesure](#créer--des-agents-sur-mesure)
+  - [Collaborer : De nouvelles formes de réseaux](#collaborer--de-nouvelles-formes-de-réseaux)
+  - [Évoluer : Co-évolution Humains/Agents](#évoluer--co-évolution-humainsagents)
+- [🛳 Hébergement Propre](#-hébergement-propre)
+  - [`A` Déployer avec Vercel, Zeabur, Sealos ou Alibaba Cloud](#a-déployer-avec-vercel-zeabur-sealos-ou-alibaba-cloud)
+  - [`B` Déployer avec Docker](#b-déployer-avec-docker)
+  - [Variables d'Environnement](#variables-denvironnement)
+- [📦 Écosystème](#-écosystème)
 - [🧩 Plugins](#-plugins)
-- [⌨️ Local Development](#️-local-development)
-- [🤝 Contributing](#-contributing)
-- [❤️ Sponsor](#️-sponsor)
-- [🔗 More Products](#-more-products)
+- [⌨️ Développement Local](#️-développement-local)
+- [🤝 Contribuer](#-contribuer)
+- [❤️ Sponsors](#️-sponsors)
+- [🔗 Autres Produits](#-autres-produits)
 
 ####
 
@@ -78,12 +78,12 @@ You stay in charge — without staying online.
 
 <https://github.com/user-attachments/assets/0a33365f-b786-48b5-9ed6-f8af7927bccb>
 
-## 👋🏻 Getting Started & Join Our Community
+## 👋🏻 Démarrage & Rejoindre notre Communauté
 
-We are a group of e/acc design-engineers, hoping to provide modern design components and tools for AIGC.
-By adopting the Bootstrapping approach, we aim to provide developers and users with a more open, transparent, and user-friendly product ecosystem.
+Nous sommes un groupe d'ingénieurs-designers passionnés, espérant fournir des composants et outils au design moderne pour l'IA générative.
+En adoptant une approche ouverte, nous visons à offrir aux développeurs et utilisateurs un écosystème produit transparent et convivial.
 
-Whether for users or professional developers, mAI will be your AI Agent playground. Please be aware that mAI is currently under active development, and feedback is welcome for any [issues][issues-link] encountered.
+Que ce soit pour les utilisateurs ou les développeurs professionnels, mAI sera votre terrain de jeu d'Agents IA. Veuillez noter que mAI est actuellement en développement actif, et vos retours sont les bienvenus pour tout [problème][issues-link] rencontré.
 
 | [![](https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1065874&theme=light&t=1769347414733)](https://www.producthunt.com/products/mAI?launch=mAI-2&embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-mAI) | We are live on Product Hunt! We are thrilled to bring mAI to the world. If you believe in a future where humans and agents co-evolve, please support our journey. |
 | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -314,9 +314,9 @@ Plugins provide a means to extend the [Function Calling][docs-function-call] cap
 >
 > The plugin system is currently undergoing major development. You can learn more in the following issues:
 >
-> - [x] [**Plugin Phase 1**](https://github.com/mAI/mAI/issues/73): Implement separation of the plugin from the main body, split the plugin into an independent repository for maintenance, and realize dynamic loading of the plugin.
-> - [x] [**Plugin Phase 2**](https://github.com/mAI/mAI/issues/97): The security and stability of the plugin's use, more accurately presenting abnormal states, the maintainability of the plugin architecture, and developer-friendly.
-> - [x] [**Plugin Phase 3**](https://github.com/mAI/mAI/issues/149): Higher-level and more comprehensive customization capabilities, support for plugin authentication, and examples.
+> - [x] [**Plugin Phase 1**](https://github.com/mDevsLabs/mAI/issues/73): Implement separation of the plugin from the main body, split the plugin into an independent repository for maintenance, and realize dynamic loading of the plugin.
+> - [x] [**Plugin Phase 2**](https://github.com/mDevsLabs/mAI/issues/97): The security and stability of the plugin's use, more accurately presenting abnormal states, the maintainability of the plugin architecture, and developer-friendly.
+> - [x] [**Plugin Phase 3**](https://github.com/mDevsLabs/mAI/issues/149): Higher-level and more comprehensive customization capabilities, support for plugin authentication, and examples.
 
 <div align="right">
 
@@ -333,7 +333,7 @@ You can use GitHub Codespaces for online development:
 Or clone it for local development:
 
 ```fish
-$ git clone https://github.com/mAI/mAI.git
+$ git clone https://github.com/mDevsLabs/mAI.git
 $ cd mAI
 $ pnpm install
 $ pnpm dev          # Full-stack (Next.js + Vite SPA)
@@ -368,7 +368,7 @@ Contributions of all types are more than welcome; if you are interested in contr
 [![][submit-agents-shield]][submit-agents-link]
 [![][submit-plugin-shield]][submit-plugin-link]
 
-<a href="https://github.com/mAI/mAI/graphs/contributors" target="_blank">
+<a href="https://github.com/mDevsLabs/mAI/graphs/contributors" target="_blank">
   <table>
     <tr>
       <th colspan="2">
@@ -487,40 +487,40 @@ This project is [mAI Community License](./LICENSE) licensed.
 [docs-self-hosting]: https://mAI.com/docs/self-hosting/start
 [docs-upstream-sync]: https://mAI.com/docs/self-hosting/advanced/upstream-sync
 [fossa-license-link]: https://app.fossa.com/projects/git%2Bgithub.com%2FmAI%2FmAI
-[fossa-license-shield]: https://app.fossa.com/api/projects/git%2Bgithub.com%2FmAI%2FmAI.svg?type=large
-[github-action-release-link]: https://github.com/actions/workflows/mAI/mAI/release.yml
-[github-action-release-shield]: https://img.shields.io/github/actions/workflow/status/mAI/mAI/release.yml?label=release&labelColor=black&logo=githubactions&logoColor=white&style=flat-square
-[github-action-test-link]: https://github.com/actions/workflows/mAI/mAI/test.yml
-[github-action-test-shield]: https://img.shields.io/github/actions/workflow/status/mAI/mAI/test.yml?label=test&labelColor=black&logo=githubactions&logoColor=white&style=flat-square
-[github-contributors-link]: https://github.com/mAI/mAI/graphs/contributors
-[github-contributors-shield]: https://img.shields.io/github/contributors/mAI/mAI?color=c4f042&labelColor=black&style=flat-square
-[github-forks-link]: https://github.com/mAI/mAI/network/members
-[github-forks-shield]: https://img.shields.io/github/forks/mAI/mAI?color=8ae8ff&labelColor=black&style=flat-square
-[github-issues-link]: https://github.com/mAI/mAI/issues
-[github-issues-shield]: https://img.shields.io/github/issues/mAI/mAI?color=ff80eb&labelColor=black&style=flat-square
-[github-license-link]: https://github.com/mAI/mAI/blob/main/LICENSE
+[fossa-license-shield]: https://app.fossa.com/api/projects/git%2Bgithub.com%mDevsLabs%2FmAI.svg?type=large
+[github-action-release-link]: https://github.com/actions/workflows/mDevsLabs/mAI/release.yml
+[github-action-release-shield]: https://img.shields.io/github/actions/workflow/status/mDevsLabs/mAI/release.yml?label=release&labelColor=black&logo=githubactions&logoColor=white&style=flat-square
+[github-action-test-link]: https://github.com/actions/workflows/mDevsLabs/mAI/test.yml
+[github-action-test-shield]: https://img.shields.io/github/actions/workflow/status/mDevsLabs/mAI/test.yml?label=test&labelColor=black&logo=githubactions&logoColor=white&style=flat-square
+[github-contributors-link]: https://github.com/mDevsLabs/mAI/graphs/contributors
+[github-contributors-shield]: https://img.shields.io/github/contributors/mDevsLabs/mAI?color=c4f042&labelColor=black&style=flat-square
+[github-forks-link]: https://github.com/mDevsLabs/mAI/network/members
+[github-forks-shield]: https://img.shields.io/github/forks/mDevsLabs/mAI?color=8ae8ff&labelColor=black&style=flat-square
+[github-issues-link]: https://github.com/mDevsLabs/mAI/issues
+[github-issues-shield]: https://img.shields.io/github/issues/mDevsLabs/mAI?color=ff80eb&labelColor=black&style=flat-square
+[github-license-link]: https://github.com/mDevsLbas/mAI/blob/canary/LICENSE
 [github-license-shield]: https://img.shields.io/badge/license-apache%202.0-white?labelColor=black&style=flat-square
-[github-project-link]: https://github.com/mAI/mAI/projects
-[github-release-link]: https://github.com/mAI/mAI/releases
-[github-release-shield]: https://img.shields.io/github/v/release/mAI/mAI?color=369eff&labelColor=black&logo=github&style=flat-square
-[github-releasedate-link]: https://github.com/mAI/mAI/releases
-[github-releasedate-shield]: https://img.shields.io/github/release-date/mAI/mAI?labelColor=black&style=flat-square
-[github-stars-link]: https://github.com/mAI/mAI/stargazers
-[github-stars-shield]: https://img.shields.io/github/stars/mAI/mAI?color=ffcb47&labelColor=black&style=flat-square
-[image-banner]: https://github.com/user-attachments/assets/5f78ae58-ed4f-4d38-8037-96109fbba58c
+[github-project-link]: https://github.com/mDevsLabs/mAI/projects
+[github-release-link]: https://github.com/mDevsLabs/mAI/releases
+[github-release-shield]: https://img.shields.io/github/v/release/mDevsLabs/mAI?color=369eff&labelColor=black&logo=github&style=flat-square
+[github-releasedate-link]: https://github.com/mDevsLabs/mAI/releases
+[github-releasedate-shield]: https://img.shields.io/github/release-date/mDevsLabs/mAI?labelColor=black&style=flat-square
+[github-stars-link]: https://github.com/mDevsLabs/mAI/stargazers
+[github-stars-shield]: https://img.shields.io/github/stars/mDevsLabs/mAI?color=ffcb47&labelColor=black&style=flat-square
+[image-banner]: ./public/avatars/may.PNG
 [image-star]: https://github.com/user-attachments/assets/3216e25b-186f-4a54-9cb4-2f124aec0471
-[issues-link]: https://img.shields.io/github/issues/mAI/mAI.svg?style=flat
-[lobe-chat-plugins]: https://github.com/mAI/lobe-chat-plugins
-[lobe-commit]: https://github.com/mAI/lobe-commit/tree/master/packages/lobe-commit
-[lobe-i18n]: https://github.com/mAI/lobe-commit/tree/master/packages/lobe-i18n
-[lobe-icons-github]: https://github.com/mAI/lobe-icons
-[lobe-icons-link]: https://www.npmjs.com/package/@mAI/icons
-[lobe-icons-shield]: https://img.shields.io/npm/v/@mAI/icons?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
-[lobe-lint-github]: https://github.com/mAI/lobe-lint
-[lobe-lint-link]: https://www.npmjs.com/package/@mAI/lint
-[lobe-lint-shield]: https://img.shields.io/npm/v/@mAI/lint?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
-[lobe-midjourney-webui]: https://github.com/mAI/lobe-midjourney-webui
-[lobe-theme]: https://github.com/mAI/sd-webui-lobe-theme
+[issues-link]: https://img.shields.io/github/issues/lobehub/mAI.svg?style=flat
+[lobe-chat-plugins]: https://github.com/mDevsLabs/mAI-plugins
+[lobe-commit]: https://github.com/lobehub/lobe-commit/tree/master/packages/lobe-commit
+[lobe-i18n]: https://github.com/lobehub/lobe-commit/tree/master/packages/lobe-i18n
+[lobe-icons-github]: https://github.com/lobehub/lobe-icons
+[lobe-icons-link]: https://www.npmjs.com/package/@lobehub/icons
+[lobe-icons-shield]: https://img.shields.io/npm/v/@lobehub/icons?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
+[lobe-lint-github]: https://github.com/lobehub/lobe-lint
+[lobe-lint-link]: https://www.npmjs.com/package/@lobehub/lint
+[lobe-lint-shield]: https://img.shields.io/npm/v/@lobehub/lint?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
+[lobe-midjourney-webui]: https://github.com/lobehub/lobe-midjourney-webui
+[lobe-theme]: https://github.com/lobehub/sd-webui-lobe-theme
 [lobe-tts-github]: https://github.com/mAI/lobe-tts
 [lobe-tts-link]: https://www.npmjs.com/package/@mAI/tts
 [lobe-tts-shield]: https://img.shields.io/npm/v/@mAI/tts?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
@@ -528,12 +528,12 @@ This project is [mAI Community License](./LICENSE) licensed.
 [lobe-ui-link]: https://www.npmjs.com/package/@mAI/ui
 [lobe-ui-shield]: https://img.shields.io/npm/v/@mAI/ui?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
 [official-site]: https://mAI.com
-[pr-welcome-link]: https://github.com/mAI/mAI/pulls
+[pr-welcome-link]: https://github.com/mDevsLabs/mAI/pulls
 [pr-welcome-shield]: https://img.shields.io/badge/🤯_pr_welcome-%E2%86%92-ffcb47?labelColor=black&style=for-the-badge
 [profile-link]: https://github.com/mAI
 [share-linkedin-link]: https://linkedin.com/feed
 [share-linkedin-shield]: https://img.shields.io/badge/-share%20on%20linkedin-black?labelColor=black&logo=linkedin&logoColor=white&style=flat-square
-[share-mastodon-link]: https://mastodon.social/share?text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20mAI%20-%20An%20open-source,%20extensible%20%28Function%20Calling%29,%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20https://github.com/mAI/mAI%20#chatbot%20#chatGPT%20#openAI
+[share-mastodon-link]: https://mastodon.social/share?text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20mAI%20-%20An%20open-source,%20extensible%20%28Function%20Calling%29,%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20https://github.com/mDevsLabs/mAI%20#chatbot%20#chatGPT%20#openAI
 [share-mastodon-shield]: https://img.shields.io/badge/-share%20on%20mastodon-black?labelColor=black&logo=mastodon&logoColor=white&style=flat-square
 [share-reddit-link]: https://www.reddit.com/submit?title=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20mAI%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20%23chatbot%20%23chatGPT%20%23openAI&url=https%3A%2F%2Fgithub.com%2FmAI%2FmAI
 [share-reddit-shield]: https://img.shields.io/badge/-share%20on%20reddit-black?labelColor=black&logo=reddit&logoColor=white&style=flat-square
@@ -545,10 +545,10 @@ This project is [mAI Community License](./LICENSE) licensed.
 [share-whatsapp-shield]: https://img.shields.io/badge/-share%20on%20whatsapp-black?labelColor=black&logo=whatsapp&logoColor=white&style=flat-square
 [share-x-link]: https://x.com/intent/tweet?hashtags=chatbot%2CchatGPT%2CopenAI&text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20mAI%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.&url=https%3A%2F%2Fgithub.com%2FmAI%2FmAI
 [share-x-shield]: https://img.shields.io/badge/-share%20on%20x-black?labelColor=black&logo=x&logoColor=white&style=flat-square
-[submit-agents-link]: https://github.com/mAI/lobe-chat-agents
+[submit-agents-link]: https://github.com/mDevsLabs/mAI-agents
 [submit-agents-shield]: https://img.shields.io/badge/🤖/🏪_submit_agent-%E2%86%92-c4f042?labelColor=black&style=for-the-badge
-[submit-plugin-link]: https://github.com/mAI/lobe-chat-plugins
+[submit-plugin-link]: https://github.com/mDevsLabs/mAI-plugins
 [submit-plugin-shield]: https://img.shields.io/badge/🧩/🏪_submit_plugin-%E2%86%92-95f3d9?labelColor=black&style=for-the-badge
-[vercel-link]: https://app.mAI.com
+[vercel-link]: https://mprojects.odoo.com
 [vercel-shield]: https://img.shields.io/badge/vercel-online-55b467?labelColor=black&logo=vercel&style=flat-square
 

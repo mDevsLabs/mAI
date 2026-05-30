@@ -684,6 +684,25 @@ export const desktopRoutes: RouteObject[] = [
         path: 'page',
       },
 
+      // Quizzly route
+      {
+        children: [
+          {
+            element: dynamicElement(() => import('@/routes/(main)/quizzly'), 'Desktop > Quizzly'),
+            handle: {
+              meta: routeMeta({ icon: ShapesIcon, titleKey: 'Quizzly' }),
+            },
+            index: true,
+          },
+        ],
+        element: dynamicLayout(
+          () => import('@/routes/(main)/quizzly/_layout'),
+          'Desktop > Quizzly > Layout',
+        ),
+        errorElement: <ErrorBoundary />,
+        path: 'quizzly',
+      },
+
       // Default route - home page (handled by persistent layout)
       {
         handle: {

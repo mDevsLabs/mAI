@@ -1,6 +1,6 @@
 {
   "name": "@lobechat/agent-runtime",
-  "version": "1.0.0",
+  "version": "0.0.8",
   "private": true,
   "main": "./src/index.ts",
   "scripts": {
@@ -17,3 +17,4 @@
     "openai": "^4.104.0"
   }
 }
+
