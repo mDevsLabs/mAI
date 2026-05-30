@@ -58,7 +58,7 @@ on:
         description: 'Skip GitHub release upload (for testing)'
         required: false
         type: boolean
-        default: true
+        default: false
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}

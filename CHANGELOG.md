@@ -2,6 +2,17 @@
 
 # Changelog
 
+### Version 0.1.0
+
+<sup>Released on **2026-05-30**</sup>
+
+#### 🚀 Features
+- **branding**: Remplacement complet de l'avatar par défaut de l'assistant par `/avatars/may.PNG`.
+- **branding**: Remplacement global de toutes les occurrences de LobeHub par mAI et Lobe AI par May dans les fichiers de locales de l'application (root et desktop).
+- **onboarding**: Amélioration de l'onboarding pour utiliser l'agent May au lieu de Lobe AI et redirection de ses chemins.
+- **rules**: Ajout de directives de développement spécifiques pour les agents sous `.agents/rules.md`.
+- **cleaning**: Suppression du dossier obsolète `changelog` de la racine du projet.
+
 ### Version 0.0.8
 
 <sup>Released on **2026-05-30**</sup>
@@ -32,5 +43,5 @@
 #### 🚀 Features
 - **branding**: Renommage de l'affichage global "LobeHub" en "mAI".
 - **branding**: Renommage de l'affichage de l'assistant "LobeAI" en "May".
-- **branding**: Remplacement de l'avatar par défaut `/avatars/lobe-ai.png` par `/avatars/may.PNG`.
+- **branding**: Remplacement de l'avatar par défaut `/avatars/may.PNG` par `/avatars/may.PNG`.
 - **docs**: Nettoyage et restructuration complète du changelog.

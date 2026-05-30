@@ -122,7 +122,9 @@
     {
       "avatar": "📊",
       "backgroundColor": "#E8F8F5",
-      "plugins": ["steam"],
+      "plugins": [
+        "steam"
+      ],
       "systemRole": "Vous êtes expert en traitement et interprétation de données, révélant des schémas et tendances à travers des graphiques et des analyses statistiques.",
       "title": "Analyste de données"
     },
@@ -270,6 +272,14 @@
   "slogan.title": "Offrez-vous un esprit plus intelligent",
   "welcomeMessages": {
     "1": "Bon retour 😊",
+    "2": "Salut, je suis là",
+    "3": "Tout est prêt !",
+    "4": "Ravi de vous revoir",
+    "5": "Prêt à commencer ?",
+    "6": "Laissez-moi vous aider avec les tâches du jour",
+    "7": "Continuons d’avancer !",
+    "8": "C’est parti 💪",
+    "9": "Au travail 🏃‍♂️",
     "10": "Productivité maximale~",
     "11": "À votre service !",
     "12": "Merci d’avoir patienté ☕",
@@ -280,7 +290,6 @@
     "17": "Chargé à bloc ⚡",
     "18": "Allons-y ! 🚀",
     "19": "Mes pensées sont synchronisées.",
-    "2": "Salut, je suis là",
     "20": "Inspiration en approche",
     "21": "J’attends votre appel",
     "22": "Retour en mode haute efficacité !",
@@ -291,7 +300,6 @@
     "27": "Système en ligne, prêt à aider 💡",
     "28": "Chargement d’ondes positives",
     "29": "Prenez le contrôle, c’est parti 🎵",
-    "3": "Tout est prêt !",
     "30": "Optimisation de l’efficacité …",
     "31": "Objectifs du jour en cours 🎯",
     "32": "Faites briller vos idées ✨",
@@ -301,12 +309,6 @@
     "36": "Parfait ! Commençons 😎",
     "37": "Je suis là, prêt pour vous",
     "38": "Continuez comme ça !",
-    "39": "N’oubliez pas de faire une pause~ 💤",
-    "4": "Ravi de vous revoir",
-    "5": "Prêt à commencer ?",
-    "6": "Laissez-moi vous aider avec les tâches du jour",
-    "7": "Continuons d’avancer !",
-    "8": "C’est parti 💪",
-    "9": "Au travail 🏃‍♂️"
+    "39": "N’oubliez pas de faire une pause~ 💤"
   }
 }
