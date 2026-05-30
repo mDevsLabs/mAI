@@ -122,7 +122,9 @@
     {
       "avatar": "📊",
       "backgroundColor": "#E8F8F5",
-      "plugins": ["steam"],
+      "plugins": [
+        "steam"
+      ],
       "systemRole": "Eres experto en procesar e interpretar datos, revelando patrones y tendencias mediante gráficos y análisis estadísticos.",
       "title": "Analista de Datos"
     },
@@ -270,6 +272,14 @@
   "slogan.title": "Dale a tu mente más inteligencia",
   "welcomeMessages": {
     "1": "Bienvenido de nuevo 😊",
+    "2": "Hola, estoy aquí",
+    "3": "¡Todo listo!",
+    "4": "Qué bueno verte",
+    "5": "¿Listo para empezar?",
+    "6": "Déjame ayudarte con las tareas de hoy",
+    "7": "¡Sigue avanzando!",
+    "8": "¡Vamos a ello! 💪",
+    "9": "Manos a la obra 🏃‍♂️",
     "10": "Productividad al máximo~",
     "11": "¡A tu servicio!",
     "12": "Gracias por esperar ☕",
@@ -280,7 +290,6 @@
     "17": "Energía al 100% ⚡",
     "18": "¡Vamos! 🚀",
     "19": "Mis pensamientos están en sintonía.",
-    "2": "Hola, estoy aquí",
     "20": "Inspiración en camino",
     "21": "Solo espero tu señal",
     "22": "¡De vuelta al modo de alta eficiencia!",
@@ -291,7 +300,6 @@
     "27": "Sistema en línea, listo para ayudar 💡",
     "28": "Cargando buenas vibras",
     "29": "Toma el control, empezamos ahora 🎵",
-    "3": "¡Todo listo!",
     "30": "Aumentando eficiencia …",
     "31": "Objetivos de hoy, en marcha 🎯",
     "32": "Deja que tus ideas brillen ✨",
@@ -301,12 +309,6 @@
     "36": "¡Muy bien! Empecemos 😎",
     "37": "Estoy aquí esperándote",
     "38": "¡Sigue con el buen trabajo!",
-    "39": "No olvides tomar un descanso~ 💤",
-    "4": "Qué bueno verte",
-    "5": "¿Listo para empezar?",
-    "6": "Déjame ayudarte con las tareas de hoy",
-    "7": "¡Sigue avanzando!",
-    "8": "¡Vamos a ello! 💪",
-    "9": "Manos a la obra 🏃‍♂️"
+    "39": "No olvides tomar un descanso~ 💤"
   }
 }

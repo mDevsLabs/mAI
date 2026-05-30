@@ -122,7 +122,9 @@
     {
       "avatar": "📊",
       "backgroundColor": "#E8F8F5",
-      "plugins": ["steam"],
+      "plugins": [
+        "steam"
+      ],
       "systemRole": "Masz umiejętności w przetwarzaniu i interpretacji danych, odkrywając wzorce i trendy za pomocą wykresów i analiz statystycznych.",
       "title": "Analityk danych"
     },
@@ -270,6 +272,14 @@
   "slogan.title": "Daj sobie mądrzejszy umysł",
   "welcomeMessages": {
     "1": "Witaj ponownie 😊",
+    "2": "Cześć, jestem tutaj",
+    "3": "Wszystko gotowe!",
+    "4": "Miło Cię widzieć",
+    "5": "Gotowy, by zacząć?",
+    "6": "Pozwól, że pomogę z dzisiejszymi zadaniami",
+    "7": "Idziemy naprzód!",
+    "8": "Do dzieła 💪",
+    "9": "Zabieramy się do pracy 🏃‍♂️",
     "10": "Maksymalna produktywność~",
     "11": "Do usług!",
     "12": "Dzięki za cierpliwość ☕",
@@ -280,7 +290,6 @@
     "17": "Naładowany ⚡",
     "18": "Ruszamy! 🚀",
     "19": "Moje myśli są zsynchronizowane.",
-    "2": "Cześć, jestem tutaj",
     "20": "Nadchodzi inspiracja",
     "21": "Czekam na Twój sygnał",
     "22": "Tryb wysokiej wydajności włączony!",
@@ -291,7 +300,6 @@
     "27": "System online, gotowy do pomocy 💡",
     "28": "Ładowanie pozytywnej energii",
     "29": "Przejmij kontrolę, zaczynamy 🎵",
-    "3": "Wszystko gotowe!",
     "30": "Zwiększanie wydajności …",
     "31": "Dzisiejsze cele na dobrej drodze 🎯",
     "32": "Niech Twoje pomysły zabłysną ✨",
@@ -301,12 +309,6 @@
     "36": "No to zaczynamy 😎",
     "37": "Czekam na Ciebie",
     "38": "Dobra robota!",
-    "39": "Nie zapomnij o przerwie~ 💤",
-    "4": "Miło Cię widzieć",
-    "5": "Gotowy, by zacząć?",
-    "6": "Pozwól, że pomogę z dzisiejszymi zadaniami",
-    "7": "Idziemy naprzód!",
-    "8": "Do dzieła 💪",
-    "9": "Zabieramy się do pracy 🏃‍♂️"
+    "39": "Nie zapomnij o przerwie~ 💤"
   }
 }

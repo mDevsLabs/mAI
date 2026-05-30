@@ -122,7 +122,9 @@
     {
       "avatar": "📊",
       "backgroundColor": "#E8F8F5",
-      "plugins": ["steam"],
+      "plugins": [
+        "steam"
+      ],
       "systemRole": "Je bent bedreven in het verwerken en interpreteren van data, en onthult patronen en trends via grafieken en statistische analyses.",
       "title": "Data-analist"
     },
@@ -270,6 +272,14 @@
   "slogan.title": "Geef jezelf een slimmer brein",
   "welcomeMessages": {
     "1": "Welkom terug 😊",
+    "2": "Hoi, ik ben er",
+    "3": "Alles is klaar!",
+    "4": "Fijn je te zien",
+    "5": "Klaar om te beginnen?",
+    "6": "Laat me helpen met de taken van vandaag",
+    "7": "Blijf vooruitgaan!",
+    "8": "Laten we dit doen 💪",
+    "9": "Aan het werk 🏃‍♂️",
     "10": "Productiviteit op max~",
     "11": "Tot je dienst!",
     "12": "Bedankt voor het wachten ☕",
@@ -280,7 +290,6 @@
     "17": "Volledig opgeladen ⚡",
     "18": "Daar gaan we! 🚀",
     "19": "Mijn gedachten zijn gesynchroniseerd.",
-    "2": "Hoi, ik ben er",
     "20": "Inspiratie komt eraan",
     "21": "Ik wacht op jouw seintje",
     "22": "Terug in hoge-efficiëntiemodus!",
@@ -291,7 +300,6 @@
     "27": "Systeem online, klaar om te helpen 💡",
     "28": "Goede vibes worden geladen",
     "29": "Neem de controle, vanaf nu 🎵",
-    "3": "Alles is klaar!",
     "30": "Efficiëntie wordt geboost …",
     "31": "Doelen van vandaag op schema 🎯",
     "32": "Laat je ideeën stralen ✨",
@@ -301,12 +309,6 @@
     "36": "Oké! Laten we beginnen 😎",
     "37": "Ik wacht op jou",
     "38": "Goed bezig!",
-    "39": "Vergeet niet pauze te nemen~ 💤",
-    "4": "Fijn je te zien",
-    "5": "Klaar om te beginnen?",
-    "6": "Laat me helpen met de taken van vandaag",
-    "7": "Blijf vooruitgaan!",
-    "8": "Laten we dit doen 💪",
-    "9": "Aan het werk 🏃‍♂️"
+    "39": "Vergeet niet pauze te nemen~ 💤"
   }
 }

@@ -19,7 +19,10 @@ name: Release Desktop Canary
 on:
   push:
     branches:
-      - canary
+      - '**'
+  pull_request:
+    branches:
+      - '**'
   workflow_dispatch:
     inputs:
       force:
@@ -34,7 +37,7 @@ on:
         default: ''
 
 concurrency:
-  group: ${{ github.workflow }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 permissions: read-all
@@ -62,32 +65,8 @@ jobs:
       - name: Check commit message prefix
         id: check
         run: |
-          # 手动触发 + force 时跳过检查
-          if [ "${{ inputs.force }}" == "true" ]; then
-            echo "should_build=true" >> $GITHUB_OUTPUT
-            echo "🔧 Force build requested, skipping commit check"
-            exit 0
-          fi
-
-          # 手动触发 (无 force) 也直接构建
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            echo "should_build=true" >> $GITHUB_OUTPUT
-            echo "🔧 Manual trigger, proceeding with build"
-            exit 0
-          fi
-
-          # 获取本次 push 的 head commit message
-          commit_msg=$(git log -1 --pretty=%s HEAD)
-          echo "📝 Head commit: $commit_msg"
-
-          # 检查是否匹配 style/feat/fix/refactor/release 前缀 (支持 gitmoji 前缀)
-          if echo "$commit_msg" | grep -qiE '^(💄\s*)?style(\(.+\))?:|^(✨\s*)?feat(\(.+\))?:|^(🐛\s*)?fix(\(.+\))?:|^(♻️\s*)?refactor(\(.+\))?:|^(🚀\s*)?release(\(.+\))?:'; then
-            echo "should_build=true" >> $GITHUB_OUTPUT
-            echo "✅ Commit matches canary build trigger: $commit_msg"
-          else
-            echo "should_build=false" >> $GITHUB_OUTPUT
-            echo "⏭️ Commit does not match style/feat/fix/refactor/release prefix, skipping: $commit_msg"
-          fi
+          echo "should_build=true" >> $GITHUB_OUTPUT
+          echo "🔧 Build enabled for push/pull_request on multi-branches"
 
       - name: Calculate canary version
         if: steps.check.outputs.should_build == 'true'
@@ -112,23 +91,9 @@ jobs:
             exit 1
           fi
 
-          echo "📌 Base version from package.json: $base_version"
+          echo "📌 Version from package.json: $base_version"
 
-          # Parse major.minor.patch
-          IFS='.' read -r major minor patch <<< "$base_version"
-          base_canary="${major}.${minor}.${patch}"
-
-          # postfix: 同 base 下已有 canary 标签的最大序号 + 1
-          max_seq=0
-          for t in $(git tag -l "v${base_canary}-canary.*" 2>/dev/null || true); do
-            seq=$(echo "$t" | grep -oE '[0-9]+$' || true)
-            if [ -n "$seq" ] && [ "$seq" -gt "$max_seq" ] 2>/dev/null; then
-              max_seq=$seq
-            fi
-          done
-          next_seq=$((max_seq + 1))
-
-          version="${base_canary}-canary.${next_seq}"
+          version="${base_version}"
           tag="v${version}"
 
           echo "version=${version}" >> $GITHUB_OUTPUT
