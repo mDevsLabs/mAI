@@ -104,21 +104,19 @@ jobs:
             exit 0
           fi
 
-          # 获取最新的 stable tag (排除 nightly/canary/beta 等)
-          latest_tag=$(git tag --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -n 1)
+          # Obtenir la version de base à partir de package.json au lieu des tags stables
+          base_version=$(node -p "require('./package.json').version")
 
-          if [ -z "$latest_tag" ]; then
-            echo "❌ No stable tag found"
+          if [ -z "$base_version" ]; then
+            echo "❌ No version found in package.json"
             exit 1
           fi
 
-          echo "📌 Latest stable tag: $latest_tag"
+          echo "📌 Base version from package.json: $base_version"
 
-          # 去掉 v 前缀，解析 major.minor.patch → a.b.c 取 c+1
-          base_version="${latest_tag#v}"
+          # Parse major.minor.patch
           IFS='.' read -r major minor patch <<< "$base_version"
-          new_patch=$((patch + 1))
-          base_canary="${major}.${minor}.${new_patch}"
+          base_canary="${major}.${minor}.${patch}"
 
           # postfix: 同 base 下已有 canary 标签的最大序号 + 1
           max_seq=0
@@ -145,17 +143,19 @@ jobs:
           TAG: ${{ steps.version.outputs.tag }}
         run: |
           previous_canary=$(git tag --sort=-creatordate | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+-canary\.[0-9]+$' | head -n 1)
-          latest_stable=$(git tag --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -n 1)
 
           if [ -n "$previous_canary" ]; then
             compare_from="$previous_canary"
             compare_range="${previous_canary}..HEAD"
-          elif [ -n "$latest_stable" ]; then
-            compare_from="$latest_stable"
-            compare_range="${latest_stable}..HEAD"
           else
-            compare_from="initial commit"
-            compare_range="HEAD"
+            first_commit=$(git rev-list --max-parents=0 HEAD 2>/dev/null | head -n 1)
+            if [ -n "$first_commit" ]; then
+              compare_from="$first_commit"
+              compare_range="${first_commit}..HEAD"
+            else
+              compare_from="HEAD"
+              compare_range="HEAD"
+            fi
           fi
 
           commit_count=$(git rev-list --count "$compare_range")
