@@ -1,7 +1,6 @@
-import { Card, Typography, Button, Steps } from 'antd';
+import { Card, Typography, Button, Steps, Flex } from 'antd';
 import { createStaticStyles } from 'antd-style';
 import { Trophy, ArrowLeft, Star, Shield, Crown } from 'lucide-react';
-import { Flexbox } from 'react-layout-kit';
 import { Icon } from '@lobehub/ui';
 
 import { useQuizzlyStore } from '../store/useQuizzlyStore';
@@ -33,11 +32,11 @@ const Leagues = ({ onBack }: LeaguesProps) => {
 
   return (
     <Card className={styles.card}>
-      <Flexbox align="center" gap={12} style={{ marginBottom: 32 }}>
+      <Flex align="center" gap={12} style={{ marginBottom: 32 }}>
         <Button type="text" icon={<Icon icon={ArrowLeft} />} onClick={onBack} />
         <Icon icon={Trophy} size={{ fontSize: 24 }} style={{ color: '#faad14' }} />
         <Typography.Title level={3} style={{ margin: 0 }}>Ligues & Progression</Typography.Title>
-      </Flexbox>
+      </Flex>
 
       <Typography.Paragraph style={{ textAlign: 'center', fontSize: '1.2rem', marginBottom: 40 }}>
         Gagnez des points en répondant correctement aux questions pour grimper dans les ligues ! 

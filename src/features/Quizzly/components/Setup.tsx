@@ -1,7 +1,6 @@
-import { Button, Card, Form, Input, Select, Typography } from 'antd';
+import { Button, Card, Form, Input, Select, Typography, Flex } from 'antd';
 import { createStaticStyles } from 'antd-style';
 import { Settings, ArrowLeft } from 'lucide-react';
-import { Flexbox } from 'react-layout-kit';
 import { Icon } from '@lobehub/ui';
 
 import { useQuizzlyStore } from '../store/useQuizzlyStore';
@@ -31,11 +30,11 @@ const Setup = ({ onStart, onBack }: SetupProps) => {
 
   return (
     <Card className={styles.card}>
-      <Flexbox align="center" gap={12} style={{ marginBottom: 24 }}>
+      <Flex align="center" gap={12} style={{ marginBottom: 24 }}>
         <Button type="text" icon={<Icon icon={ArrowLeft} />} onClick={onBack} />
         <Icon icon={Settings} size={{ fontSize: 24 }} />
         <Typography.Title level={3} style={{ margin: 0 }}>Configuration du Quiz</Typography.Title>
-      </Flexbox>
+      </Flex>
 
       <Form
         form={form}

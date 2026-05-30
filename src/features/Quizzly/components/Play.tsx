@@ -1,9 +1,8 @@
 import { Icon } from '@lobehub/ui';
-import { Button, Card, Typography, Spin, Radio, Space, message, Progress } from 'antd';
+import { Button, Card, Typography, Spin, Radio, Space, message, Progress, Badge, Flex } from 'antd';
 import { createStaticStyles } from 'antd-style';
-import { CheckCircle2, XCircle } from 'lucide-react';
+import { CheckCircle2, XCircle, Lightbulb, Sparkles } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { Flexbox } from 'react-layout-kit';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { generateQuiz } from '../services/api';
@@ -52,6 +51,10 @@ const Play = ({ config, onFinish }: PlayProps) => {
   const { styles } = useStyles();
   const apiKey = useQuizzlyStore(s => s.apiKey);
   const addPoints = useQuizzlyStore(s => s.addPoints);
+  const hints = useQuizzlyStore(s => s.hints);
+  const useHintStore = useQuizzlyStore(s => s.useHint);
+  const pointMultipliers = useQuizzlyStore(s => s.pointMultipliers);
+  const completeQuiz = useQuizzlyStore(s => s.completeQuiz);
   
   const [loading, setLoading] = useState(true);
   const [questions, setQuestions] = useState<any[]>([]);
@@ -60,6 +63,11 @@ const Play = ({ config, onFinish }: PlayProps) => {
   const [hasAnswered, setHasAnswered] = useState(false);
   const [score, setScore] = useState(0);
   const [animateState, setAnimateState] = useState<'idle' | 'success' | 'error'>('idle');
+  
+  // États de Boosters
+  const [isMultiplierActive, setIsMultiplierActive] = useState(false);
+  const [hiddenOptions, setHiddenOptions] = useState<number[]>([]);
+  const [hasUsedHintThisQuestion, setHasUsedHintThisQuestion] = useState(false);
 
   useEffect(() => {
     loadQuiz();
@@ -77,6 +85,47 @@ const Play = ({ config, onFinish }: PlayProps) => {
     }
   };
 
+  const handleUseHint = () => {
+    if (hints <= 0) {
+      message.warning("Vous n'avez pas d'indices ! Achetez-en dans la boutique.");
+      return;
+    }
+    if (hasAnswered) return;
+    if (hasUsedHintThisQuestion) return;
+
+    const currentQ = questions[currentIndex];
+    const incorrectIndices = currentQ.options
+      .map((_: any, idx: number) => idx)
+      .filter((idx: number) => idx !== currentQ.answer);
+    
+    // Choisir 2 options incorrectes au hasard à cacher
+    const shuffled = incorrectIndices.sort(() => 0.5 - Math.random());
+    const toHide = shuffled.slice(0, 2);
+    
+    if (useHintStore()) {
+      setHiddenOptions(toHide);
+      setHasUsedHintThisQuestion(true);
+      playSound('buy');
+      message.success("L'IA a éliminé deux mauvaises réponses ! 💡");
+    }
+  };
+
+  const handleActivateMultiplier = () => {
+    if (pointMultipliers <= 0) {
+      message.warning("Aucun multiplicateur disponible !");
+      return;
+    }
+    if (isMultiplierActive) return;
+    
+    // Déduire un multiplicateur du store
+    useQuizzlyStore.setState((state) => ({
+      pointMultipliers: (state.pointMultipliers || 1) - 1
+    }));
+    setIsMultiplierActive(true);
+    playSound('buy');
+    message.success("Multiplicateur x2 activé pour ce quiz ! ⚡");
+  };
+
   const handleSubmit = () => {
     if (selectedAnswer === null) return;
     setHasAnswered(true);
@@ -87,7 +136,10 @@ const Play = ({ config, onFinish }: PlayProps) => {
       setAnimateState('success');
       playSound('success');
       message.success("Bonne réponse ! 🎉");
-      addPoints(10);
+      
+      const basePoints = 10;
+      const finalPoints = isMultiplierActive ? basePoints * 2 : basePoints;
+      addPoints(finalPoints);
     } else {
       setAnimateState('error');
       playSound('error');
@@ -95,14 +147,17 @@ const Play = ({ config, onFinish }: PlayProps) => {
     }
   };
 
-  const nextQuestion = () => {
+  const nextQuestion = async () => {
     if (currentIndex < questions.length - 1) {
       setCurrentIndex(i => i + 1);
       setHasAnswered(false);
       setSelectedAnswer(null);
       setAnimateState('idle');
+      setHiddenOptions([]);
+      setHasUsedHintThisQuestion(false);
     } else {
       message.success(`Quiz terminé ! Score final: ${score}/${questions.length}`);
+      await completeQuiz(questions.length, score);
       onFinish();
     }
   };
@@ -110,10 +165,10 @@ const Play = ({ config, onFinish }: PlayProps) => {
   if (loading) {
     return (
       <Card className={styles.card}>
-        <Flexbox direction="column" align="center" justify="center" height={300} gap={16}>
+        <Flex vertical align="center" justify="center" style={{ height: 300 }} gap={16}>
           <Spin size="large" />
           <Typography.Text>L'IA prépare tes questions sur {config.topic}...</Typography.Text>
-        </Flexbox>
+        </Flex>
       </Card>
     );
   }
@@ -124,11 +179,39 @@ const Play = ({ config, onFinish }: PlayProps) => {
     <Card className={styles.card}>
       <div className={styles.progressContainer}>
         <Progress percent={Math.round((currentIndex / questions.length) * 100)} showInfo={false} strokeColor="#1677ff" />
-        <Flexbox justify="space-between" style={{ marginTop: 8 }}>
+        <Flex justify="space-between" style={{ marginTop: 8 }}>
           <Typography.Text type="secondary">Question {currentIndex + 1}/{questions.length}</Typography.Text>
           <Typography.Text type="secondary">Score: {score}</Typography.Text>
-        </Flexbox>
+        </Flex>
       </div>
+
+      {/* Barre de Boosters tactiques */}
+      <Flex justify="space-between" align="center" style={{ background: 'rgba(0,0,0,0.03)', padding: '8px 16px', borderRadius: 8, marginBottom: 16 }}>
+        <Typography.Text type="secondary" style={{ fontSize: '0.85rem' }}>Boosters :</Typography.Text>
+        <Space>
+          <Badge count={hints} size="small">
+            <Button 
+              size="small" 
+              icon={<Icon icon={Lightbulb} />} 
+              onClick={handleUseHint}
+              disabled={hasAnswered || hasUsedHintThisQuestion || hints <= 0}
+            >
+              Indice
+            </Button>
+          </Badge>
+          <Badge count={pointMultipliers} size="small">
+            <Button 
+              size="small" 
+              type={isMultiplierActive ? 'primary' : 'default'} 
+              icon={<Icon icon={Sparkles} />}
+              onClick={handleActivateMultiplier}
+              disabled={isMultiplierActive || pointMultipliers <= 0}
+            >
+              x2 Points
+            </Button>
+          </Badge>
+        </Space>
+      </Flex>
 
       <AnimatePresence mode="wait">
         <motion.div
@@ -141,7 +224,7 @@ const Play = ({ config, onFinish }: PlayProps) => {
           exit={{ opacity: 0, x: -50 }}
           transition={{ duration: 0.3 }}
         >
-          <Flexbox direction="column" padding={16}>
+          <Flex vertical padding={16}>
             <Typography.Title level={3} className={styles.question}>
               {currentQ.question}
             </Typography.Title>
@@ -153,25 +236,29 @@ const Play = ({ config, onFinish }: PlayProps) => {
               style={{ width: '100%' }}
             >
               <Space direction="vertical" style={{ width: '100%' }}>
-                {currentQ.options.map((opt: string, idx: number) => (
-                  <Radio key={idx} value={idx} className={styles.option}>
-                    {opt}
-                    {hasAnswered && idx === currentQ.answer && (
-                      <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} style={{ display: 'inline-block', marginLeft: 8 }}>
-                        <Icon icon={CheckCircle2} style={{ color: 'green' }} />
-                      </motion.span>
-                    )}
-                    {hasAnswered && selectedAnswer === idx && idx !== currentQ.answer && (
-                      <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} style={{ display: 'inline-block', marginLeft: 8 }}>
-                        <Icon icon={XCircle} style={{ color: 'red' }} />
-                      </motion.span>
-                    )}
-                  </Radio>
-                ))}
+                {currentQ.options.map((opt: string, idx: number) => {
+                  if (hiddenOptions.includes(idx)) return null;
+                  
+                  return (
+                    <Radio key={idx} value={idx} className={styles.option}>
+                      {opt}
+                      {hasAnswered && idx === currentQ.answer && (
+                        <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} style={{ display: 'inline-block', marginLeft: 8 }}>
+                          <Icon icon={CheckCircle2} style={{ color: 'green' }} />
+                        </motion.span>
+                      )}
+                      {hasAnswered && selectedAnswer === idx && idx !== currentQ.answer && (
+                        <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} style={{ display: 'inline-block', marginLeft: 8 }}>
+                          <Icon icon={XCircle} style={{ color: 'red' }} />
+                        </motion.span>
+                      )}
+                    </Radio>
+                  );
+                })}
               </Space>
             </Radio.Group>
 
-            <Flexbox justify="flex-end" style={{ marginTop: 32 }} gap={12}>
+            <Flex justify="flex-end" style={{ marginTop: 32 }} gap={12}>
               {hasAnswered ? (
                 <Button type="primary" size="large" onClick={nextQuestion}>
                   {currentIndex < questions.length - 1 ? 'Question Suivante' : 'Terminer'}
@@ -181,8 +268,8 @@ const Play = ({ config, onFinish }: PlayProps) => {
                   Valider
                 </Button>
               )}
-            </Flexbox>
-          </Flexbox>
+            </Flex>
+          </Flex>
         </motion.div>
       </AnimatePresence>
     </Card>

@@ -3,7 +3,7 @@
 <!-- For change type, change [ ] to [x]. -->
 
 - [ ] ✨ feat
-- [ ] 📈 improve
+- [ ] 🚀 improve
 - [ ] 🐛 fix
 - [ ] ♻️ refactor
 - [ ] 💄 style
