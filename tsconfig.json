@@ -17,6 +17,7 @@
     "incremental": true,
     "types": ["vitest/globals"],
     "paths": {
+      "@lobehub/icons": ["./src/components/ProviderIconWrapper"],
       "@/database/*": ["./packages/database/src/*", "./src/database/*"],
       "@/const/*": ["./packages/const/src/*", "./src/const/*"],
       "@/utils/*": ["./packages/utils/src/*", "./src/utils/*"],
