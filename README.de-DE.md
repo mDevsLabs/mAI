@@ -76,8 +76,6 @@ Sie behalten die Kontrolle — ohne online bleiben zu müssen.
 
 <br/>
 
-<https://github.com/user-attachments/assets/0a33365f-b786-48b5-9ed6-f8af7927bccb>
-
 ## 👋🏻 Erste Schritte & Community beitreten
 
 Wir sind eine Gruppe leidenschaftlicher Ingenieur-Designer, die moderne Design-Komponenten und Tools für generative KI bereitstellen möchten.
@@ -111,8 +109,6 @@ Heutige Agenten sind einmalige, aufgabenorientierte Werkzeuge. Es fehlt ihnen an
 
 mAI ist ein Arbeits- und Lebensraum, um Agenten-Teampartner zu finden, aufzubauen und mit ihnen zusammenzuarbeiten, die mit Ihnen wachsen. In mAI betrachten wir **Agenten als Arbeitseinheit** und bieten eine Infrastruktur, in der sich Menschen und Agenten gemeinsam weiterentwickeln.
 
-![](https://github.com/user-attachments/assets/89d1c402-a62b-4794-82ea-17e5ee1a6165)
-
 ### Operator: Agenten als Arbeitseinheit
 
 Stellt Ihr gesamtes KI-Team ein, plant deren Einsätze und erstattet Bericht.
@@ -120,15 +116,11 @@ Stellt Ihr gesamtes KI-Team ein, plant deren Einsätze und erstattet Bericht.
 - **Mehr Produktivität. Weniger Tools**: Bringen Sie all Ihre Agenten unter ein Dach.
 - **IM-Gateway**: Agenten direkt dort, wo Sie bereits chatten.
 
-![](https://github.com/user-attachments/assets/7b08d6d9-9dff-4b06-a919-324630554509)
-
 <div align="right">
 
 [![][back-to-top]](#readme-top)
 
 </div>
-
-![](https://github.com/user-attachments/assets/81e89324-fc66-4024-99a3-aa8e16ec8184)
 
 ### Erstellen: Agenten als Arbeitseinheit
 
@@ -137,15 +129,11 @@ Der Aufbau eines personalisierten KI-Teams beginnt mit dem **Agent Builder**. Si
 - **Einheitliche Intelligenz**: Greifen Sie nahtlos auf jedes Modell und jede Modalität zu — alles unter Ihrer Kontrolle.
 - **Über 10.000 Skills**: Verbinden Sie Ihre Agenten mit den Fähigkeiten, die Sie täglich nutzen, dank einer Bibliothek mit über 10.000 Tools und MCP-kompatiblen Plugins.
 
-![](https://github.com/user-attachments/assets/949b8166-486d-4750-ad7a-cfe7bfcb84e3)
-
 <div align="right">
 
 [![][back-to-top]](#readme-top)
 
 </div>
-
-![](https://hub-apac-1.lobeobjects.space/blog/assets/771ff3d30b9ef93e65e55021cc43d356.webp)
 
 ### Kollaborieren: Neue Formen von Kollaborationsnetzwerken skalieren
 
@@ -156,15 +144,11 @@ mAI führt **Agentengruppen** ein, sodass Sie mit Agenten wie mit echten Teammit
 - **Projekte**: Organisieren Sie Ihre Arbeit nach Projekten, um alles strukturiert und leicht nachverfolgbar zu halten.
 - **Workspace (Arbeitsbereich)**: Ein gemeinsamer Raum für Teams zur Zusammenarbeit mit Agenten, der eine klare Zuweisung und Sichtbarkeit im gesamten Unternehmen gewährleistet.
 
-![](https://github.com/user-attachments/assets/e51526c6-e09c-4a5a-9cec-dcd3fd68a3a8)
-
 <div align="right">
 
 [![][back-to-top]](#readme-top)
 
 </div>
-
-![](https://hub-apac-1.lobeobjects.space/blog/assets/fe98eae9fcb6acc47c8e1fb69bdb4b50.webp)
 
 ### Weiterentwickeln: Co-Evolution von Menschen und Agenten
 
@@ -172,8 +156,6 @@ Die beste KI ist diejenige, die Sie tiefgehend versteht. mAI bietet ein **persö
 
 - **Kontinuierliches Lernen**: Ihre Agenten lernen aus Ihrer Arbeitsweise und passen ihr Verhalten an, um im richtigen Moment zu agieren.
 - **White-Box-Gedächtnis**: Wir glauben an Transparenz. Ihre Agenten nutzen ein strukturiertes, bearbeitbares Gedächtnis, sodass Sie die volle Kontrolle darüber haben, woran sie sich erinnern.
-
-![](https://github.com/user-attachments/assets/5c6e16f0-7f47-4baf-9aeb-3a00deb8ff5b)
 
 <div align="right">
 
@@ -463,7 +445,7 @@ Dieses Projekt ist unter der [mAI-Community-Lizenz](./LICENSE) lizenziert.
 [deploy-on-sealos-link]: https://template.usw.sealos.io/deploy?templateName=mAI-db
 [deploy-on-zeabur-button-image]: https://zeabur.com/button.svg
 [deploy-on-zeabur-link]: https://zeabur.com/templates/VZGGTI
-[discord-link]: https://discord.gg/AYFPHvv2jT
+[discord-link]: https://discord.gg/fV7zwdGPpY
 [discord-shield]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=flat-square
 [discord-shield-badge]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=for-the-badge
 [docker-pulls-link]: https://hub.docker.com/r/mAI/mAI

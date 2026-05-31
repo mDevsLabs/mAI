@@ -2,7 +2,7 @@
 export const LOBE_CHAT_CLOUD = 'mAI Cloud';
 
 export const BRANDING_NAME = 'mAI';
-export const BRANDING_LOGO_URL = '/icons/icon-512x512.png';
+export const BRANDING_LOGO_URL = '/avatars/may.PNG';
 
 export const ORG_NAME = 'mAI';
 
@@ -15,7 +15,7 @@ export const BRANDING_URL = {
 };
 
 export const SOCIAL_URL = {
-  discord: 'https://discord.gg/AYFPHvv2jT',
+  discord: 'https://discord.gg/fV7zwdGPpY',
   github: 'https://github.com/mDevsLabs',
   medium: 'https://medium.com/mProjects',
   x: 'https://x.com/mDevsLabs',

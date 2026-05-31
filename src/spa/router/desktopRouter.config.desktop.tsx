@@ -6,6 +6,7 @@ import {
   Home,
   Image,
   LibraryBigIcon,
+  Puzzle,
   Settings,
   ShapesIcon,
 } from 'lucide-react';
@@ -81,6 +82,8 @@ import DesktopPageLayout from '@/routes/(main)/page/_layout';
 import PageDetailPage from '@/routes/(main)/page/[id]';
 import QuizzlyPage from '@/routes/(main)/quizzly';
 import DesktopQuizzlyLayout from '@/routes/(main)/quizzly/_layout';
+import ExtensionsPage from '@/routes/(main)/extensions';
+import DesktopExtensionsLayout from '@/routes/(main)/extensions/_layout';
 import ResourceLayout from '@/routes/(main)/resource/_layout';
 import ResourceHomePage from '@/routes/(main)/resource/(home)';
 import ResourceHomeLayout from '@/routes/(main)/resource/(home)/_layout';
@@ -580,6 +583,22 @@ export const desktopRoutes: RouteObject[] = [
         element: <DesktopQuizzlyLayout />,
         errorElement: <ErrorBoundary />,
         path: 'quizzly',
+      },
+
+      // Extensions route
+      {
+        children: [
+          {
+            element: <ExtensionsPage />,
+            handle: {
+              meta: routeMeta({ icon: Puzzle, titleKey: 'navigation.extensions' }),
+            },
+            index: true,
+          },
+        ],
+        element: <DesktopExtensionsLayout />,
+        errorElement: <ErrorBoundary />,
+        path: 'extensions',
       },
 
       // Default route - home page (handled by persistent layout)

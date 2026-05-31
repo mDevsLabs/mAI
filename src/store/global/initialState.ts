@@ -19,6 +19,7 @@ export enum SidebarTabKey {
   Setting = 'settings',
   Tasks = 'tasks',
   Video = 'video',
+  Extensions = 'extensions',
 }
 
 export enum ChatSettingsTabs {

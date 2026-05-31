@@ -76,8 +76,6 @@ You keep control — without needing to stay online.
 
 <br/>
 
-<https://github.com/user-attachments/assets/0a33365f-b786-48b5-9ed6-f8af7927bccb>
-
 ## 👋🏻 Getting Started & Join Our Community
 
 We are a group of passionate engineer-designers, hoping to provide modern-designed components and tools for generative AI.
@@ -111,16 +109,12 @@ Today’s agents are one-off, task-driven tools. They lack context, live in isol
 
 mAI is a work-and-lifestyle space to find, build, and collaborate with agent teammates that grow with you. In mAI, we treat **Agents as the unit of work**, providing an infrastructure where humans and agents co-evolve.
 
-![](https://github.com/user-attachments/assets/89d1c402-a62b-4794-82ea-17e5ee1a6165)
-
 ### Operator: Agents as the Unit of Work
 
 Hires, schedules, and reports on your entire AI team.
 
 - **More productivity. Fewer tools**: Bring all your agents under one roof.
 - **IM Gateway**: Agents where you already chat.
-
-![](https://github.com/user-attachments/assets/7b08d6d9-9dff-4b06-a919-324630554509)
 
 [![][back-to-top]](#readme-top)
 
@@ -129,8 +123,6 @@ Hires, schedules, and reports on your entire AI team.
 [![][back-to-top]](#readme-top)
 
 </div>
-
-![](https://github.com/user-attachments/assets/81e89324-fc66-4024-99a3-aa8e16ec8184)
 
 ### Create: Agents as the Unit of Work
 
@@ -139,8 +131,6 @@ Building a personalized AI team starts with the **Agent Builder**. You can descr
 - **Unified Intelligence**: Seamlessly access any model and any modality—all under your control.
 - **10,000+ Skills**: Connect your agents to the skills you use every day with a library of over 10,000 tools and MCP-compatible plugins.
 
-![](https://github.com/user-attachments/assets/949b8166-486d-4750-ad7a-cfe7bfcb84e3)
-
 [![][back-to-top]](#readme-top)
 
 <div align="right">
@@ -148,8 +138,6 @@ Building a personalized AI team starts with the **Agent Builder**. You can descr
 [![][back-to-top]](#readme-top)
 
 </div>
-
-![](https://hub-apac-1.lobeobjects.space/blog/assets/771ff3d30b9ef93e65e55021cc43d356.webp)
 
 ### Collaborate: Scale New Forms of Collaboration Networks
 
@@ -160,8 +148,6 @@ mAI introduces **Agent Groups**, allowing you to work with agents like real team
 - **Project**: Organize work by project to keep everything structured and easy to track.
 - **Workspace**: A shared space for teams to collaborate with agents, ensuring clear ownership and visibility across the organization.
 
-![](https://github.com/user-attachments/assets/e51526c6-e09c-4a5a-9cec-dcd3fd68a3a8)
-
 [![][back-to-top]](#readme-top)
 
 <div align="right">
@@ -170,16 +156,12 @@ mAI introduces **Agent Groups**, allowing you to work with agents like real team
 
 </div>
 
-![](https://hub-apac-1.lobeobjects.space/blog/assets/fe98eae9fcb6acc47c8e1fb69bdb4b50.webp)
-
 ### Evolve: Co-evolution of Humans and Agents
 
 The best AI is one that understands you deeply. mAI features **Personal Memory** that builds a clear understanding of your needs.
 
 - **Continual Learning**: Your agents learn from how you work, adapting their behavior to act at the right moment.
 - **White-Box Memory**: We believe in transparency. Your agents use structured, editable memory, giving you full control over what they remember.
-
-![](https://github.com/user-attachments/assets/5c6e16f0-7f47-4baf-9aeb-3a00deb8ff5b)
 
 <div align="right">
 
@@ -469,7 +451,7 @@ This project is [mAI Community License](./LICENSE) licensed.
 [deploy-on-sealos-link]: https://template.usw.sealos.io/deploy?templateName=mAI-db
 [deploy-on-zeabur-button-image]: https://zeabur.com/button.svg
 [deploy-on-zeabur-link]: https://zeabur.com/templates/VZGGTI
-[discord-link]: https://discord.gg/AYFPHvv2jT
+[discord-link]: https://discord.gg/fV7zwdGPpY
 [discord-shield]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=flat-square
 [discord-shield-badge]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=for-the-badge
 [docker-pulls-link]: https://hub.docker.com/r/mAI/mAI

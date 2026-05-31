@@ -223,6 +223,7 @@ export default {
   'cmdk.painting': 'Image',
 
   'cmdk.resource': 'Resources',
+  'cmdk.extensions': 'Extensions',
 
   'cmdk.search.agent': 'Agent',
 
@@ -525,6 +526,7 @@ export default {
   'tab.setting': 'Settings',
   'tab.tasks': 'Tasks',
   'tab.video': 'Video',
+  'tab.extensions': 'Extensions',
   'telemetry.allow': 'Allow',
   'telemetry.deny': 'Deny',
   'telemetry.desc':

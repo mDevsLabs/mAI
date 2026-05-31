@@ -28,6 +28,7 @@ export default {
   'navigation.settings': 'Settings',
   'navigation.task': 'Task',
   'navigation.tasks': 'Tasks',
+  'navigation.extensions': 'Extensions',
   'navigation.unpin': 'Unpin',
   'notification.finishChatGeneration': 'AI message generation completed',
   'tab.closeCurrentTab': 'Close Tab',

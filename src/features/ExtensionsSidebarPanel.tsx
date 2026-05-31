@@ -156,6 +156,19 @@ const useStyles = createStyles(({ css, token }) => {
       display: flex;
       flex-direction: column;
       gap: 16px;
+
+      animation: fadeInSlideUp 0.45s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+
+      @keyframes fadeInSlideUp {
+        from {
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
     `,
     listContainer: css`
       display: flex;
@@ -303,6 +316,7 @@ export const ExtensionsSidebarPanel = memo<ExtensionsSidebarPanelProps>(({ class
   return (
     <DraggablePanel
       className={styles.panel}
+      data-testid="extensions-sidebar-panel"
       defaultSize={{ width }}
       expand={isOpen}
       maxWidth={400}
@@ -329,6 +343,7 @@ export const ExtensionsSidebarPanel = memo<ExtensionsSidebarPanelProps>(({ class
           </div>
           <Tooltip title="Masquer le panneau">
             <ActionIcon
+              data-testid="hide-extensions-panel"
               icon={X}
               onClick={() => setIsOpen(false)}
               size={{ blockSize: 24, fontSize: 14 }}
