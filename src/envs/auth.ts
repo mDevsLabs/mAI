@@ -46,24 +46,12 @@ declare global {
       AUTH_GENERIC_OIDC_ID?: string;
       AUTH_GENERIC_OIDC_ISSUER?: string;
       AUTH_GENERIC_OIDC_SECRET?: string;
-      GITHUB_CLIENT_ID?: string;
-      GITHUB_CLIENT_SECRET?: string;
-      GOOGLE_CLIENT_ID?: string;
-      GOOGLE_CLIENT_SECRET?: string;
-      DISCORD_CLIENT_ID?: string;
-      DISCORD_CLIENT_SECRET?: string;
-      TWITCH_CLIENT_ID?: string;
-      TWITCH_CLIENT_SECRET?: string;
-      SPOTIFY_CLIENT_ID?: string;
-      SPOTIFY_CLIENT_SECRET?: string;
-
       AUTH_GITHUB_CLIENT_ID?: string;
       AUTH_GITHUB_CLIENT_SECRET?: string;
       AUTH_GITHUB_ID?: string;
       AUTH_GITHUB_SECRET?: string;
       AUTH_GOOGLE_CLIENT_ID?: string;
       AUTH_GOOGLE_CLIENT_SECRET?: string;
-
       // ===== Auth Provider Credentials ===== //
       AUTH_GOOGLE_ID?: string;
       AUTH_GOOGLE_SECRET?: string;
@@ -72,31 +60,37 @@ declare global {
 
       AUTH_KEYCLOAK_SECRET?: string;
       AUTH_LOGTO_ID?: string;
-
       AUTH_LOGTO_ISSUER?: string;
       AUTH_LOGTO_SECRET?: string;
       AUTH_MICROSOFT_AUTHORITY_URL?: string;
-
       AUTH_MICROSOFT_ID?: string;
+
       AUTH_MICROSOFT_SECRET?: string;
       AUTH_MICROSOFT_TENANT_ID?: string;
-
       AUTH_OKTA_ID?: string;
       AUTH_OKTA_ISSUER?: string;
-      AUTH_OKTA_SECRET?: string;
 
+      AUTH_OKTA_SECRET?: string;
       // ===== Better Auth ===== //
       AUTH_SECRET?: string;
+
       AUTH_SSO_PROVIDERS?: string;
       AUTH_TRUSTED_ORIGINS?: string;
-
       AUTH_WECHAT_ID?: string;
-      AUTH_WECHAT_SECRET?: string;
 
+      AUTH_WECHAT_SECRET?: string;
       AUTH_ZITADEL_ID?: string;
       AUTH_ZITADEL_ISSUER?: string;
-      AUTH_ZITADEL_SECRET?: string;
 
+      AUTH_ZITADEL_SECRET?: string;
+      DISCORD_CLIENT_ID?: string;
+      DISCORD_CLIENT_SECRET?: string;
+
+      GITHUB_CLIENT_ID?: string;
+      GITHUB_CLIENT_SECRET?: string;
+      GOOGLE_CLIENT_ID?: string;
+
+      GOOGLE_CLIENT_SECRET?: string;
       /**
        * Internal JWT expiration time for lambda → async calls.
        * Format: number followed by unit (s=seconds, m=minutes, h=hours)
@@ -114,6 +108,12 @@ declare global {
        * Can be generated using `node scripts/generate-oidc-jwk.mjs`.
        */
       JWKS_KEY?: string;
+      SPOTIFY_CLIENT_ID?: string;
+      SPOTIFY_CLIENT_SECRET?: string;
+
+      TWITCH_CLIENT_ID?: string;
+
+      TWITCH_CLIENT_SECRET?: string;
     }
   }
 }

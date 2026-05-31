@@ -1,5 +1,3 @@
-import { authEnv } from '@/envs/auth';
-
 import { type BuiltinProviderDefinition } from '../types';
 
 const provider: BuiltinProviderDefinition<
@@ -16,10 +14,13 @@ const provider: BuiltinProviderDefinition<
     };
   },
   checkEnvs: () => {
-    return !!(authEnv.DISCORD_CLIENT_ID && authEnv.DISCORD_CLIENT_SECRET)
+    const clientId = process.env.DISCORD_CLIENT_ID?.trim();
+    const clientSecret = process.env.DISCORD_CLIENT_SECRET?.trim();
+
+    return !!(clientId && clientSecret)
       ? {
-          DISCORD_CLIENT_ID: authEnv.DISCORD_CLIENT_ID,
-          DISCORD_CLIENT_SECRET: authEnv.DISCORD_CLIENT_SECRET,
+        DISCORD_CLIENT_ID: clientId,
+        DISCORD_CLIENT_SECRET: clientSecret,
         }
       : false;
   },

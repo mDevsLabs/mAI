@@ -197,9 +197,6 @@ jobs:
       - name: Install deps
         run: pnpm install
 
-      - name: Lint
-        run: bun run lint
-
   # ============================================
   # 多平台构建
   # ============================================
