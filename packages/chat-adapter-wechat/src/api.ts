@@ -51,7 +51,7 @@ const BASE_INFO: BaseInfo = { channel_version: CHANNEL_VERSION };
  * Generate a random X-WECHAT-UIN header value as required by the iLink API.
  */
 function randomUin(): string {
-  const uint32 = Math.floor(Math.random() * 0xffff_ffff);
+  const uint32 = Math.floor(Math.random() * 0xFFFF_FFFF);
   return btoa(String(uint32));
 }
 

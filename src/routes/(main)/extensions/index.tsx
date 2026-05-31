@@ -1,8 +1,10 @@
 'use client';
 
-import { Flex, Typography, Button } from 'antd';
+import { Button, Flex, Typography } from 'antd';
 import { createStaticStyles } from 'antd-style';
 import { Sparkles } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+
 import { useExtensionStore } from '@/features/ExtensionsSidebarPanel';
 
 const useStyles = createStaticStyles(({ css }) => ({
@@ -23,6 +25,7 @@ const useStyles = createStaticStyles(({ css }) => ({
 }));
 
 const ExtensionsPage = () => {
+  const { t } = useTranslation('extensions');
   const { isOpen, setIsOpen } = useExtensionStore();
   const { styles } = useStyles();
 
@@ -35,20 +38,20 @@ const ExtensionsPage = () => {
     >
       <Sparkles size={48} style={{ color: 'var(--color-primary)' }} />
       <Typography.Title level={3} style={{ margin: 0 }}>
-        mServices
+        {t('extensions.title')}
       </Typography.Title>
       <Typography.Text type="secondary">
-        Sélectionnez un service dans le panneau de gauche pour commencer.
+        {t('extensions.selectService')}
       </Typography.Text>
       {!isOpen && (
         <Button
-          type="primary"
           className={styles.openButton}
           data-testid="open-extensions-panel"
-          onClick={() => setIsOpen(true)}
           style={{ marginTop: 8 }}
+          type="primary"
+          onClick={() => setIsOpen(true)}
         >
-          Ouvrir le panneau
+          {t('extensions.openPanel')}
         </Button>
       )}
     </Flex>

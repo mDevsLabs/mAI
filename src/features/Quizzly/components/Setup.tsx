@@ -1,7 +1,7 @@
-import { Button, Card, Form, Input, Select, Typography, Flex } from 'antd';
-import { createStaticStyles } from 'antd-style';
-import { Settings, ArrowLeft } from 'lucide-react';
 import { Icon } from '@lobehub/ui';
+import { Button, Card, Flex,Form, Input, Select, Typography } from 'antd';
+import { createStaticStyles } from 'antd-style';
+import { ArrowLeft,Settings } from 'lucide-react';
 
 import { useQuizzlyStore } from '../store/useQuizzlyStore';
 
@@ -17,8 +17,8 @@ const useStyles = createStaticStyles(({ css }) => ({
 }));
 
 interface SetupProps {
-  onStart: (config: { count: number; level: string; topic: string }) => void;
   onBack: () => void;
+  onStart: (config: { count: number; level: string; topic: string }) => void;
 }
 
 const Setup = ({ onStart, onBack }: SetupProps) => {
@@ -31,7 +31,7 @@ const Setup = ({ onStart, onBack }: SetupProps) => {
   return (
     <Card className={styles.card}>
       <Flex align="center" gap={12} style={{ marginBottom: 24 }}>
-        <Button type="text" icon={<Icon icon={ArrowLeft} />} onClick={onBack} />
+        <Button icon={<Icon icon={ArrowLeft} />} type="text" onClick={onBack} />
         <Icon icon={Settings} size={{ fontSize: 24 }} />
         <Typography.Title level={3} style={{ margin: 0 }}>Configuration du Quiz</Typography.Title>
       </Flex>
@@ -46,7 +46,7 @@ const Setup = ({ onStart, onBack }: SetupProps) => {
         }}
         onFinish={onStart}
       >
-        <Form.Item label="Clé API OpenAI (Optionnel pour tester l'IA réelle)" extra="La clé est stockée localement sur votre navigateur.">
+        <Form.Item extra="La clé est stockée localement sur votre navigateur." label="Clé API OpenAI (Optionnel pour tester l'IA réelle)">
           <Input.Password 
             placeholder="sk-..." 
             value={apiKey} 
@@ -54,7 +54,7 @@ const Setup = ({ onStart, onBack }: SetupProps) => {
           />
         </Form.Item>
 
-        <Form.Item name="count" label="Nombre de questions">
+        <Form.Item label="Nombre de questions" name="count">
           <Select options={[
             { value: 3, label: '3 questions (Rapide)' },
             { value: 5, label: '5 questions (Classique)' },
@@ -62,7 +62,7 @@ const Setup = ({ onStart, onBack }: SetupProps) => {
           ]} />
         </Form.Item>
 
-        <Form.Item name="level" label="Niveau Scolaire">
+        <Form.Item label="Niveau Scolaire" name="level">
           <Select options={[
             { value: 'Primaire', label: 'Primaire' },
             { value: 'Collège', label: 'Collège' },
@@ -71,12 +71,12 @@ const Setup = ({ onStart, onBack }: SetupProps) => {
           ]} />
         </Form.Item>
 
-        <Form.Item name="topic" label="Thème ou Matière">
+        <Form.Item label="Thème ou Matière" name="topic">
           <Input placeholder="Ex: Histoire de France, Mathématiques, Géographie..." />
         </Form.Item>
 
         <Form.Item style={{ marginTop: 32, marginBottom: 0 }}>
-          <Button type="primary" htmlType="submit" size="large" block style={{ height: 50, fontSize: '1.2rem' }}>
+          <Button block htmlType="submit" size="large" style={{ height: 50, fontSize: '1.2rem' }} type="primary">
             Lancer le Quiz !
           </Button>
         </Form.Item>

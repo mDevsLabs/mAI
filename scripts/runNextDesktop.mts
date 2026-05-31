@@ -1,8 +1,9 @@
-import * as dotenv from 'dotenv';
-import dotenvExpand from 'dotenv-expand';
 import { spawn } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
+
+import * as dotenv from 'dotenv';
+import dotenvExpand from 'dotenv-expand';
 
 const isDesktop = process.env.DESKTOP_BUILD === 'true';
 

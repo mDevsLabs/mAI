@@ -1,8 +1,8 @@
-import { Card, Typography, Button, Row, Col, Input, List, Badge, message, Divider, Flex } from 'antd';
-import { createStaticStyles } from 'antd-style';
-import { Users, ArrowLeft, Play, LogOut, Plus } from 'lucide-react';
 import { Icon } from '@lobehub/ui';
-import { useState, useEffect } from 'react';
+import { Badge, Button, Card, Divider, Flex,Input, List, message, Typography } from 'antd';
+import { createStaticStyles } from 'antd-style';
+import { ArrowLeft, LogOut, Play, Plus,Users } from 'lucide-react';
+import { useEffect,useState } from 'react';
 
 import { useQuizzlyStore } from '../store/useQuizzlyStore';
 
@@ -98,19 +98,19 @@ const Clans = ({ onBack }: ClansProps) => {
   return (
     <Card className={styles.card}>
       <Flex align="center" gap={12} style={{ marginBottom: 24 }}>
-        <Button type="text" icon={<Icon icon={ArrowLeft} />} onClick={onBack} />
+        <Button icon={<Icon icon={ArrowLeft} />} type="text" onClick={onBack} />
         <Icon icon={Users} size={{ fontSize: 24 }} />
         <Typography.Title level={3} style={{ margin: 0 }}>Clans & Défis Collectifs (Réseau)</Typography.Title>
       </Flex>
 
       {clan ? (
         <div>
-          <Flex justify="space-between" align="center" style={{ marginBottom: 20 }}>
+          <Flex align="center" justify="space-between" style={{ marginBottom: 20 }}>
             <div>
               <Typography.Title level={4} style={{ margin: 0 }}>{clan.name}</Typography.Title>
               <Typography.Text type="secondary">Série Collective : {clan.collectiveStreak} jours</Typography.Text>
             </div>
-            <Badge count={`${clan.collectiveStreak} 🔥`} color="#ff4d4f" />
+            <Badge color="#ff4d4f" count={`${clan.collectiveStreak} 🔥`} />
           </Flex>
 
           <Typography.Paragraph>
@@ -122,13 +122,13 @@ const Clans = ({ onBack }: ClansProps) => {
           <Typography.Title level={5} style={{ marginBottom: 12 }}>Membres du clan :</Typography.Title>
           <div>
             {clan.members.map((member) => (
-              <div key={member.id} className={styles.memberBox}>
+              <div className={styles.memberBox} key={member.id}>
                 <Flex align="center" gap={12}>
                   <span style={{ fontSize: '1.8rem' }}>{member.avatar}</span>
                   <div>
                     <Typography.Text strong>{member.name}</Typography.Text>
                     <div>
-                      <Typography.Text type="secondary" style={{ fontSize: '0.8rem' }}>
+                      <Typography.Text style={{ fontSize: '0.8rem' }} type="secondary">
                         Streak: {member.streak} jours
                       </Typography.Text>
                     </div>
@@ -146,11 +146,11 @@ const Clans = ({ onBack }: ClansProps) => {
 
           <Flex vertical gap={12}>
             {clan.members.some(m => !m.hasPlayedToday) && (
-              <Button type="dashed" icon={<Icon icon={Play} />} onClick={handleSimulateOthers} loading={loading} block>
+              <Button block icon={<Icon icon={Play} />} loading={loading} type="dashed" onClick={handleSimulateOthers}>
                 Simuler l'activité du clan (Test Réseau)
               </Button>
             )}
-            <Button type="primary" danger icon={<Icon icon={LogOut} />} onClick={handleLeave} loading={loading} block>
+            <Button block danger icon={<Icon icon={LogOut} />} loading={loading} type="primary" onClick={handleLeave}>
               Quitter le Clan
             </Button>
           </Flex>
@@ -161,14 +161,14 @@ const Clans = ({ onBack }: ClansProps) => {
             Rejoignez un clan ou créez-en un nouveau pour participer aux streaks collectives et progresser ensemble en réseau !
           </Typography.Paragraph>
 
-          <Card size="small" title="Créer un Clan" style={{ marginBottom: 24, background: '#fcfcfc' }}>
+          <Card size="small" style={{ marginBottom: 24, background: '#fcfcfc' }} title="Créer un Clan">
             <Flex gap={12}>
               <Input 
                 placeholder="Nom du clan (ex: Les Rois du Quiz)" 
                 value={newClanName}
                 onChange={(e) => setNewClanName(e.target.value)}
               />
-              <Button type="primary" icon={<Icon icon={Plus} />} onClick={handleCreate} loading={loading}>
+              <Button icon={<Icon icon={Plus} />} loading={loading} type="primary" onClick={handleCreate}>
                 Créer
               </Button>
             </Flex>
@@ -180,14 +180,14 @@ const Clans = ({ onBack }: ClansProps) => {
             loading={loading}
             renderItem={(c) => (
               <div className={styles.clanItem} key={c.id}>
-                <Flex justify="space-between" align="center">
+                <Flex align="center" justify="space-between">
                   <div>
                     <Typography.Title level={5} style={{ margin: '0 0 4px 0' }}>{c.name}</Typography.Title>
                     <Typography.Text type="secondary">
                       Membres: {c.members.length} • Streak: {c.collectiveStreak} jours
                     </Typography.Text>
                   </div>
-                  <Button type="primary" ghost onClick={() => handleJoin(c.id, c.name)} loading={loading}>
+                  <Button ghost loading={loading} type="primary" onClick={() => handleJoin(c.id, c.name)}>
                     Rejoindre
                   </Button>
                 </Flex>

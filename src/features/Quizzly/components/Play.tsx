@@ -1,8 +1,8 @@
 import { Icon } from '@lobehub/ui';
-import { Button, Card, Typography, Spin, Radio, Space, message, Progress, Badge, Flex } from 'antd';
+import { Badge, Button, Card, Flex,message, Progress, Radio, Space, Spin, Typography } from 'antd';
 import { createStaticStyles } from 'antd-style';
-import { CheckCircle2, XCircle, Lightbulb, Sparkles } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { CheckCircle2, Lightbulb, Sparkles,XCircle } from 'lucide-react';
+import { useEffect,useState } from 'react';
 
 import { generateQuiz } from '../services/api';
 import { useQuizzlyStore } from '../store/useQuizzlyStore';
@@ -194,7 +194,7 @@ const Play = ({ config, onFinish }: PlayProps) => {
   if (loading) {
     return (
       <Card className={styles.card}>
-        <Flex vertical align="center" justify="center" style={{ height: 300 }} gap={16}>
+        <Flex vertical align="center" gap={16} justify="center" style={{ height: 300 }}>
           <Spin size="large" />
           <Typography.Text>L'IA prépare tes questions sur {config.topic}...</Typography.Text>
         </Flex>
@@ -215,26 +215,26 @@ const Play = ({ config, onFinish }: PlayProps) => {
       </div>
 
       {/* Barre de Boosters tactiques */}
-      <Flex justify="space-between" align="center" style={{ background: 'rgba(0,0,0,0.03)', padding: '8px 16px', borderRadius: 8, marginBottom: 16 }}>
-        <Typography.Text type="secondary" style={{ fontSize: '0.85rem' }}>Boosters :</Typography.Text>
+      <Flex align="center" justify="space-between" style={{ background: 'rgba(0,0,0,0.03)', padding: '8px 16px', borderRadius: 8, marginBottom: 16 }}>
+        <Typography.Text style={{ fontSize: '0.85rem' }} type="secondary">Boosters :</Typography.Text>
         <Space>
           <Badge count={hints} size="small">
             <Button 
-              size="small" 
+              disabled={hasAnswered || hasUsedHintThisQuestion || hints <= 0} 
               icon={<Icon icon={Lightbulb} />} 
+              size="small"
               onClick={handleUseHint}
-              disabled={hasAnswered || hasUsedHintThisQuestion || hints <= 0}
             >
               Indice
             </Button>
           </Badge>
           <Badge count={pointMultipliers} size="small">
             <Button 
-              size="small" 
-              type={isMultiplierActive ? 'primary' : 'default'} 
-              icon={<Icon icon={Sparkles} />}
+              disabled={isMultiplierActive || pointMultipliers <= 0} 
+              icon={<Icon icon={Sparkles} />} 
+              size="small"
+              type={isMultiplierActive ? 'primary' : 'default'}
               onClick={handleActivateMultiplier}
-              disabled={isMultiplierActive || pointMultipliers <= 0}
             >
               x2 Points
             </Button>
@@ -243,26 +243,26 @@ const Play = ({ config, onFinish }: PlayProps) => {
       </Flex>
 
       <div
-        key={currentIndex}
         className={`${styles.questionContainer} ${animateState === 'error' ? 'shake' : ''}`}
+        key={currentIndex}
       >
         <Flex vertical padding={16}>
-          <Typography.Title level={3} className={styles.question}>
+          <Typography.Title className={styles.question} level={3}>
             {currentQ.question}
           </Typography.Title>
           
           <Radio.Group 
-            onChange={(e) => setSelectedAnswer(e.target.value)} 
-            value={selectedAnswer}
-            disabled={hasAnswered}
+            disabled={hasAnswered} 
             style={{ width: '100%' }}
+            value={selectedAnswer}
+            onChange={(e) => setSelectedAnswer(e.target.value)}
           >
             <Space direction="vertical" style={{ width: '100%' }}>
               {currentQ.options.map((opt: string, idx: number) => {
                 if (hiddenOptions.includes(idx)) return null;
                 
                 return (
-                  <Radio key={idx} value={idx} className={styles.option}>
+                  <Radio className={styles.option} key={idx} value={idx}>
                     {opt}
                     {hasAnswered && idx === currentQ.answer && (
                       <span className={styles.iconContainer}>
@@ -280,13 +280,13 @@ const Play = ({ config, onFinish }: PlayProps) => {
             </Space>
           </Radio.Group>
 
-          <Flex justify="flex-end" style={{ marginTop: 32 }} gap={12}>
+          <Flex gap={12} justify="flex-end" style={{ marginTop: 32 }}>
             {hasAnswered ? (
-              <Button type="primary" size="large" onClick={nextQuestion}>
+              <Button size="large" type="primary" onClick={nextQuestion}>
                 {currentIndex < questions.length - 1 ? 'Question Suivante' : 'Terminer'}
               </Button>
             ) : (
-              <Button type="primary" size="large" onClick={handleSubmit} disabled={selectedAnswer === null}>
+              <Button disabled={selectedAnswer === null} size="large" type="primary" onClick={handleSubmit}>
                 Valider
               </Button>
             )}

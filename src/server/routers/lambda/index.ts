@@ -10,7 +10,6 @@ import { topUpRouter } from '@/business/server/lambda-routers/topUp';
 import { publicProcedure, router } from '@/libs/trpc/lambda';
 
 import { agentRouter } from './agent';
-import { quizzlyRouter } from './quizzly';
 import { agentBotProviderRouter } from './agentBotProvider';
 import { agentDocumentRouter } from './agentDocument';
 import { agentEvalRouter } from './agentEval';
@@ -30,6 +29,7 @@ import { changelogRouter } from './changelog';
 import { chunkRouter } from './chunk';
 import { comfyuiRouter } from './comfyui';
 import { configRouter } from './config';
+import { cookerRouter } from './cooker';
 import { deviceRouter } from './device';
 import { documentRouter } from './document';
 import { exporterRouter } from './exporter';
@@ -52,6 +52,7 @@ import { notebookRouter } from './notebook';
 import { notificationRouter } from './notification';
 import { oauthDeviceFlowRouter } from './oauthDeviceFlow';
 import { pluginRouter } from './plugin';
+import { quizzlyRouter } from './quizzly';
 import { ragEvalRouter } from './ragEval';
 import { recentRouter } from './recent';
 import { searchRouter } from './search';
@@ -136,6 +137,7 @@ export const lambdaRouter = router({
   taskTemplate: taskTemplateRouter,
   topUp: topUpRouter,
   quizzly: quizzlyRouter,
+  cooker: cookerRouter,
 });
 
 export type LambdaRouter = typeof lambdaRouter;

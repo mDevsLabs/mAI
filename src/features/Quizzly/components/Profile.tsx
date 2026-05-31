@@ -1,7 +1,7 @@
-import { Card, Typography, Divider, Statistic, Row, Col, Flex } from 'antd';
-import { createStaticStyles } from 'antd-style';
-import { Trophy, Star, Flame, Shield } from 'lucide-react';
 import { Icon } from '@lobehub/ui';
+import { Card, Col, Divider, Flex,Row, Statistic, Typography } from 'antd';
+import { createStaticStyles } from 'antd-style';
+import { Flame, Shield,Star, Trophy } from 'lucide-react';
 
 import { useQuizzlyStore } from '../store/useQuizzlyStore';
 
@@ -69,7 +69,7 @@ const Profile = () => {
           {AVATAR_MAP[currentAvatar] || '👤'}
         </div>
         <Typography.Title level={2} style={{ margin: 0 }}>Joueur IA</Typography.Title>
-        <Typography.Text type="secondary" style={{ fontSize: '1.1rem' }}>
+        <Typography.Text style={{ fontSize: '1.1rem' }} type="secondary">
           {getLeagueName()} {clan ? `• Clan: ${clan.name}` : ''}
         </Typography.Text>
         
@@ -78,17 +78,17 @@ const Profile = () => {
         <Row gutter={[16, 16]} style={{ width: '100%' }}>
           <Col span={8}>
             <div className={styles.statBox}>
-              <Statistic title="Score Total" value={points} prefix={<Trophy size={20} color="#faad14" style={{ marginRight: 8 }}/>} suffix="pts" />
+              <Statistic prefix={<Trophy color="#faad14" size={20} style={{ marginRight: 8 }}/>} suffix="pts" title="Score Total" value={points} />
             </div>
           </Col>
           <Col span={8}>
             <div className={styles.statBox}>
-              <Statistic title="Précision" value={precision} suffix="%" prefix={<Star size={20} color="#1677ff" style={{ marginRight: 8 }}/>} />
+              <Statistic prefix={<Star color="#1677ff" size={20} style={{ marginRight: 8 }}/>} suffix="%" title="Précision" value={precision} />
             </div>
           </Col>
           <Col span={8}>
             <div className={styles.statBox}>
-              <Statistic title="Série" value={streak} suffix=" jours" prefix={<Flame size={20} color="#ff4d4f" style={{ marginRight: 8 }}/>} />
+              <Statistic prefix={<Flame color="#ff4d4f" size={20} style={{ marginRight: 8 }}/>} suffix=" jours" title="Série" value={streak} />
             </div>
           </Col>
         </Row>
@@ -103,7 +103,7 @@ const Profile = () => {
           </Col>
           <Col span={12}>
             <div className={styles.statBox}>
-              <Statistic title="Boucliers" value={streakShields} prefix={<Icon icon={Shield} style={{ color: '#ff4d4f', marginRight: 8 }} />} />
+              <Statistic prefix={<Icon icon={Shield} style={{ color: '#ff4d4f', marginRight: 8 }} />} title="Boucliers" value={streakShields} />
             </div>
           </Col>
         </Row>

@@ -36,7 +36,7 @@ export function truncateToolResult(content: string, maxLength?: number): string 
   // providers (DeepSeek, Anthropic) reject as "unexpected end of hex escape".
   let cutoff = limit;
   const lastCharCode = content.charCodeAt(cutoff - 1);
-  if (lastCharCode >= 0xd8_00 && lastCharCode <= 0xdb_ff) {
+  if (lastCharCode >= 0xD8_00 && lastCharCode <= 0xDB_FF) {
     cutoff -= 1;
   }
 

@@ -13,6 +13,7 @@ import editor from './editor';
 import electron from './electron';
 import error from './error';
 import eval_ from './eval';
+import extensions from './extensions';
 import file from './file';
 import home from './home';
 import hotkey from './hotkey';
@@ -62,6 +63,7 @@ const resources = {
   electron,
   error,
   'eval': eval_,
+  extensions,
   file,
   home,
   hotkey,

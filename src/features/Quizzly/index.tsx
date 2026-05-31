@@ -1,17 +1,18 @@
 'use client';
 
 import { Icon } from '@lobehub/ui';
-import { Button, Typography, Alert, Flex } from 'antd';
-import { Gamepad2, User, Store, Trophy, ArrowLeft, Users } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { Alert, Button, Flex,Typography } from 'antd';
 import { createStaticStyles } from 'antd-style';
+import { ArrowLeft, Gamepad2, Store, Trophy, User, Users } from 'lucide-react';
+import { useEffect,useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
+import Clans from './components/Clans';
+import Leagues from './components/Leagues';
 import Play from './components/Play';
 import Profile from './components/Profile';
 import Setup from './components/Setup';
 import Shop from './components/Shop';
-import Leagues from './components/Leagues';
-import Clans from './components/Clans';
 import { useQuizzlyStore } from './store/useQuizzlyStore';
 
 const useStyles = createStaticStyles(({ css }) => ({
@@ -76,6 +77,7 @@ const THEME_BACKGROUNDS: Record<string, string> = {
 };
 
 const QuizzlyMain = () => {
+  const { t } = useTranslation('extensions');
   const { styles } = useStyles();
   const [currentView, setCurrentView] = useState<'menu' | 'setup' | 'play' | 'profile' | 'shop' | 'leagues' | 'clans'>('menu');
   const [quizConfig, setQuizConfig] = useState({ count: 5, level: 'Collège', topic: 'Culture Générale' });
@@ -89,7 +91,7 @@ const QuizzlyMain = () => {
   // Synchroniser avec le serveur TRPC au montage
   useEffect(() => {
     syncWithServer();
-  }, []);
+  }, [syncWithServer]);
 
   const goMenu = () => {
     syncWithServer();
@@ -106,7 +108,7 @@ const QuizzlyMain = () => {
 
   if (currentView === 'setup') {
     return (
-      <Flex className={styles.container} style={bgStyle} align={'center'} justify={'center'}>
+      <Flex align={'center'} className={styles.container} justify={'center'} style={bgStyle}>
         <Setup 
           onBack={goMenu} 
           onStart={(config) => {
@@ -120,14 +122,14 @@ const QuizzlyMain = () => {
 
   if (currentView === 'play') {
     return (
-      <Flex className={styles.container} style={bgStyle} align={'center'} justify={'center'}>
+      <Flex align={'center'} className={styles.container} justify={'center'} style={bgStyle}>
         <Button 
-          icon={<Icon icon={ArrowLeft} />} 
-          onClick={goMenu}
+          ghost 
+          icon={<Icon icon={ArrowLeft} />}
           style={{ position: 'absolute', top: 24, left: 24, zIndex: 10 }}
-          ghost
+          onClick={goMenu}
         >
-          Quitter le Quiz
+          {t('quizzly.quitQuiz')}
         </Button>
         <Play config={quizConfig} onFinish={goMenu} />
       </Flex>
@@ -136,14 +138,14 @@ const QuizzlyMain = () => {
 
   if (currentView === 'profile') {
     return (
-      <Flex className={styles.container} style={bgStyle} align={'center'} justify={'center'}>
+      <Flex align={'center'} className={styles.container} justify={'center'} style={bgStyle}>
         <Button 
-          icon={<Icon icon={ArrowLeft} />} 
-          onClick={goMenu}
+          ghost 
+          icon={<Icon icon={ArrowLeft} />}
           style={{ position: 'absolute', top: 24, left: 24, zIndex: 10 }}
-          ghost
+          onClick={goMenu}
         >
-          Retour au Menu
+          {t('quizzly.backMenu')}
         </Button>
         <Profile />
       </Flex>
@@ -152,7 +154,7 @@ const QuizzlyMain = () => {
 
   if (currentView === 'shop') {
     return (
-      <Flex className={styles.container} style={bgStyle} align={'center'} justify={'center'}>
+      <Flex align={'center'} className={styles.container} justify={'center'} style={bgStyle}>
         <Shop onBack={goMenu} />
       </Flex>
     );
@@ -160,7 +162,7 @@ const QuizzlyMain = () => {
 
   if (currentView === 'leagues') {
     return (
-      <Flex className={styles.container} style={bgStyle} align={'center'} justify={'center'}>
+      <Flex align={'center'} className={styles.container} justify={'center'} style={bgStyle}>
         <Leagues onBack={goMenu} />
       </Flex>
     );
@@ -168,70 +170,70 @@ const QuizzlyMain = () => {
 
   if (currentView === 'clans') {
     return (
-      <Flex className={styles.container} style={bgStyle} align={'center'} justify={'center'}>
+      <Flex align={'center'} className={styles.container} justify={'center'} style={bgStyle}>
         <Clans onBack={goMenu} />
       </Flex>
     );
   }
 
   return (
-    <Flex className={styles.container} style={bgStyle} align={'center'} justify={'center'}>
-      <Flex className={styles.menuBox} align={'center'} justify={'center'} vertical>
+    <Flex align={'center'} className={styles.container} justify={'center'} style={bgStyle}>
+      <Flex vertical align={'center'} className={styles.menuBox} justify={'center'}>
         {showNotification && (
           <Alert
-            message="Rappel quotidien !"
-            description={`Complète ton quiz du jour pour préserver la série de ton clan (${clan.name}) ! 🔔`}
-            type="warning"
-            showIcon
             closable
+            showIcon
+            description={t('quizzly.clanReminder', { name: clan.name })}
+            message={t('quizzly.dailyReminder')}
             style={{ marginBottom: 24, textAlign: 'left', width: '100%' }}
+            type="warning"
           />
         )}
 
         <div className={styles.avatarDisplay}>
           {AVATAR_MAP[currentAvatar] || '👤'}
         </div>
-        <Typography.Title className={styles.title}>Quizzly</Typography.Title>
+        <Typography.Title className={styles.title}>{t('quizzly.title')}</Typography.Title>
         <Typography.Text style={{ color: 'rgba(255, 255, 255, 0.8)', marginBottom: 32, fontSize: '1.1rem' }}>
-          Apprendre en s'amusant avec l'IA
+          {t('quizzly.subtitle')}
         </Typography.Text>
 
         <Flex vertical style={{ width: '100%' }}>
           <Button 
-            type={'primary'} 
             className={styles.button} 
-            icon={<Icon icon={Gamepad2} />}
+            icon={<Icon icon={Gamepad2} />} 
+            type={'primary'}
             onClick={() => setCurrentView('setup')}
           >
-            Jouer
+            {t('quizzly.play')}
           </Button>
           <Button 
             className={styles.button} 
             icon={<Icon icon={User} />}
             onClick={() => setCurrentView('profile')}
           >
-            Profil
+            {t('quizzly.profile')}
           </Button>
           <Button 
             className={styles.button} 
             icon={<Icon icon={Trophy} />}
             onClick={() => setCurrentView('leagues')}
           >
-            Ligues
+            {t('quizzly.leagues')}
           </Button>
           <Button 
             className={styles.button} 
             icon={<Icon icon={Users} />}
             onClick={() => setCurrentView('clans')}
           >
-            Clans
+            {t('quizzly.clans')}
           </Button>
           <Button 
             className={styles.button} 
             icon={<Icon icon={Store} />}
             onClick={() => setCurrentView('shop')}
           >
-            Boutique
+            {t('quizzly.shop')}
           </Button>
         </Flex>
       </Flex>

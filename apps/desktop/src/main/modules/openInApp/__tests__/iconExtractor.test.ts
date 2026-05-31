@@ -89,12 +89,12 @@ describe('extractAppIcon', () => {
     mockedMkdtemp.mockResolvedValueOnce('/tmp/lobehub-openinapp-test');
     // sips conversion
     respondExec({ binary: 'sips' }, { stdout: '' });
-    mockedReadFile.mockResolvedValueOnce(Buffer.from([0x89, 0x50, 0x4e, 0x47])); // PNG header
+    mockedReadFile.mockResolvedValueOnce(Buffer.from([0x89, 0x50, 0x4E, 0x47])); // PNG header
 
     const result = await extractAppIcon('vscode', 'darwin');
 
     expect(result).toBe(
-      `data:image/png;base64,${Buffer.from([0x89, 0x50, 0x4e, 0x47]).toString('base64')}`,
+      `data:image/png;base64,${Buffer.from([0x89, 0x50, 0x4E, 0x47]).toString('base64')}`,
     );
   });
 
@@ -126,7 +126,7 @@ describe('extractAppIcon', () => {
     mockedAccess.mockResolvedValueOnce(undefined);
     mockedMkdtemp.mockResolvedValueOnce('/tmp/lobehub-openinapp-test');
     respondExec({ binary: 'sips' }, { stdout: '' });
-    mockedReadFile.mockResolvedValueOnce(Buffer.from([0xff]));
+    mockedReadFile.mockResolvedValueOnce(Buffer.from([0xFF]));
 
     const result = await extractAppIcon('terminal', 'darwin');
 

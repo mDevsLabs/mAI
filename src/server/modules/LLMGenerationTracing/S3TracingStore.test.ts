@@ -64,7 +64,7 @@ describe('S3TracingStore.save', () => {
     expect(callKey).toBe(key);
     expect(contentType).toBe('application/zstd');
     expect(Buffer.isBuffer(body)).toBe(true);
-    expect([body[0], body[1], body[2], body[3]]).toEqual([0x28, 0xb5, 0x2f, 0xfd]);
+    expect([body[0], body[1], body[2], body[3]]).toEqual([0x28, 0xB5, 0x2F, 0xFD]);
 
     const roundtripped = JSON.parse((await decompressZstd(body)).toString('utf8'));
     expect(roundtripped).toEqual(payload);

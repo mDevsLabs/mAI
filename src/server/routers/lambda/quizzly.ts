@@ -1,36 +1,38 @@
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+
 import { z } from 'zod';
-import { router, publicProcedure } from '@/libs/trpc/lambda';
-import * as fs from 'fs';
-import * as path from 'path';
+
+import { publicProcedure,router } from '@/libs/trpc/lambda';
 
 // Dossier de persistance locale pour la simulation de base de données Quizzly
 const DATA_DIR = path.join(process.cwd(), '.gemini', 'quizzly');
 const DATA_FILE = path.join(DATA_DIR, 'db.json');
 
 interface ClanMember {
-  id: string;
-  name: string;
   avatar: string;
   hasPlayedToday: boolean;
+  id: string;
+  name: string;
   streak: number;
 }
 
 interface Clan {
-  id: string;
-  name: string;
   collectiveStreak: number;
-  members: ClanMember[];
+  id: string;
   lastStreakIncrementDate?: string;
+  members: ClanMember[];
+  name: string;
 }
 
 interface QuizzlyServerDB {
   clans: Clan[];
-  userClanId: string | null;
-  unlockedThemes: string[];
   currentTheme: string;
+  lastQuizDate: string;
+  unlockedThemes: string[];
+  userClanId: string | null;
   userPoints: number;
   userStreak: number;
-  lastQuizDate: string;
 }
 
 const DEFAULT_DB: QuizzlyServerDB = {
@@ -76,7 +78,7 @@ const loadDB = (): QuizzlyServerDB => {
       fs.writeFileSync(DATA_FILE, JSON.stringify(DEFAULT_DB, null, 2), 'utf-8');
       return DEFAULT_DB;
     }
-    const data = fs.readFileSync(DATA_FILE, 'utf-8');
+    const data = fs.readFileSync(DATA_FILE, 'utf8');
     memoryDB = JSON.parse(data);
     return memoryDB!;
   } catch (e) {

@@ -1,66 +1,67 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+
 import { lambdaClient } from '@/libs/trpc/client';
 
 export interface ClanMember {
-  id: string;
-  name: string;
   avatar: string;
   hasPlayedToday: boolean;
+  id: string;
+  name: string;
   streak: number;
 }
 
 export interface Clan {
-  id: string;
-  name: string;
   collectiveStreak: number;
-  members: ClanMember[];
+  id: string;
   lastStreakIncrementDate?: string;
+  members: ClanMember[];
+  name: string;
 }
 
 export interface QuizzlyState {
-  version: string;
-  points: number;
-  apiKey: string;
-  unlockedAvatars: string[];
-  unlockedThemes: string[];
-  currentAvatar: string;
-  currentTheme: string;
-  
-  // Streaks & Stats
-  streak: number;
-  lastQuizDate: string;
-  streakShields: number;
-  pointMultipliers: number;
   activeMultiplier: boolean;
-  hints: number;
-  quizzesPlayed: number;
-  totalQuestions: number;
-  correctAnswers: number;
-  
+  // Actions
+  addPoints: (amount: number) => void;
+  apiKey: string;
+  availableClans: Clan[];
+  buyItem: (itemId: string, cost: number) => boolean;
+  buyTheme: (themeId: string, cost: number, requiredClanStreak: number) => Promise<boolean>;
   // Clan Info
   clan: Clan | null;
-  availableClans: Clan[];
   
+  completeQuiz: (questionsCount: number, correctCount: number) => Promise<void>;
+  correctAnswers: number;
+  // Clan Actions
+  createClan: (name: string) => Promise<void>;
+  currentAvatar: string;
+  currentTheme: string;
+  hints: number;
+  joinClan: (clanId: string) => Promise<void>;
+  lastQuizDate: string;
+  leaveClan: () => Promise<void>;
+  
+  pointMultipliers: number;
+  points: number;
+  
+  quizzesPlayed: number;
+  
+  selectTheme: (themeId: string) => Promise<void>;
+  setApiKey: (key: string) => void;
+  setCurrentAvatar: (avatarId: string) => void;
+  simulateClanActivity: () => Promise<void>;
+  // Streaks & Stats
+  streak: number;
+  streakShields: number;
   // Actions de synchronisation serveur
   syncWithServer: () => Promise<void>;
   
-  // Actions
-  addPoints: (amount: number) => void;
-  setApiKey: (key: string) => void;
+  totalQuestions: number;
   unlockAvatar: (avatarId: string, cost: number) => boolean;
-  setCurrentAvatar: (avatarId: string) => void;
-  buyItem: (itemId: string, cost: number) => boolean;
+  unlockedAvatars: string[];
+  unlockedThemes: string[];
   useHint: () => boolean;
-  completeQuiz: (questionsCount: number, correctCount: number) => Promise<void>;
-  
-  // Clan Actions
-  createClan: (name: string) => Promise<void>;
-  joinClan: (clanId: string) => Promise<void>;
-  leaveClan: () => Promise<void>;
-  simulateClanActivity: () => Promise<void>;
-  buyTheme: (themeId: string, cost: number, requiredClanStreak: number) => Promise<boolean>;
-  selectTheme: (themeId: string) => Promise<void>;
+  version: string;
 }
 
 export const useQuizzlyStore = create<QuizzlyState>()(

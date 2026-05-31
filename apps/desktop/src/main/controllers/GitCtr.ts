@@ -147,7 +147,7 @@ export const quoteGitPath = (prefix: 'a/' | 'b/', filePath: string): string => {
     else if (ch === '\r') out += '\\r';
     else {
       const code = ch.codePointAt(0)!;
-      if (code < 0x20 || code === 0x7f) {
+      if (code < 0x20 || code === 0x7F) {
         out += '\\' + code.toString(8).padStart(3, '0');
       } else {
         out += ch;

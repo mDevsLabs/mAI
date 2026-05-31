@@ -1,7 +1,7 @@
-import { Card, Typography, Button, Row, Col, Badge, message, Divider, Alert, Flex } from 'antd';
-import { createStaticStyles } from 'antd-style';
-import { Store, Trophy, ArrowLeft, Unlock, Lock, Shield, Sparkles, Lightbulb, Palette } from 'lucide-react';
 import { Icon } from '@lobehub/ui';
+import { Alert, Badge, Button, Card, Col, Divider, Flex,message, Row, Typography } from 'antd';
+import { createStaticStyles } from 'antd-style';
+import { ArrowLeft, Lightbulb, Lock, Palette,Shield, Sparkles, Store, Trophy, Unlock } from 'lucide-react';
 
 import { useQuizzlyStore } from '../store/useQuizzlyStore';
 import { playSound } from '../utils/sound';
@@ -133,7 +133,7 @@ const Shop = ({ onBack }: ShopProps) => {
     <Card className={styles.card}>
       <Flex align="center" justify="space-between" style={{ marginBottom: 24 }}>
         <Flex align="center" gap={12}>
-          <Button type="text" icon={<Icon icon={ArrowLeft} />} onClick={onBack} />
+          <Button icon={<Icon icon={ArrowLeft} />} type="text" onClick={onBack} />
           <Icon icon={Store} size={{ fontSize: 24 }} />
           <Typography.Title level={3} style={{ margin: 0 }}>Boutique Quizzly</Typography.Title>
         </Flex>
@@ -148,10 +148,10 @@ const Shop = ({ onBack }: ShopProps) => {
         {SHOP_ITEMS.map(item => {
           const count = getItemCount(item.id);
           return (
-            <Col span={8} key={item.id}>
+            <Col key={item.id} span={8}>
               <div className={styles.itemCard}>
-                <Flex align="center" vertical gap={8} style={{ width: '100%' }}>
-                  <Badge count={count} color="#52c41a" offset={[0, 5]}>
+                <Flex vertical align="center" gap={8} style={{ width: '100%' }}>
+                  <Badge color="#52c41a" count={count} offset={[0, 5]}>
                     <div style={{ 
                       background: `${item.color}15`, 
                       padding: 16, 
@@ -166,7 +166,7 @@ const Shop = ({ onBack }: ShopProps) => {
                     </div>
                   </Badge>
                   <Typography.Text strong style={{ fontSize: '1.1rem', marginTop: 8 }}>{item.name}</Typography.Text>
-                  <Typography.Paragraph type="secondary" style={{ fontSize: '0.85rem', height: 40, margin: '8px 0 0 0', textAlign: 'center' }}>
+                  <Typography.Paragraph style={{ fontSize: '0.85rem', height: 40, margin: '8px 0 0 0', textAlign: 'center' }} type="secondary">
                     {item.description}
                   </Typography.Paragraph>
                 </Flex>
@@ -176,10 +176,10 @@ const Shop = ({ onBack }: ShopProps) => {
                     {item.cost} pts
                   </Typography.Paragraph>
                   <Button 
+                    block
+                    disabled={points < item.cost} 
                     type="primary"
-                    block 
                     onClick={() => handleBuyItem(item.id, item.cost)}
-                    disabled={points < item.cost}
                   >
                     Acheter
                   </Button>
@@ -194,7 +194,7 @@ const Shop = ({ onBack }: ShopProps) => {
 
       {/* Section Thèmes Cosmétiques Exclusifs de Clan */}
       <Typography.Title level={4} style={{ marginBottom: 8 }}><Icon icon={Palette} style={{ marginRight: 8 }} /> Thèmes Visuels de Clan Exclusifs</Typography.Title>
-      <Typography.Paragraph type="secondary" style={{ marginBottom: 16 }}>
+      <Typography.Paragraph style={{ marginBottom: 16 }} type="secondary">
         Débloquez ces thèmes uniques uniquement en augmentant la série (streak) de votre clan ! Série de clan actuelle : <strong>{clanStreak} jours</strong>.
       </Typography.Paragraph>
 
@@ -205,9 +205,9 @@ const Shop = ({ onBack }: ShopProps) => {
           const isStreakLocked = clanStreak < theme.requiredStreak;
 
           return (
-            <Col span={8} key={theme.id}>
+            <Col key={theme.id} span={8}>
               <div className={styles.itemCard} style={{ borderColor: isSelected ? '#52c41a' : '#f0f0f0' }}>
-                <Flex align="center" vertical gap={8}>
+                <Flex vertical align="center" gap={8}>
                   <div style={{
                     width: '100%',
                     height: 50,
@@ -223,7 +223,7 @@ const Shop = ({ onBack }: ShopProps) => {
                     Preview
                   </div>
                   <Typography.Text strong style={{ fontSize: '1rem', marginTop: 8 }}>{theme.name}</Typography.Text>
-                  <Typography.Paragraph type="secondary" style={{ fontSize: '0.8rem', height: 40, margin: '4px 0 0 0', textAlign: 'center' }}>
+                  <Typography.Paragraph style={{ fontSize: '0.8rem', height: 40, margin: '4px 0 0 0', textAlign: 'center' }} type="secondary">
                     {theme.description}
                   </Typography.Paragraph>
                 </Flex>
@@ -231,10 +231,10 @@ const Shop = ({ onBack }: ShopProps) => {
                 <div style={{ marginTop: 16 }}>
                   {isStreakLocked && !isUnlocked ? (
                     <Alert 
-                      message={`Série de clan ${theme.requiredStreak}j requise`} 
-                      type="warning" 
                       showIcon 
+                      message={`Série de clan ${theme.requiredStreak}j requise`} 
                       style={{ padding: '4px 8px', fontSize: '0.75rem', marginBottom: 12 }} 
+                      type="warning" 
                     />
                   ) : (
                     <Typography.Paragraph strong style={{ color: '#faad14', margin: '0 0 12px 0', textAlign: 'center' }}>
@@ -243,9 +243,9 @@ const Shop = ({ onBack }: ShopProps) => {
                   )}
                   
                   <Button
-                    type={isSelected ? 'primary' : 'default'}
                     block
                     disabled={isSelected || (isStreakLocked && !isUnlocked)}
+                    type={isSelected ? 'primary' : 'default'}
                     onClick={() => isUnlocked ? handleSelectTheme(theme.id) : handleBuyTheme(theme.id, theme.cost, theme.requiredStreak)}
                   >
                     {isSelected ? 'Appliqué' : isUnlocked ? 'Appliquer' : 'Acheter'}
@@ -267,7 +267,7 @@ const Shop = ({ onBack }: ShopProps) => {
           const isSelected = currentAvatar === item.id;
           
           return (
-            <Col span={6} key={item.id}>
+            <Col key={item.id} span={6}>
               <div className={styles.itemCard} style={{ borderColor: isSelected ? '#1677ff' : '#f0f0f0' }}>
                 <div>
                   <div style={{ fontSize: '3rem', marginBottom: 8 }}>{item.icon}</div>
@@ -283,10 +283,10 @@ const Shop = ({ onBack }: ShopProps) => {
                     )}
                   </div>
                   <Button 
+                    block
+                    disabled={isSelected} 
                     type={isSelected ? 'primary' : 'default'}
-                    block 
                     onClick={() => isUnlocked ? handleSelectAvatar(item.id) : handleUnlockAvatar(item.id, item.cost)}
-                    disabled={isSelected}
                   >
                     {isSelected ? 'Équipé' : isUnlocked ? 'Équiper' : 'Acheter'}
                   </Button>

@@ -9,7 +9,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => {
   return (
     <html suppressHydrationWarning lang={'en'} style={{ height: '100%' }}>
       <head>
-        <link rel="preload" href="/icons/icon-512x512.png" as="image" />
+        <link as="image" href="/icons/icon-512x512.png" rel="preload" />
       </head>
       <body style={{ height: '100%', margin: 0 }}>
         {children}
