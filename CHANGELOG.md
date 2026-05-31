@@ -2,6 +2,23 @@
 
 # Changelog
 
+### Version 0.1.1
+
+<sup>Released on **2026-05-31**</sup>
+
+#### 🚀 Features
+- **onboarding**: Ajout de l'étape de configuration d'un fournisseur d'IA dans l'accueil avec saisie des clés API et des adresses de proxy (endpoints personnalisés) pour OpenAI, Google et Anthropic.
+- **onboarding**: Intégration d'un bouton de validation et de test de connexion réseau en direct via le service de chat (`chatService.fetchPresetTaskResult`) pour s'assurer du bon fonctionnement des clés.
+- **onboarding**: Ajout d'une détection et d'une analyse fine des codes d'erreurs d'API ou de proxy lors des tests (SSL, URL mal formées, accès interdit 403, non trouvé 404, timeouts, non autorisé 401) afin d'afficher des conseils de diagnostic ciblés pour l'utilisateur.
+- **onboarding**: Optimisation du chargement des modèles grâce à une synchronisation automatique en arrière-plan (`fetchRemoteModelList`) lors d'un test de connexion ou d'une configuration réussie pour actualiser les capacités et la liste des modèles à jour.
+- **onboarding**: Correction de l'importation de `TraceNameMap` provenant de `@lobechat/types` pour garantir la stabilité et la compilation du code.
+- **models**: Intégration native des modèles phares **Qwen 3.7 Max** et **Gemini 3.5 Flash** dans la base de données des modèles de model-bank.
+- **models**: Modification du modèle général par défaut pour utiliser **GPT-5.5** d'OpenAI.
+- **workflows**: Correction du fichier d'action GitHub `release-desktop-canary.yml` en supprimant le blocage systématique si aucun tag de release stable n'est présent, avec mise en place d'un repli dynamique basé sur la version lue dans le `package.json`.
+- **branding**: Résolution du bug d'icône d'application montrant l'ancien logo Lobe AI en corrigeant le chemin d'accès absolu `/icons/icon-512x512.png` et en forçant le composant `ProductLogo` à utiliser uniquement `CustomLogo`.
+- **seo**: Amélioration du référencement de la page d'accueil en nettoyant la variable dynamique de traduction `appName` dans les métadonnées pour insérer le nom de marque statique **mAI**.
+- **documentation**: Suppression de tous les anciens répertoires `changelog` présents dans les sous-dossiers de langues de `docs/` afin d'éviter tout doublon.
+
 ### Version 0.1.0
 
 <sup>Released on **2026-05-30**</sup>
