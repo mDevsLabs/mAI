@@ -19,10 +19,7 @@ name: Release Desktop Canary
 on:
   push:
     branches:
-      - '**'
-  pull_request:
-    branches:
-      - '**'
+      - canary
   workflow_dispatch:
     inputs:
       force:
@@ -30,14 +27,9 @@ on:
         required: false
         type: boolean
         default: false
-      version:
-        description: 'Version to build (e.g. 0.0.9)'
-        required: false
-        type: string
-        default: ''
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}
   cancel-in-progress: true
 
 permissions: read-all
@@ -59,41 +51,71 @@ jobs:
       should_build: ${{ steps.check.outputs.should_build }}
     steps:
       - uses: actions/checkout@v6
-         with:
+        with:
           fetch-depth: 0
 
       - name: Check commit message prefix
         id: check
         run: |
-          echo "should_build=true" >> $GITHUB_OUTPUT
-          echo "🔧 Build enabled for push/pull_request on multi-branches"
+          # 手动触发 + force 时跳过检查
+          if [ "${{ inputs.force }}" == "true" ]; then
+            echo "should_build=true" >> $GITHUB_OUTPUT
+            echo "🔧 Force build requested, skipping commit check"
+            exit 0
+          fi
+
+          # 手动触发 (无 force) 也直接构建
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "should_build=true" >> $GITHUB_OUTPUT
+            echo "🔧 Manual trigger, proceeding with build"
+            exit 0
+          fi
+
+          # 获取本次 push 的 head commit message
+          commit_msg=$(git log -1 --pretty=%s HEAD)
+          echo "📝 Head commit: $commit_msg"
+
+          # 检查是否匹配 style/feat/fix/refactor/release 前缀 (支持 gitmoji 前缀)
+          if echo "$commit_msg" | grep -qiE '^(💄\s*)?style(\(.+\))?:|^(✨\s*)?feat(\(.+\))?:|^(🐛\s*)?fix(\(.+\))?:|^(♻️\s*)?refactor(\(.+\))?:|^(🚀\s*)?release(\(.+\))?:'; then
+            echo "should_build=true" >> $GITHUB_OUTPUT
+            echo "✅ Commit matches canary build trigger: $commit_msg"
+          else
+            echo "should_build=false" >> $GITHUB_OUTPUT
+            echo "⏭️ Commit does not match style/feat/fix/refactor/release prefix, skipping: $commit_msg"
+          fi
 
       - name: Calculate canary version
         if: steps.check.outputs.should_build == 'true'
         id: version
         run: |
-          # Si une version est fournie via input workflow_dispatch, on l'utilise directement
-          if [ -n "${{ github.event.inputs.version }}" ]; then
-            version="${{ github.event.inputs.version }}"
-            tag="v${version}"
-            echo "version=${version}" >> $GITHUB_OUTPUT
-            echo "tag=${tag}" >> $GITHUB_OUTPUT
-            echo "✅ Canary version from input: ${version}"
-            echo "🏷️ Tag: ${tag}"
-            exit 0
+          # 获取最新的 stable tag (排除 nightly/canary/beta 等)
+          latest_tag=$(git tag --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -n 1)
+
+          if [ -z "$latest_tag" ]; then
+            echo "⚠️ No stable tag found, fallback to package.json version"
+            pkg_version=$(node -p "require('./package.json').version")
+            latest_tag="v${pkg_version}"
           fi
 
-          # Obtenir la version de base à partir de package.json au lieu des tags stables
-          base_version=$(node -p "require('./package.json').version")
+          echo "📌 Latest stable tag: $latest_tag"
 
-          if [ -z "$base_version" ]; then
-            echo "❌ No version found in package.json"
-            exit 1
-          fi
+          # 去掉 v 前缀，解析 major.minor.patch → a.b.c 取 c+1
+          base_version="${latest_tag#v}"
+          IFS='.' read -r major minor patch <<< "$base_version"
+          new_patch=$((patch + 1))
+          base_canary="${major}.${minor}.${new_patch}"
 
-          echo "📌 Version from package.json: $base_version"
+          # postfix: 同 base 下已有 canary 标签的最大序号 + 1
+          max_seq=0
+          for t in $(git tag -l "v${base_canary}-canary.*" 2>/dev/null || true); do
+            seq=$(echo "$t" | grep -oE '[0-9]+$' || true)
+            if [ -n "$seq" ] && [ "$seq" -gt "$max_seq" ] 2>/dev/null; then
+              max_seq=$seq
+            fi
+          done
+          next_seq=$((max_seq + 1))
 
-          version="${base_version}"
+          version="${base_canary}-canary.${next_seq}"
           tag="v${version}"
 
           echo "version=${version}" >> $GITHUB_OUTPUT
@@ -108,19 +130,17 @@ jobs:
           TAG: ${{ steps.version.outputs.tag }}
         run: |
           previous_canary=$(git tag --sort=-creatordate | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+-canary\.[0-9]+$' | head -n 1)
+          latest_stable=$(git tag --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -n 1)
 
           if [ -n "$previous_canary" ]; then
             compare_from="$previous_canary"
             compare_range="${previous_canary}..HEAD"
+          elif [ -n "$latest_stable" ]; then
+            compare_from="$latest_stable"
+            compare_range="${latest_stable}..HEAD"
           else
-            first_commit=$(git rev-list --max-parents=0 HEAD 2>/dev/null | head -n 1)
-            if [ -n "$first_commit" ]; then
-              compare_from="$first_commit"
-              compare_range="${first_commit}..HEAD"
-            else
-              compare_from="HEAD"
-              compare_range="HEAD"
-            fi
+            compare_from="initial commit"
+            compare_range="HEAD"
           fi
 
           commit_count=$(git rev-list --count "$compare_range")
@@ -204,7 +224,6 @@ jobs:
       - name: Setup build environment
         uses: ./.github/actions/desktop-build-setup
         with:
-          cloud-token: ${{ secrets.LOBEHUB_CLOUD_TOKEN }}
           node-version: ${{ env.NODE_VERSION }}
 
       - name: Set package version
