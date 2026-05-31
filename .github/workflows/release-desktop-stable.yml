@@ -34,11 +34,6 @@ on:
         required: false
         type: boolean
         default: true
-      build_mac_intel:
-        description: 'Build macOS (Intel x64)'
-        required: false
-        type: boolean
-        default: true
       build_windows:
         description: 'Build Windows'
         required: false
@@ -154,11 +149,7 @@ jobs:
             static_matrix=$(echo "$static_matrix" | jq -c --argjson entry "$arm_entry" '. + [$entry]')
           fi
 
-          if [[ "${{ github.event_name }}" != "workflow_dispatch" ]] || [[ "${{ inputs.build_mac_intel }}" == "true" ]]; then
-            echo "Using GitHub-Hosted Runner for macOS Intel x64"
-            intel_entry='{"os": "macos-15-intel", "name": "macos-intel"}'
-            static_matrix=$(echo "$static_matrix" | jq -c --argjson entry "$intel_entry" '. + [$entry]')
-          fi
+
 
           # 输出
           echo "matrix={\"include\":$static_matrix}" >> $GITHUB_OUTPUT

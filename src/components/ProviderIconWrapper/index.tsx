@@ -18,7 +18,7 @@ export const ProviderIcon = React.memo(({ provider, size = 12, type = 'avatar', 
     if (type === 'avatar') {
       return (
         <Avatar
-          src="/icons/icon-192x192.png"
+          src="/icons/icon-512x512.png"
           size={size}
           shape={shape}
           {...rest}
@@ -28,7 +28,7 @@ export const ProviderIcon = React.memo(({ provider, size = 12, type = 'avatar', 
     
     return (
       <img
-        src="/icons/icon-192x192.png"
+        src="/icons/icon-512x512.png"
         width={size}
         height={size}
         style={{
@@ -57,7 +57,7 @@ ProviderIcon.displayName = 'ProviderIcon';
 export const LobeHub = React.memo(({ size = 24, ...rest }: { size?: number; [key: string]: any }) => {
   return (
     <img
-      src="/icons/icon-192x192.png"
+      src="/icons/icon-512x512.png"
       width={size}
       height={size}
       alt="mAI"

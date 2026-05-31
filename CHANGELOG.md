@@ -2,6 +2,20 @@
 
 # Changelog
 
+### Version 0.1.2
+
+<sup>Released on **2026-05-31**</sup>
+
+#### 🚀 Features
+- **tests E2E**: Intégration complète de scénarios de tests d'interface utilisateur (Playwright + Cucumber) sur la route `/extensions` pour valider l'ouverture et la fermeture interactives du panneau draggable.
+- **tests unitaires**: Écriture de tests unitaires sous `vitest` et `@testing-library/react` pour le composant de chargement `BrandTextLoading` afin de valider son comportement réactif selon les configurations de marque.
+- **branding**: Remplacement des imports de l'icône LobeHub provenant de la dépendance `@lobehub/icons` par l'icône locale haute résolution `/icons/icon-512x512.png` dans `ModelSelect` et `ProviderIconWrapper`.
+- **branding**: Remplacement du logo de chargement par défaut (LobeHub) par une interface premium animée avec pulsation CSS, arborant l'icône locale `512x512` de mAI et le nom de marque textuel.
+- **optimisation**: Préchargement de l'icône haute résolution `/icons/icon-512x512.png` via une balise `<link rel="preload">` dans le `<head>` de `layout.tsx` pour éliminer tout scintillement visuel lors du chargement initial de l'application.
+- **animations d'interaction**: Intégration de micro-animations CSS fluides (`fadeInSlideUp` et `scaleFadeIn`) sur le panneau d'extensions et sur son bouton de réouverture dynamique pour un ressenti utilisateur soigné.
+- **workflows**: Retrait de la compilation macOS-15-intel obsolète dans les workflows de build GitHub Actions pour accélérer et stabiliser la distribution.
+- **navigation**: Intégration de la page Extensions dans la barre latérale de navigation principale pour une expérience fluide d'accès aux mServices.
+
 ### Version 0.1.1
 
 <sup>Released on **2026-05-31**</sup>

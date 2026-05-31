@@ -1,6 +1,6 @@
 <div align="center"><a name="readme-top"></a>
 
-[![mAI Banner](./public/avatars/may.PNG)][vercel-link]
+[![mAI](./public/avatars/may.PNG)][vercel-link]
 
 # mAI
 
@@ -76,8 +76,6 @@ Vous gardez le contrôle — sans avoir besoin de rester en ligne.
 
 <br/>
 
-<https://github.com/user-attachments/assets/0a33365f-b786-48b5-9ed6-f8af7927bccb>
-
 ## 👋🏻 Démarrage & Rejoindre notre Communauté
 
 Nous sommes un groupe d'ingénieurs-designers passionnés, espérant fournir des composants et outils au design moderne pour l'IA générative.
@@ -111,16 +109,12 @@ Today’s agents are one-off, task-driven tools. They lack context, live in isol
 
 mAI is a work-and-lifestyle space to find, build, and collaborate with agent teammates that grow with you. In mAI, we treat **Agents as the unit of work**, providing an infrastructure where humans and agents co-evolve.
 
-![](https://github.com/user-attachments/assets/89d1c402-a62b-4794-82ea-17e5ee1a6165)
-
 ### Operator: Agents as the Unit of Work
 
 Hires, schedules, and reports on your entire AI team.
 
 - **More productivity. Fewer tools**: Bring all your agents under one roof.
 - **IM Gateway**: Agents where you already chat.
-
-![](https://github.com/user-attachments/assets/7b08d6d9-9dff-4b06-a919-324630554509)
 
 [![][back-to-top]](#readme-top)
 
@@ -129,8 +123,6 @@ Hires, schedules, and reports on your entire AI team.
 [![][back-to-top]](#readme-top)
 
 </div>
-
-![](https://github.com/user-attachments/assets/81e89324-fc66-4024-99a3-aa8e16ec8184)
 
 ### Create: Agents as the Unit of Work
 
@@ -139,8 +131,6 @@ Building a personalized AI team starts with the **Agent Builder**. You can descr
 - **Unified Intelligence**: Seamlessly access any model and any modality—all under your control.
 - **10,000+ Skills**: Connect your agents to the skills you use every day with a library of over 10,000 tools and MCP-compatible plugins.
 
-![](https://github.com/user-attachments/assets/949b8166-486d-4750-ad7a-cfe7bfcb84e3)
-
 [![][back-to-top]](#readme-top)
 
 <div align="right">
@@ -148,8 +138,6 @@ Building a personalized AI team starts with the **Agent Builder**. You can descr
 [![][back-to-top]](#readme-top)
 
 </div>
-
-![](https://hub-apac-1.lobeobjects.space/blog/assets/771ff3d30b9ef93e65e55021cc43d356.webp)
 
 ### Collaborate: Scale New Forms of Collaboration Networks
 
@@ -160,8 +148,6 @@ mAI introduces **Agent Groups**, allowing you to work with agents like real team
 - **Project**: Organize work by project to keep everything structured and easy to track.
 - **Workspace**: A shared space for teams to collaborate with agents, ensuring clear ownership and visibility across the organization.
 
-![](https://github.com/user-attachments/assets/e51526c6-e09c-4a5a-9cec-dcd3fd68a3a8)
-
 [![][back-to-top]](#readme-top)
 
 <div align="right">
@@ -170,16 +156,12 @@ mAI introduces **Agent Groups**, allowing you to work with agents like real team
 
 </div>
 
-![](https://hub-apac-1.lobeobjects.space/blog/assets/fe98eae9fcb6acc47c8e1fb69bdb4b50.webp)
-
 ### Evolve: Co-evolution of Humans and Agents
 
 The best AI is one that understands you deeply. mAI features **Personal Memory** that builds a clear understanding of your needs.
 
 - **Continual Learning**: Your agents learn from how you work, adapting their behavior to act at the right moment.
 - **White-Box Memory**: We believe in transparency. Your agents use structured, editable memory, giving you full control over what they remember.
-
-![](https://github.com/user-attachments/assets/5c6e16f0-7f47-4baf-9aeb-3a00deb8ff5b)
 
 <div align="right">
 
@@ -362,8 +344,7 @@ Contributions of all types are more than welcome; if you are interested in contr
 >
 > Help us make mAI better. Welcome to provide product design feedback, user experience discussions directly to us.
 >
-> **Principal Maintainers:** [@arvinxx](https://github.com/arvinxx) [@canisminor1990](https://github.com/canisminor1990)
-
+> **Principal Maintainer:** [@mDevsLabs](https://github.com/mDevsLabs)
 [![][pr-welcome-shield]][pr-welcome-link]
 [![][submit-agents-shield]][submit-agents-link]
 [![][submit-plugin-shield]][submit-plugin-link]
@@ -450,17 +431,17 @@ This project is [mAI Community License](./LICENSE) licensed.
 <!-- LINK GROUP -->
 
 [back-to-top]: https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square
-[blog]: https://mAI.com/blog
-[changelog]: https://mAI.com/changelog
-[chat-plugin-sdk]: https://github.com/mAI/chat-plugin-sdk
-[chat-plugin-template]: https://github.com/mAI/chat-plugin-template
-[chat-plugins-gateway]: https://github.com/mAI/chat-plugins-gateway
+[blog]: https://mprojects.odoo.com/blog
+[changelog]: https://mprojects.odoo.com/m-ai
+[chat-plugin-sdk]: https://github.com/lobehub/chat-plugin-sdk
+[chat-plugin-template]: https://github.com/lobehub/chat-plugin-template
+[chat-plugins-gateway]: https://github.com/lobehub/chat-plugins-gateway
 [codecov-link]: https://codecov.io/gh/mAI/mAI
 [codecov-shield]: https://img.shields.io/codecov/c/github/mAI/mAI?labelColor=black&style=flat-square&logo=codecov&logoColor=white
-[codespaces-link]: https://codespaces.new/mAI/mAI
+[codespaces-link]: https://codespaces.new/mDevsLabs/mAI
 [codespaces-shield]: https://github.com/codespaces/badge.svg
 [deploy-button-image]: https://vercel.com/button
-[deploy-link]: https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FmAI%2FmAI&env=OPENAI_API_KEY&envDescription=Find%20your%20OpenAI%20API%20Key%20by%20click%20the%20right%20Learn%20More%20button.&envLink=https%3A%2F%2Fplatform.openai.com%2Faccount%2Fapi-keys&project-name=mAI&repository-name=mAI
+[deploy-link]: https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FmDevsLabs%2FmAI&env=OPENAI_API_KEY&envDescription=Find%20your%20OpenAI%20API%20Key%20by%20click%20the%20right%20Learn%20More%20button.&envLink=https%3A%2F%2Fplatform.openai.com%2Faccount%2Fapi-keys&project-name=mAI&repository-name=mAI
 [deploy-on-alibaba-cloud-button-image]: https://service-info-public.oss-cn-hangzhou.aliyuncs.com/computenest-en.svg
 [deploy-on-alibaba-cloud-link]: https://computenest.console.aliyun.com/service/instance/create/default?type=user&ServiceName=mAI%E7%A4%BE%E5%8C%BA%E7%89%88
 [deploy-on-repocloud-button-image]: https://d16t0pc4846x52.cloudfront.net/deploylobe.svg
@@ -469,7 +450,7 @@ This project is [mAI Community License](./LICENSE) licensed.
 [deploy-on-sealos-link]: https://template.usw.sealos.io/deploy?templateName=mAI-db
 [deploy-on-zeabur-button-image]: https://zeabur.com/button.svg
 [deploy-on-zeabur-link]: https://zeabur.com/templates/VZGGTI
-[discord-link]: https://discord.gg/AYFPHvv2jT
+[discord-link]: https://discord.gg/fV7zwdGPpY
 [discord-shield]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=flat-square
 [discord-shield-badge]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=for-the-badge
 [docker-pulls-link]: https://hub.docker.com/r/mAI/mAI
@@ -527,15 +508,15 @@ This project is [mAI Community License](./LICENSE) licensed.
 [lobe-ui-github]: https://github.com/mAI/lobe-ui
 [lobe-ui-link]: https://www.npmjs.com/package/@mAI/ui
 [lobe-ui-shield]: https://img.shields.io/npm/v/@mAI/ui?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
-[official-site]: https://mAI.com
+[official-site]: https://mprojects.odoo.com
 [pr-welcome-link]: https://github.com/mDevsLabs/mAI/pulls
 [pr-welcome-shield]: https://img.shields.io/badge/🤯_pr_welcome-%E2%86%92-ffcb47?labelColor=black&style=for-the-badge
-[profile-link]: https://github.com/mAI
+[profile-link]: https://github.com/mDevsLabs
 [share-linkedin-link]: https://linkedin.com/feed
 [share-linkedin-shield]: https://img.shields.io/badge/-share%20on%20linkedin-black?labelColor=black&logo=linkedin&logoColor=white&style=flat-square
 [share-mastodon-link]: https://mastodon.social/share?text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20mAI%20-%20An%20open-source,%20extensible%20%28Function%20Calling%29,%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20https://github.com/mDevsLabs/mAI%20#chatbot%20#chatGPT%20#openAI
 [share-mastodon-shield]: https://img.shields.io/badge/-share%20on%20mastodon-black?labelColor=black&logo=mastodon&logoColor=white&style=flat-square
-[share-reddit-link]: https://www.reddit.com/submit?title=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20mAI%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20%23chatbot%20%23chatGPT%20%23openAI&url=https%3A%2F%2Fgithub.com%2FmAI%2FmAI
+[share-reddit-link]: https://www.reddit.com/submit?title=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20mAI%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20%23chatbot%20%23chatGPT%20%23openAI&url=https%3A%2F%2Fgithub.com%2FmDevsLabsI%2FmAI
 [share-reddit-shield]: https://img.shields.io/badge/-share%20on%20reddit-black?labelColor=black&logo=reddit&logoColor=white&style=flat-square
 [share-telegram-link]: https://t.me/share/url"?text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20mAI%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20%23chatbot%20%23chatGPT%20%23openAI&url=https%3A%2F%2Fgithub.com%2FmAI%2FmAI
 [share-telegram-shield]: https://img.shields.io/badge/-share%20on%20telegram-black?labelColor=black&logo=telegram&logoColor=white&style=flat-square

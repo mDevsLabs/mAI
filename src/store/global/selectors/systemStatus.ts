@@ -64,6 +64,7 @@ export const DEFAULT_SIDEBAR_ITEMS: string[] = [
   'community',
   'resource',
   'memory',
+  'extensions',
 ];
 
 /** Items that must stay contiguous in the sidebar list (accordion block). */

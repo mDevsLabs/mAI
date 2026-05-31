@@ -76,8 +76,6 @@ Mantienes el control — sin necesidad de estar en línea.
 
 <br/>
 
-<https://github.com/user-attachments/assets/0a33365f-b786-48b5-9ed6-f8af7927bccb>
-
 ## 👋🏻 Primeros pasos y unirse a nuestra comunidad
 
 Somos un grupo de ingenieros y diseñadores apasionados, con la esperanza de proporcionar componentes y herramientas con diseño moderno para la IA generativa.
@@ -111,16 +109,12 @@ Los agentes actuales son herramientas aisladas orientadas a tareas específicas.
 
 mAI es un espacio de trabajo y estilo de vida para buscar, construir y colaborar con compañeros agentes que crecen contigo. En mAI, tratamos a los **agentes como la unidad de trabajo**, proporcionando una infraestructura donde los humanos y los agentes evolucionan juntos.
 
-![](https://github.com/user-attachments/assets/89d1c402-a62b-4794-82ea-17e5ee1a6165)
-
 ### Operador: Los agentes como unidad de trabajo
 
 Recluta, planifica y gestiona informes de todo tu equipo de IA.
 
 - **Más productividad. Menos herramientas**: Reúne a todos tus agentes bajo un mismo techo.
 - **Pasarela de mensajería instantánea (IM Gateway)**: Agentes allí donde ya chateas.
-
-![](https://github.com/user-attachments/assets/7b08d6d9-9dff-4b06-a919-324630554509)
 
 [![][back-to-top]](#readme-top)
 
@@ -129,8 +123,6 @@ Recluta, planifica y gestiona informes de todo tu equipo de IA.
 [![][back-to-top]](#readme-top)
 
 </div>
-
-![](https://github.com/user-attachments/assets/81e89324-fc66-4024-99a3-aa8e16ec8184)
 
 ### Crear: Agentes a medida
 
@@ -139,8 +131,6 @@ La creación de un equipo de IA personalizado comienza con el **Creador de Agent
 - **Inteligencia unificada**: Accede sin problemas a cualquier modelo y modalidad, todo bajo tu control.
 - **Más de 10 000 habilidades**: Conecta tus agentes con las habilidades que utilizas a diario gracias a una biblioteca de más de 10 000 herramientas y plugins compatibles con MCP.
 
-![](https://github.com/user-attachments/assets/949b8166-486d-4750-ad7a-cfe7bfcb84e3)
-
 [![][back-to-top]](#readme-top)
 
 <div align="right">
@@ -148,8 +138,6 @@ La creación de un equipo de IA personalizado comienza con el **Creador de Agent
 [![][back-to-top]](#readme-top)
 
 </div>
-
-![](https://hub-apac-1.lobeobjects.space/blog/assets/771ff3d30b9ef93e65e55021cc43d356.webp)
 
 ### Colaborar: Escalar nuevas formas de redes de colaboración
 
@@ -160,8 +148,6 @@ mAI presenta los **Grupos de Agentes**, lo que te permite trabajar con agentes c
 - **Proyectos**: Organiza el trabajo por proyectos para mantener todo estructurado y fácil de seguir.
 - **Espacio de trabajo**: Un espacio compartido para que los equipos colaboren con agentes, garantizando una propiedad clara y visibilidad en toda la organización.
 
-![](https://github.com/user-attachments/assets/e51526c6-e09c-4a5a-9cec-dcd3fd68a3a8)
-
 [![][back-to-top]](#readme-top)
 
 <div align="right">
@@ -170,16 +156,12 @@ mAI presenta los **Grupos de Agentes**, lo que te permite trabajar con agentes c
 
 </div>
 
-![](https://hub-apac-1.lobeobjects.space/blog/assets/fe98eae9fcb6acc47c8e1fb69bdb4b50.webp)
-
 ### Evolucionar: Coevolución de humanos y agentes
 
 La mejor IA es aquella que te entiende en profundidad. mAI cuenta con **Memoria Personal** que construye una comprensión clara de tus necesidades.
 
 - **Aprendizaje continuo**: Tus agentes aprenden de cómo trabajas, adaptando su comportamiento para actuar en el momento adecuado.
 - **Memoria de caja blanca**: Creemos en la transparencia. Tus agentes utilizan una memoria estructurada y editable, lo que te otorga un control total sobre lo que recuerdan.
-
-![](https://github.com/user-attachments/assets/5c6e16f0-7f47-4baf-9aeb-3a00deb8ff5b)
 
 <div align="right">
 
@@ -469,7 +451,7 @@ Este proyecto está bajo la licencia [mAI Community License](./LICENSE).
 [deploy-on-sealos-link]: https://template.usw.sealos.io/deploy?templateName=mAI-db
 [deploy-on-zeabur-button-image]: https://zeabur.com/button.svg
 [deploy-on-zeabur-link]: https://zeabur.com/templates/VZGGTI
-[discord-link]: https://discord.gg/AYFPHvv2jT
+[discord-link]: https://discord.gg/fV7zwdGPpY
 [discord-shield]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=flat-square
 [discord-shield-badge]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=for-the-badge
 [docker-pulls-link]: https://hub.docker.com/r/mAI/mAI
