@@ -1,5 +1,3 @@
-import { authEnv } from '@/envs/auth';
-
 import { type BuiltinProviderDefinition } from '../types';
 
 const provider: BuiltinProviderDefinition<
@@ -17,11 +15,14 @@ const provider: BuiltinProviderDefinition<
     };
   },
   checkEnvs: () => {
-    return !!(authEnv.GOOGLE_CLIENT_ID && authEnv.GOOGLE_CLIENT_SECRET)
+    const clientId = process.env.GOOGLE_CLIENT_ID?.trim();
+    const clientSecret = process.env.GOOGLE_CLIENT_SECRET?.trim();
+
+    return !!(clientId && clientSecret)
       ? {
-          GOOGLE_CLIENT_ID: authEnv.GOOGLE_CLIENT_ID,
-          GOOGLE_CLIENT_SECRET: authEnv.GOOGLE_CLIENT_SECRET,
-        }
+        GOOGLE_CLIENT_ID: clientId,
+        GOOGLE_CLIENT_SECRET: clientSecret,
+      }
       : false;
   },
   id: 'google',

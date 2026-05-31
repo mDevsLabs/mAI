@@ -1,5 +1,3 @@
-import { authEnv } from '@/envs/auth';
-
 import { type BuiltinProviderDefinition } from '../types';
 
 const provider: BuiltinProviderDefinition<
@@ -16,10 +14,13 @@ const provider: BuiltinProviderDefinition<
     };
   },
   checkEnvs: () => {
-    return !!(authEnv.SPOTIFY_CLIENT_ID && authEnv.SPOTIFY_CLIENT_SECRET)
+    const clientId = process.env.SPOTIFY_CLIENT_ID?.trim();
+    const clientSecret = process.env.SPOTIFY_CLIENT_SECRET?.trim();
+
+    return !!(clientId && clientSecret)
       ? {
-          SPOTIFY_CLIENT_ID: authEnv.SPOTIFY_CLIENT_ID,
-          SPOTIFY_CLIENT_SECRET: authEnv.SPOTIFY_CLIENT_SECRET,
+        SPOTIFY_CLIENT_ID: clientId,
+        SPOTIFY_CLIENT_SECRET: clientSecret,
         }
       : false;
   },

@@ -1,5 +1,3 @@
-import { authEnv } from '@/envs/auth';
-
 import { type BuiltinProviderDefinition } from '../types';
 
 const provider: BuiltinProviderDefinition<
@@ -16,10 +14,13 @@ const provider: BuiltinProviderDefinition<
     };
   },
   checkEnvs: () => {
-    return !!(authEnv.GITHUB_CLIENT_ID && authEnv.GITHUB_CLIENT_SECRET)
+    const clientId = process.env.GITHUB_CLIENT_ID?.trim();
+    const clientSecret = process.env.GITHUB_CLIENT_SECRET?.trim();
+
+    return !!(clientId && clientSecret)
       ? {
-          GITHUB_CLIENT_ID: authEnv.GITHUB_CLIENT_ID,
-          GITHUB_CLIENT_SECRET: authEnv.GITHUB_CLIENT_SECRET,
+        GITHUB_CLIENT_ID: clientId,
+        GITHUB_CLIENT_SECRET: clientSecret,
         }
       : false;
   },

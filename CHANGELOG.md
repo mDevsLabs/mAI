@@ -2,6 +2,17 @@
 
 # Changelog
 
+### Version 0.1.4
+
+Sub-release details: Better-Auth SSO env handling and canary workflow cleanup.
+
+<sup>Released on **2026-05-31**</sup>
+
+#### 🚀 Features
+- **auth - SSO**: Lecture directe des variables d'environnement Vercel via `process.env.PROVIDER_CLIENT_ID` et `process.env.PROVIDER_CLIENT_SECRET` pour Google, GitHub, Discord, Twitch et Spotify, sans préfixe `AUTH_`.
+- **auth - validation**: Correction des faux positifs de détection des variables SSO dans Better-Auth pour empêcher les avertissements de configuration alors que les secrets sont bien présents.
+- **workflows**: Suppression de l'étape `lint` du build canary desktop pour alléger le pipeline GitHub Actions.
+
 ### Version 0.1.3
 
 Sub-release details: Integrated Twitch, Spotify, Google, GitHub, and Discord SSO features.

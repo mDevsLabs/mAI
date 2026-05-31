@@ -1,6 +1,6 @@
 {
   "name": "mai",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Avec mAI, passez à la vitesse supérieure !",
   "keywords": [
     "ai",
@@ -572,4 +572,3 @@
     }
   }
 }
-
