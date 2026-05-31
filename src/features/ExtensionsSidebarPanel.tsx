@@ -1,16 +1,15 @@
 'use client';
 
-import { ActionIcon, DraggablePanel, DraggablePanelContainer, Tooltip, Flexbox, Tag, Text } from '@lobehub/ui';
+import { ActionIcon, DraggablePanel, DraggablePanelContainer,Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { 
-  GraduationCap, 
-  Music, 
+  CheckCircle2,
   ChefHat, 
+  GraduationCap, 
   Heart, 
-  X,
+  Music, 
   Sparkles,
-  CheckCircle2
-} from 'lucide-react';
+  X} from 'lucide-react';
 import { memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { create } from 'zustand';
@@ -20,10 +19,10 @@ import { create } from 'zustand';
  */
 interface ExtensionState {
   isOpen: boolean;
-  width: number;
   setIsOpen: (isOpen: boolean) => void;
   setWidth: (width: number) => void;
   toggle: () => void;
+  width: number;
 }
 
 /**
@@ -50,15 +49,15 @@ export interface ExtensionsSidebarPanelProps {
  * Représentation d'une carte de service (mService).
  */
 interface ServiceCardItem {
-  id: string;
-  title: string;
+  author: string;
+  category: string;
   description: string;
   icon: React.ComponentType<{ className?: string; size?: number }>;
-  route: string;
-  category: string;
-  author: string;
+  id: string;
   isOfficial?: boolean;
+  route: string;
   statusTag?: string;
+  title: string;
 }
 
 /**
@@ -95,7 +94,7 @@ const SERVICES_LIST: ServiceCardItem[] = [
     category: 'Cuisine',
     author: 'mServices',
     isOfficial: true,
-    statusTag: 'Nouveau',
+    statusTag: 'Bêta',
   },
   {
     id: 'health',
@@ -345,8 +344,8 @@ export const ExtensionsSidebarPanel = memo<ExtensionsSidebarPanelProps>(({ class
             <ActionIcon
               data-testid="hide-extensions-panel"
               icon={X}
-              onClick={() => setIsOpen(false)}
               size={{ blockSize: 24, fontSize: 14 }}
+              onClick={() => setIsOpen(false)}
             />
           </Tooltip>
         </div>
@@ -358,8 +357,8 @@ export const ExtensionsSidebarPanel = memo<ExtensionsSidebarPanelProps>(({ class
               const IconComponent = service.icon;
               return (
                 <div
-                  key={service.id}
                   className={styles.card}
+                  key={service.id}
                   onClick={() => handleCardClick(service.route)}
                 >
                   {/* Ligne En-tête de carte avec Avatar et Titre */}
@@ -374,7 +373,7 @@ export const ExtensionsSidebarPanel = memo<ExtensionsSidebarPanelProps>(({ class
                           {service.isOfficial && (
                             <Tooltip title="Service Officiel certifié par mAI">
                               <span className={styles.officialBadge}>
-                                <CheckCircle2 size={12} fill="currentColor" style={{ color: 'white' }} />
+                                <CheckCircle2 fill="currentColor" size={12} style={{ color: 'white' }} />
                               </span>
                             </Tooltip>
                           )}
@@ -384,9 +383,7 @@ export const ExtensionsSidebarPanel = memo<ExtensionsSidebarPanelProps>(({ class
                     </div>
                     {/* Tag de statut optionnel */}
                     {service.statusTag && (
-                      <Tag size="small" variant="default">
-                        {service.statusTag}
-                      </Tag>
+                      <span style={{ background: 'rgba(255,255,255,0.15)', borderRadius: 4, color: 'inherit', fontSize: 10, fontWeight: 600, padding: '2px 8px' }}>{service.statusTag}</span>
                     )}
                   </div>
 
@@ -396,7 +393,7 @@ export const ExtensionsSidebarPanel = memo<ExtensionsSidebarPanelProps>(({ class
                   {/* Pied de carte avec tag de catégorie et indicateur d'action */}
                   <div className={styles.cardFooter}>
                     <span className={styles.categoryTag}>{service.category}</span>
-                    <Text size="small" type="primary">Lancer →</Text>
+                    <span style={{ color: 'var(--ant-color-primary)', fontSize: 12, fontWeight: 600 }}>Lancer →</span>
                   </div>
                 </div>
               );

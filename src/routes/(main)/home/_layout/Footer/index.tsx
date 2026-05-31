@@ -24,7 +24,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import ChangelogModal from '@/components/ChangelogModal';
 import HighlightNotification from '@/components/HighlightNotification';
-import { DOCUMENTS_REFER_URL, GITHUB } from '@/const/url';
+import { GITHUB } from '@/const/url';
 import Billboard from '@/features/Billboard';
 import { useBillboardMenuItems } from '@/features/Billboard/MenuItems';
 import { useActiveNavKey } from '@/features/NavPanel';
@@ -276,7 +276,7 @@ const Footer = memo(() => {
         icon: <Icon icon={Book} />,
         key: 'docs',
         label: (
-          <a href={DOCUMENTS_REFER_URL} rel="noopener noreferrer" target="_blank">
+          <a href="https://github.com/mDevsLabs/mAI/tree/canary/docs" rel="noopener noreferrer" target="_blank">
             {t('userPanel.docs')}
           </a>
         ),
@@ -302,8 +302,11 @@ const Footer = memo(() => {
       {
         icon: <Icon icon={FileClockIcon} />,
         key: 'changelog',
-        label: t('changelog'),
-        onClick: handleOpenChangelogModal,
+        label: (
+          <a href="https://mprojects.odoo.com/m-ai" rel="noopener noreferrer" target="_blank">
+            {t('changelog')}
+          </a>
+        ),
       },
       ...(footer.layout === 'compact' && !footer.hideGitHub
         ? [

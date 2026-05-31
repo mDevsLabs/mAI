@@ -1,16 +1,17 @@
 'use client';
 
+import { TraceNameMap } from '@lobechat/types';
 import { ProviderIcon } from '@lobehub/icons';
-import { Block, Button, Flexbox, Input, Text, Alert } from '@lobehub/ui';
+import { Alert,Block, Button, Flexbox, Input, Text } from '@lobehub/ui';
 import { cssVar } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { Undo2Icon, KeyRoundIcon, GlobeIcon, Loader2Icon, CheckCircle2Icon } from 'lucide-react';
-import { memo, useCallback, useState, useEffect } from 'react';
+import { CheckCircle2Icon,GlobeIcon, KeyRoundIcon, Loader2Icon, Undo2Icon } from 'lucide-react';
+import { memo, useCallback, useEffect,useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { chatService } from '@/services/chat';
-import { TraceNameMap } from '@lobechat/types';
+import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
+
 import LobeMessage from '../components/LobeMessage';
 import OnboardingFooterActions from '../components/OnboardingFooterActions';
 
@@ -208,22 +209,22 @@ const AIProviderStep = memo<AIProviderStepProps>(({ onBack, onNext }) => {
       </Flexbox>
 
       {/* Provider Selector Cards */}
-      <Flexbox gap={12} horizontal style={{ width: '100%' }}>
+      <Flexbox horizontal gap={12} style={{ width: '100%' }}>
         {(['openai', 'google', 'anthropic'] as ProviderId[]).map((pid) => (
           <Block
-            key={pid}
             clickable
-            flex={1}
             align="center"
+            flex={1}
             justify="center"
+            key={pid}
             padding={16}
+            variant={'outlined'}
             style={{
               borderColor: selectedProvider === pid ? cssVar.colorSuccess : undefined,
               borderRadius: 12,
               textAlign: 'center',
               transition: 'all 0.2s ease',
             }}
-            variant={'outlined'}
             onClick={() => setSelectedProvider(pid)}
           >
             <ProviderIcon provider={pid} size={40} type={'avatar'} />
@@ -244,8 +245,8 @@ const AIProviderStep = memo<AIProviderStepProps>(({ onBack, onNext }) => {
             placeholder={t('screenProvider.apiKeyPlaceholder', `Saisissez votre clé API ${selectedProvider === 'openai' ? 'OpenAI' : selectedProvider === 'google' ? 'Google' : 'Anthropic'}`)}
             prefix={<KeyRoundIcon size={16} style={{ marginRight: 4, color: cssVar.colorTextDescription }} />}
             size={'large'}
-            type="password"
             style={{ width: '100%' }}
+            type="password"
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
           />
@@ -266,10 +267,10 @@ const AIProviderStep = memo<AIProviderStepProps>(({ onBack, onNext }) => {
         </Flexbox>
 
         {/* Connectivity Test Actions and Alerts */}
-        <Flexbox gap={8} horizontal align="center" style={{ marginTop: 4 }}>
+        <Flexbox horizontal align="center" gap={8} style={{ marginTop: 4 }}>
           <Button
             disabled={testStatus === 'loading'}
-            icon={testStatus === 'loading' ? <Loader2Icon size={16} className="anticon-spin" /> : undefined}
+            icon={testStatus === 'loading' ? <Loader2Icon className="anticon-spin" size={16} /> : undefined}
             onClick={handleTestConnection}
           >
             {testStatus === 'loading' ? t('screenProvider.test.testing', 'Test en cours...') : t('screenProvider.test.button', 'Tester la connexion')}
@@ -286,21 +287,21 @@ const AIProviderStep = memo<AIProviderStepProps>(({ onBack, onNext }) => {
         {testStatus === 'error' && (
           <Flexbox gap={8}>
             <Alert
+              showIcon
               description={testErrorMessage}
+              message={t('screenProvider.test.errorTitle', 'Échec du test')}
+              type="error"
               extra={
                 <Button size="small" type="primary" onClick={handleTestConnection}>
                   {t('screenProvider.test.retry', 'Réessayer')}
                 </Button>
               }
-              message={t('screenProvider.test.errorTitle', 'Échec du test')}
-              type="error"
-              showIcon
             />
             {testAdviceMessage && (
               <Alert
+                showIcon
                 description={testAdviceMessage}
                 type="warning"
-                showIcon
               />
             )}
           </Flexbox>
@@ -319,7 +320,7 @@ const AIProviderStep = memo<AIProviderStepProps>(({ onBack, onNext }) => {
           </Button>
         }
         right={
-          <Flexbox gap={12} horizontal>
+          <Flexbox horizontal gap={12}>
             <Button
               style={{ color: cssVar.colorTextSecondary }}
               type={'text'}

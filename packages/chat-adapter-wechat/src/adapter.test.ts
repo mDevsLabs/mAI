@@ -699,7 +699,7 @@ describe('downloadMediaFromRawMessage', () => {
   });
 
   it('downloads an image via CDN main media', async () => {
-    const imageBytes = Buffer.from([0x89, 0x50, 0x4e, 0x47]);
+    const imageBytes = Buffer.from([0x89, 0x50, 0x4E, 0x47]);
     downloadSpy.mockResolvedValueOnce(imageBytes);
 
     const result = await downloadMediaFromRawMessage(
@@ -849,7 +849,7 @@ describe('downloadMediaFromRawMessage', () => {
   });
 
   it('skips a single failing item without dropping the others', async () => {
-    const goodBytes = Buffer.from([0xff, 0xd8]);
+    const goodBytes = Buffer.from([0xFF, 0xD8]);
     downloadSpy.mockRejectedValueOnce(new Error('first failed')).mockResolvedValueOnce(goodBytes);
 
     const result = await downloadMediaFromRawMessage(

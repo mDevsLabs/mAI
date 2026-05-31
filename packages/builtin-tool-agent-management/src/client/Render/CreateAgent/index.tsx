@@ -80,9 +80,9 @@ export const CreateAgentRender = memo<BuiltinRenderProps<CreateAgentParams, Crea
     if (pluginState?.success && (pluginState.agentId || pluginState.sessionId)) {
       return (
         <Flexbox
+          horizontal
           align={'center'}
           className={styles.agentCard}
-          horizontal
           gap={12}
           onClick={handleNavigateToSession}
         >

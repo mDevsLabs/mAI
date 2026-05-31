@@ -25,10 +25,10 @@ describe('resolveLocalFileMimeType', () => {
   });
 
   it('serves preview-only image formats with their image MIME', () => {
-    expect(resolveLocalFileMimeType('/repo/photo.heic', Buffer.from([0xff, 0xd8]))).toBe(
+    expect(resolveLocalFileMimeType('/repo/photo.heic', Buffer.from([0xFF, 0xD8]))).toBe(
       'image/heic',
     );
-    expect(resolveLocalFileMimeType('/repo/diagram.bmp', Buffer.from([0x42, 0x4d]))).toBe(
+    expect(resolveLocalFileMimeType('/repo/diagram.bmp', Buffer.from([0x42, 0x4D]))).toBe(
       'image/bmp',
     );
   });
@@ -54,7 +54,7 @@ describe('resolveLocalFileMimeType', () => {
 
   it('falls back to application/octet-stream when the sniff detects binary data', () => {
     // Embedded null byte → sniff classifies as binary.
-    const binary = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x00, 0x01, 0x02, 0x03]);
+    const binary = Buffer.from([0x89, 0x50, 0x4E, 0x47, 0x00, 0x01, 0x02, 0x03]);
     expect(resolveLocalFileMimeType('/repo/strange.blob', binary)).toBe('application/octet-stream');
   });
 

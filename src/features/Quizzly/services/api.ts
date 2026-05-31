@@ -1,8 +1,8 @@
 interface QuizConfig {
+  apiKey: string;
   count: number;
   level: string;
   topic: string;
-  apiKey: string;
 }
 
 export const generateQuiz = async (config: QuizConfig): Promise<any[]> => {
@@ -47,7 +47,7 @@ Réponds UNIQUEMENT avec un tableau JSON valide au format suivant (pas de markdo
     
     const data = await res.json();
     const content = data.choices[0].message.content;
-    const jsonStr = content.replace(/```json/g, '').replace(/```/g, '').trim();
+    const jsonStr = content.replaceAll('```json', '').replaceAll('```', '').trim();
     
     return JSON.parse(jsonStr);
   } catch (e) {

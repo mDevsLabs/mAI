@@ -1,7 +1,10 @@
-import { IWorldOptions, World, setWorldConstructor } from '@cucumber/cucumber';
-import { Browser, BrowserContext, Page, Response, chromium } from '@playwright/test';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+
+import type { IWorldOptions} from '@cucumber/cucumber';
+import { setWorldConstructor,World } from '@cucumber/cucumber';
+import type { Browser, BrowserContext, Page, Response} from '@playwright/test';
+import { chromium } from '@playwright/test';
 
 /**
  * Default timeout for waiting operations (e.g., waitForURL, toBeVisible)

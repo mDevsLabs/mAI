@@ -2,6 +2,7 @@
 
 import {
   BrainCircuit,
+  ChefHat,
   FilePenIcon,
   Home,
   Image,
@@ -702,6 +703,25 @@ export const desktopRoutes: RouteObject[] = [
         ),
         errorElement: <ErrorBoundary />,
         path: 'quizzly',
+      },
+
+      // Cooker route
+      {
+        children: [
+          {
+            element: dynamicElement(() => import('@/routes/(main)/cooker'), 'Desktop > Cooker'),
+            handle: {
+              meta: routeMeta({ icon: ChefHat, titleKey: 'Cooker' }),
+            },
+            index: true,
+          },
+        ],
+        element: dynamicLayout(
+          () => import('@/routes/(main)/cooker/_layout'),
+          'Desktop > Cooker > Layout',
+        ),
+        errorElement: <ErrorBoundary />,
+        path: 'cooker',
       },
 
       // Extensions route

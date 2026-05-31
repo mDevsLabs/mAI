@@ -2,6 +2,29 @@
 
 # Changelog
 
+### Version 0.1.3
+
+Sub-release details: Integrated Twitch, Spotify, Google, GitHub, and Discord SSO features.
+
+<sup>Released on **2026-05-31**</sup>
+
+#### 🚀 Features
+- **auth - SSO**: Restriction complète de l'authentification SSO tierce de Better-Auth à seulement 5 fournisseurs officiels : Google, GitHub, Discord, Twitch, et Spotify. Suppression de l'ensemble des configurations des fournisseurs d'authentification tierce obsolètes (Apple, Auth0, Authelia, Authentik, Casdoor, Cloudflare Zero Trust, Cognito, Feishu, Generic OIDC, Keycloak, Logto, Microsoft, Okta, WeChat, Zitadel).
+- **auth - env**: Intégration et validation stricte via Zod (dans `src/envs/auth.ts`) des secrets et IDs client sans préfixe `AUTH_` pour les variables : `GOOGLE_CLIENT_ID/SECRET`, `GITHUB_CLIENT_ID/SECRET`, `DISCORD_CLIENT_ID/SECRET`, `TWITCH_CLIENT_ID/SECRET`, et `SPOTIFY_CLIENT_ID/SECRET`.
+- **auth - ui**: Modification de la gestion visuelle dans `AuthIcons.tsx` pour afficher les logos PNG locaux haute résolution (`google-logo.png`, `github-logo.png`, `discord-logo.png`, `twitch-logo.png`, `spotify-logo.png`) à la place des icônes SVG par défaut sur les interfaces de connexion et le panneau de profil.
+- **auth - paramètres**: Démasquage et réactivation complète de la section "Comptes connectés" dans les paramètres généraux de profil utilisateur, permettant de lier et délier à la volée ses comptes sociaux.
+- **auth - redirection**: Configuration et validation des callbacks officiels de production (`https://mai-officiel.vercel.app/api/auth/callback/[provider]`).
+- **cooker**: Bouton d'exportation PDF / Impression de recettes 🖨️ avec mise en page stylisée spécialement optimisée pour être affichée en cuisine.
+- **locales**: Centralisation et enrichissement complet des traductions de Quizzly, Cooker et de la page Extensions dans un namespace dédié `extensions` (traductions fr-FR et en-US incluses manuellement).
+- **eslint**: Résolution de l'avertissement de dépendances manquantes dans le hook `useEffect` du module Quizzly (`syncWithServer`).
+- **desktop**: Renommage complet de `lobehub` / `LobeHub` en `mai` / `mAI` dans l'application desktop et les fichiers de builds / workflows CI-CD pour uniformiser la distribution.
+- **cooker**: Connexion de la génération de recettes Cooker au service LLM (`chatService`) de l'utilisateur.
+- **cooker**: Gestion dynamique et sur-mesure de l'exclusion des allergènes choisis et cochés librement par l'utilisateur.
+- **cooker**: Synchronisation cloud et stockage PostgreSQL de l'historique complet des recettes générées.
+- **cooker - nutrition**: Calcul et extraction fine des macro-nutriments (kcal, protéines, glucides, lipides) dans l'objet recette grâce à un prompt et un schéma JSON IA dédiés si l'option nutritionnelle est cochée.
+- **cooker - courses**: Génération d'une liste de courses structurée à partir des ingrédients, exportable et téléchargeable au format JSON (.json) et texte brut (.txt).
+- **cooker - partage**: Intégration d'un bouton de partage public unique créant à la volée un topic virtuel connecté à `topic_shares` pour que des invités puissent consulter la recette directement sur le web.
+
 ### Version 0.1.2
 
 <sup>Released on **2026-05-31**</sup>

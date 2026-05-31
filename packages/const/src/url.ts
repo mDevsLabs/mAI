@@ -10,9 +10,9 @@ export const OG_URL = '/og/og.webp?v=1';
 
 export const GITHUB = 'https://github.com/mDevsLabs/mAI';
 export const GITHUB_ISSUES = urlJoin(GITHUB, 'issues/new/choose');
-export const CHANGELOG = 'https://mprojects.odoo.com/changelog';
+export const CHANGELOG = 'https://mprojects.odoo.com/m-ai';
 
-export const DOCUMENTS = urlJoin(OFFICIAL_SITE, '/docs');
+export const DOCUMENTS = 'https://github.com/mDevsLabs/mAI/tree/canary/docs';
 export const USAGE_DOCUMENTS = urlJoin(DOCUMENTS, '/usage');
 export const SELF_HOSTING_DOCUMENTS = urlJoin(DOCUMENTS, '/self-hosting');
 export const DATABASE_SELF_HOSTING_URL = urlJoin(SELF_HOSTING_DOCUMENTS, '/server-database');

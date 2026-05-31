@@ -69,6 +69,14 @@ export const componentMap = {
     loading: loading('Settings > Skill'),
   }),
 
+  // Extension settings
+  [SettingsTabs.QuizzlySettings]: dynamic(() => import('../quizzly-settings'), {
+    loading: loading('Settings > QuizzlySettings'),
+  }),
+  [SettingsTabs.CookerSettings]: dynamic(() => import('../cooker-settings'), {
+    loading: loading('Settings > CookerSettings'),
+  }),
+
   [SettingsTabs.Plans]: dynamic(() => import('@/business/client/BusinessSettingPages/Plans'), {
     loading: loading('Settings > Plans'),
   }),

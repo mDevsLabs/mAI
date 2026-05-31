@@ -1,7 +1,7 @@
-import { When, Then } from '@cucumber/cucumber';
+import { Then,When } from '@cucumber/cucumber';
 import { expect } from '@playwright/test';
 
-import { CustomWorld } from '../../support/world';
+import type { CustomWorld } from '../../support/world';
 
 Then('the extensions sidebar panel should be open', async function (this: CustomWorld) {
   const panel = this.page.locator('[data-testid="extensions-sidebar-panel"]');

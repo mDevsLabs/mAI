@@ -11,10 +11,10 @@ export interface BinarySniffResult {
 }
 
 const hasUtf8Bom = (buf: Buffer): boolean =>
-  buf.length >= 3 && buf[0] === 0xef && buf[1] === 0xbb && buf[2] === 0xbf;
+  buf.length >= 3 && buf[0] === 0xEF && buf[1] === 0xBB && buf[2] === 0xBF;
 
 const hasUtf16Bom = (buf: Buffer): boolean =>
-  buf.length >= 2 && ((buf[0] === 0xff && buf[1] === 0xfe) || (buf[0] === 0xfe && buf[1] === 0xff));
+  buf.length >= 2 && ((buf[0] === 0xFF && buf[1] === 0xFE) || (buf[0] === 0xFE && buf[1] === 0xFF));
 
 /**
  * Heuristically determine if a buffer looks like binary data.
@@ -60,7 +60,7 @@ const checkPrintableRatio = (text: string, sampledBytes: number): BinarySniffRes
       continue;
     }
     const code = ch.codePointAt(0)!;
-    if (code < 0x20 && code !== 0x09 && code !== 0x0a && code !== 0x0d) {
+    if (code < 0x20 && code !== 0x09 && code !== 0x0A && code !== 0x0D) {
       suspect++;
     }
   }

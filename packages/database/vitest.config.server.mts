@@ -1,4 +1,5 @@
 import { resolve } from 'node:path';
+
 import { coverageConfigDefaults, defineConfig } from 'vitest/config';
 
 export default defineConfig({

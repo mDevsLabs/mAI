@@ -1,7 +1,7 @@
-import { Card, Typography, Button, Steps, Flex } from 'antd';
-import { createStaticStyles } from 'antd-style';
-import { Trophy, ArrowLeft, Star, Shield, Crown } from 'lucide-react';
 import { Icon } from '@lobehub/ui';
+import { Button, Card, Flex,Steps, Typography } from 'antd';
+import { createStaticStyles } from 'antd-style';
+import { ArrowLeft, Crown,Shield, Star, Trophy } from 'lucide-react';
 
 import { useQuizzlyStore } from '../store/useQuizzlyStore';
 
@@ -33,7 +33,7 @@ const Leagues = ({ onBack }: LeaguesProps) => {
   return (
     <Card className={styles.card}>
       <Flex align="center" gap={12} style={{ marginBottom: 32 }}>
-        <Button type="text" icon={<Icon icon={ArrowLeft} />} onClick={onBack} />
+        <Button icon={<Icon icon={ArrowLeft} />} type="text" onClick={onBack} />
         <Icon icon={Trophy} size={{ fontSize: 24 }} style={{ color: '#faad14' }} />
         <Typography.Title level={3} style={{ margin: 0 }}>Ligues & Progression</Typography.Title>
       </Flex>
@@ -44,8 +44,8 @@ const Leagues = ({ onBack }: LeaguesProps) => {
       </Typography.Paragraph>
 
       <Steps
-        direction="vertical"
         current={getCurrentLeague()}
+        direction="vertical"
         items={[
           {
             title: <Typography.Text strong style={{ fontSize: '1.2rem', color: '#cd7f32' }}>Ligue Bronze</Typography.Text>,
