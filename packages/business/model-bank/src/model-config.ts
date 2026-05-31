@@ -20,7 +20,7 @@ const loadmAIModelConfig = async (): Promise<mAIModelConfig> =>
 export const loadModels = async () =>
   loadModelBankModels({
     providerLoaders: {
-      [ModelProvider.mAI]: loadmAIModels,
+      [ModelProvider.LobeHub]: loadmAIModels,
     },
   });
 
