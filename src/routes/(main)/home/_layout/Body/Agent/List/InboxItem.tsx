@@ -61,7 +61,7 @@ const InboxItem = memo<InboxItemProps>(({ className, style }) => {
   const inboxAgentAvatar = inboxMeta.avatar || DEFAULT_INBOX_AVATAR;
   const inboxUrl = usePreservedAgentUrl(inboxAgentId!);
 
-  // Prefetch agent layout chunk and data eagerly since Lobe AI is almost always clicked
+  // Prefetch agent layout chunk and data eagerly since May is almost always clicked
   prefetchAgent(inboxAgentId!);
 
   const avatarNode = (

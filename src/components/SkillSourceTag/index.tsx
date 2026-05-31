@@ -1,4 +1,5 @@
 import { type SkillSource } from '@lobechat/types';
+import { ORG_NAME } from '@lobechat/business-const';
 import { Icon, Tag } from '@lobehub/ui';
 import { BadgeCheck, CircleUser, Package } from 'lucide-react';
 import { memo } from 'react';
@@ -15,7 +16,7 @@ const SkillSourceTag = memo<SkillSourceTagProps>(({ source }) => {
     case 'builtin': {
       return (
         <Tag color={'success'} icon={<Icon icon={BadgeCheck} />} size={'small'}>
-          LobeHub
+          {ORG_NAME}
         </Tag>
       );
     }
