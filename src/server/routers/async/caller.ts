@@ -9,7 +9,6 @@ import { signInternalJWT } from '@/libs/trpc/utils/internalJwt';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 
 import { type AsyncRouter } from './index';
-import { asyncRouter } from './index';
 
 export const createAsyncServerClient = async (userId: string) => {
   const token = await signInternalJWT();
@@ -41,7 +40,7 @@ export const createAsyncServerClient = async (userId: string) => {
  * Helper method for inferring caller type, but does not actually call createAsyncCallerFactory. Calling it will throw an error: asyncRouter is not initialized
  */
 const helperFunc = () => {
-  const dummyCreateCaller = createAsyncCallerFactory(asyncRouter);
+  const dummyCreateCaller = createAsyncCallerFactory({} as AsyncRouter);
   return {} as unknown as ReturnType<typeof dummyCreateCaller>;
 };
 
