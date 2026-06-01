@@ -6,6 +6,8 @@ import { WebhookUserService } from '@/server/services/webhookUser';
 
 import { validateRequest } from './validateRequest';
 
+export const dynamic = 'force-dynamic';
+
 export const POST = async (req: Request): Promise<NextResponse> => {
   const payload = await validateRequest(req, authEnv.LOGTO_WEBHOOK_SIGNING_KEY!);
 

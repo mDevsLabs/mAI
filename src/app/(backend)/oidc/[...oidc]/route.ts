@@ -8,6 +8,8 @@ import { authEnv } from '@/envs/auth';
 import { createNodeRequest, createNodeResponse } from '@/libs/oidc-provider/http-adapter';
 import { getOIDCProvider } from '@/server/services/oidc/oidcProvider';
 
+export const dynamic = 'force-dynamic';
+
 const log = debug('lobe-oidc:route'); // Create a debug instance with a namespace
 
 const handler = async (req: NextRequest) => {

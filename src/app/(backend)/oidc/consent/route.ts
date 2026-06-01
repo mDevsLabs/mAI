@@ -6,6 +6,8 @@ import { NextResponse } from 'next/server';
 import { appEnv } from '@/envs/app';
 import { OIDCService } from '@/server/services/oidc';
 
+export const dynamic = 'force-dynamic';
+
 const log = debug('lobe-oidc:consent');
 
 export async function POST(request: NextRequest) {

@@ -6,6 +6,8 @@ import { eq } from 'drizzle-orm';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
+export const dynamic = 'force-dynamic';
+
 const log = debug('lobe-oidc:clear-session');
 
 /**

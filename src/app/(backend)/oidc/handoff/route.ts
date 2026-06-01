@@ -5,6 +5,8 @@ import { NextResponse } from 'next/server';
 import { OAuthHandoffModel } from '@/database/models/oauthHandoff';
 import { serverDB } from '@/database/server';
 
+export const dynamic = 'force-dynamic';
+
 const log = debug('lobe-oidc:handoff');
 
 /**
