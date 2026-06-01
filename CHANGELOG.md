@@ -2,6 +2,21 @@
 
 # Changelog
 
+### Version 0.1.5
+
+Sub-release details: SSO Canva/X/Notion integration, WhatsApp/iMessage removal, production runtime styling fixes, static title branding, and version alignments.
+
+<sup>Released on **2026-06-01**</sup>
+
+#### 🚀 Features
+- **auth - SSO**: Intégration complète de Canva, X (Twitter) et Notion comme fournisseurs d'authentification OAuth 2.0 génériques via `process.env.PROVIDER_CLIENT_ID` et `process.env.PROVIDER_CLIENT_SECRET`.
+- **auth - ui**: Intégration et affichage des logos officiels PNG locaux (`canva-logo.png`, `x-logo.png`, `notion-logo.png`) pour les boutons SSO et la gestion des comptes liés.
+- **branding**: Simplification et uniformisation des titres de l'application en remplaçant la variable dynamique `AppName` par la marque statique **mAI**.
+- **mobile**: Amélioration globale de la réactivité et du rendu visuel de l'interface mAI sur les appareils mobiles.
+- **integration**: Suppression des sections d'intégration WhatsApp et iMessage obsolètes au sein de l'éditeur d'agent.
+- **workflows & packages**: Alignement de toutes les versions des packages principaux et de la compilation Electron Desktop vers la version `0.1.5`, avec couplage automatique dans le workflow CI-CD `release-desktop-canary.yml`.
+- **correctifs**: Résolution des erreurs runtime critiques en production (`TypeError: g is not a function`, etc.) sur la page Extensions et les fenêtres de paramètres de Quizzly et Cooker en migrant les composants vers `createStaticStyles`.
+
 ### Version 0.1.4
 
 Sub-release details: Better-Auth SSO env handling and canary workflow cleanup.

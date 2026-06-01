@@ -31,7 +31,8 @@ export const BRANDING_EMAIL = {
   support: 'support@mai.com',
 };
 
-export const BRANDING_PROVIDER = 'mai';
+ex
+port const BRANDING_PROVIDER = 'mai';
 
 export const COPYRIGHT = `© ${new Date().getFullYear()} ${ORG_NAME}`;
 export const COPYRIGHT_FULL = `${COPYRIGHT}. All rights reserved.`;

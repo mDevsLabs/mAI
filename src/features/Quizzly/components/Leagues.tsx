@@ -5,7 +5,7 @@ import { ArrowLeft, Crown,Shield, Star, Trophy } from 'lucide-react';
 
 import { useQuizzlyStore } from '../store/useQuizzlyStore';
 
-const useStyles = createStaticStyles(({ css }) => ({
+const styles = createStaticStyles(({ css }) => ({
   card: css`
     background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(10px);
@@ -21,7 +21,6 @@ interface LeaguesProps {
 }
 
 const Leagues = ({ onBack }: LeaguesProps) => {
-  const { styles } = useStyles();
   const points = useQuizzlyStore(s => s.points);
 
   const getCurrentLeague = () => {

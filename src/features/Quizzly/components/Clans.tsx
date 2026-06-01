@@ -6,7 +6,7 @@ import { useEffect,useState } from 'react';
 
 import { useQuizzlyStore } from '../store/useQuizzlyStore';
 
-const useStyles = createStaticStyles(({ css }) => ({
+const styles = createStaticStyles(({ css }) => ({
   card: css`
     background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(10px);
@@ -44,7 +44,6 @@ interface ClansProps {
 }
 
 const Clans = ({ onBack }: ClansProps) => {
-  const { styles } = useStyles();
   const { 
     clan, 
     availableClans, 

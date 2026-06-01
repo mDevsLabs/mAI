@@ -6,7 +6,7 @@ import { Bell, Cpu, GraduationCap, Star,Trophy } from 'lucide-react';
 import { useState } from 'react';
 
 
-const useStyles = createStaticStyles(({ css }) => ({
+const styles = createStaticStyles(({ css }) => ({
   container: css`
     width: 100%;
     max-width: 720px;
@@ -73,7 +73,7 @@ const QUIZ_COUNT_MARKS = {
 };
 
 const QuizzlySettingsPage = () => {
-  const { styles } = useStyles();
+
   const [defaultModel, setDefaultModel] = useState('gpt-5.5');
   const [notifications, setNotifications] = useState(true);
   const [classLevel, setClassLevel] = useState('college');

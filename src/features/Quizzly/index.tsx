@@ -15,7 +15,7 @@ import Setup from './components/Setup';
 import Shop from './components/Shop';
 import { useQuizzlyStore } from './store/useQuizzlyStore';
 
-const useStyles = createStaticStyles(({ css }) => ({
+const styles = createStaticStyles(({ css }) => ({
   container: css`
     width: 100%;
     height: 100%;
@@ -78,7 +78,6 @@ const THEME_BACKGROUNDS: Record<string, string> = {
 
 const QuizzlyMain = () => {
   const { t } = useTranslation('extensions');
-  const { styles } = useStyles();
   const [currentView, setCurrentView] = useState<'menu' | 'setup' | 'play' | 'profile' | 'shop' | 'leagues' | 'clans'>('menu');
   const [quizConfig, setQuizConfig] = useState({ count: 5, level: 'Collège', topic: 'Culture Générale' });
   

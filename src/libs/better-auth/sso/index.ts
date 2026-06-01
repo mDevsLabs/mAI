@@ -6,11 +6,14 @@ import { authEnv } from '@/envs/auth';
 import { BUILTIN_BETTER_AUTH_PROVIDERS } from '@/libs/better-auth/constants';
 import { parseSSOProviders } from '@/libs/better-auth/utils/server';
 
+import Canva from './providers/canva';
 import Discord from './providers/discord';
 import Github from './providers/github';
 import Google from './providers/google';
+import Notion from './providers/notion';
 import Spotify from './providers/spotify';
 import Twitch from './providers/twitch';
+import X from './providers/x';
 
 const providerDefinitions = [
   Google,
@@ -18,6 +21,9 @@ const providerDefinitions = [
   Discord,
   Twitch,
   Spotify,
+  X,
+  Canva,
+  Notion,
 ] as const;
 
 const builtInProviderIds = new Set(BUILTIN_BETTER_AUTH_PROVIDERS);

@@ -6,7 +6,7 @@ import { ArrowLeft, Lightbulb, Lock, Palette,Shield, Sparkles, Store, Trophy, Un
 import { useQuizzlyStore } from '../store/useQuizzlyStore';
 import { playSound } from '../utils/sound';
 
-const useStyles = createStaticStyles(({ css }) => ({
+const styles = createStaticStyles(({ css }) => ({
   card: css`
     background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(10px);
@@ -57,7 +57,6 @@ interface ShopProps {
 }
 
 const Shop = ({ onBack }: ShopProps) => {
-  const { styles } = useStyles();
   const { 
     points, 
     unlockedAvatars, 

@@ -17,7 +17,7 @@ type View = 'menu' | 'generator' | 'result' | 'history';
 
 const BG = 'linear-gradient(135deg, #2d1b00 0%, #8B4513 50%, #D2691E 100%)';
 
-const useStyles = createStaticStyles(({ css }) => ({
+const styles = createStaticStyles(({ css }) => ({
   container: css`
     width: 100%;
     height: 100%;
@@ -107,63 +107,50 @@ const useStyles = createStaticStyles(({ css }) => ({
   `,
   primaryButton: css`
     background: linear-gradient(135deg, #D2691E, #8B4513) !important;
-    border: none !important;
-    color: white !important;
-    box-shadow: 0 4px 16px rgba(210, 105, 30, 0.4);
+    margin-bottom: 14px;
+    width: 100%;
+    border: none;
+    background: linear-gradient(135deg, #D2691E 0%, #8B4513 100%);
+    color: white;
+    box-shadow: 0 4px 14px rgba(210, 105, 30, 0.35);
+    transition: all 0.3s ease;
 
     &:hover {
-      transform: translateY(-2px) !important;
-      box-shadow: 0 8px 24px rgba(210, 105, 30, 0.6) !important;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(210, 105, 30, 0.5);
+      background: linear-gradient(135deg, #E07A2F 0%, #9C521F 100%) !important;
+      color: white !important;
     }
 
     &:active {
-      transform: translateY(0) !important;
+      transform: translateY(0);
     }
   `,
-  secondaryButton: css`
-    background: rgba(255, 255, 255, 0.08) !important;
-    border: 1px solid rgba(255, 255, 255, 0.18) !important;
-    color: rgba(255, 255, 255, 0.85) !important;
-    backdrop-filter: blur(4px);
-
-    &:hover {
-      background: rgba(255, 255, 255, 0.13) !important;
-      border-color: rgba(255, 255, 255, 0.3) !important;
-      color: white !important;
-      transform: translateY(-1px) !important;
-    }
-  `,
-  aboutBox: css`
+  aboutCard: css`
     background: rgba(255, 255, 255, 0.06);
-    border-radius: 12px;
-    padding: 14px 18px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 16px 24px;
+    margin-top: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
     text-align: left;
-    margin-top: 8px;
-  `,
-  backButton: css`
-    position: absolute;
-    top: 24px;
-    left: 24px;
-    z-index: 10;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    color: rgba(255, 255, 255, 0.8) !important;
-    background: rgba(255, 255, 255, 0.06) !important;
-    border-radius: 12px !important;
-    height: 40px !important;
-    backdrop-filter: blur(8px);
+    animation: slideDown 0.35s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
 
-    &:hover {
-      border-color: rgba(255, 255, 255, 0.4) !important;
-      color: white !important;
-      background: rgba(255, 255, 255, 0.12) !important;
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   `,
 }));
 
 const CookerMain = () => {
   const { t } = useTranslation('extensions');
-  const { styles } = useStyles();
   const [currentView, setCurrentView] = useState<View>('menu');
   const [showAbout, setShowAbout] = useState(false);
 

@@ -8,7 +8,7 @@ import { generateQuiz } from '../services/api';
 import { useQuizzlyStore } from '../store/useQuizzlyStore';
 import { playSound } from '../utils/sound';
 
-const useStyles = createStaticStyles(({ css, keyframes }) => {
+const styles = createStaticStyles(({ css, keyframes }) => {
   const shake = keyframes`
     0%, 100% { transform: translateX(0); }
     20%, 60% { transform: translateX(-6px); }
@@ -77,7 +77,6 @@ interface PlayProps {
 }
 
 const Play = ({ config, onFinish }: PlayProps) => {
-  const { styles } = useStyles();
   const apiKey = useQuizzlyStore(s => s.apiKey);
   const addPoints = useQuizzlyStore(s => s.addPoints);
   const hints = useQuizzlyStore(s => s.hints);

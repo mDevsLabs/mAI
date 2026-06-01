@@ -66,39 +66,33 @@ declare global {
       AUTH_MICROSOFT_ID?: string;
 
       AUTH_MICROSOFT_SECRET?: string;
+      AUTH_MICROSOFT_SECRET?: string;
       AUTH_MICROSOFT_TENANT_ID?: string;
+      AUTH_MICROSOFT_TENANT_ID?: string;
+
       AUTH_OKTA_ID?: string;
+      AUTH_OKTA_ID?: string;
+
       AUTH_OKTA_ISSUER?: string;
+      AUTH_OKTA_ISSUER?: string;
+      AUTH_OKTA_SECRET?: string;
 
       AUTH_OKTA_SECRET?: string;
       // ===== Better Auth ===== //
       AUTH_SECRET?: string;
+      // ===== Better Auth ===== //
+      AUTH_SECRET?: string;
 
       AUTH_SSO_PROVIDERS?: string;
+      AUTH_SSO_PROVIDERS?: string;
       AUTH_TRUSTED_ORIGINS?: string;
+
+      AUTH_TRUSTED_ORIGINS?: string;
+      AUTH_WECHAT_ID?: string;
       AUTH_WECHAT_ID?: string;
 
       AUTH_WECHAT_SECRET?: string;
-      AUTH_ZITADEL_ID?: string;
-      AUTH_ZITADEL_ISSUER?: string;
-
-      AUTH_ZITADEL_SECRET?: string;
-      DISCORD_CLIENT_ID?: string;
-      DISCORD_CLIENT_SECRET?: string;
-
-      GITHUB_CLIENT_ID?: string;
-      GITHUB_CLIENT_SECRET?: string;
-      GOOGLE_CLIENT_ID?: string;
-
-      GOOGLE_CLIENT_SECRET?: string;
-      /**
-       * Internal JWT expiration time for lambda → async calls.
-       * Format: number followed by unit (s=seconds, m=minutes, h=hours)
-       * Examples: '10s', '1m', '1h'
-       * Should be as short as possible for security, but long enough to account for network latency and server processing time.
-       * @default '30s'
-       */
-      INTERNAL_JWT_EXPIRATION?: string;
+      AUTH_WECHAT_SECRET?: string;
 
       // ===== JWKS Key ===== //
       /**
@@ -107,13 +101,68 @@ declare global {
        * Must be a JWKS JSON string containing an RS256 RSA key pair.
        * Can be generated using `node scripts/generate-oidc-jwk.mjs`.
        */
+
+      AUTH_ZITADEL_ID?: string;
+      AUTH_ZITADEL_ID?: string;
+      AUTH_ZITADEL_ISSUER?: string;
+      AUTH_ZITADEL_ISSUER?: string;
+
+      AUTH_ZITADEL_SECRET?: string;
+      AUTH_ZITADEL_SECRET?: string;
+
+      CANVA_CLIENT_ID?: string;
+      CANVA_CLIENT_SECRET?: string;
+      DISCORD_CLIENT_ID?: string;
+
+      DISCORD_CLIENT_ID?: string;
+      DISCORD_CLIENT_SECRET?: string;
+      DISCORD_CLIENT_SECRET?: string;
+
+      GITHUB_CLIENT_ID?: string;
+      GITHUB_CLIENT_ID?: string;
+      GITHUB_CLIENT_SECRET?: string;
+
+      GITHUB_CLIENT_SECRET?: string;
+      GOOGLE_CLIENT_ID?: string;
+      GOOGLE_CLIENT_ID?: string;
+
+      GOOGLE_CLIENT_SECRET?: string;
+      GOOGLE_CLIENT_SECRET?: string;
+
+      /**
+       * Internal JWT expiration time for lambda → async calls.
+       * Format: number followed by unit (s=seconds, m=minutes, h=hours)
+       * Examples: '10s', '1m', '1h'
+       * Should be as short as possible for security, but long enough to account for network latency and server processing time.
+       * @default '30s'
+       */
+      INTERNAL_JWT_EXPIRATION?: string;
+      /**
+       * Internal JWT expiration time for lambda → async calls.
+       * Format: number followed by unit (s=seconds, m=minutes, h=hours)
+       * Examples: '10s', '1m', '1h'
+       * Should be as short as possible for security, but long enough to account for network latency and server processing time.
+       * @default '30s'
+       */
+      INTERNAL_JWT_EXPIRATION?: string;
+      // ===== JWKS Key ===== //
+      /**
+       * Generic JWKS key for signing/verifying JWTs.
+       * Used for internal service authentication and other cryptographic operations.
+       * Must be a JWKS JSON string containing an RS256 RSA key pair.
+       * Can be generated using `node scripts/generate-oidc-jwk.mjs`.
+       */
       JWKS_KEY?: string;
+
+      NOTION_CLIENT_ID?: string;
+
+      NOTION_CLIENT_SECRET?: string;
       SPOTIFY_CLIENT_ID?: string;
       SPOTIFY_CLIENT_SECRET?: string;
-
       TWITCH_CLIENT_ID?: string;
-
       TWITCH_CLIENT_SECRET?: string;
+      X_CLIENT_ID?: string;
+      X_CLIENT_SECRET?: string;
     }
   }
 }
@@ -141,6 +190,12 @@ export const getAuthConfig = () => {
       TWITCH_CLIENT_SECRET: z.string().optional(),
       SPOTIFY_CLIENT_ID: z.string().optional(),
       SPOTIFY_CLIENT_SECRET: z.string().optional(),
+      X_CLIENT_ID: z.string().optional(),
+      X_CLIENT_SECRET: z.string().optional(),
+      CANVA_CLIENT_ID: z.string().optional(),
+      CANVA_CLIENT_SECRET: z.string().optional(),
+      NOTION_CLIENT_ID: z.string().optional(),
+      NOTION_CLIENT_SECRET: z.string().optional(),
 
       AUTH_GOOGLE_ID: z.string().optional(),
       AUTH_GOOGLE_SECRET: z.string().optional(),
@@ -157,99 +212,6 @@ export const getAuthConfig = () => {
       AUTH_COGNITO_ID: z.string().optional(),
       AUTH_COGNITO_SECRET: z.string().optional(),
       AUTH_COGNITO_ISSUER: z.string().optional(),
-      AUTH_COGNITO_DOMAIN: z.string().optional(),
-      AUTH_COGNITO_REGION: z.string().optional(),
-      AUTH_COGNITO_USERPOOL_ID: z.string().optional(),
-
-      AUTH_MICROSOFT_AUTHORITY_URL: z.string().optional(),
-      AUTH_MICROSOFT_ID: z.string().optional(),
-      AUTH_MICROSOFT_SECRET: z.string().optional(),
-      AUTH_MICROSOFT_TENANT_ID: z.string().optional(),
-
-      AUTH_AUTH0_ID: z.string().optional(),
-      AUTH_AUTH0_SECRET: z.string().optional(),
-      AUTH_AUTH0_ISSUER: z.string().optional(),
-
-      AUTH_AUTHELIA_ID: z.string().optional(),
-      AUTH_AUTHELIA_SECRET: z.string().optional(),
-      AUTH_AUTHELIA_ISSUER: z.string().optional(),
-
-      AUTH_AUTHENTIK_ID: z.string().optional(),
-      AUTH_AUTHENTIK_SECRET: z.string().optional(),
-      AUTH_AUTHENTIK_ISSUER: z.string().optional(),
-
-      AUTH_CASDOOR_ID: z.string().optional(),
-      AUTH_CASDOOR_SECRET: z.string().optional(),
-      AUTH_CASDOOR_ISSUER: z.string().optional(),
-
-      AUTH_CLOUDFLARE_ZERO_TRUST_ID: z.string().optional(),
-      AUTH_CLOUDFLARE_ZERO_TRUST_SECRET: z.string().optional(),
-      AUTH_CLOUDFLARE_ZERO_TRUST_ISSUER: z.string().optional(),
-
-      AUTH_FEISHU_APP_ID: z.string().optional(),
-      AUTH_FEISHU_APP_SECRET: z.string().optional(),
-
-      AUTH_GENERIC_OIDC_ID: z.string().optional(),
-      AUTH_GENERIC_OIDC_SECRET: z.string().optional(),
-      AUTH_GENERIC_OIDC_ISSUER: z.string().optional(),
-
-      AUTH_KEYCLOAK_ID: z.string().optional(),
-      AUTH_KEYCLOAK_SECRET: z.string().optional(),
-      AUTH_KEYCLOAK_ISSUER: z.string().optional(),
-
-      AUTH_LOGTO_ID: z.string().optional(),
-      AUTH_LOGTO_SECRET: z.string().optional(),
-      AUTH_LOGTO_ISSUER: z.string().optional(),
-
-      AUTH_OKTA_ID: z.string().optional(),
-      AUTH_OKTA_SECRET: z.string().optional(),
-      AUTH_OKTA_ISSUER: z.string().optional(),
-
-      AUTH_WECHAT_ID: z.string().optional(),
-      AUTH_WECHAT_SECRET: z.string().optional(),
-
-      AUTH_ZITADEL_ID: z.string().optional(),
-      AUTH_ZITADEL_SECRET: z.string().optional(),
-      AUTH_ZITADEL_ISSUER: z.string().optional(),
-
-      LOGTO_WEBHOOK_SIGNING_KEY: z.string().optional(),
-
-      // Casdoor
-      CASDOOR_WEBHOOK_SECRET: z.string().optional(),
-
-      // Generic JWKS key for signing/verifying JWTs
-      JWKS_KEY: z.string().optional(),
-      ENABLE_OIDC: z.boolean(),
-
-      // Internal JWT expiration time (e.g., '10s', '1m', '1h')
-      INTERNAL_JWT_EXPIRATION: z.string().default('30s'),
-    },
-
-    runtimeEnv: {
-      AUTH_EMAIL_VERIFICATION: process.env.AUTH_EMAIL_VERIFICATION === '1',
-      AUTH_ENABLE_MAGIC_LINK: process.env.AUTH_ENABLE_MAGIC_LINK === '1',
-      AUTH_SECRET: process.env.AUTH_SECRET,
-      AUTH_SSO_PROVIDERS: process.env.AUTH_SSO_PROVIDERS,
-      AUTH_TRUSTED_ORIGINS: process.env.AUTH_TRUSTED_ORIGINS,
-      AUTH_ALLOWED_EMAILS: process.env.AUTH_ALLOWED_EMAILS,
-      AUTH_DISABLE_EMAIL_PASSWORD: process.env.AUTH_DISABLE_EMAIL_PASSWORD === '1',
-
-      GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
-      GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
-      GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
-      GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
-      DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
-      DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
-      TWITCH_CLIENT_ID: process.env.TWITCH_CLIENT_ID,
-      TWITCH_CLIENT_SECRET: process.env.TWITCH_CLIENT_SECRET,
-      SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
-      SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
-
-      // Cognito provider specific env vars
-      AUTH_COGNITO_DOMAIN: process.env.AUTH_COGNITO_DOMAIN,
-      AUTH_COGNITO_REGION: process.env.AUTH_COGNITO_REGION,
-      AUTH_COGNITO_USERPOOL_ID: process.env.AUTH_COGNITO_USERPOOL_ID,
-
       // Auth Provider Credentials
       AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
       AUTH_GOOGLE_CLIENT_ID: process.env.AUTH_GOOGLE_CLIENT_ID,

@@ -7,7 +7,7 @@ import { useEffect,useState } from 'react';
 
 import { useCookerStore } from '@/features/Cooker/store/useCookerStore';
 
-const useStyles = createStaticStyles(({ css }) => ({
+const styles = createStaticStyles(({ css }) => ({
   container: css`
     width: 100%;
     max-width: 720px;
@@ -137,7 +137,6 @@ interface TagsInputProps {
 }
 
 const TagsInput = ({ tags, onAdd, onRemove, placeholder = 'Ajouter...', variant = 'include' }: TagsInputProps) => {
-  const { styles } = useStyles();
   const [inputVal, setInputVal] = useState('');
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -181,7 +180,7 @@ const TagsInput = ({ tags, onAdd, onRemove, placeholder = 'Ajouter...', variant 
 };
 
 const CookerSettingsPage = () => {
-  const { styles } = useStyles();
+
 
   const defaultServings = useCookerStore((s) => s.defaultServings);
   const cookingMode = useCookerStore((s) => s.cookingMode);

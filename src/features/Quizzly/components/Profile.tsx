@@ -5,7 +5,7 @@ import { Flame, Shield,Star, Trophy } from 'lucide-react';
 
 import { useQuizzlyStore } from '../store/useQuizzlyStore';
 
-const useStyles = createStaticStyles(({ css }) => ({
+const styles = createStaticStyles(({ css }) => ({
   card: css`
     background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(10px);
@@ -42,7 +42,6 @@ const AVATAR_MAP: Record<string, string> = {
 };
 
 const Profile = () => {
-  const { styles } = useStyles();
   const { 
     points, 
     streak, 

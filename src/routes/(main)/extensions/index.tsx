@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useExtensionStore } from '@/features/ExtensionsSidebarPanel';
 
-const useStyles = createStaticStyles(({ css }) => ({
+const styles = createStaticStyles(({ css }) => ({
   openButton: css`
     animation: scaleFadeIn 0.35s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
 
@@ -27,7 +27,7 @@ const useStyles = createStaticStyles(({ css }) => ({
 const ExtensionsPage = () => {
   const { t } = useTranslation('extensions');
   const { isOpen, setIsOpen } = useExtensionStore();
-  const { styles } = useStyles();
+
 
   return (
     <Flex

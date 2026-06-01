@@ -18,7 +18,7 @@ interface RecipeGeneratorProps {
   onRecipeGenerated: (recipe: Recipe) => void;
 }
 
-const useStyles = createStaticStyles(({ css }) => ({
+const styles = createStaticStyles(({ css }) => ({
   wrapper: css`
     width: 100%;
     max-width: 640px;
@@ -206,8 +206,6 @@ const MOCK_RECIPE: Omit<Recipe, 'id' | 'createdAt'> = {
 };
 
 const RecipeGenerator = ({ onRecipeGenerated, onBack }: RecipeGeneratorProps) => {
-  const { styles } = useStyles();
-
   const cookingMode = useCookerStore((s) => s.cookingMode);
   const defaultServings = useCookerStore((s) => s.defaultServings);
   const defaultPrepTime = useCookerStore((s) => s.defaultPrepTime);

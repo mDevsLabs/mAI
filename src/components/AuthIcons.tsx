@@ -33,55 +33,88 @@ const AuthIcons = (id: string, size = 36) => {
   if (normalizedId === 'google') {
     return (
       <img
-        src="/auth/google-logo.png"
-        width={size}
-        height={size}
         alt="Google"
+        height={size}
+        src="/auth/google-logo.png"
         style={{ objectFit: 'contain', verticalAlign: 'middle' }}
+        width={size}
       />
     );
   }
   if (normalizedId === 'github') {
     return (
       <img
-        src="/auth/github-logo.png"
-        width={size}
-        height={size}
         alt="GitHub"
+        height={size}
+        src="/auth/github-logo.png"
         style={{ objectFit: 'contain', verticalAlign: 'middle' }}
+        width={size}
       />
     );
   }
   if (normalizedId === 'discord') {
     return (
       <img
-        src="/auth/discord-logo.png"
-        width={size}
-        height={size}
         alt="Discord"
+        height={size}
+        src="/auth/discord-logo.png"
         style={{ objectFit: 'contain', verticalAlign: 'middle' }}
+        width={size}
       />
     );
   }
   if (normalizedId === 'twitch') {
     return (
       <img
-        src="/auth/twitch-logo.png"
-        width={size}
-        height={size}
         alt="Twitch"
+        height={size}
+        src="/auth/twitch-logo.png"
         style={{ objectFit: 'contain', verticalAlign: 'middle' }}
+        width={size}
       />
     );
   }
   if (normalizedId === 'spotify') {
     return (
       <img
-        src="/auth/spotify-logo.png"
-        width={size}
-        height={size}
         alt="Spotify"
+        height={size}
+        src="/auth/spotify-logo.png"
         style={{ objectFit: 'contain', verticalAlign: 'middle' }}
+        width={size}
+      />
+    );
+  }
+  if (normalizedId === 'x') {
+    return (
+      <img
+        alt="X"
+        height={size}
+        src="/auth/x-logo.png"
+        style={{ objectFit: 'contain', verticalAlign: 'middle' }}
+        width={size}
+      />
+    );
+  }
+  if (normalizedId === 'canva') {
+    return (
+      <img
+        alt="Canva"
+        height={size}
+        src="/auth/canva-logo.png"
+        style={{ objectFit: 'contain', verticalAlign: 'middle' }}
+        width={size}
+      />
+    );
+  }
+  if (normalizedId === 'notion') {
+    return (
+      <img
+        alt="Notion"
+        height={size}
+        src="/auth/notion-logo.png"
+        style={{ objectFit: 'contain', verticalAlign: 'middle' }}
+        width={size}
       />
     );
   }

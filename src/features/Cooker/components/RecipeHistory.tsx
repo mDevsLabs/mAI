@@ -13,7 +13,7 @@ interface RecipeHistoryProps {
   onLoad: (recipe: Recipe) => void;
 }
 
-const useStyles = createStaticStyles(({ css }) => ({
+const styles = createStaticStyles(({ css }) => ({
   wrapper: css`
     width: 100%;
     max-width: 680px;
@@ -158,7 +158,6 @@ const MODE_EMOJIS: Record<string, string> = {
 };
 
 const RecipeHistory = ({ onBack, onLoad }: RecipeHistoryProps) => {
-  const { styles } = useStyles();
   const savedRecipes = useCookerStore((s) => s.savedRecipes);
   const deleteRecipe = useCookerStore((s) => s.deleteRecipe);
 

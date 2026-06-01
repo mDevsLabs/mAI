@@ -4,7 +4,7 @@ Ce document définit les règles et directives que chaque agent de codage interv
 
 ## 1. Gestion des Versions & Changelogs 📈
 À chaque mise à jour ou montée de version de l'application :
-- **`package.json`** : Vous devez incrémenter la version du projet vers la version supérieure appropriée.
+- **`apps/desktop/package.json` & `package.json`** : À chaque mise à jour, sauf contrordre explicite, vous devez obligatoirement incrémenter la version vers une version supérieure appropriée dans `apps/desktop/package.json` et `package.json`.
 - **`CHANGELOG.md`** : Vous devez ajouter une section décrivant les modifications apportées par la nouvelle version.
 - **Documentation (`docs/`)** : Vous devez créer un nouveau fichier de notes de version au format MD dans les répertoires `docs/en-US/changelog/` et `docs/fr-FR/changelog/` (par exemple : `010-30-05-2026.md` pour la version `0.1.0`).
 

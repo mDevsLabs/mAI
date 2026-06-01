@@ -17,7 +17,7 @@ interface RecipeResultProps {
   recipe: Recipe | null;
 }
 
-const useStyles = createStaticStyles(({ css }) => ({
+const styles = createStaticStyles(({ css }) => ({
   container: css`
     width: 100%;
     max-width: 700px;
@@ -292,7 +292,6 @@ const MODE_LABELS: Record<string, string> = {
 
 const RecipeResult = ({ recipe, onSave, onBack }: RecipeResultProps) => {
   const { t } = useTranslation('extensions');
-  const { styles } = useStyles();
   const [isSharing, setIsSharing] = useState(false);
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [shareUrl, setShareUrl] = useState('');

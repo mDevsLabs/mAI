@@ -177,7 +177,7 @@ function buildClientEnv(): SPAClientEnv {
 
 async function buildSeoMeta(locale: string): Promise<string> {
   const { t } = await translation('metadata', locale);
-  const title = t('chat.title', { appName: BRANDING_NAME });
+  const title = t('chat.title').replace(/\{\{appName\}\}/g, 'mAI');
   const description = t('chat.description', { appName: BRANDING_NAME });
 
   return [

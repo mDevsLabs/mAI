@@ -13,7 +13,7 @@ interface IngredientTagsProps {
   tags: string[];
 }
 
-const useStyles = createStaticStyles(({ css }) => ({
+const styles = createStaticStyles(({ css }) => ({
   wrapper: css`
     display: flex;
     flex-direction: column;
@@ -109,7 +109,6 @@ const IngredientTags = ({
   placeholder = 'Ajouter un ingrédient...',
   color = '#D2691E',
 }: IngredientTagsProps) => {
-  const { styles } = useStyles();
   const [inputValue, setInputValue] = useState('');
 
   const handleAdd = () => {

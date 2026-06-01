@@ -3,7 +3,7 @@ export default {
   'changelog.title': 'Changelog',
   'chat.description':
     '{{appName}} is a work-and-lifestyle space to find, build, and collaborate with agent teams that grow with you.',
-  'chat.title': '{{appName}} - Avec {{appName}}, passez à la vitesse supérieure !',
+  'chat.title': 'mAI - Avec mAI, passez à la vitesse supérieure !',
   'discover.assistants.description':
     'Content, Q&A, images, video, voice, workflows—browse and add Agents from the Community.',
   'discover.assistants.title': 'Agent Community',

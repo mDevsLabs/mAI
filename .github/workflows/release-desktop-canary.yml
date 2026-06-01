@@ -82,34 +82,7 @@ jobs:
         if: steps.check.outputs.should_build == 'true'
         id: version
         run: |
-          # 获取最新的 stable tag (排除 nightly/canary/beta 等)
-          latest_tag=$(git tag --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -n 1)
-
-          if [ -z "$latest_tag" ]; then
-            echo "⚠️ No stable tag found, fallback to package.json version"
-            pkg_version=$(node -p "require('./package.json').version")
-            latest_tag="v${pkg_version}"
-          fi
-
-          echo "📌 Latest stable tag: $latest_tag"
-
-          # 去掉 v 前缀，解析 major.minor.patch → a.b.c 取 c+1
-          base_version="${latest_tag#v}"
-          IFS='.' read -r major minor patch <<< "$base_version"
-          new_patch=$((patch + 1))
-          base_canary="${major}.${minor}.${new_patch}"
-
-          # postfix: 同 base 下已有 canary 标签的最大序号 + 1
-          max_seq=0
-          for t in $(git tag -l "v${base_canary}-canary.*" 2>/dev/null || true); do
-            seq=$(echo "$t" | grep -oE '[0-9]+$' || true)
-            if [ -n "$seq" ] && [ "$seq" -gt "$max_seq" ] 2>/dev/null; then
-              max_seq=$seq
-            fi
-          done
-          next_seq=$((max_seq + 1))
-
-          version="${base_canary}-canary.${next_seq}"
+          version=$(node -p "require('./apps/desktop/package.json').version")
           tag="v${version}"
 
           echo "version=${version}" >> $GITHUB_OUTPUT
