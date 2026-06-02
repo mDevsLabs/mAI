@@ -25,7 +25,7 @@ import {
 } from '@/database/models/ragEval';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
-import { createAsyncCaller } from '@/server/routers/async';
+import { createAsyncCaller } from '@/server/routers/async/caller';
 import { FileService } from '@/server/services/file';
 
 const ragEvalProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {

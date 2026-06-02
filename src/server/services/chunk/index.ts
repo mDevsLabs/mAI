@@ -45,7 +45,7 @@ export class ChunkService {
 
     // Async router will read keyVaults from DB, no need to pass jwtPayload
     // Dynamic import to avoid circular dependency
-    const { createAsyncCaller } = await import('@/server/routers/async');
+    const { createAsyncCaller } = await import('@/server/routers/async/caller');
     const asyncCaller = await createAsyncCaller({ userId: this.userId });
 
     // trigger embedding task asynchronously
@@ -87,7 +87,7 @@ export class ChunkService {
 
     // Async router will read keyVaults from DB, no need to pass jwtPayload
     // Dynamic import to avoid circular dependency
-    const { createAsyncCaller } = await import('@/server/routers/async');
+    const { createAsyncCaller } = await import('@/server/routers/async/caller');
     const asyncCaller = await createAsyncCaller({ userId: this.userId });
 
     // trigger parse file task asynchronously
