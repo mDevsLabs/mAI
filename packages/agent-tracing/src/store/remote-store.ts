@@ -23,7 +23,7 @@ const LEGACY_SUFFIX = '.json';
 // https://datatracker.ietf.org/doc/html/rfc8478#section-3.1.1
 function isZstdFrame(buf: Buffer): boolean {
   return (
-    buf.length >= 4 && buf[0] === 0x28 && buf[1] === 0xb5 && buf[2] === 0x2f && buf[3] === 0xfd
+    buf.length >= 4 && buf[0] === 0x28 && buf[1] === 0xB5 && buf[2] === 0x2F && buf[3] === 0xFD
   );
 }
 

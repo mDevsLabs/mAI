@@ -1,6 +1,6 @@
 {
   "name": "@lobechat/builtin-tool-user-interaction",
-  "version": "1.0.0",
+  "version": "0.0.8",
   "private": true,
   "exports": {
     ".": "./src/index.ts",
@@ -19,3 +19,4 @@
     "react": "^19"
   }
 }
+

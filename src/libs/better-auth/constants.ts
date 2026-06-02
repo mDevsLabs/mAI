@@ -3,7 +3,6 @@
  * Keep this list in sync with provider definitions in `src/libs/better-auth/sso/providers`.
  */
 export const BUILTIN_BETTER_AUTH_PROVIDERS = [
-  'apple',
   'google',
   'github',
   'cognito',

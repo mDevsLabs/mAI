@@ -57,7 +57,7 @@
   "agent.telemetryHint": "Vous pouvez également répondre avec vos propres mots.",
   "agent.title": "Intégration par conversation",
   "agent.welcome": "...hm ? Je viens de me réveiller — mon esprit est vide. Qui êtes-vous ? Et — comment devrais-je m'appeler ? J'ai besoin d'un nom aussi.",
-  "agent.welcome.footer": "Configurez votre agent Lobe AI. Il fonctionne sur votre serveur, apprend à chaque interaction et devient plus performant au fil du temps.",
+  "agent.welcome.footer": "Configurez votre agent May. Il fonctionne sur votre serveur, apprend à chaque interaction et devient plus performant au fil du temps.",
   "agent.welcome.guide.growTogether.desc": "À chaque discussion, je vous comprendrai mieux et, avec le temps, je deviendrai un coéquipier plus efficace.",
   "agent.welcome.guide.growTogether.title": "Évoluer avec vous",
   "agent.welcome.guide.knowYou.desc": "Qu'avez-vous au programme ces temps-ci ? Un peu de contexte m'aidera à mieux vous assister.",

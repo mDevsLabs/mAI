@@ -29,6 +29,7 @@ import { changelogRouter } from './changelog';
 import { chunkRouter } from './chunk';
 import { comfyuiRouter } from './comfyui';
 import { configRouter } from './config';
+import { cookerRouter } from './cooker';
 import { deviceRouter } from './device';
 import { documentRouter } from './document';
 import { exporterRouter } from './exporter';
@@ -51,6 +52,7 @@ import { notebookRouter } from './notebook';
 import { notificationRouter } from './notification';
 import { oauthDeviceFlowRouter } from './oauthDeviceFlow';
 import { pluginRouter } from './plugin';
+import { quizzlyRouter } from './quizzly';
 import { ragEvalRouter } from './ragEval';
 import { recentRouter } from './recent';
 import { searchRouter } from './search';
@@ -134,6 +136,8 @@ export const lambdaRouter = router({
   subscription: subscriptionRouter,
   taskTemplate: taskTemplateRouter,
   topUp: topUpRouter,
+  quizzly: quizzlyRouter,
+  cooker: cookerRouter,
 });
 
 export type LambdaRouter = typeof lambdaRouter;

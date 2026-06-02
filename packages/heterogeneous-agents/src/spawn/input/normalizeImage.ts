@@ -25,7 +25,7 @@ export interface NormalizeImageOptions {
   fetcher?: typeof fetch;
 }
 
-const PNG_SIG = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+const PNG_SIG = Buffer.from([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]);
 
 const EXT_BY_MEDIA_TYPE: Record<string, string> = {
   'image/gif': '.gif',
@@ -56,7 +56,7 @@ const guessMediaTypeFromBuffer = (buffer: Buffer): string | undefined => {
   if (buffer.length >= PNG_SIG.length && buffer.subarray(0, PNG_SIG.length).equals(PNG_SIG)) {
     return 'image/png';
   }
-  if (buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff) {
+  if (buffer[0] === 0xFF && buffer[1] === 0xD8 && buffer[2] === 0xFF) {
     return 'image/jpeg';
   }
   if (buffer.length >= 6) {

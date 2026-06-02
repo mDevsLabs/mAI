@@ -9,6 +9,7 @@ import { AsyncLocalStorage } from '@/utils/localStorage';
 export enum SidebarTabKey {
   Chat = 'chat',
   Community = 'community',
+  Extensions = 'extensions',
   Home = 'home',
   Image = 'image',
   Knowledge = 'knowledge',
@@ -49,6 +50,7 @@ export enum SettingsTabs {
   ChatAppearance = 'chat-appearance',
   /** @deprecated Use Appearance instead */
   Common = 'common',
+  CookerSettings = 'cooker-settings',
   Credits = 'credits',
   Creds = 'creds',
   Hotkey = 'hotkey',
@@ -63,14 +65,17 @@ export enum SettingsTabs {
   Profile = 'profile',
   Provider = 'provider',
   Proxy = 'proxy',
+  // Extensions
+  QuizzlySettings = 'quizzly-settings',
   Referral = 'referral',
   Security = 'security',
+
   ServiceModel = 'service-model',
   Skill = 'skill',
-
   Stats = 'stats',
   Storage = 'storage',
   SystemTools = 'system-tools',
+
   /** @deprecated Use ServiceModel instead */
   TTS = 'tts',
   Usage = 'usage',

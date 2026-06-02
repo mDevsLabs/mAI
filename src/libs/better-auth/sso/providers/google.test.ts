@@ -1,21 +1,21 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
-vi.mock('@/envs/auth', () => ({
-  authEnv: {
-    AUTH_GOOGLE_ID: 'google-client-id',
-    AUTH_GOOGLE_SECRET: 'google-client-secret',
-  },
-}));
+afterEach(() => {
+  vi.unstubAllEnvs();
+});
 
 describe('Google SSO provider', () => {
   it('should prompt account selection during OAuth sign in', async () => {
+    vi.stubEnv('GOOGLE_CLIENT_ID', 'google-client-id');
+    vi.stubEnv('GOOGLE_CLIENT_SECRET', 'google-client-secret');
+
     const { default: provider } = await import('./google');
 
     const env = provider.checkEnvs();
 
     expect(env).toEqual({
-      AUTH_GOOGLE_ID: 'google-client-id',
-      AUTH_GOOGLE_SECRET: 'google-client-secret',
+      GOOGLE_CLIENT_ID: 'google-client-id',
+      GOOGLE_CLIENT_SECRET: 'google-client-secret',
     });
     expect(env && provider.build(env)).toEqual(
       expect.objectContaining({

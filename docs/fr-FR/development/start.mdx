@@ -1,0 +1,102 @@
+---
+title: Guide de démarrage du développement technique
+description: >-
+  Explorez la configuration du développement de mAI, sa pile technologique et les
+  directives de contribution.
+tags:
+  - mAI
+  - Next.js
+  - Guide de développement
+  - Internationalisation
+  - Open Source
+---
+
+# Guide de démarrage du développement technique
+
+Bienvenue dans le Guide de démarrage du développement technique de mAI. mAI est une application de conversation IA construite sur le framework Next.js, intégrant une variété de piles technologiques pour offrir des fonctionnalités et des caractéristiques diverses. Ce guide détaillera les principaux composants techniques de mAI et comment configurer et utiliser ces technologies dans votre environnement de développement.
+
+## Pile technologique de base
+
+La pile technologique principale de mAI est la suivante :
+
+- **Framework** : [Next.js](https://nextjs.org/) 16 + [React](https://react.dev/) 19, offrant le rendu côté serveur, les gestionnaires de routes (Route Handlers) et d'autres fonctionnalités clés.
+- **Bibliothèque de composants** : [Ant Design (antd)](https://ant.design/) comme bibliothèque de composants de base, et [@mAI/ui](https://github.com/mAI/lobe-ui) comme bibliothèque de composants métiers.
+- **Gestion d'état** : [zustand](https://github.com/pmndrs/zustand), une bibliothèque de gestion d'état légère et simple d'utilisation.
+- **Récupération de données** : [SWR](https://swr.vercel.app/) pour la récupération de données côté client.
+- **Routage** : Architecture de routage hybride — [Next.js App Router](https://nextjs.org/) pour les pages statiques (ex. pages d'authentification), et [React Router DOM](https://reactrouter.com/) pour la SPA principale.
+- **API** : [tRPC](https://trpc.io/) pour une communication API de bout en bout typée et sécurisée.
+- **Base de données** : [Drizzle ORM](https://orm.drizzle.team/) + PostgreSQL.
+- **Internationalisation** : [react-i18next](https://react.i18next.com/) pour le support multilingue.
+- **Style (CSS)** : [antd-style](https://github.com/ant-design/antd-style), une bibliothèque CSS-in-JS qui complète Ant Design.
+- **Tests unitaires** : [Vitest](https://github.com/vitest-dev/vitest) pour les tests unitaires.
+
+## Structure des répertoires
+
+mAI utilise une architecture Monorepo (espace de noms `@lobechat/`).
+La structure des répertoires de niveau supérieur est la suivante :
+
+```bash
+mAI/
+├── apps/desktop/          # Application de bureau Electron
+├── packages/              # Paquets partagés (@lobechat/*)
+│   ├── database/          # Schémas de base de données, modèles, dépôts (repositories)
+│   ├── agent-runtime/     # Runtime de l'agent
+│   ├── model-runtime/     # Runtime du modèle
+│   └── ...                # Autres paquets partagés
+├── src/                   # Code source principal de l'application
+│   ├── app/               # Next.js App Router avec groupes de routes et routes d'API
+│   ├── components/        # Composants d'interface utilisateur réutilisables
+│   ├── config/            # Configuration de l'application, variables d'env client et serveur
+│   ├── const/             # Constantes et énumérations de l'application
+│   ├── envs/              # Définitions et validation des variables d'env (analyses, authentification, LLM, etc.)
+│   ├── features/          # Modules de fonctionnalités métiers (paramètres d'agent, dév de plugins, etc.)
+│   ├── helpers/           # Fonctions utilitaires d'aide
+│   ├── hooks/             # Hooks personnalisés réutilisables
+│   ├── layout/            # Composants de mise en page (AuthProvider, GlobalProvider, etc.)
+│   ├── libs/              # Intégrations tierces (better-auth, OIDC, tRPC, etc.)
+│   ├── locales/           # Fichiers de langue pour l'internationalisation
+│   ├── server/            # Modules, routeurs et services côté serveur
+│   ├── services/          # Interfaces de services côté client
+│   ├── store/             # Gestion d'état Zustand
+│   ├── styles/            # Styles globaux et configurations CSS-in-JS
+│   ├── tools/             # Outils intégrés (artefacts, inspecteurs, interventions, etc.)
+│   ├── types/             # Définitions de types TypeScript
+│   └── utils/             # Fonctions utilitaires générales
+├── locales/               # Fichiers de traduction i18n (zh-CN, en-US, etc.)
+└── e2e/                   # Tests de bout en bout (Cucumber + Playwright)
+```
+
+Pour une introduction détaillée à la structure des répertoires, consultez : [Structure des répertoires](/docs/development/basic/folder-structure)
+
+## Configuration de l'environnement de développement local
+
+Veuillez vous référer au [Guide de configuration de l'environnement](/docs/development/basic/setup-development) pour le processus complet de configuration, y compris l'installation des logiciels, la configuration du projet, le démarrage des services Docker et les migrations de bases de données.
+
+## Style de code et guide de contribution
+
+Dans le projet mAI, nous accordons une grande importance à la qualité et à la cohérence du code. C'est pourquoi nous avons établi une série de normes de style de code et de processus de contribution afin de veiller à ce que chaque développeur puisse participer sereinement au projet. Voici les directives de style de code et de contribution que vous devez suivre en tant que développeur.
+
+- **Style de code** : Nous utilisons `@mAI/lint` pour unifier le style de code, incluant les configurations ESLint, Prettier, remarklint et stylelint. Veuillez respecter nos normes de code pour maintenir sa cohérence et sa lisibilité.
+- **Processus de contribution** : Nous utilisons gitmoji et semantic release pour les processus de soumission et de publication du code. Veuillez utiliser gitmoji pour annoter vos messages de validation (commit) et vous assurer du respect des normes semantic release afin que nos systèmes automatisés puissent gérer correctement les versions et les publications.
+
+Toutes les contributions feront l'objet d'une révision du code (code review). Les mainteneurs peuvent suggérer des modifications ou formuler des exigences. Veuillez répondre activement aux commentaires de révision et apporter des ajustements en temps utile. Nous attendons avec impatience votre participation et votre contribution.
+
+Pour des directives détaillées sur le style de code et les contributions, veuillez vous référer au [Guide du style de code et des contributions](/docs/development/basic/contributing-guidelines).
+
+## Guide d'implémentation de l'internationalisation
+
+mAI utilise `react-i18next` pour le support multilingue, garantissant une expérience utilisateur globale.
+
+Les fichiers de langue par défaut sont situés dans `src/locales/default/` (anglais). Les fichiers de traduction se trouvent dans le répertoire `locales/`. Pendant le développement, il vous suffit de modifier les clés dans `src/locales/default/` — l'intégration continue (CI) génère automatiquement les fichiers de traduction pour les autres langues.
+
+Si vous souhaitez ajouter une nouvelle langue, suivez les étapes détaillées dans le [Guide d'ajout d'une nouvelle langue](/docs/development/internationalization/add-new-locale). Nous vous encourageons à participer à nos efforts d'internationalisation afin de fournir de meilleurs services aux utilisateurs du monde entier.
+
+Pour un guide détaillé sur la mise en œuvre de l'internationalisation, veuillez vous référer au [Guide d'implémentation de l'internationalisation](/docs/development/internationalization/internationalization-implementation).
+
+## Annexe : Ressources et références
+
+Pour aider les développeurs à mieux comprendre et utiliser la pile technologique de mAI, nous fournissons une liste complète de ressources et de références — [Ressources et références mAI](/docs/development/basic/resources). Consultez notre liste de ressources maintenue, qui comprend des tutoriels, des articles et d'autres liens utiles.
+
+Nous encourageons les développeurs à utiliser ces ressources pour approfondir leur apprentissage et améliorer leurs compétences. Rejoignez les discussions de la communauté via les [Discussions GitHub mAI](https://github.com/mAI/mAI/discussions) ou [Discord](https://discord.com/invite/AYFPHvv2jT), pour poser des questions ou partager vos expériences.
+
+Si vous avez des questions ou avez besoin d'aide supplémentaire, n'hésitez pas à nous contacter par les canaux ci-dessus.

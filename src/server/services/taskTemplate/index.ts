@@ -29,7 +29,7 @@ const hashString = (str: string): number => {
 const mulberry32 = (seed: number) => {
   let t = seed >>> 0;
   return () => {
-    t = (t + 0x6d_2b_79_f5) | 0;
+    t = (t + 0x6D_2B_79_F5) | 0;
     let r = Math.imul(t ^ (t >>> 15), 1 | t);
     r = (r + Math.imul(r ^ (r >>> 7), 61 | r)) ^ r;
     return ((r ^ (r >>> 14)) >>> 0) / 4_294_967_296;

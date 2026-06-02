@@ -31,7 +31,6 @@ import Wechat from './providers/wechat';
 import Zitadel from './providers/zitadel';
 
 const providerDefinitions = [
-  Apple,
   Google,
   Github,
   Cognito,
@@ -92,9 +91,10 @@ export const initBetterAuthSSOProviders = () => {
      */
     const env = definition.checkEnvs();
     if (!env) {
-      throw new Error(
-        `[Better-Auth] ${rawProvider} SSO provider environment variables are not set correctly!`,
+      console.warn(
+        `[Better-Auth] ${rawProvider} SSO provider environment variables are not set correctly. Skipping provider initialization.`,
       );
+      continue;
     }
 
     if (definition.type === 'builtin') {

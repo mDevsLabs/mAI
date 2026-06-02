@@ -2281,6 +2281,31 @@ const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      search: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 262_144,
+    description:
+      'Qwen 3.7 Max is Alibaba\'s latest flagship model, featuring state-of-the-art reasoning, coding, and multimodal vision capabilities.',
+    displayName: 'Qwen 3.7 Max',
+    id: 'qwen-3.7-max',
+    maxOutput: 8192,
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 2.4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 9.6, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
     },
     config: {
       deploymentName: 'qwen-long-latest',

@@ -1,4 +1,5 @@
-import { BrandLoading, LobeHubText } from '@lobehub/ui/brand';
+import { BRANDING_NAME } from '@lobechat/business-const';
+import { Avatar } from '@lobehub/ui';
 
 import { isCustomBranding } from '@/const/version';
 

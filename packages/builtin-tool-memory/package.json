@@ -1,6 +1,6 @@
 {
   "name": "@lobechat/builtin-tool-memory",
-  "version": "1.0.0",
+  "version": "0.0.8",
   "private": true,
   "type": "module",
   "exports": {
@@ -27,3 +27,4 @@
     "react-i18next": "*"
   }
 }
+

@@ -1,6 +1,6 @@
 {
   "name": "@lobechat/file-loaders",
-  "version": "1.0.0",
+  "version": "0.0.8",
   "private": true,
   "description": "Utilities for reading and processing various file types",
   "keywords": [

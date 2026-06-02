@@ -388,7 +388,7 @@ describe('QQAdapter', () => {
 
   describe('fetchAttachmentData', () => {
     it('should fetch attachment data via fetchData callback', async () => {
-      const imageBytes = new Uint8Array([0x89, 0x50, 0x4e, 0x47]);
+      const imageBytes = new Uint8Array([0x89, 0x50, 0x4E, 0x47]);
       vi.stubGlobal(
         'fetch',
         vi.fn().mockResolvedValueOnce(new Response(imageBytes, { status: 200 })),

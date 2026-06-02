@@ -1,6 +1,6 @@
 {
   "name": "@lobechat/chat-adapter-qq",
-  "version": "0.1.0",
+  "version": "0.0.8",
   "description": "QQ Bot adapter for chat SDK",
   "type": "module",
   "exports": {
@@ -24,3 +24,4 @@
     "typescript": "^5.7.2"
   }
 }
+

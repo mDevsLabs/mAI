@@ -122,7 +122,9 @@
     {
       "avatar": "📊",
       "backgroundColor": "#E8F8F5",
-      "plugins": ["steam"],
+      "plugins": [
+        "steam"
+      ],
       "systemRole": "Bạn giỏi xử lý và diễn giải dữ liệu, khám phá các mẫu và xu hướng thông qua biểu đồ và phân tích thống kê.",
       "title": "Chuyên Gia Phân Tích Dữ Liệu"
     },
@@ -270,6 +272,14 @@
   "slogan.title": "Trao cho bạn một trí tuệ thông minh hơn",
   "welcomeMessages": {
     "1": "Chào mừng bạn trở lại 😊",
+    "2": "Xin chào, tôi ở đây",
+    "3": "Mọi thứ đã sẵn sàng!",
+    "4": "Rất vui được gặp lại bạn",
+    "5": "Sẵn sàng bắt đầu chưa?",
+    "6": "Hãy để tôi giúp bạn với các nhiệm vụ hôm nay",
+    "7": "Tiếp tục tiến lên!",
+    "8": "Cùng bắt đầu nào 💪",
+    "9": "Bắt tay vào việc thôi 🏃‍♂️",
     "10": "Hiệu suất tối đa~",
     "11": "Sẵn sàng phục vụ!",
     "12": "Cảm ơn bạn đã chờ ☕",
@@ -280,7 +290,6 @@
     "17": "Đã sạc đầy ⚡",
     "18": "Đi thôi! 🚀",
     "19": "Tôi đang đồng bộ suy nghĩ.",
-    "2": "Xin chào, tôi ở đây",
     "20": "Cảm hứng đang đến",
     "21": "Chỉ chờ bạn gọi",
     "22": "Trở lại chế độ hiệu suất cao!",
@@ -291,7 +300,6 @@
     "27": "Hệ thống đã sẵn sàng, sẵn sàng hỗ trợ 💡",
     "28": "Đang tải năng lượng tích cực",
     "29": "Bắt đầu kiểm soát ngay 🎵",
-    "3": "Mọi thứ đã sẵn sàng!",
     "30": "Tăng tốc hiệu suất …",
     "31": "Mục tiêu hôm nay, đúng tiến độ 🎯",
     "32": "Hãy để ý tưởng của bạn tỏa sáng ✨",
@@ -301,12 +309,6 @@
     "36": "Được rồi! Bắt đầu thôi 😎",
     "37": "Tôi đang chờ bạn",
     "38": "Tiếp tục phát huy nhé!",
-    "39": "Đừng quên nghỉ ngơi~ 💤",
-    "4": "Rất vui được gặp lại bạn",
-    "5": "Sẵn sàng bắt đầu chưa?",
-    "6": "Hãy để tôi giúp bạn với các nhiệm vụ hôm nay",
-    "7": "Tiếp tục tiến lên!",
-    "8": "Cùng bắt đầu nào 💪",
-    "9": "Bắt tay vào việc thôi 🏃‍♂️"
+    "39": "Đừng quên nghỉ ngơi~ 💤"
   }
 }

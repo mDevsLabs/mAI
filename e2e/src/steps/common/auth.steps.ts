@@ -1,8 +1,8 @@
 import { Given, When } from '@cucumber/cucumber';
 import { expect } from '@playwright/test';
 
-import { TEST_USER, createTestSession } from '../../support/seedTestUser';
-import { CustomWorld } from '../../support/world';
+import { createTestSession,TEST_USER } from '../../support/seedTestUser';
+import type { CustomWorld } from '../../support/world';
 
 /**
  * Login via UI - fills in the login form and submits

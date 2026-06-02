@@ -1,6 +1,6 @@
 {
   "name": "@lobechat/ssrf-safe-fetch",
-  "version": "1.0.0",
+  "version": "0.0.8",
   "private": true,
   "description": "SSRF-safe fetch implementation with browser/node conditional exports",
   "exports": {
@@ -23,3 +23,4 @@
     "vitest": "^3.2.4"
   }
 }
+
