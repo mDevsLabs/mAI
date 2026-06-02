@@ -10,5 +10,5 @@ export const OrgBrand = memo<LobeHubProps>((props) => {
     return <span>{ORG_NAME}</span>;
   }
 
-  return <LobeHub {...props} />;
+  return <span style={{ fontWeight: 'bold', fontSize: props.size ?? 16 }}>mAI</span>;
 });

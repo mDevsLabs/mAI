@@ -1,3 +1,11 @@
+import {
+  SiCanva,
+  SiDiscord,
+  SiNotion,
+  SiSpotify,
+  SiTwitch,
+  SiX,
+} from '@icons-pack/react-simple-icons';
 import { Apple, Aws, Google, Microsoft } from '@lobehub/icons';
 import {
   Auth0,
@@ -17,14 +25,20 @@ const iconComponents: { [key: string]: any } = {
   'auth0': Auth0,
   'authelia': Authelia.Color,
   'authentik': Authentik.Color,
+  'canva': SiCanva,
   'casdoor': Casdoor.Color,
   'cloudflare': Cloudflare.Color,
   'cognito': Aws.Color,
+  'discord': SiDiscord,
   'github': Github,
   'google': Google.Color,
   'logto': Logto.Color,
   'microsoft': Microsoft.Color,
   'microsoft-entra-id': MicrosoftEntra.Color,
+  'notion': SiNotion,
+  'spotify': SiSpotify,
+  'twitch': SiTwitch,
+  'twitter': SiX,
   'zitadel': Zitadel.Color,
 };
 

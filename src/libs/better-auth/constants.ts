@@ -8,6 +8,11 @@ export const BUILTIN_BETTER_AUTH_PROVIDERS = [
   'github',
   'cognito',
   'microsoft',
+  'twitch',
+  'discord',
+  'spotify',
+  'notion',
+  'twitter',
 ] as const;
 
 /**

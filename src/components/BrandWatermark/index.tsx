@@ -37,11 +37,11 @@ const BrandWatermark = memo<Omit<FlexboxProps, 'children'>>(({ style, ...rest })
       ) : (
         <a
           className={styles.logoLink}
-          href={`https://lobehub.com?utm_source=${UTM_SOURCE}&utm_content=brand_watermark`}
+          href={`https://github.com/mDevsLabs/mAI`}
           rel="noreferrer"
           target="_blank"
         >
-          <LobeHub size={20} type={'text'} />
+          <span style={{ fontWeight: 'bold', fontSize: 13 }}>mAI</span>
         </a>
       )}
     </Flexbox>

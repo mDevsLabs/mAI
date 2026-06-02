@@ -85,9 +85,9 @@ if (!hasAppleCertificate) {
 
 // 根据版本类型确定协议 scheme
 const getProtocolScheme = () => {
-  if (isCanary) return 'lobehub-canary';
-  if (isNightly) return 'lobehub-nightly';
-  return 'lobehub';
+  if (isCanary) return 'mai-canary';
+  if (isNightly) return 'mai-nightly';
+  return 'mai';
 };
 
 const protocolScheme = getProtocolScheme();
@@ -213,7 +213,7 @@ const config = {
       console.info(`⏭️  Skipping Assets.car (not found or copy failed)`);
     }
   },
-  appId: 'com.lobehub.lobehub-desktop',
+  appId: 'com.mai.mai-desktop',
   appImage: {
     artifactName: '${productName}-${version}.${ext}',
   },
@@ -273,7 +273,7 @@ const config = {
       CFBundleIconName: 'AppIcon',
       CFBundleURLTypes: [
         {
-          CFBundleURLName: 'LobeHub Protocol',
+          CFBundleURLName: 'mAI Protocol',
           CFBundleURLSchemes: [protocolScheme],
         },
       ],
@@ -311,7 +311,7 @@ const config = {
   },
   protocols: [
     {
-      name: 'LobeHub Protocol',
+      name: 'mAI Protocol',
       schemes: [protocolScheme],
     },
   ],
@@ -330,7 +330,7 @@ const config = {
   ],
 
   win: {
-    executableName: 'LobeHub',
+    executableName: 'mAI',
   },
 };
 

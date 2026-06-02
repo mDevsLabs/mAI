@@ -1,6 +1,6 @@
 # @lobehub/cli
 
-LobeHub command-line interface.
+mAI command-line interface.
 
 ## Local Development
 

@@ -10,9 +10,11 @@ import Apple from './providers/apple';
 import Auth0 from './providers/auth0';
 import Authelia from './providers/authelia';
 import Authentik from './providers/authentik';
+import Canva from './providers/canva';
 import Casdoor from './providers/casdoor';
 import CloudflareZeroTrust from './providers/cloudflare-zero-trust';
 import Cognito from './providers/cognito';
+import Discord from './providers/discord';
 import Feishu from './providers/feishu';
 import GenericOIDC from './providers/generic-oidc';
 import Github from './providers/github';
@@ -20,7 +22,11 @@ import Google from './providers/google';
 import Keycloak from './providers/keycloak';
 import Logto from './providers/logto';
 import Microsoft from './providers/microsoft';
+import Notion from './providers/notion';
 import Okta from './providers/okta';
+import Spotify from './providers/spotify';
+import Twitch from './providers/twitch';
+import Twitter from './providers/twitter';
 import Wechat from './providers/wechat';
 import Zitadel from './providers/zitadel';
 
@@ -42,6 +48,12 @@ const providerDefinitions = [
   Zitadel,
   Feishu,
   Wechat,
+  Twitch,
+  Discord,
+  Spotify,
+  Notion,
+  Twitter,
+  Canva,
 ] as const;
 
 const builtInProviderIds = new Set(BUILTIN_BETTER_AUTH_PROVIDERS);

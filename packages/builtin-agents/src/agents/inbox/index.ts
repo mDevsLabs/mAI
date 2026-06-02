@@ -10,7 +10,7 @@ import { createSystemRole } from './systemRole';
  * Note: model and provider are intentionally undefined to use user's default settings
  */
 export const INBOX: BuiltinAgentDefinition = {
-  avatar: '/avatars/lobe-ai.png',
+  avatar: '/avatars/may.PNG',
   runtime: (ctx) => ({
     plugins: [AgentDocumentsIdentifier, ...(ctx.plugins || [])],
     systemRole: createSystemRole(ctx.userLocale),

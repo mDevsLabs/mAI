@@ -2,6 +2,8 @@ import { findMatchingRoute } from '~common/routes';
 
 import { invoke } from './invoke';
 
+const SAFE_EXTERNAL_PROTOCOLS = new Set(['mailto:', 'tel:']);
+
 const interceptRoute = async (path: string, source: 'link-click', url: string) => {
   console.info(`[preload] Intercepted ${source} and prevented default behavior:`, path);
 
@@ -27,6 +29,21 @@ export const setupRouteInterceptors = function () {
       if (link && link.href) {
         try {
           const url = new URL(link.href);
+
+          if (SAFE_EXTERNAL_PROTOCOLS.has(url.protocol)) {
+            console.info(`[preload] Intercepted external link click:`, url.href);
+            e.preventDefault();
+            e.stopPropagation();
+            await invoke('system.openExternalLink', url.href);
+            return false;
+          }
+
+          if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+            console.warn('[preload] Blocked unsupported link protocol:', url.protocol);
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+          }
 
           // Check if it's an external link
           if (url.origin !== window.location.origin) {
@@ -61,14 +78,8 @@ export const setupRouteInterceptors = function () {
           }
         } catch (err) {
           // Handle possible URL parsing errors or other issues
-          // For example mailto:, tel: protocols will cause new URL() to throw error
           if (err instanceof TypeError && err.message.includes('Invalid URL')) {
-            console.info(
-              '[preload] Non-HTTP link clicked, allowing default browser behavior:',
-              link.href,
-            );
-            // For non-HTTP/HTTPS links, allow browser default handling
-            // No need for e.preventDefault() or invoke
+            console.warn('[preload] Ignored invalid link URL:', link.href);
           } else {
             console.error('[preload] Link interception error:', err);
           }

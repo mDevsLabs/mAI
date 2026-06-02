@@ -1,25 +1,23 @@
-import { authEnv } from '@/envs/auth';
-
 import { type BuiltinProviderDefinition } from '../types';
 
 const provider: BuiltinProviderDefinition<
   {
-    AUTH_GITHUB_ID: string;
-    AUTH_GITHUB_SECRET: string;
+    GITHUB_CLIENT_ID: string;
+    GITHUB_CLIENT_SECRET: string;
   },
   'github'
 > = {
   build: (env) => {
     return {
-      clientId: env.AUTH_GITHUB_ID,
-      clientSecret: env.AUTH_GITHUB_SECRET,
+      clientId: env.GITHUB_CLIENT_ID,
+      clientSecret: env.GITHUB_CLIENT_SECRET,
     };
   },
   checkEnvs: () => {
-    return !!(authEnv.AUTH_GITHUB_ID && authEnv.AUTH_GITHUB_SECRET)
+    return !!(process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET)
       ? {
-          AUTH_GITHUB_ID: authEnv.AUTH_GITHUB_ID,
-          AUTH_GITHUB_SECRET: authEnv.AUTH_GITHUB_SECRET,
+          GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
+          GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
         }
       : false;
   },

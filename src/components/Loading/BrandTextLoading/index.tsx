@@ -21,8 +21,9 @@ const BrandTextLoading = ({ debugId }: BrandTextLoadingProps) => {
 
   return (
     <div className={styles.container}>
-      <div aria-label="Loading" className={styles.brand} role="status">
-        <BrandLoading size={40} text={LobeHubText} />
+      <div aria-label="Loading" className={styles.brand} role="status" style={{ flexDirection: 'column', gap: 8 }}>
+        <CircleLoading />
+        <span style={{ fontWeight: 'bold', fontSize: 18 }}>mAI</span>
       </div>
       {showDebug && (
         <div className={styles.debug}>

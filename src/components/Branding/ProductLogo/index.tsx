@@ -18,5 +18,5 @@ export const ProductLogo = memo<ProductLogoProps>((props) => {
     return <CustomLogo {...props} />;
   }
 
-  return <LobeHub {...props} />;
+  return <span style={{ fontWeight: 'bold', fontSize: props.size ?? 16, display: 'inline-flex', alignItems: 'center' }}>mAI</span>;
 });
