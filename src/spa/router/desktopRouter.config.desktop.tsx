@@ -2,10 +2,12 @@
 
 import {
   BrainCircuit,
+  ChefHat,
   FilePenIcon,
   Home,
   Image,
   LibraryBigIcon,
+  Puzzle,
   Settings,
   ShapesIcon,
 } from 'lucide-react';
@@ -54,6 +56,8 @@ import CommunityListModelLayout from '@/routes/(main)/community/(list)/model/_la
 import CommunityListProviderPage from '@/routes/(main)/community/(list)/provider';
 import CommunityListSkillPage from '@/routes/(main)/community/(list)/skill';
 import CommunityListSkillLayout from '@/routes/(main)/community/(list)/skill/_layout';
+import CookerPage from '@/routes/(main)/cooker';
+import DesktopCookerLayout from '@/routes/(main)/cooker/_layout';
 import DevtoolsIndexPage from '@/routes/(main)/devtools';
 import DevtoolsLayout from '@/routes/(main)/devtools/_layout';
 import DevtoolsToolPage from '@/routes/(main)/devtools/[identifier]';
@@ -65,6 +69,8 @@ import EvalBenchLayout from '@/routes/(main)/eval/bench/[benchmarkId]/_layout';
 import EvalDatasetDetailPage from '@/routes/(main)/eval/bench/[benchmarkId]/datasets/[datasetId]';
 import EvalRunDetailPage from '@/routes/(main)/eval/bench/[benchmarkId]/runs/[runId]';
 import EvalCaseDetailPage from '@/routes/(main)/eval/bench/[benchmarkId]/runs/[runId]/cases/[caseId]';
+import ExtensionsPage from '@/routes/(main)/extensions';
+import DesktopExtensionsLayout from '@/routes/(main)/extensions/_layout';
 import GroupPage from '@/routes/(main)/group';
 import DesktopGroupLayout from '@/routes/(main)/group/_layout';
 import { groupRouteMeta } from '@/routes/(main)/group/features/routeMeta';
@@ -79,6 +85,8 @@ import MemoryPreferencesPage from '@/routes/(main)/memory/preferences';
 import PageIndexPage from '@/routes/(main)/page';
 import DesktopPageLayout from '@/routes/(main)/page/_layout';
 import PageDetailPage from '@/routes/(main)/page/[id]';
+import QuizzlyPage from '@/routes/(main)/quizzly';
+import DesktopQuizzlyLayout from '@/routes/(main)/quizzly/_layout';
 import ResourceLayout from '@/routes/(main)/resource/_layout';
 import ResourceHomePage from '@/routes/(main)/resource/(home)';
 import ResourceHomeLayout from '@/routes/(main)/resource/(home)/_layout';
@@ -563,6 +571,54 @@ export const desktopRoutes: RouteObject[] = [
         element: <DesktopPageLayout />,
         errorElement: <ErrorBoundary />,
         path: 'page',
+      },
+
+      // Quizzly route
+      {
+        children: [
+          {
+            element: <QuizzlyPage />,
+            handle: {
+              meta: routeMeta({ icon: ShapesIcon, titleKey: 'Quizzly' }),
+            },
+            index: true,
+          },
+        ],
+        element: <DesktopQuizzlyLayout />,
+        errorElement: <ErrorBoundary />,
+        path: 'quizzly',
+      },
+
+      // Cooker route
+      {
+        children: [
+          {
+            element: <CookerPage />,
+            handle: {
+              meta: routeMeta({ icon: ChefHat, titleKey: 'Cooker' }),
+            },
+            index: true,
+          },
+        ],
+        element: <DesktopCookerLayout />,
+        errorElement: <ErrorBoundary />,
+        path: 'cooker',
+      },
+
+      // Extensions route
+      {
+        children: [
+          {
+            element: <ExtensionsPage />,
+            handle: {
+              meta: routeMeta({ icon: Puzzle, titleKey: 'navigation.extensions' }),
+            },
+            index: true,
+          },
+        ],
+        element: <DesktopExtensionsLayout />,
+        errorElement: <ErrorBoundary />,
+        path: 'extensions',
       },
 
       // Default route - home page (handled by persistent layout)

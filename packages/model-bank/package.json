@@ -1,6 +1,6 @@
 {
   "name": "model-bank",
-  "version": "1.0.0",
+  "version": "0.0.9",
   "private": true,
   "exports": {
     ".": "./src/index.ts",
@@ -106,3 +106,4 @@
     "zod": "^3.25.76"
   }
 }
+

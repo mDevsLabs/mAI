@@ -10,8 +10,12 @@ export * from './apiKey';
 export * from './asyncTask';
 export * from './betterAuth';
 export * from './chatGroup';
+<<<<<<< HEAD
 export * from './connector';
 export * from './device';
+=======
+export * from './cookerRecipe';
+>>>>>>> origin
 export * from './documentHistory';
 export * from './documentShare';
 export * from './file';

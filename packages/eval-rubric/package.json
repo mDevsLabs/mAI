@@ -1,6 +1,6 @@
 {
   "name": "@lobechat/eval-rubric",
-  "version": "1.0.0",
+  "version": "0.0.8",
   "private": true,
   "description": "Rubric evaluator engine for agent evaluation benchmarks",
   "keywords": [
@@ -36,3 +36,4 @@
     "typescript": ">=5"
   }
 }
+

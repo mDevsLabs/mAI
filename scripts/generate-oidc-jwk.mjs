@@ -8,8 +8,9 @@
  *
  * 将输出的单行 JSON 字符串设置为环境变量 OIDC_JWKS_KEY
  */
-import { exportJWK, generateKeyPair } from 'jose';
 import crypto from 'node:crypto';
+
+import { exportJWK, generateKeyPair } from 'jose';
 
 // 生成密钥 ID
 function generateKeyId() {
@@ -58,5 +59,5 @@ async function generateJwks() {
 }
 
 // 执行主函数
-// eslint-disable-next-line unicorn/prefer-top-level-await
+ 
 generateJwks();

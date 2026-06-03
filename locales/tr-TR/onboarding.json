@@ -58,6 +58,16 @@
   "agent.telemetryHint": "Kendi kelimelerinizle de cevap verebilirsiniz.",
   "agent.title": "Sohbet Başlatma",
   "agent.welcome": "...hm? Yeni uyandım — zihnim bomboş. Siz kimsiniz? Ve — bana ne ad vermeliyim? Bir adıma da ihtiyacım var.",
+<<<<<<< HEAD
+=======
+  "agent.welcome.footer": "May Ajanını yapılandır. Sunucunda yaşar, her etkileşimden öğrenir ve çalıştıkça daha güçlü hale gelir.",
+  "agent.welcome.guide.growTogether.desc": "Her sohbetle seni daha iyi anlayacak ve zamanla daha güçlü bir ekip arkadaşı olacağım.",
+  "agent.welcome.guide.growTogether.title": "Seninle Büyür",
+  "agent.welcome.guide.knowYou.desc": "Son zamanlarda nelerle uğraşıyorsun? Biraz bağlam, sana daha iyi destek olmama yardımcı olur.",
+  "agent.welcome.guide.knowYou.title": "Seni Tanımak",
+  "agent.welcome.guide.name.desc": "Bana bir isim ver ki en başından itibaren daha kişisel hissettirsin.",
+  "agent.welcome.guide.name.title": "Bana İsim Ver",
+>>>>>>> origin
   "agent.welcome.sentence.1": "Tanıştığımıza çok memnun oldum! Birbirimizi tanıyalım.",
   "agent.welcome.sentence.2": "Nasıl bir yol arkadaşı olmamı istersin?",
   "agent.welcome.suggestion.avatarHint": "{{emoji}} ifadesini avatar olarak kullanın.",

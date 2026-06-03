@@ -224,7 +224,7 @@ describe('spawnAgent', () => {
   it('serializes multimodal content blocks into the CC stream-json user message', async () => {
     nextFakeProc = createFakeProc().proc;
     const { spawnAgent } = await import('./spawnAgent');
-    const pngBytes = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00]);
+    const pngBytes = Buffer.from([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0x00]);
     await spawnAgent({
       agentType: 'claude-code',
       operationId: 'op-1',
@@ -259,7 +259,7 @@ describe('spawnAgent', () => {
     const fsp = await import('node:fs/promises');
     const cacheDir = await fsp.mkdtemp(`${os.tmpdir()}/spawn-agent-codex-`);
 
-    const pngBytes = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00]);
+    const pngBytes = Buffer.from([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0x00]);
     const { spawnAgent } = await import('./spawnAgent');
     await spawnAgent({
       agentType: 'codex',

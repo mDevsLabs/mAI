@@ -28,11 +28,65 @@ const iconComponents: { [key: string]: any } = {
   'zitadel': Zitadel.Color,
 };
 
-/**
- * Get the auth icons component for the given provider id
- */
 const AuthIcons = (id: string, size = 36) => {
-  const IconComponent = iconComponents[id];
+  const normalizedId = id.toLowerCase();
+  if (normalizedId === 'google') {
+    return (
+      <img
+        src="/auth/google-logo.png"
+        width={size}
+        height={size}
+        alt="Google"
+        style={{ objectFit: 'contain', verticalAlign: 'middle' }}
+      />
+    );
+  }
+  if (normalizedId === 'github') {
+    return (
+      <img
+        src="/auth/github-logo.png"
+        width={size}
+        height={size}
+        alt="GitHub"
+        style={{ objectFit: 'contain', verticalAlign: 'middle' }}
+      />
+    );
+  }
+  if (normalizedId === 'discord') {
+    return (
+      <img
+        src="/auth/discord-logo.png"
+        width={size}
+        height={size}
+        alt="Discord"
+        style={{ objectFit: 'contain', verticalAlign: 'middle' }}
+      />
+    );
+  }
+  if (normalizedId === 'twitch') {
+    return (
+      <img
+        src="/auth/twitch-logo.png"
+        width={size}
+        height={size}
+        alt="Twitch"
+        style={{ objectFit: 'contain', verticalAlign: 'middle' }}
+      />
+    );
+  }
+  if (normalizedId === 'spotify') {
+    return (
+      <img
+        src="/auth/spotify-logo.png"
+        width={size}
+        height={size}
+        alt="Spotify"
+        style={{ objectFit: 'contain', verticalAlign: 'middle' }}
+      />
+    );
+  }
+
+  const IconComponent = iconComponents[normalizedId];
   if (IconComponent) {
     return <IconComponent size={size} />;
   }

@@ -6,19 +6,24 @@ import {
   Brain,
   BrainCircuit,
   ChartColumnBigIcon,
+  ChefHat,
   Coins,
   CreditCard,
   Database,
   EllipsisIcon,
   EthernetPort,
   Gift,
+  GraduationCap,
   Info,
   KeyboardIcon,
   KeyIcon,
   KeyRound,
   Map,
+<<<<<<< HEAD
   MessageCircleIcon,
   MonitorSmartphoneIcon,
+=======
+>>>>>>> origin
   PaletteIcon,
   Sparkles,
   TerminalSquare,
@@ -41,6 +46,7 @@ import { userGeneralSettingsSelectors } from '@/store/user/slices/settings/selec
 
 export enum SettingsGroupKey {
   Agent = 'agent',
+  Extensions = 'extensions',
   General = 'general',
   Subscription = 'subscription',
   System = 'system',
@@ -176,17 +182,32 @@ export const useCategory = () => {
         key: SettingsTabs.APIKey,
         label: tAuth('tab.apikey'),
       },
-      {
-        icon: MessageCircleIcon,
-        key: SettingsTabs.Messenger,
-        label: t('tab.messenger'),
-      },
     ].filter(Boolean) as CategoryItem[];
 
     groups.push({
       items: agentItems,
       key: SettingsGroupKey.Agent,
       title: t('group.aiConfig'),
+    });
+
+    // Extensions group
+    const extensionItems: CategoryItem[] = [
+      {
+        icon: GraduationCap,
+        key: SettingsTabs.QuizzlySettings,
+        label: 'Quizzly',
+      },
+      {
+        icon: ChefHat,
+        key: SettingsTabs.CookerSettings,
+        label: 'Cooker',
+      },
+    ];
+
+    groups.push({
+      items: extensionItems,
+      key: SettingsGroupKey.Extensions,
+      title: 'Extensions',
     });
 
     // System group

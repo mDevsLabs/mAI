@@ -15,7 +15,12 @@
   "features.imessage.title": "Kênh iMessage",
   "features.inputMarkdown.desc": "Hiển thị Markdown trong khu vực nhập liệu theo thời gian thực (văn bản in đậm, khối mã, bảng, v.v.).",
   "features.inputMarkdown.title": "Hiển Thị Markdown Trong Ô Nhập",
+<<<<<<< HEAD
   "features.platformAgent.desc": "Hiển thị mục \"Thêm Đại Lý Nền Tảng\" trong menu tạo. Các đại lý nền tảng (ví dụ: OpenClaw, Hermes) chạy trên một thiết bị được kết nối và giao tiếp lại thông qua lh connect.",
   "features.platformAgent.title": "Tạo Đại Lý Nền Tảng",
+=======
+  "features.messenger.desc": "Trò chuyện với các đại lý của bạn từ Telegram (và các ứng dụng nhắn tin khác) thông qua bot mAI được chia sẻ. Thêm một tab Messenger trong Cài đặt để liên kết tài khoản của bạn và chọn đại lý nhận tin nhắn.",
+  "features.messenger.title": "Nhắn tin",
+>>>>>>> origin
   "title": "Phòng Thí Nghiệm"
 }

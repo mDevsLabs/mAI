@@ -11,8 +11,14 @@ import debug from 'debug';
 
 import { FileS3 } from '@/server/modules/S3';
 
-const compressZstd = promisify(zstdCompress);
-const decompressZstd = promisify(zstdDecompress);
+const compressZstd = zstdCompress ? promisify(zstdCompress) : null;
+const decompressZstd = zstdDecompress ? promisify(zstdDecompress) : null;
+
+const ensureZstd = () => {
+  if (!compressZstd || !decompressZstd) {
+    throw new Error('Zstd compression requires Node.js v22.x LTS or later.');
+  }
+};
 
 const log = debug('lobe-server:llm-generation-tracing:s3');
 
@@ -67,7 +73,8 @@ export class S3TracingStore implements ITracingStore {
   async save(record: TracingPayload): Promise<SaveResult> {
     const key = buildTracingKey(record);
     log('Saving tracing payload to S3: %s', key);
-    const compressed = await compressZstd(Buffer.from(JSON.stringify(record)));
+    ensureZstd();
+    const compressed = await compressZstd!(Buffer.from(JSON.stringify(record)));
     await this.s3.uploadBuffer(key, compressed, ZSTD_CONTENT_TYPE);
     return { key };
   }
@@ -75,7 +82,8 @@ export class S3TracingStore implements ITracingStore {
   async get(key: string): Promise<TracingPayload | null> {
     try {
       const bytes = await this.s3.getFileByteArray(key);
-      const buf = await decompressZstd(Buffer.from(bytes));
+      ensureZstd();
+      const buf = await decompressZstd!(Buffer.from(bytes));
       return JSON.parse(buf.toString('utf8')) as TracingPayload;
     } catch {
       return null;

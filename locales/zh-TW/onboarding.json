@@ -58,6 +58,16 @@
   "agent.telemetryHint": "您也可以用自己的話回答。",
   "agent.title": "對話入門",
   "agent.welcome": "...嗯？我剛醒來——腦袋一片空白。您是誰？還有我應該叫什麼名字？我也需要一個名字。",
+<<<<<<< HEAD
+=======
+  "agent.welcome.footer": "設定您的 May 代理。它常駐於您的伺服器上，從每次互動中學習，運行時間越長就會變得越強大。",
+  "agent.welcome.guide.growTogether.desc": "每次對話我都會更了解你，並逐漸成為更可靠的夥伴。",
+  "agent.welcome.guide.growTogether.title": "與你一同成長",
+  "agent.welcome.guide.knowYou.desc": "最近在忙些什麼？提供一點背景資訊能幫助我更好地協助你。",
+  "agent.welcome.guide.knowYou.title": "認識你",
+  "agent.welcome.guide.name.desc": "幫我取個名字，讓我們從一開始就更有親切感。",
+  "agent.welcome.guide.name.title": "給我取名",
+>>>>>>> origin
   "agent.welcome.sentence.1": "很高興認識你！我們來互相了解一下吧。",
   "agent.welcome.sentence.2": "你想要我成為什麼樣的夥伴？",
   "agent.welcome.suggestion.avatarHint": "使用 {{emoji}} 作為頭像。",

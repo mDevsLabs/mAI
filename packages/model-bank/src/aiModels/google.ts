@@ -99,6 +99,32 @@ const googleChatModels: AIChatModelCard[] = [
       video: true,
       vision: true,
     },
+    contextWindowTokens: 2_097_152,
+    description: 'Gemini 3.5 Flash is Google\'s next-generation model, optimized for high-speed, high-volume tasks with rich multimodal features.',
+    displayName: 'Gemini 3.5 Flash',
+    id: 'gemini-3.5-flash',
+    maxOutput: 65_536,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.075, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    settings: {
+      extendParams: ['thinkingLevel', 'urlContext'],
+      searchImpl: 'params',
+      searchProvider: 'google',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      video: true,
+      vision: true,
+    },
     contextWindowTokens: 1_048_576 + 65_536,
     description: 'Points to gemini-3.1-flash-lite',
     displayName: 'Gemini Flash-Lite Latest',

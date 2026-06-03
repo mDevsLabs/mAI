@@ -20,11 +20,11 @@ const runMigrations = async () => {
 
   console.log('✅ database migration pass.');
   console.log('-------------------------------------');
-  // eslint-disable-next-line unicorn/no-process-exit
+   
   process.exit(0);
 };
 
-// eslint-disable-next-line unicorn/prefer-top-level-await
+ 
 runMigrations().catch((err) => {
   console.error(
     '❌ Database migrate failed. Please check your database is valid and DATABASE_URL is set correctly. The error detail is below:',
@@ -35,6 +35,6 @@ runMigrations().catch((err) => {
     console.info(PGVECTOR_HINT);
   }
 
-  // eslint-disable-next-line unicorn/no-process-exit
+   
   process.exit(1);
 });

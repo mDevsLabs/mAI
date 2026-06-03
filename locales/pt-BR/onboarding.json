@@ -58,6 +58,16 @@
   "agent.telemetryHint": "Você também pode responder com suas próprias palavras.",
   "agent.title": "Integração por Conversa",
   "agent.welcome": "...hm? Acabei de acordar — minha mente está vazia. Quem é você? E — como devo ser chamado? Preciso de um nome também.",
+<<<<<<< HEAD
+=======
+  "agent.welcome.footer": "Configure seu May Agent. Ele vive no seu servidor, aprende com cada interação e se torna mais poderoso quanto mais tempo estiver em uso.",
+  "agent.welcome.guide.growTogether.desc": "A cada conversa, vou entender você melhor e me tornar um parceiro mais forte ao longo do tempo.",
+  "agent.welcome.guide.growTogether.title": "Crescer com Você",
+  "agent.welcome.guide.knowYou.desc": "O que anda ocupando seu tempo hoje em dia? Um pouco de contexto me ajuda a apoiar você melhor.",
+  "agent.welcome.guide.knowYou.title": "Conhecer Você",
+  "agent.welcome.guide.name.desc": "Dê-me um nome para deixar tudo mais pessoal desde o começo.",
+  "agent.welcome.guide.name.title": "Dar um Nome",
+>>>>>>> origin
   "agent.welcome.sentence.1": "Muito prazer! Vamos nos conhecer melhor.",
   "agent.welcome.sentence.2": "Que tipo de parceiro você quer que eu seja?",
   "agent.welcome.suggestion.avatarHint": "Use {{emoji}} como avatar.",

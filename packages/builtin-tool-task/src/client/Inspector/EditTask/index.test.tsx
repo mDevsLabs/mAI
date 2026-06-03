@@ -106,14 +106,14 @@ describe('EditTaskInspector', () => {
     mocks.agentMetaById.agt_lobe = {
       avatar: 'lobe-avatar',
       backgroundColor: '#123456',
-      title: 'Lobe AI',
+      title: 'May',
     };
 
     renderInspector({ assigneeAgentId: 'agt_lobe' });
 
     expect(screen.getByTestId('assignee-avatar').dataset.agentId).toBe('agt_lobe');
     expect(screen.getByTestId('assignee-avatar').dataset.fallbackToDefault).toBe('false');
-    expect(screen.getByText('Lobe AI')).toBeTruthy();
+    expect(screen.getByText('May')).toBeTruthy();
     expect(screen.queryByText('agt_lobe')).toBeNull();
   });
 });

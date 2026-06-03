@@ -58,6 +58,16 @@
   "agent.telemetryHint": "Можете също да отговорите със свои думи.",
   "agent.title": "Разговорно въвеждане",
   "agent.welcome": "...хм? Току-що се събудих — умът ми е празен. Кой сте вие? И — какво име да ми дадете? Имам нужда и от име.",
+<<<<<<< HEAD
+=======
+  "agent.welcome.footer": "Настройте своя May агент. Той работи на вашия сървър, учи се от всяко взаимодействие и става по-мощен, колкото по-дълго работи.",
+  "agent.welcome.guide.growTogether.desc": "С всяка беседа ще те опознавам по-добре и с времето ще ставам все по-надежден партньор.",
+  "agent.welcome.guide.growTogether.title": "Растем заедно",
+  "agent.welcome.guide.knowYou.desc": "Какво имаш за вършене напоследък? Малко контекст ще ми помогне да те подкрепя по-добре.",
+  "agent.welcome.guide.knowYou.title": "Да те опозная",
+  "agent.welcome.guide.name.desc": "Дай ми име, за да звучи по-лично от самото начало.",
+  "agent.welcome.guide.name.title": "Дай ми име",
+>>>>>>> origin
   "agent.welcome.sentence.1": "Радвам се да се запознаем! Нека се опознаем по-добре.",
   "agent.welcome.sentence.2": "Какъв тип партньор искаш да бъда?",
   "agent.welcome.suggestion.avatarHint": "Използвайте {{emoji}} като аватар.",

@@ -1,7 +1,8 @@
 import { type ChildProcess, spawn } from 'node:child_process';
+import net from 'node:net';
+
 import dotenv from 'dotenv';
 import dotenvExpand from 'dotenv-expand';
-import net from 'node:net';
 
 const env = process.env.NODE_ENV || 'development';
 const isWindows = process.platform === 'win32';

@@ -1,0 +1,32 @@
+{
+  "extensions.title": "mServices",
+  "extensions.selectService": "Select a service from the left panel to begin.",
+  "extensions.openPanel": "Open Panel",
+
+  "cooker.title": "Cooker",
+  "cooker.subtitle": "Smart cooking with AI",
+  "cooker.beta": "Beta",
+  "cooker.generateRecipe": "Generate Recipe",
+  "cooker.myRecipes": "My Recipes",
+  "cooker.about": "About",
+  "cooker.aboutDesc": "Cooker is an AI-powered culinary extension. It generates personalized recipes based on your ingredients, dietary preferences, and cooking mode. Recipes are saved locally for offline use. 🥘",
+  "cooker.printRecipe": "Print Recipe",
+  "cooker.printSuccess": "Print preview started!",
+  "cooker.back": "Back",
+  "cooker.share": "Share Recipe",
+  "cooker.save": "Save Recipe",
+  "cooker.servings": "serving",
+  "cooker.servings_plural": "servings",
+
+  "quizzly.title": "Quizzly",
+  "quizzly.subtitle": "Learn while having fun with AI",
+  "quizzly.play": "Play",
+  "quizzly.profile": "Profile",
+  "quizzly.leagues": "Leagues",
+  "quizzly.clans": "Clans",
+  "quizzly.shop": "Shop",
+  "quizzly.quitQuiz": "Quit Quiz",
+  "quizzly.backMenu": "Back to Menu",
+  "quizzly.dailyReminder": "Daily reminder!",
+  "quizzly.clanReminder": "Complete your daily quiz to preserve your clan's streak ({{name}})! 🔔"
+}

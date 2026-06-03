@@ -5,7 +5,13 @@ import { zstdDecompress } from 'node:zlib';
 
 import type { ExecutionSnapshot } from '../types';
 
-const decompressZstd = promisify(zstdDecompress);
+const decompressZstd = zstdDecompress ? promisify(zstdDecompress) : null;
+
+const ensureZstd = () => {
+  if (!decompressZstd) {
+    throw new Error('Zstd decompression requires Node.js v22.x LTS or later.');
+  }
+};
 
 const REMOTE_DIR = '_remote';
 const ENV_FILE = '.env';
@@ -17,7 +23,7 @@ const LEGACY_SUFFIX = '.json';
 // https://datatracker.ietf.org/doc/html/rfc8478#section-3.1.1
 function isZstdFrame(buf: Buffer): boolean {
   return (
-    buf.length >= 4 && buf[0] === 0x28 && buf[1] === 0xb5 && buf[2] === 0x2f && buf[3] === 0xfd
+    buf.length >= 4 && buf[0] === 0x28 && buf[1] === 0xB5 && buf[2] === 0x2F && buf[3] === 0xFD
   );
 }
 
@@ -139,7 +145,8 @@ export class RemoteSnapshotStore {
     // Sniff the zstd frame magic so the body is decoded by content, not URL
     // suffix — keeps legacy `.json` snapshots working alongside compressed ones.
     const body = Buffer.from(await res.arrayBuffer());
-    const decoded = isZstdFrame(body) ? await decompressZstd(body) : body;
+    if (isZstdFrame(body)) ensureZstd();
+    const decoded = isZstdFrame(body) ? await decompressZstd!(body) : body;
     const snapshot = JSON.parse(decoded.toString('utf8')) as ExecutionSnapshot;
 
     // Cache locally as plain JSON for easy inspection.

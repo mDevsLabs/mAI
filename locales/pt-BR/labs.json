@@ -15,7 +15,12 @@
   "features.imessage.title": "Canal iMessage",
   "features.inputMarkdown.desc": "Renderize Markdown na área de entrada em tempo real (texto em negrito, blocos de código, tabelas etc.).",
   "features.inputMarkdown.title": "Renderização de Markdown na Entrada",
+<<<<<<< HEAD
   "features.platformAgent.desc": "Exibir a entrada \"Adicionar Agente de Plataforma\" no menu de criação. Agentes de plataforma (por exemplo, OpenClaw, Hermes) operam em um dispositivo conectado e se comunicam de volta via lh connect.",
   "features.platformAgent.title": "Criação de Agente de Plataforma",
+=======
+  "features.messenger.desc": "Converse com seus agentes pelo Telegram (e outros mensageiros) através do bot compartilhado mAI. Adiciona uma aba Mensageiro nas Configurações para vincular sua conta e escolher qual agente recebe as mensagens.",
+  "features.messenger.title": "Mensageiro",
+>>>>>>> origin
   "title": "Laboratórios"
 }

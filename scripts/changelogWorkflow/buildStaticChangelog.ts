@@ -57,7 +57,7 @@ class BuildStaticChangelog {
 
       const entry: ChangelogStaticItem = {
         children: {},
-        date: date,
+        date,
         version: this.cleanVersion(versionNumber),
       };
 

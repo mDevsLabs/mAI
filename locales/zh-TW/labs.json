@@ -15,7 +15,12 @@
   "features.imessage.title": "iMessage 通道",
   "features.inputMarkdown.desc": "在輸入區即時渲染 Markdown（粗體、程式碼區塊、表格等）。",
   "features.inputMarkdown.title": "輸入框 Markdown 渲染",
+<<<<<<< HEAD
   "features.platformAgent.desc": "在建立選單中顯示「新增平台代理」項目。平台代理（例如 OpenClaw、Hermes）運行於連接的設備上，並通過 lh connect 回傳通信。",
   "features.platformAgent.title": "平台代理建立",
+=======
+  "features.messenger.desc": "透過共享的 mAI 機器人，從 Telegram（以及其他即時通訊工具）與您的代理進行對話。在設定中新增「Messenger」標籤，用於綁定您的帳戶並選擇接收訊息的代理。",
+  "features.messenger.title": "即時通訊",
+>>>>>>> origin
   "title": "實驗室"
 }

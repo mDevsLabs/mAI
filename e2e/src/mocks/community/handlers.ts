@@ -3,7 +3,7 @@
  */
 import type { Route } from 'playwright';
 
-import { type MockHandler, createTrpcResponse } from '../index';
+import { createTrpcResponse,type MockHandler } from '../index';
 import {
   mockAssistantCategories,
   mockAssistantList,

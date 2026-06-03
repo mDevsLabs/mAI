@@ -46,43 +46,51 @@ declare global {
       AUTH_GENERIC_OIDC_ID?: string;
       AUTH_GENERIC_OIDC_ISSUER?: string;
       AUTH_GENERIC_OIDC_SECRET?: string;
-
+      AUTH_GITHUB_CLIENT_ID?: string;
+      AUTH_GITHUB_CLIENT_SECRET?: string;
       AUTH_GITHUB_ID?: string;
       AUTH_GITHUB_SECRET?: string;
+      AUTH_GOOGLE_CLIENT_ID?: string;
+      AUTH_GOOGLE_CLIENT_SECRET?: string;
       // ===== Auth Provider Credentials ===== //
       AUTH_GOOGLE_ID?: string;
-
       AUTH_GOOGLE_SECRET?: string;
       AUTH_KEYCLOAK_ID?: string;
       AUTH_KEYCLOAK_ISSUER?: string;
 
       AUTH_KEYCLOAK_SECRET?: string;
       AUTH_LOGTO_ID?: string;
-
       AUTH_LOGTO_ISSUER?: string;
       AUTH_LOGTO_SECRET?: string;
       AUTH_MICROSOFT_AUTHORITY_URL?: string;
-
       AUTH_MICROSOFT_ID?: string;
+
       AUTH_MICROSOFT_SECRET?: string;
       AUTH_MICROSOFT_TENANT_ID?: string;
-
       AUTH_OKTA_ID?: string;
       AUTH_OKTA_ISSUER?: string;
-      AUTH_OKTA_SECRET?: string;
 
+      AUTH_OKTA_SECRET?: string;
       // ===== Better Auth ===== //
       AUTH_SECRET?: string;
+
       AUTH_SSO_PROVIDERS?: string;
       AUTH_TRUSTED_ORIGINS?: string;
-
       AUTH_WECHAT_ID?: string;
-      AUTH_WECHAT_SECRET?: string;
 
+      AUTH_WECHAT_SECRET?: string;
       AUTH_ZITADEL_ID?: string;
       AUTH_ZITADEL_ISSUER?: string;
-      AUTH_ZITADEL_SECRET?: string;
 
+      AUTH_ZITADEL_SECRET?: string;
+      DISCORD_CLIENT_ID?: string;
+      DISCORD_CLIENT_SECRET?: string;
+
+      GITHUB_CLIENT_ID?: string;
+      GITHUB_CLIENT_SECRET?: string;
+      GOOGLE_CLIENT_ID?: string;
+
+      GOOGLE_CLIENT_SECRET?: string;
       /**
        * Internal JWT expiration time for lambda → async calls.
        * Format: number followed by unit (s=seconds, m=minutes, h=hours)
@@ -100,6 +108,12 @@ declare global {
        * Can be generated using `node scripts/generate-oidc-jwk.mjs`.
        */
       JWKS_KEY?: string;
+      SPOTIFY_CLIENT_ID?: string;
+      SPOTIFY_CLIENT_SECRET?: string;
+
+      TWITCH_CLIENT_ID?: string;
+
+      TWITCH_CLIENT_SECRET?: string;
     }
   }
 }
@@ -110,12 +124,23 @@ export const getAuthConfig = () => {
     client: {},
     server: {
       AUTH_SECRET: z.string().optional(),
-      AUTH_SSO_PROVIDERS: z.string().optional().default(''),
+      AUTH_SSO_PROVIDERS: z.string().optional().default('google,github,discord,twitch,spotify'),
       AUTH_TRUSTED_ORIGINS: z.string().optional(),
       AUTH_EMAIL_VERIFICATION: z.boolean().optional().default(false),
       AUTH_ENABLE_MAGIC_LINK: z.boolean().optional().default(false),
       AUTH_ALLOWED_EMAILS: z.string().optional(),
       AUTH_DISABLE_EMAIL_PASSWORD: z.boolean().optional().default(false),
+
+      GITHUB_CLIENT_ID: z.string().optional(),
+      GITHUB_CLIENT_SECRET: z.string().optional(),
+      GOOGLE_CLIENT_ID: z.string().optional(),
+      GOOGLE_CLIENT_SECRET: z.string().optional(),
+      DISCORD_CLIENT_ID: z.string().optional(),
+      DISCORD_CLIENT_SECRET: z.string().optional(),
+      TWITCH_CLIENT_ID: z.string().optional(),
+      TWITCH_CLIENT_SECRET: z.string().optional(),
+      SPOTIFY_CLIENT_ID: z.string().optional(),
+      SPOTIFY_CLIENT_SECRET: z.string().optional(),
 
       AUTH_GOOGLE_ID: z.string().optional(),
       AUTH_GOOGLE_SECRET: z.string().optional(),
@@ -125,7 +150,9 @@ export const getAuthConfig = () => {
       AUTH_APPLE_APP_BUNDLE_IDENTIFIER: z.string().optional(),
 
       AUTH_GITHUB_ID: z.string().optional(),
+      AUTH_GITHUB_CLIENT_ID: z.string().optional(),
       AUTH_GITHUB_SECRET: z.string().optional(),
+      AUTH_GITHUB_CLIENT_SECRET: z.string().optional(),
 
       AUTH_COGNITO_ID: z.string().optional(),
       AUTH_COGNITO_SECRET: z.string().optional(),
@@ -207,6 +234,17 @@ export const getAuthConfig = () => {
       AUTH_ALLOWED_EMAILS: process.env.AUTH_ALLOWED_EMAILS,
       AUTH_DISABLE_EMAIL_PASSWORD: process.env.AUTH_DISABLE_EMAIL_PASSWORD === '1',
 
+      GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
+      GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
+      GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+      GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+      DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
+      DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
+      TWITCH_CLIENT_ID: process.env.TWITCH_CLIENT_ID,
+      TWITCH_CLIENT_SECRET: process.env.TWITCH_CLIENT_SECRET,
+      SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
+      SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
+
       // Cognito provider specific env vars
       AUTH_COGNITO_DOMAIN: process.env.AUTH_COGNITO_DOMAIN,
       AUTH_COGNITO_REGION: process.env.AUTH_COGNITO_REGION,
@@ -214,14 +252,18 @@ export const getAuthConfig = () => {
 
       // Auth Provider Credentials
       AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
+      AUTH_GOOGLE_CLIENT_ID: process.env.AUTH_GOOGLE_CLIENT_ID,
       AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
+      AUTH_GOOGLE_CLIENT_SECRET: process.env.AUTH_GOOGLE_CLIENT_SECRET,
 
       AUTH_APPLE_CLIENT_ID: process.env.AUTH_APPLE_CLIENT_ID,
       AUTH_APPLE_CLIENT_SECRET: process.env.AUTH_APPLE_CLIENT_SECRET,
       AUTH_APPLE_APP_BUNDLE_IDENTIFIER: process.env.AUTH_APPLE_APP_BUNDLE_IDENTIFIER,
 
       AUTH_GITHUB_ID: process.env.AUTH_GITHUB_ID,
+      AUTH_GITHUB_CLIENT_ID: process.env.AUTH_GITHUB_CLIENT_ID,
       AUTH_GITHUB_SECRET: process.env.AUTH_GITHUB_SECRET,
+      AUTH_GITHUB_CLIENT_SECRET: process.env.AUTH_GITHUB_CLIENT_SECRET,
 
       AUTH_MICROSOFT_AUTHORITY_URL: process.env.AUTH_MICROSOFT_AUTHORITY_URL,
       AUTH_MICROSOFT_ID: process.env.AUTH_MICROSOFT_ID,

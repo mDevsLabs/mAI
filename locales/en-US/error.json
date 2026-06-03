@@ -74,7 +74,19 @@
   "response.GoogleAIBlockReason.default": "The content was blocked ({{blockReason}}). Please adjust it and try again.",
   "response.InsufficientBudgetForModel": "Your remaining credits are insufficient for this model. Please top up credits, upgrade your plan, or try a less expensive model.",
   "response.InvalidAccessCode": "Invalid access code or empty. Please enter the correct access code or add a custom API Key.",
+<<<<<<< HEAD
   "response.LobeHubModelDeprecated": "The model \"{{model}}\" is no longer available. Please pick a current model from the model selector.",
+=======
+  "response.InvalidBedrockCredentials": "Bedrock authentication failed. Please check the AccessKeyId/SecretAccessKey and retry.",
+  "response.InvalidComfyUIArgs": "Invalid ComfyUI configuration. Please check the settings and try again.",
+  "response.InvalidGithubToken": "The GitHub Personal Access Token is incorrect or empty. Please check your GitHub Personal Access Token and try again.",
+  "response.InvalidOllamaArgs": "Invalid Ollama configuration, please check Ollama configuration and try again",
+  "response.InvalidProviderAPIKey": "{{provider}} API Key is incorrect or empty, please check your {{provider}} API Key and try again",
+  "response.InvalidVertexCredentials": "Vertex authentication failed. Please check your credentials and try again.",
+  "response.mAIModelDeprecated": "The model \"{{model}}\" is no longer available. Please pick a current model from the model selector.",
+  "response.LocationNotSupportError": "We're sorry, your current location does not support this model service. This may be due to regional restrictions or the service not being available. Please confirm if the current location supports using this service, or try using a different location.",
+  "response.ModelNotFound": "Sorry, the requested model could not be found. It may not exist or you may not have the necessary access permissions. Please try again after changing the API Key or adjusting your access permissions.",
+>>>>>>> origin
   "response.NoOpenAIAPIKey": "OpenAI API Key is empty, please add a custom OpenAI API Key",
   "response.PluginApiNotFound": "Sorry, the API does not exist in the skill's manifest. Please check if your request method matches the skill manifest API",
   "response.PluginApiParamsError": "Sorry, the input parameter validation for the skill request failed. Please check if the input parameters match the API description",

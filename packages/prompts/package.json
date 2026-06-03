@@ -1,6 +1,6 @@
 {
   "name": "@lobechat/prompts",
-  "version": "1.0.0",
+  "version": "0.0.8",
   "private": true,
   "exports": {
     ".": "./src/index.ts",
@@ -20,3 +20,4 @@
     "tsx": "^4.20.6"
   }
 }
+

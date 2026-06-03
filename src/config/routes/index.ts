@@ -5,6 +5,7 @@ import {
   Image,
   LibraryBigIcon,
   ListTodoIcon,
+  Puzzle,
   Settings,
   ShapesIcon,
   Video,
@@ -108,6 +109,16 @@ export const NAVIGATION_ROUTES: NavigationRoute[] = [
     pathPrefix: '/tasks',
   },
   {
+    cmdkKey: 'cmdk.extensions',
+    electronKey: 'navigation.extensions',
+    icon: Puzzle,
+    id: 'extensions',
+    keywords: ['extensions', 'services', 'plugins', 'quizzly', 'vibs', 'cooker', 'health'],
+    keywordsKey: 'cmdk.keywords.extensions',
+    path: '/extensions',
+    pathPrefix: '/extensions',
+  },
+  {
     cmdkKey: 'cmdk.settings',
     electronKey: 'navigation.settings',
     icon: Settings,
@@ -130,5 +141,5 @@ export const getRouteById = (id: string): NavigationRoute | undefined =>
  */
 export const getNavigableRoutes = (): NavigationRoute[] =>
   NAVIGATION_ROUTES.filter((r) =>
-    ['community', 'video', 'image', 'resource', 'page', 'memory'].includes(r.id),
+    ['community', 'video', 'image', 'resource', 'page', 'memory', 'extensions'].includes(r.id),
   );

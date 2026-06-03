@@ -1,6 +1,6 @@
 {
   "name": "@lobechat/desktop-bridge",
-  "version": "1.0.0",
+  "version": "0.0.8",
   "private": true,
   "exports": {
     ".": "./src/index.ts"
@@ -8,3 +8,4 @@
   "main": "./src/index.ts",
   "types": "./src/index.ts"
 }
+

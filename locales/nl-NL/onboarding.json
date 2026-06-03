@@ -58,6 +58,16 @@
   "agent.telemetryHint": "Je kunt ook antwoorden in je eigen woorden.",
   "agent.title": "Conversatie Onboarding",
   "agent.welcome": "...hm? Ik ben net wakker — mijn gedachten zijn leeg. Wie ben jij? En — hoe moet ik genoemd worden? Ik heb ook een naam nodig.",
+<<<<<<< HEAD
+=======
+  "agent.welcome.footer": "Configureer je May Agent. Hij draait op je eigen server, leert van elke interactie en wordt krachtiger naarmate hij langer actief is.",
+  "agent.welcome.guide.growTogether.desc": "Met ieder gesprek leer ik je beter kennen en word ik op termijn een sterkere teammate.",
+  "agent.welcome.guide.growTogether.title": "Met je meegroeien",
+  "agent.welcome.guide.knowYou.desc": "Waar ben je de laatste tijd mee bezig? Een beetje context helpt me om je beter te ondersteunen.",
+  "agent.welcome.guide.knowYou.title": "Jou leren kennen",
+  "agent.welcome.guide.name.desc": "Geef me een naam zodat het vanaf het begin persoonlijker voelt.",
+  "agent.welcome.guide.name.title": "Geef me een naam",
+>>>>>>> origin
   "agent.welcome.sentence.1": "Leuk om je te ontmoeten! Laten we elkaar beter leren kennen.",
   "agent.welcome.sentence.2": "Wat voor partner wil je dat ik voor je ben?",
   "agent.welcome.suggestion.avatarHint": "Gebruik {{emoji}} als de avatar.",

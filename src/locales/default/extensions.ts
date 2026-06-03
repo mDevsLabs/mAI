@@ -1,0 +1,35 @@
+export default {
+  // Page Extensions / mServices
+  'extensions.title': 'mServices',
+  'extensions.selectService': 'Sélectionnez un service dans le panneau de gauche pour commencer.',
+  'extensions.openPanel': 'Ouvrir le panneau',
+
+  // Cooker
+  'cooker.title': 'Cooker',
+  'cooker.subtitle': 'Cuisine intelligente avec l\'IA',
+  'cooker.beta': 'Bêta',
+  'cooker.generateRecipe': 'Générer une recette',
+  'cooker.myRecipes': 'Mes recettes',
+  'cooker.about': 'À propos',
+  'cooker.aboutDesc': 'Cooker est une extension culinaire propulsée par l\'IA. Elle génère des recettes personnalisées selon vos ingrédients, préférences alimentaires et mode de cuisson. Les recettes sont sauvegardées localement pour une utilisation hors-ligne. 🥘',
+  'cooker.printRecipe': 'Imprimer la recette',
+  'cooker.printSuccess': 'Aperçu avant impression lancé !',
+  'cooker.back': 'Retour',
+  'cooker.share': 'Partager la recette',
+  'cooker.save': 'Sauvegarder la recette',
+  'cooker.servings': 'portion',
+  'cooker.servings_plural': 'portions',
+
+  // Quizzly
+  'quizzly.title': 'Quizzly',
+  'quizzly.subtitle': 'Apprendre en s\'amusant avec l\'IA',
+  'quizzly.play': 'Jouer',
+  'quizzly.profile': 'Profil',
+  'quizzly.leagues': 'Ligues',
+  'quizzly.clans': 'Clans',
+  'quizzly.shop': 'Boutique',
+  'quizzly.quitQuiz': 'Quitter le Quiz',
+  'quizzly.backMenu': 'Retour au Menu',
+  'quizzly.dailyReminder': 'Rappel quotidien !',
+  'quizzly.clanReminder': 'Complète ton quiz du jour pour préserver la série de ton clan ({{name}}) ! 🔔',
+};

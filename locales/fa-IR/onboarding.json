@@ -58,6 +58,16 @@
   "agent.telemetryHint": "همچنین می‌توانید با کلمات خود پاسخ دهید.",
   "agent.title": "آموزش مکالمه",
   "agent.welcome": "...هم؟ تازه بیدار شدم — ذهنم خالیه. شما کی هستید؟ و — چه نامی باید داشته باشم؟ من هم به یک نام نیاز دارم.",
+<<<<<<< HEAD
+=======
+  "agent.welcome.footer": "ایجنت May خودت را تنظیم کن. روی سرور تو اجرا می‌شود، از هر تعامل یاد می‌گیرد و هرچه بیشتر کار کند قدرتمندتر می‌شود.",
+  "agent.welcome.guide.growTogether.desc": "با هر گفتگو، بهتر می‌فهممت و کم‌کم همراه قوی‌تری برایت می‌شوم.",
+  "agent.welcome.guide.growTogether.title": "با تو رشد می‌کنم",
+  "agent.welcome.guide.knowYou.desc": "این روزها درگیر چه کارهایی هستی؟ کمی زمینه کمکم می‌کند بهتر همراهت باشم.",
+  "agent.welcome.guide.knowYou.title": "آشنایی با تو",
+  "agent.welcome.guide.name.desc": "برای اینکه از همان اول حس صمیمی‌تری داشته باشیم، یک اسم برای من انتخاب کن.",
+  "agent.welcome.guide.name.title": "اسم من را انتخاب کن",
+>>>>>>> origin
   "agent.welcome.sentence.1": "از آشنایی با تو خوشحالم! بیاییم همدیگر را بهتر بشناسیم.",
   "agent.welcome.sentence.2": "می‌خواهی چه نوع همراهی برایت باشم؟",
   "agent.welcome.suggestion.avatarHint": "از {{emoji}} به عنوان آواتار استفاده کنید.",

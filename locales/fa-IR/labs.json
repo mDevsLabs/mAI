@@ -15,7 +15,12 @@
   "features.imessage.title": "کانال iMessage",
   "features.inputMarkdown.desc": "نمایش زنده Markdown در ناحیه ورودی (متن پررنگ، بلوک‌های کد، جدول‌ها و غیره).",
   "features.inputMarkdown.title": "نمایش Markdown در ورودی",
+<<<<<<< HEAD
   "features.platformAgent.desc": "نمایش گزینه \"افزودن نماینده پلتفرم\" در منوی ایجاد. نمایندگان پلتفرم (مانند OpenClaw، Hermes) روی یک دستگاه متصل اجرا می‌شوند و از طریق lh connect ارتباط برقرار می‌کنند.",
   "features.platformAgent.title": "ایجاد نماینده پلتفرم",
+=======
+  "features.messenger.desc": "با عوامل خود از طریق تلگرام (و سایر پیام‌رسان‌ها) از طریق ربات مشترک mAI صحبت کنید. یک تب پیام‌رسان در تنظیمات اضافه می‌کند برای اتصال حساب شما و انتخاب اینکه کدام عامل پیام‌ها را دریافت کند.",
+  "features.messenger.title": "پیام‌رسان",
+>>>>>>> origin
   "title": "آزمایشگاه‌ها"
 }
