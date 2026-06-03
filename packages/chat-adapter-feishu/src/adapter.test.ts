@@ -783,7 +783,7 @@ describe('downloadMediaFromRawMessage', () => {
   });
 
   it('downloads an image via image_key + downloadResource(messageId, key, "image")', async () => {
-    const imageBytes = Buffer.from([0x89, 0x50, 0x4E, 0x47]);
+    const imageBytes = Buffer.from([0x89, 0x50, 0x4e, 0x47]);
     downloadSpy.mockResolvedValueOnce(imageBytes);
 
     const result = await downloadMediaFromRawMessage(
@@ -830,7 +830,7 @@ describe('downloadMediaFromRawMessage', () => {
   });
 
   it('downloads audio via file_key as audio/ogg', async () => {
-    const audioBytes = Buffer.from([0x4F, 0x67, 0x67, 0x53]);
+    const audioBytes = Buffer.from([0x4f, 0x67, 0x67, 0x53]);
     downloadSpy.mockResolvedValueOnce(audioBytes);
 
     const result = await downloadMediaFromRawMessage(
@@ -864,7 +864,7 @@ describe('downloadMediaFromRawMessage', () => {
   });
 
   it('downloads sticker via file_key with type "image" (not "file")', async () => {
-    const stickerBytes = Buffer.from([0x89, 0x50, 0x4E, 0x47]);
+    const stickerBytes = Buffer.from([0x89, 0x50, 0x4e, 0x47]);
     downloadSpy.mockResolvedValueOnce(stickerBytes);
 
     const result = await downloadMediaFromRawMessage(

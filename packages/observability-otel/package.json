@@ -1,6 +1,6 @@
 {
   "name": "@lobechat/observability-otel",
-  "version": "0.0.8",
+  "version": "1.0.0",
   "private": true,
   "exports": {
     "./node": "./src/node.ts",
@@ -28,4 +28,3 @@
     "@vercel/otel": "^2.1.0"
   }
 }
-

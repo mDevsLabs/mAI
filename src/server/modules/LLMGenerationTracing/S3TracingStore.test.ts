@@ -1,12 +1,16 @@
 // @vitest-environment node
 import { promisify } from 'node:util';
-import { zstdCompress, zstdDecompress } from 'node:zlib';
+import { brotliCompress, brotliDecompress, constants } from 'node:zlib';
 
 import type { TracingPayload } from '@lobechat/llm-generation-tracing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const compressZstd = promisify(zstdCompress);
-const decompressZstd = promisify(zstdDecompress);
+const compressBr = promisify(brotliCompress);
+const decompressBr = promisify(brotliDecompress);
+
+const BROTLI_COMPRESS_OPTS = {
+  params: { [constants.BROTLI_PARAM_QUALITY]: 4 },
+};
 
 const uploadBuffer = vi.fn();
 const getFileByteArray = vi.fn();
@@ -33,40 +37,39 @@ beforeEach(() => {
 });
 
 describe('buildTracingKey', () => {
-  it('lays out scenario / version-hash / date / id with the .json.zst suffix', () => {
+  it('lays out scenario / version-hash / date / id with the .json.br suffix', () => {
     const key = buildTracingKey(samplePayload());
     expect(key).toBe(
-      'llm-generation-tracing/home_brief/v1.0-ab1fc3/2026-05-22/00000000-0000-0000-0000-000000000001.json.zst',
+      'llm-generation-tracing/home_brief/v1.0-ab1fc3/2026-05-22/00000000-0000-0000-0000-000000000001.json.br',
     );
   });
 
   it('sanitises path-unsafe characters in scenario and version segments', () => {
     const key = buildTracingKey(samplePayload({ prompt_version: 'v 2/0', scenario: 'odd name!' }));
     expect(key).toMatch(
-      /llm-generation-tracing\/odd_name_\/v_2_0-ab1fc3\/2026-05-22\/00000000-0000-0000-0000-000000000001\.json\.zst/,
+      /llm-generation-tracing\/odd_name_\/v_2_0-ab1fc3\/2026-05-22\/00000000-0000-0000-0000-000000000001\.json\.br/,
     );
   });
 });
 
 describe('S3TracingStore.save', () => {
-  it('uploads zstd-compressed JSON with the canonical key and content-type', async () => {
+  it('uploads brotli-compressed JSON with the canonical key and content-type', async () => {
     const store = new S3TracingStore();
     const payload = samplePayload({ input: { messages: [{ role: 'user' }] } });
 
     const { key } = await store.save(payload);
 
     expect(key).toBe(
-      'llm-generation-tracing/home_brief/v1.0-ab1fc3/2026-05-22/00000000-0000-0000-0000-000000000001.json.zst',
+      'llm-generation-tracing/home_brief/v1.0-ab1fc3/2026-05-22/00000000-0000-0000-0000-000000000001.json.br',
     );
     expect(uploadBuffer).toHaveBeenCalledTimes(1);
 
     const [callKey, body, contentType] = uploadBuffer.mock.calls[0];
     expect(callKey).toBe(key);
-    expect(contentType).toBe('application/zstd');
+    expect(contentType).toBe('application/brotli');
     expect(Buffer.isBuffer(body)).toBe(true);
-    expect([body[0], body[1], body[2], body[3]]).toEqual([0x28, 0xB5, 0x2F, 0xFD]);
 
-    const roundtripped = JSON.parse((await decompressZstd(body)).toString('utf8'));
+    const roundtripped = JSON.parse((await decompressBr(body)).toString('utf8'));
     expect(roundtripped).toEqual(payload);
   });
 });
@@ -75,10 +78,10 @@ describe('S3TracingStore.get', () => {
   it('decompresses a stored payload by key', async () => {
     const store = new S3TracingStore();
     const payload = samplePayload();
-    const buf = await compressZstd(Buffer.from(JSON.stringify(payload)));
+    const buf = await compressBr(Buffer.from(JSON.stringify(payload)), BROTLI_COMPRESS_OPTS);
     getFileByteArray.mockResolvedValueOnce(new Uint8Array(buf));
 
-    const loaded = await store.get('some/key.json.zst');
+    const loaded = await store.get('some/key.json.br');
     expect(loaded).toEqual(payload);
   });
 

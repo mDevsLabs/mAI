@@ -1,11 +1,10 @@
 {
   "name": "@lobechat/builtin-tool-local-system",
-  "version": "0.0.8",
+  "version": "1.0.0",
   "private": true,
   "exports": {
     ".": "./src/index.ts",
-    "./client": "./src/client/index.ts",
-    "./executionRuntime": "./src/ExecutionRuntime/index.ts"
+    "./client": "./src/client/index.ts"
   },
   "main": "./src/index.ts",
   "dependencies": {
@@ -26,4 +25,3 @@
     "react-i18next": "*"
   }
 }
-

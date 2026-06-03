@@ -60,7 +60,7 @@ export const uploader = async (
       acl: 'public-read',
       bucketName: userConfig.bucketName,
       client,
-      item,
+      item: item,
       path: formatPath(item, userConfig.uploadPath),
       urlPrefix: userConfig.pathPrefix,
     });

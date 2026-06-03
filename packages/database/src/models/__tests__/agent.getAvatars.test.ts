@@ -88,10 +88,10 @@ describe('AgentModel.getAgentAvatarsByIds', () => {
 
     expect(result).toHaveLength(1);
     expect(result[0]).toEqual({
-      avatar: '/avatars/may.PNG',
+      avatar: '/avatars/lobe-ai.png',
       backgroundColor: null,
       id: 'agent-inbox',
-      title: 'May',
+      title: 'Lobe AI',
     });
   });
 

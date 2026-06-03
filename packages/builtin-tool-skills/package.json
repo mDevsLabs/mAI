@@ -1,6 +1,6 @@
 {
   "name": "@lobechat/builtin-tool-skills",
-  "version": "0.0.8",
+  "version": "1.0.0",
   "private": true,
   "exports": {
     ".": "./src/index.ts",
@@ -24,4 +24,3 @@
     "react-i18next": "*"
   }
 }
-

@@ -1,7 +1,7 @@
 import { Given, Then } from '@cucumber/cucumber';
 import { expect } from '@playwright/test';
 
-import type { CustomWorld } from '../../support/world';
+import { CustomWorld } from '../../support/world';
 
 // ============================================
 // Given Steps (Preconditions)

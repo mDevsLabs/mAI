@@ -9,7 +9,7 @@ export default {
   'alert.cloud.title': '{{name}} beta is live',
   'agentOnboardingPromo.actionLabel': 'Try it now',
   'agentOnboardingPromo.description':
-    'Set up your agent teams in a quick chat with May. Your existing agents remain unchanged.',
+    'Set up your agent teams in a quick chat with Lobe AI. Your existing agents remain unchanged.',
   'agentOnboardingPromo.title': 'Quick Wizard',
   'appLoading.appIdle': 'Ready to start',
   'appLoading.appInitializing': 'Application is starting...',
@@ -34,10 +34,10 @@ export default {
   'botIntegrationBanner.dismiss': 'Dismiss',
   'botIntegrationBanner.title': 'Create your own Bot Channel',
   'messengerBanner.dismiss': 'Dismiss',
-  'messengerBanner.title': 'Talk to May on your favorite messaging apps',
+  'messengerBanner.title': 'Talk to Lobe AI on your favorite messaging apps',
   'branching': 'Create Subtopic',
   'branchingDisable':
-    'The "Sub-topic" feature is unavailable in the current mode. To use this feature, please switch to Postgres/Pglite DB mode or use mAI Cloud.',
+    'The "Sub-topic" feature is unavailable in the current mode. To use this feature, please switch to Postgres/Pglite DB mode or use LobeHub Cloud.',
   'branchingRequiresSavedTopic':
     'Current topic is not saved, please save it first to use subtopic feature',
   'cancel': 'Cancel',
@@ -127,7 +127,7 @@ export default {
   'cmdk.askAIHeadingEmpty': 'Choose an AI feature',
   'cmdk.askAgentHeading': 'Ask Agent',
   'cmdk.askAgentPlaceholder': 'Ask {{agent}} something...',
-  'cmdk.askMay': 'Ask May',
+  'cmdk.askLobeAI': 'Ask Lobe AI',
   'cmdk.community': 'Community',
   'cmdk.communitySupport': 'Community Support',
   'cmdk.contactUs': 'Contact Us',
@@ -223,7 +223,6 @@ export default {
   'cmdk.painting': 'Image',
 
   'cmdk.resource': 'Resources',
-  'cmdk.extensions': 'Extensions',
 
   'cmdk.search.agent': 'Agent',
 
@@ -318,7 +317,7 @@ export default {
   'exportType.allAgentWithMessage': 'Export All Agents and Messages',
   'exportType.globalSetting': 'Export Global Settings',
   'feedback': 'Feedback',
-  'feedback.emailContact': 'You can also email us at {{email}}',
+  'feedback.emailContact': 'You can also email us at <email>{{email}}</email>',
   'feedback.errors.fileTooLarge': 'File exceeds 5MB',
   'feedback.errors.submitFailed': 'Submit failed. Try again.',
   'feedback.errors.teamNotFound': 'Configuration error',
@@ -526,7 +525,6 @@ export default {
   'tab.setting': 'Settings',
   'tab.tasks': 'Tasks',
   'tab.video': 'Video',
-  'tab.extensions': 'Extensions',
   'telemetry.allow': 'Allow',
   'telemetry.deny': 'Deny',
   'telemetry.desc':
@@ -565,4 +563,5 @@ export default {
   'userPanel.upgradePlan': 'Upgrade Plan',
   'userPanel.usages': 'Usage',
   'version': 'Version',
+  'zoom': 'Zoom',
 };

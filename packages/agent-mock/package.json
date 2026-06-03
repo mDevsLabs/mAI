@@ -1,6 +1,6 @@
 {
   "name": "@lobechat/agent-mock",
-  "version": "0.0.8",
+  "version": "0.0.1",
   "private": true,
   "exports": {
     ".": "./src/index.ts"
@@ -18,4 +18,3 @@
     "vitest": "^3.0.0"
   }
 }
-

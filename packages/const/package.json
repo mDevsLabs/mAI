@@ -1,12 +1,13 @@
 {
   "name": "@lobechat/const",
-  "version": "0.0.9",
+  "version": "1.0.0",
   "private": true,
   "exports": {
     ".": "./src/index.ts",
     "./currency": "./src/currency.ts",
     "./desktopGlobalShortcuts": "./src/desktopGlobalShortcuts.ts",
-    "./hotkeys": "./src/hotkeys.ts"
+    "./hotkeys": "./src/hotkeys.ts",
+    "./visualRef": "./src/visualRef.ts"
   },
   "main": "./src/index.ts",
   "dependencies": {
@@ -23,4 +24,3 @@
     "klavis": "^2.15.0"
   }
 }
-

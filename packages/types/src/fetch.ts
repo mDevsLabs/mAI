@@ -13,7 +13,7 @@ export const ChatErrorType = {
 
   InvalidUserKey: 'InvalidUserKey', // is not valid User key
   CreateMessageError: 'CreateMessageError',
-  mAIModelDeprecated: 'mAIModelDeprecated', // requested mAI model is no longer available
+  LobeHubModelDeprecated: 'LobeHubModelDeprecated', // requested LobeHub model is no longer available
   /**
    * @deprecated
    */

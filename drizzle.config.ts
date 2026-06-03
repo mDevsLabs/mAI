@@ -7,7 +7,7 @@ import type { Config } from 'drizzle-kit';
 
 dotenv.config();
 
-const connectionString = process.env.DATABASE_URL!;
+let connectionString = process.env.DATABASE_URL!;
 
 export default {
   dbCredentials: {

@@ -1,6 +1,6 @@
 {
   "name": "@lobechat/local-file-shell",
-  "version": "0.0.8",
+  "version": "1.0.0",
   "private": true,
   "sideEffects": false,
   "main": "./src/index.ts",
@@ -16,4 +16,3 @@
     "@types/debug": "^4.1.12"
   }
 }
-

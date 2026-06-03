@@ -15,17 +15,17 @@ const log = debug('file-loaders:text');
 const readTextFile = async (filePath: string): Promise<string> => {
   const buffer = await readFile(filePath);
 
-  if (buffer.length >= 2 && buffer[0] === 0xFF && buffer[1] === 0xFE) {
+  if (buffer.length >= 2 && buffer[0] === 0xff && buffer[1] === 0xfe) {
     log('Detected UTF-16LE BOM');
     return new TextDecoder('utf-16le').decode(buffer.subarray(2));
   }
 
-  if (buffer.length >= 2 && buffer[0] === 0xFE && buffer[1] === 0xFF) {
+  if (buffer.length >= 2 && buffer[0] === 0xfe && buffer[1] === 0xff) {
     log('Detected UTF-16BE BOM');
     return new TextDecoder('utf-16be').decode(buffer.subarray(2));
   }
 
-  if (buffer.length >= 3 && buffer[0] === 0xEF && buffer[1] === 0xBB && buffer[2] === 0xBF) {
+  if (buffer.length >= 3 && buffer[0] === 0xef && buffer[1] === 0xbb && buffer[2] === 0xbf) {
     log('Detected UTF-8 BOM');
     return buffer.subarray(3).toString('utf8');
   }

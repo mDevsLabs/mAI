@@ -7,7 +7,7 @@ import { BUILTIN_AGENT_SLUGS } from '../../types';
 import { systemRoleTemplate } from './systemRole';
 
 export const TASK_AGENT: BuiltinAgentDefinition = {
-  avatar: '/avatars/may.PNG',
+  avatar: '/avatars/lobe-ai.png',
   persist: {
     model: DEFAULT_MODEL,
     provider: DEFAULT_PROVIDER,

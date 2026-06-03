@@ -11,6 +11,7 @@ import {
   CheckIcon,
   ChevronDownIcon,
   CloudIcon,
+  ExternalLinkIcon,
   InfoIcon,
   LaptopIcon,
   MonitorIcon,
@@ -160,6 +161,21 @@ const styles = createStaticStyles(({ css }) => ({
       color: ${cssVar.colorTextSecondary};
     }
   `,
+  headerLink: css`
+    display: flex;
+    gap: 3px;
+    align-items: center;
+
+    font-size: 11px;
+    color: ${cssVar.colorTextQuaternary};
+    text-decoration: none;
+
+    transition: color 0.2s;
+
+    &:hover {
+      color: ${cssVar.colorPrimary};
+    }
+  `,
   headerTitle: css`
     font-size: 12px;
     font-weight: 500;
@@ -200,7 +216,7 @@ const OptionRow = memo<OptionRowProps>(({ active, desc, disabled, icon, label, o
 
 OptionRow.displayName = 'HeteroDeviceSwitcher.OptionRow';
 
-const getDeviceIcon = (platform: string | undefined, size = 14): ReactNode => {
+const getDeviceIcon = (platform: string | null | undefined, size = 14): ReactNode => {
   switch (platform) {
     case 'darwin': {
       return <SiApple color="currentColor" size={size} />;
@@ -278,7 +294,10 @@ const HeteroDeviceSwitcher = memo<HeteroDeviceSwitcherProps>(({ agentId }) => {
     chipLabel = t('heteroAgent.executionTarget.local');
   } else if (executionTarget === 'device') {
     chipIcon = getDeviceIcon(boundDevice?.platform);
-    chipLabel = boundDevice?.hostname ?? t('heteroAgent.executionTarget.unknownDevice');
+    chipLabel =
+      boundDevice?.friendlyName ??
+      boundDevice?.hostname ??
+      t('heteroAgent.executionTarget.unknownDevice');
   }
 
   const isActive = (target: HeteroExecutionTarget, deviceId?: string) => {
@@ -290,11 +309,22 @@ const HeteroDeviceSwitcher = memo<HeteroDeviceSwitcherProps>(({ agentId }) => {
     <Flexbox gap={2} style={{ maxWidth: 320, minWidth: 280 }}>
       <div className={styles.header}>
         <span className={styles.headerTitle}>{t('heteroAgent.executionTarget.title')}</span>
-        <Tooltip title={t('heteroAgent.executionTarget.infoTooltip')}>
-          <span className={styles.headerInfo}>
-            <Icon icon={InfoIcon} size={12} />
-          </span>
-        </Tooltip>
+        <Flexbox horizontal align={'center'} gap={6}>
+          <a
+            className={styles.headerLink}
+            href="https://lobehub.com/downloads"
+            rel="noreferrer"
+            target="_blank"
+          >
+            <Icon icon={ExternalLinkIcon} size={11} />
+            <span>{t('heteroAgent.executionTarget.downloadDesktop')}</span>
+          </a>
+          <Tooltip title={t('heteroAgent.executionTarget.infoTooltip')}>
+            <span className={styles.headerInfo}>
+              <Icon icon={InfoIcon} size={12} />
+            </span>
+          </Tooltip>
+        </Flexbox>
       </div>
       {isDesktop ? (
         <OptionRow
@@ -318,7 +348,7 @@ const HeteroDeviceSwitcher = memo<HeteroDeviceSwitcherProps>(({ agentId }) => {
           disabled={!d.online}
           icon={getDeviceIcon(d.platform)}
           key={d.deviceId}
-          label={d.hostname}
+          label={d.friendlyName || d.hostname || d.deviceId}
           desc={
             <>
               <span className={d.online ? styles.dotOnline : styles.dotOffline} />

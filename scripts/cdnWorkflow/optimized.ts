@@ -7,7 +7,7 @@ export const opimized = async (
   width: number = WIDTH,
 ): Promise<Buffer> => {
   return await sharp(inputBuffer)
-    .resize({ width, withoutEnlargement: true })
+    .resize({ width: width, withoutEnlargement: true })
     .webp()
     .toBuffer();
 };

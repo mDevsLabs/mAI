@@ -107,7 +107,7 @@ describe('AgentSignalNightlyReviewModel', () => {
             chatConfig: chatConfigForSelfIteration(blockedEnabled),
             id: `nightly-lobe-ai-${caseName}`,
             slug: INBOX_SESSION_ID,
-            title: 'May',
+            title: 'Lobe AI',
             userId: enabledUserId,
             virtual: true,
           },

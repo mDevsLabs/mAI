@@ -142,10 +142,10 @@ export type DeclareSelfFeedbackIntentStateReason =
 export interface DeclareSelfFeedbackIntentState {
   /** Whether the declaration crossed the Agent Signal enqueue boundary. */
   accepted: boolean;
-  /** Rejection or runtime reason. */
-  reason: DeclareSelfFeedbackIntentStateReason;
   /** Missing context keys when the runtime cannot emit the declaration. */
   required?: string[];
+  /** Rejection or runtime reason. */
+  reason: DeclareSelfFeedbackIntentStateReason;
   /** Stable source id for accepted declarations. */
   sourceId?: null | string;
   /** Evidence strength assigned by the declaration service. */

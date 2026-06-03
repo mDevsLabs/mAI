@@ -38,7 +38,7 @@ const isWhitelisted = (filePath: string, whitelist: WhitelistConfig): boolean =>
     for (const pattern of whitelist.patterns) {
       // Escape dots and replace glob patterns
       // Use a placeholder for ** to avoid conflicts with single *
-      const regexPattern = pattern
+      let regexPattern = pattern
         .replaceAll('.', '\\.')
         .replaceAll('**', '\u0000DOUBLESTAR\u0000')
         .replaceAll('*', '[^/]*')

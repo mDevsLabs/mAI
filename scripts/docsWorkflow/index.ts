@@ -42,7 +42,7 @@ const run = async () => {
       };
     });
     return {
-      children,
+      children: children,
       ...item,
     };
   });

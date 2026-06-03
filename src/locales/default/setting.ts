@@ -325,6 +325,35 @@ export default {
   'creds.view.title': 'View Credential: {{name}}',
   'creds.view.values': 'Credential Values',
   'creds.view.warning': 'These values are sensitive. Do not share them with others.',
+  'devices.actions.edit': 'Edit',
+  'devices.actions.remove': 'Remove',
+  'devices.channel.connected': 'Connected {{time}}',
+  'devices.currentBadge': 'This device',
+  'devices.detail.addDir': 'Add directory',
+  'devices.detail.connections': 'Connections',
+  'devices.detail.noRecent': 'No recent directories',
+  'devices.detail.recentDirs': 'Recent directories',
+  'devices.edit.browse': 'Browse…',
+  'devices.edit.cancel': 'Cancel',
+  'devices.edit.defaultCwd': 'Default working directory',
+  'devices.edit.defaultCwdPlaceholder': 'e.g. /Users/me/projects',
+  'devices.edit.friendlyName': 'Name',
+  'devices.edit.friendlyNamePlaceholder': 'A name to recognize this device',
+  'devices.edit.save': 'Save',
+  'devices.edit.title': 'Edit device',
+  'devices.empty':
+    'No devices yet. Connect one with `lh connect` or by signing in to the desktop app.',
+  'devices.fallbackBadge': 'Unstable identity',
+  'devices.fallbackTooltip':
+    "This device couldn't be identified by its machine ID, so reinstalling the app may create a duplicate entry.",
+  'devices.lastSeen': 'Last active {{time}}',
+  'devices.remove.confirm': 'Remove this device?',
+  'devices.remove.confirmDesc':
+    'This disconnects the device from your account. It does not sign the device out, and it can re-register on next connect.',
+  'devices.status.offline': 'Offline',
+  'devices.status.online': 'Online',
+  'devices.title': 'My Devices',
+  'devices.workingDirectory': 'Working dir: {{path}}',
   'checkingPermissions': 'Checking permissions...',
   'danger.clear.action': 'Clear Now',
   'danger.clear.confirm': "Clear all chat data? This can't be undone.",
@@ -497,7 +526,7 @@ export default {
   'memory.effort.medium': 'Medium — Balanced behavior',
   'memory.effort.title': 'Aggressiveness',
   'memory.enabled.desc':
-    'Allow mAI to extract preferences and info from conversations and use them later. You can view, edit, or clear memory anytime.',
+    'Allow LobeHub to extract preferences and info from conversations and use them later. You can view, edit, or clear memory anytime.',
   'memory.enabled.title': 'Enable Memory',
   'memory.title': 'Memory Settings',
   'message.success': 'Update successful',
@@ -506,10 +535,15 @@ export default {
   'notification.email.title': 'Email Notifications',
   'notification.inbox.desc': 'Show notifications in the in-app inbox',
   'notification.inbox.title': 'Inbox Notifications',
+  'notification.push.desc':
+    'Send push notifications to your mobile devices (LobeHub mobile app required)',
+  'notification.push.title': 'Mobile Push Notifications',
+  'notification.category.billing.title': 'Billing',
   'notification.category.generation.title': 'Generation',
   'notification.category.schedule.title': 'Scheduled tasks',
   'notification.item.agent_cron_job_failed': 'Scheduled task failed',
   'notification.item.image_generation_completed': 'Image generation completed',
+  'notification.item.storage_overage_cap_reached': 'Storage pay-as-you-go cap reached',
   'notification.item.video_generation_completed': 'Video generation completed',
   'notification.title': 'Notification Channels',
   'myAgents.actions.cancel': 'Cancel',
@@ -565,6 +599,16 @@ export default {
   'settingAgent.description.desc': 'A brief introduction to your agent, not for character setting',
   'settingAgent.description.placeholder': 'Enter agent description',
   'settingAgent.description.title': 'Agent Description',
+  'settingAgent.export.dialogTitle': 'Export Agent Profile',
+  'settingAgent.export.enabledPlugins': 'Enabled Skills',
+  'settingAgent.export.error': 'Failed to export the agent profile',
+  'settingAgent.export.metadata': 'Metadata',
+  'settingAgent.export.model': 'Model',
+  'settingAgent.export.provider': 'Provider',
+  'settingAgent.export.success': 'Agent profile exported successfully',
+  'settingAgent.export.tags': 'Tags',
+  'settingAgent.export.untitled': 'Untitled Agent',
+  'settingAgent.export.untitledFileName': 'agent-profile',
   'settingAgent.name.placeholder': 'Enter agent name',
   'settingAgent.name.title': 'Name',
   'settingAgent.prompt.placeholder': 'Enter agent settings, press / to open the command menu',
@@ -588,7 +632,7 @@ export default {
   'settingAgent.tag.title': 'Tag',
   'settingAgent.title': 'Agent info',
   'settingAppearance.appTray.desc':
-    'Show the mAI icon in the system tray or macOS menu bar. Disabling it also removes tray menu access.',
+    'Show the LobeHub icon in the system tray or macOS menu bar. Disabling it also removes tray menu access.',
   'settingAppearance.appTray.title': 'Show App Tray',
   'settingAppearance.animationMode.agile': 'Agile',
   'settingAppearance.animationMode.desc':
@@ -799,7 +843,7 @@ export default {
   'settingSelfIteration.enabled.desc':
     'Allow this assistant to review recent signals and improve its own skills when the self-iteration workflow runs.',
   'settingSelfIteration.enabled.managedDesc':
-    'Always on for May while Self-Iteration is available.',
+    'Always on for Lobe AI while Self-Iteration is available.',
   'settingSelfIteration.enabled.title': 'Enable Self-Iteration',
   'settingSelfIteration.title': 'Self-Iteration',
   'settingSystem.oauth.info.desc': 'Logged in',
@@ -851,7 +895,7 @@ export default {
   'settingSystemTools.tools.grep.desc': 'GNU grep - standard text search tool',
   'settingSystemTools.tools.kimi.desc': 'Kimi CLI - Moonshot AI agentic coding CLI',
   'settingSystemTools.tools.mdfind.desc': 'macOS Spotlight search (fast indexed search)',
-  'settingSystemTools.tools.lobehub.desc': 'mAI CLI - manage and connect to mAI services',
+  'settingSystemTools.tools.lobehub.desc': 'LobeHub CLI - manage and connect to LobeHub services',
   'settingSystemTools.tools.bun.desc': 'Bun - fast JavaScript runtime and package manager',
   'settingSystemTools.tools.bunx.desc': 'bunx - Bun package runner for executing npm packages',
   'settingSystemTools.tools.node.desc': 'Node.js - JavaScript runtime for executing JS/TS',
@@ -894,7 +938,7 @@ export default {
   'skillStore.search': 'Search skills by name or keyword, press Enter to search…',
   'skillStore.tabs.community': 'Community',
   'skillStore.tabs.custom': 'Custom',
-  'skillStore.tabs.lobehub': 'mAI',
+  'skillStore.tabs.lobehub': 'LobeHub',
   'skillStore.tabs.mcp': 'MCP',
   'skillStore.tabs.skills': 'Skills',
   'skillStore.title': 'Skill Store',
@@ -934,6 +978,54 @@ When I am ___, I need ___
   'storage.embeddings.used': 'Vector Storage',
   'storage.title': 'Data Storage',
   'storage.used': 'Storage Usage',
+  'storageOverage.addPaymentMethod': 'Add payment method',
+  'storageOverage.capped': 'Monthly spending cap reached. Overage uploads are paused.',
+  'storageOverage.capUpdateFailed': 'Failed to update monthly cap.',
+  'storageOverage.capUpdated': 'Monthly cap updated.',
+  'storageOverage.consent.billedMonthlyForYearly':
+    'Storage overage is billed monthly, separate from your yearly plan renewal',
+  'storageOverage.consent.billedTogether': 'Billed together with your subscription',
+  'storageOverage.consent.canDisable': 'Can be disabled anytime',
+  'storageOverage.consent.description': 'Storage exceeding your plan quota will be charged:',
+  'storageOverage.consent.enable': 'Agree and enable',
+  'storageOverage.consent.onlyOverage': 'Only overage is charged',
+  'storageOverage.consent.rate':
+    'About {{limitedMonthlyRate}}/GB/month for a limited time (regular {{regularMonthlyRate}}).',
+  'storageOverage.consent.title': 'Enable Storage Pay-as-you-go',
+  'storageOverage.currentPlanLocked.desc':
+    'Your current plan does not support storage pay-as-you-go. After it ends, subscribe to a plan to enable it.',
+  'storageOverage.desc':
+    'Subscription plans can enable metered billing for storage beyond the included quota.',
+  'storageOverage.disableConfirm.blockUploads':
+    'If your storage is still above the included quota, new uploads will be blocked.',
+  'storageOverage.disableConfirm.canEnableAgain':
+    'You can enable storage pay-as-you-go again later.',
+  'storageOverage.disableConfirm.confirm': 'Disable',
+  'storageOverage.disableConfirm.description':
+    'After disabling, storage overage will no longer be billed.',
+  'storageOverage.disableConfirm.existingCharges':
+    'Charges already incurred in this billing cycle will still be included on your subscription invoice.',
+  'storageOverage.disableConfirm.title': 'Disable storage pay-as-you-go?',
+  'storageOverage.disableFailed': 'Failed to disable storage pay-as-you-go.',
+  'storageOverage.disabled': 'Storage pay-as-you-go disabled.',
+  'storageOverage.enableFailed': 'Failed to enable storage pay-as-you-go.',
+  'storageOverage.enabled': 'Storage pay-as-you-go enabled.',
+  'storageOverage.monthlyCap': 'Monthly Spending Cap',
+  'storageOverage.monthlyCapDesc':
+    'Leave empty for unlimited. Uploads will be blocked when the cap is reached.',
+  'storageOverage.noPaymentMethod': 'Please add a payment method to enable storage pay-as-you-go.',
+  'storageOverage.rate':
+    'About {{limitedMonthlyRate}}/GB/month for a limited time (regular {{regularMonthlyRate}}).',
+  'storageOverage.subscriptionRequired.action': 'View plans',
+  'storageOverage.subscriptionRequired.desc':
+    'Subscribe to a plan to enable storage pay-as-you-go for overage usage.',
+  'storageOverage.title': 'File Storage Pay-as-you-go',
+  'storageOverage.toggle': 'Enable overage billing',
+  'storageOverage.unlimited': 'Unlimited',
+  'storageOverage.usage.current': 'Usage',
+  'storageOverage.usage.estimatedCharge': 'Est. Cycle Charge',
+  'storageOverage.usage.incurredCharge': 'Incurred This Cycle',
+  'storageOverage.usage.overage': 'Overage',
   'submitAgentModal.button': 'Submit Agent',
   'submitAgentModal.identifier': 'Agent Identifier',
   'submitAgentModal.metaMiss':
@@ -1044,6 +1136,7 @@ When I am ___, I need ___
   'tab.chatAppearance': 'Chat Appearance',
   'tab.common': 'Appearance',
   'tab.creds': 'Credentials',
+  'tab.devices': 'Devices',
   'tab.experiment': 'Experiment',
   'tab.hotkey': 'Hotkeys',
   'tab.image': 'Image Generation',
@@ -1154,7 +1247,7 @@ When I am ___, I need ___
     'Manage connections to your desktop devices. List online devices, activate a device for remote operations, and check connection status.',
   'tools.builtins.lobe-remote-device.title': 'Remote Device',
   'tools.builtins.lobe-skill-store.description':
-    'Browse and install agent skills from the mAI marketplace. Use this when you need extended capabilities or want to install a specific skill.',
+    'Browse and install agent skills from the LobeHub marketplace. Use this when you need extended capabilities or want to install a specific skill.',
   'tools.builtins.lobe-skill-store.title': 'Skill Store',
   'tools.builtins.lobe-skills.description': 'Activate and use reusable skill packages',
   'tools.builtins.lobe-skills.title': 'Skills',
@@ -1183,8 +1276,8 @@ When I am ___, I need ___
     'Browser automation CLI for AI agents. Use when tasks involve website or Electron interaction such as navigation, form filling, clicking, screenshot capture, scraping data, login flows, and end-to-end app testing.',
   'tools.builtins.lobe-agent-browser.title': 'Agent Browser',
   'tools.builtins.lobehub.description':
-    'Manage the mAI platform via CLI — knowledge bases, memory, agents, files, search, generation, and more.',
-  'tools.builtins.lobehub.title': 'mAI',
+    'Manage the LobeHub platform via CLI — knowledge bases, memory, agents, files, search, generation, and more.',
+  'tools.builtins.lobehub.title': 'LobeHub',
   'tools.builtins.task.description':
     'Task management and execution — create, track, review, and complete tasks via CLI.',
   'tools.builtins.task.title': 'Task',
@@ -1371,7 +1464,7 @@ When I am ___, I need ___
   'tools.lobehubSkill.disconnected': 'Disconnected',
 
   'tools.lobehubSkill.error': 'Error',
-  // mAI Skill Providers i18n
+  // LobeHub Skill Providers i18n
   'tools.lobehubSkill.providers.github.description':
     'GitHub is a platform for version control and collaboration, enabling developers to host, review, and manage code repositories.',
   'tools.lobehubSkill.providers.github.readme':

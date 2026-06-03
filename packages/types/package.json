@@ -1,6 +1,6 @@
 {
   "name": "@lobechat/types",
-  "version": "0.0.8",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "main": "./src/index.ts",
@@ -22,4 +22,3 @@
     "zod": "^3.25.76"
   }
 }
-

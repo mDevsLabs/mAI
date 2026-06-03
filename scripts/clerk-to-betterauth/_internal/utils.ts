@@ -8,7 +8,7 @@ export async function generateBackupCodes(secret: string) {
     .map((code) => `${code.slice(0, 5)}-${code.slice(5)}`);
   const encCodes = await symmetricEncrypt({
     data: JSON.stringify(backupCodes),
-    key,
+    key: key,
   });
   return encCodes;
 }

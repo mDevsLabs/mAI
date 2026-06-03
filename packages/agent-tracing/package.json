@@ -1,6 +1,6 @@
 {
   "name": "@lobechat/agent-tracing",
-  "version": "0.0.8",
+  "version": "1.0.0",
   "private": true,
   "exports": {
     ".": "./src/index.ts",
@@ -17,4 +17,3 @@
     "gpt-tokenizer": "^3.4.0"
   }
 }
-

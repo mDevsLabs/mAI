@@ -1,5 +1,4 @@
 export enum DesktopOnboardingScreen {
-  AIProvider = 'ai-provider',
   DataMode = 'data-mode',
   Login = 'login',
   Permissions = 'permissions',

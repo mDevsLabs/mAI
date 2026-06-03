@@ -1,283 +1,375 @@
-# 🤯 Application de Bureau mAI
-mAI Desktop est une application de bureau multiplateforme pour [mAI](https://github.com/mDevsLabs/mAI), construite avec Electron, offrant une expérience et des fonctionnalités de bureau plus natives.
+# 🤯 LobeHub Desktop Application
 
-## ✨ Fonctionnalités
+LobeHub Desktop is a cross-platform desktop application for [LobeHub](https://github.com/lobehub/lobehub), built with Electron, providing a more native desktop experience and functionality.
 
-- **🌍 Support Multiplateforme** : Compatible avec les systèmes macOS (Intel/Apple Silicon), Windows et Linux.
-- **🔄 Mises à jour Automatiques** : Le mécanisme de mise à jour intégré garantit que vous disposez toujours de la dernière version.
-- **🌐 Support Multilingue** : Support complet de l'i18n pour plus de 18 langues avec chargement différé.
-- **🎨 Intégration Native** : Intégration approfondie avec le système d'exploitation via les menus natifs, les raccourcis clavier et les notifications.
-- **🔒 Sécurisé & Fiable** : Signé et notarisé pour macOS, stockage chiffré des clés, flux OAuth sécurisé.
-- **📦 Multiples Canaux de Distribution** : Versions stable, bêta et nightly builds.
-- **⚡ Gestion Avancée des Fenêtres** : Architecture multi-fenêtres avec synchronisation automatique du thème.
-- **🔗 Synchronisation Serveur Distant** : Synchronisation sécurisée des données avec des instances mAI distantes.
-- **🎯 Outils de Développement** : Panneau de développement intégré et outils complets de débogage.
+## ✨ Features
 
-## 🚀 Configuration pour le Développement
+- **🌍 Cross-platform Support**: Supports macOS (Intel/Apple Silicon), Windows, and Linux systems
+- **🔄 Auto Updates**: Built-in update mechanism ensures you always have the latest version
+- **🌐 Multi-language Support**: Complete i18n support for 18+ languages with lazy loading
+- **🎨 Native Integration**: Deep OS integration with native menus, shortcuts, and notifications
+- **🔒 Secure & Reliable**: macOS notarized, encrypted token storage, secure OAuth flow
+- **📦 Multiple Release Channels**: Stable, beta, and nightly build versions
+- **⚡ Advanced Window Management**: Multi-window architecture with theme synchronization
+- **🔗 Remote Server Sync**: Secure data synchronization with remote LobeHub instances
+- **🎯 Developer Tools**: Built-in development panel and comprehensive debugging tools
 
-### Prérequis
+## 🚀 Development Setup
+
+### Prerequisites
 
 - **Node.js** 22+
 - **pnpm** 10+
-- Environnement de développement compatible **Electron**
+- **Electron** compatible development environment
 
-### Démarrage Rapide
+### Quick Start
 
 ```bash
-# Installer les dépendances
+# Install dependencies
 pnpm install-isolated
 
-# Lancer le serveur de développement
+# Start development server
 pnpm dev
 
-# Vérification du typage
+# Type checking
 pnpm type-check
 
-# Exécuter les tests
+# Run tests
 pnpm test
 ```
 
-### Configuration de l'Environnement
+### Environment Configuration
 
-Copiez le fichier `.env.desktop` vers `.env` et configurez-le selon vos besoins :
+Copy `.env.desktop` to `.env` and configure as needed:
 
 ```bash
 cp .env.desktop .env
 ```
 
-> [!WARNING]
-> Sauvegardez votre fichier `.env` avant d'effectuer des modifications pour éviter de perdre vos configurations.
+> \[!WARNING]
+> Backup your `.env` file before making changes to avoid losing configurations.
 
-### Commandes de Build
+### Build Commands
 
-| Commande                   | Description                                                 |
-| -------------------------- | ----------------------------------------------------------- |
-| `pnpm build:main`          | Compiler le processus principal et preload (dist uniquement)|
-| `pnpm package:mac`         | Empaqueter pour macOS (Intel + Apple Silicon)               |
-| `pnpm package:win`         | Empaqueter pour Windows                                     |
-| `pnpm package:linux`       | Empaqueter pour Linux                                       |
-| `pnpm package:local`       | Build d'empaquetage local (sans ASAR)                       |
-| `pnpm package:local:reuse` | Build d'empaquetage local en réutilisant le dist existant   |
+| Command                    | Description                                 |
+| -------------------------- | ------------------------------------------- |
+| `pnpm build:main`          | Build main/preload (dist output only)       |
+| `pnpm package:mac`         | Package for macOS (Intel + Apple Silicon)   |
+| `pnpm package:win`         | Package for Windows                         |
+| `pnpm package:linux`       | Package for Linux                           |
+| `pnpm package:local`       | Local packaging build (no ASAR)             |
+| `pnpm package:local:reuse` | Local packaging build reusing existing dist |
 
-### Flux de Travail de Développement
+### Development Workflow
 
 ```bash
-# 1. Développement
-pnpm dev # Lancer avec rechargement à chaud (hot reload)
+# 1. Development
+pnpm dev # Start with hot reload
 
-# 2. Qualité du Code
-pnpm lint       # Vérification ESLint
-pnpm format     # Formatage Prettier
-pnpm type-check # Validation TypeScript
+# 2. Code Quality
+pnpm lint       # ESLint checking
+pnpm format     # Prettier formatting
+pnpm type-check # TypeScript validation
 
-# 3. Tests
-pnpm test # Exécuter les tests Vitest
+# 3. Testing
+pnpm test # Run Vitest tests
 
-# 4. Build & Empaquetage
-pnpm build:main    # Build de production (dist uniquement)
-pnpm package:local # Empaquetage pour test local
+# 4. Build & Package
+pnpm build:main    # Production build (dist only)
+pnpm package:local # Local testing package
 ```
 
-## 🎯 Canaux de Distribution
+## 🎯 Release Channels
 
-| Canal       | Description                                       | Stabilité | Mises à jour auto |
-| ----------- | ------------------------------------------------- | --------- | ----------------- |
-| **Stable**  | Versions entièrement testées                      | 🟢 Haute  | ✅ Oui            |
-| **Beta**    | Pré-versions avec nouvelles fonctionnalités       | 🟡 Moyenne| ✅ Oui            |
-| **Nightly** | Builds quotidiens avec les derniers changements   | 🟠 Basse  | ✅ Oui            |
+| Channel     | Description                      | Stability | Auto-Updates |
+| ----------- | -------------------------------- | --------- | ------------ |
+| **Stable**  | Thoroughly tested releases       | 🟢 High   | ✅ Yes       |
+| **Beta**    | Pre-release with new features    | 🟡 Medium | ✅ Yes       |
+| **Nightly** | Daily builds with latest changes | 🟠 Low    | ✅ Yes       |
 
-## 🛠 Stack Technique
+## 🛠 Technology Stack
 
-### Framework Principal
+### Core Framework
 
-- **Electron** `37.1.0` - Framework de bureau multiplateforme
-- **Node.js** `22+` - Runtime backend
-- **TypeScript** `5.7+` - Développement typé et sécurisé
-- **Vite** `6.2+` - Outil de build
+- **Electron** `37.1.0` - Cross-platform desktop framework
+- **Node.js** `22+` - Backend runtime
+- **TypeScript** `5.7+` - Type-safe development
+- **Vite** `6.2+` - Build tooling
 
-### Architecture & Modèles
+### Architecture & Patterns
 
-- **Injection de Dépendances** - Conteneur IoC avec enregistrement basé sur des décorateurs
-- **Architecture Dirigée par les Événements** - Communication IPC entre les processus
-- **Fédération de Modules** - Chargement dynamique des contrôleurs et services
-- **Modèle Observateur** - Gestion de l'état et synchronisation de l'interface utilisateur
+- **Dependency Injection** - IoC container with decorator-based registration
+- **Event-Driven Architecture** - IPC communication between processes
+- **Module Federation** - Dynamic controller and service loading
+- **Observer Pattern** - State management and UI synchronization
 
-### Outils de Développement
+### Development Tools
 
-- **Vitest** - Framework de tests unitaires
-- **ESLint** - Validation de code
-- **Prettier** - Formatage de code
-- **electron-builder** - Empaquetage de l'application
-- **electron-updater** - Mécanisme de mise à jour automatique
+- **Vitest** - Unit testing framework
+- **ESLint** - Code linting
+- **Prettier** - Code formatting
+- **electron-builder** - Application packaging
+- **electron-updater** - Auto-update mechanism
 
-### Sécurité & Stockage
+### Security & Storage
 
-- **Electron Safe Storage** - Stockage chiffré des clés et tokens
-- **OAuth 2.0 + PKCE** - Flux d'authentification sécurisé
-- **electron-store** - Configuration persistante
-- **Gestionnaire de Protocole Personnalisé** - Gestion sécurisée des rappels (callbacks)
+- **Electron Safe Storage** - Encrypted token storage
+- **OAuth 2.0 + PKCE** - Secure authentication flow
+- **electron-store** - Persistent configuration
+- **Custom Protocol Handler** - Secure callback handling
 
 ## 🏗 Architecture
 
-L'application de bureau utilise une architecture sophistiquée d'injection de dépendances et de communication dirigée par les événements :
+The desktop application uses a sophisticated dependency injection and event-driven architecture:
 
-### 📁 Structure Principale
+### 📁 Core Structure
 
 ```
 src/main/core/
-├── App.ts                    # 🎯 Orchestrateur principal de l'application
-├── IoCContainer.ts           # 🔌 Conteneur d'injection de dépendances
-├── window/                   # 🪟 Modules de gestion des fenêtres
-│   ├── WindowThemeManager.ts     # 🎨 Synchronisation des thèmes
-│   ├── WindowPositionManager.ts  # 📐 Persistance de la position
-│   ├── WindowErrorHandler.ts     # ⚠️  Gestion des erreurs
-│   └── WindowConfigBuilder.ts    # ⚙️  Générateur de configuration
-├── browser/                  # 🌐 Modules de gestion du navigateur
-│   ├── Browser.ts               # 🪟 Instances de fenêtres individuelles
-│   └── BrowserManager.ts        # 👥 Coordinateur multi-fenêtres
-├── ui/                       # 🎨 Modules du système d'interface utilisateur
-│   ├── Tray.ts                  # 📍 Intégration de la zone de notification
-│   ├── TrayManager.ts           # 🔧 Gestion du tray
-│   ├── MenuManager.ts           # 📋 Système de menu natif
-│   └── ShortcutManager.ts       # ⌨️  Raccourcis globaux
-└── infrastructure/           # 🔧 Services d'infrastructure
-    ├── StoreManager.ts          # 💾 Stockage de la configuration
-    ├── I18nManager.ts           # 🌍 Internationalisation
-    ├── UpdaterManager.ts        # 📦 Système de mise à jour automatique
-    └── StaticFileServerManager.ts # 🗂️ Serveur de fichiers locaux
+├── App.ts                    # 🎯 Main application orchestrator
+├── IoCContainer.ts           # 🔌 Dependency injection container
+├── window/                   # 🪟 Window management modules
+│   ├── WindowThemeManager.ts     # 🎨 Theme synchronization
+│   ├── WindowPositionManager.ts  # 📐 Position persistence
+│   ├── WindowErrorHandler.ts     # ⚠️  Error boundaries
+│   └── WindowConfigBuilder.ts    # ⚙️  Configuration builder
+├── browser/                  # 🌐 Browser management modules
+│   ├── Browser.ts               # 🪟 Individual window instances
+│   └── BrowserManager.ts        # 👥 Multi-window coordinator
+├── ui/                       # 🎨 UI system modules
+│   ├── Tray.ts                  # 📍 System tray integration
+│   ├── TrayManager.ts           # 🔧 Tray management
+│   ├── MenuManager.ts           # 📋 Native menu system
+│   └── ShortcutManager.ts       # ⌨️  Global shortcuts
+└── infrastructure/           # 🔧 Infrastructure services
+    ├── StoreManager.ts          # 💾 Configuration storage
+    ├── I18nManager.ts           # 🌍 Internationalization
+    ├── UpdaterManager.ts        # 📦 Auto-update system
+    └── StaticFileServerManager.ts # 🗂️ Local file serving
 ```
 
-### 🔄 Cycle de Vie de l'Application
+### 🔄 Application Lifecycle
 
-La classe `App.ts` orchestre tout le cycle de vie de l'application à travers plusieurs phases clés :
+The `App.ts` class orchestrates the entire application lifecycle through key phases:
 
-#### 1. 🚀 Phase d'Initialisation
+#### 1. 🚀 Initialization Phase
 
-- **Journalisation des informations système** - Capture les détails de l'OS, du processeur, de la RAM et de la langue.
-- **Configuration du Store Manager** - Initialise le stockage persistant de la configuration.
-- **Chargement dynamique des modules** - Découvre automatiquement les contrôleurs et les services via des imports glob.
-- **Enregistrement des événements IPC** - Configure les canaux de communication inter-processus.
+- **System Information Logging** - Captures OS, CPU, RAM, and locale details
+- **Store Manager Setup** - Initializes persistent configuration storage
+- **Dynamic Module Loading** - Auto-discovers controllers and services via glob imports
+- **IPC Event Registration** - Sets up inter-process communication channels
 
-#### 2. 🏃 Phase de Bootstrap
+#### 2. 🏃 Bootstrap Phase
 
-- **Vérification d'instance unique** - S'assure qu'une seule instance de l'application est en cours d'exécution.
-- **Lancement du serveur IPC** - Démarre le serveur de communication.
-- **Initialisation des gestionnaires principaux** - Initialisation séquentielle de tous les gestionnaires :
-  - 🌍 I18n pour l'internationalisation
-  - 📋 Système de menu pour les menus natifs
-  - 🗂️ Serveur de fichiers statiques pour les ressources locales
-  - ⌨️ Raccourcis clavier globaux
-  - 🪟 Gestion des fenêtres du navigateur
-  - 📍 Zone de notification (tray) (Windows uniquement)
-  - 📦 Système d'auto-mise à jour
+- **Single Instance Check** - Ensures only one application instance runs
+- **IPC Server Launch** - Starts the communication server
+- **Core Manager Initialization** - Sequential initialization of all managers:
+  - 🌍 I18n for internationalization
+  - 📋 Menu system for native menus
+  - 🗂️ Static file server for local assets
+  - ⌨️ Global shortcuts registration
+  - 🪟 Browser window management
+  - 📍 System tray (Windows only)
+  - 📦 Auto-updater system
 
-### 🔧 Analyse Approfondie des Composants
+### 🔧 Core Components Deep Dive
 
-#### 🌐 Système de Gestion du Navigateur
+#### 🌐 Browser Management System
 
-- **Architecture multi-fenêtres** - Supporte les fenêtres de chat, de paramètres et d'outils de développement.
-- **Gestion de l'état des fenêtres** - Gère le positionnement, le thème et le cycle de vie.
-- **Mapping WebContents** - Mapping bidirectionnel entre les WebContents et leurs identifiants.
-- **Diffusion d'événements** - Distribution centralisée des événements à toutes les fenêtres ou à des fenêtres spécifiques.
+- **Multi-Window Architecture** - Supports chat, settings, and devtools windows
+- **Window State Management** - Handles positioning, theming, and lifecycle
+- **WebContents Mapping** - Bidirectional mapping between WebContents and identifiers
+- **Event Broadcasting** - Centralized event distribution to all or specific windows
 
-#### 🔌 Injection de Dépendances & Système d'Événements
+#### 🔌 Dependency Injection & Event System
 
-- **Conteneur IoC** - Conteneur basé sur WeakMap pour les méthodes de contrôleur décorées.
-- **Décorateurs IPC Typés** - `@IpcMethod` relie les méthodes des contrôleurs à des canaux typés et sécurisés.
-- **Mapping automatique des événements** - Événements enregistrés lors du chargement des contrôleurs.
-- **Localisateur de Services** - Récupération typée des services et des contrôleurs.
+- **IoC Container** - WeakMap-based container for decorated controller methods
+- **Typed IPC Decorators** - `@IpcMethod` wires controller methods into type-safe channels
+- **Automatic Event Mapping** - Events registered during controller loading
+- **Service Locator** - Type-safe service and controller retrieval
 
-##### 🧠 Flux IPC Sécurisé
+##### 🧠 Type-Safe IPC Flow
 
-- **Propagation de contexte asynchrone** - `src/main/utils/ipc/base.ts` capture l'`IpcContext` avec `AsyncLocalStorage`, permettant ainsi à la logique du contrôleur d'appeler `getIpcContext()` n'importe où dans un gestionnaire IPC sans transmettre explicitement les arguments.
-- **Registre des constructeurs de services** - `src/main/controllers/registry.ts` exporte `controllerIpcConstructors` et `DesktopIpcServices`, permettant le typage automatique des proxies IPC du renderer.
-- **Proxy du Renderer** - `src/utils/electron/ipc.ts` expose `ensureElectronIpc()` qui construit un proxy dynamiquement au-dessus de `window.electronAPI.invoke`, fournissant une interface typée au code React/Next.js sans exposer les proxies bruts dans le preload.
-- **Package de types partagés** - `apps/desktop/src/main/exports.d.ts` enrichit `@lobechat/electron-client-ipc` pour que chaque package puisse utiliser `DesktopIpcServices` sans importer directement le code métier desktop.
+- **Async Context Propagation** - `src/main/utils/ipc/base.ts` captures the `IpcContext` with `AsyncLocalStorage`, so controller logic can call `getIpcContext()` anywhere inside an IPC handler without explicitly threading arguments.
+- **Service Constructors Registry** - `src/main/controllers/registry.ts` exports `controllerIpcConstructors` and `DesktopIpcServices`, enabling automatic typing of renderer IPC proxies.
+- **Renderer Proxy Helper** - `src/utils/electron/ipc.ts` exposes `ensureElectronIpc()` which lazily builds a proxy on top of `window.electronAPI.invoke`, giving React/Next.js code a type-safe API surface without exposing raw proxies in preload.
+- **Shared Typings Package** - `apps/desktop/src/main/exports.d.ts` augments `@lobechat/electron-client-ipc` so every package can consume `DesktopIpcServices` without importing desktop business code directly.
 
-#### 🪟 Gestion des Fenêtres
+#### 🪟 Window Management
 
-- **Fenêtres adaptées au thème** - Adaptation automatique au mode sombre/clair du système.
-- **Style spécifique à la plateforme** - Personnalisation de la barre de titre et de la superposition sous Windows.
-- **Persistance de la position** - Enregistre et restaure les positions des fenêtres d'une session à l'autre.
-- **Gestion des erreurs** - Gestion centralisée des erreurs pour les opérations de fenêtres.
+- **Theme-Aware Windows** - Automatic adaptation to system dark/light mode
+- **Platform-Specific Styling** - Windows title bar and overlay customization
+- **Position Persistence** - Save and restore window positions across sessions
+- **Error Boundaries** - Centralized error handling for window operations
 
-#### 🔧 Services d'Infrastructure
+#### 🔧 Infrastructure Services
 
 ##### 🌍 I18n Manager
 
-- Support de plus de 18 langues avec chargement différé et organisation par espaces de noms.
-- Intégration système avec la détection de langue d'Electron.
-- Rafraîchissement dynamique de l'interface utilisateur lors des changements de langue.
+- **18+ Language Support** with lazy loading and namespace organization
+- **System Integration** with Electron's locale detection
+- **Dynamic UI Refresh** on language changes
+- **Resource Management** with efficient loading strategies
 
 ##### 📦 Update Manager
 
-- Support multi-canaux (stable, beta, nightly) avec intervalles configurables.
-- Téléchargements en arrière-plan avec suivi de progression et notifications.
-- Protection contre les retours en arrière (rollback) avec gestion des erreurs et récupération.
+- **Multi-Channel Support** (stable, beta, nightly) with configurable intervals
+- **Background Downloads** with progress tracking and user notifications
+- **Rollback Protection** with error handling and recovery mechanisms
+- **Channel Management** with automatic channel switching
 
 ##### 💾 Store Manager
 
-- Stockage typé et sécurisé utilisant `electron-store` avec interfaces TypeScript.
-- Secrets chiffrés via l'API Safe Storage d'Electron.
-- Validation de la configuration avec gestion des valeurs par défaut.
+- **Type-Safe Storage** using electron-store with TypeScript interfaces
+- **Encrypted Secrets** via Electron's Safe Storage API
+- **Configuration Validation** with default value management
+- **File System Integration** with automatic directory creation
 
-##### 🗂️ Serveur de Fichiers Statiques
+##### 🗂️ Static File Server
 
-- Serveur HTTP local pour distribuer les ressources de l'application et les fichiers utilisateur.
-- Contrôles de sécurité avec filtrage des requêtes et validation des accès.
-- Routage intelligent entre les différents emplacements de stockage.
+- **Local HTTP Server** for serving application assets and user files
+- **Security Controls** with request filtering and access validation
+- **File Management** with upload, download, and deletion capabilities
+- **Path Resolution** with intelligent routing between storage locations
 
-#### 🎨 Intégration de l'Interface Utilisateur
+#### 🎨 UI System Integration
 
-- **Raccourcis globaux** - Enregistrement de raccourcis clavier natifs avec détection des conflits.
-- **Zone de notification (Tray)** - Intégration native avec menus contextuels et notifications.
-- **Menus natifs** - Menus d'application et menus contextuels spécifiques à la plateforme avec support i18n.
+- **Global Shortcuts** - Platform-aware keyboard shortcut registration with conflict detection
+- **System Tray** - Native integration with context menus and notifications
+- **Native Menus** - Platform-specific application and context menus with i18n
+- **Theme Synchronization** - Automatic theme updates across all UI components
 
-## 🧪 Tests
+### 🏛 Controller & Service Architecture
 
-### Structure des Tests
+#### 🎮 Controller Pattern
 
-```bash
-apps/desktop/src/main/controllers/__tests__/ # Tests unitaires des contrôleurs
-tests/                                       # Tests d'intégration
+- **Typed IPC Decorators** - Controllers extend `ControllerModule` and expose renderer methods via `@IpcMethod`
+- **IPC Event Handling** - Processes events from renderer with decorator-based registration
+- **Lifecycle Hooks** - `beforeAppReady` and `afterAppReady` for initialization phases
+- **Type-Safe Communication** - Strong typing for all IPC events and responses
+- **Error Boundaries** - Comprehensive error handling with proper propagation
+
+#### 🔧 Service Pattern
+
+- **Business Logic Encapsulation** - Clean separation of concerns
+- **Dependency Management** - Managed through IoC container
+- **Cross-Controller Sharing** - Services accessible via service locator pattern
+- **Resource Management** - Proper initialization and cleanup
+
+### 🔗 Inter-Process Communication
+
+#### 📡 IPC System Features
+
+- **Bidirectional Communication** - Main↔Renderer and Main↔Next.js server
+- **Type-Safe Events** - TypeScript interfaces for all event parameters
+- **Context Awareness** - Events include sender context for window-specific operations
+- **Error Propagation** - Centralized error handling with proper status codes
+
+##### 🧩 Renderer IPC Helper
+
+Renderer code uses a lightweight proxy generated at runtime to keep IPC calls type-safe without exposing raw Electron objects through `contextBridge`. Use the helper exported from `src/utils/electron/ipc.ts` to access the main-process services:
+
+```ts
+import { ensureElectronIpc } from '@/utils/electron/ipc';
+
+const ipc = ensureElectronIpc();
+await ipc.windows.openSettingsWindow({ tab: 'provider' });
 ```
 
-### Exécution des Tests
+The helper internally builds a proxy on top of `window.electronAPI.invoke`, so no proxy objects need to be cloned across the preload boundary.
+
+#### 🛡️ Security Features
+
+- **OAuth 2.0 + PKCE** - Secure authentication with state parameter validation
+- **Encrypted Token Storage** - Using Electron's Safe Storage API when available
+- **Custom Protocol Handler** - Secure callback handling for OAuth flows
+- **Request Filtering** - Security controls for web requests and external links
+
+## 🧪 Testing
+
+### Test Structure
 
 ```bash
-pnpm test       # Exécuter tous les tests
-pnpm test:watch # Mode observateur
-pnpm type-check # Validation des types
+apps/desktop/src/main/controllers/__tests__/ # Controller unit tests
+tests/                                       # Integration tests
 ```
 
-## 🔒 Sécurité
+### Running Tests
 
-### Authentification & Autorisation
+```bash
+pnpm test       # Run all tests
+pnpm test:watch # Watch mode
+pnpm type-check # Type validation
+```
 
-- **Flux OAuth 2.0** avec PKCE pour un échange de tokens sécurisé.
-- **Validation du paramètre d'état (State)** pour empêcher les attaques CSRF.
-- **Stockage chiffré des tokens** en utilisant le stockage sécurisé natif de la plateforme.
+### Test Coverage
 
-### Sécurité de l'Application
+- **Controller Tests** - IPC event handling validation
+- **Service Tests** - Business logic verification
+- **Integration Tests** - End-to-end workflow testing
+- **Type Tests** - TypeScript interface validation
 
-- **Signature du Code** - Notarisation macOS pour une sécurité renforcée.
-- **Sandbox** - Accès contrôlé aux ressources système.
-- **Contrôles CSP** - Gestion de la politique de sécurité du contenu (Content Security Policy).
+## 🔒 Security Features
+
+### Authentication & Authorization
+
+- **OAuth 2.0 Flow** with PKCE for secure token exchange
+- **State Parameter Validation** to prevent CSRF attacks
+- **Encrypted Token Storage** using platform-native secure storage
+- **Automatic Token Refresh** with fallback to re-authentication
+
+### Application Security
+
+- **Code Signing** - macOS notarization for enhanced security
+- **Sandboxing** - Controlled access to system resources
+- **CSP Controls** - Content Security Policy management
+- **Request Filtering** - Security controls for external requests
+
+### Data Protection
+
+- **Encrypted Configuration** - Sensitive data encrypted at rest
+- **Secure IPC** - Type-safe communication channels
+- **Path Validation** - Secure file system access controls
+- **Network Security** - HTTPS enforcement and proxy support
 
 ## 🤝 Contribution
 
-Le développement d'applications de bureau implique des considérations multiplateformes complexes et des intégrations natives. Nous accueillons les contributions de la communauté pour améliorer les fonctionnalités, les performances et l'expérience utilisateur de mAI.
+Desktop application development involves complex cross-platform considerations and native integrations. We welcome community contributions to improve functionality, performance, and user experience. You can participate in improvements through:
 
-### Processus de Contribution
+### How to Contribute
 
-1. Forkez le [dépôt mAI](https://github.com/mDevsLabs/mAI)
-2. Configurez l'environnement de développement de bureau en suivant notre guide
-3. Apportez vos modifications à l'application de bureau
-4. Soumettez une Pull Request décrivant vos changements.
+1. **Platform Support**: Enhance cross-platform compatibility and native integrations
+2. **Performance Optimization**: Improve application startup time, memory usage, and responsiveness
+3. **Feature Development**: Add new desktop-specific features and capabilities
+4. **Bug Fixes**: Fix platform-specific issues and edge cases
+5. **Security Improvements**: Enhance security measures and authentication flows
+6. **UI/UX Enhancements**: Improve desktop user interface and experience
 
-## 📚 Ressources Supplémentaires
+### Contribution Process
 
-- **Guide de Développement** : [`Development.md`](./Development.md) - Documentation complète de développement
-- **Docs d'Architecture** : `/docs` - Spécifications techniques détaillées
-- **Contribution** : `CONTRIBUTING.md` - Directives de contribution
-- **Support & Issues** : [GitHub Issues](https://github.com/mDevsLabs/mAI/issues)
+1. Fork the [LobeHub repository](https://github.com/lobehub/lobehub)
+2. Set up the desktop development environment following our setup guide
+3. Make your changes to the desktop application
+4. Submit a Pull Request describing:
+
+- Platform compatibility testing results
+- Performance impact analysis
+- Security considerations
+- User experience improvements
+- Breaking changes (if any)
+
+### Development Areas
+
+- **Core Architecture**: Dependency injection, event system, and lifecycle management
+- **Window Management**: Multi-window support, theme synchronization, and state persistence
+- **IPC Communication**: Type-safe inter-process communication between main and renderer
+- **Platform Integration**: Native menus, shortcuts, notifications, and system tray
+- **Security Features**: OAuth flows, token encryption, and secure storage
+- **Auto-Update System**: Multi-channel updates and rollback mechanisms
+
+## 📚 Additional Resources
+
+- **Development Guide**: [`Development.md`](./Development.md) - Comprehensive development documentation
+- **Architecture Docs**: [`/docs`](../../docs/) - Detailed technical specifications
+- **Contributing**: [`CONTRIBUTING.md`](../../CONTRIBUTING.md) - Contribution guidelines
+- **Issues & Support**: [GitHub Issues](https://github.com/lobehub/lobehub/issues)

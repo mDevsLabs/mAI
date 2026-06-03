@@ -1,6 +1,6 @@
 {
   "name": "@lobechat/builtin-tool-web-onboarding",
-  "version": "0.0.8",
+  "version": "1.0.0",
   "private": true,
   "exports": {
     ".": "./src/index.ts",
@@ -29,4 +29,3 @@
     "swr": "^2"
   }
 }
-

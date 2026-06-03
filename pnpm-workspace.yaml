@@ -4,18 +4,6 @@ packages:
   - e2e
   - apps/desktop/src/main
 
-allowBuilds:
-  '@lobehub/editor': set this to true or false
-  core-js: set this to true or false
-  electron: set this to true or false
-  es5-ext: set this to true or false
-  esbuild: set this to true or false
-  ffmpeg-static: set this to true or false
-  msgpackr-extract: set this to true or false
-  protobufjs: set this to true or false
-  sharp: set this to true or false
-  unrs-resolver: set this to true or false
-
 onlyBuiltDependencies:
   - '@google/genai'
   - '@lobehub/editor'
@@ -28,3 +16,6 @@ overrides:
   react: 19.2.4
   react-dom: 19.2.4
   '@react-pdf/image': 3.0.4
+
+patchedDependencies:
+  '@upstash/qstash': patches/@upstash__qstash.patch

@@ -1,9 +1,8 @@
 import { and, eq, inArray, sql } from 'drizzle-orm';
 
-import type { LobeChatDatabase } from '@/database/type';
+import { LobeChatDatabase } from '@/database/type';
 
-import type { RoleItem} from '../schemas/rbac';
-import { permissions, rolePermissions, roles, userRoles } from '../schemas/rbac';
+import { RoleItem, permissions, rolePermissions, roles, userRoles } from '../schemas/rbac';
 
 export interface UserPermissionInfo {
   category: string;

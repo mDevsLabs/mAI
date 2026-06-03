@@ -1,9 +1,9 @@
 import { isPlainRecord } from '@lobechat/utils';
 
-const HIGH_SURROGATE_START = 0xD8_00;
-const HIGH_SURROGATE_END = 0xDB_FF;
-const LOW_SURROGATE_START = 0xDC_00;
-const LOW_SURROGATE_END = 0xDF_FF;
+const HIGH_SURROGATE_START = 0xd8_00;
+const HIGH_SURROGATE_END = 0xdb_ff;
+const LOW_SURROGATE_START = 0xdc_00;
+const LOW_SURROGATE_END = 0xdf_ff;
 
 const isHighSurrogate = (codeUnit: number) =>
   codeUnit >= HIGH_SURROGATE_START && codeUnit <= HIGH_SURROGATE_END;

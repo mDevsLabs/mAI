@@ -24,7 +24,7 @@ const generateThreadId = () => `thd_${createNanoId(16)()}`;
  * output is short enough to keep the per-operation `processedKeys` set small.
  */
 const fnv1a = (input: string): string => {
-  let hash = 0x81_1C_9D_C5;
+  let hash = 0x81_1c_9d_c5;
   for (let i = 0; i < input.length; i += 1) {
     hash ^= input.charCodeAt(i);
     // FNV prime 0x01000193, applied via bit shifts to stay in 32-bit math.

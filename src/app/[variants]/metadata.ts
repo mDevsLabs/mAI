@@ -4,6 +4,7 @@ import { OG_URL } from '@lobechat/const';
 import { DEFAULT_LANG } from '@/const/locale';
 import { OFFICIAL_URL } from '@/const/url';
 import { isCustomBranding, isCustomORG } from '@/const/version';
+import { translation } from '@/server/translation';
 import { type DynamicLayoutProps } from '@/types/next';
 import { RouteVariants } from '@/utils/server/routeVariants';
 
@@ -11,6 +12,7 @@ const isDev = process.env.NODE_ENV === 'development';
 
 export const generateMetadata = async (props: DynamicLayoutProps) => {
   const locale = await RouteVariants.getLocale(props);
+  const { t } = await translation('metadata', locale);
 
   return {
     alternates: {
@@ -20,7 +22,7 @@ export const generateMetadata = async (props: DynamicLayoutProps) => {
       statusBarStyle: 'black-translucent',
       title: BRANDING_NAME,
     },
-    description: 'Avec mAI, passez à la vitesse supérieure !',
+    description: t('chat.description', { appName: BRANDING_NAME }),
     icons: isCustomBranding
       ? BRANDING_LOGO_URL
       : {
@@ -31,10 +33,10 @@ export const generateMetadata = async (props: DynamicLayoutProps) => {
     manifest: '/manifest.json',
     metadataBase: new URL(OFFICIAL_URL),
     openGraph: {
-      description: 'Avec mAI, passez à la vitesse supérieure !',
+      description: t('chat.description', { appName: BRANDING_NAME }),
       images: [
         {
-          alt: 'mAI - Avec mAI, passez à la vitesse supérieure !',
+          alt: t('chat.title', { appName: BRANDING_NAME }),
           height: 640,
           url: OG_URL,
           width: 1200,
@@ -42,20 +44,20 @@ export const generateMetadata = async (props: DynamicLayoutProps) => {
       ],
       locale: DEFAULT_LANG,
       siteName: BRANDING_NAME,
-      title: 'mAI - Avec mAI, passez à la vitesse supérieure !',
+      title: BRANDING_NAME,
       type: 'website',
       url: OFFICIAL_URL,
     },
     title: {
-      default: 'mAI - Avec mAI, passez à la vitesse supérieure !',
+      default: t('chat.title', { appName: BRANDING_NAME }),
       template: `%s · ${BRANDING_NAME}`,
     },
     twitter: {
       card: 'summary_large_image',
-      description: 'Avec mAI, passez à la vitesse supérieure !',
+      description: t('chat.description', { appName: BRANDING_NAME }),
       images: [OG_URL],
       site: isCustomORG ? `@${ORG_NAME}` : '@lobehub',
-      title: 'mAI - Avec mAI, passez à la vitesse supérieure !',
+      title: t('chat.title', { appName: BRANDING_NAME }),
     },
   };
 };

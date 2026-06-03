@@ -1,28 +1,27 @@
+import { authEnv } from '@/envs/auth';
+
 import { type BuiltinProviderDefinition } from '../types';
 
 const provider: BuiltinProviderDefinition<
   {
-    GOOGLE_CLIENT_ID: string;
-    GOOGLE_CLIENT_SECRET: string;
+    AUTH_GOOGLE_ID: string;
+    AUTH_GOOGLE_SECRET: string;
   },
   'google'
 > = {
   build: (env) => {
     return {
-      clientId: env.GOOGLE_CLIENT_ID,
-      clientSecret: env.GOOGLE_CLIENT_SECRET,
+      clientId: env.AUTH_GOOGLE_ID,
+      clientSecret: env.AUTH_GOOGLE_SECRET,
       prompt: 'select_account',
     };
   },
   checkEnvs: () => {
-    const clientId = process.env.GOOGLE_CLIENT_ID?.trim();
-    const clientSecret = process.env.GOOGLE_CLIENT_SECRET?.trim();
-
-    return !!(clientId && clientSecret)
+    return !!(authEnv.AUTH_GOOGLE_ID && authEnv.AUTH_GOOGLE_SECRET)
       ? {
-        GOOGLE_CLIENT_ID: clientId,
-        GOOGLE_CLIENT_SECRET: clientSecret,
-      }
+          AUTH_GOOGLE_ID: authEnv.AUTH_GOOGLE_ID,
+          AUTH_GOOGLE_SECRET: authEnv.AUTH_GOOGLE_SECRET,
+        }
       : false;
   },
   id: 'google',

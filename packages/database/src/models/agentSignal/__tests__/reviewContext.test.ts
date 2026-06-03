@@ -36,7 +36,7 @@ describe('AgentSignalReviewContextModel', () => {
       await serverDB.insert(agents).values({
         id: 'agent-signal-review-context-inbox',
         slug: INBOX_SESSION_ID,
-        title: 'May',
+        title: 'Lobe AI',
         userId,
         virtual: true,
       });
