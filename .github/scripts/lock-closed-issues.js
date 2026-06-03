@@ -23,7 +23,7 @@ module.exports = async ({ github, context }) => {
       sort: 'updated',
       direction: 'asc',
       per_page: 100,
-      page,
+      page: page,
     });
 
     if (issues.length === 0) {

@@ -1,13 +1,13 @@
 import type { ModelProviderCard } from '@/types/llm';
 
-const mAI: ModelProviderCard = {
+const LobeHub: ModelProviderCard = {
   chatModels: [],
   description:
-    'mAI Cloud uses official APIs to access AI models and measures usage with Credits tied to model tokens.',
+    'LobeHub Cloud uses official APIs to access AI models and measures usage with Credits tied to model tokens.',
   enabled: true,
   id: 'lobehub',
   modelsUrl: 'https://lobehub.com/zh/docs/usage/subscription/model-pricing',
-  name: 'mAI',
+  name: 'LobeHub',
   settings: {
     modelEditable: false,
     showAddNewModel: false,
@@ -17,7 +17,7 @@ const mAI: ModelProviderCard = {
   url: 'https://lobehub.com',
 };
 
-export default mAI;
+export default LobeHub;
 
 export const planCardModels = [
   'deepseek-v4-pro',

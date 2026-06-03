@@ -76,28 +76,28 @@ function updatePackageJson() {
     // Modify other fields based on releaseType
     switch (releaseType) {
       case 'stable': {
-        packageJson.productName = 'mAI';
-        packageJson.name = 'mai-desktop';
+        packageJson.productName = 'LobeHub';
+        packageJson.name = 'lobehub-desktop';
         console.log('🌟 Setting as Stable version.');
         break;
       }
       case 'beta': {
-        packageJson.productName = 'mAI-Beta';
-        packageJson.name = 'mai-desktop-beta';
+        packageJson.productName = 'LobeHub-Beta'; // Or 'LobeHub-Beta' if preferred
+        packageJson.name = 'lobehub-desktop-beta'; // Or 'lobehub-desktop' if preferred
         console.log('🧪 Setting as Beta version.');
         updateAppIcon('beta');
         break;
       }
       case 'nightly': {
-        packageJson.productName = 'mAI-Nightly';
-        packageJson.name = 'mai-desktop-nightly';
+        packageJson.productName = 'LobeHub-Nightly'; // Or 'LobeHub-Nightly'
+        packageJson.name = 'lobehub-desktop-nightly'; // Or 'lobehub-desktop-nightly'
         console.log('🌙 Setting as Nightly version.');
         updateAppIcon('nightly');
         break;
       }
       case 'canary': {
-        packageJson.productName = 'mAI';
-        packageJson.name = 'mai-desktop-canary';
+        packageJson.productName = 'LobeHub';
+        packageJson.name = 'lobehub-desktop-canary';
         console.log('🐤 Setting as Canary version (same app name and icon as stable).');
         break;
       }

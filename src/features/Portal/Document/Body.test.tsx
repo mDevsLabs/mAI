@@ -30,6 +30,29 @@ vi.mock('@lobehub/ui', () => ({
   TextArea: () => <textarea />,
 }));
 
+vi.mock('@/components/CodeEditorPane', () => ({
+  default: ({ value }: { value: string }) => (
+    <textarea readOnly data-testid="highlight-editor" value={value} />
+  ),
+}));
+
+const mockDocumentMeta = vi.hoisted(() => ({
+  current: { content: '', filename: 'doc.md' } as {
+    content?: string;
+    fileType?: string | null;
+    filename?: string | null;
+    title?: string | null;
+  },
+}));
+
+vi.mock('@/libs/swr', () => ({
+  useClientDataSWR: () => ({ data: mockDocumentMeta.current }),
+}));
+
+vi.mock('@/services/document', () => ({
+  documentService: { getDocumentById: vi.fn() },
+}));
+
 vi.mock('./EditorCanvas', () => ({
   default: () => <div data-testid="editor-canvas" />,
 }));
@@ -101,6 +124,7 @@ describe('DocumentBody', () => {
   beforeEach(() => {
     mockAgentState.current.activeAgentId = 'agent-1';
     mockUserState.current.preference.lab.enableAgentDocumentFloatingChatPanel = false;
+    mockDocumentMeta.current = { content: '', filename: 'doc.md' };
   });
 
   it('does not render FloatingChatPanel when the lab feature is disabled', () => {
@@ -115,5 +139,37 @@ describe('DocumentBody', () => {
     render(<DocumentBody />);
 
     expect(screen.getByTestId('floating-chat-panel')).toBeDefined();
+  });
+
+  it('renders highlight editor for non-markdown files', () => {
+    mockDocumentMeta.current = { content: 'raw log content', filename: 'topic_call.txt' };
+
+    render(<DocumentBody />);
+
+    expect(screen.getByTestId('highlight-editor')).toHaveValue('raw log content');
+    expect(screen.queryByTestId('editor-canvas')).toBeNull();
+  });
+
+  it('renders EditorCanvas for markdown files', () => {
+    mockDocumentMeta.current = { content: '# hi', filename: 'note.md' };
+
+    render(<DocumentBody />);
+
+    expect(screen.getByTestId('editor-canvas')).toBeDefined();
+    expect(screen.queryByTestId('highlight-editor')).toBeNull();
+  });
+
+  it('renders EditorCanvas for notebook documents that have no filename', () => {
+    mockDocumentMeta.current = {
+      content: '# notes',
+      fileType: 'markdown',
+      filename: null,
+      title: 'Meeting notes',
+    };
+
+    render(<DocumentBody />);
+
+    expect(screen.getByTestId('editor-canvas')).toBeDefined();
+    expect(screen.queryByTestId('highlight-editor')).toBeNull();
   });
 });

@@ -25,7 +25,6 @@ describe('setupRouteInterceptors', () => {
 
     // Mock console methods (route interceptor uses console.info)
     vi.spyOn(console, 'info').mockImplementation(() => {});
-    vi.spyOn(console, 'warn').mockImplementation(() => {});
     consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     // Setup happy-dom window and document
@@ -140,27 +139,6 @@ describe('setupRouteInterceptors', () => {
       // mailto: links are treated as external links by the URL constructor
       expect(invoke).toHaveBeenCalledWith('system.openExternalLink', 'mailto:test@example.com');
       expect(preventDefaultSpy).toHaveBeenCalled();
-    });
-
-    it('should block dangerous link protocols', async () => {
-      setupRouteInterceptors();
-
-      const link = document.createElement('a');
-      link.href = 'javascript:alert(1)';
-      document.body.append(link);
-
-      const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
-      const preventDefaultSpy = vi.spyOn(clickEvent, 'preventDefault');
-      const stopPropagationSpy = vi.spyOn(clickEvent, 'stopPropagation');
-      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-
-      link.dispatchEvent(clickEvent);
-      await new Promise((resolve) => setTimeout(resolve, 0));
-
-      expect(invoke).not.toHaveBeenCalledWith('system.openExternalLink', expect.anything());
-      expect(preventDefaultSpy).toHaveBeenCalled();
-      expect(stopPropagationSpy).toHaveBeenCalled();
-      expect(warnSpy).toHaveBeenCalledWith('[preload] Blocked unsupported link protocol:', 'javascript:');
     });
   });
 

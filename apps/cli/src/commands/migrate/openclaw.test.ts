@@ -276,7 +276,7 @@ describe('migrate openclaw', () => {
       writeFile('readme.md', 'text content');
       // Write a file with null bytes (binary)
       const binPath = path.join(tmpDir, 'image.dat');
-      fs.writeFileSync(binPath, Buffer.from([0x89, 0x50, 0x4E, 0x47, 0x00, 0x00, 0x01]));
+      fs.writeFileSync(binPath, Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x00, 0x00, 0x01]));
 
       mockTrpcClient.agent.createAgent.mutate.mockResolvedValue({ agentId: 'agt_test' });
       mockTrpcClient.agentDocument.upsertDocument.mutate.mockResolvedValue({});

@@ -104,7 +104,7 @@ async function createUploadTask(opts: createUploadTaskOpts): Promise<UploadResul
     eTag: output.ETag,
     imgURL: url,
     key: opts.path,
-    url,
+    url: url,
     versionId: output.VersionId,
   };
 }

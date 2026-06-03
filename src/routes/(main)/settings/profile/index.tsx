@@ -106,7 +106,7 @@ const ProfileSetting = () => {
             </>
           )}
 
-          {isLogin && (
+          {isLogin && !isDesktop && (
             <>
               <Divider style={{ margin: 0 }} />
               <ProfileRow label={t('profile.sso.providers')}>

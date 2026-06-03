@@ -10,15 +10,14 @@ import About from '../about';
 import Advanced from '../advanced';
 import APIKey from '../apikey';
 import Appearance from '../appearance';
-import CookerSettingsPage from '../cooker-settings';
 import Creds from '../creds';
+import Devices from '../devices';
 import Hotkey from '../hotkey';
 import Memory from '../memory';
 import Messenger from '../messenger';
 import Profile from '../profile';
 import Provider from '../provider';
 import Proxy from '../proxy';
-import QuizzlySettingsPage from '../quizzly-settings';
 import Security from '../security';
 import ServiceModel from '../service-model';
 import Skill from '../skill';
@@ -39,6 +38,7 @@ export const componentMap = {
   [SettingsTabs.Proxy]: Proxy,
   [SettingsTabs.SystemTools]: SystemTools,
   [SettingsTabs.Storage]: Storage,
+  [SettingsTabs.Devices]: Devices,
   // Profile related tabs
   [SettingsTabs.Profile]: Profile,
   [SettingsTabs.Stats]: Stats,
@@ -47,10 +47,6 @@ export const componentMap = {
   [SettingsTabs.Creds]: Creds,
   [SettingsTabs.Security]: Security,
   [SettingsTabs.Skill]: Skill,
-
-  // Extension settings
-  [SettingsTabs.QuizzlySettings]: QuizzlySettingsPage,
-  [SettingsTabs.CookerSettings]: CookerSettingsPage,
 
   [SettingsTabs.Plans]: Plans,
   [SettingsTabs.Credits]: Credits,

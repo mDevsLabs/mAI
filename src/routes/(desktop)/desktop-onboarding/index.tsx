@@ -9,7 +9,6 @@ import Loading from '@/components/Loading/BrandTextLoading';
 import { electronSystemService } from '@/services/electron/system';
 
 import OnboardingContainer from './_layout';
-import AIProviderStep from './features/AIProviderStep';
 import DataModeStep from './features/DataModeStep';
 import LoginStep from './features/LoginStep';
 import PermissionsStep from './features/PermissionsStep';
@@ -32,13 +31,11 @@ const DesktopOnboardingPage = memo(() => {
         DesktopOnboardingScreen.Welcome,
         DesktopOnboardingScreen.Permissions,
         DesktopOnboardingScreen.DataMode,
-        DesktopOnboardingScreen.AIProvider,
         DesktopOnboardingScreen.Login,
       ]
     : [
         DesktopOnboardingScreen.Welcome,
         DesktopOnboardingScreen.DataMode,
-        DesktopOnboardingScreen.AIProvider,
         DesktopOnboardingScreen.Login,
       ];
 
@@ -197,9 +194,6 @@ const DesktopOnboardingPage = memo(() => {
       }
       case DesktopOnboardingScreen.DataMode: {
         return <DataModeStep onBack={goToPreviousStep} onNext={goToNextStep} />;
-      }
-      case DesktopOnboardingScreen.AIProvider: {
-        return <AIProviderStep onBack={goToPreviousStep} onNext={goToNextStep} />;
       }
       case DesktopOnboardingScreen.Login: {
         return <LoginStep onBack={goToPreviousStep} onNext={goToNextStep} />;

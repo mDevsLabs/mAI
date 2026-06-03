@@ -1,6 +1,6 @@
 {
   "name": "@lobechat/llm-generation-tracing",
-  "version": "0.0.8",
+  "version": "1.0.0",
   "private": true,
   "exports": {
     ".": "./src/index.ts",
@@ -16,4 +16,3 @@
     "commander": "^13.1.0"
   }
 }
-

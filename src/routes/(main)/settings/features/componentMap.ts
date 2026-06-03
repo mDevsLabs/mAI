@@ -46,6 +46,9 @@ export const componentMap = {
   [SettingsTabs.Storage]: dynamic(() => import('../storage'), {
     loading: loading('Settings > Storage'),
   }),
+  [SettingsTabs.Devices]: dynamic(() => import('../devices'), {
+    loading: loading('Settings > Devices'),
+  }),
   // Profile related tabs
   [SettingsTabs.Profile]: dynamic(() => import('../profile'), {
     loading: loading('Settings > Profile'),
@@ -67,14 +70,6 @@ export const componentMap = {
   }),
   [SettingsTabs.Skill]: dynamic(() => import('../skill'), {
     loading: loading('Settings > Skill'),
-  }),
-
-  // Extension settings
-  [SettingsTabs.QuizzlySettings]: dynamic(() => import('../quizzly-settings'), {
-    loading: loading('Settings > QuizzlySettings'),
-  }),
-  [SettingsTabs.CookerSettings]: dynamic(() => import('../cooker-settings'), {
-    loading: loading('Settings > CookerSettings'),
   }),
 
   [SettingsTabs.Plans]: dynamic(() => import('@/business/client/BusinessSettingPages/Plans'), {

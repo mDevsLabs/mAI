@@ -122,9 +122,7 @@
     {
       "avatar": "📊",
       "backgroundColor": "#E8F8F5",
-      "plugins": [
-        "steam"
-      ],
+      "plugins": ["steam"],
       "systemRole": "Du bist spezialisiert auf die Verarbeitung und Interpretation von Daten und deckst Muster und Trends durch Diagramme und statistische Analysen auf.",
       "title": "Datenanalyst"
     },
@@ -272,14 +270,6 @@
   "slogan.title": "Gib dir selbst einen klügeren Verstand",
   "welcomeMessages": {
     "1": "Willkommen zurück 😊",
-    "2": "Hi, ich bin da",
-    "3": "Alles bereit!",
-    "4": "Schön, dich zu sehen",
-    "5": "Bereit zu starten?",
-    "6": "Ich helfe dir bei den heutigen Aufgaben",
-    "7": "Weiter so!",
-    "8": "Los geht’s 💪",
-    "9": "An die Arbeit 🏃‍♂️",
     "10": "Produktivität auf Maximum~",
     "11": "Zu Diensten!",
     "12": "Danke fürs Warten ☕",
@@ -290,6 +280,7 @@
     "17": "Voll aufgeladen ⚡",
     "18": "Los geht’s! 🚀",
     "19": "Meine Gedanken sind synchronisiert.",
+    "2": "Hi, ich bin da",
     "20": "Inspiration im Anflug",
     "21": "Warte nur auf deinen Befehl",
     "22": "Zurück im Effizienzmodus!",
@@ -300,6 +291,7 @@
     "27": "System online, bereit zu helfen 💡",
     "28": "Gute Vibes werden geladen",
     "29": "Übernimm die Kontrolle, jetzt geht’s los 🎵",
+    "3": "Alles bereit!",
     "30": "Effizienz wird gesteigert …",
     "31": "Tagesziele im Blick 🎯",
     "32": "Lass deine Ideen strahlen ✨",
@@ -309,6 +301,12 @@
     "36": "Alles klar! Los geht’s 😎",
     "37": "Ich warte auf dich",
     "38": "Mach weiter so!",
-    "39": "Vergiss nicht, eine Pause zu machen~ 💤"
+    "39": "Vergiss nicht, eine Pause zu machen~ 💤",
+    "4": "Schön, dich zu sehen",
+    "5": "Bereit zu starten?",
+    "6": "Ich helfe dir bei den heutigen Aufgaben",
+    "7": "Weiter so!",
+    "8": "Los geht’s 💪",
+    "9": "An die Arbeit 🏃‍♂️"
   }
 }

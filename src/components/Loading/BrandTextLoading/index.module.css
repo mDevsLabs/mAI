@@ -78,22 +78,3 @@
   font-size: 12px;
   color: var(--brand-muted-color);
 }
-
-@keyframes pulse {
-  0% {
-    transform: scale(0.97);
-    opacity: 0.6;
-  }
-  50% {
-    transform: scale(1.03);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(0.97);
-    opacity: 0.6;
-  }
-}
-
-.logo {
-  animation: pulse 2.2s infinite ease-in-out;
-}

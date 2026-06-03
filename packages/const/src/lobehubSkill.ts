@@ -1,5 +1,5 @@
 import type { IconType } from '@icons-pack/react-simple-icons';
-import { SiGithub, SiLinear, SiVercel } from '@icons-pack/react-simple-icons';
+import { SiGithub, SiLinear, SiVercel, SiX } from '@icons-pack/react-simple-icons';
 
 export interface LobehubSkillProviderType {
   /**
@@ -37,7 +37,7 @@ export interface LobehubSkillProviderType {
 }
 
 /**
- * Predefined mAI Skill Provider list
+ * Predefined LobeHub Skill Provider list
  *
  * Note:
  * - This list is used for UI display (icons, labels)
@@ -46,7 +46,7 @@ export interface LobehubSkillProviderType {
  */
 export const LOBEHUB_SKILL_PROVIDERS: LobehubSkillProviderType[] = [
   {
-    author: 'mAI',
+    author: 'LobeHub',
     authorUrl: 'https://lobehub.com',
     defaultVisible: true,
     description:
@@ -58,7 +58,7 @@ export const LOBEHUB_SKILL_PROVIDERS: LobehubSkillProviderType[] = [
       'Connect to GitHub to access your repositories, create and manage issues, review pull requests, and collaborate on code—all through natural conversation with your AI assistant.',
   },
   {
-    author: 'mAI',
+    author: 'LobeHub',
     authorUrl: 'https://lobehub.com',
     defaultVisible: true,
     description:
@@ -70,7 +70,7 @@ export const LOBEHUB_SKILL_PROVIDERS: LobehubSkillProviderType[] = [
     label: 'Linear',
   },
   {
-    author: 'mAI',
+    author: 'LobeHub',
     authorUrl: 'https://lobehub.com',
     defaultVisible: true,
     description:
@@ -82,7 +82,7 @@ export const LOBEHUB_SKILL_PROVIDERS: LobehubSkillProviderType[] = [
     label: 'Outlook Calendar',
   },
   {
-    author: 'mAI',
+    author: 'LobeHub',
     authorUrl: 'https://lobehub.com',
     defaultVisible: true,
     description: 'Notion is a collaborative productivity and note-taking application.',
@@ -93,7 +93,19 @@ export const LOBEHUB_SKILL_PROVIDERS: LobehubSkillProviderType[] = [
     label: 'Notion',
   },
   {
-    author: 'mAI',
+    author: 'LobeHub',
+    authorUrl: 'https://lobehub.com',
+    defaultVisible: true,
+    description:
+      'X (Twitter) is a social media platform for sharing real-time updates, news, and engaging with your audience through posts, replies, and direct messages.',
+    icon: SiX,
+    id: 'twitter',
+    readme:
+      'Connect to X (Twitter) to post tweets, manage your timeline, and engage with your audience. Create content, schedule posts, monitor mentions, and build your social media presence through conversational AI.',
+    label: 'X (Twitter)',
+  },
+  {
+    author: 'LobeHub',
     authorUrl: 'https://lobehub.com',
     defaultVisible: true,
     description:

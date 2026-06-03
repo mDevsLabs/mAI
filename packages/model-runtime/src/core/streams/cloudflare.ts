@@ -22,7 +22,7 @@ class CloudflareStreamTransformer {
     }
     const splits = textChunk.split('\n\n');
     for (let i = 0; i < splits.length - 1; i++) {
-      if (/\[DONE\]/.test(splits[i].trim())) {
+      if (/\[DONE]/.test(splits[i].trim())) {
         return;
       }
       this.parseChunk(splits[i], controller);

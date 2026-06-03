@@ -7,13 +7,17 @@ import type { ChangeEvent } from 'react';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import CodeEditorPane from '@/components/CodeEditorPane';
 import FloatingChatPanel from '@/features/FloatingChatPanel';
+import { useClientDataSWR } from '@/libs/swr';
+import { documentService } from '@/services/document';
 import { useAgentStore } from '@/store/agent';
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/selectors';
 import { useDocumentStore } from '@/store/document';
 import { useUserStore } from '@/store/user';
 import { labPreferSelectors } from '@/store/user/selectors';
+import { getDocumentRenderMode } from '@/utils/documentRenderMode';
 import {
   getSkillMarkdownMetadataError,
   parseSkillMarkdownFrontmatterFields,
@@ -194,6 +198,55 @@ const SkillFrontmatterBlock = memo<SkillFrontmatterBlockProps>(({ documentId, fr
   );
 });
 
+interface HighlightEditorProps {
+  content: string;
+  documentId: string;
+  language: string;
+  onSaved: (newContent: string) => void;
+}
+
+const HighlightEditor = memo<HighlightEditorProps>(({ content, documentId, language, onSaved }) => {
+  const [buffer, setBuffer] = useState<string | undefined>(undefined);
+  const editingValue = buffer ?? content;
+
+  const handleChange = useCallback(
+    (next: string) => {
+      setBuffer(next === content ? undefined : next);
+    },
+    [content],
+  );
+
+  const handleSave = useCallback(async () => {
+    if (buffer === undefined) return;
+    const toWrite = buffer;
+    try {
+      await documentService.updateDocument({
+        content: toWrite,
+        id: documentId,
+        saveSource: 'manual',
+      });
+      // Update SWR cache before clearing the buffer so the editor's value prop
+      // never falls back to stale content, which would otherwise reset the cursor.
+      onSaved(toWrite);
+      setBuffer(undefined);
+    } catch {
+      /* swallow */
+    }
+  }, [buffer, documentId, onSaved]);
+
+  return (
+    <CodeEditorPane
+      language={language}
+      style={{ minHeight: '100%' }}
+      value={editingValue}
+      onChange={handleChange}
+      onSave={handleSave}
+    />
+  );
+});
+
+HighlightEditor.displayName = 'HighlightEditor';
+
 const DocumentBody = memo(() => {
   const documentId = useChatStore(chatPortalSelectors.portalDocumentId);
   const agentDocumentId = useChatStore(chatPortalSelectors.portalAgentDocumentId);
@@ -209,13 +262,40 @@ const DocumentBody = memo(() => {
   );
   const isSkillMarkdown = contentFormat === 'skillMarkdown';
 
+  const { data: documentMeta, mutate: mutateDocumentMeta } = useClientDataSWR(
+    documentId ? ['portal-document-header', documentId] : null,
+    () => documentService.getDocumentById(documentId!),
+  );
+  const renderMode = documentMeta
+    ? getDocumentRenderMode(documentMeta)
+    : { mode: 'editor' as const };
+
+  const handleHighlightSaved = useCallback(
+    (saved: string) => {
+      mutateDocumentMeta((prev) => (prev ? { ...prev, content: saved } : prev), {
+        revalidate: false,
+      });
+    },
+    [mutateDocumentMeta],
+  );
+
   return (
     <Flexbox flex={1} height={'100%'} style={{ overflow: 'hidden' }}>
       <div className={styles.content}>
         {documentId && isSkillMarkdown && (
           <SkillFrontmatterBlock documentId={documentId} frontmatter={skillFrontmatter} />
         )}
-        <EditorCanvas />
+        {renderMode.mode === 'highlight' && documentId ? (
+          <HighlightEditor
+            content={documentMeta?.content ?? ''}
+            documentId={documentId}
+            key={documentId}
+            language={renderMode.language}
+            onSaved={handleHighlightSaved}
+          />
+        ) : (
+          <EditorCanvas />
+        )}
       </div>
       <TodoList />
       {enableFloatingChatPanel && activeAgentId && (

@@ -1,6 +1,6 @@
 ---
 name: docs-changelog
-description: "Writing guide for website changelog pages under `docs/changelog/*.mdx` (NOT GitHub Release notes — those live in the `version-release` skill). Use when creating or editing a product update post in EN/ZH. Triggers on `docs/changelog/*.mdx`, 'changelog post', 'product update post', 'add a changelog', '更新日志', 'changelog 文案'."
+description: 'Write website changelog pages under docs/changelog/*.mdx. Use for EN/ZH product update posts, changelog posts, update-log copy, or docs changelog edits; not GitHub Release notes.'
 ---
 
 # Docs Changelog Writing Guide
@@ -23,11 +23,12 @@ For every docs changelog task, you MUST load:
 
 ## File and Naming Convention
 
-Use the strict format naming convention for changelog files:
+Use date-based file names:
 
-- Standard: `XXX-XX-XX-XXXX.md` (e.g., `004-29-05-2026.md` for version 0.0.4 released on May 29, 2026)
+- English: `docs/changelog/YYYY-MM-DD-topic.mdx`
+- Chinese: `docs/changelog/YYYY-MM-DD-topic.zh-CN.mdx`
 
-Always create the files inside `docs/changelog` using this precise format. Old changelog files in this directory must be deleted.
+EN and ZH files must exist as a pair and describe the same release facts.
 
 ## Frontmatter Requirements
 

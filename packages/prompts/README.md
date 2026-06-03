@@ -1,6 +1,6 @@
 # @lobechat/prompts
 
-This package contains prompt chains and templates for the mAI application.
+This package contains prompt chains and templates for the LobeHub application.
 
 ## Features
 

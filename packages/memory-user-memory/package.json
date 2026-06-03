@@ -1,6 +1,6 @@
 {
   "name": "@lobechat/memory-user-memory",
-  "version": "0.0.8",
+  "version": "1.0.0",
   "private": true,
   "sideEffects": false,
   "type": "module",
@@ -38,4 +38,3 @@
     "zod": "^3.25.76"
   }
 }
-

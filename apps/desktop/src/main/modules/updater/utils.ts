@@ -1,7 +1,7 @@
 import semver from 'semver';
 
 const STATIC_ASSET_PATH_PREFIXES = ['/assets/', '/_next/', '/static/'];
-const ROOT_STATIC_FILE_RE = /^\/[^/][^./]*\.[^/]+$/;
+const ROOT_STATIC_FILE_RE = /^\/[^/]+\.[^/]+$/;
 
 const isStaticAssetPath = (pathname: string) =>
   ROOT_STATIC_FILE_RE.test(pathname) ||

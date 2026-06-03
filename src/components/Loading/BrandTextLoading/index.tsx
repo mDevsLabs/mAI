@@ -1,5 +1,4 @@
-import { BRANDING_NAME } from '@lobechat/business-const';
-import { Avatar } from '@lobehub/ui';
+import { BrandLoading, LobeHubText } from '@lobehub/ui/brand';
 
 import { isCustomBranding } from '@/const/version';
 
@@ -22,9 +21,8 @@ const BrandTextLoading = ({ debugId }: BrandTextLoadingProps) => {
 
   return (
     <div className={styles.container}>
-      <div aria-label="Loading" className={`${styles.brand} ${styles.logo}`} role="status">
-        <Avatar shape="circle" size={40} src="/icons/icon-512x512.png" />
-        <span style={{ fontSize: 24, fontWeight: 800, letterSpacing: -0.5 }}>{BRANDING_NAME}</span>
+      <div aria-label="Loading" className={styles.brand} role="status">
+        <BrandLoading size={40} text={LobeHubText} />
       </div>
       {showDebug && (
         <div className={styles.debug}>

@@ -8,7 +8,7 @@ export enum ProtocolSource {
   DEVELOPER = 'developer',
   /** GitHub official */
   GITHUB_OFFICIAL = 'github_official',
-  /** Official mAI marketplace */
+  /** Official LobeHub marketplace */
   OFFICIAL = 'official',
   /** Third-party marketplace */
   THIRD_PARTY = 'third_party',

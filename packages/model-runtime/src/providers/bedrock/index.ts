@@ -4,7 +4,6 @@ import {
   InvokeModelCommand,
   InvokeModelWithResponseStreamCommand,
 } from '@aws-sdk/client-bedrock-runtime';
-import { cloudModelIdMapping } from '@lobechat/business-const';
 import { ModelProvider } from 'model-bank';
 
 import { shouldDropUnsupportedClaudeAssistantPrefill } from '../../const/models';
@@ -24,6 +23,7 @@ import {
   AWSBedrockLlamaStream,
   createBedrockStream,
 } from '../../core/streams';
+import { ErrorClassifier } from '../../errors';
 import type {
   ChatMethodOptions,
   ChatStreamPayload,
@@ -37,7 +37,6 @@ import { AgentRuntimeErrorType } from '../../types/error';
 import { AgentRuntimeError } from '../../utils/createError';
 import { debugStream } from '../../utils/debugStream';
 import { getModelPricing } from '../../utils/getModelPricing';
-import { isExceededContextWindowError } from '../../utils/isExceededContextWindowError';
 import { StreamingResponse } from '../../utils/response';
 import { normalizeClaudeThinkingHistoryMessages } from '../anthropic/claudeThinkingHistory';
 
@@ -77,6 +76,7 @@ export interface LobeBedrockAIParams {
   accessKeyId?: string;
   accessKeySecret?: string;
   id?: string;
+  modelIdMapping?: Record<string, string>;
   region?: string;
   sessionToken?: string;
 }
@@ -84,16 +84,18 @@ export interface LobeBedrockAIParams {
 export class LobeBedrockAI implements LobeRuntimeAI {
   private client: BedrockRuntimeClient;
   private id: string;
+  private modelIdMapping: Record<string, string>;
 
   region: string;
 
   constructor(options: LobeBedrockAIParams = {}) {
-    const { id, region, accessKeyId, accessKeySecret, sessionToken } = options;
+    const { id, modelIdMapping = {}, region, accessKeyId, accessKeySecret, sessionToken } = options;
 
     if (!(accessKeyId && accessKeySecret))
       throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidBedrockCredentials);
     this.region = region ?? 'us-east-1';
     this.id = id ?? ModelProvider.Bedrock;
+    this.modelIdMapping = modelIdMapping;
     this.client = new BedrockRuntimeClient({
       credentials: {
         accessKeyId,
@@ -108,6 +110,10 @@ export class LobeBedrockAI implements LobeRuntimeAI {
     if (payload.model.startsWith('meta')) return this.invokeLlamaModel(payload, options);
 
     return this.invokeClaudeModel(payload, options);
+  }
+
+  private resolveModelId(model: string): string {
+    return this.modelIdMapping[model] ?? model;
   }
   /**
    * Supports the Amazon Titan Text models series.
@@ -166,7 +172,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
         ...bedrockRequestParams,
       }),
       contentType: 'application/json',
-      modelId: cloudModelIdMapping[payload.model] || payload.model,
+      modelId: this.resolveModelId(payload.model),
     });
 
     try {
@@ -332,7 +338,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
       accept: 'application/json',
       body: JSON.stringify(anthropicPayload),
       contentType: 'application/json',
-      modelId: cloudModelIdMapping[model] || model,
+      modelId: this.resolveModelId(model),
     });
 
     try {
@@ -364,7 +370,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
       );
     } catch (e) {
       const err = e as Error & { $metadata: any };
-      const errorType = isExceededContextWindowError(err.message)
+      const errorType = ErrorClassifier.isExceededContextWindow(err.message)
         ? AgentRuntimeErrorType.ExceededContextWindow
         : AgentRuntimeErrorType.ProviderBizError;
 

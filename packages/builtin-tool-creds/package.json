@@ -1,6 +1,6 @@
 {
   "name": "@lobechat/builtin-tool-creds",
-  "version": "0.0.8",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "exports": {
@@ -14,4 +14,3 @@
     "@lobechat/types": "workspace:*"
   }
 }
-

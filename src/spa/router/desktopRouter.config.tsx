@@ -2,12 +2,10 @@
 
 import {
   BrainCircuit,
-  ChefHat,
   FilePenIcon,
   Home,
   Image,
   LibraryBigIcon,
-  Puzzle,
   Settings,
   ShapesIcon,
 } from 'lucide-react';
@@ -686,63 +684,6 @@ export const desktopRoutes: RouteObject[] = [
         path: 'page',
       },
 
-      // Quizzly route
-      {
-        children: [
-          {
-            element: dynamicElement(() => import('@/routes/(main)/quizzly'), 'Desktop > Quizzly'),
-            handle: {
-              meta: routeMeta({ icon: ShapesIcon, titleKey: 'Quizzly' }),
-            },
-            index: true,
-          },
-        ],
-        element: dynamicLayout(
-          () => import('@/routes/(main)/quizzly/_layout'),
-          'Desktop > Quizzly > Layout',
-        ),
-        errorElement: <ErrorBoundary />,
-        path: 'quizzly',
-      },
-
-      // Cooker route
-      {
-        children: [
-          {
-            element: dynamicElement(() => import('@/routes/(main)/cooker'), 'Desktop > Cooker'),
-            handle: {
-              meta: routeMeta({ icon: ChefHat, titleKey: 'Cooker' }),
-            },
-            index: true,
-          },
-        ],
-        element: dynamicLayout(
-          () => import('@/routes/(main)/cooker/_layout'),
-          'Desktop > Cooker > Layout',
-        ),
-        errorElement: <ErrorBoundary />,
-        path: 'cooker',
-      },
-
-      // Extensions route
-      {
-        children: [
-          {
-            element: dynamicElement(() => import('@/routes/(main)/extensions'), 'Desktop > Extensions'),
-            handle: {
-              meta: routeMeta({ icon: Puzzle, titleKey: 'navigation.extensions' }),
-            },
-            index: true,
-          },
-        ],
-        element: dynamicLayout(
-          () => import('@/routes/(main)/extensions/_layout'),
-          'Desktop > Extensions > Layout',
-        ),
-        errorElement: <ErrorBoundary />,
-        path: 'extensions',
-      },
-
       // Default route - home page (handled by persistent layout)
       {
         handle: {
@@ -777,6 +718,17 @@ export const desktopRoutes: RouteObject[] = [
       'Desktop > Share > Topic > Layout',
     ),
     path: '/share/t',
+  },
+
+  // Share page route (outside main layout)
+  {
+    children: [
+      {
+        element: dynamicElement(() => import('@/routes/share/page/[id]'), 'Desktop > Share > Page'),
+        path: ':id',
+      },
+    ],
+    path: '/share/page',
   },
 
   // Devtools route (outside main layout, dev-only)

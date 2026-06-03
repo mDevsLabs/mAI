@@ -66,7 +66,7 @@ export interface PluginListResponse {
  * Plugin source types
  * - legacy: From old plugin list (_getPluginList)
  * - market: From Market SDK (getMcpDetail)
- * - builtin: From mAI builtin tools
+ * - builtin: From LobeHub builtin tools
  */
 export type PluginSource = 'legacy' | 'market' | 'builtin';
 

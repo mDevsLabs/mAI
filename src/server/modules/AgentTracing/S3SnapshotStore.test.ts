@@ -61,7 +61,7 @@ describe('S3SnapshotStore.save', () => {
     expect(Buffer.isBuffer(body)).toBe(true);
 
     // zstd frame magic: 0x28 b5 2f fd
-    expect([body[0], body[1], body[2], body[3]]).toEqual([0x28, 0xB5, 0x2F, 0xFD]);
+    expect([body[0], body[1], body[2], body[3]]).toEqual([0x28, 0xb5, 0x2f, 0xfd]);
 
     const roundtripped = JSON.parse((await decompressZstd(body)).toString('utf8'));
     expect(roundtripped).toEqual(snap);

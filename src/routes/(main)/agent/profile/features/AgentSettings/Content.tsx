@@ -82,7 +82,7 @@ const Content = memo(() => {
     [availableTabs, t],
   );
 
-  const displayTitle = isInbox ? 'May' : meta.title || t('defaultSession', { ns: 'common' });
+  const displayTitle = isInbox ? 'Lobe AI' : meta.title || t('defaultSession', { ns: 'common' });
 
   return (
     <Flexbox

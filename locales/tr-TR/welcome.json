@@ -122,9 +122,7 @@
     {
       "avatar": "📊",
       "backgroundColor": "#E8F8F5",
-      "plugins": [
-        "steam"
-      ],
+      "plugins": ["steam"],
       "systemRole": "Verileri işleme ve yorumlama konusunda uzmansınız, grafikler ve istatistiksel analizlerle kalıpları ve eğilimleri ortaya çıkarırsınız.",
       "title": "Veri Analisti"
     },
@@ -272,14 +270,6 @@
   "slogan.title": "Kendinize daha akıllı bir zihin kazandırın",
   "welcomeMessages": {
     "1": "Tekrar hoş geldiniz 😊",
-    "2": "Merhaba, buradayım",
-    "3": "Her şey hazır!",
-    "4": "Sizi görmek harika",
-    "5": "Hazır mısınız?",
-    "6": "Bugünkü görevlerde yardımcı olayım",
-    "7": "İlerlemenizi sürdürün!",
-    "8": "Haydi başlayalım 💪",
-    "9": "Hadi işe koyulalım 🏃‍♂️",
     "10": "Verimlilik en üst düzeyde~",
     "11": "Hizmetinizdeyim!",
     "12": "Beklediğiniz için teşekkürler ☕",
@@ -290,6 +280,7 @@
     "17": "Tam şarjlı ⚡",
     "18": "Hadi gidelim! 🚀",
     "19": "Düşüncelerim seninle uyumlu.",
+    "2": "Merhaba, buradayım",
     "20": "İlham geliyor",
     "21": "Sadece çağırmanı bekliyorum",
     "22": "Yüksek verimlilik moduna geri döndüm!",
@@ -300,6 +291,7 @@
     "27": "Sistem çevrimiçi, yardıma hazır 💡",
     "28": "Pozitif enerji yükleniyor",
     "29": "Kontrol sende, şimdi başlıyoruz 🎵",
+    "3": "Her şey hazır!",
     "30": "Verimlilik artırılıyor …",
     "31": "Bugünün hedefleri yolda 🎯",
     "32": "Fikirlerin parlasın ✨",
@@ -309,6 +301,12 @@
     "36": "Harika! Başlayalım 😎",
     "37": "Seni bekliyorum",
     "38": "İyi çalışmaya devam et!",
-    "39": "Mola vermeyi unutma~ 💤"
+    "39": "Mola vermeyi unutma~ 💤",
+    "4": "Sizi görmek harika",
+    "5": "Hazır mısınız?",
+    "6": "Bugünkü görevlerde yardımcı olayım",
+    "7": "İlerlemenizi sürdürün!",
+    "8": "Haydi başlayalım 💪",
+    "9": "Hadi işe koyulalım 🏃‍♂️"
   }
 }

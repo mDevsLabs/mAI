@@ -10,7 +10,7 @@ const getTruncatedPortion = (value: string) => value.split('\n\n[Content truncat
 const endsWithHighSurrogate = (value: string) => {
   const lastCharCode = value.charCodeAt(value.length - 1);
 
-  return lastCharCode >= 0xD8_00 && lastCharCode <= 0xDB_FF;
+  return lastCharCode >= 0xd8_00 && lastCharCode <= 0xdb_ff;
 };
 
 describe('truncateToolResult', () => {

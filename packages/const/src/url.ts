@@ -2,17 +2,17 @@ import urlJoin from 'url-join';
 
 const isDev = process.env.NODE_ENV === 'development';
 
-export const OFFICIAL_URL = 'https://m-ai-officiel.vercel.app';
-export const OFFICIAL_SITE = 'https://mprojects.odoo.com';
-export const OFFICIAL_DOMAIN = 'mprojects.odoo.com';
+export const OFFICIAL_URL = 'https://app.lobehub.com';
+export const OFFICIAL_SITE = 'https://lobehub.com';
+export const OFFICIAL_DOMAIN = 'lobehub.com';
 
 export const OG_URL = '/og/og.webp?v=1';
 
-export const GITHUB = 'https://github.com/mDevsLabs/mAI';
+export const GITHUB = 'https://github.com/lobehub/lobe-chat';
 export const GITHUB_ISSUES = urlJoin(GITHUB, 'issues/new/choose');
-export const CHANGELOG = 'https://mprojects.odoo.com/m-ai';
+export const CHANGELOG = 'https://lobehub.com/changelog';
 
-export const DOCUMENTS = 'https://github.com/mDevsLabs/mAI/tree/canary/docs';
+export const DOCUMENTS = urlJoin(OFFICIAL_SITE, '/docs');
 export const USAGE_DOCUMENTS = urlJoin(DOCUMENTS, '/usage');
 export const SELF_HOSTING_DOCUMENTS = urlJoin(DOCUMENTS, '/self-hosting');
 export const DATABASE_SELF_HOSTING_URL = urlJoin(SELF_HOSTING_DOCUMENTS, '/server-database');
@@ -74,7 +74,7 @@ export const mailTo = (email: string) => `mailto:${email}`;
 export const AES_GCM_URL = 'https://datatracker.ietf.org/doc/html/draft-ietf-avt-srtp-aes-gcm-01';
 export const BASE_PROVIDER_DOC_URL = 'https://lobehub.com/docs/usage/providers';
 export const SITEMAP_BASE_URL = isDev ? '/sitemap.xml/' : 'sitemap';
-export const CHANGELOG_URL = urlJoin(OFFICIAL_SITE, 'changelog/versions');
+export const CHANGELOG_URL = urlJoin(OFFICIAL_SITE, 'changelog');
 
 export const DOWNLOAD_URL = {
   android: 'https://play.google.com/store/apps/details?id=com.lobehub.app',

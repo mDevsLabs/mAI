@@ -17,7 +17,6 @@
     "incremental": true,
     "types": ["vitest/globals"],
     "paths": {
-      "@lobehub/icons": ["./src/components/ProviderIconWrapper"],
       "@/database/*": ["./packages/database/src/*", "./src/database/*"],
       "@/const/*": ["./packages/const/src/*", "./src/const/*"],
       "@/utils/*": ["./packages/utils/src/*", "./src/utils/*"],
@@ -34,7 +33,6 @@
   "exclude": [
     "node_modules",
     "apps/desktop/**",
-    "apps/device-gateway/**",
     "apps/mobile/**",
     "tmp",
     "temp",

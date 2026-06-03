@@ -115,7 +115,7 @@ const Nav = memo<{
       <Flexbox horizontal gap={12}>
         <a
           className={styles.link}
-          href="https://discord.gg/fV7zwdGPpY"
+          href="https://discord.gg/AYFPHvv2jT"
           rel="noopener noreferrer"
           target={'_blank'}
         >

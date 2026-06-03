@@ -3,7 +3,7 @@ import * as XLSX from 'xlsx';
 
 import { detectFormat } from '../src/detect';
 
-const XLSX_MAGIC = new Uint8Array([0x50, 0x4B, 0x03, 0x04]);
+const XLSX_MAGIC = new Uint8Array([0x50, 0x4b, 0x03, 0x04]);
 
 describe('detectFormat - edge cases', () => {
   it('should detect XLS by filename extension', () => {
@@ -49,7 +49,7 @@ describe('detectFormat - edge cases', () => {
   });
 
   it('should not detect XLSX from short Uint8Array (less than 4 bytes)', () => {
-    const data = new Uint8Array([0x50, 0x4B]);
+    const data = new Uint8Array([0x50, 0x4b]);
     // Not enough bytes for magic number → falls through to string detection
     expect(detectFormat(data)).toBe('csv');
   });

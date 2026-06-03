@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { App } from '@/core/App';
 import GatewayConnectionService from '@/services/gatewayConnectionSrv';
+import ImessageBridgeService from '@/services/imessageBridgeSrv';
 
 import GatewayConnectionCtr from '../GatewayConnectionCtr';
 import HeterogeneousAgentCtr from '../HeterogeneousAgentCtr';
@@ -34,6 +35,7 @@ const { ipcMainHandleMock, MockGatewayClient } = vi.hoisted(() => {
     });
 
     sendToolCallResponse = vi.fn();
+    sendMessageApiResponse = vi.fn();
     sendAgentRunAck = vi.fn();
 
     constructor(options: any) {
@@ -67,6 +69,19 @@ const { ipcMainHandleMock, MockGatewayClient } = vi.hoisted(() => {
       });
     }
 
+    simulateMessageApiRequest(
+      platform: string,
+      apiName: string,
+      payload: Record<string, unknown>,
+      requestId = 'msg-req-1',
+    ) {
+      this.emit('message_api_request', {
+        api: { apiName, payload, platform },
+        requestId,
+        type: 'message_api_request',
+      });
+    }
+
     simulateAuthExpired() {
       this.emit('auth_expired');
     }
@@ -80,6 +95,7 @@ const { ipcMainHandleMock, MockGatewayClient } = vi.hoisted(() => {
       operationId = 'op-1',
       prompt = 'hello',
       jwt = 'mock-jwt',
+      extra: Record<string, unknown> = {},
     ) {
       this.emit('agent_run_request', {
         agentType,
@@ -88,6 +104,7 @@ const { ipcMainHandleMock, MockGatewayClient } = vi.hoisted(() => {
         prompt,
         topicId: 'topic-1',
         type: 'agent_run_request',
+        ...extra,
       });
     }
 
@@ -160,6 +177,10 @@ vi.mock('@lobechat/device-gateway-client', () => ({
   GatewayClient: MockGatewayClient,
 }));
 
+vi.mock('@/services/imessageBridgeSrv', () => ({
+  default: class ImessageBridgeService {},
+}));
+
 vi.mock('execa', () => ({
   execa: vi.fn().mockResolvedValue({ stdout: '', stderr: '' }),
 }));
@@ -204,6 +225,10 @@ const mockHeterogeneousAgentCtr = {
   startSession: vi.fn().mockResolvedValue({ sessionId: 'mock-session-id' }),
 } as unknown as HeterogeneousAgentCtr;
 
+const mockImessageBridgeSrv = {
+  handleGatewayMessageApi: vi.fn().mockResolvedValue({ ok: true }),
+} as unknown as ImessageBridgeService;
+
 const mockRemoteServerConfigCtr = {
   getAccessToken: vi.fn().mockResolvedValue('mock-access-token'),
   getRemoteServerUrl: vi.fn().mockResolvedValue('https://server.example.com'),
@@ -226,6 +251,7 @@ const mockApp = {
   }),
   getService: vi.fn((Cls) => {
     if (Cls === GatewayConnectionService) return mockGatewayConnectionSrv;
+    if (Cls === ImessageBridgeService) return mockImessageBridgeSrv;
     return null;
   }),
   storeManager: { get: mockStoreGet, set: mockStoreSet },
@@ -500,15 +526,18 @@ describe('GatewayConnectionCtr', () => {
       ['renameLocalFile', 'handleRenameFile', mockLocalFileCtr],
     ] as const)('should route %s to %s', async (apiName, methodName, controller) => {
       const client = await connectAndOpen();
-      const args = { test: 'arg' };
 
-      client.simulateToolCallRequest(apiName, args);
+      // Each tool's args are domain-shaped (path, file_path, items, etc.).
+      // The runtime denormalizes them before calling the controller, so this
+      // test only asserts that the *right* controller method runs — see the
+      // envelope-shape test below for end-to-end content/state coverage.
+      client.simulateToolCallRequest(apiName, { test: 'arg' });
       await vi.advanceTimersByTimeAsync(0);
 
-      expect((controller as any)[methodName]).toHaveBeenCalledWith(args);
+      expect((controller as any)[methodName]).toHaveBeenCalled();
     });
 
-    it('should send tool_call_response with success result', async () => {
+    it('should send tool_call_response with content + state envelope on success', async () => {
       vi.mocked(mockLocalFileCtr.readFile).mockResolvedValueOnce({
         charCount: 5,
         content: 'hello',
@@ -526,23 +555,20 @@ describe('GatewayConnectionCtr', () => {
       client.simulateToolCallRequest('readFile', { path: '/a.txt' }, 'req-42');
       await vi.advanceTimersByTimeAsync(0);
 
-      expect(client.sendToolCallResponse).toHaveBeenCalledWith({
-        requestId: 'req-42',
-        result: {
-          content: JSON.stringify({
-            charCount: 5,
-            content: 'hello',
-            createdTime: new Date('2024-01-01'),
-            filename: 'a.txt',
-            fileType: '.txt',
-            lineCount: 1,
-            loc: [1, 1],
-            modifiedTime: new Date('2024-01-01'),
-            totalCharCount: 5,
-            totalLineCount: 1,
-          }),
-          success: true,
-        },
+      // The runtime produces a formatted prompt string for `content` and a
+      // structured snapshot for `state`. We only assert envelope shape here
+      // — the exact prompt format is owned by the runtime/prompts packages.
+      expect(client.sendToolCallResponse).toHaveBeenCalledTimes(1);
+      const response = client.sendToolCallResponse.mock.calls[0][0];
+      expect(response.requestId).toBe('req-42');
+      expect(response.result.success).toBe(true);
+      expect(typeof response.result.content).toBe('string');
+      expect(response.result.content.length).toBeGreaterThan(0);
+      expect(response.result.content).toContain('hello');
+      expect(response.result.state).toMatchObject({
+        content: 'hello',
+        filename: 'a.txt',
+        path: '/a.txt',
       });
     });
 
@@ -573,6 +599,66 @@ describe('GatewayConnectionCtr', () => {
         'Tool "unknownApi" is not available on this device. It may not be supported in the current desktop version. Please skip this tool and try alternative approaches.';
       expect(client.sendToolCallResponse).toHaveBeenCalledWith({
         requestId: 'req-unknown',
+        result: {
+          content: errorMsg,
+          error: errorMsg,
+          success: false,
+        },
+      });
+    });
+  });
+
+  describe('message API routing', () => {
+    async function connectAndOpen() {
+      ctr.afterAppReady();
+      await vi.advanceTimersByTimeAsync(0);
+      const client = MockGatewayClient.lastInstance!;
+      client.simulateConnected();
+      return client;
+    }
+
+    it('should route iMessage message API requests to the iMessage bridge service', async () => {
+      vi.mocked(mockImessageBridgeSrv.handleGatewayMessageApi).mockResolvedValueOnce({
+        guid: 'sent-1',
+      });
+      const client = await connectAndOpen();
+
+      client.simulateMessageApiRequest(
+        'imessage',
+        'sendText',
+        {
+          applicationId: 'home-mac-mini',
+          chatGuid: 'iMessage;-;chat-1',
+          message: 'hello',
+        },
+        'msg-req-42',
+      );
+      await vi.advanceTimersByTimeAsync(0);
+
+      expect(mockImessageBridgeSrv.handleGatewayMessageApi).toHaveBeenCalledWith('sendText', {
+        applicationId: 'home-mac-mini',
+        chatGuid: 'iMessage;-;chat-1',
+        message: 'hello',
+      });
+      expect(client.sendMessageApiResponse).toHaveBeenCalledWith({
+        requestId: 'msg-req-42',
+        result: {
+          content: JSON.stringify({ guid: 'sent-1' }),
+          success: true,
+        },
+      });
+    });
+
+    it('should send message_api_response with error for unsupported platforms', async () => {
+      const client = await connectAndOpen();
+
+      client.simulateMessageApiRequest('unsupported', 'sendText', {}, 'msg-req-err');
+      await vi.advanceTimersByTimeAsync(0);
+
+      const errorMsg =
+        'Message API "unsupported/sendText" is not available on this device. It may not be supported in the current desktop version.';
+      expect(client.sendMessageApiResponse).toHaveBeenCalledWith({
+        requestId: 'msg-req-err',
         result: {
           content: errorMsg,
           error: errorMsg,
@@ -648,6 +734,22 @@ describe('GatewayConnectionCtr', () => {
         );
       },
     );
+
+    it('forwards cwd and systemContext from the request to spawnLhHeteroExec', async () => {
+      const client = await connectAndOpen();
+      client.simulateAgentRunRequest('claude-code', 'op-ctx', 'hi', 'mock-jwt', {
+        cwd: '/Users/alice/repo',
+        systemContext: 'WORKSPACE CONTEXT',
+      });
+      await vi.advanceTimersByTimeAsync(0);
+
+      expect(mockHeterogeneousAgentCtr.spawnLhHeteroExec).toHaveBeenCalledWith(
+        expect.objectContaining({
+          cwd: '/Users/alice/repo',
+          systemContext: 'WORKSPACE CONTEXT',
+        }),
+      );
+    });
 
     it('sends accepted ack and spawns lh hetero exec', async () => {
       const client = await connectAndOpen();
@@ -874,6 +976,7 @@ describe('GatewayConnectionCtr', () => {
         requestId: 'req-cap',
         result: {
           content: JSON.stringify({ available: true, version: 'openclaw 1.2.3' }),
+          state: { available: true, version: 'openclaw 1.2.3' },
           success: true,
         },
       });
@@ -898,6 +1001,7 @@ describe('GatewayConnectionCtr', () => {
         requestId: 'req-cap-nover',
         result: {
           content: JSON.stringify({ available: true }),
+          state: { available: true },
           success: true,
         },
       });
@@ -923,6 +1027,10 @@ describe('GatewayConnectionCtr', () => {
             available: false,
             reason: 'openclaw is not installed on this device',
           }),
+          state: {
+            available: false,
+            reason: 'openclaw is not installed on this device',
+          },
           success: true,
         },
       });
@@ -941,6 +1049,7 @@ describe('GatewayConnectionCtr', () => {
         requestId: 'req-unknown-plat',
         result: {
           content: JSON.stringify({ available: false, reason: 'Unknown platform: unknownBot' }),
+          state: { available: false, reason: 'Unknown platform: unknownBot' },
           success: true,
         },
       });
@@ -955,6 +1064,7 @@ describe('GatewayConnectionCtr', () => {
         requestId: 'req-profile',
         result: {
           content: JSON.stringify({}),
+          state: {},
           success: true,
         },
       });

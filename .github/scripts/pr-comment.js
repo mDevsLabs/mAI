@@ -113,7 +113,7 @@ ${assetTable}
         comment_id: buildComment.id,
         owner: context.repo.owner,
         repo: context.repo.repo,
-        body,
+        body: body,
       });
       console.log(`Updated existing comment ID: ${buildComment.id}`);
       return { updated: true, id: buildComment.id };
@@ -122,7 +122,7 @@ ${assetTable}
         issue_number: context.issue.number,
         owner: context.repo.owner,
         repo: context.repo.repo,
-        body,
+        body: body,
       });
       console.log(`Created new comment ID: ${result.data.id}`);
       return { updated: false, id: result.data.id };

@@ -7,6 +7,7 @@ Guidelines for using AI coding agents in this LobeHub repository.
 - Next.js 16 + React 19 + TypeScript
 - SPA inside Next.js with `react-router-dom`
 - `@lobehub/ui`, antd for components; antd-style for CSS-in-JS — **prefer `createStaticStyles` with `cssVar.*`** (zero-runtime); only fall back to `createStyles` + `token` when styles genuinely need runtime computation. See `.cursor/docs/createStaticStyles_migration_guide.md`.
+- **Component priority**: `@lobehub/ui/base-ui` (headless primitives) **first**, then `@lobehub/ui` root, then antd as last resort. When the component exists in base-ui, use it — never reach for the root or antd counterpart. Base-ui covers `Select`, `Modal` / `createModal` / `confirmModal`, `DropdownMenu`, `ContextMenu`, `Popover`, `ScrollArea`, `Switch`, `Toast`, `FloatingSheet`. Prefer `@lobehub/ui/base-ui` for new code and migrate root-package call sites opportunistically.
 - react-i18next for i18n; zustand for state management
 - SWR for data fetching; TRPC for type-safe backend
 - Drizzle ORM with PostgreSQL; Vitest for testing
@@ -122,6 +123,10 @@ cd packages/database && bunx vitest run --silent='passed-only' '[file]'
 - Add keys to a namespace file under `src/locales/default/` (e.g. `agent.ts`, `auth.ts`)
 - For dev preview: translate `locales/zh-CN/` and `locales/en-US/`
 - `pnpm i18n` is slow; run it manually when locale keys need updating (e.g. before opening a PR).
+
+### Code Style
+
+- When a single file grows beyond \~800 lines, consider splitting it into multiple files (extract sub-components, hooks, helpers, or types). Smaller, focused files are friendly to humans and agents.
 
 ### Code Review
 
