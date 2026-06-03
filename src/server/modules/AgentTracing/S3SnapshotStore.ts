@@ -1,20 +1,25 @@
 import { promisify } from 'node:util';
-import { zstdCompress, zstdDecompress } from 'node:zlib';
+import { brotliCompress, brotliDecompress, constants } from 'node:zlib';
 
 import type { ExecutionSnapshot, ISnapshotStore, SnapshotSummary } from '@lobechat/agent-tracing';
 import debug from 'debug';
 
 import { FileS3 } from '@/server/modules/S3';
 
-const compressZstd = promisify(zstdCompress);
-const decompressZstd = promisify(zstdDecompress);
+const compressBr = promisify(brotliCompress);
+const decompressBr = promisify(brotliDecompress);
 
 const log = debug('lobe-server:agent-tracing:s3');
 
 const TRACE_PREFIX = 'agent-traces';
-const SNAPSHOT_SUFFIX = '.json.zst';
+const SNAPSHOT_SUFFIX = '.json.br';
 const LEGACY_SUFFIX = '.json';
-const ZSTD_CONTENT_TYPE = 'application/zstd';
+const BROTLI_CONTENT_TYPE = 'application/brotli';
+
+/** Brotli quality 4 gives a good size/speed trade-off for JSON payloads. */
+const BROTLI_COMPRESS_OPTS = {
+  params: { [constants.BROTLI_PARAM_QUALITY]: 4 },
+};
 
 /**
  * Canonical S3 key for a finalized operation snapshot. Single source of truth
@@ -33,11 +38,11 @@ export const buildFinalSnapshotKey = (
  * S3-backed snapshot store for production agent trace persistence.
  *
  * S3 paths:
- * - Final:   agent-traces/{agentId}/{topicId}/{operationId}.json.zst
- * - Partial: agent-traces/_partial/{operationId}.json.zst  (temporary, deleted after finalization)
+ * - Final:   agent-traces/{agentId}/{topicId}/{operationId}.json.br
+ * - Partial: agent-traces/_partial/{operationId}.json.br  (temporary, deleted after finalization)
  *
- * Snapshots are zstd-compressed (level 3) before upload — measured 8-9× average
- * size reduction across production traces. The `.zst` suffix is the format
+ * Snapshots are Brotli-compressed (quality 4) before upload — achieves ~6-8×
+ * average size reduction for JSON traces. The `.br` suffix is the format
  * indicator; Content-Encoding is intentionally NOT set so the object is served
  * as opaque bytes (avoids HTTP middleware auto-decompressing into clients that
  * don't expect it). Readers explicitly decompress.
@@ -63,11 +68,11 @@ export class S3SnapshotStore implements ISnapshotStore {
   }
 
   private async encodeSnapshot(value: unknown): Promise<Buffer> {
-    return compressZstd(Buffer.from(JSON.stringify(value)));
+    return compressBr(Buffer.from(JSON.stringify(value)), BROTLI_COMPRESS_OPTS);
   }
 
   private async decodeSnapshot<T>(bytes: Uint8Array): Promise<T> {
-    const buf = await decompressZstd(Buffer.from(bytes));
+    const buf = await decompressBr(Buffer.from(bytes));
     return JSON.parse(buf.toString('utf8')) as T;
   }
 
@@ -78,7 +83,7 @@ export class S3SnapshotStore implements ISnapshotStore {
 
     log('Saving snapshot to S3: %s', key);
     const compressed = await this.encodeSnapshot(snapshot);
-    await this.s3.uploadBuffer(key, compressed, ZSTD_CONTENT_TYPE);
+    await this.s3.uploadBuffer(key, compressed, BROTLI_CONTENT_TYPE);
   }
 
   // === Query methods — not supported, use OTEL backend ===
@@ -102,7 +107,7 @@ export class S3SnapshotStore implements ISnapshotStore {
   }
 
   async loadPartial(operationId: string): Promise<Partial<ExecutionSnapshot> | null> {
-    // Current format: .json.zst (zstd-compressed)
+    // Current format: .json.br (Brotli-compressed)
     try {
       const bytes = await this.s3.getFileByteArray(this.partialKey(operationId));
       return await this.decodeSnapshot<Partial<ExecutionSnapshot>>(bytes);
@@ -122,12 +127,12 @@ export class S3SnapshotStore implements ISnapshotStore {
 
   async savePartial(operationId: string, partial: Partial<ExecutionSnapshot>): Promise<void> {
     const compressed = await this.encodeSnapshot(partial);
-    await this.s3.uploadBuffer(this.partialKey(operationId), compressed, ZSTD_CONTENT_TYPE);
+    await this.s3.uploadBuffer(this.partialKey(operationId), compressed, BROTLI_CONTENT_TYPE);
   }
 
   async removePartial(operationId: string): Promise<void> {
     // Clean up both the current key and any legacy uncompressed sibling that may
-    // exist if the operation was started before the zstd rollout.
+    // exist if the operation was started before the brotli rollout.
     await Promise.allSettled([
       this.s3.deleteFile(this.partialKey(operationId)),
       this.s3.deleteFile(this.legacyPartialKey(operationId)),

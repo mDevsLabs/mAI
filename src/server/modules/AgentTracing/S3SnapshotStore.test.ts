@@ -1,12 +1,16 @@
 // @vitest-environment node
 import { promisify } from 'node:util';
-import { zstdCompress, zstdDecompress } from 'node:zlib';
+import { brotliCompress, brotliDecompress, constants } from 'node:zlib';
 
 import type { ExecutionSnapshot } from '@lobechat/agent-tracing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const compressZstd = promisify(zstdCompress);
-const decompressZstd = promisify(zstdDecompress);
+const compressBr = promisify(brotliCompress);
+const decompressBr = promisify(brotliDecompress);
+
+const BROTLI_COMPRESS_OPTS = {
+  params: { [constants.BROTLI_PARAM_QUALITY]: 4 },
+};
 
 // Stub FileS3 with vi.fn methods so we can assert calls + return canned data.
 const uploadBuffer = vi.fn();
@@ -48,7 +52,7 @@ beforeEach(() => {
 });
 
 describe('S3SnapshotStore.save', () => {
-  it('writes to agent-traces/{agentId}/{topicId}/{operationId}.json.zst with zstd body', async () => {
+  it('writes to agent-traces/{agentId}/{topicId}/{operationId}.json.br with brotli body', async () => {
     const store = new S3SnapshotStore();
     const snap = sampleSnapshot();
 
@@ -56,14 +60,11 @@ describe('S3SnapshotStore.save', () => {
 
     expect(uploadBuffer).toHaveBeenCalledTimes(1);
     const [key, body, contentType] = uploadBuffer.mock.calls[0];
-    expect(key).toBe(`agent-traces/${snap.agentId}/${snap.topicId}/${snap.operationId}.json.zst`);
-    expect(contentType).toBe('application/zstd');
+    expect(key).toBe(`agent-traces/${snap.agentId}/${snap.topicId}/${snap.operationId}.json.br`);
+    expect(contentType).toBe('application/brotli');
     expect(Buffer.isBuffer(body)).toBe(true);
 
-    // zstd frame magic: 0x28 b5 2f fd
-    expect([body[0], body[1], body[2], body[3]]).toEqual([0x28, 0xb5, 0x2f, 0xfd]);
-
-    const roundtripped = JSON.parse((await decompressZstd(body)).toString('utf8'));
+    const roundtripped = JSON.parse((await decompressBr(body)).toString('utf8'));
     expect(roundtripped).toEqual(snap);
   });
 
@@ -73,13 +74,13 @@ describe('S3SnapshotStore.save', () => {
 
     const [key] = uploadBuffer.mock.calls[0];
     expect(key).toBe(
-      'agent-traces/unknown/unknown/op_1777000000000_agt_abc_tpc_xyz_QwErTy.json.zst',
+      'agent-traces/unknown/unknown/op_1777000000000_agt_abc_tpc_xyz_QwErTy.json.br',
     );
   });
 });
 
 describe('S3SnapshotStore.savePartial', () => {
-  it('writes to agent-traces/_partial/{operationId}.json.zst with compressed body', async () => {
+  it('writes to agent-traces/_partial/{operationId}.json.br with compressed body', async () => {
     const store = new S3SnapshotStore();
     const partial = { operationId: 'op_partial_1', steps: [{ stepIndex: 0 }] };
 
@@ -87,28 +88,28 @@ describe('S3SnapshotStore.savePartial', () => {
 
     expect(uploadBuffer).toHaveBeenCalledTimes(1);
     const [key, body, contentType] = uploadBuffer.mock.calls[0];
-    expect(key).toBe('agent-traces/_partial/op_partial_1.json.zst');
-    expect(contentType).toBe('application/zstd');
+    expect(key).toBe('agent-traces/_partial/op_partial_1.json.br');
+    expect(contentType).toBe('application/brotli');
 
-    const roundtripped = JSON.parse((await decompressZstd(body)).toString('utf8'));
+    const roundtripped = JSON.parse((await decompressBr(body)).toString('utf8'));
     expect(roundtripped).toEqual(partial);
   });
 });
 
 describe('S3SnapshotStore.loadPartial', () => {
-  it('decodes the zstd-compressed .json.zst object when present', async () => {
+  it('decodes the brotli-compressed .json.br object when present', async () => {
     const partial = { operationId: 'op_load_1', steps: [{ stepIndex: 7 }] };
-    const compressed = await compressZstd(Buffer.from(JSON.stringify(partial)));
+    const compressed = await compressBr(Buffer.from(JSON.stringify(partial)), BROTLI_COMPRESS_OPTS);
     getFileByteArray.mockResolvedValueOnce(new Uint8Array(compressed));
 
     const store = new S3SnapshotStore();
     const result = await store.loadPartial('op_load_1');
 
-    expect(getFileByteArray).toHaveBeenCalledWith('agent-traces/_partial/op_load_1.json.zst');
+    expect(getFileByteArray).toHaveBeenCalledWith('agent-traces/_partial/op_load_1.json.br');
     expect(result).toEqual(partial);
   });
 
-  it('falls back to legacy uncompressed .json when .json.zst is missing', async () => {
+  it('falls back to legacy uncompressed .json when .json.br is missing', async () => {
     const partial = { operationId: 'op_legacy_1' };
     getFileByteArray.mockRejectedValueOnce(new Error('NoSuchKey'));
     getFileContent.mockResolvedValueOnce(JSON.stringify(partial));
@@ -116,7 +117,7 @@ describe('S3SnapshotStore.loadPartial', () => {
     const store = new S3SnapshotStore();
     const result = await store.loadPartial('op_legacy_1');
 
-    expect(getFileByteArray).toHaveBeenCalledWith('agent-traces/_partial/op_legacy_1.json.zst');
+    expect(getFileByteArray).toHaveBeenCalledWith('agent-traces/_partial/op_legacy_1.json.br');
     expect(getFileContent).toHaveBeenCalledWith('agent-traces/_partial/op_legacy_1.json');
     expect(result).toEqual(partial);
   });
@@ -131,12 +132,12 @@ describe('S3SnapshotStore.loadPartial', () => {
 });
 
 describe('S3SnapshotStore.removePartial', () => {
-  it('deletes both the .json.zst and legacy .json keys', async () => {
+  it('deletes both the .json.br and legacy .json keys', async () => {
     const store = new S3SnapshotStore();
     await store.removePartial('op_remove_1');
 
     const keys = deleteFile.mock.calls.map(([k]) => k);
-    expect(keys).toContain('agent-traces/_partial/op_remove_1.json.zst');
+    expect(keys).toContain('agent-traces/_partial/op_remove_1.json.br');
     expect(keys).toContain('agent-traces/_partial/op_remove_1.json');
     expect(deleteFile).toHaveBeenCalledTimes(2);
   });

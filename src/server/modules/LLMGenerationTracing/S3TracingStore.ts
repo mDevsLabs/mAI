@@ -1,5 +1,5 @@
 import { promisify } from 'node:util';
-import { zstdCompress, zstdDecompress } from 'node:zlib';
+import { brotliCompress, brotliDecompress, constants } from 'node:zlib';
 
 import type {
   ITracingStore,
@@ -11,14 +11,19 @@ import debug from 'debug';
 
 import { FileS3 } from '@/server/modules/S3';
 
-const compressZstd = promisify(zstdCompress);
-const decompressZstd = promisify(zstdDecompress);
+const compressBr = promisify(brotliCompress);
+const decompressBr = promisify(brotliDecompress);
 
 const log = debug('lobe-server:llm-generation-tracing:s3');
 
 const TRACE_PREFIX = 'llm-generation-tracing';
-const PAYLOAD_SUFFIX = '.json.zst';
-const ZSTD_CONTENT_TYPE = 'application/zstd';
+const PAYLOAD_SUFFIX = '.json.br';
+const BROTLI_CONTENT_TYPE = 'application/brotli';
+
+/** Brotli quality 4 gives a good size/speed trade-off for JSON payloads. */
+const BROTLI_COMPRESS_OPTS = {
+  params: { [constants.BROTLI_PARAM_QUALITY]: 4 },
+};
 
 const sanitize = (value: string): string => value.replaceAll(/[^\w.-]+/g, '_') || 'unknown';
 
@@ -30,7 +35,7 @@ const dateSegment = (createdAt: number): string => new Date(createdAt).toISOStri
  * in `llm_generation_tracing.storage_key` always matches the object in S3.
  *
  * Layout:
- *   llm-generation-tracing/{scenario}/{promptVersion}-{promptHash}/{yyyy-mm-dd}/{tracingId}.json.zst
+ *   llm-generation-tracing/{scenario}/{promptVersion}-{promptHash}/{yyyy-mm-dd}/{tracingId}.json.br
  */
 export const buildTracingKey = (record: {
   created_at: number;
@@ -50,7 +55,7 @@ export const buildTracingKey = (record: {
 /**
  * S3-backed store for per-call llm_generation_tracing payloads.
  *
- * Payload is zstd-compressed (level 3) prior to upload; the `.zst` suffix
+ * Payload is Brotli-compressed (quality 4) prior to upload; the `.br` suffix
  * advertises the format but Content-Encoding is intentionally omitted to keep
  * the object opaque to HTTP middleware (callers decompress explicitly).
  *
@@ -67,15 +72,18 @@ export class S3TracingStore implements ITracingStore {
   async save(record: TracingPayload): Promise<SaveResult> {
     const key = buildTracingKey(record);
     log('Saving tracing payload to S3: %s', key);
-    const compressed = await compressZstd(Buffer.from(JSON.stringify(record)));
-    await this.s3.uploadBuffer(key, compressed, ZSTD_CONTENT_TYPE);
+    const compressed = await compressBr(
+      Buffer.from(JSON.stringify(record)),
+      BROTLI_COMPRESS_OPTS,
+    );
+    await this.s3.uploadBuffer(key, compressed, BROTLI_CONTENT_TYPE);
     return { key };
   }
 
   async get(key: string): Promise<TracingPayload | null> {
     try {
       const bytes = await this.s3.getFileByteArray(key);
-      const buf = await decompressZstd(Buffer.from(bytes));
+      const buf = await decompressBr(Buffer.from(bytes));
       return JSON.parse(buf.toString('utf8')) as TracingPayload;
     } catch {
       return null;
