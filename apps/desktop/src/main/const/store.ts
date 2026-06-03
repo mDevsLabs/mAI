@@ -34,8 +34,6 @@ export const STORE_DEFAULTS: ElectronMainStore = {
   gatewayDeviceName: '',
   gatewayEnabled: true,
   gatewayUrl: 'https://device-gateway.lobehub.com',
-  heteroTracingEnabled: false,
-  imessageBridgeConfigs: [],
   locale: 'auto',
   localFileWorkspaceRoots: [],
   networkProxy: defaultProxySettings,

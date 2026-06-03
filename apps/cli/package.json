@@ -1,6 +1,6 @@
 {
   "name": "@lobehub/cli",
-  "version": "0.0.24",
+  "version": "0.0.8",
   "type": "module",
   "bin": {
     "lh": "./dist/index.js",
@@ -30,7 +30,6 @@
   "devDependencies": {
     "@lobechat/agent-gateway-client": "workspace:*",
     "@lobechat/device-gateway-client": "workspace:*",
-    "@lobechat/device-identity": "workspace:*",
     "@lobechat/heterogeneous-agents": "workspace:*",
     "@lobechat/local-file-shell": "workspace:*",
     "@trpc/client": "^11.8.1",
@@ -45,7 +44,7 @@
     "picocolors": "^1.1.1",
     "superjson": "^2.2.6",
     "tsdown": "^0.21.4",
-    "typescript": "^6.0.3",
+    "typescript": "^5.9.3",
     "ws": "^8.18.1"
   },
   "publishConfig": {
@@ -53,3 +52,4 @@
     "registry": "https://registry.npmjs.org"
   }
 }
+

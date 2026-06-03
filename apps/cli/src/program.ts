@@ -4,7 +4,6 @@ import { Command } from 'commander';
 
 import { registerAgentCommand } from './commands/agent';
 import { registerAgentGroupCommand } from './commands/agent-group';
-import { registerAgentSignalCommand } from './commands/agent-signal';
 import { registerBotCommand } from './commands/bot';
 import { registerCompletionCommand } from './commands/completion';
 import { registerConfigCommand } from './commands/config';
@@ -43,7 +42,7 @@ export function createProgram() {
 
   program
     .name('lh')
-    .description('LobeHub CLI - manage and connect to LobeHub services')
+    .description('mAI CLI - manage and connect to mAI services')
     .version(version);
 
   registerLoginCommand(program);
@@ -59,7 +58,6 @@ export function createProgram() {
   registerMemoryCommand(program);
   registerAgentCommand(program);
   registerAgentGroupCommand(program);
-  registerAgentSignalCommand(program);
   registerBotCommand(program);
   registerGenerateCommand(program);
   registerFileCommand(program);

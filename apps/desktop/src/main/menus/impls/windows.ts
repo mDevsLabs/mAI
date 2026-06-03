@@ -1,10 +1,7 @@
-import path from 'node:path';
-
 import type { MenuItemConstructorOptions } from 'electron';
 import { app, BrowserWindow, clipboard, Menu, shell } from 'electron';
 
 import { isDev } from '@/const/env';
-import { HETERO_AGENT_DIR } from '@/const/heteroAgent';
 
 import type { ContextMenuData, IMenuPlatform, MenuOptions } from '../types';
 import { BaseMenuPlatform } from './BaseMenuPlatform';
@@ -142,9 +139,9 @@ export class WindowsMenu extends BaseMenuPlatform implements IMenuPlatform {
         submenu: [
           { accelerator: 'F12', label: t('dev.devTools'), role: 'toggleDevTools' },
           { type: 'separator' },
-          this.buildZoomMenuItem('reset', t('view.resetZoom'), 'CmdOrCtrl+0'),
-          ...this.buildZoomMenuItems('in', t('view.zoomIn'), 'CmdOrCtrl+=', ['CmdOrCtrl+Plus']),
-          this.buildZoomMenuItem('out', t('view.zoomOut'), 'CmdOrCtrl+-'),
+          { label: t('view.resetZoom'), role: 'resetZoom' },
+          { label: t('view.zoomIn'), role: 'zoomIn' },
+          { label: t('view.zoomOut'), role: 'zoomOut' },
           { type: 'separator' },
           { label: t('view.toggleFullscreen'), role: 'togglefullscreen' },
         ],
@@ -213,25 +210,6 @@ export class WindowsMenu extends BaseMenuPlatform implements IMenuPlatform {
               await shell.openExternal('https://github.com/lobehub/lobe-chat');
             },
             label: t('help.githubRepo'),
-          },
-          { type: 'separator' },
-          {
-            click: () => {
-              const heteroAgentPath = path.join(this.app.appStoragePath, HETERO_AGENT_DIR);
-              console.info(`[Menu] Opening HeteroAgent directory: ${heteroAgentPath}`);
-              shell.openPath(heteroAgentPath).catch((err) => {
-                console.error(`[Menu] Error opening path ${heteroAgentPath}:`, err);
-              });
-            },
-            label: t('help.openHeteroAgentDir'),
-          },
-          {
-            checked: this.app.storeManager.get('heteroTracingEnabled', false),
-            click: (item) => {
-              this.app.storeManager.set('heteroTracingEnabled', item.checked);
-            },
-            label: t('help.toggleHeteroTracing'),
-            type: 'checkbox',
           },
         ],
       },

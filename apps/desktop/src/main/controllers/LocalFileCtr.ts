@@ -248,15 +248,14 @@ export default class LocalFileCtr extends ControllerModule {
     error?: string;
     success: boolean;
   }> {
-    const resolvedPath = expandTilde(filePath) ?? filePath;
-    logger.debug('Attempting to open file:', { filePath: resolvedPath });
+    logger.debug('Attempting to open file:', { filePath });
 
     try {
-      await shell.openPath(resolvedPath);
-      logger.debug('File opened successfully:', { filePath: resolvedPath });
+      await shell.openPath(filePath);
+      logger.debug('File opened successfully:', { filePath });
       return { success: true };
     } catch (error) {
-      logger.error(`Failed to open file ${resolvedPath}:`, error);
+      logger.error(`Failed to open file ${filePath}:`, error);
       return { error: (error as Error).message, success: false };
     }
   }
@@ -266,13 +265,8 @@ export default class LocalFileCtr extends ControllerModule {
     error?: string;
     success: boolean;
   }> {
-    const resolvedTarget = expandTilde(targetPath) ?? targetPath;
-    const folderPath = isDirectory ? resolvedTarget : path.dirname(resolvedTarget);
-    logger.debug('Attempting to open folder:', {
-      folderPath,
-      isDirectory,
-      targetPath: resolvedTarget,
-    });
+    const folderPath = isDirectory ? targetPath : path.dirname(targetPath);
+    logger.debug('Attempting to open folder:', { folderPath, isDirectory, targetPath });
 
     try {
       await shell.openPath(folderPath);

@@ -21,18 +21,18 @@ export function truncate(str: string, maxWidth: number): string {
   for (const char of str) {
     const code = char.codePointAt(0)!;
     const cw =
-      (code >= 0x1100 && code <= 0x115f) ||
-      (code >= 0x2e80 && code <= 0x303e) ||
-      (code >= 0x3040 && code <= 0x33bf) ||
-      (code >= 0x3400 && code <= 0x4dbf) ||
-      (code >= 0x4e00 && code <= 0x9fff) ||
-      (code >= 0xa000 && code <= 0xa4cf) ||
-      (code >= 0xac00 && code <= 0xd7af) ||
-      (code >= 0xf900 && code <= 0xfaff) ||
-      (code >= 0xfe30 && code <= 0xfe6f) ||
-      (code >= 0xff01 && code <= 0xff60) ||
-      (code >= 0xffe0 && code <= 0xffe6) ||
-      (code >= 0x20000 && code <= 0x2fa1f)
+      (code >= 0x1100 && code <= 0x115F) ||
+      (code >= 0x2E80 && code <= 0x303E) ||
+      (code >= 0x3040 && code <= 0x33BF) ||
+      (code >= 0x3400 && code <= 0x4DBF) ||
+      (code >= 0x4E00 && code <= 0x9FFF) ||
+      (code >= 0xA000 && code <= 0xA4CF) ||
+      (code >= 0xAC00 && code <= 0xD7AF) ||
+      (code >= 0xF900 && code <= 0xFAFF) ||
+      (code >= 0xFE30 && code <= 0xFE6F) ||
+      (code >= 0xFF01 && code <= 0xFF60) ||
+      (code >= 0xFFE0 && code <= 0xFFE6) ||
+      (code >= 0x20000 && code <= 0x2FA1F)
         ? 2
         : 1;
     if (width + cw > maxWidth - 1) {
@@ -93,18 +93,18 @@ export function displayWidth(s: string): number {
   for (const char of plain) {
     const code = char.codePointAt(0)!;
     if (
-      (code >= 0x1100 && code <= 0x115f) || // Hangul Jamo
-      (code >= 0x2e80 && code <= 0x303e) || // CJK Radicals, Kangxi, Symbols
-      (code >= 0x3040 && code <= 0x33bf) || // Hiragana, Katakana, Bopomofo, CJK Compat
-      (code >= 0x3400 && code <= 0x4dbf) || // CJK Extension A
-      (code >= 0x4e00 && code <= 0x9fff) || // CJK Unified Ideographs
-      (code >= 0xa000 && code <= 0xa4cf) || // Yi Syllables/Radicals
-      (code >= 0xac00 && code <= 0xd7af) || // Hangul Syllables
-      (code >= 0xf900 && code <= 0xfaff) || // CJK Compatibility Ideographs
-      (code >= 0xfe30 && code <= 0xfe6f) || // CJK Compatibility Forms
-      (code >= 0xff01 && code <= 0xff60) || // Fullwidth Forms
-      (code >= 0xffe0 && code <= 0xffe6) || // Fullwidth Signs
-      (code >= 0x20000 && code <= 0x2fa1f) // CJK Extension B–F, Compatibility Supplement
+      (code >= 0x1100 && code <= 0x115F) || // Hangul Jamo
+      (code >= 0x2E80 && code <= 0x303E) || // CJK Radicals, Kangxi, Symbols
+      (code >= 0x3040 && code <= 0x33BF) || // Hiragana, Katakana, Bopomofo, CJK Compat
+      (code >= 0x3400 && code <= 0x4DBF) || // CJK Extension A
+      (code >= 0x4E00 && code <= 0x9FFF) || // CJK Unified Ideographs
+      (code >= 0xA000 && code <= 0xA4CF) || // Yi Syllables/Radicals
+      (code >= 0xAC00 && code <= 0xD7AF) || // Hangul Syllables
+      (code >= 0xF900 && code <= 0xFAFF) || // CJK Compatibility Ideographs
+      (code >= 0xFE30 && code <= 0xFE6F) || // CJK Compatibility Forms
+      (code >= 0xFF01 && code <= 0xFF60) || // Fullwidth Forms
+      (code >= 0xFFE0 && code <= 0xFFE6) || // Fullwidth Signs
+      (code >= 0x20000 && code <= 0x2FA1F) // CJK Extension B–F, Compatibility Supplement
     ) {
       width += 2;
     } else {

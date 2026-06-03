@@ -80,13 +80,14 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, macos-15-intel, windows-2025, ubuntu-latest]
+        os: [macos-latest, windows-2025, ubuntu-latest]
     steps:
       - uses: actions/checkout@v6
 
       - name: Setup build environment
         uses: ./.github/actions/desktop-build-setup
         with:
+          cloud-token: ${{ secrets.LOBEHUB_CLOUD_TOKEN }}
           node-version: ${{ env.NODE_VERSION }}
 
       - name: Set package version

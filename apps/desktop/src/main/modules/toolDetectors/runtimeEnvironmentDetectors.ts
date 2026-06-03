@@ -96,13 +96,13 @@ export const uvDetector: IToolDetector = createCommandDetector('uv', {
 });
 
 /**
- * LobeHub CLI detector
- * Tries lobehub, lobe, lh in order; validates via --help output containing "LobeHub"
+ * mAI CLI detector
+ * Tries mai, lobehub, lobe, lh in order; validates via --help output containing "mAI"
  */
 export const lobehubDetector: IToolDetector = {
-  description: 'LobeHub CLI - manage and connect to LobeHub services',
+  description: 'mAI CLI - manage and connect to mAI services',
   async detect(): Promise<ToolStatus> {
-    const commands = ['lobehub', 'lobe', 'lh'];
+    const commands = ['mai', 'lobehub', 'lobe', 'lh'];
     const whichCmd = platform() === 'win32' ? 'where' : 'which';
 
     for (const cmd of commands) {
@@ -110,9 +110,9 @@ export const lobehubDetector: IToolDetector = {
         const { stdout: pathOut } = await execPromise(`${whichCmd} ${cmd}`, { timeout: 3000 });
         const toolPath = pathOut.trim().split('\n')[0];
 
-        // Validate it's actually LobeHub CLI by checking help output
+        // Validate it's actually mAI CLI by checking help output
         const { stdout: helpOut } = await execPromise(`${cmd} --help`, { timeout: 3000 });
-        if (!helpOut.includes('LobeHub')) continue;
+        if (!helpOut.includes('mAI')) continue;
 
         const { stdout: versionOut } = await execPromise(`${cmd} --version`, { timeout: 3000 });
         const version = versionOut.trim().split('\n')[0];

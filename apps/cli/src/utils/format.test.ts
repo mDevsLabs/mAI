@@ -121,7 +121,7 @@ describe('printBoxTable', () => {
       },
     ];
 
-    printBoxTable(columns, rows, 'LobeHub Token Usage Report - Monthly (2026-03)');
+    printBoxTable(columns, rows, 'mAI Token Usage Report - Monthly (2026-03)');
     expect(output.join('\n')).toMatchSnapshot();
 
     vi.restoreAllMocks();

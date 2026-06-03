@@ -75,14 +75,8 @@ jobs:
           commit_msg=$(git log -1 --pretty=%s HEAD)
           echo "📝 Head commit: $commit_msg"
 
-          # 检查是否匹配 style/feat/fix/refactor/release 前缀 (支持 gitmoji 前缀)
-          if echo "$commit_msg" | grep -qiE '^(💄\s*)?style(\(.+\))?:|^(✨\s*)?feat(\(.+\))?:|^(🐛\s*)?fix(\(.+\))?:|^(♻️\s*)?refactor(\(.+\))?:|^(🚀\s*)?release(\(.+\))?:'; then
-            echo "should_build=true" >> $GITHUB_OUTPUT
-            echo "✅ Commit matches canary build trigger: $commit_msg"
-          else
-            echo "should_build=false" >> $GITHUB_OUTPUT
-            echo "⏭️ Commit does not match style/feat/fix/refactor/release prefix, skipping: $commit_msg"
-          fi
+          echo "should_build=true" >> $GITHUB_OUTPUT
+          echo "✅ Canary build trigger: $commit_msg"
 
       - name: Calculate canary version
         if: steps.check.outputs.should_build == 'true'
@@ -92,8 +86,9 @@ jobs:
           latest_tag=$(git tag --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -n 1)
 
           if [ -z "$latest_tag" ]; then
-            echo "❌ No stable tag found"
-            exit 1
+            echo "⚠️ No stable tag found, fallback to package.json version"
+            pkg_version=$(node -p "require('./package.json').version")
+            latest_tag="v${pkg_version}"
           fi
 
           echo "📌 Latest stable tag: $latest_tag"
@@ -202,9 +197,6 @@ jobs:
       - name: Install deps
         run: pnpm install
 
-      - name: Lint
-        run: bun run lint
-
   # ============================================
   # 多平台构建
   # ============================================
@@ -216,7 +208,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-15, macos-15-intel, windows-2025, ubuntu-latest]
+        os: [macos-15, windows-2025, ubuntu-latest]
     steps:
       - uses: actions/checkout@v6
 
