@@ -20,7 +20,15 @@ import Google from './providers/google';
 import Keycloak from './providers/keycloak';
 import Logto from './providers/logto';
 import Microsoft from './providers/microsoft';
+import Notion from './providers/notion';
 import Okta from './providers/okta';
+import Canva from './providers/canva';
+import Discord from './providers/discord';
+import Slack from './providers/slack';
+import Spotify from './providers/spotify';
+import Telegram from './providers/telegram';
+import Twitch from './providers/twitch';
+import X from './providers/x';
 import Wechat from './providers/wechat';
 import Zitadel from './providers/zitadel';
 
@@ -28,6 +36,11 @@ const providerDefinitions = [
   Apple,
   Google,
   Github,
+  Discord,
+  Slack,
+  Spotify,
+  Twitch,
+  Notion,
   Cognito,
   Microsoft,
   Auth0,
@@ -42,6 +55,9 @@ const providerDefinitions = [
   Zitadel,
   Feishu,
   Wechat,
+  X,
+  Canva,
+  Telegram,
 ] as const;
 
 const builtInProviderIds = new Set(BUILTIN_BETTER_AUTH_PROVIDERS);

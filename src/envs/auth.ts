@@ -23,6 +23,9 @@ declare global {
       AUTH_AUTHENTIK_SECRET?: string;
       AUTH_CASDOOR_ID?: string;
 
+      AUTH_CANVA_ID?: string;
+      AUTH_CANVA_SECRET?: string;
+
       AUTH_CASDOOR_ISSUER?: string;
       AUTH_CASDOOR_SECRET?: string;
       AUTH_CLOUDFLARE_ZERO_TRUST_ID?: string;
@@ -50,6 +53,8 @@ declare global {
       AUTH_GITHUB_ID?: string;
       AUTH_GITHUB_SECRET?: string;
       // ===== Auth Provider Credentials ===== //
+      AUTH_DISCORD_ID?: string;
+      AUTH_DISCORD_SECRET?: string;
       AUTH_GOOGLE_ID?: string;
 
       AUTH_GOOGLE_SECRET?: string;
@@ -61,6 +66,8 @@ declare global {
 
       AUTH_LOGTO_ISSUER?: string;
       AUTH_LOGTO_SECRET?: string;
+      AUTH_NOTION_ID?: string;
+      AUTH_NOTION_SECRET?: string;
       AUTH_MICROSOFT_AUTHORITY_URL?: string;
 
       AUTH_MICROSOFT_ID?: string;
@@ -71,6 +78,15 @@ declare global {
       AUTH_OKTA_ISSUER?: string;
       AUTH_OKTA_SECRET?: string;
 
+      AUTH_SPOTIFY_ID?: string;
+      AUTH_SPOTIFY_SECRET?: string;
+      AUTH_SLACK_ID?: string;
+      AUTH_SLACK_SECRET?: string;
+      AUTH_TELEGRAM_ID?: string;
+      AUTH_TELEGRAM_SECRET?: string;
+      AUTH_TWITCH_ID?: string;
+      AUTH_TWITCH_SECRET?: string;
+
       // ===== Better Auth ===== //
       AUTH_SECRET?: string;
       AUTH_SSO_PROVIDERS?: string;
@@ -78,6 +94,9 @@ declare global {
 
       AUTH_WECHAT_ID?: string;
       AUTH_WECHAT_SECRET?: string;
+
+      AUTH_X_ID?: string;
+      AUTH_X_SECRET?: string;
 
       AUTH_ZITADEL_ID?: string;
       AUTH_ZITADEL_ISSUER?: string;
@@ -120,6 +139,9 @@ export const getAuthConfig = () => {
       AUTH_GOOGLE_ID: z.string().optional(),
       AUTH_GOOGLE_SECRET: z.string().optional(),
 
+      AUTH_DISCORD_ID: z.string().optional(),
+      AUTH_DISCORD_SECRET: z.string().optional(),
+
       AUTH_APPLE_CLIENT_ID: z.string().optional(),
       AUTH_APPLE_CLIENT_SECRET: z.string().optional(),
       AUTH_APPLE_APP_BUNDLE_IDENTIFIER: z.string().optional(),
@@ -152,6 +174,8 @@ export const getAuthConfig = () => {
       AUTH_AUTHENTIK_ISSUER: z.string().optional(),
 
       AUTH_CASDOOR_ID: z.string().optional(),
+      AUTH_CANVA_ID: z.string().optional(),
+      AUTH_CANVA_SECRET: z.string().optional(),
       AUTH_CASDOOR_SECRET: z.string().optional(),
       AUTH_CASDOOR_ISSUER: z.string().optional(),
 
@@ -174,12 +198,30 @@ export const getAuthConfig = () => {
       AUTH_LOGTO_SECRET: z.string().optional(),
       AUTH_LOGTO_ISSUER: z.string().optional(),
 
+      AUTH_NOTION_ID: z.string().optional(),
+      AUTH_NOTION_SECRET: z.string().optional(),
+
       AUTH_OKTA_ID: z.string().optional(),
       AUTH_OKTA_SECRET: z.string().optional(),
       AUTH_OKTA_ISSUER: z.string().optional(),
 
+      AUTH_SLACK_ID: z.string().optional(),
+      AUTH_SLACK_SECRET: z.string().optional(),
+
+      AUTH_SPOTIFY_ID: z.string().optional(),
+      AUTH_SPOTIFY_SECRET: z.string().optional(),
+
+      AUTH_TELEGRAM_ID: z.string().optional(),
+      AUTH_TELEGRAM_SECRET: z.string().optional(),
+
+      AUTH_TWITCH_ID: z.string().optional(),
+      AUTH_TWITCH_SECRET: z.string().optional(),
+
       AUTH_WECHAT_ID: z.string().optional(),
       AUTH_WECHAT_SECRET: z.string().optional(),
+
+      AUTH_X_ID: z.string().optional(),
+      AUTH_X_SECRET: z.string().optional(),
 
       AUTH_ZITADEL_ID: z.string().optional(),
       AUTH_ZITADEL_SECRET: z.string().optional(),
@@ -216,6 +258,9 @@ export const getAuthConfig = () => {
       AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
       AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
 
+      AUTH_DISCORD_ID: process.env.AUTH_DISCORD_ID,
+      AUTH_DISCORD_SECRET: process.env.AUTH_DISCORD_SECRET,
+
       AUTH_APPLE_CLIENT_ID: process.env.AUTH_APPLE_CLIENT_ID,
       AUTH_APPLE_CLIENT_SECRET: process.env.AUTH_APPLE_CLIENT_SECRET,
       AUTH_APPLE_APP_BUNDLE_IDENTIFIER: process.env.AUTH_APPLE_APP_BUNDLE_IDENTIFIER,
@@ -245,6 +290,8 @@ export const getAuthConfig = () => {
       AUTH_AUTHENTIK_ISSUER: process.env.AUTH_AUTHENTIK_ISSUER,
 
       AUTH_CASDOOR_ID: process.env.AUTH_CASDOOR_ID,
+      AUTH_CANVA_ID: process.env.AUTH_CANVA_ID,
+      AUTH_CANVA_SECRET: process.env.AUTH_CANVA_SECRET,
       AUTH_CASDOOR_SECRET: process.env.AUTH_CASDOOR_SECRET,
       AUTH_CASDOOR_ISSUER: process.env.AUTH_CASDOOR_ISSUER,
 
@@ -267,12 +314,30 @@ export const getAuthConfig = () => {
       AUTH_LOGTO_SECRET: process.env.AUTH_LOGTO_SECRET,
       AUTH_LOGTO_ISSUER: process.env.AUTH_LOGTO_ISSUER,
 
+      AUTH_NOTION_ID: process.env.AUTH_NOTION_ID,
+      AUTH_NOTION_SECRET: process.env.AUTH_NOTION_SECRET,
+
       AUTH_OKTA_ID: process.env.AUTH_OKTA_ID,
       AUTH_OKTA_SECRET: process.env.AUTH_OKTA_SECRET,
       AUTH_OKTA_ISSUER: process.env.AUTH_OKTA_ISSUER,
 
+      AUTH_SLACK_ID: process.env.AUTH_SLACK_ID,
+      AUTH_SLACK_SECRET: process.env.AUTH_SLACK_SECRET,
+
+      AUTH_SPOTIFY_ID: process.env.AUTH_SPOTIFY_ID,
+      AUTH_SPOTIFY_SECRET: process.env.AUTH_SPOTIFY_SECRET,
+
+      AUTH_TELEGRAM_ID: process.env.AUTH_TELEGRAM_ID,
+      AUTH_TELEGRAM_SECRET: process.env.AUTH_TELEGRAM_SECRET,
+
+      AUTH_TWITCH_ID: process.env.AUTH_TWITCH_ID,
+      AUTH_TWITCH_SECRET: process.env.AUTH_TWITCH_SECRET,
+
       AUTH_WECHAT_ID: process.env.AUTH_WECHAT_ID,
       AUTH_WECHAT_SECRET: process.env.AUTH_WECHAT_SECRET,
+
+      AUTH_X_ID: process.env.AUTH_X_ID,
+      AUTH_X_SECRET: process.env.AUTH_X_SECRET,
 
       AUTH_ZITADEL_ID: process.env.AUTH_ZITADEL_ID,
       AUTH_ZITADEL_SECRET: process.env.AUTH_ZITADEL_SECRET,

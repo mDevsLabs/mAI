@@ -45,7 +45,8 @@ export const useSignIn = () => {
   const [isSocialOnly, setIsSocialOnly] = useState(false);
   const [lastAuthProvider] = useState(() => {
     try {
-      return localStorage.getItem(LAST_AUTH_PROVIDER_KEY);
+      const storedProvider = localStorage.getItem(LAST_AUTH_PROVIDER_KEY);
+      return storedProvider ? normalizeProviderId(storedProvider) : null;
     } catch {
       return null;
     }
@@ -214,7 +215,7 @@ export const useSignIn = () => {
       }
 
       try {
-        localStorage.setItem(LAST_AUTH_PROVIDER_KEY, provider);
+        localStorage.setItem(LAST_AUTH_PROVIDER_KEY, normalizedProvider);
       } catch {
         // Ignore localStorage errors (e.g., quota exceeded, private mode)
       }
@@ -277,8 +278,10 @@ export const useSignIn = () => {
   const resolvedProviders = ENABLE_BUSINESS_FEATURES ? ssoProviders : oAuthSSOProviders;
   const sortedProviders = lastAuthProvider
     ? [...resolvedProviders].sort((a, b) => {
-        if (a === lastAuthProvider) return -1;
-        if (b === lastAuthProvider) return 1;
+        const normalizedA = normalizeProviderId(a);
+        const normalizedB = normalizeProviderId(b);
+        if (normalizedA === lastAuthProvider) return -1;
+        if (normalizedB === lastAuthProvider) return 1;
         return 0;
       })
     : resolvedProviders;

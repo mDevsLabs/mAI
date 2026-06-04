@@ -11,5 +11,5 @@
 
 provider: generic
 url: http://localhost:8787/stable
-updaterCacheDirName: lobehub-desktop-local-test
+updaterCacheDirName: mai-desktop-local-test
 channel: stable
