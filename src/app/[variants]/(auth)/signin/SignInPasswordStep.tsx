@@ -35,7 +35,7 @@ export const SignInPasswordStep = ({
   return (
     <AuthCard
       subtitle={t('betterAuth.signin.passwordStep.subtitle')}
-      title={'Agent teammates that grow with you'}
+      title={t('signin.title', { ns: 'auth' })}
       footer={
         <>
           <Text fontSize={13} type={'secondary'}>
