@@ -18,5 +18,5 @@ export const ProductLogo = memo<ProductLogoProps>((props) => {
     return <CustomLogo {...props} />;
   }
 
-  return <LobeHub {...props} />;
+  return <img src="/avatars/may.PNG" alt="Product Logo" style={{ width: props.size || 32, height: props.size || 32 }} />;
 });

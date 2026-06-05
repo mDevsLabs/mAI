@@ -76,19 +76,17 @@ const SocialProviderButtons = memo<SocialProviderButtonsProps>(
               key={provider}
               loading={socialLoading === provider}
               size="large"
-              icon={
-                <div
-                  style={{
-                    left: 12,
-                    position: 'absolute',
-                    top: 13,
-                  }}
-                >
-                  {AuthIcons(provider, 18)}
-                </div>
-              }
               onClick={() => onSocialSignIn(provider)}
             >
+              <div
+                style={{
+                  left: 12,
+                  position: 'absolute',
+                  top: 13,
+                }}
+              >
+                {AuthIcons(provider, 18)}
+              </div>
               {getProviderLabel(provider)}
             </Button>
           );
