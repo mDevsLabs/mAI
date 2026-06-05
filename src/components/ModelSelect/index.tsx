@@ -349,7 +349,7 @@ export const ProviderItemRender = memo<ProviderItemRenderProps>(
             title={name}
           />
         ) : provider === 'lobehub' ? (
-          <LobeHub.Morden size={size} />
+          <img src="/avatars/may.PNG" alt="Model Logo" style={{ width: size || 32, height: size || 32 }} />
         ) : (
           <ProviderIcon provider={provider} size={size} type={type} />
         )}

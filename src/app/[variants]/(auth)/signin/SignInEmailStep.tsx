@@ -1,13 +1,13 @@
 import { BRANDING_NAME } from '@lobechat/business-const';
 import { Alert, Button, Flexbox, Icon, Input, Skeleton, Text } from '@lobehub/ui';
 import { type FormInstance, type InputRef } from 'antd';
-import { Badge, Divider, Form } from 'antd';
+import { Divider, Form } from 'antd';
 import { createStaticStyles } from 'antd-style';
 import { ChevronRight, Mail } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import AuthIcons from '@/components/AuthIcons';
+import SocialProviderButtons from '@/components/SocialProviderButtons';
 import { PRIVACY_URL, TERMS_URL } from '@/const/url';
 
 import AuthCard from '../../../../features/AuthCard';
@@ -65,14 +65,7 @@ export const SignInEmailStep = ({
     </Divider>
   );
 
-  const getProviderLabel = (provider: string) => {
-    const normalized = provider
-      .toLowerCase()
-      .replaceAll(/(^|[_-])([a-z])/g, (_, __, c) => c.toUpperCase());
-    const normalizedKey = normalized.replaceAll(/[^\da-z]/gi, '');
-    const key = `betterAuth.signin.continueWith${normalizedKey}`;
-    return t(key, { defaultValue: `Continue with ${normalized}` });
-  };
+
 
   const footer = (
     <Text fontSize={13} type={'secondary'}>
@@ -105,7 +98,7 @@ export const SignInEmailStep = ({
     <AuthCard
       footer={footer}
       subtitle={t('signin.subtitle', { appName: BRANDING_NAME })}
-      title={'Agent teammates that grow with you'}
+      title={t('betterAuth.signin.emailStep.title')}
     >
       {!serverConfigInit && (
         <Flexbox gap={12}>
@@ -115,48 +108,13 @@ export const SignInEmailStep = ({
         </Flexbox>
       )}
       {serverConfigInit && oAuthSSOProviders.length > 0 && (
-        <Flexbox gap={12}>
-          {oAuthSSOProviders.map((provider) => {
-            const button = (
-              <Button
-                block
-                key={provider}
-                loading={socialLoading === provider}
-                size="large"
-                icon={
-                  <Icon
-                    icon={AuthIcons(provider, 18)}
-                    style={{
-                      left: 12,
-                      position: 'absolute',
-                      top: 13,
-                    }}
-                  />
-                }
-                onClick={() => onSocialSignIn(provider)}
-              >
-                {getProviderLabel(provider)}
-              </Button>
-            );
-            const showLastUsed =
-              provider === lastAuthProvider &&
-              (oAuthSSOProviders.length > 1 ||
-                (oAuthSSOProviders.length === 1 && !disableEmailPassword));
-            return showLastUsed ? (
-              <Badge.Ribbon
-                color="var(--ant-color-info-fill-tertiary)"
-                key={provider}
-                styles={{ content: { color: 'var(--ant-color-info)' } }}
-                text={t('betterAuth.signin.lastUsed')}
-              >
-                {button}
-              </Badge.Ribbon>
-            ) : (
-              button
-            );
-          })}
-          {!disableEmailPassword && divider}
-        </Flexbox>
+        <SocialProviderButtons
+          hideBottomDivider={disableEmailPassword}
+          lastAuthProvider={lastAuthProvider}
+          onSocialSignIn={onSocialSignIn}
+          providers={oAuthSSOProviders}
+          socialLoading={socialLoading}
+        />
       )}
       {serverConfigInit && disableEmailPassword && oAuthSSOProviders.length === 0 && (
         <Alert showIcon description={t('betterAuth.signin.ssoOnlyNoProviders')} type="warning" />

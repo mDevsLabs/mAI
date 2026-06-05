@@ -20,10 +20,10 @@ export const rendererDir = path.join(appPath, 'dist', 'renderer');
 
 export const userDataDir = app.getPath('userData');
 
-export const appStorageDir = path.join(userDataDir, 'lobehub-storage');
+export const appStorageDir = path.join(userDataDir, 'mai-storage');
 
 // Legacy local database directory used in older desktop versions
-export const legacyLocalDbDir = path.join(appStorageDir, 'lobehub-local-db');
+export const legacyLocalDbDir = path.join(appStorageDir, 'mai-local-db');
 
 // ------  Application storage directory ---- //
 
@@ -33,4 +33,4 @@ export const FILE_STORAGE_DIR = 'file-storage';
 export const INSTALL_PLUGINS_DIR = 'plugins';
 
 // Desktop file service
-export const LOCAL_STORAGE_URL_PREFIX = '/lobe-desktop-file';
+export const LOCAL_STORAGE_URL_PREFIX = '/mai-desktop-file';

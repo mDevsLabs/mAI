@@ -1278,7 +1278,7 @@ export class MessengerRouter {
         slug: row.slug,
         title:
           (row.title && row.title.trim()) ||
-          (row.slug === INBOX_SESSION_ID ? 'LobeAI' : 'Custom Agent'),
+          (row.slug === INBOX_SESSION_ID ? 'May' : 'Custom Agent'),
       }));
 
     const inboxIdx = mapped.findIndex((row) => row.slug === INBOX_SESSION_ID);

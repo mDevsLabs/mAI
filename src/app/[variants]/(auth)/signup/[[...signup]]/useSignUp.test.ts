@@ -9,7 +9,19 @@ const mockPush = vi.hoisted(() => vi.fn());
 const mockSearchParamsGet = vi.hoisted(() => vi.fn().mockReturnValue(null));
 const mockMessageError = vi.hoisted(() => vi.fn());
 const mockSignUpEmail = vi.hoisted(() => vi.fn());
+const mockSignInSocial = vi.hoisted(() => vi.fn());
+const mockSignInOauth2 = vi.hoisted(() => vi.fn());
 const mockGetCaptchaTokenOnError = vi.hoisted(() => vi.fn());
+const mockLocalStorage = vi.hoisted(() => {
+  const store = new Map<string, string>();
+
+  return {
+    clear: () => store.clear(),
+    getItem: (key: string) => store.get(key) ?? null,
+    removeItem: (key: string) => store.delete(key),
+    setItem: (key: string, value: string) => store.set(key, value),
+  };
+});
 
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: mockPush }),
@@ -21,7 +33,17 @@ vi.mock('@/components/AntdStaticMethods', () => ({
 }));
 
 vi.mock('@/libs/better-auth/auth-client', () => ({
+  signIn: {
+    oauth2: mockSignInOauth2,
+    social: mockSignInSocial,
+  },
   signUp: { email: mockSignUpEmail },
+}));
+
+vi.mock('@/libs/better-auth/utils/client', () => ({
+  isBuiltinProvider: (p: string) =>
+    ['google', 'github', 'apple', 'discord', 'slack', 'spotify', 'twitch', 'notion'].includes(p),
+  normalizeProviderId: (p: string) => p,
 }));
 
 vi.mock('@lobechat/business-const', () => ({
@@ -38,6 +60,18 @@ vi.mock('@/business/client/hooks/useBusinessSignup', () => ({
   }),
 }));
 
+vi.mock('@/business/client/hooks/useBusinessSignin', () => ({
+  useBusinessSignin: () => ({
+    getAdditionalData: async () => ({}),
+    preSocialSigninCheck: async () => true,
+    ssoProviders: [],
+  }),
+}));
+
+vi.mock('@/features/User/UserLoginOrSignup/trackLoginOrSignupClicked', () => ({
+  trackLoginOrSignupClicked: vi.fn().mockResolvedValue(undefined),
+}));
+
 // motion/react-m exports `form` as a motion HTML element — mock the whole module
 vi.mock('motion/react-m', () => ({ form: {} }));
 
@@ -47,13 +81,19 @@ vi.mock('../../_layout/AuthServerConfigProvider', () => ({
     selector({
       serverConfig: {
         enableEmailVerification: mockEnableEmailVerification,
+        oAuthSSOProviders: ['google', 'github'],
       },
+      serverConfigInit: true,
     }),
 }));
+
+// Mock global localStorage
+vi.stubGlobal('localStorage', mockLocalStorage);
 
 describe('useSignUp', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockLocalStorage.clear();
     mockSearchParamsGet.mockReturnValue(null);
     mockGetCaptchaTokenOnError.mockResolvedValue(undefined);
     mockEnableEmailVerification = false;
@@ -69,6 +109,30 @@ describe('useSignUp', () => {
 
       expect(result.current.loading).toBe(false);
       expect(result.current.onSubmit).toBeInstanceOf(Function);
+    });
+
+    it('should return socialLoading as null initially', () => {
+      const { result } = renderHook(() => useSignUp());
+
+      expect(result.current.socialLoading).toBeNull();
+    });
+
+    it('should return oAuthSSOProviders from config', () => {
+      const { result } = renderHook(() => useSignUp());
+
+      expect(result.current.oAuthSSOProviders).toEqual(['google', 'github']);
+    });
+
+    it('should return serverConfigInit from config', () => {
+      const { result } = renderHook(() => useSignUp());
+
+      expect(result.current.serverConfigInit).toBe(true);
+    });
+
+    it('should return handleSocialSignIn as a function', () => {
+      const { result } = renderHook(() => useSignUp());
+
+      expect(result.current.handleSocialSignIn).toBeInstanceOf(Function);
     });
   });
 
@@ -278,6 +342,139 @@ describe('useSignUp', () => {
       });
 
       expect(result.current.loading).toBe(false);
+    });
+  });
+
+  describe('handleSocialSignIn', () => {
+    it('should call signIn.social for builtin providers', async () => {
+      mockSignInSocial.mockResolvedValue({ url: 'https://google.com/auth' });
+
+      const { result } = renderHook(() => useSignUp());
+
+      await act(async () => {
+        await result.current.handleSocialSignIn('google');
+      });
+
+      expect(mockSignInSocial).toHaveBeenCalledWith(
+        expect.objectContaining({ provider: 'google' }),
+      );
+      expect(mockMessageError).not.toHaveBeenCalled();
+    });
+
+    it('should call signIn.oauth2 for custom providers', async () => {
+      mockSignInOauth2.mockResolvedValue({ url: 'https://custom.com/auth' });
+
+      const { result } = renderHook(() => useSignUp());
+
+      await act(async () => {
+        await result.current.handleSocialSignIn('custom-oidc');
+      });
+
+      expect(mockSignInOauth2).toHaveBeenCalledWith(
+        expect.objectContaining({ providerId: 'custom-oidc' }),
+      );
+    });
+
+    it('should save last auth provider to localStorage', async () => {
+      mockSignInSocial.mockResolvedValue({ url: 'https://google.com/auth' });
+
+      const { result } = renderHook(() => useSignUp());
+
+      await act(async () => {
+        await result.current.handleSocialSignIn('google');
+      });
+
+      expect(localStorage.getItem('lobehub:auth:last-provider:v1')).toBe('google');
+    });
+
+    it('should show error when social sign in fails', async () => {
+      mockSignInSocial.mockResolvedValue({
+        error: { message: 'OAuth failed', status: 500 },
+      });
+
+      const { result } = renderHook(() => useSignUp());
+
+      await act(async () => {
+        await result.current.handleSocialSignIn('google');
+      });
+
+      expect(mockMessageError).toHaveBeenCalled();
+    });
+
+    it('should NOT throw when result has error: null (redirect case)', async () => {
+      mockSignInSocial.mockResolvedValue({
+        error: null,
+        redirect: true,
+        url: 'https://google.com/auth',
+      });
+
+      const { result } = renderHook(() => useSignUp());
+
+      await act(async () => {
+        await result.current.handleSocialSignIn('google');
+      });
+
+      // Should not show error toast — this is the critical regression test
+      expect(mockMessageError).not.toHaveBeenCalled();
+    });
+
+    it('should use social sign in for built-in providers', async () => {
+      mockSignInSocial.mockResolvedValue({ url: 'https://discord.com/auth' });
+
+      const { result } = renderHook(() => useSignUp());
+
+      await act(async () => {
+        await result.current.handleSocialSignIn('discord');
+      });
+
+      expect(mockSignInSocial).toHaveBeenCalledWith(
+        expect.objectContaining({
+          provider: 'discord',
+        }),
+      );
+      expect(mockSignInOauth2).not.toHaveBeenCalled();
+    });
+
+    it('should use oauth2 sign in for non-builtin providers', async () => {
+      mockSignInOauth2.mockResolvedValue({ url: 'https://telegram.org/auth' });
+
+      const { result } = renderHook(() => useSignUp());
+
+      await act(async () => {
+        await result.current.handleSocialSignIn('telegram');
+      });
+
+      expect(mockSignInOauth2).toHaveBeenCalledWith(
+        expect.objectContaining({
+          providerId: 'telegram',
+        }),
+      );
+    });
+
+    it('should reset socialLoading after completion', async () => {
+      mockSignInSocial.mockResolvedValue({ url: 'https://google.com/auth' });
+
+      const { result } = renderHook(() => useSignUp());
+
+      await act(async () => {
+        await result.current.handleSocialSignIn('google');
+      });
+
+      expect(result.current.socialLoading).toBeNull();
+    });
+
+    it('should reset socialLoading after error', async () => {
+      mockSignInSocial.mockResolvedValue({
+        error: { message: 'Failed', status: 500 },
+      });
+
+      const { result } = renderHook(() => useSignUp());
+
+      await act(async () => {
+        await result.current.handleSocialSignIn('google');
+      });
+
+      expect(result.current.socialLoading).toBeNull();
     });
   });
 });

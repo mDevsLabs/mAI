@@ -6,9 +6,11 @@ import { useTranslation } from 'react-i18next';
 
 import type { BusinessSignupFomData } from '@/business/client/hooks/useBusinessSignup';
 import { useBusinessSignup } from '@/business/client/hooks/useBusinessSignup';
+import { useBusinessSignin } from '@/business/client/hooks/useBusinessSignin';
 import { message } from '@/components/AntdStaticMethods';
 import { trackLoginOrSignupClicked } from '@/features/User/UserLoginOrSignup/trackLoginOrSignupClicked';
-import { signUp } from '@/libs/better-auth/auth-client';
+import { signIn, signUp } from '@/libs/better-auth/auth-client';
+import { isBuiltinProvider, normalizeProviderId } from '@/libs/better-auth/utils/client';
 
 import { useAuthServerConfigStore } from '../../_layout/AuthServerConfigProvider';
 import type { AuthFetchOptions } from '../../utils/authFetchOptions';
@@ -27,16 +29,22 @@ interface SignUpErrorLike {
   message?: string;
 }
 
+const LAST_AUTH_PROVIDER_KEY = 'lobehub:auth:last-provider:v1';
+
 export const useSignUp = () => {
   const { t } = useTranslation(['auth', 'authError']);
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
+  const [socialLoading, setSocialLoading] = useState<string | null>(null);
   const { getCaptchaTokenOnError, getFetchOptions, preSocialSignupCheck, businessElement } =
     useBusinessSignup(form);
+  const { getAdditionalData, preSocialSigninCheck, ssoProviders } = useBusinessSignin();
   const enableEmailVerification = useAuthServerConfigStore(
     (s) => s.serverConfig.enableEmailVerification || false,
   );
+  const serverConfigInit = useAuthServerConfigStore((s) => s.serverConfigInit);
+  const oAuthSSOProviders = useAuthServerConfigStore((s) => s.serverConfig.oAuthSSOProviders) || [];
 
   const handleSignUp = async (values: SignUpFormValues) => {
     setLoading(true);
@@ -108,5 +116,61 @@ export const useSignUp = () => {
     }
   };
 
-  return { businessElement, loading, onSubmit: handleSignUp };
+  const handleSocialSignIn = async (provider: string) => {
+    setSocialLoading(provider);
+    const normalizedProvider = normalizeProviderId(provider);
+    await trackLoginOrSignupClicked({
+      provider: normalizedProvider,
+      spm: 'signup.social.click',
+    });
+
+    try {
+      if (ENABLE_BUSINESS_FEATURES && !(await preSocialSigninCheck())) {
+        setSocialLoading(null);
+        return;
+      }
+
+      try {
+        localStorage.setItem(LAST_AUTH_PROVIDER_KEY, normalizedProvider);
+      } catch {
+        // Ignore localStorage errors (e.g., quota exceeded, private mode)
+      }
+
+      const callbackUrl = searchParams.get('callbackUrl') || '/';
+      const additionalData = await getAdditionalData();
+      const signInWithAdditionalData = async () =>
+        isBuiltinProvider(normalizedProvider)
+          ? await signIn.social({
+              additionalData,
+              callbackURL: callbackUrl,
+              provider: normalizedProvider,
+            })
+          : await signIn.oauth2({
+              additionalData,
+              callbackURL: callbackUrl,
+              providerId: normalizedProvider,
+            });
+
+      const result = await signInWithAdditionalData();
+
+      if (result && 'error' in result && result.error) throw result.error;
+    } catch (error) {
+      console.error(`${normalizedProvider} sign in error:`, error);
+      message.error(t('betterAuth.signin.socialError'));
+    } finally {
+      setSocialLoading(null);
+    }
+  };
+
+  const resolvedProviders = ENABLE_BUSINESS_FEATURES ? ssoProviders : oAuthSSOProviders;
+
+  return {
+    businessElement,
+    handleSocialSignIn,
+    loading,
+    oAuthSSOProviders: resolvedProviders,
+    onSubmit: handleSignUp,
+    serverConfigInit: ENABLE_BUSINESS_FEATURES ? true : serverConfigInit,
+    socialLoading,
+  };
 };

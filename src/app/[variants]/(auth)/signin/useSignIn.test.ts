@@ -45,12 +45,13 @@ vi.mock('@/libs/better-auth/auth-client', () => ({
 }));
 
 vi.mock('@/libs/better-auth/utils/client', () => ({
-  isBuiltinProvider: (p: string) => ['google', 'github', 'apple'].includes(p),
+  isBuiltinProvider: (p: string) =>
+    ['google', 'github', 'apple', 'discord', 'slack', 'spotify', 'twitch', 'notion'].includes(p),
   normalizeProviderId: (p: string) => p,
 }));
 
 vi.mock('@lobechat/business-const', () => ({
-  BRANDING_NAME: 'LobeHub',
+  BRANDING_NAME: 'mAI',
   ENABLE_BUSINESS_FEATURES: false,
 }));
 
@@ -354,6 +355,39 @@ describe('useSignIn', () => {
       });
 
       expect(mockMessageError).toHaveBeenCalled();
+    });
+
+    it('should use social sign in for built-in providers', async () => {
+      mockSignInSocial.mockResolvedValue({ url: 'https://google.com/auth' });
+
+      const { result } = renderHook(() => useSignIn());
+
+      await act(async () => {
+        await result.current.handleSocialSignIn('discord');
+      });
+
+      expect(mockSignInSocial).toHaveBeenCalledWith(
+        expect.objectContaining({
+          provider: 'discord',
+        }),
+      );
+      expect(mockSignInOauth2).not.toHaveBeenCalled();
+    });
+
+    it('should use oauth2 sign in for custom providers', async () => {
+      mockSignInOauth2.mockResolvedValue({ url: 'https://telegram.org/auth' });
+
+      const { result } = renderHook(() => useSignIn());
+
+      await act(async () => {
+        await result.current.handleSocialSignIn('telegram');
+      });
+
+      expect(mockSignInOauth2).toHaveBeenCalledWith(
+        expect.objectContaining({
+          providerId: 'telegram',
+        }),
+      );
     });
 
     it('should not retry social sign in when captcha is returned unexpectedly', async () => {

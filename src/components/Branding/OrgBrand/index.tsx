@@ -10,5 +10,5 @@ export const OrgBrand = memo<LobeHubProps>((props) => {
     return <span>{ORG_NAME}</span>;
   }
 
-  return <LobeHub {...props} />;
+  return <img src="/avatars/may.PNG" alt="Org Brand" style={{ width: props.size || 32, height: props.size || 32 }} />;
 });

@@ -8,6 +8,8 @@ import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import SocialProviderButtons from '@/components/SocialProviderButtons';
+
 import { AuthCard } from '../../../../../features/AuthCard';
 import { trackLoginOrSignupClicked } from '../../../../../features/User/UserLoginOrSignup/trackLoginOrSignupClicked';
 import { type SignUpFormValues } from './useSignUp';
@@ -15,7 +17,15 @@ import { useSignUp } from './useSignUp';
 
 const BetterAuthSignUpForm = () => {
   const [form] = Form.useForm<SignUpFormValues>();
-  const { loading, onSubmit, businessElement } = useSignUp();
+  const {
+    loading,
+    onSubmit,
+    businessElement,
+    handleSocialSignIn,
+    oAuthSSOProviders,
+    serverConfigInit,
+    socialLoading,
+  } = useSignUp();
 
   const { t } = useTranslation('auth');
   const searchParams = useSearchParams();
@@ -56,6 +66,13 @@ const BetterAuthSignUpForm = () => {
       subtitle={t('betterAuth.signup.subtitle')}
       title={t('betterAuth.signup.title')}
     >
+      {serverConfigInit && oAuthSSOProviders.length > 0 && (
+        <SocialProviderButtons
+          onSocialSignIn={handleSocialSignIn}
+          providers={oAuthSSOProviders}
+          socialLoading={socialLoading}
+        />
+      )}
       <Form form={form} layout="vertical" onFinish={onSubmit}>
         <Form.Item
           name="email"
@@ -151,3 +168,4 @@ const BetterAuthSignUpForm = () => {
 };
 
 export default BetterAuthSignUpForm;
+

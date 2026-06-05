@@ -4,10 +4,15 @@
  */
 export const BUILTIN_BETTER_AUTH_PROVIDERS = [
   'apple',
-  'google',
+  'discord',
   'github',
+  'google',
   'cognito',
   'microsoft',
+  'notion',
+  'slack',
+  'spotify',
+  'twitch',
 ] as const;
 
 /**
@@ -16,4 +21,5 @@ export const BUILTIN_BETTER_AUTH_PROVIDERS = [
  */
 export const PROVIDER_ALIAS_MAP: Record<string, string> = {
   'microsoft-entra-id': 'microsoft',
+  twitter: 'x',
 };
