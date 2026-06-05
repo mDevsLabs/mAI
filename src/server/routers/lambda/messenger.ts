@@ -377,7 +377,7 @@ export const messengerRouter = router({
         backgroundColor: row.backgroundColor,
         id: row.id,
         slug: row.slug,
-        title: row.title || (row.slug === INBOX_SESSION_ID ? 'LobeAI' : null),
+        title: row.title || (row.slug === INBOX_SESSION_ID ? 'May' : 'Custom Agent'),
       }));
 
     // Pin the inbox/LobeAI agent to the top regardless of updatedAt — it's the
