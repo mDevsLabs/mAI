@@ -6,34 +6,18 @@ import { authEnv } from '@/envs/auth';
 import { BUILTIN_BETTER_AUTH_PROVIDERS } from '@/libs/better-auth/constants';
 import { parseSSOProviders } from '@/libs/better-auth/utils/server';
 
-import Apple from './providers/apple';
-import Auth0 from './providers/auth0';
-import Authelia from './providers/authelia';
-import Authentik from './providers/authentik';
-import Casdoor from './providers/casdoor';
-import CloudflareZeroTrust from './providers/cloudflare-zero-trust';
-import Cognito from './providers/cognito';
-import Feishu from './providers/feishu';
-import GenericOIDC from './providers/generic-oidc';
-import Github from './providers/github';
-import Google from './providers/google';
-import Keycloak from './providers/keycloak';
-import Logto from './providers/logto';
-import Microsoft from './providers/microsoft';
-import Notion from './providers/notion';
-import Okta from './providers/okta';
 import Canva from './providers/canva';
 import Discord from './providers/discord';
+import Github from './providers/github';
+import Google from './providers/google';
+import Notion from './providers/notion';
 import Slack from './providers/slack';
 import Spotify from './providers/spotify';
 import Telegram from './providers/telegram';
 import Twitch from './providers/twitch';
 import X from './providers/x';
-import Wechat from './providers/wechat';
-import Zitadel from './providers/zitadel';
 
 const providerDefinitions = [
-  Apple,
   Google,
   Github,
   Discord,
@@ -41,20 +25,6 @@ const providerDefinitions = [
   Spotify,
   Twitch,
   Notion,
-  Cognito,
-  Microsoft,
-  Auth0,
-  Authelia,
-  Authentik,
-  Casdoor,
-  CloudflareZeroTrust,
-  GenericOIDC,
-  Keycloak,
-  Logto,
-  Okta,
-  Zitadel,
-  Feishu,
-  Wechat,
   X,
   Canva,
   Telegram,
