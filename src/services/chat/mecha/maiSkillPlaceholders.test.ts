@@ -1,30 +1,30 @@
-import { builtinSkills, LobeHubIdentifier } from '@lobechat/builtin-skills';
+import { builtinSkills, mAIIdentifier } from '@lobechat/builtin-skills';
 import { renderPlaceholderTemplate } from '@lobechat/context-engine';
 import { describe, expect, it } from 'vitest';
 
-const LobeHubSkill = builtinSkills.find((s) => s.identifier === LobeHubIdentifier);
-if (!LobeHubSkill) {
-  throw new Error(`LobeHubSkill not found in builtinSkills (looking for "${LobeHubIdentifier}")`);
+const mAISkill = builtinSkills.find((s) => s.identifier === mAIIdentifier);
+if (!mAISkill) {
+  throw new Error(`mAISkill not found in builtinSkills (looking for "${mAIIdentifier}")`);
 }
-const lobeHubContent = LobeHubSkill.content;
+const mAIContent = mAISkill.content;
 
 /**
  * Regression for .
  *
  * Instead of building a dedicated AgentIdentityContextInjector, we wire current
  * agent / topic identity through the existing PlaceholderVariablesProcessor —
- * the LobeHub builtin skill content references `{{agent_id}}`, `{{topic_id}}`,
+ * the mAI builtin skill content references `{{agent_id}}`, `{{topic_id}}`,
  * etc., and `contextEngineering.ts` provides the matching variable generators.
  *
  * This test pins the contract from BOTH ends:
- *   1. `lobehub/content.ts` actually contains the expected `{{...}}` tokens.
+ *   1. `mai/content.ts` actually contains the expected `{{...}}` tokens.
  *   2. The placeholder engine substitutes them with caller-provided values.
  *
  * If anyone renames a token in content.ts without updating the generators (or
  * vice versa), this test fails before users see a broken `lh agent run -a {{agent_id}}`
  * literal in their prompts.
  */
-describe('LobeHub skill identity placeholders ()', () => {
+describe('mAI skill identity placeholders ()', () => {
   const PLACEHOLDER_KEYS = [
     'agent_id',
     'agent_title',
@@ -33,15 +33,15 @@ describe('LobeHub skill identity placeholders ()', () => {
     'topic_title',
   ] as const;
 
-  it('lobeHubContent references all expected placeholder tokens', () => {
-    const content = lobeHubContent;
+  it('mAIContent references all expected placeholder tokens', () => {
+    const content = mAIContent;
     for (const key of PLACEHOLDER_KEYS) {
       expect(content).toContain(`{{${key}}}`);
     }
   });
 
   it('renderPlaceholderTemplate substitutes all identity placeholders', () => {
-    const rendered = renderPlaceholderTemplate(lobeHubContent, {
+    const rendered = renderPlaceholderTemplate(mAIContent, {
       agent_id: 'agt_xyz',
       agent_title: 'Test Agent',
       agent_description: 'A test assistant',
@@ -62,7 +62,7 @@ describe('LobeHub skill identity placeholders ()', () => {
   });
 
   it('falls back to empty string when an identity field is missing', () => {
-    const rendered = renderPlaceholderTemplate(lobeHubContent, {
+    const rendered = renderPlaceholderTemplate(mAIContent, {
       agent_id: 'agt_only',
       agent_title: '',
       agent_description: '',

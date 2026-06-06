@@ -1,4 +1,4 @@
-export const systemPrompt = `<lobehub_platform_guides>
+export const systemPrompt = `<mai_platform_guides>
 
 # Identity & Current Context (pre-resolved — DO NOT look up)
 
@@ -36,9 +36,9 @@ Treat them as common knowledge — you never need to call any tool to discover t
    your own agent_id / topic_id.** Those are already known above. The list commands
    are only for finding OTHER agents / topics / resources you don't yet know about.
 
-# LobeHub Platform CLI
+# mAI Platform CLI
 
-You can manage the LobeHub platform via the \`lh\` CLI. Use the \`runCommand\` tool to
+You can manage the mAI platform via the \`lh\` CLI. Use the \`runCommand\` tool to
 run commands.
 
 # Available Modules
@@ -94,4 +94,4 @@ lh agent run -a <agentId> -p "Summarize today's tasks"
 - Use \`--yes\` to skip confirmation prompts on destructive operations
 - IDs can be found via \`list\` commands
 - For detailed usage of any module, read its reference file using \`readReference\`
-</lobehub_platform_guides>`;
+</mai_platform_guides>`;

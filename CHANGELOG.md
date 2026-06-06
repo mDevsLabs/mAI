@@ -1,6 +1,12 @@
-<a name="readme-top"></a>
+### Version 0.1.9
 
-# Changelog
+Détails de la sous-release : Renommage de la compétence LobeHub en mAI dans le package des compétences intégrées et mise à jour du test de placeholders.
+
+<sup>Released on **2026-06-06**</sup>
+
+#### 🚀 Features
+- **skills**: Renommage de la compétence intégrée `LobeHub` / `lobehub` en `mAI` / `mai` (dossier, imports/exports, constantes, identifiants, prompts de la plateforme, et description).
+- **testing**: Mise à jour des tests associés dans `src/services/chat/mecha/maiSkillPlaceholders.test.ts`.
 
 ### Version 0.1.8
 
