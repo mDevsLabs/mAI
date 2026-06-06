@@ -66,9 +66,10 @@ export const initBetterAuthSSOProviders = () => {
      */
     const env = definition.checkEnvs();
     if (!env) {
-      throw new Error(
+      console.warn(
         `[Better-Auth] ${rawProvider} SSO provider environment variables are not set correctly!`,
       );
+      continue;
     }
 
     if (definition.type === 'builtin') {

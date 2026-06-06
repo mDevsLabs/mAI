@@ -8,7 +8,18 @@ export const parseSSOProviders = (providersEnv?: string): string[] => {
   const providers = providersEnv?.trim();
 
   if (!providers) {
-    return [];
+    return [
+      'google',
+      'github',
+      'canva',
+      'twitch',
+      'discord',
+      'slack',
+      'telegram',
+      'x',
+      'notion',
+      'spotify',
+    ];
   }
 
   return providers
