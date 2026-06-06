@@ -20,30 +20,16 @@ const providerNameStyle: CSSProperties = {
 };
 
 const PROVIDER_LABELS: Record<string, string> = {
-  apple: 'Apple',
-  auth0: 'Auth0',
-  authelia: 'Authelia',
-  authentik: 'Authentik',
   canva: 'Canva',
-  casdoor: 'Casdoor',
-  'cloudflare-zero-trust': 'Cloudflare Zero Trust',
-  cognito: 'AWS Cognito',
   discord: 'Discord',
-  feishu: 'Feishu',
   github: 'GitHub',
   google: 'Google',
-  keycloak: 'Keycloak',
-  logto: 'Logto',
-  microsoft: 'Microsoft',
   notion: 'Notion',
-  okta: 'Okta',
   slack: 'Slack',
   spotify: 'Spotify',
   telegram: 'Telegram',
   twitch: 'Twitch',
   x: 'X',
-  wechat: 'WeChat',
-  zitadel: 'Zitadel',
 };
 
 const getProviderLabel = (provider: string) => {
