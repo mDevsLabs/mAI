@@ -282,9 +282,9 @@ export default class HeterogeneousAgentCtr extends ControllerModule {
       : error instanceof Error
         ? error.message
         : typeof error === 'object' &&
-            error &&
-            'message' in error &&
-            typeof error.message === 'string'
+          error &&
+          'message' in error &&
+          typeof error.message === 'string'
           ? error.message
           : undefined;
   }
@@ -424,9 +424,9 @@ export default class HeterogeneousAgentCtr extends ControllerModule {
       command === defaultCommand
         ? await this.app.toolDetectorManager?.detect?.(defaultCommand, true)
         : await detectHeterogeneousCliCommand(
-            session.agentType === 'claude-code' ? 'claude-code' : 'codex',
-            command,
-          );
+          session.agentType === 'claude-code' ? 'claude-code' : 'codex',
+          command,
+        );
     const cliMissingError = this.buildCliMissingError(session);
 
     if (!status || status.available || !cliMissingError) return;
@@ -853,9 +853,9 @@ export default class HeterogeneousAgentCtr extends ControllerModule {
     const intervention =
       session.agentType === 'claude-code'
         ? await this.setupInterventionForOp(params.operationId, session.sessionId).catch((err) => {
-            logger.warn('Failed to set up AskUserQuestion bridge — proceeding without it:', err);
-            return undefined;
-          })
+          logger.warn('Failed to set up AskUserQuestion bridge — proceeding without it:', err);
+          return undefined;
+        })
         : undefined;
 
     let spawnPlan;
@@ -1343,13 +1343,13 @@ export default class HeterogeneousAgentCtr extends ControllerModule {
 
     // When systemContext is provided, send a content-block array so CC sees the
     // context block first, then the user's actual message — mirrors
-    // spawnHeteroSandbox. m handles JSON arrays via coerceJsonPrompt, so no m
+    // spawnHeteroSandbox. lh handles JSON arrays via coerceJsonPrompt, so no lh
     // changes are required.
     const stdinPayload = systemContext
       ? JSON.stringify([
-          { text: systemContext, type: 'text' },
-          { text: prompt, type: 'text' },
-        ])
+        { text: systemContext, type: 'text' },
+        { text: prompt, type: 'text' },
+      ])
       : JSON.stringify(prompt);
     child.stdin.write(stdinPayload);
     child.stdin.end();
