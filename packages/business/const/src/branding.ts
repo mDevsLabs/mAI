@@ -1,6 +1,6 @@
 // the code below can only be modified with commercial license
 // if you want to use it in the commercial usage
-// please contact us for more information: hello@lobehub.com
+// please contact us for more information: hello@mprojects.odoo.com
 
 export const LOBE_CHAT_CLOUD = 'mAI Cloud';
 
@@ -30,8 +30,8 @@ export const FILE_URL = {
 };
 
 export const BRANDING_EMAIL = {
-  business: 'hello@lobehub.com',
-  support: 'support@lobehub.com',
+  business: 'hello@mprojects.odoo.com',
+  support: 'support@mprojects.odoo.com',
 };
 
 export const BRANDING_PROVIDER = 'mai';

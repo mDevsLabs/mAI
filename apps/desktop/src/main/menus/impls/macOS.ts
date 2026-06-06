@@ -262,13 +262,21 @@ export class MacOSMenu extends BaseMenuPlatform implements IMenuPlatform {
           },
           {
             click: async () => {
-              await shell.openExternal('https://github.com/lobehub/lobe-chat');
+              await shell.openExternal('https://github.com/mDevsLabs/mAI');
             },
             label: t('help.githubRepo'),
           },
           {
             click: async () => {
-              await shell.openExternal('https://github.com/lobehub/lobe-chat/issues/new/choose');
+              const mainWindow = this.app.browserManager.getMainWindow();
+              mainWindow.show();
+              mainWindow.broadcast('navigate', { path: '/settings/changelog' });
+            },
+            label: t('help.changelog') || 'Journal des modifications',
+          },
+          {
+            click: async () => {
+              await shell.openExternal('https://github.com/mDevsLabs/mAI/issues/new/choose');
             },
             label: t('help.reportIssue'),
           },

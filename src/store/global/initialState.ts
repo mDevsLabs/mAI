@@ -45,6 +45,7 @@ export enum SettingsTabs {
   APIKey = 'apikey',
   Appearance = 'appearance',
   Billing = 'billing',
+  Changelog = 'changelog',
   /** @deprecated Use Appearance instead */
   ChatAppearance = 'chat-appearance',
   /** @deprecated Use Appearance instead */

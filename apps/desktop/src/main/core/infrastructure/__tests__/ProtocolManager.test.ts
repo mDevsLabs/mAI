@@ -12,11 +12,11 @@ const { mockApp, mockGetProtocolScheme, mockParseProtocolUrl } = vi.hoisted(() =
     getPath: vi.fn().mockReturnValue('/mock/exe/path'),
     isDefaultProtocolClient: vi.fn().mockReturnValue(true),
     isReady: vi.fn().mockReturnValue(true),
-    name: 'LobeHub',
+    name: 'mAI',
     on: vi.fn(),
     setAsDefaultProtocolClient: vi.fn().mockReturnValue(true),
   },
-  mockGetProtocolScheme: vi.fn().mockReturnValue('lobehub'),
+  mockGetProtocolScheme: vi.fn().mockReturnValue('mai'),
   mockParseProtocolUrl: vi.fn(),
 }));
 
@@ -77,7 +77,7 @@ describe('ProtocolManager', () => {
     });
 
     // Reset protocol utils mock
-    mockGetProtocolScheme.mockReturnValue('lobehub');
+    mockGetProtocolScheme.mockReturnValue('mai');
     mockParseProtocolUrl.mockReturnValue({
       action: 'install',
       params: { url: 'https://example.com' },
@@ -101,7 +101,7 @@ describe('ProtocolManager', () => {
   describe('constructor', () => {
     it('should initialize with protocol scheme from getProtocolScheme', () => {
       expect(getProtocolScheme).toHaveBeenCalled();
-      expect(manager.getScheme()).toBe('lobehub');
+      expect(manager.getScheme()).toBe('mai');
     });
   });
 
@@ -109,7 +109,7 @@ describe('ProtocolManager', () => {
     it('should register protocol handlers', () => {
       manager.initialize();
 
-      expect(app.setAsDefaultProtocolClient).toHaveBeenCalledWith('lobehub');
+      expect(app.setAsDefaultProtocolClient).toHaveBeenCalledWith('mai');
     });
 
     it('should set up event listeners', () => {
@@ -124,7 +124,7 @@ describe('ProtocolManager', () => {
     it('should use simple registration in production mode', () => {
       manager.initialize();
 
-      expect(app.setAsDefaultProtocolClient).toHaveBeenCalledWith('lobehub');
+      expect(app.setAsDefaultProtocolClient).toHaveBeenCalledWith('mai');
     });
 
     it('should use explicit parameters in development mode', async () => {
@@ -137,7 +137,7 @@ describe('ProtocolManager', () => {
 
       // In dev mode, should be called with additional arguments
       expect(app.setAsDefaultProtocolClient).toHaveBeenCalledWith(
-        'lobehub',
+        'mai',
         expect.any(String),
         expect.any(Array),
       );
@@ -146,7 +146,7 @@ describe('ProtocolManager', () => {
     it('should verify registration status after registering', () => {
       manager.initialize();
 
-      expect(app.isDefaultProtocolClient).toHaveBeenCalledWith('lobehub');
+      expect(app.isDefaultProtocolClient).toHaveBeenCalledWith('mai');
     });
   });
 
@@ -159,10 +159,10 @@ describe('ProtocolManager', () => {
       // Access private method through prototype
       const result = manager['getProtocolUrlFromArgs']([
         '/path/to/app',
-        'lobehub://plugin/install?url=https://example.com',
+        'mai://plugin/install?url=https://example.com',
       ]);
 
-      expect(result).toBe('lobehub://plugin/install?url=https://example.com');
+      expect(result).toBe('mai://plugin/install?url=https://example.com');
     });
 
     it('should return null when no matching URL found', () => {
@@ -173,11 +173,11 @@ describe('ProtocolManager', () => {
 
     it('should return first matching URL when multiple exist', () => {
       const result = manager['getProtocolUrlFromArgs']([
-        'lobehub://first/action',
-        'lobehub://second/action',
+        'mai://first/action',
+        'mai://second/action',
       ]);
 
-      expect(result).toBe('lobehub://first/action');
+      expect(result).toBe('mai://first/action');
     });
   });
 
@@ -189,16 +189,16 @@ describe('ProtocolManager', () => {
     it('should store URL when app is not ready', () => {
       mockApp.isReady.mockReturnValue(false);
 
-      manager['handleProtocolUrl']('lobehub://plugin/install');
+      manager['handleProtocolUrl']('mai://plugin/install');
 
-      expect(manager['pendingUrls']).toContain('lobehub://plugin/install');
+      expect(manager['pendingUrls']).toContain('mai://plugin/install');
       expect(mockShowMainWindow).not.toHaveBeenCalled();
     });
 
     it('should process URL immediately when app is ready', async () => {
       mockApp.isReady.mockReturnValue(true);
 
-      manager['handleProtocolUrl']('lobehub://plugin/install');
+      manager['handleProtocolUrl']('mai://plugin/install');
 
       // Allow async processing
       await vi.waitFor(() => {
@@ -226,7 +226,7 @@ describe('ProtocolManager', () => {
       expect(openUrlHandler).toBeDefined();
 
       const mockEvent = { preventDefault: vi.fn() };
-      openUrlHandler!(mockEvent, 'lobehub://plugin/install');
+      openUrlHandler!(mockEvent, 'mai://plugin/install');
 
       expect(mockEvent.preventDefault).toHaveBeenCalled();
       await vi.waitFor(() => {
@@ -238,7 +238,7 @@ describe('ProtocolManager', () => {
       expect(secondInstanceHandler).toBeDefined();
 
       const mockEvent = {};
-      secondInstanceHandler!(mockEvent, ['/path/to/app', 'lobehub://plugin/install']);
+      secondInstanceHandler!(mockEvent, ['/path/to/app', 'mai://plugin/install']);
 
       await vi.waitFor(() => {
         expect(mockShowMainWindow).toHaveBeenCalled();
@@ -262,7 +262,7 @@ describe('ProtocolManager', () => {
 
     it('should process all pending URLs', async () => {
       // Add pending URLs
-      manager['pendingUrls'] = ['lobehub://action1', 'lobehub://action2'];
+      manager['pendingUrls'] = ['mai://action1', 'mai://action2'];
 
       await manager.processPendingUrls();
 
@@ -271,7 +271,7 @@ describe('ProtocolManager', () => {
     });
 
     it('should clear pending URLs after processing', async () => {
-      manager['pendingUrls'] = ['lobehub://action1'];
+      manager['pendingUrls'] = ['mai://action1'];
 
       await manager.processPendingUrls();
 
@@ -289,7 +289,7 @@ describe('ProtocolManager', () => {
 
   describe('getScheme', () => {
     it('should return the protocol scheme', () => {
-      expect(manager.getScheme()).toBe('lobehub');
+      expect(manager.getScheme()).toBe('mai');
     });
   });
 
@@ -315,12 +315,12 @@ describe('ProtocolManager', () => {
     it('should show main window and dispatch to handler', async () => {
       vi.mocked(parseProtocolUrl).mockReturnValue({
         action: 'install',
-        originalUrl: 'lobehub://plugin/install?url=https://example.com',
+        originalUrl: 'mai://plugin/install?url=https://example.com',
         params: { url: 'https://example.com' },
         urlType: 'plugin',
       });
 
-      await manager['processProtocolUrl']('lobehub://plugin/install');
+      await manager['processProtocolUrl']('mai://plugin/install');
 
       expect(mockShowMainWindow).toHaveBeenCalled();
       expect(mockHandleProtocolRequest).toHaveBeenCalledWith('plugin', 'install', {
@@ -331,7 +331,7 @@ describe('ProtocolManager', () => {
     it('should warn and return when parseProtocolUrl returns null', async () => {
       vi.mocked(parseProtocolUrl).mockReturnValue(null);
 
-      await manager['processProtocolUrl']('lobehub://invalid');
+      await manager['processProtocolUrl']('mai://invalid');
 
       expect(mockShowMainWindow).toHaveBeenCalled();
       expect(mockHandleProtocolRequest).not.toHaveBeenCalled();
@@ -342,7 +342,7 @@ describe('ProtocolManager', () => {
 
       // Should not throw
       await expect(
-        manager['processProtocolUrl']('lobehub://plugin/install'),
+        manager['processProtocolUrl']('mai://plugin/install'),
       ).resolves.not.toThrow();
     });
   });

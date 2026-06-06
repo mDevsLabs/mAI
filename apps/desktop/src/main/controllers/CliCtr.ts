@@ -22,7 +22,7 @@ export default class CliCtr extends ControllerModule {
   async runCliCommand(args: string): Promise<{ exitCode: number; stderr: string; stdout: string }> {
     const execAsync = promisify(exec);
     const wrapperDir = getCliWrapperDir();
-    const cmd = process.platform === 'win32' ? 'lobehub.cmd' : 'lobehub';
+    const cmd = process.platform === 'win32' ? 'mai.cmd' : 'mai';
     const wrapperPath = path.join(wrapperDir, cmd);
 
     const env = { ...process.env };
@@ -35,9 +35,9 @@ export default class CliCtr extends ControllerModule {
       ]);
 
       if (token && serverUrl) {
-        env.LOBEHUB_JWT = token;
-        env.LOBEHUB_SERVER = normalizeServerUrl(serverUrl);
-        logger.debug('Injected LOBEHUB_JWT / LOBEHUB_SERVER for CLI command');
+        env.MAI_JWT = token;
+        env.MAI_SERVER = normalizeServerUrl(serverUrl);
+        logger.debug('Injected MAI_JWT / MAI_SERVER for CLI command');
       }
     }
 

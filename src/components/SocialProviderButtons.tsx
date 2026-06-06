@@ -1,9 +1,10 @@
 'use client';
 
 import { Button, Flexbox, Icon, Text } from '@lobehub/ui';
-import { Badge, Divider } from 'antd';
+import { Badge, Divider, Dropdown } from 'antd';
 import { type ReactNode, memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { MoreHorizontal } from 'lucide-react';
 
 import AuthIcons from '@/components/AuthIcons';
 
@@ -67,48 +68,69 @@ const SocialProviderButtons = memo<SocialProviderButtonsProps>(
       </Divider>
     );
 
+    const primaryKeys = ['google', 'github', 'x'];
+    const primaryProviders = providers.filter((p) => primaryKeys.includes(p.toLowerCase()));
+    const otherProviders = providers.filter((p) => !primaryKeys.includes(p.toLowerCase()));
+
+    const renderButton = (provider: string) => {
+      const button = (
+        <Button
+          block
+          key={provider}
+          loading={socialLoading === provider}
+          size="large"
+          icon={
+            <div
+              style={{
+                left: 12,
+                position: 'absolute',
+                top: 13,
+              }}
+            >
+              {AuthIcons(provider, 18)}
+            </div>
+          }
+          onClick={() => onSocialSignIn(provider)}
+        >
+          {getProviderLabel(provider)}
+        </Button>
+      );
+
+      const showLastUsed = provider === lastAuthProvider && providers.length > 1;
+
+      return showLastUsed ? (
+        <Badge.Ribbon
+          color="var(--ant-color-info-fill-tertiary)"
+          key={provider}
+          styles={{ content: { color: 'var(--ant-color-info)' } }}
+          text={t('betterAuth.signin.lastUsed')}
+        >
+          {button}
+        </Badge.Ribbon>
+      ) : (
+        button
+      );
+    };
+
+    const dropdownItems = otherProviders.map((provider) => ({
+      key: provider,
+      icon: <div style={{ display: 'flex', alignItems: 'center' }}>{AuthIcons(provider, 16)}</div>,
+      label: getProviderLabel(provider),
+      onClick: () => onSocialSignIn(provider),
+    }));
+
     return (
       <Flexbox gap={12}>
-        {providers.map((provider) => {
-          const button = (
-            <Button
-              block
-              key={provider}
-              loading={socialLoading === provider}
-              size="large"
-              icon={
-                <div
-                  style={{
-                    left: 12,
-                    position: 'absolute',
-                    top: 13,
-                  }}
-                >
-                  {AuthIcons(provider, 18)}
-                </div>
-              }
-              onClick={() => onSocialSignIn(provider)}
-            >
-              {getProviderLabel(provider)}
+        {primaryProviders.map((provider) => renderButton(provider))}
+        
+        {otherProviders.length > 0 && (
+          <Dropdown menu={{ items: dropdownItems }} placement="bottom" trigger={['click']}>
+            <Button block size="large" icon={<MoreHorizontal size={18} />}>
+              More
             </Button>
-          );
+          </Dropdown>
+        )}
 
-          const showLastUsed =
-            provider === lastAuthProvider && providers.length > 1;
-
-          return showLastUsed ? (
-            <Badge.Ribbon
-              color="var(--ant-color-info-fill-tertiary)"
-              key={provider}
-              styles={{ content: { color: 'var(--ant-color-info)' } }}
-              text={t('betterAuth.signin.lastUsed')}
-            >
-              {button}
-            </Badge.Ribbon>
-          ) : (
-            button
-          );
-        })}
         {!hideBottomDivider && divider}
       </Flexbox>
     );

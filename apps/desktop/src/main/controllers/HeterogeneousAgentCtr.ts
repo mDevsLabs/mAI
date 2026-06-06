@@ -1279,7 +1279,7 @@ export default class HeterogeneousAgentCtr extends ControllerModule {
   }
 
   /**
-   * Spawn `lh hetero exec` for gateway-driven agent runs.
+   * Spawn `m hetero exec` for gateway-driven agent runs.
    * The `lh` CLI handles everything downstream — no local
    * AgentStreamPipeline or IPC broadcast needed. Mirrors
    * `spawnHeteroSandbox()` on the server side.
@@ -1329,8 +1329,8 @@ export default class HeterogeneousAgentCtr extends ControllerModule {
     const env = {
       ...process.env,
       ...buildProxyEnv(this.app.storeManager.get('networkProxy')),
-      LOBEHUB_JWT: jwt,
-      LOBEHUB_SERVER: serverUrl,
+      MAI_JWT: jwt,
+      MAI_SERVER: serverUrl,
     };
 
     logger.info('spawnLhHeteroExec: type=%s op=%s topic=%s', agentType, operationId, topicId);
@@ -1343,7 +1343,7 @@ export default class HeterogeneousAgentCtr extends ControllerModule {
 
     // When systemContext is provided, send a content-block array so CC sees the
     // context block first, then the user's actual message — mirrors
-    // spawnHeteroSandbox. lh handles JSON arrays via coerceJsonPrompt, so no lh
+    // spawnHeteroSandbox. m handles JSON arrays via coerceJsonPrompt, so no m
     // changes are required.
     const stdinPayload = systemContext
       ? JSON.stringify([

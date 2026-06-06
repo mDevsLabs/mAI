@@ -40,9 +40,11 @@ const AuthContainer: FC<PropsWithChildren> = ({ children }) => {
             <AuthThemeButton size={18} />
           </Flexbox>
         </Flexbox>
-        <Center height={'100%'} padding={16} width={'100%'}>
-          {children}
-        </Center>
+        <Flexbox flex={1} padding={16} width={'100%'}>
+          <div style={{ margin: 'auto' }}>
+            {children}
+          </div>
+        </Flexbox>
         <Center padding={24}>
           <Text align={'center'} type={'secondary'}>
             {COPYRIGHT_FULL}

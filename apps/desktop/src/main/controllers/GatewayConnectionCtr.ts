@@ -32,14 +32,14 @@ import RemoteServerConfigCtr from './RemoteServerConfigCtr';
 import ShellCommandCtr from './ShellCommandCtr';
 
 /**
- * Inject the lh-notify protocol into the first turn of a new hetero-agent session.
- * Tells the agent binary how to push results back to the LobeHub chat UI via `lh notify`.
+ * Inject the m-notify protocol into the first turn of a new hetero-agent session.
+ * Tells the agent binary how to push results back to the mAI chat UI via `m notify`.
  * Ported directly from apps/cli/src/tools/heteroTask.ts so desktop and CLI stay in sync.
  */
 function buildNotifyProtocol(lhPath: string, topicId: string): string {
   return (
-    `## Context: This task was dispatched by LobeHub\n\n` +
-    `This conversation / task was sent to you by the **LobeHub platform** on behalf of a user. You are running as a background agent; the user is waiting for your response inside the LobeHub chat interface.\n\n` +
+    `## Context: This task was dispatched by mAI\n\n` +
+    `This conversation / task was sent to you by the **mAI platform** on behalf of a user. You are running as a background agent; the user is waiting for your response inside the mAI chat interface.\n\n` +
     `**When to call notify**: any time you have something meaningful to tell the user — a key finding, a decision you made, a result, a question, or your final answer.\n\n` +
     `**What to hide**: internal work details such as tool call sequences, file reads, intermediate command output, retries, or low-level reasoning steps.\n\n` +
     `## Sending messages back to the user\n\n` +
@@ -701,11 +701,11 @@ export default class GatewayConnectionCtr extends ControllerModule {
       this.remoteServerConfigCtr.getAccessToken(),
     ]);
 
-    // Inject auth into child env so `lh notify` can authenticate without CLI config.
+    // Inject auth into child env so `m notify` can authenticate without CLI config.
     const childEnv: NodeJS.ProcessEnv = {
       ...process.env,
-      ...(accessToken && { LOBEHUB_JWT: accessToken }),
-      ...(serverUrl && { LOBEHUB_SERVER: serverUrl }),
+      ...(accessToken && { MAI_JWT: accessToken }),
+      ...(serverUrl && { MAI_SERVER: serverUrl }),
     };
 
     if (agentType === 'openclaw') {
@@ -713,7 +713,7 @@ export default class GatewayConnectionCtr extends ControllerModule {
       const openclawAgent = process.env['OPENCLAW_AGENT_ID'] ?? 'main';
 
       // Always inject the notify protocol so openclaw knows how to report results
-      // back to the LobeHub UI — even if the previous turn failed and the session
+      // back to the mAI UI — even if the previous turn failed and the session
       // history was not cleanly committed.
       const enrichedPrompt = `${prompt}\n\n${buildNotifyProtocol(lhPath, topicId)}`;
 

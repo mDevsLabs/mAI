@@ -34,6 +34,9 @@ export const componentMap = {
   [SettingsTabs.About]: dynamic(() => import('../about'), {
     loading: loading('Settings > About'),
   }),
+  [SettingsTabs.Changelog]: dynamic(() => import('../changelog'), {
+    loading: loading('Settings > Changelog'),
+  }),
   [SettingsTabs.Hotkey]: dynamic(() => import('../hotkey'), {
     loading: loading('Settings > Hotkey'),
   }),

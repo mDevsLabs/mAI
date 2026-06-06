@@ -9,7 +9,7 @@ export const styles = createStaticStyles(({ css, cssVar }) => ({
   innerContainerDark: css`
     position: relative;
 
-    overflow: hidden;
+    overflow: hidden auto;
 
     border: 1px solid ${cssVar.colorBorderSecondary};
     border-radius: ${cssVar.borderRadius};
@@ -21,7 +21,7 @@ export const styles = createStaticStyles(({ css, cssVar }) => ({
   innerContainerLight: css`
     position: relative;
 
-    overflow: hidden;
+    overflow: hidden auto;
 
     border: 1px solid ${cssVar.colorBorder};
     border-radius: ${cssVar.borderRadius};
