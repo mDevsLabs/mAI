@@ -13,6 +13,31 @@
 - [ ] 📝 docs
 - [ ] 🔨 chore
 
+#### 🔢 Version
+
+<!-- Choisir le type de version de la release en mettant [x]. -->
+
+- [ ] Majeure
+- [x] Mineure
+- [ ] Correctif
+
+#### 📂 Dossier
+
+<!-- Cocher les dossiers impactés par cette PR -->
+
+- [ ] docs
+- [ ] src
+- [ ] packages
+- [ ] desktop
+- [ ] .github
+- [ ] public
+- [ ] tests
+- [ ] plugins
+- [ ] locales
+- [ ] e2e
+- [ ] .agents
+- [ ] autre
+
 #### 🔗 Related Issue
 
 <!-- Link to the issue that is fixed by this PR -->

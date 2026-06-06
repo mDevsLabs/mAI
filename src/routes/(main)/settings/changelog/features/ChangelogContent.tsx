@@ -1,4 +1,4 @@
-﻿import { Markdown } from '@lobehub/ui';
+import { Markdown } from '@lobehub/ui';
 import { memo } from 'react';
 
 import changelogRaw from '../../../../../../CHANGELOG.md?raw';
@@ -8,9 +8,10 @@ interface ChangelogContentProps {
 }
 
 const ChangelogContent = memo<ChangelogContentProps>(({ mobile }) => {
+  const formattedChangelog = changelogRaw.replace(/<sup>/g, '*').replace(/<\/sup>/g, '*');
   return (
     <div style={{ padding: mobile ? 16 : 24, userSelect: 'text' }}>
-      <Markdown>{changelogRaw}</Markdown>
+      <Markdown>{formattedChangelog}</Markdown>
     </div>
   );
 });

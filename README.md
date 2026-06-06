@@ -38,11 +38,7 @@ Vous gardez le contrôle — sans avoir besoin de rester en ligne.
 [![][share-mastodon-shield]][share-mastodon-link]
 [![][share-linkedin-shield]][share-linkedin-link]
 
-<sup>Votre Opérateur Principal d'Agents</sup>
-
-<a href="https://www.producthunt.com/products/mAI?embed=true&amp;utm_source=badge-top-post-badge&amp;utm_medium=badge&amp;utm_campaign=badge-mAI-2" target="_blank" rel="noopener noreferrer"><img alt="mAI - Your Chief Agent Operator for multi-agent work | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/top-post-badge.svg?post_id=1147569&amp;theme=light&amp;period=daily&amp;t=1779247564355"></a> <a href="https://trendshift.io/repositories/19224" target="_blank"><img src="https://trendshift.io/api/badge/repositories/19224" alt="mAI%2FmAI | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
-
-[![](https://vercel.com/oss/program-badge.svg)](https://vercel.com/oss)
+</sup>
 
 </div>
 
@@ -83,23 +79,14 @@ En adoptant une approche ouverte, nous visons à offrir aux développeurs et uti
 
 Que ce soit pour les utilisateurs ou les développeurs professionnels, mAI sera votre terrain de jeu d'Agents IA. Veuillez noter que mAI est actuellement en développement actif, et vos retours sont les bienvenus pour tout [problème][issues-link] rencontré.
 
-| [![](https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1065874&theme=light&t=1769347414733)](https://www.producthunt.com/products/mAI?launch=mAI-2&embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-mAI) | We are live on Product Hunt! We are thrilled to bring mAI to the world. If you believe in a future where humans and agents co-evolve, please support our journey. |
-| :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [![][discord-shield-badge]][discord-link]                                                                                                                                                                                                                          | Join our Discord community! This is where you can connect with developers and other enthusiastic users of mAI.                                                    |
 
-> \[!IMPORTANT]
+| [![][discord-shield-badge]][discord-link] | Join our Discord community! This is where you can connect with developers and other enthusiastic users of mAI. |
+| :--- | :--- |
+
+> [!IMPORTANT]
 >
-> **Star Us**, You will receive all release notifications from GitHub without any delay \~ ⭐️
+> **Star Us**, You will receive all release notifications from GitHub without any delay ~ ⭐️
 
-[![][image-star]][github-stars-link]
-
-<details>
-  <summary><kbd>Star History</kbd></summary>
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=mAI%2FmAI&theme=dark&type=Date">
-    <img width="100%" src="https://api.star-history.com/svg?repos=mAI%2FmAI&type=Date">
-  </picture>
-</details>
 
 ## ✨ Features
 
@@ -349,37 +336,6 @@ Contributions of all types are more than welcome; if you are interested in contr
 [![][submit-agents-shield]][submit-agents-link]
 [![][submit-plugin-shield]][submit-plugin-link]
 
-<a href="https://github.com/mDevsLabs/mAI/graphs/contributors" target="_blank">
-  <table>
-    <tr>
-      <th colspan="2">
-        <br><img src="https://contrib.rocks/image?repo=mAI/mAI"><br><br>
-      </th>
-    </tr>
-    <tr>
-      <td>
-        <picture>
-          <source media="(prefers-color-scheme: dark)" srcset="https://next.ossinsight.io/widgets/official/compose-org-active-contributors/thumbnail.png?activity=active&period=past_28_days&owner_id=131470832&repo_ids=643445235&image_size=2x3&color_scheme=dark">
-          <img src="https://next.ossinsight.io/widgets/official/compose-org-active-contributors/thumbnail.png?activity=active&period=past_28_days&owner_id=131470832&repo_ids=643445235&image_size=2x3&color_scheme=light">
-        </picture>
-      </td>
-      <td rowspan="2">
-        <picture>
-          <source media="(prefers-color-scheme: dark)" srcset="https://next.ossinsight.io/widgets/official/compose-org-participants-growth/thumbnail.png?activity=active&period=past_28_days&owner_id=131470832&repo_ids=643445235&image_size=4x7&color_scheme=dark">
-          <img src="https://next.ossinsight.io/widgets/official/compose-org-participants-growth/thumbnail.png?activity=active&period=past_28_days&owner_id=131470832&repo_ids=643445235&image_size=4x7&color_scheme=light">
-        </picture>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <picture>
-          <source media="(prefers-color-scheme: dark)" srcset="https://next.ossinsight.io/widgets/official/compose-org-active-contributors/thumbnail.png?activity=new&period=past_28_days&owner_id=131470832&repo_ids=643445235&image_size=2x3&color_scheme=dark">
-          <img src="https://next.ossinsight.io/widgets/official/compose-org-active-contributors/thumbnail.png?activity=new&period=past_28_days&owner_id=131470832&repo_ids=643445235&image_size=2x3&color_scheme=light">
-        </picture>
-      </td>
-    </tr>
-  </table>
-</a>
 
 <div align="right">
 
@@ -391,12 +347,6 @@ Contributions of all types are more than welcome; if you are interested in contr
 
 Every bit counts and your one-time donation sparkles in our galaxy of support! You're a shooting star, making a swift and bright impact on our journey. Thank you for believing in us – your generosity guides us toward our mission, one brilliant flash at a time.
 
-<a href="https://opencollective.com/mAI" target="_blank">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/mAI/.github/blob/main/static/sponsor-dark.png?raw=true">
-    <img  src="https://github.com/mAI/.github/blob/main/static/sponsor-light.png?raw=true">
-  </picture>
-</a>
 
 <div align="right">
 
