@@ -156,43 +156,46 @@ export const useFileItemDropdown = ({
     const libraryRelatedActions = (
       isInLibrary
         ? [
-            availableKnowledgeBases.length > 0 && {
-              children: moveToKnowledgeBaseSubmenu,
-              icon: <Icon icon={BookPlusIcon} />,
-              key: 'moveToOtherLibrary',
-              label: t('FileManager.actions.moveToOtherLibrary'),
-            },
-            {
-              icon: <Icon icon={BookMinusIcon} />,
-              key: 'removeFromLibrary',
-              label: t('FileManager.actions.removeFromLibrary'),
-              onClick: async ({ domEvent }) => {
-                domEvent.stopPropagation();
+          availableKnowledgeBases.length > 0 && {
+            children: moveToKnowledgeBaseSubmenu,
+            icon: <Icon icon={BookPlusIcon} />,
+            key: 'moveToOtherLibrary',
+            label: t('FileManager.actions.moveToOtherLibrary'),
+          },
+          {
+            icon: <Icon icon={BookMinusIcon} />,
+            key: 'removeFromLibrary',
+            label: t('FileManager.actions.removeFromLibrary'),
+            onClick: async ({ domEvent }) => {
+              domEvent.stopPropagation();
 
-                confirmModal({
-                  okButtonProps: {
-                    danger: true,
-                  },
-                  onOk: async () => {
-                    await removeFilesFromKnowledgeBase(libraryId, [id]);
+              confirmModal({
+                cancelText: t('cancel', { ns: 'common' }),
+                content: t('FileManager.actions.confirmRemoveFromLibrary', {
+                  count: 1,
+                }),
+                okButtonProps: {
+                  danger: true,
+                },
+                okText: t('FileManager.actions.removeFromLibrary'),
+                onOk: async () => {
+                  await removeFilesFromKnowledgeBase(libraryId, [id]);
 
-                    message.success(t('FileManager.actions.removeFromLibrarySuccess'));
-                  },
-                  title: t('FileManager.actions.confirmRemoveFromLibrary', {
-                    count: 1,
-                  }),
-                });
-              },
+                  message.success(t('FileManager.actions.removeFromLibrarySuccess'));
+                },
+                title: t('FileManager.actions.removeFromLibrary'),
+              });
             },
-          ]
+          },
+        ]
         : [
-            availableKnowledgeBases.length > 0 && {
-              children: addToKnowledgeBaseSubmenu,
-              icon: <Icon icon={BookPlusIcon} />,
-              key: 'addToLibrary',
-              label: t('FileManager.actions.addToLibrary'),
-            },
-          ]
+          availableKnowledgeBases.length > 0 && {
+            children: addToKnowledgeBaseSubmenu,
+            icon: <Icon icon={BookPlusIcon} />,
+            key: 'addToLibrary',
+            label: t('FileManager.actions.addToLibrary'),
+          },
+        ]
     ) as ItemType[];
 
     const hasKnowledgeBaseActions = libraryRelatedActions.some(Boolean);

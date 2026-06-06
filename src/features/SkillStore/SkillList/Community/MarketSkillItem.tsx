@@ -66,13 +66,16 @@ const MarketSkillItem = memo<DiscoverSkillItem>(({ name, icon, description, iden
   const handleUninstall = useCallback(() => {
     if (!installedSkill) return;
     confirmModal({
+      cancelText: tc('cancel'),
+      content: t('store.actions.confirmUninstall'),
       okButtonProps: { danger: true },
+      okText: t('store.actions.uninstall'),
       onOk: async () => {
         await deleteAgentSkill(installedSkill.id);
       },
-      title: t('store.actions.confirmUninstall'),
+      title: t('store.actions.uninstall'),
     });
-  }, [installedSkill, deleteAgentSkill, t]);
+  }, [installedSkill, deleteAgentSkill, t, tc]);
 
   const handleDownload = useCallback(async () => {
     if (!installedSkill?.zipFileHash) return;
@@ -96,14 +99,14 @@ const MarketSkillItem = memo<DiscoverSkillItem>(({ name, icon, description, iden
           items={[
             ...(installedSkill?.zipFileHash
               ? [
-                  {
-                    icon: <Icon icon={DownloadIcon} />,
-                    key: 'download',
-                    label: tc('download'),
-                    onClick: handleDownload,
-                  },
-                  { type: 'divider' as const },
-                ]
+                {
+                  icon: <Icon icon={DownloadIcon} />,
+                  key: 'download',
+                  label: tc('download'),
+                  onClick: handleDownload,
+                },
+                { type: 'divider' as const },
+              ]
               : []),
             {
               danger: true,

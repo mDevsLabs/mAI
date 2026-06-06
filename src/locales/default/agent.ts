@@ -289,6 +289,8 @@ export default {
     'Open your app on the Feishu / Lark Open Platform → Permissions, then look up your Open ID.',
   'channel.userIdHint.imessage':
     'Use your iMessage handle as seen in BlueBubbles, usually an email address or E.164 phone number.',
+  'channel.userIdHint.imessage':
+    'Use your iMessage handle as seen in BlueBubbles, usually an email address or E.164 phone number.',
   'channel.userIdHint.line':
     'Open the LINE Developers Console → your channel → Basic settings tab, and copy "Your user ID" (starts with U, 33 chars).',
   'channel.userIdHint.qq': 'Your QQ number, shown on your QQ profile page.',

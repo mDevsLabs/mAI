@@ -281,7 +281,7 @@
     "@lobechat/web-crawler": "workspace:*",
     "@lobehub/analytics": "^1.6.2",
     "@lobehub/charts": "^5.0.0",
-    "@mai/desktop-ipc-typings": "workspace:*",
+    "@lobehub/desktop-ipc-typings": "workspace:*",
     "@lobehub/editor": "^4.15.0",
     "@lobehub/icons": "^5.0.0",
     "@lobehub/market-sdk": "0.33.3",

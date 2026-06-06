@@ -136,29 +136,29 @@ export const useTopicItemDropdownMenu = ({
       },
       ...(isDesktop
         ? [
-            {
-              icon: <Icon icon={PanelTop} />,
-              key: 'openInNewTab',
-              label: t('actions.openInNewTab'),
-              onClick: () => {
-                if (!activeAgentId) return;
-                const url = SESSION_CHAT_TOPIC_URL(activeAgentId, id);
-                addTab(url);
-                navigate(url);
-              },
+          {
+            icon: <Icon icon={PanelTop} />,
+            key: 'openInNewTab',
+            label: t('actions.openInNewTab'),
+            onClick: () => {
+              if (!activeAgentId) return;
+              const url = SESSION_CHAT_TOPIC_URL(activeAgentId, id);
+              addTab(url);
+              navigate(url);
             },
-            {
-              icon: <Icon icon={ExternalLink} />,
-              key: 'openInNewWindow',
-              label: t('actions.openInNewWindow'),
-              onClick: () => {
-                if (activeAgentId) openTopicInNewWindow(activeAgentId, id);
-              },
+          },
+          {
+            icon: <Icon icon={ExternalLink} />,
+            key: 'openInNewWindow',
+            label: t('actions.openInNewWindow'),
+            onClick: () => {
+              if (activeAgentId) openTopicInNewWindow(activeAgentId, id);
             },
-            {
-              type: 'divider' as const,
-            },
-          ]
+          },
+          {
+            type: 'divider' as const,
+          },
+        ]
         : []),
       {
         icon: <Icon icon={Hash} />,
@@ -207,11 +207,14 @@ export const useTopicItemDropdownMenu = ({
         label: t('delete', { ns: 'common' }),
         onClick: () => {
           confirmModal({
+            cancelText: t('cancel', { ns: 'common' }),
+            content: t('actions.confirmRemoveTopic'),
             okButtonProps: { danger: true },
+            okText: t('delete', { ns: 'common' }),
             onOk: async () => {
               await removeTopic(id);
             },
-            title: t('actions.confirmRemoveTopic'),
+            title: t('delete', { ns: 'common' }),
           });
         },
       },

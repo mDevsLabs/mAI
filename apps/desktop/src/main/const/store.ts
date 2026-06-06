@@ -33,7 +33,7 @@ export const STORE_DEFAULTS: ElectronMainStore = {
   gatewayDeviceId: '',
   gatewayDeviceName: '',
   gatewayEnabled: true,
-  gatewayUrl: 'https://device-gateway.mai.com',
+  gatewayUrl: 'https://device-gateway.lobehub.com',
   heteroTracingEnabled: false,
   imessageBridgeConfigs: [],
   locale: 'auto',

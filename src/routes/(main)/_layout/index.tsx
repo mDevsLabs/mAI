@@ -42,6 +42,7 @@ const CloudBanner = dynamic(() => import('@/features/AlertBanner/CloudBanner'));
 
 const Layout: FC = () => {
   const { isPWA } = usePlatform();
+  const { showCloudPromotion } = useServerConfigStore(featureFlagsSelectors);
 
   return (
     <HotkeysProvider initiallyActiveScopes={[HotkeyScopeEnum.Global]}>
