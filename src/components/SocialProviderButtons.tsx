@@ -2,10 +2,12 @@
 
 import { Button, Flexbox, Icon, Text } from '@lobehub/ui';
 import { Badge, Divider } from 'antd';
-import { type ReactNode, memo } from 'react';
+import { ChevronDown } from 'lucide-react';
+import { type ReactNode, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import AuthIcons from '@/components/AuthIcons';
+import AnimatedCollapsed from '@/components/AnimatedCollapsed';
 
 export interface SocialProviderButtonsProps {
   /**
@@ -47,13 +49,21 @@ const SocialProviderButtons = memo<SocialProviderButtonsProps>(
     dividerText,
   }) => {
     const { t } = useTranslation('auth');
+    const [expanded, setExpanded] = useState(false);
 
     if (providers.length === 0) return null;
 
+    const INITIAL_PROVIDERS = ['google', 'github', 'x'];
+    const defaultProviders = providers.filter((p) => INITIAL_PROVIDERS.includes(p.toLowerCase()));
+    const initialVisible = defaultProviders.length > 0 ? defaultProviders : providers.slice(0, 3);
+    const hasMoreProviders = providers.length > initialVisible.length;
+
+    const remainingProviders = providers.filter((p) => !initialVisible.includes(p));
+
     const getProviderLabel = (provider: string) => {
       const normalized = provider
-        .toLowerCase()
-        .replaceAll(/(^|[_-])([a-z])/g, (_, __, c) => c.toUpperCase());
+         .toLowerCase()
+         .replaceAll(/(^|[_-])([a-z])/g, (_, __, c) => c.toUpperCase());
       const normalizedKey = normalized.replaceAll(/[^\da-z]/gi, '');
       const key = `betterAuth.signin.continueWith${normalizedKey}`;
       return t(key, { defaultValue: `Continue with ${normalized}` });
@@ -67,48 +77,77 @@ const SocialProviderButtons = memo<SocialProviderButtonsProps>(
       </Divider>
     );
 
+    const renderProviderButton = (provider: string) => {
+      const button = (
+        <Button
+          block
+          key={provider}
+          loading={socialLoading === provider}
+          size="large"
+          icon={
+            <div
+              style={{
+                left: 12,
+                position: 'absolute',
+                top: 13,
+              }}
+            >
+              {AuthIcons(provider, 18)}
+            </div>
+          }
+          onClick={() => onSocialSignIn(provider)}
+        >
+          {getProviderLabel(provider)}
+        </Button>
+      );
+
+      const showLastUsed =
+        provider === lastAuthProvider && providers.length > 1;
+
+      return showLastUsed ? (
+        <Badge.Ribbon
+          color="var(--ant-color-info-fill-tertiary)"
+          key={provider}
+          styles={{ content: { color: 'var(--ant-color-info)' } }}
+          text={t('betterAuth.signin.lastUsed')}
+        >
+          {button}
+        </Badge.Ribbon>
+      ) : (
+        button
+      );
+    };
+
     return (
       <Flexbox gap={12}>
-        {providers.map((provider) => {
-          const button = (
-            <Button
-              block
-              key={provider}
-              loading={socialLoading === provider}
-              size="large"
-              icon={
-                <div
-                  style={{
-                    left: 12,
-                    position: 'absolute',
-                    top: 13,
-                  }}
-                >
-                  {AuthIcons(provider, 18)}
-                </div>
-              }
-              onClick={() => onSocialSignIn(provider)}
-            >
-              {getProviderLabel(provider)}
-            </Button>
-          );
+        {initialVisible.map(renderProviderButton)}
+        
+        <AnimatedCollapsed open={expanded}>
+          <Flexbox gap={12}>
+            {remainingProviders.map(renderProviderButton)}
+          </Flexbox>
+        </AnimatedCollapsed>
 
-          const showLastUsed =
-            provider === lastAuthProvider && providers.length > 1;
-
-          return showLastUsed ? (
-            <Badge.Ribbon
-              color="var(--ant-color-info-fill-tertiary)"
-              key={provider}
-              styles={{ content: { color: 'var(--ant-color-info)' } }}
-              text={t('betterAuth.signin.lastUsed')}
-            >
-              {button}
-            </Badge.Ribbon>
-          ) : (
-            button
-          );
-        })}
+        {hasMoreProviders && !expanded && (
+          <Button
+            block
+            size="large"
+            icon={
+              <div
+                style={{
+                  left: 12,
+                  position: 'absolute',
+                  top: 13,
+                }}
+              >
+                <Icon icon={ChevronDown} />
+              </div>
+            }
+            onClick={() => setExpanded(true)}
+          >
+            {t('betterAuth.signin.moreProviders', { defaultValue: 'Plus encore' })}
+          </Button>
+        )}
         {!hideBottomDivider && divider}
       </Flexbox>
     );

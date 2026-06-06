@@ -113,6 +113,7 @@ export default {
   'betterAuth.signin.passwordPlaceholder': 'Enter your password',
   'betterAuth.signin.passwordStep.subtitle': 'Enter your password to continue',
   'betterAuth.signin.setPassword': 'set a password',
+  'betterAuth.signin.moreProviders': 'More',
   'betterAuth.signin.signupLink': 'Sign up now',
   'betterAuth.signin.socialError': 'Social sign in failed, please try again',
   'betterAuth.signin.socialOnlyHint':
