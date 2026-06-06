@@ -317,6 +317,30 @@ export const aiderDetector: IToolDetector = createCommandDetector('aider', {
 });
 
 /**
+ * Opencode CLI
+ */
+export const opencodeDetector: IToolDetector = createCommandDetector('opencode', {
+  description: 'Opencode - AI pair programming CLI',
+  priority: 7,
+});
+
+/**
+ * Cline CLI
+ */
+export const clineDetector: IToolDetector = createCommandDetector('cline', {
+  description: 'Cline - AI coding CLI',
+  priority: 8,
+});
+
+/**
+ * Google Antigravity CLI
+ */
+export const antigravityDetector: IToolDetector = createCommandDetector('antigravity', {
+  description: 'Google Antigravity - Google agentic coding CLI',
+  priority: 9,
+});
+
+/**
  * All CLI agent detectors
  */
 export const cliAgentDetectors: IToolDetector[] = [
@@ -326,4 +350,7 @@ export const cliAgentDetectors: IToolDetector[] = [
   qwenCodeDetector,
   kimiCliDetector,
   aiderDetector,
+  opencodeDetector,
+  clineDetector,
+  antigravityDetector,
 ];

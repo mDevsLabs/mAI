@@ -210,9 +210,17 @@ export class WindowsMenu extends BaseMenuPlatform implements IMenuPlatform {
           },
           {
             click: async () => {
-              await shell.openExternal('https://github.com/lobehub/lobe-chat');
+              await shell.openExternal('https://github.com/mDevsLabs/mAI');
             },
             label: t('help.githubRepo'),
+          },
+          {
+            click: async () => {
+              const mainWindow = this.app.browserManager.getMainWindow();
+              mainWindow.show();
+              mainWindow.broadcast('navigate', { path: '/settings/changelog' });
+            },
+            label: t('help.changelog') || 'Journal des modifications',
           },
           { type: 'separator' },
           {

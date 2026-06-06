@@ -10,16 +10,16 @@ export const getProtocolScheme = (): string => {
   const appPath = app.getPath('exe');
 
   // Determine by bundle identifier
-  if (bundleId?.toLowerCase().includes('nightly')) return 'lobehub-nightly';
-  if (bundleId?.toLowerCase().includes('beta')) return 'lobehub-beta';
-  if (bundleId?.includes('dev')) return 'lobehub-dev';
+  if (bundleId?.toLowerCase().includes('nightly')) return 'mai-nightly';
+  if (bundleId?.toLowerCase().includes('beta')) return 'mai-beta';
+  if (bundleId?.includes('dev')) return 'mai-dev';
 
   // Determine by executable file path
-  if (appPath?.toLowerCase().includes('nightly')) return 'lobehub-nightly';
-  if (appPath?.toLowerCase().includes('beta')) return 'lobehub-beta';
-  if (appPath?.includes('dev')) return 'lobehub-dev';
+  if (appPath?.toLowerCase().includes('nightly')) return 'mai-nightly';
+  if (appPath?.toLowerCase().includes('beta')) return 'mai-beta';
+  if (appPath?.includes('dev')) return 'mai-dev';
 
-  return 'lobehub';
+  return 'mai';
 };
 
 export const getVersionInfo = (): { channel: AppChannel; protocolScheme: string } => {
@@ -81,14 +81,14 @@ function validateMcpSchema(schema: any): schema is McpSchema {
 }
 
 /**
- * Parse lobehub:// protocol URL (supports multi-version protocols)
+ * Parse mai:// protocol URL (supports multi-version protocols)
  *
  * Supported URL formats:
- * - lobehub://plugin/install?id=figma&schema=xxx&marketId=lobehub
- * - lobehub://plugin/configure?id=xxx&...
- * - lobehub-bet://plugin/install?id=figma&schema=xxx&marketId=lobehub
- * - lobehub-nightly://plugin/install?id=figma&schema=xxx&marketId=lobehub
- * - lobehub-dev://plugin/install?id=figma&schema=xxx&marketId=lobehub
+ * - mai://plugin/install?id=figma&schema=xxx&marketId=mai
+ * - mai://plugin/configure?id=xxx&...
+ * - mai-bet://plugin/install?id=figma&schema=xxx&marketId=mai
+ * - mai-nightly://plugin/install?id=figma&schema=xxx&marketId=mai
+ * - mai-dev://plugin/install?id=figma&schema=xxx&marketId=mai
  *
  * @param url Protocol URL
  * @returns Parse result, including basic structure and all query parameters
@@ -98,13 +98,13 @@ export const parseProtocolUrl = (url: string): ProtocolUrlParsed | null => {
     const parsedUrl = new URL(url);
 
     // Support multiple protocol schemes
-    const validProtocols = ['lobehub:', 'lobehub-dev:', 'lobehub-nightly:', 'lobehub-beta:'];
+    const validProtocols = ['mai:', 'mai-dev:', 'mai-nightly:', 'mai-beta:'];
     if (!validProtocols.includes(parsedUrl.protocol)) {
       return null;
     }
 
     // For custom protocols, after URL parsing:
-    // lobehub://plugin/install -> hostname: "plugin", pathname: "/install"
+    // mai://plugin/install -> hostname: "plugin", pathname: "/install"
     const urlType = parsedUrl.hostname; // "plugin"
     const pathParts = parsedUrl.pathname.split('/').filter(Boolean); // ["install"]
 
@@ -147,10 +147,10 @@ export function generateRFCProtocolUrl(params: {
   marketId?: string;
   /** MCP Schema object */
   schema: McpSchema;
-  /** Protocol scheme (default: lobehub) */
+  /** Protocol scheme (default: mai) */
   scheme?: string;
 }): string {
-  const { id, schema, marketId, scheme = 'lobehub' } = params;
+  const { id, schema, marketId, scheme = 'mai' } = params;
 
   // Validate schema.identifier matches id
   if (schema.identifier !== id) {
@@ -205,6 +205,6 @@ export function generateRFCProtocolUrl(params: {
  *   },
  *   marketId: 'higress'
  * });
- * // Result: lobehub://plugin/install?id=edgeone-mcp&schema=%7B%22identifier%22%3A...&marketId=higress
+ * // Result: mai://plugin/install?id=edgeone-mcp&schema=%7B%22identifier%22%3A...&marketId=higress
  * ```
  */

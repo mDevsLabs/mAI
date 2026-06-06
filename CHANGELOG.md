@@ -2,13 +2,20 @@
 
 # Changelog
 
-### Version 0.1.6
+### Version 0.1.7
 
 Sub-release details: OAuth multi-provider expansion, brand rename to mAI / May, and Telegram login support.
 
 <sup>Released on **2026-06-04**</sup>
 
 #### 🚀 Features
+- **desktop - branding**: Renommage des packages générés par l'application de bureau en `mai` au lieu de `lobehub`.
+- **desktop - outils**: Ajout de la détection de nouveaux outils systèmes en ligne de commande (CLIs) : Opencode, Cline, et Google Antigravity.
+- **desktop - ui**: Intégration d'une page native de "Journal des modifications" dans les paramètres système de l'application avec affichage hors-ligne formaté en Markdown pour éviter l'ouverture du navigateur.
+- **auth - ui**: Correction d'un bug majeur empêchant le défilement (scroll) sur la page d'authentification lorsque l'écran est trop petit.
+- **auth - ui**: Refonte des boutons de connexion sociale en affichant par défaut Google, GitHub et X, et en regroupant les autres fournisseurs derrière un menu déroulant "More".
+- **branding - réseaux sociaux**: Mise à jour globale de tous les liens de l'application pointant vers l'écosystème mAI : Serveur Discord officiel, profil X (mDevsLabs), GitHub (mDevsLabs/mAI) et site web (mprojects.odoo.com).
+- **docs - desktop**: Traduction du README de l'application de bureau en français et ajustement du branding en faveur de mAI.
 - **auth - SSO**: Ajout des fournisseurs de connexion Google, GitHub, Discord, Slack, Spotify, Twitch, Notion, X, Canva et Telegram, avec routage OAuth aligné sur `/api/auth/callback/[provider]`.
 - **auth - env**: Extension des variables serveur `AUTH_*` pour couvrir les nouveaux clients OAuth et validation centralisée via `src/envs/auth.ts`.
 - **auth - ui**: Affichage des logos PNG locaux dans les boutons de connexion et le panneau des comptes liés, avec le nouveau branding mAI / May et l'avatar `may.PNG`.

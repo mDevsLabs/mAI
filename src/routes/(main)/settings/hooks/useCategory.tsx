@@ -20,6 +20,7 @@ import {
   MessageCircleIcon,
   MonitorSmartphoneIcon,
   PaletteIcon,
+  ScrollText,
   Sparkles,
   TerminalSquare,
 } from 'lucide-react';
@@ -60,6 +61,7 @@ export interface CategoryGroup {
 
 export const useCategory = () => {
   const { t } = useTranslation('setting');
+  const { t: tCommon } = useTranslation('common');
   const { t: tAuth } = useTranslation('auth');
   const { t: tSubscription } = useTranslation('subscription');
   const mobile = useServerConfigStore((s) => s.isMobile);
@@ -217,6 +219,11 @@ export const useCategory = () => {
         label: t('tab.advanced'),
       },
       !hideDocs && {
+        icon: ScrollText,
+        key: SettingsTabs.Changelog,
+        label: tCommon('changelog'),
+      },
+      !hideDocs && {
         icon: Info,
         key: SettingsTabs.About,
         label: t('tab.about'),
@@ -233,6 +240,7 @@ export const useCategory = () => {
   }, [
     t,
     tAuth,
+    tCommon,
     tSubscription,
     enableBusinessFeatures,
     enableExecutionDeviceSwitcher,
