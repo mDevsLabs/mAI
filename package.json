@@ -1,6 +1,6 @@
 {
   "name": "mai",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "Avec mAI, passez à la vitesse supérieure !",
   "keywords": [
     "framework",
@@ -281,7 +281,7 @@
     "@lobechat/web-crawler": "workspace:*",
     "@lobehub/analytics": "^1.6.2",
     "@lobehub/charts": "^5.0.0",
-    "@lobehub/desktop-ipc-typings": "workspace:*",
+    "@mai/desktop-ipc-typings": "workspace:*",
     "@lobehub/editor": "^4.15.0",
     "@lobehub/icons": "^5.0.0",
     "@lobehub/market-sdk": "0.33.3",
