@@ -2,6 +2,19 @@
 
 # Changelog
 
+### Version 0.1.8
+
+Détails de la sous-release : Renommage du branding en mAI / May, mise à jour du template de PR, correction de formatage du Changelog et mise à jour du menu d'aide.
+
+<sup>Released on **2026-06-06**</sup>
+
+#### 🚀 Features
+- **branding**: Renommage de LobeHub en mAI et Lobe AI en May à travers les composants de l'application et les fichiers de langues i18n.
+- **pr-template**: Ajout de sections complémentaires dans le template de Pull Request (Version et Dossier).
+- **help-menu**: Redirection du lien Changelog du menu d'aide directement vers la page locale `/settings/changelog`.
+- **settings-changelog**: Amélioration du formatage des dates de versions dans la page Changelog en paramètre en convertissant les balises HTML <sup> en italique.
+- **readme**: Nettoyage de tous les fichiers README.md pour supprimer les images obsolètes et conserver uniquement l'avatar de May.
+
 ### Version 0.1.7
 
 Sub-release details: OAuth multi-provider expansion, brand rename to mAI / May, and Telegram login support.

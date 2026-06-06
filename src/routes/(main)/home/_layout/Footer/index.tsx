@@ -293,8 +293,7 @@ const Footer = memo(() => {
       {
         icon: <Icon icon={FileClockIcon} />,
         key: 'changelog',
-        label: t('changelog'),
-        onClick: handleOpenChangelogModal,
+        label: <Link to="/settings/changelog">{t('changelog')}</Link>,
       },
       ...(footer.layout === 'compact' && !footer.hideGitHub
         ? [

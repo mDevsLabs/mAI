@@ -38,11 +38,8 @@ Mantienes el control — sin necesidad de estar en línea.
 [![][share-mastodon-shield]][share-mastodon-link]
 [![][share-linkedin-shield]][share-linkedin-link]
 
-<sup>Tu operador principal de agentes</sup>
 
-<a href="https://www.producthunt.com/products/mAI?embed=true&amp;utm_source=badge-top-post-badge&amp;utm_medium=badge&amp;utm_campaign=badge-mAI-2" target="_blank" rel="noopener noreferrer"><img alt="mAI - Your Chief Agent Operator for multi-agent work | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/top-post-badge.svg?post_id=1147569&amp;theme=light&amp;period=daily&amp;t=1779247564355"></a> <a href="https://trendshift.io/repositories/19224" target="_blank"><img src="https://trendshift.io/api/badge/repositories/19224" alt="mAI%2FmAI | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
-
-[![](https://vercel.com/oss/program-badge.svg)](https://vercel.com/oss)
+</sup>
 
 </div>
 
