@@ -938,7 +938,7 @@ export default {
   'skillStore.search': 'Search skills by name or keyword, press Enter to search…',
   'skillStore.tabs.community': 'Community',
   'skillStore.tabs.custom': 'Custom',
-  'skillStore.tabs.lobehub': 'LobeHub',
+  'skillStore.tabs.lobehub': 'mAI',
   'skillStore.tabs.mcp': 'MCP',
   'skillStore.tabs.skills': 'Skills',
   'skillStore.title': 'Skill Store',
@@ -1277,7 +1277,7 @@ When I am ___, I need ___
   'tools.builtins.lobe-agent-browser.title': 'Agent Browser',
   'tools.builtins.lobehub.description':
     'Manage the LobeHub platform via CLI — knowledge bases, memory, agents, files, search, generation, and more.',
-  'tools.builtins.lobehub.title': 'LobeHub',
+  'tools.builtins.lobehub.title': 'mAI',
   'tools.builtins.task.description':
     'Task management and execution — create, track, review, and complete tasks via CLI.',
   'tools.builtins.task.title': 'Task',
