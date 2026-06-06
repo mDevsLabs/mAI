@@ -19,24 +19,6 @@ const providerNameStyle: CSSProperties = {
   textTransform: 'capitalize',
 };
 
-const PROVIDER_LABELS: Record<string, string> = {
-  canva: 'Canva',
-  discord: 'Discord',
-  github: 'GitHub',
-  google: 'Google',
-  notion: 'Notion',
-  slack: 'Slack',
-  spotify: 'Spotify',
-  telegram: 'Telegram',
-  twitch: 'Twitch',
-  x: 'X',
-};
-
-const getProviderLabel = (provider: string) => {
-  const normalized = normalizeProviderId(provider);
-  return PROVIDER_LABELS[normalized] || provider;
-};
-
 export const SSOProvidersList = memo(() => {
   const isLogin = useUserStore(authSelectors.isLogin);
   const providers = useUserStore(authSelectors.authProviders);
@@ -51,7 +33,7 @@ export const SSOProvidersList = memo(() => {
 
   // Get linked provider IDs for filtering
   const linkedProviderIds = useMemo(() => {
-    return new Set(providers.map((item) => normalizeProviderId(item.provider)));
+    return new Set(providers.map((item) => item.provider));
   }, [providers]);
 
   // Get available providers for linking (filter out already linked)
@@ -66,8 +48,6 @@ export const SSOProvidersList = memo(() => {
     // Better-auth link/unlink operations are not available on desktop
     if (isDesktop) return;
 
-    const normalizedProvider = normalizeProviderId(provider);
-
     // Prevent unlink if this is the only login method
     if (!allowUnlink) {
       notification.error({
@@ -76,16 +56,16 @@ export const SSOProvidersList = memo(() => {
       return;
     }
     confirmModal({
-      content: t('profile.sso.unlink.description', { provider: normalizedProvider }),
+      content: t('profile.sso.unlink.description', { provider }),
       okButtonProps: {
         danger: true,
       },
       onOk: async () => {
         const { unlinkAccount } = await import('@/libs/better-auth/auth-client');
-        await unlinkAccount({ providerId: normalizedProvider });
+        await unlinkAccount({ providerId: provider });
         refreshAuthProviders();
       },
-      title: <span style={providerNameStyle}>{t('profile.sso.unlink.title', { provider: normalizedProvider })}</span>,
+      title: <span style={providerNameStyle}>{t('profile.sso.unlink.title', { provider })}</span>,
     });
   };
 
@@ -114,7 +94,7 @@ export const SSOProvidersList = memo(() => {
   const linkMenuItems: MenuProps['items'] = availableProviders.map((provider) => ({
     icon: AuthIcons(provider, 16),
     key: provider,
-    label: <span style={providerNameStyle}>{getProviderLabel(provider)}</span>,
+    label: <span style={providerNameStyle}>{provider}</span>,
     onClick: () => handleLinkSSO(provider),
   }));
 
@@ -130,7 +110,7 @@ export const SSOProvidersList = memo(() => {
         >
           <Flexbox horizontal align={'center'} gap={6} style={{ fontSize: 12 }}>
             {AuthIcons(item.provider, 16)}
-            <span style={providerNameStyle}>{getProviderLabel(item.provider)}</span>
+            <span style={providerNameStyle}>{item.provider}</span>
             {item.email && (
               <Text fontSize={11} type="secondary">
                 · {item.email}

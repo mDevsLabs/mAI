@@ -42,6 +42,7 @@ const CloudBanner = dynamic(() => import('@/features/AlertBanner/CloudBanner'));
 
 const Layout: FC = () => {
   const { isPWA } = usePlatform();
+  const { showCloudPromotion } = useServerConfigStore(featureFlagsSelectors);
 
   return (
     <HotkeysProvider initiallyActiveScopes={[HotkeyScopeEnum.Global]}>
@@ -54,6 +55,7 @@ const Layout: FC = () => {
         {isDesktop && <OverlaySnapshotPublisher />}
         {isDesktop && <OverlayCaptureUploader />}
         {isDesktop && <OverlayMessageDispatcher />}
+        {showCloudPromotion && <CloudBanner />}
       </Suspense>
       {isDesktop && <AuthRequiredModal />}
       {isDesktop && <ZoomHUD />}
@@ -67,7 +69,9 @@ const Layout: FC = () => {
           height={
             isDesktop
               ? `calc(100% - ${TITLE_BAR_HEIGHT}px)`
-              : '100%'
+              : showCloudPromotion
+                ? `calc(100% - ${BANNER_HEIGHT}px)`
+                : '100%'
           }
         >
           <NavPanel />
