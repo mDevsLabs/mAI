@@ -1,18 +1,21 @@
 import { authEnv } from '@/envs/auth';
 
-import { type BuiltinProviderDefinition } from '../types';
+import { type GenericProviderDefinition } from '../types';
 
-const provider: BuiltinProviderDefinition<
-  {
-    AUTH_RAILWAY_ID: string;
-    AUTH_RAILWAY_SECRET: string;
-  },
-  'railway'
-> = {
+const provider: GenericProviderDefinition<{
+  AUTH_RAILWAY_ID: string;
+  AUTH_RAILWAY_SECRET: string;
+}> = {
   build: (env) => {
     return {
+      authorizationUrl: 'https://backboard.railway.com/oauth/auth',
       clientId: env.AUTH_RAILWAY_ID,
       clientSecret: env.AUTH_RAILWAY_SECRET,
+      discoveryUrl: 'https://backboard.railway.com/oauth/.well-known/openid-configuration',
+      providerId: 'railway',
+      responseType: 'code',
+      scopes: ['openid', 'email', 'profile'],
+      tokenUrl: 'https://backboard.railway.com/oauth/token',
     };
   },
   checkEnvs: () => {
@@ -22,7 +25,7 @@ const provider: BuiltinProviderDefinition<
     };
   },
   id: 'railway',
-  type: 'builtin',
+  type: 'generic',
 };
 
 export default provider;

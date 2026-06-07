@@ -10,9 +10,6 @@ export const BUILTIN_BETTER_AUTH_PROVIDERS = [
   'slack',
   'spotify',
   'twitch',
-  'railway',
-  'monday',
-  'vercel',
 ] as const;
 
 /**

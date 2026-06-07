@@ -7,8 +7,9 @@
 export const parseSSOProviders = (providersEnv?: string): string[] => {
   const providers = providersEnv?.trim();
 
+  let result: string[];
   if (!providers) {
-    return [
+    result = [
       'google',
       'github',
       'canva',
@@ -20,10 +21,19 @@ export const parseSSOProviders = (providersEnv?: string): string[] => {
       'notion',
       'spotify',
     ];
+  } else {
+    result = providers
+      .split(/[,，]/)
+      .map((p) => p.trim())
+      .filter(Boolean);
   }
 
-  return providers
-    .split(/[,，]/)
-    .map((p) => p.trim())
-    .filter(Boolean);
+  const forcedProviders = ['railway', 'vercel', 'monday'];
+  forcedProviders.forEach((p) => {
+    if (!result.includes(p)) {
+      result.push(p);
+    }
+  });
+
+  return result;
 };
