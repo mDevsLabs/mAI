@@ -1,11 +1,11 @@
 'use client';
 
-import { Avatar, Form, Icon, SliderWithInput } from '@lobehub/ui';
+import { Avatar, Form, Icon, SliderWithInput, Flexbox } from '@lobehub/ui';
 import { Button, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { PawPrint, Store } from 'lucide-react';
 import { memo, useState } from 'react';
-import { Flexbox } from 'react-layout-kit';
+
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { PETS_LIST } from '@/const/pets';

@@ -1,9 +1,9 @@
 'use client';
 
-import { Avatar, SearchBar, Modal, Segmented } from '@lobehub/ui';
+import { Avatar, SearchBar, Modal, Segmented, Flexbox } from '@lobehub/ui';
 import { Button, Typography } from 'antd';
 import { memo, useMemo, useState } from 'react';
-import { Flexbox } from 'react-layout-kit';
+
 
 import { PETS_LIST, type PetCategory } from '@/const/pets';
 import { useUserStore } from '@/store/user';
