@@ -27,10 +27,6 @@ const Page = memo(() => {
   const enablePets = general?.enablePets ?? false;
   const petsLevel = general?.petsLevel || 1;
 
-  const gainXp = () => {
-    setSettings({ general: { petsLevel: Math.min(100, petsLevel + 1) } });
-  };
-
   const enablePetsItem = {
     children: <Switch />,
     desc: t('settingPets.enable.desc'),
@@ -80,11 +76,11 @@ const Page = memo(() => {
         <Flexbox horizontal align={'center'} gap={12} padding={12} style={{ background: 'var(--color-fill-secondary)', borderRadius: 8 }}>
           <div style={{ fontWeight: 'bold', fontSize: 14 }}>Niveau {petsLevel}</div>
           <div style={{ flex: 1, height: 8, background: 'var(--color-fill-tertiary)', borderRadius: 4, overflow: 'hidden' }}>
-            <div style={{ width: `${petsLevel === 100 ? 100 : (petsLevel % 10) * 10}%`, height: '100%', background: 'var(--color-primary)', transition: 'width 0.3s' }} />
+            <div style={{ width: `${petsLevel === 100 ? 100 : ((general?.petsMsgCount || 0) % 10) * 10}%`, height: '100%', background: 'var(--color-primary)', transition: 'width 0.3s' }} />
           </div>
-          <Button size="small" type="primary" onClick={gainXp} disabled={!enablePets || petsLevel >= 100}>
-            Interagir (+1 Niveau)
-          </Button>
+          <div style={{ fontSize: 12, color: 'var(--color-text-description)' }}>
+            {petsLevel === 100 ? 'Max' : `${(general?.petsMsgCount || 0) % 10} / 10 msgs`}
+          </div>
         </Flexbox>
         {petsLevel >= 100 && (
           <div style={{ color: 'var(--color-primary)', fontSize: 12, textAlign: 'center' }}>

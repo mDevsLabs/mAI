@@ -103,7 +103,7 @@ Today’s agents are one-off, task-driven tools. They lack context, live in isol
 
 **mAI changes everything.**
 
-mAI is a work-and-lifestyle space to find, build, and collaborate with agent teammates that grow with you. In mAI, we treat **Agents as the unit of work**, providing an infrastructure where humans and agents co-evolve.
+Avec mAI, passez à la vitesse supérieure. In mAI, we treat **Agents as the unit of work**, providing an infrastructure where humans and agents co-evolve.
 
 ### Operator: Agents as the Unit of Work
 

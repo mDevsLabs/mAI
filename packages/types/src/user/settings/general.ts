@@ -34,6 +34,7 @@ export interface UserGeneralConfig {
   petsWeather?: boolean;
   petsVoice?: boolean;
   petsAura?: boolean;
+  petsMsgCount?: number;
   responseLanguage?: string;
   telemetry: boolean;
   timezone?: string;

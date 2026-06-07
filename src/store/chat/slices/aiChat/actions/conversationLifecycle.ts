@@ -58,6 +58,8 @@ import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 import { type StoreSetter } from '@/store/types';
 import { useUserMemoryStore } from '@/store/userMemory';
+import { useUserStore } from '@/store/user';
+import { settingsSelectors } from '@/store/user/slices/settings/selectors';
 import { markdownToTxt } from '@/utils/markdownToTxt';
 
 import { dbMessageSelectors, displayMessageSelectors, topicSelectors } from '../../../selectors';
@@ -339,6 +341,22 @@ export class ConversationLifecycleActionImpl {
 
     // if message is empty or no files, then stop
     if (!message && !hasFile) return;
+
+    // Increment petsMsgCount and update petsLevel if pets are enabled (10 messages = 1 level)
+    const userStore = useUserStore.getState();
+    const generalSettings = settingsSelectors.currentSettings(userStore).general;
+    if (generalSettings?.enablePets) {
+      const currentMsgCount = generalSettings.petsMsgCount || 0;
+      const nextMsgCount = currentMsgCount + 1;
+      const nextLevel = Math.min(100, Math.floor(nextMsgCount / 10) + 1);
+      
+      await userStore.setSettings({
+        general: {
+          petsMsgCount: nextMsgCount,
+          petsLevel: nextLevel,
+        },
+      });
+    }
 
     // ━━━ Message Queue: enqueue if agent is currently running ━━━
     // Check if there's a running agent-runtime operation in the current context.

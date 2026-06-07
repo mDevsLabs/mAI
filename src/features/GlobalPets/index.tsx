@@ -121,20 +121,7 @@ const Pet = memo(({ petId, isGenerating, index, zoom, config }: { petId: string;
 
 export const GlobalPets = memo(() => {
   const { general } = useUserStore(settingsSelectors.currentSettings, isEqual);
-  const setSettings = useUserStore((s) => s.setSettings);
   const isGenerating = useChatStore(operationSelectors.isAgentRuntimeRunning);
-  const [prevGenerating, setPrevGenerating] = useState(isGenerating);
-
-  useEffect(() => {
-    // Gain XP when generation stops (message completed)
-    if (prevGenerating && !isGenerating) {
-      const currentLevel = general?.petsLevel || 1;
-      if (currentLevel < 100) {
-        setSettings({ general: { petsLevel: Math.min(100, currentLevel + 1) } });
-      }
-    }
-    setPrevGenerating(isGenerating);
-  }, [isGenerating, prevGenerating, general?.petsLevel, setSettings]);
 
   const selectedPets = general?.pets || [];
   const petsZoom = general?.petsZoom || 1;
