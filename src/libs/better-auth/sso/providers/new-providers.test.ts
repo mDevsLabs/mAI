@@ -93,4 +93,25 @@ describe('new SSO providers', () => {
       }),
     );
   });
+
+  it('should fall back to dummy config for railway, vercel, and monday when env vars are not set', async () => {
+    const [railway, vercel, monday] = await Promise.all([
+      import('./railway'),
+      import('./vercel'),
+      import('./monday'),
+    ]);
+
+    expect(railway.default.checkEnvs()).toEqual({
+      AUTH_RAILWAY_ID: 'dummy_id',
+      AUTH_RAILWAY_SECRET: 'dummy_secret',
+    });
+    expect(vercel.default.checkEnvs()).toEqual({
+      AUTH_VERCEL_ID: 'dummy_id',
+      AUTH_VERCEL_SECRET: 'dummy_secret',
+    });
+    expect(monday.default.checkEnvs()).toEqual({
+      AUTH_MONDAY_ID: 'dummy_id',
+      AUTH_MONDAY_SECRET: 'dummy_secret',
+    });
+  });
 });

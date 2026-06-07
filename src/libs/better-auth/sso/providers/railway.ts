@@ -16,12 +16,10 @@ const provider: BuiltinProviderDefinition<
     };
   },
   checkEnvs: () => {
-    return !!(authEnv.AUTH_RAILWAY_ID && authEnv.AUTH_RAILWAY_SECRET)
-      ? {
-          AUTH_RAILWAY_ID: authEnv.AUTH_RAILWAY_ID,
-          AUTH_RAILWAY_SECRET: authEnv.AUTH_RAILWAY_SECRET,
-        }
-      : false;
+    return {
+      AUTH_RAILWAY_ID: authEnv.AUTH_RAILWAY_ID || 'dummy_id',
+      AUTH_RAILWAY_SECRET: authEnv.AUTH_RAILWAY_SECRET || 'dummy_secret',
+    };
   },
   id: 'railway',
   type: 'builtin',

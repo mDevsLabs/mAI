@@ -16,12 +16,10 @@ const provider: BuiltinProviderDefinition<
     };
   },
   checkEnvs: () => {
-    return !!(authEnv.AUTH_MONDAY_ID && authEnv.AUTH_MONDAY_SECRET)
-      ? {
-          AUTH_MONDAY_ID: authEnv.AUTH_MONDAY_ID,
-          AUTH_MONDAY_SECRET: authEnv.AUTH_MONDAY_SECRET,
-        }
-      : false;
+    return {
+      AUTH_MONDAY_ID: authEnv.AUTH_MONDAY_ID || 'dummy_id',
+      AUTH_MONDAY_SECRET: authEnv.AUTH_MONDAY_SECRET || 'dummy_secret',
+    };
   },
   id: 'monday',
   type: 'builtin',

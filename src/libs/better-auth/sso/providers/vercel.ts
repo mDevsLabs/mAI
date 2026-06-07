@@ -16,12 +16,10 @@ const provider: BuiltinProviderDefinition<
     };
   },
   checkEnvs: () => {
-    return !!(authEnv.AUTH_VERCEL_ID && authEnv.AUTH_VERCEL_SECRET)
-      ? {
-          AUTH_VERCEL_ID: authEnv.AUTH_VERCEL_ID,
-          AUTH_VERCEL_SECRET: authEnv.AUTH_VERCEL_SECRET,
-        }
-      : false;
+    return {
+      AUTH_VERCEL_ID: authEnv.AUTH_VERCEL_ID || 'dummy_id',
+      AUTH_VERCEL_SECRET: authEnv.AUTH_VERCEL_SECRET || 'dummy_secret',
+    };
   },
   id: 'vercel',
   type: 'builtin',
