@@ -110,7 +110,7 @@ runs:
         done
 
         # 4. 创建 renderer manifest (仅 stable 渠道有 renderer tar)
-        RENDERER_TAR="release/lobehub-renderer.tar.gz"
+        RENDERER_TAR="release/mai-renderer.tar.gz"
         if [ -f "$RENDERER_TAR" ]; then
           echo ""
           echo "📋 Creating renderer manifest..."
@@ -120,10 +120,10 @@ runs:
           cat > "release/${CHANNEL}-renderer.yml" <<EOF
         version: $VERSION
         files:
-          - url: $VERSION/lobehub-renderer.tar.gz
+          - url: $VERSION/mai-renderer.tar.gz
             sha512: $RENDERER_SHA512
             size: $RENDERER_SIZE
-        path: $VERSION/lobehub-renderer.tar.gz
+        path: $VERSION/mai-renderer.tar.gz
         sha512: $RENDERER_SHA512
         releaseDate: '$RELEASE_DATE'
         EOF

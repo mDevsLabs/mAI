@@ -22,6 +22,8 @@ export interface UserGeneralConfig {
   mermaidTheme?: MermaidProps['theme'];
   neutralColor?: NeutralColors;
   primaryColor?: PrimaryColors;
+  pets?: string[];
+  petsZoom?: number;
   responseLanguage?: string;
   telemetry: boolean;
   timezone?: string;

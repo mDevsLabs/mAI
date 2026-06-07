@@ -132,6 +132,7 @@ export default {
   'agentInfoDescription.role.systemRole': 'Agent Profile',
   'agentInfoDescription.role.title': 'Agent Profile',
   'agentInfoDescription.value.unset': 'Not Set',
+  'tab.pets': 'Pets',
 
   'agentInfoDescription.value.untitled': 'Untitled Agent',
   'agentSkillDetail.addedAt': 'Added',

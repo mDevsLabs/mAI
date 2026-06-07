@@ -11,6 +11,8 @@ export const DEFAULT_COMMON_SETTINGS: UserGeneralConfig = {
   isDevMode: false,
   isLiteMode: false,
   mermaidTheme: 'lobe-theme',
+  pets: ['claude-pixel'],
+  petsZoom: 1,
   telemetry: true,
   transitionMode: 'fadeIn',
 };

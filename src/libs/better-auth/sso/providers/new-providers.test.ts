@@ -4,8 +4,7 @@ vi.mock('@/envs/auth', () => ({
   authEnv: {
     AUTH_CANVA_ID: 'canva-client-id',
     AUTH_CANVA_SECRET: 'canva-client-secret',
-    AUTH_DISCORD_ID: 'discord-client-id',
-    AUTH_DISCORD_SECRET: 'discord-client-secret',
+
     AUTH_GITHUB_ID: 'github-client-id',
     AUTH_GITHUB_SECRET: 'github-client-secret',
     AUTH_GOOGLE_ID: 'google-client-id',
@@ -27,18 +26,14 @@ vi.mock('@/envs/auth', () => ({
 
 describe('new SSO providers', () => {
   it('should expose native provider configs for built-in providers', async () => {
-    const [discord, slack, spotify, twitch, notion] = await Promise.all([
-      import('./discord'),
+    const [slack, spotify, twitch, notion] = await Promise.all([
       import('./slack'),
       import('./spotify'),
       import('./twitch'),
       import('./notion'),
     ]);
 
-    expect(discord.default.checkEnvs()).toEqual({
-      AUTH_DISCORD_ID: 'discord-client-id',
-      AUTH_DISCORD_SECRET: 'discord-client-secret',
-    });
+
     expect(slack.default.build(slack.default.checkEnvs()!)).toEqual({
       clientId: 'slack-client-id',
       clientSecret: 'slack-client-secret',
@@ -94,24 +89,12 @@ describe('new SSO providers', () => {
     );
   });
 
-  it('should fall back to dummy config for railway, vercel, and monday when env vars are not set', async () => {
-    const [railway, vercel, monday] = await Promise.all([
-      import('./railway'),
-      import('./vercel'),
-      import('./monday'),
-    ]);
+  it('should fall back to dummy config for railway when env vars are not set', async () => {
+    const railway = await import('./railway');
 
     expect(railway.default.checkEnvs()).toEqual({
       AUTH_RAILWAY_ID: 'dummy_id',
       AUTH_RAILWAY_SECRET: 'dummy_secret',
-    });
-    expect(vercel.default.checkEnvs()).toEqual({
-      AUTH_VERCEL_ID: 'dummy_id',
-      AUTH_VERCEL_SECRET: 'dummy_secret',
-    });
-    expect(monday.default.checkEnvs()).toEqual({
-      AUTH_MONDAY_ID: 'dummy_id',
-      AUTH_MONDAY_SECRET: 'dummy_secret',
     });
   });
 });

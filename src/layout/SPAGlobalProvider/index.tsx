@@ -25,6 +25,8 @@ import type { SPAServerConfig } from '@/types/spaServerConfig';
 
 import Locale from './Locale';
 
+const GlobalPets = lazy(() => import('@/features/GlobalPets').then((m) => ({ default: m.GlobalPets })));
+
 const ModalHost = lazy(() => import('@lobehub/ui').then((m) => ({ default: m.ModalHost })));
 const BaseModalHost = lazy(() =>
   import('@lobehub/ui/base-ui').then((m) => ({ default: m.ModalHost })),
@@ -74,6 +76,7 @@ const SPAGlobalProvider = memo<PropsWithChildren>(({ children }) => {
                           <BaseModalHost />
                           <ToastHost />
                           <ContextMenuHost />
+                          <GlobalPets />
                         </Suspense>
                       </LazyMotion>
                     </DragUploadProvider>

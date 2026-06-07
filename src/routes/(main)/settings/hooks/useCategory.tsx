@@ -20,6 +20,7 @@ import {
   MessageCircleIcon,
   MonitorSmartphoneIcon,
   PaletteIcon,
+  PawPrint,
   ScrollText,
   Sparkles,
   TerminalSquare,
@@ -103,6 +104,11 @@ export const useCategory = () => {
         icon: PaletteIcon,
         key: SettingsTabs.Appearance,
         label: t('tab.appearance'),
+      },
+      {
+        icon: PawPrint,
+        key: SettingsTabs.Pets,
+        label: t('tab.pets'),
       },
       enableExecutionDeviceSwitcher && {
         icon: MonitorSmartphoneIcon,
