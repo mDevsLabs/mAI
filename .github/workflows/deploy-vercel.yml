@@ -1,4 +1,4 @@
-name: Deploy to Vercel via GitHub Actions
+name: 🚀 Deploy to Vercel via GitHub Actions
 
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -22,14 +22,13 @@ on:
 
 jobs:
   Deploy-Production:
-    # Se lance UNIQUEMENT sur un push vers la branche canary
     if: github.event_name == 'push' && github.ref == 'refs/heads/canary'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout du code 📦
+      - name: 📦 Checkout du code
         uses: actions/checkout@v4
 
-      - name: Vérifier les secrets Vercel 🔑
+      - name: 🔑 Vérifier les secrets Vercel
         run: |
           if [ -z "${{ env.VERCEL_TOKEN }}" ]; then
             echo "::error::Le secret VERCEL_TOKEN est manquant dans les paramètres GitHub !"
@@ -44,24 +43,24 @@ jobs:
             exit 1
           fi
 
-      - name: Nettoyer le dossier .vercel résiduel 🧹
+      - name: 🧹 Nettoyer le dossier .vercel résiduel
         run: rm -rf .vercel
 
-      - name: Setup Environment (Node.js, pnpm & Bun) 🛠️
+      - name: 🛠️ Setup Environment (Node.js, pnpm & Bun)
         uses: ./.github/actions/setup-env
         with:
           node-version: 20
 
-      - name: Install Vercel CLI 🚀
+      - name: ⚡ Install Vercel CLI
         run: npm install --global vercel@latest
 
-      - name: Install des dépendances 📥
+      - name: 📥 Installation des dépendances
         run: pnpm install
 
-      - name: Pull Vercel Environment Information 🌍
+      - name: 🌍 Pull Vercel Environment Information
         run: vercel pull --yes --environment=production --token=${{ env.VERCEL_TOKEN }}
 
-      - name: Copy/patch Vercel environment variables to root 📦
+      - name: 📦 Copy/patch Vercel environment variables to root
         run: |
           touch .env.production.local
 
@@ -83,24 +82,22 @@ jobs:
             echo "KEY_VAULTS_SECRET=${{ env.KEY_VAULTS_SECRET }}" >> .env.production.local
           fi
 
-      - name: Build Project Artifacts 🏗️
+      - name: 🏗️ Build Project Artifacts
         env:
           KEY_VAULTS_SECRET: ${{ env.KEY_VAULTS_SECRET }}
         run: vercel build --prod --token=${{ env.VERCEL_TOKEN }}
 
-      - name: Deploy Project Artifacts to Vercel 🌐
-        # --archive=tgz évite la limite API "files > 15000" en envoyant une archive unique
+      - name: 🌐 Deploy Project Artifacts to Vercel
         run: vercel deploy --prebuilt --archive=tgz --prod --token=${{ env.VERCEL_TOKEN }}
 
   Deploy-Preview:
-    # Se lance sur PR, déclenchement manuel, ou push sur une branche autre que canary (donc ici, sur 'main')
     if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref != 'refs/heads/canary')
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout du code 📦
+      - name: 📦 Checkout du code
         uses: actions/checkout@v4
 
-      - name: Vérifier les secrets Vercel 🔑
+      - name: 🔑 Vérifier les secrets Vercel
         run: |
           if [ -z "${{ env.VERCEL_TOKEN }}" ]; then
             echo "::error::Le secret VERCEL_TOKEN est manquant dans les paramètres GitHub !"
@@ -115,25 +112,24 @@ jobs:
             exit 1
           fi
 
-      - name: Nettoyer le dossier .vercel résiduel 🧹
+      - name: 🧹 Nettoyer le dossier .vercel résiduel
         run: rm -rf .vercel
 
-      - name: Setup Environment (Node.js, pnpm & Bun) 🛠️
+      - name: 🛠️ Setup Environment (Node.js, pnpm & Bun)
         uses: ./.github/actions/setup-env
         with:
           node-version: 20
 
-      - name: Install Vercel CLI 🚀
+      - name: ⚡ Install Vercel CLI
         run: npm install --global vercel@latest
 
-      - name: Install des dépendances 📥
+      - name: 📥 Installation des dépendances
         run: pnpm install
 
-      - name: Pull Vercel Environment Information 🌍
-        # On pull l'environnement preview ici
+      - name: 🌍 Pull Vercel Environment Information
         run: vercel pull --yes --environment=preview --token=${{ env.VERCEL_TOKEN }}
 
-      - name: Copy/patch Vercel environment variables to root 📦
+      - name: 📦 Copy/patch Vercel environment variables to root
         run: |
           touch .env.preview.local
 
@@ -155,13 +151,10 @@ jobs:
             echo "KEY_VAULTS_SECRET=${{ env.KEY_VAULTS_SECRET }}" >> .env.preview.local
           fi
 
-      - name: Build Project Artifacts 🏗️
+      - name: 🏗️ Build Project Artifacts
         env:
           KEY_VAULTS_SECRET: ${{ env.KEY_VAULTS_SECRET }}
-        # Pas de flag --prod
         run: vercel build --token=${{ env.VERCEL_TOKEN }}
 
-      - name: Deploy Project Artifacts to Vercel 🌐
-        # Pas de flag --prod pour déployer en preview
-        # --archive=tgz évite la limite API "files > 15000" en envoyant une archive unique
+      - name: 🌐 Deploy Project Artifacts to Vercel
         run: vercel deploy --prebuilt --archive=tgz --token=${{ env.VERCEL_TOKEN }}

@@ -25,6 +25,15 @@ export interface UserGeneralConfig {
   enablePets?: boolean;
   pets?: string[];
   petsZoom?: number;
+  petsLevel?: number;
+  petsSound?: boolean;
+  petsAnim?: boolean;
+  petsAcc?: boolean;
+  petsBg?: boolean;
+  petsColor?: boolean;
+  petsWeather?: boolean;
+  petsVoice?: boolean;
+  petsAura?: boolean;
   responseLanguage?: string;
   telemetry: boolean;
   timezone?: string;

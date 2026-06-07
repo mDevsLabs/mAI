@@ -14,6 +14,7 @@ export const DEFAULT_COMMON_SETTINGS: UserGeneralConfig = {
   enablePets: false,
   pets: [],
   petsZoom: 1,
+  petsLevel: 1,
   telemetry: true,
   transitionMode: 'fadeIn',
 };

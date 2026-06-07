@@ -1,113 +1,132 @@
-name: '🐛 Bug Report'
-description: 'Report an bug'
-labels: ['unconfirm']
+name: '🐛 Rapport de Bug'
+description: 'Signaler un bug sur mAI'
+labels: ['non-confirmé']
 type: Bug
 body:
   - type: dropdown
     attributes:
-      label: '📱 Client Type'
-      description: 'Select how you are accessing LobeChat'
+      label: '📱 Type de Client'
+      description: 'Sélectionnez comment vous accédez à mAI'
       multiple: true
       options:
-        - 'Web (Desktop Browser)'
-        - 'Web (Mobile Browser)'
-        - 'Desktop App (Electron)'
-        - 'Mobile App (React Native)'
-        - 'Other'
+        - 'Web (Navigateur Desktop)'
+        - 'Web (Navigateur Mobile)'
+        - 'Application Desktop (Electron)'
+        - 'Application Mobile (React Native)'
+        - 'Autre'
     validations:
       required: true
 
   - type: dropdown
     attributes:
-      label: '💻 Operating System'
+      label: '💻 Système d''Exploitation'
+      description: 'Sélectionnez votre système d''exploitation'
       multiple: true
       options:
         - 'Windows'
         - 'macOS'
         - 'Ubuntu'
-        - 'Other Linux'
+        - 'Autre Linux'
         - 'iOS'
         - 'Android'
-        - 'Other'
+        - 'Autre'
     validations:
       required: true
 
   - type: dropdown
     attributes:
-      label: '📦 Deployment Platform'
-      multiple: true
-      options:
-        - 'Official Cloud'
-        - 'Vercel'
-        - 'Zeabur'
-        - 'Sealos'
-        - 'Netlify'
-        - 'Self hosting Docker'
-        - 'Other'
-    validations:
-      required: false
-
-  - type: input
-    attributes:
-      label: '📌 Version'
-    validations:
-      required: true
-
-  - type: dropdown
-    attributes:
-      label: '🌐 Browser'
+      label: '🌐 Navigateur'
+      description: 'Sélectionnez le(s) navigateur(s) concerné(s)'
       multiple: true
       options:
         - 'Chrome'
         - 'Edge'
         - 'Safari'
         - 'Firefox'
-        - 'Other'
+        - 'Autre'
     validations:
       required: true
-
-  - type: textarea
-    attributes:
-      label: '🐛 What happened?'
-      description: A clear and concise description of the bug, if the above option is `Other`, please also explain in detail.
-    validations:
-      required: true
-
-  - type: textarea
-    attributes:
-      label: '📷 How to reproduce it?'
-      description: A clear and concise description of how to reproduce.
-
-  - type: textarea
-    attributes:
-      label: '🚦 What it should be?'
-      description: A clear and concise description of what you expected to happen.
-
-  - type: textarea
-    attributes:
-      label: '📝 Additional Information'
-      description: If your problem needs further explanation, or if the issue you're seeing cannot be reproduced in a gist, please add more information here.
 
   - type: dropdown
     attributes:
-      label: '🛠️ Willing to Submit a PR?'
-      description: Would you be willing to submit a pull request to fix this bug?
+      label: '📦 Plateforme de Déploiement'
+      description: 'Sélectionnez votre plateforme de déploiement si applicable'
+      multiple: true
       options:
-        - 'Yes, I am willing to submit a PR'
-        - 'No, but I am happy to help test the fix'
+        - 'Cloud Officiel'
+        - 'Vercel'
+        - 'Zeabur'
+        - 'Sealos'
+        - 'Netlify'
+        - 'Auto-hébergement Docker'
+        - 'Autre'
+    validations:
+      required: false
+
+  - type: input
+    attributes:
+      label: '📌 Version de mAI'
+      description: 'Indiquez la version exacte de mAI que vous utilisez'
+      placeholder: 'ex: v1.0.0'
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: '🐛 Description du Bug'
+      description: 'Décrivez le bug de manière claire et précise. Si vous avez sélectionné "Autre" dans les options ci-dessus, merci de préciser davantage.'
+      placeholder: 'Lorsque je fais X, il se passe Y au lieu de Z...'
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: '📷 Étapes pour Reproduire'
+      description: 'Décrivez les étapes précises pour reproduire le bug'
+      placeholder: |
+        1. Aller sur '...'
+        2. Cliquer sur '...'
+        3. Faire défiler jusqu'à '...'
+        4. Observer l'erreur
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: '🚦 Comportement Attendu'
+      description: 'Décrivez ce qui devrait normalement se passer'
+      placeholder: 'Il devrait se passer...'
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: '📝 Informations Complémentaires'
+      description: 'Ajoutez toute information supplémentaire utile : captures d''écran, logs, liens, etc.'
+      placeholder: 'Logs, captures d''écran, contexte supplémentaire...'
+    validations:
+      required: false
+
+  - type: dropdown
+    attributes:
+      label: '🛠️ Prêt à Soumettre une PR ?'
+      description: 'Seriez-vous prêt(e) à soumettre une Pull Request pour corriger ce bug ?'
+      options:
+        - 'Oui, je suis prêt(e) à soumettre une PR'
+        - 'Non, mais je suis disponible pour tester le correctif'
     validations:
       required: false
 
   - type: checkboxes
     attributes:
       label: '✅ Validations'
-      description: Before submitting the issue, please make sure you do the following
+      description: 'Merci de vérifier les points suivants avant de soumettre votre rapport'
       options:
-        - label: Read the [docs](https://lobehub.com/zh/docs).
+        - label: "J'ai lu la documentation."
           required: true
-        - label: Check that there isn't [already an issue](https://github.com/lobehub/lobe-chat/issues) that reports the same bug to avoid creating a duplicate.
+        - label: "J'ai vérifié qu'il n'existe pas [déjà un rapport](https://github.com/mDevsLabs/mAI/issues) pour ce bug afin d'éviter les doublons."
           required: true
-        - label: Make sure this is a LobeChat issue and not a third-party library or provider issue.
+        - label: "Je confirme que ce bug est lié à mAI et non à une bibliothèque tierce ou un fournisseur externe."
           required: true
-        - label: Check that this is a concrete bug. For Q&A, please use [GitHub Discussions](https://github.com/lobehub/lobe-chat/discussions) or join our [Discord Server](https://discord.gg/rGHwKq4R).
+        - label: "Ce rapport concerne un bug concret. Pour toute question, merci d'utiliser les [GitHub Discussions](https://github.com/mDevsLabs/mAI/discussions) ou de rejoindre notre [Serveur Discord](https://discord.gg/fV7zwdGPpY)."
           required: true

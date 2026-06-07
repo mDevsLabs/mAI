@@ -9,7 +9,7 @@ export type PetId =
   | 'mini-sama'
   | 'problem';
 
-export type PetCategory = 'Mascot' | 'Human' | 'Robot' | 'Alien';
+export type PetCategory = 'Mascot' | 'Human' | 'Robot' | 'Alien' | 'Animal';
 
 export interface PetConfig {
   id: PetId;
@@ -19,7 +19,7 @@ export interface PetConfig {
 }
 
 export const PETS_LIST: PetConfig[] = [
-  { id: 'apupepe', name: 'Apu Pepe', description: 'Le petit Pepe toujours prêt à aider.', category: 'Mascot' },
+  { id: 'apupepe', name: 'Apu Pepe', description: 'Le petit Pepe toujours prêt à aider.', category: 'Animal' },
   { id: 'claude-pixel', name: 'Claude Pixel', description: 'Un petit Claude tout mignon en pixel art.', category: 'Mascot' },
   { id: 'codix', name: 'Codix', description: 'Votre assistant robotique pour le code.', category: 'Robot' },
   { id: 'dario', name: 'Dario', description: 'Dario le développeur dévoué.', category: 'Human' },
@@ -29,3 +29,4 @@ export const PETS_LIST: PetConfig[] = [
   { id: 'mini-sama', name: 'Mini Sama', description: 'Le petit Sama respectueux.', category: 'Human' },
   { id: 'problem', name: 'Problem', description: 'Un compagnon pour vous aider avec vos problèmes.', category: 'Mascot' },
 ];
+

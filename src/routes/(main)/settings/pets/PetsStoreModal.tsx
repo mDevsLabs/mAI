@@ -8,6 +8,7 @@ import { memo, useMemo, useState } from 'react';
 import { PETS_LIST, type PetCategory } from '@/const/pets';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/slices/settings/selectors';
+import { useTranslation } from 'react-i18next';
 
 interface PetsStoreModalProps {
   onOpenChange: (open: boolean) => void;
@@ -15,9 +16,12 @@ interface PetsStoreModalProps {
 }
 
 const PetsStoreModal = memo<PetsStoreModalProps>(({ onOpenChange, open }) => {
+  const { t } = useTranslation('setting');
   const { general } = useUserStore(settingsSelectors.currentSettings);
   const setSettings = useUserStore((s) => s.setSettings);
   const selectedPets = general?.pets || ['claude-pixel'];
+  const petsLevel = general?.petsLevel || 1;
+  const maxPets = petsLevel >= 100 ? 2 : 1;
 
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState<'All' | PetCategory>('All');
@@ -32,20 +36,41 @@ const PetsStoreModal = memo<PetsStoreModalProps>(({ onOpenChange, open }) => {
   }, [search, category]);
 
   const categoryOptions = [
-    { label: 'Tous', value: 'All' },
-    { label: 'Mascottes', value: 'Mascot' },
-    { label: 'Humains', value: 'Human' },
-    { label: 'Robots', value: 'Robot' },
-    { label: 'Aliens', value: 'Alien' },
+    { label: t('settingPets.store.category.all'), value: 'All' },
+    { label: t('settingPets.store.category.animal'), value: 'Animal' },
+    { label: t('settingPets.store.category.mascot'), value: 'Mascot' },
+    { label: t('settingPets.store.category.human'), value: 'Human' },
+    { label: t('settingPets.store.category.robot'), value: 'Robot' },
+    { label: t('settingPets.store.category.alien'), value: 'Alien' },
   ];
 
+  const playSound = () => {
+    try {
+      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(600, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(900, ctx.currentTime + 0.1);
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.1);
+    } catch (e) {
+      // Ignore audio errors
+    }
+  };
+
   const togglePet = (petId: string) => {
+    playSound();
     let newPets = [...selectedPets];
     if (newPets.includes(petId)) {
       newPets = newPets.filter((id) => id !== petId);
     } else {
-      if (newPets.length >= 2) {
-        newPets.shift(); // keep max 2
+      if (newPets.length >= maxPets) {
+        newPets = newPets.slice(newPets.length - maxPets + 1); // keep max allowed
       }
       newPets.push(petId);
     }
@@ -56,7 +81,7 @@ const PetsStoreModal = memo<PetsStoreModalProps>(({ onOpenChange, open }) => {
     <Modal
       onCancel={() => onOpenChange(false)}
       open={open}
-      title={'Store des Pets'}
+      title={t('settingPets.store.title')}
       width={800}
       footer={null}
     >
@@ -71,7 +96,7 @@ const PetsStoreModal = memo<PetsStoreModalProps>(({ onOpenChange, open }) => {
           <SearchBar
             allowClear
             onInputChange={setSearch}
-            placeholder={'Rechercher un pet...'}
+            placeholder={t('settingPets.store.searchPlaceholder')}
             value={search}
             style={{ flex: 1 }}
           />
@@ -92,11 +117,26 @@ const PetsStoreModal = memo<PetsStoreModalProps>(({ onOpenChange, open }) => {
                   key={pet.id}
                   gap={16}
                   padding={16}
+                  onClick={() => togglePet(pet.id)}
                   style={{
                     background: isSelected ? 'var(--color-fill-secondary)' : 'var(--color-fill-quaternary)',
                     border: `1px solid ${isSelected ? 'var(--color-primary)' : 'var(--color-border)'}`,
                     borderRadius: 12,
-                    transition: 'all 0.2s',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                    transform: isSelected ? 'scale(0.98)' : 'scale(1)',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = isSelected ? 'scale(0.98)' : 'scale(1.02)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = isSelected ? 'scale(0.98)' : 'scale(1)';
+                  }}
+                  onMouseDown={(e) => {
+                    e.currentTarget.style.transform = 'scale(0.95)';
+                  }}
+                  onMouseUp={(e) => {
+                    e.currentTarget.style.transform = isSelected ? 'scale(0.98)' : 'scale(1.02)';
                   }}
                 >
                   <Flexbox horizontal align={'center'} gap={16}>
@@ -112,11 +152,10 @@ const PetsStoreModal = memo<PetsStoreModalProps>(({ onOpenChange, open }) => {
                   </Flexbox>
                   <Flexbox horizontal justify={'flex-end'} width={'100%'}>
                     <Button
-                      onClick={() => togglePet(pet.id)}
                       type={isSelected ? 'default' : 'primary'}
-                      style={{ minWidth: 80 }}
+                      style={{ minWidth: 80, pointerEvents: 'none' }}
                     >
-                      {isSelected ? 'Retirer' : 'Ajouter'}
+                      {isSelected ? t('settingPets.store.action.remove') : t('settingPets.store.action.add')}
                     </Button>
                   </Flexbox>
                 </Flexbox>
@@ -125,12 +164,12 @@ const PetsStoreModal = memo<PetsStoreModalProps>(({ onOpenChange, open }) => {
           </div>
           {filteredPets.length === 0 && (
             <Flexbox align={'center'} padding={24}>
-              <Typography.Text type={'secondary'}>Aucun pet trouvé</Typography.Text>
+              <Typography.Text type={'secondary'}>{t('settingPets.store.empty')}</Typography.Text>
             </Flexbox>
           )}
           <Flexbox align={'center'} paddingBlock={24}>
             <Typography.Text type={'secondary'}>
-              D'autres pet arrivent bientôt ! Suivez-nous sur{' '}
+              {t('settingPets.store.comingSoon')}
               <a href="https://x.com/mDevsLabs" target="_blank" rel="noreferrer">
                 @mDevsLabs
               </a>
