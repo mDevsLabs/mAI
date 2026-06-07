@@ -1,8 +1,8 @@
 'use client';
 
 import { Button, Flexbox, Icon, Text } from '@lobehub/ui';
-import { Badge, Divider, Dropdown } from 'antd';
-import { type ReactNode, memo } from 'react';
+import { Badge, Divider } from 'antd';
+import { type ReactNode, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MoreHorizontal } from 'lucide-react';
 
@@ -48,6 +48,7 @@ const SocialProviderButtons = memo<SocialProviderButtonsProps>(
     dividerText,
   }) => {
     const { t } = useTranslation('auth');
+    const [showAll, setShowAll] = useState(false);
 
     if (providers.length === 0) return null;
 
@@ -112,23 +113,16 @@ const SocialProviderButtons = memo<SocialProviderButtonsProps>(
       );
     };
 
-    const dropdownItems = otherProviders.map((provider) => ({
-      key: provider,
-      icon: <div style={{ display: 'flex', alignItems: 'center' }}>{AuthIcons(provider, 16)}</div>,
-      label: getProviderLabel(provider),
-      onClick: () => onSocialSignIn(provider),
-    }));
-
     return (
       <Flexbox gap={12}>
         {primaryProviders.map((provider) => renderButton(provider))}
         
-        {otherProviders.length > 0 && (
-          <Dropdown menu={{ items: dropdownItems }} placement="bottom" trigger={['click']}>
-            <Button block size="large" icon={<MoreHorizontal size={18} />}>
-              More
-            </Button>
-          </Dropdown>
+        {showAll && otherProviders.map((provider) => renderButton(provider))}
+
+        {!showAll && otherProviders.length > 0 && (
+          <Button block size="large" icon={<MoreHorizontal size={18} />} onClick={() => setShowAll(true)}>
+            {t('betterAuth.signin.moreOptions', { defaultValue: 'More options' })}
+          </Button>
         )}
 
         {!hideBottomDivider && divider}

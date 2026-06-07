@@ -10,11 +10,14 @@ import Canva from './providers/canva';
 import Discord from './providers/discord';
 import Github from './providers/github';
 import Google from './providers/google';
+import Monday from './providers/monday';
 import Notion from './providers/notion';
+import Railway from './providers/railway';
 import Slack from './providers/slack';
 import Spotify from './providers/spotify';
 import Telegram from './providers/telegram';
 import Twitch from './providers/twitch';
+import Vercel from './providers/vercel';
 import X from './providers/x';
 
 const providerDefinitions = [
@@ -28,6 +31,9 @@ const providerDefinitions = [
   X,
   Canva,
   Telegram,
+  Railway,
+  Monday,
+  Vercel,
 ] as const;
 
 const builtInProviderIds = new Set(BUILTIN_BETTER_AUTH_PROVIDERS);

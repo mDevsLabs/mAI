@@ -2,6 +2,19 @@
 
 # Changelog
 
+### Version 0.1.9
+
+Détails de la sous-release : Extension de la compatibilité OAuth, refonte mobile, branding mAI et intégration d'une compétence GitHub pour l'Agent.
+
+<sup>Released on **2026-06-07**</sup>
+
+#### 🚀 Features
+- **auth - SSO**: Résolution des bugs empêchant l'affichage des nouveaux fournisseurs Railway, Monday et Vercel. Ils sont désormais listés dans le menu déroulant "More".
+- **ui - mobile**: Amélioration du design de la carte d'authentification (`AuthCard`) sur mobile avec une animation fluide de chargement et des espacements ajustés pour s'adapter à toutes les résolutions.
+- **branding**: Remplacement manuel des textes affichés contenant LobeHub par mAI pour finaliser la transition de marque.
+- **compétences - GitHub**: Définition des variables d'environnement (`GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`) et configuration de l'adresse de callback du plugin pour donner à l'IA la capacité de coder sur GitHub (outils avancés au lieu d'une simple authentification).
+
+
 ### Version 0.1.8
 
 Détails de la sous-release : Renommage du branding en mAI / May, mise à jour du template de PR, correction de formatage du Changelog et mise à jour du menu d'aide.

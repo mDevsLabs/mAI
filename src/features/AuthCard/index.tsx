@@ -11,22 +11,51 @@ export interface AuthCardProps extends Omit<FlexboxProps, 'title'> {
   title?: ReactNode;
 }
 
-export const AuthCard = memo<AuthCardProps>(({ children, title, subtitle, footer, ...rest }) => {
+import { createStaticStyles } from 'antd-style';
+
+const styles = createStaticStyles(({ css }) => ({
+  authCard: css`
+    animation: fadeInSlideUp 0.5s ease-out forwards;
+    padding: 24px;
+    border-radius: 16px;
+    background: var(--ant-color-bg-container);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+
+    @media (max-width: 576px) {
+      padding: 16px;
+      box-shadow: none;
+      background: transparent;
+    }
+
+    @keyframes fadeInSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  `,
+}));
+
+export const AuthCard = memo<AuthCardProps>(({ children, title, subtitle, footer, className, ...rest }) => {
   return (
-    <Flexbox width={'min(100%,440px)'} {...rest}>
-      <Flexbox gap={16}>
+    <Flexbox className={[styles.authCard, className].filter(Boolean).join(' ')} width={'min(100%,440px)'} {...rest}>
+      <Flexbox gap={12}>
         {title && (
-          <Text fontSize={28} style={{ lineHeight: 1.4 }} weight={'bold'}>
+          <Text fontSize={28} style={{ lineHeight: 1.2, letterSpacing: '-0.02em' }} weight={'bold'}>
             {title}
           </Text>
         )}
         {subtitle && (
-          <Text fontSize={18} style={{ lineHeight: 1.4 }} type={'secondary'} weight={500}>
+          <Text fontSize={16} style={{ lineHeight: 1.4 }} type={'secondary'} weight={500}>
             {subtitle}
           </Text>
         )}
       </Flexbox>
-      <Flexbox gap={4} paddingBlock={32}>
+      <Flexbox gap={8} paddingBlock={28}>
         {children}
       </Flexbox>
       {footer}

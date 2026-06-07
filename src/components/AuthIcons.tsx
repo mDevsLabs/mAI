@@ -8,11 +8,14 @@ const localAuthIcons: Record<string, string> = {
   discord: '/auth/discord-logo.png',
   github: '/auth/github-logo.png',
   google: '/auth/google-logo.png',
+  monday: '/auth/monday-logo.png',
   notion: '/auth/notion-logo.png',
+  railway: '/auth/railway-logo.png',
   slack: '/auth/slack-logo.png',
   spotify: '/auth/spotify-logo.png',
   telegram: '/auth/telegram-logo.png',
   twitch: '/auth/twitch-logo.png',
+  vercel: '/auth/vercel-logo.png',
   x: '/auth/x-logo.png',
 };
 

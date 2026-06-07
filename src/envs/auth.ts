@@ -98,6 +98,13 @@ declare global {
       AUTH_X_ID?: string;
       AUTH_X_SECRET?: string;
 
+      AUTH_RAILWAY_ID?: string;
+      AUTH_RAILWAY_SECRET?: string;
+      AUTH_VERCEL_ID?: string;
+      AUTH_VERCEL_SECRET?: string;
+      AUTH_MONDAY_ID?: string;
+      AUTH_MONDAY_SECRET?: string;
+
       AUTH_ZITADEL_ID?: string;
       AUTH_ZITADEL_ISSUER?: string;
       AUTH_ZITADEL_SECRET?: string;
@@ -163,6 +170,15 @@ export const getAuthConfig = () => {
 
     AUTH_X_ID: process.env.AUTH_X_ID,
     AUTH_X_SECRET: process.env.AUTH_X_SECRET,
+
+    AUTH_RAILWAY_ID: process.env.AUTH_RAILWAY_ID,
+    AUTH_RAILWAY_SECRET: process.env.AUTH_RAILWAY_SECRET,
+
+    AUTH_VERCEL_ID: process.env.AUTH_VERCEL_ID,
+    AUTH_VERCEL_SECRET: process.env.AUTH_VERCEL_SECRET,
+
+    AUTH_MONDAY_ID: process.env.AUTH_MONDAY_ID,
+    AUTH_MONDAY_SECRET: process.env.AUTH_MONDAY_SECRET,
 
     JWKS_KEY: process.env.JWKS_KEY,
     ENABLE_OIDC: !!process.env.JWKS_KEY,
