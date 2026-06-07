@@ -68,10 +68,11 @@ export const GlobalPets = memo(() => {
   const { general } = useUserStore(settingsSelectors.currentSettings, isEqual);
   const isGenerating = useChatStore(operationSelectors.isAgentRuntimeRunning);
 
-  const selectedPets = general?.pets || ['claude-pixel'];
+  const selectedPets = general?.pets || [];
   const petsZoom = general?.petsZoom || 1;
+  const enablePets = general?.enablePets ?? false;
 
-  if (selectedPets.length === 0) return null;
+  if (!enablePets || selectedPets.length === 0) return null;
 
   return (
     <>

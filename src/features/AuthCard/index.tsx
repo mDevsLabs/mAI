@@ -15,7 +15,6 @@ import { createStaticStyles } from 'antd-style';
 
 const styles = createStaticStyles(({ css }) => ({
   authCard: css`
-    animation: fadeInSlideUp 0.5s ease-out forwards;
     padding: 24px;
     border-radius: 16px;
     background: var(--ant-color-bg-container);
@@ -25,17 +24,6 @@ const styles = createStaticStyles(({ css }) => ({
       padding: 16px;
       box-shadow: none;
       background: transparent;
-    }
-
-    @keyframes fadeInSlideUp {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
     }
   `,
 }));

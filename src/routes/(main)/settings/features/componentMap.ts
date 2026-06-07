@@ -13,6 +13,9 @@ export const componentMap = {
   [SettingsTabs.Appearance]: dynamic(() => import('../appearance'), {
     loading: loading('Settings > Appearance'),
   }),
+  [SettingsTabs.Pets]: dynamic(() => import('../pets'), {
+    loading: loading('Settings > Pets'),
+  }),
   [SettingsTabs.Provider]: dynamic(() => import('../provider'), {
     loading: loading('Settings > Provider'),
   }),

@@ -1,7 +1,7 @@
 'use client';
 
 import { Avatar, Form, Icon, SliderWithInput } from '@lobehub/ui';
-import { Button } from 'antd';
+import { Button, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { PawPrint, Store } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -23,11 +23,21 @@ const Page = memo(() => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [setSettings] = useUserStore((s) => [s.setSettings]);
 
-  const selectedPets = general?.pets || ['claude-pixel'];
+  const selectedPets = general?.pets || [];
+  const enablePets = general?.enablePets ?? false;
+
+  const enablePetsItem = {
+    children: <Switch />,
+    desc: 'Activer ou désactiver l\'affichage des compagnons virtuels.',
+    label: 'Activer les Pets',
+    minWidth: undefined,
+    name: 'enablePets',
+    valuePropName: 'checked',
+  };
 
   const petsItem = {
     children: (
-      <Flexbox gap={16} width={'100%'}>
+      <Flexbox gap={16} width={'100%'} style={{ opacity: enablePets ? 1 : 0.5, pointerEvents: enablePets ? 'auto' : 'none' }}>
         <Flexbox horizontal gap={12} wrap={'wrap'}>
           {selectedPets.map((petId) => {
             const petConfig = PETS_LIST.find((p) => p.id === petId);
@@ -56,9 +66,15 @@ const Page = memo(() => {
               </Flexbox>
             );
           })}
+          {selectedPets.length === 0 && (
+            <div style={{ color: 'var(--color-text-description)', fontSize: 13, padding: 12 }}>
+              Aucun pet sélectionné. Ouvrez le store pour en ajouter.
+            </div>
+          )}
         </Flexbox>
         <Button
           block
+          disabled={!enablePets}
           icon={<Icon icon={Store} />}
           onClick={() => setIsModalOpen(true)}
           type={'dashed'}
@@ -75,6 +91,7 @@ const Page = memo(() => {
   const petsZoomItem = {
     children: (
       <SliderWithInput
+        disabled={!enablePets}
         max={3}
         min={0.5}
         step={0.1}
@@ -95,7 +112,7 @@ const Page = memo(() => {
         initialValues={general}
         items={[
           {
-            children: [petsItem, petsZoomItem],
+            children: [enablePetsItem, petsItem, petsZoomItem],
             title: 'Pets',
             icon: PawPrint,
           },
