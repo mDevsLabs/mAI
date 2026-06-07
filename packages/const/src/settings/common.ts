@@ -11,6 +11,11 @@ export const DEFAULT_COMMON_SETTINGS: UserGeneralConfig = {
   isDevMode: false,
   isLiteMode: false,
   mermaidTheme: 'lobe-theme',
+  enablePets: false,
+  pets: [],
+  petsZoom: 1,
+  petsLevel: 1,
+  petsMsgCount: 0,
   telemetry: true,
   transitionMode: 'fadeIn',
 };

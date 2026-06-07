@@ -60,6 +60,7 @@ export enum SettingsTabs {
   Memory = 'memory',
   Messenger = 'messenger',
   Notification = 'notification',
+  Pets = 'pets',
   // business
   Plans = 'plans',
   Profile = 'profile',

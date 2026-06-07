@@ -53,8 +53,6 @@ declare global {
       AUTH_GITHUB_ID?: string;
       AUTH_GITHUB_SECRET?: string;
       // ===== Auth Provider Credentials ===== //
-      AUTH_DISCORD_ID?: string;
-      AUTH_DISCORD_SECRET?: string;
       AUTH_GOOGLE_ID?: string;
 
       AUTH_GOOGLE_SECRET?: string;
@@ -100,10 +98,6 @@ declare global {
 
       AUTH_RAILWAY_ID?: string;
       AUTH_RAILWAY_SECRET?: string;
-      AUTH_VERCEL_ID?: string;
-      AUTH_VERCEL_SECRET?: string;
-      AUTH_MONDAY_ID?: string;
-      AUTH_MONDAY_SECRET?: string;
 
       AUTH_ZITADEL_ID?: string;
       AUTH_ZITADEL_ISSUER?: string;
@@ -144,9 +138,6 @@ export const getAuthConfig = () => {
     AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
     AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
 
-    AUTH_DISCORD_ID: process.env.AUTH_DISCORD_ID,
-    AUTH_DISCORD_SECRET: process.env.AUTH_DISCORD_SECRET,
-
     AUTH_GITHUB_ID: process.env.AUTH_GITHUB_ID,
     AUTH_GITHUB_SECRET: process.env.AUTH_GITHUB_SECRET,
 
@@ -173,12 +164,6 @@ export const getAuthConfig = () => {
 
     AUTH_RAILWAY_ID: process.env.AUTH_RAILWAY_ID,
     AUTH_RAILWAY_SECRET: process.env.AUTH_RAILWAY_SECRET,
-
-    AUTH_VERCEL_ID: process.env.AUTH_VERCEL_ID,
-    AUTH_VERCEL_SECRET: process.env.AUTH_VERCEL_SECRET,
-
-    AUTH_MONDAY_ID: process.env.AUTH_MONDAY_ID,
-    AUTH_MONDAY_SECRET: process.env.AUTH_MONDAY_SECRET,
 
     JWKS_KEY: process.env.JWKS_KEY,
     ENABLE_OIDC: !!process.env.JWKS_KEY,

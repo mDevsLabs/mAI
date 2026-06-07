@@ -1,10 +1,10 @@
-name: Desktop Manual Build
+name: 🚀 Desktop Manual Build
 
 on:
   workflow_dispatch:
     inputs:
       channel:
-        description: 'Release channel for desktop build (affects version suffix and workflow:set-desktop-version)'
+        description: '🎯 Release channel for desktop build'
         required: true
         default: canary
         type: choice
@@ -13,22 +13,22 @@ on:
           - beta
           - stable
       build_macos:
-        description: 'Build macOS artifacts'
+        description: '🍏 Build macOS artifacts'
         required: true
         default: true
         type: boolean
       build_windows:
-        description: 'Build Windows artifacts'
+        description: '🪟 Build Windows artifacts'
         required: true
         default: true
         type: boolean
       build_linux:
-        description: 'Build Linux artifacts'
+        description: '🐧 Build Linux artifacts'
         required: true
         default: true
         type: boolean
       version:
-        description: 'Override desktop version (e.g. 1.2.3). Leave empty to auto-generate.'
+        description: '🔢 Override desktop version (leave empty to auto-generate)'
         required: false
         default: ''
 
@@ -44,20 +44,20 @@ env:
 
 jobs:
   version:
-    name: Determine version
+    name: 🔢 Determine version
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.set_version.outputs.version }}
     steps:
       - uses: actions/checkout@v6
 
-      - name: Setup Node.js
+      - name: ⚙️ Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
           package-manager-cache: false
 
-      - name: Set version
+      - name: 🏷️ Set version
         id: set_version
         env:
           INPUT_VERSION: ${{ inputs.version }}
@@ -86,13 +86,13 @@ jobs:
 
           echo "version=${version}" >> $GITHUB_OUTPUT
 
-      - name: Version Summary
+      - name: 📊 Version Summary
         run: |
           echo "🚦 Release Version: ${{ steps.set_version.outputs.version }}"
 
   build-macos:
     needs: [version]
-    name: Build Desktop App (macOS)
+    name: 🍏 Build Desktop App (macOS)
     if: inputs.build_macos
     runs-on: ${{ matrix.os }}
     strategy:
@@ -101,15 +101,15 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Setup build environment
+      - name: ⚙️ Setup build environment
         uses: ./.github/actions/desktop-build-setup
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Set package version
+      - name: 🏷️ Set package version
         run: npm run workflow:set-desktop-version ${{ needs.version.outputs.version }} ${{ inputs.channel }}
 
-      - name: Build artifact on macOS
+      - name: 🍏 Build artifact on macOS
         run: npm run desktop:package:app
         env:
           UPDATE_CHANNEL: ${{ inputs.channel }}
@@ -125,7 +125,7 @@ jobs:
           APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
 
-      - name: Rename macOS latest-mac.yml for multi-architecture support
+      - name: 🔄 Rename macOS latest-mac.yml for multi-architecture support
         if: runner.os == 'macOS'
         run: |
           cd apps/desktop/release
@@ -145,7 +145,7 @@ jobs:
             ls -la latest*.yml || echo "No latest*.yml files found"
           fi
 
-      - name: Upload artifact
+      - name: 📤 Upload artifact
         uses: actions/upload-artifact@v6
         with:
           name: release-${{ matrix.os }}
@@ -163,21 +163,21 @@ jobs:
 
   build-windows:
     needs: [version]
-    name: Build Desktop App (Windows)
+    name: 🪟 Build Desktop App (Windows)
     if: inputs.build_windows
     runs-on: windows-2025
     steps:
       - uses: actions/checkout@v6
 
-      - name: Setup build environment
+      - name: ⚙️ Setup build environment
         uses: ./.github/actions/desktop-build-setup
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Set package version
+      - name: 🏷️ Set package version
         run: npm run workflow:set-desktop-version ${{ needs.version.outputs.version }} ${{ inputs.channel }}
 
-      - name: Build artifact on Windows
+      - name: 🪟 Build artifact on Windows
         run: npm run desktop:package:app
         env:
           UPDATE_CHANNEL: ${{ inputs.channel }}
@@ -189,7 +189,7 @@ jobs:
           TEMP: C:\temp
           TMP: C:\temp
 
-      - name: Upload artifact
+      - name: 📤 Upload artifact
         uses: actions/upload-artifact@v6
         with:
           name: release-windows-2025
@@ -207,21 +207,21 @@ jobs:
 
   build-linux:
     needs: [version]
-    name: Build Desktop App (Linux)
+    name: 🐧 Build Desktop App (Linux)
     if: inputs.build_linux
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
 
-      - name: Setup build environment
+      - name: ⚙️ Setup build environment
         uses: ./.github/actions/desktop-build-setup
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Set package version
+      - name: 🏷️ Set package version
         run: npm run workflow:set-desktop-version ${{ needs.version.outputs.version }} ${{ inputs.channel }}
 
-      - name: Build artifact on Linux
+      - name: 🐧 Build artifact on Linux
         run: npm run desktop:package:app
         env:
           UPDATE_CHANNEL: ${{ inputs.channel }}
@@ -231,7 +231,7 @@ jobs:
           NEXT_PUBLIC_DESKTOP_PROJECT_ID: ${{ inputs.channel == 'stable' && secrets.UMAMI_STABLE_DESKTOP_PROJECT_ID || secrets.UMAMI_BETA_DESKTOP_PROJECT_ID }}
           NEXT_PUBLIC_DESKTOP_UMAMI_BASE_URL: ${{ inputs.channel == 'stable' && secrets.UMAMI_STABLE_DESKTOP_BASE_URL || secrets.UMAMI_BETA_DESKTOP_BASE_URL }}
 
-      - name: Upload artifact
+      - name: 📤 Upload artifact
         uses: actions/upload-artifact@v6
         with:
           name: release-ubuntu-latest
@@ -249,31 +249,31 @@ jobs:
 
   merge-mac-files:
     needs: [build-macos, version]
-    name: Merge macOS Release Files
+    name: 🔗 Merge macOS Release Files
     runs-on: ubuntu-latest
     permissions:
       contents: read
     if: inputs.build_macos
     steps:
-      - name: Checkout repository
+      - name: 📥 Checkout repository
         uses: actions/checkout@v6
 
-      - name: Setup environment
+      - name: ⚙️ Setup environment
         uses: ./.github/actions/setup-env
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Download artifacts
+      - name: ⬇️ Download artifacts
         uses: actions/download-artifact@v7
         with:
           path: release
           pattern: release-*
           merge-multiple: true
 
-      - name: List downloaded artifacts
+      - name: 🗂️ List downloaded artifacts
         run: ls -R release
 
-      - name: Install yaml only for merge step
+      - name: 📦 Install yaml only for merge step
         run: |
           cd scripts/electronWorkflow
           if [ ! -f package.json ]; then
@@ -281,10 +281,10 @@ jobs:
           fi
           bun add --no-save yaml@2.8.1
 
-      - name: Merge latest-mac.yml files
+      - name: 🤝 Merge latest-mac.yml files
         run: bun run scripts/electronWorkflow/mergeMacReleaseFiles.js
 
-      - name: Upload artifacts with merged macOS files
+      - name: 📤 Upload artifacts with merged macOS files
         uses: actions/upload-artifact@v6
         with:
           name: merged-release-manual

@@ -1,20 +1,4 @@
-name: Release Desktop Canary
-
-# ============================================
-# Canary 自动发版工作流
-# ============================================
-# 触发条件:
-#   1. canary 分支有 push (合入 PR) 且 commit 前缀为 style/feat/fix/refactor/release (支持 gitmoji)
-#   2. 手动触发 (workflow_dispatch)
-#
-# 并发策略:
-#   同一 workflow 仅保留最新一次运行，自动取消排队中的旧 build
-#
-# 版本策略:
-#   基于最新 stable tag 的 patch+1, postfix 为递增序号
-#   格式: X.Y.(Z+1)-canary.N
-#   例: 当前 tag v2.1.28 → v2.1.29-canary.1, 下次 → v2.1.29-canary.2
-# ============================================
+name: 🐤 Release Desktop Canary
 
 on:
   push:
@@ -23,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       force:
-        description: 'Force build (skip commit message check)'
+        description: '💪 Force build (skip commit message check)'
         required: false
         type: boolean
         default: false
@@ -38,11 +22,8 @@ env:
   NODE_VERSION: '24.11.1'
 
 jobs:
-  # ============================================
-  # 检查 commit 前缀并计算版本号
-  # ============================================
   calculate-version:
-    name: Calculate Canary Version
+    name: 🔢 Calculate Canary Version
     runs-on: ubuntu-latest
     outputs:
       release_notes: ${{ steps.release-notes.outputs.release_notes }}
@@ -54,35 +35,31 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Check commit message prefix
+      - name: 🔍 Check commit message prefix
         id: check
         run: |
-          # 手动触发 + force 时跳过检查
           if [ "${{ inputs.force }}" == "true" ]; then
             echo "should_build=true" >> $GITHUB_OUTPUT
             echo "🔧 Force build requested, skipping commit check"
             exit 0
           fi
 
-          # 手动触发 (无 force) 也直接构建
           if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
             echo "should_build=true" >> $GITHUB_OUTPUT
             echo "🔧 Manual trigger, proceeding with build"
             exit 0
           fi
 
-          # 获取本次 push 的 head commit message
           commit_msg=$(git log -1 --pretty=%s HEAD)
           echo "📝 Head commit: $commit_msg"
 
           echo "should_build=true" >> $GITHUB_OUTPUT
           echo "✅ Canary build trigger: $commit_msg"
 
-      - name: Calculate canary version
+      - name: 🧮 Calculate canary version
         if: steps.check.outputs.should_build == 'true'
         id: version
         run: |
-          # 获取最新的 stable tag (排除 nightly/canary/beta 等)
           latest_tag=$(git tag --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -n 1)
 
           if [ -z "$latest_tag" ]; then
@@ -93,13 +70,11 @@ jobs:
 
           echo "📌 Latest stable tag: $latest_tag"
 
-          # 去掉 v 前缀，解析 major.minor.patch → a.b.c 取 c+1
           base_version="${latest_tag#v}"
           IFS='.' read -r major minor patch <<< "$base_version"
           new_patch=$((patch + 1))
           base_canary="${major}.${minor}.${new_patch}"
 
-          # postfix: 同 base 下已有 canary 标签的最大序号 + 1
           max_seq=0
           for t in $(git tag -l "v${base_canary}-canary.*" 2>/dev/null || true); do
             seq=$(echo "$t" | grep -oE '[0-9]+$' || true)
@@ -117,7 +92,7 @@ jobs:
           echo "✅ Canary version: ${version}"
           echo "🏷️ Tag: ${tag}"
 
-      - name: Generate canary release notes
+      - name: 📝 Generate canary release notes
         if: steps.check.outputs.should_build == 'true'
         id: release-notes
         env:
@@ -177,33 +152,27 @@ jobs:
             echo "EOF"
           } >> $GITHUB_OUTPUT
 
-  # ============================================
-  # 代码质量检查
-  # ============================================
   test:
-    name: Code quality check
+    name: 🧪 Code quality check
     needs: [calculate-version]
     if: needs.calculate-version.outputs.should_build == 'true'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout base
+      - name: 📥 Checkout base
         uses: actions/checkout@v6
 
-      - name: Setup environment
+      - name: ⚙️ Setup environment
         uses: ./.github/actions/setup-env
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Install deps
+      - name: 📦 Install deps
         run: pnpm install
 
-  # ============================================
-  # 多平台构建
-  # ============================================
   build:
     needs: [calculate-version, test]
     if: needs.calculate-version.outputs.should_build == 'true'
-    name: Build Desktop App
+    name: 📦 Build Desktop App (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -212,24 +181,22 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Setup build environment
+      - name: ⚙️ Setup build environment
         uses: ./.github/actions/desktop-build-setup
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Set package version
+      - name: 🏷️ Set package version
         run: npm run workflow:set-desktop-version ${{ needs.calculate-version.outputs.version }} canary
 
-      # macOS 构建前清理 (修复 hdiutil 问题)
-      - name: Clean previous build artifacts (macOS)
+      - name: 🧹 Clean previous build artifacts (macOS)
         if: runner.os == 'macOS'
         run: |
           sudo rm -rf apps/desktop/release || true
           sudo rm -rf apps/desktop/dist || true
           sudo rm -rf /tmp/electron-builder* || true
 
-      # macOS 构建
-      - name: Build artifact on macOS
+      - name: 🍏 Build artifact on macOS
         if: runner.os == 'macOS'
         run: npm run desktop:package:app
         env:
@@ -248,8 +215,7 @@ jobs:
           NEXT_PUBLIC_DESKTOP_PROJECT_ID: ${{ secrets.UMAMI_BETA_DESKTOP_PROJECT_ID }}
           NEXT_PUBLIC_DESKTOP_UMAMI_BASE_URL: ${{ secrets.UMAMI_BETA_DESKTOP_BASE_URL }}
 
-      # Windows 构建
-      - name: Build artifact on Windows
+      - name: 🪟 Build artifact on Windows
         if: runner.os == 'Windows'
         run: npm run desktop:package:app
         env:
@@ -264,8 +230,7 @@ jobs:
           TEMP: C:\temp
           TMP: C:\temp
 
-      # Linux 构建
-      - name: Build artifact on Linux
+      - name: 🐧 Build artifact on Linux
         if: runner.os == 'Linux'
         run: npm run desktop:package:app
         env:
@@ -278,41 +243,38 @@ jobs:
           NEXT_PUBLIC_DESKTOP_PROJECT_ID: ${{ secrets.UMAMI_BETA_DESKTOP_PROJECT_ID }}
           NEXT_PUBLIC_DESKTOP_UMAMI_BASE_URL: ${{ secrets.UMAMI_BETA_DESKTOP_BASE_URL }}
 
-      - name: Upload artifacts
+      - name: 📤 Upload artifacts
         uses: ./.github/actions/desktop-upload-artifacts
         with:
           artifact-name: release-${{ matrix.os }}
           retention-days: 3
 
-  # ============================================
-  # 合并 macOS 多架构 latest-mac.yml 文件
-  # ============================================
   merge-mac-files:
     needs: [build]
-    name: Merge macOS Release Files
+    name: 🔗 Merge macOS Release Files
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - name: Checkout repository
+      - name: 📥 Checkout repository
         uses: actions/checkout@v6
 
-      - name: Setup environment
+      - name: ⚙️ Setup environment
         uses: ./.github/actions/setup-env
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Download artifacts
+      - name: ⬇️ Download artifacts
         uses: actions/download-artifact@v7
         with:
           path: release
           pattern: release-*
           merge-multiple: true
 
-      - name: List downloaded artifacts
+      - name: 🗂️ List downloaded artifacts
         run: ls -R release
 
-      - name: Install yaml only for merge step
+      - name: 📦 Install yaml only for merge step
         run: |
           cd scripts/electronWorkflow
           if [ ! -f package.json ]; then
@@ -320,36 +282,33 @@ jobs:
           fi
           bun add --no-save yaml@2.8.1
 
-      - name: Merge latest-mac.yml files
+      - name: 🤝 Merge latest-mac.yml files
         run: bun run scripts/electronWorkflow/mergeMacReleaseFiles.js
 
-      - name: Upload artifacts with merged macOS files
+      - name: 📤 Upload artifacts with merged macOS files
         uses: actions/upload-artifact@v6
         with:
           name: merged-release
           path: release/
           retention-days: 1
 
-  # ============================================
-  # 创建 Canary Release
-  # ============================================
   publish-release:
     needs: [merge-mac-files, calculate-version]
-    name: Publish Canary Release
+    name: 🚀 Publish Canary Release
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - name: Download merged artifacts
+      - name: ⬇️ Download merged artifacts
         uses: actions/download-artifact@v7
         with:
           name: merged-release
           path: release
 
-      - name: List final artifacts
+      - name: 🗂️ List final artifacts
         run: ls -R release
 
-      - name: Create Canary Release
+      - name: 🚀 Create Canary Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ needs.calculate-version.outputs.tag }}
@@ -367,14 +326,11 @@ jobs:
             release/*.rpm*
             release/*.tar.gz*
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  # ============================================
-  # 发布到 S3 更新服务器
-  # ============================================
   publish-s3:
     needs: [merge-mac-files, calculate-version]
-    name: Publish to S3
+    name: 🪣 Publish to S3
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -388,19 +344,16 @@ jobs:
           s3-region: ${{ secrets.UPDATE_S3_REGION }}
           s3-endpoint: ${{ secrets.UPDATE_S3_ENDPOINT }}
 
-  # ============================================
-  # 清理旧的 Canary Releases (保留最近 7 个)
-  # ============================================
   cleanup-old-canaries:
     needs: [publish-release, publish-s3]
-    name: Cleanup Old Canary Releases
+    name: 🗑️ Cleanup Old Canary Releases
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v6
 
-      - name: Delete old canary GitHub releases
+      - name: 🗑️ Delete old canary GitHub releases
         uses: actions/github-script@v7
         with:
           script: |
@@ -419,14 +372,12 @@ jobs:
             for (const release of toDelete) {
               console.log(`🗑️ Deleting old canary release: ${release.tag_name}`);
 
-              // Delete the release
               await github.rest.repos.deleteRelease({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 release_id: release.id,
               });
 
-              // Delete the tag
               try {
                 await github.rest.git.deleteRef({
                   owner: context.repo.owner,
@@ -440,7 +391,7 @@ jobs:
 
             console.log(`✅ Cleanup complete. Kept ${Math.min(canaryReleases.length, 7)} canary releases, deleted ${toDelete.length}.`);
 
-      - name: Cleanup old S3 versions
+      - name: 🧹 Cleanup old S3 versions
         uses: ./.github/actions/desktop-cleanup-s3
         with:
           channel: canary

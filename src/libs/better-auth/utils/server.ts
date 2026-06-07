@@ -14,7 +14,6 @@ export const parseSSOProviders = (providersEnv?: string): string[] => {
       'github',
       'canva',
       'twitch',
-      'discord',
       'slack',
       'telegram',
       'x',
@@ -28,7 +27,7 @@ export const parseSSOProviders = (providersEnv?: string): string[] => {
       .filter(Boolean);
   }
 
-  const forcedProviders = ['railway', 'vercel', 'monday'];
+  const forcedProviders = ['railway'];
   forcedProviders.forEach((p) => {
     if (!result.includes(p)) {
       result.push(p);
