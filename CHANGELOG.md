@@ -14,9 +14,13 @@ Détails de la sous-release : Nouvelles interactions de Pets (nouveaux pets, son
 - **stats**: Effets visuels ajoutés pour récompenser une connexion consécutive supérieure à 30 jours, incluant un nouvel effet de toast animé (flamme) lors de l'accès au site.
 - **notifications**: Ajout d'un système de notifications globales sur la page d'accueil avec historique défilant (100 maximum), menu contextuel par notification (lu, supprimer, etc.), épinglage (limité à 5) et distinction par code couleur (info, succès, erreur).
 - **notifications**: Implémentation d'un système de tri des notifications via des onglets rapides (Toutes / Succès / Erreurs / Épinglées) pour retrouver facilement vos alertes ciblées.
+- **notifications**: Amélioration visuelle du menu des notifications (réduction de l'espace supérieur et alignement horizontal optimisé des boutons d'actions globales).
 - **notifications**: Implémentation des notifications **Web Push** ! Une option a été ajoutée dans les paramètres pour vous demander la permission. Une fois acceptée, vous recevrez vos alertes même avec l'onglet fermé.
 - **notifications**: Vos notifications deviennent interactives ! Celles qui sont liées à une action spécifique redirigeront désormais automatiquement vers la page ou conversation concernée au simple clic.
+- **settings**: L'onglet Notifications de la barre latérale a été déplacé dans la section "Général" de base pour être accessible par tous à tout moment.
 - **settings**: Création d'une interface de paramètres dédiée aux notifications permettant d'activer les recommandations/nouveautés, le Web Push, et de personnaliser finement les effets sonores et le volume par type de notification.
+- **settings**: Ajout d'un bouton magique "Notification de Test" dans les paramètres pour simuler instantanément une alerte et vérifier votre configuration sonore et visuelle !
+- **settings**: Personnalisation extrême ! Vous pouvez désormais choisir la **couleur exacte** de la pastille pour chaque type de notification (Information, Succès, Erreur) via de nouveaux sélecteurs de couleurs.
 - **agent**: Retrait des suggestions "WhatsApp" et "iMessage" de la liste des canaux de messagerie.
 - **stats**: Ajout d'une pluie de confettis immersifs plein écran pour célébrer des paliers importants de séries de connexions. Les confettis ont désormais des **thèmes spéciaux** : dorés pour 50 jours, arc-en-ciel géant pour 100 jours !
 

@@ -15,6 +15,11 @@ export interface NotificationItem {
 }
 
 export interface NotificationSettings {
+  colors: {
+    info: string;
+    success: string;
+    error: string;
+  };
   news: boolean;
   recommendations: boolean;
   sounds: {
@@ -51,6 +56,11 @@ export const useNotificationStore = create<NotificationState>()(
           info: true,
           success: true,
           error: true,
+        },
+        colors: {
+          info: '#1677ff',
+          success: '#52c41a',
+          error: '#ff4d4f',
         },
         volume: 50,
       },

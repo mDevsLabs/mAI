@@ -21,13 +21,7 @@ import { useNotificationStore } from '@/store/notification';
 
 const { Paragraph } = Typography;
 
-const typeColors = {
-  error: 'red',
-  info: 'blue',
-  success: 'green',
-};
-
-const NotificationListItem = ({ item }: { item: NotificationItem }) => {
+const NotificationListItem = ({ item, colors }: { item: NotificationItem; colors: any }) => {
   const { markAsRead, markAsUnread, deleteNotification, togglePin, notifications } =
     useNotificationStore();
   const { message } = App.useApp();
@@ -99,7 +93,7 @@ const NotificationListItem = ({ item }: { item: NotificationItem }) => {
         borderBottom: '1px solid var(--color-border-secondary)',
       }}
     >
-      <Badge color={typeColors[item.type]} style={{ marginRight: 8 }} />
+      <Badge color={colors[item.type] || 'blue'} style={{ marginRight: 8 }} />
       <div
         style={{ flex: 1, minWidth: 0, cursor: item.actionPath ? 'pointer' : 'default' }}
         onClick={() => {
@@ -139,7 +133,7 @@ export const NotificationsMenu = () => {
   const [open, setOpen] = useState(false);
   const [filter, setFilter] = useState<'all' | 'success' | 'error' | 'pinned'>('all');
   const navigate = useNavigate();
-  const { notifications, clearAll } = useNotificationStore();
+  const { notifications, clearAll, settings } = useNotificationStore();
   const { t } = useTranslation('common');
 
   const unreadCount = notifications.filter((n) => !n.read).length;
@@ -152,7 +146,7 @@ export const NotificationsMenu = () => {
   });
 
   const content = (
-    <div style={{ width: 320 }}>
+    <div style={{ width: 320, marginTop: -4 }}>
       <div
         style={{
           display: 'flex',
@@ -162,9 +156,9 @@ export const NotificationsMenu = () => {
         }}
       >
         <h3 style={{ margin: 0 }}>{t('notification.title')}</h3>
-        <div>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           <Popconfirm title={t('notification.deleteAllConfirm')} onConfirm={clearAll}>
-            <Button danger size="small" type="text">
+            <Button danger size="small" style={{ padding: '0 4px' }} type="text">
               {t('notification.deleteAll')}
             </Button>
           </Popconfirm>
@@ -203,7 +197,7 @@ export const NotificationsMenu = () => {
               if (a.pinned === b.pinned) return b.timestamp - a.timestamp;
               return a.pinned ? -1 : 1;
             })
-            .map((n) => <NotificationListItem item={n} key={n.id} />)
+            .map((n) => <NotificationListItem colors={settings.colors} item={n} key={n.id} />)
         )}
       </div>
     </div>

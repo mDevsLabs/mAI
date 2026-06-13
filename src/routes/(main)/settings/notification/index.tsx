@@ -1,8 +1,8 @@
 'use client';
 
 import { Form, SliderWithInput } from '@lobehub/ui';
-import { App, Switch } from 'antd';
-import { AlertCircle, Bell, CheckCircle, Globe, Info, Volume2 } from 'lucide-react';
+import { App, Button, ColorPicker, Switch } from 'antd';
+import { AlertCircle, Bell, CheckCircle, Globe, Info, Palette, Send, Volume2 } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -11,7 +11,7 @@ import SettingHeader from '@/routes/(main)/settings/features/SettingHeader';
 import { useNotificationStore } from '@/store/notification';
 
 const NotificationSettingsPage = memo(() => {
-  const { settings, updateSettings, updateSounds } = useNotificationStore();
+  const { settings, updateSettings, updateSounds, addNotification } = useNotificationStore();
   const { message } = App.useApp();
   const { t } = useTranslation('setting');
 
@@ -52,6 +52,37 @@ const NotificationSettingsPage = memo(() => {
     if (changedValues.soundSuccess !== undefined)
       updateSounds({ success: changedValues.soundSuccess });
     if (changedValues.soundError !== undefined) updateSounds({ error: changedValues.soundError });
+
+    if (changedValues.colorInfo !== undefined)
+      updateSettings({
+        colors: {
+          ...settings.colors,
+          info:
+            typeof changedValues.colorInfo === 'string'
+              ? changedValues.colorInfo
+              : changedValues.colorInfo.toHexString(),
+        },
+      });
+    if (changedValues.colorSuccess !== undefined)
+      updateSettings({
+        colors: {
+          ...settings.colors,
+          success:
+            typeof changedValues.colorSuccess === 'string'
+              ? changedValues.colorSuccess
+              : changedValues.colorSuccess.toHexString(),
+        },
+      });
+    if (changedValues.colorError !== undefined)
+      updateSettings({
+        colors: {
+          ...settings.colors,
+          error:
+            typeof changedValues.colorError === 'string'
+              ? changedValues.colorError
+              : changedValues.colorError.toHexString(),
+        },
+      });
   };
 
   return (
@@ -69,10 +100,31 @@ const NotificationSettingsPage = memo(() => {
           soundInfo: settings.sounds.info,
           soundSuccess: settings.sounds.success,
           soundError: settings.sounds.error,
+          colorInfo: settings.colors.info,
+          colorSuccess: settings.colors.success,
+          colorError: settings.colors.error,
         }}
         items={[
           {
             children: [
+              {
+                children: (
+                  <Button
+                    icon={<Send size={16} />}
+                    onClick={() => {
+                      addNotification({
+                        type: 'info',
+                        title: 'Test',
+                        content: 'Ceci est une notification de test réussie !',
+                      });
+                    }}
+                  >
+                    Envoyer
+                  </Button>
+                ),
+                desc: 'Vérifier le comportement visuel et sonore (ainsi que Web Push si activé)',
+                label: 'Notification de Test',
+              },
               {
                 children: <Switch onChange={requestNotificationPermission} />,
                 desc: t('settingNotification.general.webPush.desc'),
@@ -134,6 +186,30 @@ const NotificationSettingsPage = memo(() => {
             ],
             title: t('settingNotification.sounds.title'),
             icon: Volume2,
+          },
+          {
+            title: 'Apparence',
+            icon: Palette,
+            children: [
+              {
+                children: <ColorPicker showText />,
+                desc: 'Couleur de la pastille pour les informations',
+                label: 'Couleur Information',
+                name: 'colorInfo',
+              },
+              {
+                children: <ColorPicker showText />,
+                desc: 'Couleur de la pastille pour les succès',
+                label: 'Couleur Succès',
+                name: 'colorSuccess',
+              },
+              {
+                children: <ColorPicker showText />,
+                desc: 'Couleur de la pastille pour les erreurs',
+                label: 'Couleur Erreur',
+                name: 'colorError',
+              },
+            ],
           },
         ]}
         onValuesChange={handleValuesChange}
