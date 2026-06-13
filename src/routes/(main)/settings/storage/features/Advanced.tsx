@@ -108,6 +108,14 @@ const AdvancedActions = () => {
     children: [
       {
         children: (
+          <div style={{ color: 'var(--color-text-description)' }}>
+            Vos données sont stockées et sécurisées en France.
+          </div>
+        ),
+        minWidth: undefined,
+      },
+      {
+        children: (
           <DataImporter>
             <Button icon={<Icon icon={HardDriveDownload} />}>
               {t('storage.actions.import.button')}
@@ -118,7 +126,7 @@ const AdvancedActions = () => {
         layout: 'horizontal',
         minWidth: undefined,
       },
-      ...(enableBusinessFeatures ? [renderExportButtonFormItem()] : []),
+      renderExportButtonFormItem(),
       {
         children: (
           <Button danger type={'primary'} onClick={handleClear}>

@@ -50,21 +50,4 @@ export interface ChannelPlatformDefinition extends SerializedPlatformDefinition 
  * Virtual platforms shown in the sidebar with a "Coming Soon" badge.
  * Not registered on the server — handled entirely on the client.
  */
-export const COMING_SOON_PLATFORMS: ChannelPlatformDefinition[] = [
-  {
-    comingSoon: true,
-    connectionMode: 'webhook',
-    id: 'whatsapp',
-    name: 'WhatsApp',
-    schema: [],
-  },
-  // iMessage is registered server-side but lab-gated: shown as a placeholder
-  // unless the `imessage` feature flag is on (see channel/index.tsx).
-  {
-    comingSoon: true,
-    connectionMode: 'webhook',
-    id: 'imessage',
-    name: 'iMessage',
-    schema: [],
-  },
-];
+export const COMING_SOON_PLATFORMS: ChannelPlatformDefinition[] = [];

@@ -76,14 +76,31 @@ const HeatmapStats = memo(() => {
   const days = (n: number) => [n, t('stats.days')].join(' ');
 
   const items = [
-    { label: t('stats.heatmapStats.peakTokens'), value: formatShortenNumber(stats.peak) },
+    {
+      label: t('stats.heatmapStats.peakTokens'),
+      value: formatShortenNumber(stats.peak),
+      isStreak: false,
+      rawValue: stats.peak,
+    },
     {
       label: t('stats.heatmapStats.longestTask'),
       loading: maxTaskDuration === undefined,
       value: formatDuration(maxTaskDuration),
+      isStreak: false,
+      rawValue: maxTaskDuration ?? 0,
     },
-    { label: t('stats.heatmapStats.currentStreak'), value: days(stats.current) },
-    { label: t('stats.heatmapStats.longestStreak'), value: days(stats.longest) },
+    {
+      label: t('stats.heatmapStats.currentStreak'),
+      value: days(stats.current),
+      isStreak: true,
+      rawValue: stats.current,
+    },
+    {
+      label: t('stats.heatmapStats.longestStreak'),
+      value: days(stats.longest),
+      isStreak: true,
+      rawValue: stats.longest,
+    },
   ];
 
   return (
@@ -93,11 +110,21 @@ const HeatmapStats = memo(() => {
           <Fragment key={item.label}>
             {index > 0 && <Divider style={{ height: 32, margin: 0 }} type={'vertical'} />}
             <Flexbox align={'center'} flex={1} gap={4}>
-              <div style={{ fontSize: 20, fontWeight: 'bold' }}>
+              <div
+                style={{
+                  fontSize: 20,
+                  fontWeight: 'bold',
+                  color: item.isStreak && item.rawValue >= 30 ? 'var(--color-error)' : 'inherit',
+                  textShadow:
+                    item.isStreak && item.rawValue >= 30 ? '0 0 8px rgba(255, 69, 0, 0.5)' : 'none',
+                }}
+              >
                 {loading || item.loading ? (
                   <Skeleton.Button active size={'small'} style={{ width: 56 }} />
                 ) : (
-                  item.value
+                  <>
+                    {item.value} {item.isStreak && item.rawValue >= 30 && '🔥'}
+                  </>
                 )}
               </div>
               <div style={{ color: cssVar.colorTextDescription, fontSize: 12 }}>{item.label}</div>
