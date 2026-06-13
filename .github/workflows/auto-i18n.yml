@@ -1,0 +1,82 @@
+name: 🌍 Traduction automatique
+
+on:
+schedule:
+- cron: '0 0 */3 * *'
+workflow_dispatch: {}
+
+permissions:
+contents: write
+pull-requests: write
+
+jobs:
+update-i18n:
+runs-on: ubuntu-latest
+timeout-minutes: 30
+
+steps:
+  - name: ⚙️ Configuration de Git
+    run: |
+      git config --global user.name "mDevsLabs"
+      git config --global user.email "tusseaumathias@gmail.com"
+
+  - name: 📥 Récupération du code
+    uses: actions/checkout@v4
+    with:
+      ref: ${{ github.event.pull_request.head.ref }}
+
+  - name: 📦 Configuration de pnpm
+    uses: pnpm/action-setup@v4
+    with:
+      version: 9
+
+  - name: 🍞 Configuration de Bun
+    uses: oven-sh/setup-bun@v2
+
+  - name: ⏳ Installation des dépendances
+    run: pnpm install
+
+  - name: 🌐 Traduction avec Mistral
+    run: bun run i18n
+    env:
+      OPENAI_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+      OPENAI_PROXY_URL: 'https://api.mistral.ai/v1'
+      OPENAI_MODEL_NAME: 'mistral-small-latest'
+
+  - name: 🔀 Création de la Pull Request
+    id: cpr
+    uses: peter-evans/create-pull-request@v7
+    with:
+      token: ${{ secrets.GH_TOKEN }}
+      add-paths: |
+        locales/**/*.json
+      labels: |
+        i18n
+        automatique
+        style
+      branch: style/auto-i18n
+      delete-branch: true
+      title: '🤖 style: mise à jour i18n'
+      commit-message: '💄 style: mise à jour i18n'
+      body: |
+        🎉 **Nouvelles traductions disponibles !**
+
+        Cette Pull Request a été générée automatiquement par notre bot propulsé par Mistral AI. L'internationalisation du projet a été mise à jour.
+
+        ### ✅ Actions recommandées
+        - [ ] Relire les clés JSON pour vérifier la pertinence du contexte.
+        - [ ] S'assurer qu'aucune variable d'interpolation n'a été cassée.
+        - [ ] Approuver et fusionner si tout est au vert ! 🚀
+
+        ### 🤖 Détails techniques
+        - **Déclencheur :** `${{ github.workflow }}`
+        - **Identifiant du run :** `${{ github.run_id }}`
+        - **Commit source :** `${{ github.sha }}`
+
+        <details>
+        <summary>📄 Voir les logs de traduction</summary>
+
+        ```bash
+        $(cat i18n_update.log)
+        ```
+        </details>

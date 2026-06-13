@@ -1,7 +1,7 @@
 'use client';
 
-import { ActionIcon, DropdownMenu, Icon } from '@lobehub/ui';
-import { App, Badge, Button, Popconfirm, Popover, Segmented, Tooltip, Typography } from 'antd';
+import { ActionIcon, Icon } from '@lobehub/ui';
+import { App, Badge, Button, Dropdown, Popconfirm, Popover, Segmented, Tooltip, Typography } from 'antd';
 import {
   BellIcon,
   CheckIcon,
@@ -134,11 +134,9 @@ const NotificationListItem = ({ item, colors }: { item: NotificationItem; colors
           {item.content}
         </Paragraph>
       </div>
-      <div style={{ position: 'relative', zIndex: 1000 }}>
-        <DropdownMenu items={menuItems}>
-          <ActionIcon icon={MoreVerticalIcon} size="small" />
-        </DropdownMenu>
-      </div>
+      <Dropdown menu={{ items: menuItems }} placement="bottomRight" trigger={['click']}>
+        <ActionIcon icon={MoreVerticalIcon} size="small" />
+      </Dropdown>
     </div>
   );
 };
