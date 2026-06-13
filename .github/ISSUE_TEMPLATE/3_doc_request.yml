@@ -46,7 +46,7 @@ body:
 
         Voici ce que la documentation devrait expliquer...
 
-        ```exemple de code si nécessaire```
+        `xemple de code si nécessaire`
     validations:
       required: false
 
@@ -83,6 +83,7 @@ body:
         - 'Oui, je suis prêt(e) à soumettre une PR avec les modifications'
         - 'Oui, je peux aider à relire et valider les modifications'
         - 'Non, mais je reste disponible pour répondre aux questions'
+        - 'Je ne sais pas encore'
     validations:
       required: false
 
@@ -103,7 +104,7 @@ body:
           required: true
         - label: "J'ai consulté la [documentation existante](https://lobehub.com/zh/docs) avant de soumettre cette demande."
           required: true
-        - label: "Cette demande concerne directement la documentation de mAI."
+        - label: 'Cette demande concerne directement la documentation de mAI.'
           required: true
         - label: "Pour toute question générale, j'utiliserai les [GitHub Discussions](https://github.com/mDevsLabs/mAI/discussions) ou le [Serveur Discord](https://discord.gg/fV7zwdGPpY)."
           required: true

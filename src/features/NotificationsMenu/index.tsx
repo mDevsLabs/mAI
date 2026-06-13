@@ -16,6 +16,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
+import { useChatStore } from '@/store/chat';
 import type { NotificationItem } from '@/store/notification';
 import { useNotificationStore } from '@/store/notification';
 
@@ -24,8 +25,10 @@ const { Paragraph } = Typography;
 const NotificationListItem = ({ item, colors }: { item: NotificationItem; colors: any }) => {
   const { markAsRead, markAsUnread, deleteNotification, togglePin, notifications } =
     useNotificationStore();
+  const mainInputEditor = useChatStore((s) => s.mainInputEditor);
   const { message } = App.useApp();
   const { t } = useTranslation('common');
+  const navigate = useNavigate();
 
   const handleTogglePin = () => {
     const res = togglePin(item.id);
@@ -72,7 +75,16 @@ const NotificationListItem = ({ item, colors }: { item: NotificationItem; colors
       key: 'send',
       label: t('notification.actions.sendToIA'),
       icon: <Icon icon={SendIcon} />,
-      onClick: () => message.info(t('notification.actions.soon')),
+      onClick: () => {
+        if (mainInputEditor?.instance) {
+          mainInputEditor.instance.setDocument('markdown', item.content);
+          mainInputEditor.focus();
+          message.success('Copié dans la zone de chat !');
+          navigate('/chat');
+        } else {
+          message.error('Zone de chat introuvable');
+        }
+      },
     },
     { type: 'divider' },
     {
@@ -122,9 +134,11 @@ const NotificationListItem = ({ item, colors }: { item: NotificationItem; colors
           {item.content}
         </Paragraph>
       </div>
-      <DropdownMenu items={menuItems}>
-        <ActionIcon icon={MoreVerticalIcon} size="small" />
-      </DropdownMenu>
+      <div style={{ position: 'relative', zIndex: 1000 }}>
+        <DropdownMenu items={menuItems}>
+          <ActionIcon icon={MoreVerticalIcon} size="small" />
+        </DropdownMenu>
+      </div>
     </div>
   );
 };
