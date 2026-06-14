@@ -47,7 +47,7 @@ const Pet = memo(
     const startY = window.innerHeight - (size + 70);
 
     const handleInteraction = () => {
-      if (config?.petsSound && (config?.petsLevel || 1) >= 100) {
+      if (config?.petsSound && (config?.petsLevel || 1) >= 90) {
         try {
           const audio = new Audio(`/pets/${petId}/${petId}.mp3`);
           audio.volume = config?.petsVolume ?? 1;

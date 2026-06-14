@@ -155,13 +155,13 @@ const Page = memo(() => {
   };
 
   const petsSoundItem = {
-    children: <Switch disabled={!enablePets || petsLevel < 100} />,
+    children: <Switch disabled={!enablePets || petsLevel < 90} defaultChecked={false} />,
     desc:
-      petsLevel >= 100 ? (
+      petsLevel >= 90 ? (
         'Activer les sons ludiques des pets.'
       ) : (
         <>
-          <Icon icon={Lock} /> Débloqué au niveau 100
+          <Icon icon={Lock} /> Débloqué au niveau 90
         </>
       ),
     label: 'Son du pet',
@@ -171,11 +171,23 @@ const Page = memo(() => {
     divider: false,
   };
 
+  const soundEnabled = enablePets && petsLevel >= 90 && !!general?.petsSound;
+
   const petsVolumeItem = {
     children: (
-      <Flexbox horizontal align={'center'} gap={12} width={'100%'}>
+      <Flexbox
+        horizontal
+        align={'center'}
+        gap={12}
+        width={'100%'}
+        style={{
+          opacity: soundEnabled ? 1 : 0.45,
+          pointerEvents: soundEnabled ? 'auto' : 'none',
+          transition: 'opacity 0.2s ease',
+        }}
+      >
         <SliderWithInput
-          disabled={!enablePets || petsLevel < 100 || !general?.petsSound}
+          disabled={!soundEnabled}
           marks={{ 0: <span style={{ whiteSpace: 'nowrap' }}>Min</span>, 1: <span style={{ whiteSpace: 'nowrap' }}>Max</span> }}
           max={1}
           min={0}
@@ -184,14 +196,7 @@ const Page = memo(() => {
         />
       </Flexbox>
     ),
-    desc:
-      petsLevel >= 100 ? (
-        'Réglez le volume des pets'
-      ) : (
-        <>
-          <Icon icon={Lock} /> Débloqué au niveau 100
-        </>
-      ),
+    desc: soundEnabled ? 'Réglez le volume des pets' : 'Activez Son du pet pour régler le volume',
     label: 'Volume du son',
     minWidth: undefined,
     name: 'petsVolume',
@@ -278,13 +283,13 @@ const Page = memo(() => {
   };
 
   const petsAuraItem = {
-    children: <Switch disabled={!enablePets || petsLevel < 90} />,
+    children: <Switch disabled={!enablePets || petsLevel < 80} />,
     desc:
-      petsLevel >= 90 ? (
+      petsLevel >= 80 ? (
         "Activer l'aura magique autour du pet."
       ) : (
         <>
-          <Icon icon={Lock} /> Débloqué au niveau 90
+          <Icon icon={Lock} /> Débloqué au niveau 80
         </>
       ),
     label: 'Aura',
