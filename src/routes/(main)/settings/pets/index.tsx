@@ -134,11 +134,11 @@ const Page = memo(() => {
     children: (
       <SliderWithInput
         disabled={!enablePets || petsLevel < 10}
-        marks={{ 0.5: 'Min', 3: 'Max' }}
+        marks={{ 0.5: <span style={{ whiteSpace: 'nowrap' }}>Min</span>, 3: <span style={{ whiteSpace: 'nowrap' }}>Max</span> }}
         max={3}
         min={0.5}
         step={0.1}
-        style={{ width: 240 }}
+        style={{ width: 350 }}
       />
     ),
     desc:
@@ -176,11 +176,11 @@ const Page = memo(() => {
       <Flexbox horizontal align={'center'} gap={12} width={'100%'}>
         <SliderWithInput
           disabled={!enablePets || petsLevel < 100 || !general?.petsSound}
-          marks={{ 0: 'Min', 1: 'Max' }}
+          marks={{ 0: <span style={{ whiteSpace: 'nowrap' }}>Min</span>, 1: <span style={{ whiteSpace: 'nowrap' }}>Max</span> }}
           max={1}
           min={0}
           step={0.1}
-          style={{ flex: 1 }}
+          style={{ width: 350 }}
         />
       </Flexbox>
     ),
@@ -291,6 +291,7 @@ const Page = memo(() => {
     minWidth: undefined,
     name: 'petsAura',
     valuePropName: 'checked',
+    divider: true,
   };
 
   return (
