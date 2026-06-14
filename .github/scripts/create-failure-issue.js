@@ -3,7 +3,7 @@
  * Usage: node create-failure-issue.js
  */
 
-module.exports = async ({ github, context, core }) => {
+module.exports = async function createFailureIssue({ github, context, core }) {
   const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
   const timestamp = new Date().toISOString();
   const date = timestamp.split('T')[0];
@@ -250,7 +250,7 @@ async function getFailureCount(github, context, issueNumber) {
       (comment) =>
         comment.body.includes('Additional Failure') && comment.created_at.startsWith(today),
     ).length;
-  } catch (error) {
+  } catch {
     return 0;
   }
 }

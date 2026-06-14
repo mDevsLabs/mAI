@@ -1,34 +1,33 @@
-name: Desktop Build Setup
-description: Setup Node.js, pnpm and install dependencies for desktop build
+name: Configuration de compilation Bureau
+description: Configurer Node.js, pnpm et installer les dépendances pour la compilation bureau
 
 inputs:
   node-version:
-    description: Node.js version
+    description: Version de Node.js
     required: true
 
 runs:
   using: composite
   steps:
-    - name: Setup environment
+    - name: Configurer l'environnement
       uses: ./.github/actions/setup-env
       with:
         node-version: ${{ inputs.node-version }}
 
-    - name: Install dependencies
+    - name: Installer les dépendances
       shell: bash
       run: pnpm install --node-linker=hoisted
 
-    # 移除国内 electron 镜像配置，GitHub Actions 使用官方源更快
-    - name: Remove China electron mirror from .npmrc
+    - name: Supprimer le miroir electron de Chine de .npmrc
       shell: bash
       run: |
         NPMRC_FILE="./apps/desktop/.npmrc"
         if [ -f "$NPMRC_FILE" ]; then
           sed -i.bak '/^electron_mirror=/d; /^electron_builder_binaries_mirror=/d' "$NPMRC_FILE"
           rm -f "${NPMRC_FILE}.bak"
-          echo "✅ Removed electron mirror config from .npmrc"
+          echo "✅ Configuration du miroir electron supprimée de .npmrc"
         fi
 
-    - name: Install deps on Desktop
+    - name: Installer les dépendances sur le Bureau
       shell: bash
       run: npm run install-isolated --prefix=./apps/desktop

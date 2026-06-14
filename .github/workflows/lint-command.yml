@@ -1,0 +1,90 @@
+name: 🐛 lint-command
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request: {}
+  workflow_dispatch:
+    inputs:
+      lint_task:
+        description: 'Sélectionnez le lint à exécuter'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - eslint
+          - lint:ts
+          - lint:style
+          - lint:circular
+          - lint:md
+          - lint:mdx
+          - lint:console
+          - lint:unused
+
+jobs:
+  eslint:
+    name: 🐛 ESLint
+    if: github.event_name != 'workflow_dispatch' || inputs.lint_task == 'all' || inputs.lint_task == 'eslint'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📦 Checkout du code
+        uses: actions/checkout@v4
+
+      - name: 🛠️ Setup Environment
+        uses: ./.github/actions/setup-env
+
+      - name: 💾 Get pnpm store directory
+        shell: bash
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - uses: actions/cache@v4
+        name: 📦 Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: 📥 Installation des dépendances
+        run: pnpm install
+
+      - name: 🐛 Exécution de ESLint
+        continue-on-error: true
+        run: pnpx eslint .
+
+  other-lints:
+    name: 🐛 Other Lints
+    if: github.event_name != 'workflow_dispatch' || inputs.lint_task == 'all' || inputs.lint_task != 'eslint'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📦 Checkout du code
+        uses: actions/checkout@v4
+
+      - name: 🛠️ Setup Environment
+        uses: ./.github/actions/setup-env
+
+      - name: 💾 Get pnpm store directory
+        shell: bash
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - uses: actions/cache@v4
+        name: 📦 Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: 📥 Installation des dépendances
+        run: pnpm install
+
+      - name: 🐛 Exécution des autres lints
+        continue-on-error: true
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ] && [ "${{ inputs.lint_task }}" != "all" ]; then
+            npm run ${{ inputs.lint_task }}
+          else
+            npm run lint:ts && npm run lint:style && npm run type-check && npm run lint:circular
+          fi

@@ -13,7 +13,9 @@ export const generateMetadata = async (props: DynamicLayoutProps) => {
   const { t } = await translation('auth', locale);
 
   return metadataModule.generate({
+    alternate: true,
     description: t('betterAuth.signup.subtitle'),
+    tags: ['inscription', 'signup', 'IA', 'mAI', 'compte'],
     title: t('betterAuth.signup.title'),
     url: '/signup',
   });

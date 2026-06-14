@@ -1,24 +1,24 @@
-name: Setup Node and pnpm
-description: Setup Node.js and pnpm for workflows
+name: Configurer Node et pnpm
+description: Configurer Node.js et pnpm pour les flux de travail
 
 inputs:
   node-version:
-    description: Node.js version
+    description: Version de Node.js
     required: true
   package-manager-cache:
-    description: Pass-through to actions/setup-node package-manager-cache
+    description: Transmission au cache du gestionnaire de paquets de actions/setup-node
     required: false
     default: 'false'
 
 runs:
   using: composite
   steps:
-    - name: Install pnpm
+    - name: Installer pnpm
       uses: pnpm/action-setup@v4
       with:
         run_install: false
 
-    - name: Setup Node.js
+    - name: Configurer Node.js
       uses: actions/setup-node@v6
       with:
         node-version: ${{ inputs.node-version }}

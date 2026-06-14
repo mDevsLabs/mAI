@@ -846,11 +846,27 @@ export default {
   'settingModel.topP.desc':
     'How many possibilities to consider; a higher value accepts more potential answers, while a lower value tends to choose the most likely answer. It is not recommended to change this alongside the creativity level.',
   'settingModel.topP.title': 'Openness to Ideas',
+  'settingNotification.general.news.desc': 'Be informed of new features in the app',
+  'settingNotification.general.news.title': 'News',
+  'settingNotification.general.recommendations.desc': 'Receive usage recommendations',
+  'settingNotification.general.recommendations.title': 'Recommendations',
+  'settingNotification.general.title': 'General',
+  'settingNotification.general.webPush.desc':
+    'Receive system notifications, even when the tab is closed',
+  'settingNotification.general.webPush.title': 'Web Push Notifications',
+  'settingNotification.sounds.error.desc': 'Play a sound on red notification',
+  'settingNotification.sounds.error.title': 'Error',
+  'settingNotification.sounds.info.desc': 'Play a sound on blue notification',
+  'settingNotification.sounds.info.title': 'Information / Recommendation',
+  'settingNotification.sounds.success.desc': 'Play a sound on green notification',
+  'settingNotification.sounds.success.title': 'Success / Validation',
+  'settingNotification.sounds.title': 'Sound Effects',
+  'settingNotification.sounds.volume.desc': 'Global notification volume',
+  'settingNotification.sounds.volume.title': 'Volume',
   'settingOpening.openingMessage.desc':
     "The opening message displayed when the conversation starts, used to introduce the agent's features",
   'settingOpening.openingMessage.placeholder':
     'Hello, I am your Custom Agent. You can start chatting with me right away, or go to Agent Settings to complete my information.',
-  'settingOpening.openingMessage.title': 'Opening Message',
   'settingOpening.openingQuestions.desc':
     'Guiding questions displayed at the beginning of the conversation',
   'settingOpening.openingQuestions.empty':

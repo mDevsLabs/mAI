@@ -17,7 +17,6 @@ import {
   KeyIcon,
   KeyRound,
   Map,
-  MessageCircleIcon,
   MonitorSmartphoneIcon,
   PaletteIcon,
   PawPrint,
@@ -120,7 +119,7 @@ export const useCategory = () => {
         key: SettingsTabs.Hotkey,
         label: t('tab.hotkey'),
       },
-      enableBusinessFeatures && {
+      {
         icon: BellIcon,
         key: SettingsTabs.Notification,
         label: t('tab.notification'),
@@ -183,11 +182,6 @@ export const useCategory = () => {
         icon: KeyIcon,
         key: SettingsTabs.APIKey,
         label: tAuth('tab.apikey'),
-      },
-      {
-        icon: MessageCircleIcon,
-        key: SettingsTabs.Messenger,
-        label: t('tab.messenger'),
       },
     ].filter(Boolean) as CategoryItem[];
 

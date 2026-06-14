@@ -1,8 +1,8 @@
 {
-  "name": "mai-desktop",
-  "version": "0.2.0",
+  "name": "mai-app",
+  "version": "0.3.0",
   "private": true,
-  "description": "mAI Application",
+  "description": "Avec mAI, passez à la vitesse supérieure !",
   "homepage": "https://github.com/mDevsLabs/mAI",
   "repository": {
     "type": "git",

@@ -1,6 +1,6 @@
 {
   "name": "mai",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Avec mAI, passez à la vitesse supérieure !",
   "keywords": [
     "framework",
@@ -281,12 +281,12 @@
     "@lobechat/web-crawler": "workspace:*",
     "@lobehub/analytics": "^1.6.2",
     "@lobehub/charts": "^5.0.0",
-    "@mai/desktop-ipc-typings": "workspace:*",
     "@lobehub/editor": "^4.15.0",
     "@lobehub/icons": "^5.0.0",
     "@lobehub/market-sdk": "0.33.3",
     "@lobehub/tts": "^5.1.2",
     "@lobehub/ui": "^5.15.5",
+    "@mai/desktop-ipc-typings": "workspace:*",
     "@modelcontextprotocol/sdk": "^1.26.0",
     "@napi-rs/canvas": "^0.1.88",
     "@neondatabase/serverless": "^1.0.2",

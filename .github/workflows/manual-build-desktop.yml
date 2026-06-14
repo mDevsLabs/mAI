@@ -1,4 +1,4 @@
-name: 🚀 Desktop Manual Build
+name: 🏗️ Desktop Manual Build
 
 on:
   workflow_dispatch:

@@ -46,6 +46,7 @@ body:
       options:
         - 'Oui, je suis prêt(e) à soumettre une PR'
         - 'Non, mais je suis disponible pour tester la fonctionnalité'
+        - 'Je ne sais pas encore'
     validations:
       required: false
 
@@ -60,11 +61,11 @@ body:
   - type: checkboxes
     attributes:
       label: '✅ Validations'
-      description: 'Merci de vérifier les points suivants avant de soumettre votre demande'
+      description: 'Merci de vérifier les points suivants avant de soumettre'
       options:
         - label: "J'ai vérifié qu'il n'existe pas [déjà une demande similaire](https://github.com/mDevsLabs/mAI/issues) afin d'éviter les doublons."
           required: true
-        - label: "Cette demande concerne directement mAI et non une dépendance ou un service tiers."
+        - label: 'Cette demande concerne directement mAI et non une dépendance ou un service tiers.'
           required: true
         - label: "Pour toute question générale, j'utiliserai les [GitHub Discussions](https://github.com/mDevsLabs/mAI/discussions) ou le [Serveur Discord](https://discord.gg/fV7zwdGPpY)."
           required: true

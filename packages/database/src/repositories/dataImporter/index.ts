@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import type { ImporterEntryData, ImportPgDataStructure, ImportResultData } from '@lobechat/types';
 import { and, eq, inArray } from 'drizzle-orm';
 
