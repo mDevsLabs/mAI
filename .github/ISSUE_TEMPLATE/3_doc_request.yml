@@ -46,7 +46,7 @@ body:
 
         Voici ce que la documentation devrait expliquer...
 
-        `xemple de code si nécessaire`
+        ` Exemple de code si nécessaire`
     validations:
       required: false
 

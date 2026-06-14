@@ -1,15 +1,14 @@
 /**
  * Generate or update PR comment with Docker build info
  */
-module.exports = async ({
+module.exports = async function dockerPrComment({
   github,
   context,
   dockerMetaJson,
   image,
   version,
   dockerhubUrl,
-  platforms,
-}) => {
+}) {
   const COMMENT_IDENTIFIER = '<!-- DOCKER-BUILD-COMMENT -->';
 
   const parseTags = () => {
@@ -20,7 +19,7 @@ module.exports = async ({
           return parsed.tags;
         }
       }
-    } catch (e) {
+    } catch {
       // ignore parsing error, fallback below
     }
     if (image && version) {

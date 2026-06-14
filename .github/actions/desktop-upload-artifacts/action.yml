@@ -1,19 +1,19 @@
-name: Desktop Upload Artifacts
-description: Rename macOS yml for multi-arch and upload build artifacts
+name: Téléchargement d'Artefacts Bureau
+description: Renommer le yml macOS pour l'architecture multiple et télécharger les artefacts de compilation
 
 inputs:
   artifact-name:
-    description: Name for the uploaded artifact
+    description: Nom de l'artefact téléchargé
     required: true
   retention-days:
-    description: Number of days to retain artifacts
+    description: Nombre de jours pour conserver les artefacts
     required: false
     default: '5'
 
 runs:
   using: composite
   steps:
-    - name: Rename macOS *-mac.yml for multi-architecture support
+    - name: Renommer *-mac.yml de macOS pour le support multi-architecture
       if: runner.os == 'macOS'
       shell: bash
       run: |
@@ -28,17 +28,17 @@ runs:
           if [ -f "$yml" ]; then
             new_name="${yml%.yml}-${ARCH_SUFFIX}.yml"
             mv "$yml" "$new_name"
-            echo "✅ Renamed $yml to $new_name"
+            echo "✅ $yml renommé en $new_name"
           fi
         done
 
-    - name: List yml files before upload
+    - name: Lister les fichiers yml avant le téléchargement
       shell: bash
       run: |
-        echo "📋 YML files to upload:"
-        ls -la apps/desktop/release/*.yml 2>/dev/null || echo "   ⚠️ No yml files found!"
+        echo "📋 Fichiers YML à télécharger :"
+        ls -la apps/desktop/release/*.yml 2>/dev/null || echo "   ⚠️ Aucun fichier yml trouvé !"
 
-    - name: Upload artifact
+    - name: Télécharger l'artefact
       uses: actions/upload-artifact@v6
       with:
         name: ${{ inputs.artifact-name }}

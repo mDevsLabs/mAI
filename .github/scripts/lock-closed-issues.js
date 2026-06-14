@@ -4,7 +4,7 @@
  * @param {object} github - GitHub API client
  * @param {object} context - GitHub Actions context
  */
-module.exports = async ({ github, context }) => {
+module.exports = async function lockClosedIssues({ github, context }) {
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
@@ -27,7 +27,6 @@ module.exports = async ({ github, context }) => {
     });
 
     if (issues.length === 0) {
-      hasMore = false;
       break;
     }
 
@@ -43,7 +42,6 @@ module.exports = async ({ github, context }) => {
       if (updatedAt > sevenDaysAgo) {
         // Since issues are sorted by updated_at ascending,
         // once we hit a recent issue, all remaining will be recent too
-        hasMore = false;
         break;
       }
 

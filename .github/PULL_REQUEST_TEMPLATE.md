@@ -1,4 +1,4 @@
-## 💻 Change Type
+## 💻 Type de Changement
 
 - [ ] ✨ feat
 - [x] 🚀 improve
@@ -32,22 +32,22 @@
 - [ ] .agents
 - [ ] autre
 
-## 🔗 Related Issue
+## 🔗 Issue Liée
 
-## 🔀 Related Pull Request
+## 🔀 Pull Request Liée
 
-## 🔀 Description of Change
+## 🔀 Description du Changement
 
-## 🧪 How to Test
+## 🧪 Comment Tester
 
-- [x] Tested locally
-- [ ] Added/updated tests
-- [ ] No tests needed
+- [x] Testé localement
+- [ ] Tests ajoutés/mis à jour
+- [ ] Aucun test requis
 
-## 📸 Screenshots / Videos
+## 📸 Captures d'Écran / Vidéos
 
-| Before | After |
-| ------ | ----- |
-| ...    | ...   |
+| Avant | Après |
+| ----- | ----- |
+| ...   | ...   |
 
-## 📝 Additional Information
+## 📝 Informations Supplémentaires

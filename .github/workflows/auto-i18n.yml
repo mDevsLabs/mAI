@@ -1,18 +1,18 @@
 name: 🌍 Traduction automatique
 
 on:
-schedule:
-- cron: '0 0 */3 * *'
-workflow_dispatch: {}
+  schedule:
+    - cron: '0 0 */3 * *'
+  workflow_dispatch: {}
 
 permissions:
-contents: write
-pull-requests: write
+  contents: write
+  pull-requests: write
 
 jobs:
-update-i18n:
-runs-on: ubuntu-latest
-timeout-minutes: 30
+  update-i18n:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
 
 steps:
   - name: ⚙️ Configuration de Git
