@@ -1,4 +1,4 @@
-﻿# 🤯 Application de Bureau mAI
+﻿# Application de Bureau mAI
 
 L'application de bureau mAI est une application multiplateforme pour [mAI](https://github.com/mDevsLabs/mAI), construite avec Electron, offrant une expérience de bureau et des fonctionnalités plus natives.
 
