@@ -7,7 +7,6 @@ import { type MenuProps } from '@lobehub/ui';
 import { ActionIcon, DropdownMenu, Flexbox, Icon } from '@lobehub/ui';
 import { DiscordIcon, GithubIcon } from '@lobehub/ui/icons';
 import {
-  Book,
   CircleHelp,
   Feather,
   FileClockIcon,
@@ -25,7 +24,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { openChangelogModal } from '@/components/ChangelogModal';
 import { openFeedbackModal } from '@/components/FeedbackModal';
 import HighlightNotification from '@/components/HighlightNotification';
-import { DOCUMENTS_REFER_URL, GITHUB } from '@/const/url';
+import { GITHUB } from '@/const/url';
 import Billboard from '@/features/Billboard';
 import { useBillboardMenuItems } from '@/features/Billboard/MenuItems';
 import { useActiveNavKey } from '@/features/NavPanel';
@@ -253,25 +252,16 @@ const Footer = memo(() => {
     () => [
       ...(footer.showSettingsEntry && !isDevMode
         ? [
-            {
-              icon: <Icon icon={Settings2} />,
-              key: 'setting',
-              label: <Link to="/settings">{t('userPanel.setting')}</Link>,
-            },
-            {
-              type: 'divider' as const,
-            },
-          ]
+          {
+            icon: <Icon icon={Settings2} />,
+            key: 'setting',
+            label: <Link to="/settings">{t('userPanel.setting')}</Link>,
+          },
+          {
+            type: 'divider' as const,
+          },
+        ]
         : []),
-      {
-        icon: <Icon icon={Book} />,
-        key: 'docs',
-        label: (
-          <a href={DOCUMENTS_REFER_URL} rel="noopener noreferrer" target="_blank">
-            {t('userPanel.docs')}
-          </a>
-        ),
-      },
       {
         icon: <Icon icon={Feather} />,
         key: 'feedback',
@@ -297,35 +287,35 @@ const Footer = memo(() => {
       },
       ...(footer.layout === 'compact' && !footer.hideGitHub
         ? [
-            {
-              icon: <Icon icon={GithubIcon} />,
-              key: 'github',
-              label: (
-                <a href={GITHUB} rel="noopener noreferrer" target="_blank">
-                  GitHub
-                </a>
-              ),
-            },
-          ]
+          {
+            icon: <Icon icon={GithubIcon} />,
+            key: 'github',
+            label: (
+              <a href={GITHUB} rel="noopener noreferrer" target="_blank">
+                GitHub
+              </a>
+            ),
+          },
+        ]
         : []),
       ...(footer.showEvalEntry && footer.layout === 'compact'
         ? [
-            {
-              icon: <Icon icon={FlaskConical} />,
-              key: 'eval',
-              label: <Link to="/eval">Evaluation Lab</Link>,
-            },
-          ]
+          {
+            icon: <Icon icon={FlaskConical} />,
+            key: 'eval',
+            label: <Link to="/eval">Evaluation Lab</Link>,
+          },
+        ]
         : []),
       ...(shouldShowProductHuntMenuEntry
         ? [
-            {
-              icon: <Icon icon={Rocket} />,
-              key: 'productHunt',
-              label: 'Product Hunt',
-              onClick: handleOpenProductHuntCard,
-            },
-          ]
+          {
+            icon: <Icon icon={Rocket} />,
+            key: 'productHunt',
+            label: 'Product Hunt',
+            onClick: handleOpenProductHuntCard,
+          },
+        ]
         : []),
       ...(isHomeSidebar && billboardMenuItems && billboardMenuItems.length > 0
         ? [{ type: 'divider' as const }, ...billboardMenuItems]

@@ -168,18 +168,21 @@ const Page = memo(() => {
     minWidth: undefined,
     name: 'petsSound',
     valuePropName: 'checked',
+    divider: false,
   };
 
   const petsVolumeItem = {
     children: (
-      <SliderWithInput
-        disabled={!enablePets || petsLevel < 100 || !general?.petsSound}
-        marks={{ 0: 'Min', 1: 'Max' }}
-        max={1}
-        min={0}
-        step={0.1}
-        style={{ width: 240 }}
-      />
+      <Flexbox horizontal align={'center'} gap={12} width={'100%'}>
+        <SliderWithInput
+          disabled={!enablePets || petsLevel < 100 || !general?.petsSound}
+          marks={{ 0: 'Min', 1: 'Max' }}
+          max={1}
+          min={0}
+          step={0.1}
+          style={{ flex: 1 }}
+        />
+      </Flexbox>
     ),
     desc:
       petsLevel >= 100 ? (
@@ -274,22 +277,6 @@ const Page = memo(() => {
     valuePropName: 'checked',
   };
 
-  const petsVoiceItem = {
-    children: <Switch disabled={!enablePets || petsLevel < 80} />,
-    desc:
-      petsLevel >= 80 ? (
-        'Activer les petites voix.'
-      ) : (
-        <>
-          <Icon icon={Lock} /> Débloqué au niveau 80
-        </>
-      ),
-    label: 'Voix',
-    minWidth: undefined,
-    name: 'petsVoice',
-    valuePropName: 'checked',
-  };
-
   const petsAuraItem = {
     children: <Switch disabled={!enablePets || petsLevel < 90} />,
     desc:
@@ -325,7 +312,6 @@ const Page = memo(() => {
               petsBgItem,
               petsColorItem,
               petsWeatherItem,
-              petsVoiceItem,
               petsAuraItem,
               petsSoundItem,
               petsVolumeItem,

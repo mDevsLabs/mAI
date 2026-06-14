@@ -74,7 +74,7 @@ const Pet = memo(
 
       // Aura
       if (config?.petsAura) {
-        style.filter = 'drop-shadow(0 0 10px var(--color-primary))';
+        style.filter = 'drop-shadow(0 0 15px var(--color-primary)) drop-shadow(0 0 5px var(--color-primary))';
       } else {
         style.filter = 'drop-shadow(0 4px 6px rgba(0,0,0,0.1))';
       }
@@ -104,12 +104,14 @@ const Pet = memo(
             <div
               style={{
                 position: 'absolute',
-                top: '-10%',
-                left: '-10%',
-                width: '120%',
-                height: '120%',
-                background:
-                  'radial-gradient(circle, var(--color-primary-light) 0%, transparent 70%)',
+                top: '5%',
+                left: '5%',
+                width: '90%',
+                height: '90%',
+                backgroundImage: 'url("/pets/background.png")',
+                backgroundSize: 'contain',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
                 zIndex: -1,
                 borderRadius: '50%',
               }}
@@ -144,14 +146,22 @@ const Pet = memo(
             <div
               style={{
                 position: 'absolute',
-                top: '-30%',
-                right: '-10%',
-                fontSize: size * 0.3,
+                top: '-20%',
+                right: '-40%',
+                fontSize: size * 0.2,
+                padding: '4px 10px',
+                background: 'rgba(255, 255, 255, 0.9)',
+                color: 'black',
+                borderRadius: '12px',
+                borderBottomLeftRadius: '2px',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
                 pointerEvents: 'none',
                 animation: 'float 3s ease-in-out infinite',
+                whiteSpace: 'nowrap',
+                fontWeight: 'bold',
               }}
             >
-              🌤️
+              Sunny ☀️
             </div>
           )}
         </div>

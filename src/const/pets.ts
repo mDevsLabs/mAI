@@ -10,7 +10,11 @@ export type PetId =
   | 'laughing-gemini'
   | 'mini-elon'
   | 'mini-sama'
-  | 'problem';
+  | 'maomao-the-cat'
+  | 'mr-poopybutthole'
+  | 'plum-tang'
+  | 'problem'
+  | 'traffic-light';
 
 export type PetCategory = 'Mascot' | 'Human' | 'Robot' | 'Alien' | 'Animal';
 
@@ -83,5 +87,29 @@ export const PETS_LIST: PetConfig[] = [
     name: 'Problem',
     description: 'Un compagnon pour vous aider avec vos problèmes.',
     category: 'Mascot',
+  },
+  {
+    id: 'maomao-the-cat',
+    name: 'MaoMao',
+    description: 'Le chat MaoMao, toujours curieux.',
+    category: 'Animal',
+  },
+  {
+    id: 'mr-poopybutthole',
+    name: 'Mr Poopybutthole',
+    description: 'Un ami loyal sur qui vous pouvez toujours compter, ooo-wee!',
+    category: 'Alien',
+  },
+  {
+    id: 'plum-tang',
+    name: 'Plum Tang',
+    description: 'Le compagnon fruité de vos aventures.',
+    category: 'Mascot',
+  },
+  {
+    id: 'traffic-light',
+    name: 'Traffic Light',
+    description: 'Un feu de circulation pour réguler votre code.',
+    category: 'Robot',
   },
 ];

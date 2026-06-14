@@ -1,60 +1,25 @@
-'use client';
+import { metadataModule } from '@/server/metadata';
+import { translation } from '@/server/translation';
+import { type DynamicLayoutProps } from '@/types/next';
+import { RouteVariants } from '@/utils/server/routeVariants';
 
-import { Suspense } from 'react';
+import SignInClientPage from './ClientPage';
 
-import Loading from '@/components/Loading/BrandTextLoading';
+export const generateMetadata = async (props: DynamicLayoutProps) => {
+  const locale = await RouteVariants.getLocale(props);
+  const { t } = await translation('auth', locale);
 
-import { SignInEmailStep } from './SignInEmailStep';
-import { SignInPasswordStep } from './SignInPasswordStep';
-import { useSignIn } from './useSignIn';
+  return metadataModule.generate({
+    alternate: true,
+    description: t('betterAuth.signin.subtitle'),
+    tags: ['connexion', 'signin', 'IA', 'mAI', 'login'],
+    title: t('betterAuth.signin.title'),
+    url: '/signin',
+  });
+};
 
 const SignInPage = () => {
-  const {
-    disableEmailPassword,
-    email,
-    form,
-    handleBackToEmail,
-    handleCheckUser,
-    handleForgotPassword,
-    handleSignIn,
-    handleSocialSignIn,
-    isSocialOnly,
-    lastAuthProvider,
-    loading,
-    oAuthSSOProviders,
-    serverConfigInit,
-    socialLoading,
-    step,
-  } = useSignIn();
-
-  return (
-    <Suspense fallback={<Loading debugId={'Signin'} />}>
-      {step === 'email' ? (
-        <SignInEmailStep
-          disableEmailPassword={disableEmailPassword}
-          form={form as any}
-          isSocialOnly={isSocialOnly}
-          lastAuthProvider={lastAuthProvider}
-          loading={loading}
-          oAuthSSOProviders={oAuthSSOProviders}
-          serverConfigInit={serverConfigInit}
-          socialLoading={socialLoading}
-          onCheckUser={handleCheckUser}
-          onSetPassword={handleForgotPassword}
-          onSocialSignIn={handleSocialSignIn}
-        />
-      ) : (
-        <SignInPasswordStep
-          email={email}
-          form={form as any}
-          loading={loading}
-          onBackToEmail={handleBackToEmail}
-          onForgotPassword={handleForgotPassword}
-          onSubmit={handleSignIn}
-        />
-      )}
-    </Suspense>
-  );
+  return <SignInClientPage />;
 };
 
 export default SignInPage;
