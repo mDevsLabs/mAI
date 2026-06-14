@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { and, eq, inArray } from 'drizzle-orm';
 import pMap from 'p-map';
 

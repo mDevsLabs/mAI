@@ -178,7 +178,7 @@ const NotificationSettingsPage = memo(() => {
                 icon: AlertCircle,
               },
               {
-                children: <SliderWithInput max={100} min={0} style={{ width: 240 }} />,
+                children: <SliderWithInput max={100} min={0} />,
                 desc: t('settingNotification.sounds.volume.desc'),
                 label: t('settingNotification.sounds.volume.title'),
                 name: 'volume',
