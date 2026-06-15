@@ -27,8 +27,6 @@ jobs:
 
       - name: 📦 Configuration de pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 9
 
       - name: 🍞 Configuration de Bun
         uses: oven-sh/setup-bun@v2
