@@ -7,6 +7,7 @@ import type { TFunction } from 'i18next';
 import { BotMessageSquareIcon, Download, MoreHorizontal, Settings2Icon, Trash } from 'lucide-react';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import { useAgentTransferMenuItem } from '@/business/client/hooks/useAgentTransferMenuItem';
 import { useBusinessAgentImportMenuItem } from '@/business/client/hooks/useBusinessAgentImportMenuItem';
@@ -33,60 +34,6 @@ import { type OriginalAgentInfo, useMarketPublish } from './AgentPublishButton/u
 import AgentStatusTag from './AgentStatusTag';
 import AgentVersionReviewTag, { useVersionReviewStatus } from './AgentVersionReviewTag';
 import AutoSaveHint from './AutoSaveHint';
-
-type HeaderTranslation = TFunction<
-  readonly ['setting', 'marketAuth', 'chat', 'file', 'common'],
-  undefined
->;
-
-const buildAgentProfileMarkdown = (params: {
-  description?: string;
-  model?: string;
-  plugins?: string[];
-  provider?: string;
-  systemRole?: string;
-  t: HeaderTranslation;
-  tags?: string[];
-  title?: string;
-}) => {
-  const { description, model, plugins = [], provider, systemRole, t, tags = [], title } = params;
-  const sections: string[] = [];
-  const agentTitle = title?.trim() || t('settingAgent.export.untitled', { ns: 'setting' });
-
-  sections.push(`# ${agentTitle}`);
-
-  if (description?.trim()) sections.push(description.trim());
-
-  const metadata = [
-    provider ? `- ${t('settingAgent.export.provider', { ns: 'setting' })}: ${provider}` : undefined,
-    model ? `- ${t('settingAgent.export.model', { ns: 'setting' })}: ${model}` : undefined,
-    tags.length > 0
-      ? `- ${t('settingAgent.export.tags', { ns: 'setting' })}: ${tags.join(', ')}`
-      : undefined,
-  ].filter(Boolean);
-
-  if (metadata.length > 0) {
-    sections.push(
-      `## ${t('settingAgent.export.metadata', { ns: 'setting' })}\n\n${metadata.join('\n')}`,
-    );
-  }
-
-  if (plugins.length > 0) {
-    sections.push(
-      `## ${t('settingAgent.export.enabledPlugins', { ns: 'setting' })}\n\n${plugins
-        .map((plugin) => `- ${plugin}`)
-        .join('\n')}`,
-    );
-  }
-
-  if (systemRole?.trim()) {
-    sections.push(
-      `## ${t('settingAgent.prompt.title', { ns: 'setting' })}\n\n${systemRole.trim()}`,
-    );
-  }
-
-  return `${sections.join('\n\n')}\n`;
-};
 
 type HeaderTranslation = TFunction<
   readonly ['setting', 'marketAuth', 'chat', 'file', 'common'],
@@ -314,51 +261,6 @@ const Header = memo(() => {
     }
   }, [config.model, config.plugins, config.provider, editor, meta, systemRole, t]);
 
-  const handleExportMarkdown = useCallback(async () => {
-    try {
-      const editorMarkdown = editor?.getDocument('markdown') as string | null | undefined;
-      const profileMarkdown = buildAgentProfileMarkdown({
-        description: meta?.description,
-        model: config.model,
-        plugins: config.plugins,
-        provider: config.provider,
-        systemRole: editorMarkdown ?? systemRole,
-        t,
-        tags: meta?.tags,
-        title: meta?.title,
-      });
-      const baseFileName = sanitizeFileName(
-        meta?.title || '',
-        t('settingAgent.export.untitledFileName', { ns: 'setting' }),
-      );
-      const fileName = `${baseFileName}.md`;
-
-      if (isDesktop) {
-        const { desktopExportService } = await import('@/services/electron/desktopExportService');
-        await desktopExportService.exportMarkdown({
-          content: profileMarkdown,
-          dialogTitle: t('settingAgent.export.dialogTitle', { ns: 'setting' }),
-          fileName,
-          successTitle: t('settingAgent.export.success', { ns: 'setting' }),
-        });
-      } else {
-        const blob = new Blob([profileMarkdown], { type: 'text/markdown' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = fileName;
-        document.body.append(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-        message.success(t('settingAgent.export.success', { ns: 'setting' }));
-      }
-    } catch (error) {
-      console.error('Failed to export agent profile markdown:', error);
-      message.error(t('settingAgent.export.error', { ns: 'setting' }));
-    }
-  }, [config.model, config.plugins, config.provider, editor, meta, systemRole, t]);
-
   const importMenuItem = useBusinessAgentImportMenuItem(activeAgentId ?? undefined);
   const transferMenuItems = useAgentTransferMenuItem(activeAgentId ?? undefined);
 
@@ -441,7 +343,7 @@ const Header = memo(() => {
                 size={DESKTOP_HEADER_ICON_SMALL_SIZE}
               />
             </DropdownMenu>
-            {!isHeterogeneous && isStatusInit && !lockedByOther && !lockPending && (
+            {!isHeterogeneous && isStatusInit && (
               <ToggleRightPanelButton
                 expand={showAgentBuilderPanel}
                 icon={BotMessageSquareIcon}

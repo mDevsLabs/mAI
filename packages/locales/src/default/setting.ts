@@ -373,55 +373,9 @@ export default {
   'devices.edit.friendlyNamePlaceholder': 'A name to recognize this device',
   'devices.edit.save': 'Save',
   'devices.edit.title': 'Edit device',
-<<<<<<< HEAD:src/locales/default/setting.ts
   'devices.empty':
     'No devices yet. Connect one with `lh connect` or by signing in to the desktop app.',
-=======
-  'devices.capabilities.commands.desc': 'Safely execute terminal commands in your environment.',
-  'devices.capabilities.commands.title': 'Run commands',
-  'devices.capabilities.files.desc':
-    'Let agents directly access and organize the files on your computer.',
-  'devices.capabilities.files.title': 'Read & write local files',
-  'devices.capabilities.title': 'What you can do once connected',
-  'devices.capabilities.tools.desc': 'Connect local tools to extend what agents can do.',
-  'devices.capabilities.tools.title': 'Call system tools',
-  'devices.connectWizard.button': 'Connect Device',
-  'devices.connectWizard.cli.connectDesc':
-    'Start the background daemon to keep the device online and listening for remote operations.',
-  'devices.connectWizard.cli.connectTitle': 'Start the daemon',
-  'devices.connectWizard.cli.installDesc':
-    'Install the mAI CLI globally with your preferred package manager to enable device connectivity and management.',
-  'devices.connectWizard.cli.installTitle': 'Install the CLI',
-  'devices.connectWizard.cli.loginDesc':
-    'Complete OAuth authorization in your browser to link the CLI with your account.',
-  'devices.connectWizard.cli.loginTitle': 'Sign in',
-  'devices.connectWizard.desktop.downloadLink': 'Download mAI Desktop',
-  'devices.connectWizard.desktop.step1': 'Download the desktop app',
-  'devices.connectWizard.desktop.step1Desc':
-    'Visit the mAI downloads page and get the app for your operating system.',
-  'devices.connectWizard.desktop.step2': 'Sign in and open the device gateway',
-  'devices.connectWizard.desktop.step2Desc':
-    "After signing in, click the device gateway icon in the top-right corner and confirm it's turned on.",
-  'devices.connectWizard.desktop.step3': 'Your device appears automatically',
-  'devices.connectWizard.desktop.step3Desc':
-    "The desktop app registers itself as a device on launch — you'll see it in the list once connected.",
-  'devices.connectWizard.footer':
-    'Only device metadata is registered — your data is never accessed.',
-  'devices.connectWizard.method.cli': 'Via CLI',
-  'devices.connectWizard.method.desktop': 'Via Desktop',
-  'devices.connectWizard.subtitle': 'Choose how to connect your computer to mAI.',
-  'devices.connectWizard.title': 'Connect Device',
-  'devices.empty.desc':
-    'Once connected, mAI agents can read/write files, run commands, and call system tools directly on your computer.',
-  'devices.empty.methodCli.desc':
-    'Install the CLI in your terminal — great for servers or headless machines.',
-  'devices.empty.methodCli.title': 'Connect via CLI',
-  'devices.empty.methodDesktop.badge': 'Recommended',
-  'devices.empty.methodDesktop.desc':
-    'Download the desktop app, sign in, and your device connects automatically.',
-  'devices.empty.methodDesktop.title': 'Connect via Desktop',
-  'devices.empty.title': 'Connect your first device',
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:packages/locales/src/default/setting.ts
+
   'devices.fallbackBadge': 'Unstable identity',
   'devices.fallbackTooltip':
     "This device couldn't be identified by its machine ID, so reinstalling the app may create a duplicate entry.",
@@ -617,33 +571,7 @@ export default {
   'memory.enabled.title': 'Enable Memory',
   'memory.title': 'Memory Settings',
   'message.success': 'Update successful',
-<<<<<<< HEAD:src/locales/default/setting.ts
-=======
-  'notification.enabled': 'Enabled',
-  'notification.email.desc': 'Receive email notifications when important events occur',
-  'notification.email.title': 'Email Notifications',
-  'notification.inbox.desc': 'Show notifications in the in-app inbox',
-  'notification.inbox.title': 'Inbox Notifications',
-  'notification.push.desc':
-    'Send push notifications to your mobile devices (mAI mobile app required)',
-  'notification.push.title': 'Mobile Push Notifications',
-  'notification.category.billing.title': 'Billing',
-  'notification.category.generation.title': 'Generation',
-  'notification.category.schedule.title': 'Scheduled tasks',
-  'notification.category.workspace.title': 'Workspace',
-  'notification.item.agent_cron_job_failed': 'Scheduled task failed',
-  'notification.item.image_generation_completed': 'Image generation completed',
-  'notification.item.storage_overage_cap_reached': 'Storage pay-as-you-go cap reached',
-  'notification.item.video_generation_completed': 'Video generation completed',
-  'notification.item.workspace_member_invited': 'Workspace invitation',
-  'notification.item.workspace_member_joined': 'New member joined',
-  'notification.item.workspace_member_removed': 'Removed from workspace',
-  'notification.item.workspace_payment_failed': 'Renewal payment failed',
-  'notification.item.workspace_payment_method_removed': 'Payment method removed',
-  'notification.item.workspace_primary_ownership_transferred': 'Primary ownership transferred',
-  'notification.item.workspace_subscription_expired': 'Subscription ended',
-  'notification.title': 'Notification Channels',
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:packages/locales/src/default/setting.ts
+
   'myAgents.actions.cancel': 'Cancel',
   'myAgents.actions.confirmDeprecate': 'Confirm Deprecate',
   'myAgents.actions.deprecate': 'Deprecate Permanently',

@@ -113,19 +113,7 @@ describe('mapFeatureFlagsEnvToState', () => {
     expect(mappedState.enableStorageOverage).toBe(true);
   });
 
-<<<<<<< HEAD:src/config/featureFlags/schema.test.ts
-=======
-  it('should map the workspace allowlist flag by user ID', () => {
-    const config = {
-      workspace: ['user-123'],
-    };
 
-    expect(mapFeatureFlagsEnvToState(config, 'user-123').enableWorkspace).toBe(true);
-    expect(mapFeatureFlagsEnvToState(config, 'user-456').enableWorkspace).toBe(false);
-    expect(mapFeatureFlagsEnvToState(config).enableWorkspace).toBe(false);
-  });
-
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:packages/app-config/src/featureFlags/schema.test.ts
   it('should correctly map boolean feature flags to state', () => {
     const config = {
       provider_settings: true,

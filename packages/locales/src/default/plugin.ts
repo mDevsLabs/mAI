@@ -55,13 +55,10 @@ export default {
   'builtins.lobe-agent.apiName.analyzeVisualMedia.mediaCount': '{{count}} media',
   'builtins.lobe-agent.apiName.analyzeVisualMedia.result':
     'Analyze visual media: <question>{{question}}</question>',
-<<<<<<< HEAD:src/locales/default/plugin.ts
   'builtins.lobe-agent.apiName.callSubAgent': 'Call SubAgent',
   'builtins.lobe-agent.apiName.callSubAgents': 'Call SubAgents',
   'builtins.lobe-agent.apiName.callSubAgents.more': '{{count}} in total',
-=======
-  'builtins.lobe-agent.apiName.callSubAgent': 'Call sub-agent',
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:packages/locales/src/default/plugin.ts
+
   'builtins.lobe-agent.subAgent.stats.tokens': '{{count}} tokens',
   'builtins.lobe-agent.subAgent.stats.tools': '{{count}} tools',
   'builtins.lobe-agent.title': 'Lobe Agent',

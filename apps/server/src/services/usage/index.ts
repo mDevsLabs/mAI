@@ -52,16 +52,10 @@ export class UsageRecordService {
       .orderBy(desc(messages.createdAt));
     return spends.map((spend) => {
       const metadata = spend.metadata as MessageMetadata;
-<<<<<<< HEAD:src/server/services/usage/index.ts
       // Prefer the canonical nested `usage` / `performance` shapes, falling back
       // to the deprecated flat fields for messages written before the migration.
       const usage = metadata?.usage;
-=======
-      // Prefer the dedicated `usage` column, then the canonical nested
-      // `metadata.usage` / `metadata.performance` shapes, falling back to the
-      // deprecated flat fields for messages written before the migration.
-      const usage = spend.usage ?? metadata?.usage;
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/usage/index.ts
+
       const performance = metadata?.performance;
       const totalInputTokens = usage?.totalInputTokens ?? metadata?.totalInputTokens ?? 0;
       const totalOutputTokens = usage?.totalOutputTokens ?? metadata?.totalOutputTokens ?? 0;

@@ -14,10 +14,7 @@ import {
 } from '@lobechat/agent-runtime';
 import { LobeActivatorIdentifier } from '@lobechat/builtin-tool-activator';
 import {
-<<<<<<< HEAD:src/server/modules/AgentRuntime/RuntimeExecutors.ts
-=======
-  type ComposioServiceSummary,
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/modules/AgentRuntime/RuntimeExecutors.ts
+
   type CredSummary,
   generateComposioServicesList,
   generateCredsList,
@@ -137,41 +134,7 @@ const LLM_RETRY_MAX_DELAY_MS = 30_000;
  */
 const EMPTY_COMPLETION_MAX_RETRIES = 2;
 
-<<<<<<< HEAD:src/server/modules/AgentRuntime/RuntimeExecutors.ts
-=======
-const buildBotAgentGroupContext = (params: {
-  agentConfig?: any;
-  agentId?: string;
-  botContext?: unknown;
-}): AgentGroupConfig | undefined => {
-  if (!params.botContext || !params.agentId) return undefined;
 
-  const title = params.agentConfig?.title;
-  const description = params.agentConfig?.description;
-  const name = typeof title === 'string' && title.trim() ? title.trim() : 'Current Agent';
-
-  return {
-    agentMap: {
-      [params.agentId]: {
-        name,
-        role: 'participant',
-      },
-    },
-    currentAgentId: params.agentId,
-    currentAgentName: name,
-    currentAgentRole: 'participant',
-    members: [
-      {
-        id: params.agentId,
-        name,
-        role: 'participant',
-      },
-    ],
-    systemPrompt: typeof description === 'string' ? description : undefined,
-  };
-};
-
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/modules/AgentRuntime/RuntimeExecutors.ts
 /**
  * Output-token count at or below this — combined with no content, reasoning,
  * tool calls, or images — marks a turn as an empty completion.
@@ -210,54 +173,7 @@ const isEmptyModelCompletion = (params: {
   return true;
 };
 
-<<<<<<< HEAD:src/server/modules/AgentRuntime/RuntimeExecutors.ts
-=======
-type ReasoningReplayNode = {
-  children?: ReasoningReplayNode[];
-  members?: ReasoningReplayNode[];
-  reasoning?: unknown;
-};
 
-const stripAssistantReasoningForReplay = (messages: UIChatMessage[]): UIChatMessage[] => {
-  const stripMessage = <T extends ReasoningReplayNode>(message: T): T => {
-    let changed = false;
-
-    const children = message.children?.map((child) => {
-      const strippedChild = stripMessage(child);
-      if (strippedChild !== child) changed = true;
-      return strippedChild;
-    });
-
-    const members = message.members?.map((member) => {
-      const strippedMember = stripMessage(member);
-      if (strippedMember !== member) changed = true;
-      return strippedMember;
-    });
-
-    if ('reasoning' in message) changed = true;
-    if (!changed) return message;
-
-    const { reasoning: _reasoning, ...messageWithoutReasoning } = message;
-
-    return {
-      ...messageWithoutReasoning,
-      ...(children ? { children } : {}),
-      ...(members ? { members } : {}),
-    } as T;
-  };
-
-  let changed = false;
-
-  const strippedMessages = messages.map((message) => {
-    const strippedMessage = stripMessage(message);
-    if (strippedMessage !== message) changed = true;
-    return strippedMessage;
-  });
-
-  return changed ? strippedMessages : messages;
-};
-
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/modules/AgentRuntime/RuntimeExecutors.ts
 const GEN_AI_FUNCTION_TOOL_TYPE: ToolType = 'function';
 
 type ToolFailureKind = 'replan' | 'retry' | 'stop';
@@ -330,91 +246,7 @@ const buildPostProcessUrl = (
   }
   return (path: string | null, file: { id?: string | null }) =>
     fileService!.getFileAccessUrl({ id: file.id, url: path });
-<<<<<<< HEAD:src/server/modules/AgentRuntime/RuntimeExecutors.ts
-=======
-};
 
-/**
- * Build the per-tool-call server virtual sub-agent runner injected into the tool
- * execution context. Closes over the current tool payload + parent message so
- * the `callSubAgent` server tool can fork a child op without re-deriving the
- * message anchor (which it cannot do correctly from its own context).
- *
- * The runner creates the pending placeholder tool message that anchors the
- * isolation thread (so the UI shows a loading state and the completion bridge
- * has a message to backfill), then kicks off the child op asynchronously and
- * returns immediately. Returns `undefined` when virtual sub-agent execution is
- * not available (no `execVirtualSubAgent` callback, or missing agent/topic
- * context).
- */
-const buildServerVirtualSubAgentRunner = (
-  ctx: RuntimeExecutorContext,
-  state: AgentState,
-  chatToolPayload: ChatToolPayload,
-  parentMessageId: string,
-): ServerSubAgentRunner | undefined => {
-  const execVirtualSubAgent = ctx.execVirtualSubAgent;
-  if (!execVirtualSubAgent) return undefined;
-
-  const agentId = state.metadata?.agentId;
-  const topicId = ctx.topicId ?? state.metadata?.topicId;
-  if (!agentId || !topicId) return undefined;
-
-  return {
-    run: async ({ agentId: targetAgentId, description, instruction, timeout }) => {
-      // 1. Create the pending placeholder tool message (mirrors the normal
-      //    tool-message shape in call_tool) that anchors the isolation thread
-      //    and renders a loading state until the bridge backfills it.
-      const placeholder = await ctx.messageModel.create({
-        agentId,
-        content: '',
-        parentId: parentMessageId,
-        plugin: chatToolPayload as any,
-        pluginState: { status: 'pending' },
-        role: 'tool',
-        threadId: state.metadata?.threadId,
-        tool_call_id: chatToolPayload.id,
-        topicId,
-      });
-
-      // 2. Fork the virtual child op anchored to the placeholder. The virtual
-      //    entry marks the child as `isSubAgent` and registers the completion
-      //    bridge that backfills this tool message and resumes the parent op.
-      const result = (await execVirtualSubAgent({
-        agentId: targetAgentId ?? agentId,
-        groupId: state.metadata?.groupId ?? undefined,
-        instruction,
-        parentMessageId: placeholder.id,
-        parentOperationId: ctx.operationId,
-        timeout,
-        title: description,
-        topicId,
-      })) as { operationId?: string; success?: boolean; threadId?: string } | undefined;
-
-      // 3. If the child op never started, no completion bridge will fire — parking
-      //    the parent on it would hang forever. Drop the placeholder and signal
-      //    `started: false` so callSubAgent surfaces an inline tool error instead.
-      if (!result?.success) {
-        try {
-          await ctx.messageModel.deleteMessage(placeholder.id);
-        } catch (error) {
-          log(
-            'buildServerVirtualSubAgentRunner: failed to clean up placeholder %s: %O',
-            placeholder.id,
-            error,
-          );
-        }
-        return { started: false, subOperationId: result?.operationId, threadId: '' };
-      }
-
-      return {
-        started: true,
-        subOperationId: result?.operationId,
-        threadId: result?.threadId ?? '',
-      };
-    },
-  };
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/modules/AgentRuntime/RuntimeExecutors.ts
 };
 
 const shouldRetryLLM = (kind: LLMErrorKind, attempt: number, maxRetries: number) =>
@@ -954,26 +786,7 @@ export const createRuntimeExecutors = (
         // {{sandbox_enabled}} — mirrors client-side check for lobe-cloud-sandbox.
         const sandboxEnabled = String(resolved.enabledToolIds.includes('lobe-cloud-sandbox'));
 
-<<<<<<< HEAD:src/server/modules/AgentRuntime/RuntimeExecutors.ts
-=======
-        // {{sandbox_uploaded_files}} — lists the topic/session files that are
-        // synced into the sandbox upload dir, so the agent knows they exist.
-        // Mirrors the bootstrap query in SandboxMiddlewareService.
-        let sandboxUploadedFiles = '';
-        if (sandboxEnabled === 'true' && ctx.serverDB && ctx.userId && lobehubSkillTopicId) {
-          try {
-            const { FileModel } = await import('@/database/models/file');
-            const { formatUploadedFilesPrompt } =
-              await import('@lobechat/builtin-tool-cloud-sandbox');
-            const fileModel = new FileModel(ctx.serverDB, ctx.userId);
-            const uploadedFiles = await fileModel.findFilesToInitInSandbox(lobehubSkillTopicId);
-            sandboxUploadedFiles = formatUploadedFilesPrompt(uploadedFiles);
-          } catch (error) {
-            log('Failed to resolve files for {{sandbox_uploaded_files}} substitution: %O', error);
-          }
-        }
 
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/modules/AgentRuntime/RuntimeExecutors.ts
         // {{session_date}} — current date formatted for user's timezone.
         const sessionDate = new Intl.DateTimeFormat('en-US', {
           day: 'numeric',
@@ -1014,16 +827,11 @@ export const createRuntimeExecutors = (
           }
         }
 
-<<<<<<< HEAD:src/server/modules/AgentRuntime/RuntimeExecutors.ts
         // {{KLAVIS_SERVICES_LIST}} — used by lobe-creds system role (Klavis integrations section).
         // Mirrors client-side: klavisStoreSelectors.getServers() filtered by connection status.
         let klavisServicesListStr = '';
         if (ctx.serverDB && ctx.userId && !!klavisEnv.KLAVIS_API_KEY) {
-=======
-        // {{COMPOSIO_SERVICES_LIST}} — used by lobe-creds system role (Composio integrations section).
-        let composioServicesListStr = '';
-        if (ctx.serverDB && ctx.userId && !!composioEnv.COMPOSIO_API_KEY) {
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/modules/AgentRuntime/RuntimeExecutors.ts
+
           try {
             const { PluginModel } = await import('@/database/models/plugin');
             const pluginModel = new PluginModel(ctx.serverDB, ctx.userId, ctx.workspaceId);
@@ -1074,14 +882,9 @@ export const createRuntimeExecutors = (
             session_date: sessionDate,
             // Creds tool variables
             sandbox_enabled: sandboxEnabled,
-<<<<<<< HEAD:src/server/modules/AgentRuntime/RuntimeExecutors.ts
             CREDS_LIST: credsListStr,
             KLAVIS_SERVICES_LIST: klavisServicesListStr,
-=======
-            sandbox_uploaded_files: sandboxUploadedFiles,
-            CREDS_LIST: credsListStr,
-            COMPOSIO_SERVICES_LIST: composioServicesListStr,
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/modules/AgentRuntime/RuntimeExecutors.ts
+
             // Memory tool variables
             memory_effort: memoryEffort,
           },
@@ -1300,53 +1103,7 @@ export const createRuntimeExecutors = (
         }
       };
 
-<<<<<<< HEAD:src/server/modules/AgentRuntime/RuntimeExecutors.ts
-=======
-      // File service + date shard used to persist model-generated images
-      // (Gemini multimodal `content_part`/`reasoning_part` images) to object
-      // storage, built once and reused across parts. The `userId` check only
-      // satisfies its optional type — it is always present in this executor.
-      // A missing-S3-config failure surfaces later at uploadBase64 (caught per
-      // image in uploadPartImage), never at construction.
-      const imageUploadService = ctx.userId ? new FileService(ctx.serverDB, ctx.userId) : undefined;
-      const imageUploadDate = new Date().toISOString().split('T')[0];
 
-      // Coalesce a streamed text chunk into the trailing text part (mirrors the
-      // client StreamingHandler) so serialized multimodal content stays compact
-      // and preserves text/image ordering.
-      const appendTextPart = (parts: ContentPart[], text: string) => {
-        const last = parts.at(-1);
-        if (last && last.type === 'text') {
-          parts[parts.length - 1] = { text: last.text + text, type: 'text' };
-        } else {
-          parts.push({ text, type: 'text' });
-        }
-      };
-
-      // Persist a base64 image part to object storage and swap the placeholder
-      // part for one referencing the uploaded URL. Runs concurrently with the
-      // rest of the stream; a failed upload leaves the inline data-URI so the
-      // image still renders. Never stores raw base64 in the message on success.
-      const uploadPartImage = (
-        parts: ContentPart[],
-        partIndex: number,
-        base64: string,
-        mimeType: string | undefined,
-      ): Promise<void> => {
-        if (!imageUploadService) return Promise.resolve();
-        const ext = mimeType?.split('/')[1] || 'png';
-        const pathname = `${fileEnv.NEXT_PUBLIC_S3_FILE_PATH}/generations/${imageUploadDate}/${nanoid()}.${ext}`;
-        return imageUploadService
-          .uploadBase64(base64, pathname)
-          .then(({ url }) => {
-            parts[partIndex] = { image: url, type: 'image' };
-          })
-          .catch((error) => {
-            console.error(`[${operationLogId}][content_part] image upload failed:`, error);
-          });
-      };
-
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/modules/AgentRuntime/RuntimeExecutors.ts
       const maxAttempts = resolveLLMMaxAttempts(provider);
 
       // OTel chat span — wraps all retry attempts; TTFT recorded on the first
@@ -1619,15 +1376,7 @@ export const createRuntimeExecutors = (
               await flushReasoningBuffer();
               clearAttemptBuffers();
 
-<<<<<<< HEAD:src/server/modules/AgentRuntime/RuntimeExecutors.ts
-=======
-              // Wait for any model-generated image uploads to finish so the
-              // persisted multimodal content references S3 URLs, not base64.
-              if (contentImageUploads.length > 0 || reasoningImageUploads.length > 0) {
-                await Promise.allSettled([...contentImageUploads, ...reasoningImageUploads]);
-              }
 
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/modules/AgentRuntime/RuntimeExecutors.ts
               // Empty-completion guard: if the model produced
               // nothing actionable — no content, reasoning, tool calls, images,
               // or output tokens — throw so the retry loop below re-attempts the

@@ -31,13 +31,9 @@ export const agentBuilderRuntime: ServerRuntimeRegistration = {
       throw new Error('userId and serverDB are required for Agent Builder execution');
     }
 
-<<<<<<< HEAD:src/server/services/toolExecution/serverRuntimes/agentBuilder.ts
     const agentModel = new AgentModel(context.serverDB, context.userId);
     const pluginModel = new PluginModel(context.serverDB, context.userId);
-=======
-    const agentModel = new AgentModel(context.serverDB, context.userId, context.workspaceId);
-    const pluginModel = new PluginModel(context.serverDB, context.userId, context.workspaceId);
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/toolExecution/serverRuntimes/agentBuilder.ts
+
     const aiInfraRepos = new AiInfraRepos(context.serverDB, context.userId, {});
     const discoverService = new DiscoverService();
 
@@ -312,15 +308,10 @@ export const agentBuilderRuntime: ServerRuntimeRegistration = {
             }
           }
 
-<<<<<<< HEAD:src/server/services/toolExecution/serverRuntimes/agentBuilder.ts
           // OAuth-based tools (Klavis, LobehubSkill) cannot be installed in background context
           return {
             content: `Installing official integrations that require OAuth (Klavis, LobehubSkill) is not supported in background execution. Please install "${identifier}" from the Agent Builder UI instead.`,
-=======
-          // OAuth-based tools (Composio, LobehubSkill) cannot be installed in background context
-          return {
-            content: `Installing official integrations that require OAuth (Composio, LobehubSkill) is not supported in background execution. Please install "${identifier}" from the Agent Builder UI instead.`,
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/toolExecution/serverRuntimes/agentBuilder.ts
+
             error: { message: 'OAuth not available in background context', type: 'NotSupported' },
             success: false,
           };

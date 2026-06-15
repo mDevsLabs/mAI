@@ -46,10 +46,7 @@ export default {
   'groupTitle.byStatus.completed': 'Completed',
   'groupTitle.byStatus.failed': 'Failed',
   'groupTitle.byStatus.paused': 'Paused',
-<<<<<<< HEAD:src/locales/default/topic.ts
-=======
-  'groupTitle.byStatus.pending': 'Needs attention',
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:packages/locales/src/default/topic.ts
+
   'groupTitle.byStatus.running': 'Running',
   'groupTitle.byStatus.waitingForHuman': 'Awaiting input',
   'groupTitle.byTime.month': 'This Month',

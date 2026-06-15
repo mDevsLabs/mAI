@@ -2,11 +2,8 @@
 
 **App name:** `Telegram` | **Process name:** `Telegram`
 
-<<<<<<<< HEAD:.agents/skills/local-testing/bot/telegram/index.md
-See [osascript-common.md](../osascript-common.md) for shared patterns.
-========
-See [references/osascript.md](../../references/osascript.md) for shared patterns.
->>>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:.agents/skills/agent-testing/bot/telegram/index.md
+<See [osascript-common.md](../osascript-common.md) for shared patterns.
+=
 
 ## Activate & Navigate
 
@@ -79,11 +76,7 @@ curl -s "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/getUpdates?limit=5" | j
 ## Script
 
 ```bash
-<<<<<<<< HEAD:.agents/skills/local-testing/bot/telegram/index.md
-./.agents/skills/local-testing/bot/telegram/test-telegram-bot.sh "MyTestBot" "/start"
+<./.agents/skills/local-testing/bot/telegram/test-telegram-bot.sh "MyTestBot" "/start"
 ./.agents/skills/local-testing/bot/telegram/test-telegram-bot.sh "GPTBot" "Hello" 60
-========
-./.agents/skills/agent-testing/bot/telegram/test-telegram-bot.sh "MyTestBot" "/start"
-./.agents/skills/agent-testing/bot/telegram/test-telegram-bot.sh "GPTBot" "Hello" 60
->>>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:.agents/skills/agent-testing/bot/telegram/index.md
+=
 ```

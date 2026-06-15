@@ -121,10 +121,7 @@ export class TaskRunnerService {
           taskModel: this.taskModel,
           taskTopicModel: this.taskTopicModel,
           userId: this.userId,
-<<<<<<< HEAD:src/server/services/taskRunner/index.ts
-=======
-          workspaceId: this.workspaceId,
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/taskRunner/index.ts
+
         },
         extraPrompt,
       );

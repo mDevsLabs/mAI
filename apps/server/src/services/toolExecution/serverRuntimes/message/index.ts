@@ -346,14 +346,11 @@ export const messageRuntime: ServerRuntimeRegistration = {
               ((row.metadata as Record<string, unknown> | null)?.tenantName as string) ?? '',
           }));
 
-<<<<<<< HEAD:src/server/services/toolExecution/serverRuntimes/message/index.ts
         const telegramView = await maybeSynthesizeTelegramInstall(
           context.serverDB,
           context.userId,
         );
-=======
-        const telegramView = await maybeSynthesizeTelegramInstall(context.serverDB, context.userId);
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/toolExecution/serverRuntimes/message/index.ts
+
         if (telegramView) installations.push(telegramView);
 
         return installations;

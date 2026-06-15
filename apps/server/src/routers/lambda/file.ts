@@ -20,13 +20,8 @@ import { ChunkModel } from '@/database/models/chunk';
 import { DocumentModel } from '@/database/models/document';
 import { FileModel } from '@/database/models/file';
 import { KnowledgeRepo } from '@/database/repositories/knowledge';
-<<<<<<< HEAD:src/server/routers/lambda/file.ts
 import { authedProcedure, router } from '@/libs/trpc/lambda';
-=======
-import { workspaceMembers } from '@/database/schemas';
-import { appEnv } from '@/envs/app';
-import { router } from '@/libs/trpc/lambda';
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/routers/lambda/file.ts
+
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { DocumentService } from '@/server/services/document';
 import { FileService } from '@/server/services/file';
@@ -35,16 +30,7 @@ import type { FileListItem, KnowledgeItemStatus } from '@/types/files';
 import { QueryFileListSchema, UploadFileSchema } from '@/types/files';
 import { TransferErrorCode } from '@/types/transferError';
 
-<<<<<<< HEAD:src/server/routers/lambda/file.ts
-=======
-/**
- * Generate file proxy URL
- * Returns a unified proxy URL format: ${APP_URL}/f/:id
- */
-const getFileProxyUrl = (fileId: string): string => `${appEnv.APP_URL}/f/${fileId}`;
-const fileTransferEntityTypeSchema = z.enum(['document', 'file', 'folder']);
 
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/routers/lambda/file.ts
 const filterKnowledgeItems = <
   T extends {
     fileType: string;

@@ -75,9 +75,6 @@ echo "[$APP] Waiting ${WAIT}s for bot response..."
 sleep "$WAIT"
 
 echo "[$APP] Capturing screenshot..."
-<<<<<<<< HEAD:.agents/skills/local-testing/bot/telegram/test-telegram-bot.sh
-"$SCRIPT_DIR/../capture-app-window.sh" "$APP" "$SCREENSHOT"
-========
-"$SCRIPT_DIR/../../scripts/capture-app-window.sh" "$APP" "$SCREENSHOT"
->>>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:.agents/skills/agent-testing/bot/telegram/test-telegram-bot.sh
+<"$SCRIPT_DIR/../capture-app-window.sh" "$APP" "$SCREENSHOT"
+=
 echo "[$APP] Done! Screenshot saved to $SCREENSHOT"

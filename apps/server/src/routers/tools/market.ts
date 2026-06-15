@@ -1,8 +1,6 @@
 import { MARKET_AUTH_REQUIRED_MESSAGE } from '@lobechat/desktop-bridge';
-<<<<<<< HEAD:src/server/routers/tools/market.ts
 import { type CodeInterpreterToolName } from '@lobehub/market-sdk';
-=======
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/routers/tools/market.ts
+
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 import { z } from 'zod';
@@ -259,7 +257,6 @@ const execInSandboxHandler = async ({
 
     log('execInSandbox response for %s: %O', toolName, response);
 
-<<<<<<< HEAD:src/server/routers/tools/market.ts
     if (!response.success) {
       const errorCode = response.error?.code;
       const errorMessage = response.error?.message || 'Unknown error';
@@ -287,10 +284,7 @@ const execInSandboxHandler = async ({
         sessionExpiredAndRecreated: false,
         success: false,
       };
-=======
-    if (!response.success && isSandboxAuthError(response.error)) {
-      throwSandboxAuthError();
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/routers/tools/market.ts
+
     }
 
     return response;

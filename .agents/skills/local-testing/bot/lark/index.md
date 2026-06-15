@@ -2,11 +2,8 @@
 
 **App name:** `Lark` or `飞书` | **Process name:** `Lark` or `飞书`
 
-<<<<<<<< HEAD:.agents/skills/local-testing/bot/lark/index.md
-See [osascript-common.md](../osascript-common.md) for shared patterns.
-========
-See [references/osascript.md](../../references/osascript.md) for shared patterns.
->>>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:.agents/skills/agent-testing/bot/lark/index.md
+<See [osascript-common.md](../osascript-common.md) for shared patterns.
+=
 
 ## Activate & Navigate
 
@@ -60,11 +57,7 @@ screencapture /tmp/lark-bot-response.png
 ## Script
 
 ```bash
-<<<<<<<< HEAD:.agents/skills/local-testing/bot/lark/index.md
-./.agents/skills/local-testing/bot/lark/test-lark-bot.sh "bot-testing" "@MyBot hello"
+<./.agents/skills/local-testing/bot/lark/test-lark-bot.sh "bot-testing" "@MyBot hello"
 ./.agents/skills/local-testing/bot/lark/test-lark-bot.sh "bot-testing" "Help me with this" 30
-========
-./.agents/skills/agent-testing/bot/lark/test-lark-bot.sh "bot-testing" "@MyBot hello"
-./.agents/skills/agent-testing/bot/lark/test-lark-bot.sh "bot-testing" "Help me with this" 30
->>>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:.agents/skills/agent-testing/bot/lark/index.md
+=
 ```

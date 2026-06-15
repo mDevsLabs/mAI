@@ -425,11 +425,8 @@ export class TaskService {
     ]);
 
     // Derive fileIds from persisted editor_data (single source of truth).
-<<<<<<< HEAD:src/server/services/task/index.ts
     const extractCtx = { db: this.db, userId: this.userId };
-=======
-    const extractCtx = { db: this.db, userId: this.userId, workspaceId: this.workspaceId };
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/task/index.ts
+
     const [taskFileIds, ...commentFileIdLists] = await Promise.all([
       extractFileIdsFromEditorData(task.editorData, extractCtx),
       ...comments.map((c) => extractFileIdsFromEditorData(c.editorData, extractCtx)),
@@ -445,10 +442,7 @@ export class TaskService {
       db: this.db,
       fileIds: allFileIds,
       userId: this.userId,
-<<<<<<< HEAD:src/server/services/task/index.ts
-=======
-      workspaceId: this.workspaceId,
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/task/index.ts
+
     });
     const fileById = new Map(allFileMetadata.map((f) => [f.id, f]));
     const taskFiles = taskFileIds.map((id) => fileById.get(id)).filter((f) => !!f);

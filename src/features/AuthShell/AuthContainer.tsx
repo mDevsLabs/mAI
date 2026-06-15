@@ -22,7 +22,6 @@ const AuthContainer: FC<PropsWithChildren> = ({ children }) => {
         height={'100%'}
         width={'100%'}
       >
-<<<<<<< HEAD:src/app/[variants]/(auth)/_layout/index.tsx
         <Flexbox
           horizontal
           align={'center'}
@@ -32,10 +31,7 @@ const AuthContainer: FC<PropsWithChildren> = ({ children }) => {
           width={'100%'}
         >
           <Link aria-label={'mAI'} href={'/'} style={{ display: 'inline-flex' }}>
-=======
-        <Flexbox horizontal align={'center'} padding={16} width={'100%'}>
-          <a aria-label={'mAI'} href={'/'} style={{ display: 'inline-flex' }}>
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:src/features/AuthShell/AuthContainer.tsx
+
             <ProductLogo size={40} />
           </a>
         </Flexbox>
@@ -50,7 +46,6 @@ const AuthContainer: FC<PropsWithChildren> = ({ children }) => {
           </Flexbox>
           <AuthFooterLinks />
         </Flexbox>
-<<<<<<< HEAD:src/app/[variants]/(auth)/_layout/index.tsx
         <Center flex={1} padding={16} width={'100%'}>
           {children}
         </Center>
@@ -59,8 +54,7 @@ const AuthContainer: FC<PropsWithChildren> = ({ children }) => {
             {COPYRIGHT_FULL}
           </Text>
         </Center>
-=======
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:src/features/AuthShell/AuthContainer.tsx
+
       </Flexbox>
     </Flexbox>
   );

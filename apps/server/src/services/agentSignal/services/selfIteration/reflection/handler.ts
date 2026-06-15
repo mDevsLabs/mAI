@@ -131,11 +131,7 @@ export interface CreateSelfReflectionSourceHandlerDependencies {
    * @default builtin agent default
    */
   maxSteps?: number;
-<<<<<<< HEAD:src/server/services/agentSignal/services/selfIteration/reflection/handler.ts
-=======
-  /** Workspace id, threaded so the enqueued run targets the correct workspace. */
-  workspaceId?: string;
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/agentSignal/services/selfIteration/reflection/handler.ts
+
 }
 
 const isSelfReflectionScopeType = (value: unknown): value is SelfReflectionSourceScopeType =>
@@ -311,10 +307,7 @@ export const createSelfReflectionSourceHandler = (
       slug: BUILTIN_AGENT_SLUGS.selfReflection,
       ...(payload.topicId ? { topicId: payload.topicId } : {}),
       userId: payload.userId,
-<<<<<<< HEAD:src/server/services/agentSignal/services/selfIteration/reflection/handler.ts
-=======
-      workspaceId: deps.workspaceId,
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/agentSignal/services/selfIteration/reflection/handler.ts
+
     });
 
     return {

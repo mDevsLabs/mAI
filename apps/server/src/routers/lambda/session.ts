@@ -153,18 +153,10 @@ export const sessionRouter = router({
       return ctx.sessionModel.query({ current, pageSize });
     }),
 
-<<<<<<< HEAD:src/server/routers/lambda/session.ts
   removeAllSessions: sessionProcedure.mutation(async ({ ctx }) => {
     return ctx.sessionModel.deleteAll();
   }),
-=======
-  // Owner-only — bulk wipes everyone's sessions in the workspace.
-  removeAllSessions: sessionProcedure
-    .use(withScopedPermission('session:delete'))
-    .mutation(async ({ ctx }) => {
-      return ctx.sessionModel.deleteAll();
-    }),
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/routers/lambda/session.ts
+
 
   removeSession: sessionProcedure
     .use(withScopedPermission('session:delete'))

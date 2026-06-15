@@ -35,22 +35,14 @@ const resolveBriefTextTranslator = async (db: mAIDatabase, userId: string) => {
  */
 export const agentSignalReviewRuntime: ServerRuntimeRegistration = {
   factory: async (context) => {
-<<<<<<< HEAD:src/server/services/toolExecution/serverRuntimes/agentSignalReview.ts
     const { agentId, operationId, serverDB, userId } = context;
-=======
-    const { agentId, operationId, serverDB, userId, workspaceId } = context;
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/toolExecution/serverRuntimes/agentSignalReview.ts
+
     if (!agentId || !userId || !operationId || !serverDB) {
       throw new Error('agent-signal-review requires agentId, userId, operationId and serverDB');
     }
 
-<<<<<<< HEAD:src/server/services/toolExecution/serverRuntimes/agentSignalReview.ts
     const operation = await new AgentOperationModel(serverDB, userId).findById(operationId);
-=======
-    const operation = await new AgentOperationModel(serverDB, userId, workspaceId).findById(
-      operationId,
-    );
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/toolExecution/serverRuntimes/agentSignalReview.ts
+
     const marker = readAgentSignalMarker(operation?.metadata);
 
     const reviewWindowEnd = marker?.reviewWindowEnd ?? new Date(0).toISOString();
@@ -60,7 +52,6 @@ export const agentSignalReviewRuntime: ServerRuntimeRegistration = {
 
     const service = createReviewRuntimePrimitives({
       agentId,
-<<<<<<< HEAD:src/server/services/toolExecution/serverRuntimes/agentSignalReview.ts
       briefModel: new BriefModel(serverDB, userId),
       briefTextTranslator: await resolveBriefTextTranslator(serverDB, userId),
       db: serverDB,
@@ -71,19 +62,7 @@ export const agentSignalReviewRuntime: ServerRuntimeRegistration = {
       skillDocumentService: new SkillManagementDocumentService(serverDB, userId),
       sourceId,
       userId,
-=======
-      briefModel: new BriefModel(serverDB, userId, workspaceId),
-      briefTextTranslator: await resolveBriefTextTranslator(serverDB, userId),
-      db: serverDB,
-      localDate,
-      proposalBriefWriter: createServerSelfReviewBriefWriter(serverDB, userId, workspaceId),
-      reviewWindowEnd,
-      reviewWindowStart,
-      skillDocumentService: new SkillManagementDocumentService(serverDB, userId, workspaceId),
-      sourceId,
-      userId,
-      workspaceId,
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/toolExecution/serverRuntimes/agentSignalReview.ts
+
     });
 
     return new AgentSignalToolExecutionRuntime({

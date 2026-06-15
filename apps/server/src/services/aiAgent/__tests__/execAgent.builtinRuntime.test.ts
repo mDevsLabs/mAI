@@ -234,14 +234,8 @@ describe('AiAgentService.execAgent - builtin agent runtime config', () => {
       slug: 'self-reflection',
       systemRole: '',
     });
-<<<<<<< HEAD:src/server/services/aiAgent/__tests__/execAgent.builtinRuntime.test.ts
     mockGetBuiltinAgent.mockResolvedValueOnce({ id: 'agent-self-reflection', slug: 'self-reflection' });
-=======
-    mockGetBuiltinAgent.mockResolvedValueOnce({
-      id: 'agent-self-reflection',
-      slug: 'self-reflection',
-    });
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/aiAgent/__tests__/execAgent.builtinRuntime.test.ts
+
 
     await service.execAgent({ prompt: 'reflect', slug: 'self-reflection' });
 

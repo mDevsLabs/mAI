@@ -8,11 +8,7 @@ import { eq, inArray } from 'drizzle-orm';
 import { after } from 'next/server';
 import { z } from 'zod';
 
-<<<<<<< HEAD:src/server/routers/lambda/topic.ts
-=======
-import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
-import { wsCompatProcedure } from '@/business/server/trpc-middlewares/workspaceAuth';
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/routers/lambda/topic.ts
+
 import { AgentOperationModel } from '@/database/models/agentOperation';
 import { MessageModel } from '@/database/models/message';
 import { TopicModel } from '@/database/models/topic';
@@ -37,19 +33,12 @@ const topicProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) =>
 
   return opts.next({
     ctx: {
-<<<<<<< HEAD:src/server/routers/lambda/topic.ts
       agentMigrationRepo: new AgentMigrationRepo(ctx.serverDB, ctx.userId),
       agentOperationModel: new AgentOperationModel(ctx.serverDB, ctx.userId),
       topicImporterRepo: new TopicImporterRepo(ctx.serverDB, ctx.userId),
       topicModel: new TopicModel(ctx.serverDB, ctx.userId),
       topicShareModel: new TopicShareModel(ctx.serverDB, ctx.userId),
-=======
-      agentMigrationRepo: new AgentMigrationRepo(ctx.serverDB, ctx.userId, wsId),
-      agentOperationModel: new AgentOperationModel(ctx.serverDB, ctx.userId, wsId),
-      topicImporterRepo: new TopicImporterRepo(ctx.serverDB, ctx.userId, wsId),
-      topicModel: new TopicModel(ctx.serverDB, ctx.userId, wsId),
-      topicShareModel: new TopicShareModel(ctx.serverDB, ctx.userId, wsId),
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/routers/lambda/topic.ts
+
     },
   });
 });

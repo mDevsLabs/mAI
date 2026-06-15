@@ -280,11 +280,8 @@ export const taskRouter = router({
       }
     }),
 
-<<<<<<< HEAD:src/server/routers/lambda/task.ts
   updateComment: taskProcedure
-=======
-  updateComment: taskProcedureWrite
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/routers/lambda/task.ts
+
     .input(
       z.object({
         commentId: z.string(),

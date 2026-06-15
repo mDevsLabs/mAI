@@ -50,11 +50,7 @@ import { AgentModel } from '@/database/models/agent';
 import { AgentOperationModel } from '@/database/models/agentOperation';
 import { AgentSkillModel } from '@/database/models/agentSkill';
 import { AiModelModel } from '@/database/models/aiModel';
-<<<<<<< HEAD:src/server/services/aiAgent/index.ts
-=======
-import { ConnectorModel } from '@/database/models/connector';
-import { ConnectorToolModel } from '@/database/models/connectorTool';
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/aiAgent/index.ts
+
 import { DeviceModel } from '@/database/models/device';
 import { FileModel } from '@/database/models/file';
 import { MessageModel } from '@/database/models/message';
@@ -106,10 +102,8 @@ import { resolveAttachmentsByFileIds } from '@/server/services/file/resolveAttac
 import { HeterogeneousAgentService } from '@/server/services/heterogeneousAgent';
 import type { ConversationHistoryEntry } from '@/server/services/heterogeneousAgent/cloudHeteroContext';
 import { MarketService } from '@/server/services/market';
-<<<<<<< HEAD:src/server/services/aiAgent/index.ts
 import { deviceProxy } from '@/server/services/toolExecution/deviceProxy';
-=======
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/aiAgent/index.ts
+
 import { markdownToTxt } from '@/utils/markdownToTxt';
 
 import { resolveDeviceAccessPolicy } from './deviceAccessPolicy';
@@ -1450,7 +1444,6 @@ export class AiAgentService {
           // Resolve the working directory for the run: a topic-level override
           // wins, else the device's user-configured defaultCwd. The device row
           // lives in the DB (the gateway only knows live connections), so read
-<<<<<<< HEAD:src/server/services/aiAgent/index.ts
           // it directly rather than via deviceProxy.
           const boundDevice = await new DeviceModel(this.db, this.userId).findByDeviceId(
             dispatchDeviceId,
@@ -1480,46 +1473,7 @@ export class AiAgentService {
             ...heteroParams,
             cwd: deviceCwd,
             deviceId: dispatchDeviceId,
-=======
-          // it directly rather than via deviceGateway.
-          const boundDevice = await new DeviceModel(this.db, this.userId).findByDeviceId(
-            dispatchDeviceId,
-          );
-          // Resolve via the shared precedence helper so dispatch, workspace-init,
-          // and the new-topic backfill below all agree on the cwd.
-          const deviceCwd = resolveDeviceWorkingDirectory({
-            deviceDefaultCwd: boundDevice?.defaultCwd,
-            deviceId: dispatchDeviceId,
-            initialWorkingDirectory: appContext?.initialTopicMetadata?.workingDirectory,
-            topicWorkingDirectory: topic?.metadata?.workingDirectory,
-            workingDirByDevice: agentConfig.agencyConfig?.workingDirByDevice,
-          });
 
-          // A brand-new topic has no pinned cwd yet: the directory was only
-          // recorded at agent level (`workingDirByDevice`) when no topic existed.
-          // Persist the resolved cwd onto the topic so the sidebar groups it
-          // under the right project and the next turn reuses the same directory.
-          if (isNewTopic && deviceCwd && deviceCwd !== topic?.metadata?.workingDirectory) {
-            await this.topicModel.updateMetadata(topicId, { workingDirectory: deviceCwd });
-          }
-
-          // A device is the user's own persistent machine — build a
-          // device-specific context instead of reusing the cloud-sandbox one
-          // (which describes an ephemeral /workspace + pre-cloned repos and
-          // would mislead the agent).
-          const { buildRemoteDeviceHeteroContext } =
-            await import('@/server/services/heterogeneousAgent/remoteDeviceHeteroContext');
-          const deviceSystemContext = buildRemoteDeviceHeteroContext({
-            agentSystemContext: agentConfig.agencyConfig?.heterogeneousProvider?.systemContext,
-            conversationHistory,
-            cwd: deviceCwd,
-          });
-
-          const result = await deviceGateway.dispatchAgentRun({
-            ...heteroParams,
-            cwd: deviceCwd,
-            deviceId: dispatchDeviceId,
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/aiAgent/index.ts
             systemContext: deviceSystemContext,
           });
           if (!result.success) {
@@ -1639,11 +1593,8 @@ export class AiAgentService {
     const { loadModels } = await import('@/business/client/model-bank/loadModels');
     const builtinModels = await loadModels();
     // Resolve file URLs before visual tool activation checks and context build.
-<<<<<<< HEAD:src/server/services/aiAgent/index.ts
     const fileService = new FileService(this.db, this.userId);
-=======
-    const fileService = new FileService(this.db, this.userId, this.workspaceId);
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/aiAgent/index.ts
+
     const postProcessUrl = (path: string | null, file: { id?: string | null }) =>
       fileService.getFileAccessUrl({ id: file.id, url: path });
     let historyMessagesCache: any[] | undefined;
@@ -2419,7 +2370,6 @@ export class AiAgentService {
 
     await throwIfExecutionAborted('message history loading');
 
-<<<<<<< HEAD:src/server/services/aiAgent/index.ts
     // 12. Collect Phase 2 warnings (ingestion/parsing errors) alongside Phase 1 warnings
     // Phase 1 warnings (e.g. file too large) are already in botPlatformContext.warnings
     const warnings: string[] = [];
@@ -2614,13 +2564,7 @@ export class AiAgentService {
     // Append Phase 2 warnings (ingestion/parsing errors) to botPlatformContext
     // so the context engine can inject them alongside Phase 1 warnings
     if (warnings.length > 0 && botPlatformContext) {
-=======
-    // 12. Surface Phase 2 warnings (attachment ingestion/parsing errors) from the
-    // shared turn-setup block to the context engine, alongside Phase 1 warnings
-    // already on botPlatformContext. The DB user/assistant rows + Agent Signal
-    // enqueue all happened in that shared block, before the hetero fork.
-    if (runAttachments.warnings.length > 0 && botPlatformContext) {
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/aiAgent/index.ts
+
       const existing = (botPlatformContext as any).warnings as string[] | undefined;
       (botPlatformContext as any).warnings = [...(existing ?? []), ...runAttachments.warnings];
     }

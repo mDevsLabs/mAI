@@ -69,11 +69,7 @@ export default {
     "Sorry, the token usage or request count has reached the rate limit for this key. Please try again later or increase the key's quota.",
   StateStorePersistError:
     'A temporary issue with the conversation state store interrupted this operation. Please try again; if it persists, contact support.',
-<<<<<<< HEAD:src/locales/default/modelRuntime.ts
-=======
-  StateStoreReadError:
-    'This operation could not be resumed because its session state was unavailable. Please reopen the conversation to continue; if it persists, contact support.',
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:packages/locales/src/default/modelRuntime.ts
+
   StreamChunkError:
     'Error parsing the message chunk of the streaming request. Please check if the current API interface complies with the standard specifications, or contact your API provider for assistance.',
   UpstreamGatewayError:

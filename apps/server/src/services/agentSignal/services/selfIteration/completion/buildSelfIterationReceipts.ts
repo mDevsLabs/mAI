@@ -75,10 +75,7 @@ const SUMMARY_TITLE_BY_KIND: Record<AgentSignalOperationMarker['kind'], string> 
   'nightly-review': 'Nightly self-review completed',
   'self-feedback-intent': 'Self-feedback intent completed',
   'self-reflection': 'Self-reflection completed',
-<<<<<<< HEAD:src/server/services/agentSignal/services/selfIteration/completion/buildSelfIterationReceipts.ts
-=======
-  'skill': 'Skill write completed',
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/agentSignal/services/selfIteration/completion/buildSelfIterationReceipts.ts
+
 };
 
 /**
@@ -125,17 +122,11 @@ export const buildSelfIterationReceipts = (
     userId,
   } satisfies Partial<AgentSignalReceipt>;
 
-<<<<<<< HEAD:src/server/services/agentSignal/services/selfIteration/completion/buildSelfIterationReceipts.ts
   // A single memory write surfaces as just its action receipt — no aggregate
   // "review summary" (that is for nightly-review / reflection runs that capture
   // ideas across multiple actions).
   const includeSummary = marker.kind !== 'memory';
-=======
-  // A single same-turn memory / skill write surfaces as just its action receipt
-  // — no aggregate "review summary" (that is for nightly-review / reflection runs
-  // that capture ideas across multiple actions).
-  const includeSummary = marker.kind !== 'memory' && marker.kind !== 'skill';
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/agentSignal/services/selfIteration/completion/buildSelfIterationReceipts.ts
+
 
   const summary: AgentSignalReceipt = {
     ...base,

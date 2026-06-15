@@ -1,14 +1,8 @@
 import { files } from '@lobechat/database/schemas';
-<<<<<<< HEAD:src/server/services/file/extractFileIdsFromEditorData.ts
 import { and, eq, inArray } from 'drizzle-orm';
 
 import type { mAIDatabase } from '@/database/type';
-=======
-import { and, inArray } from 'drizzle-orm';
 
-import type { mAIDatabase } from '@/database/type';
-import { buildWorkspaceWhere } from '@/database/utils/workspace';
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/file/extractFileIdsFromEditorData.ts
 
 /**
  * Walks a serialized Lexical editor state, collects every URL referenced by
@@ -93,11 +87,8 @@ function extractStorageKeyFromUrl(url: string): string | undefined {
 
 export async function extractFileIdsFromEditorData(
   json: unknown,
-<<<<<<< HEAD:src/server/services/file/extractFileIdsFromEditorData.ts
   ctx: { db: mAIDatabase; userId: string },
-=======
-  ctx: { db: mAIDatabase; userId: string; workspaceId?: string },
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/file/extractFileIdsFromEditorData.ts
+
 ): Promise<string[]> {
   const urls = collectAttachmentUrlsFromEditorData(json);
   if (urls.length === 0) return [];
@@ -126,11 +117,8 @@ export async function extractFileIdsFromEditorData(
       const rows = await ctx.db
         .select({ id: files.id, url: files.url })
         .from(files)
-<<<<<<< HEAD:src/server/services/file/extractFileIdsFromEditorData.ts
         .where(and(eq(files.userId, ctx.userId), inArray(files.url, keys)));
-=======
-        .where(and(buildWorkspaceWhere(ctx, files), inArray(files.url, keys)));
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/file/extractFileIdsFromEditorData.ts
+
 
       const firstIdPerUrl = new Map<string, string>();
       for (const row of rows) {

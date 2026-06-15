@@ -293,7 +293,6 @@ const getReceiptTarget = (
 const toReceiptKind = (
   _action: BaseAction,
 ): Pick<AgentSignalReceipt, 'detail' | 'kind' | 'status' | 'title'> | undefined => {
-<<<<<<< HEAD:src/server/services/agentSignal/services/receiptService.ts
   // Memory receipts are no longer projected synchronously here: the memory
   // writer runs as an async execAgent run, so its receipt is projected on the
   // completion path from the run's finalState (see selfIteration/completion).
@@ -308,14 +307,7 @@ const toReceiptKind = (
     };
   }
 
-=======
-  // Memory and skill receipts are no longer projected synchronously here: both
-  // the memory writer and the skill-management action now run as async execAgent
-  // runs, so their receipts are projected on the completion path from the run's
-  // finalState (see selfIteration/completion). Projecting one here too would
-  // duplicate it — and with a premature, empty target, since at this point the
-  // write has only been enqueued.
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/agentSignal/services/receiptService.ts
+
   return;
 };
 

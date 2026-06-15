@@ -194,11 +194,8 @@ export default {
   'heteroAgent.executionTarget.sandbox': 'Cloud Sandbox',
   'heteroAgent.executionTarget.sandboxDesc': 'Run in an ephemeral cloud sandbox',
   'heteroAgent.executionTarget.downloadDesktop': 'Get Desktop App',
-<<<<<<< HEAD:src/locales/default/chat.ts
-=======
   'heteroAgent.executionTarget.downloadDesktopDesc': 'Run agents with access to your computer',
   'heteroAgent.executionTarget.downloadDesktopTitle': 'Get the desktop app',
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:packages/locales/src/default/chat.ts
   'heteroAgent.executionTarget.title': 'Execution Device',
   'heteroAgent.executionTarget.unknownDevice': 'Unknown device',
   'hideForYou':
@@ -903,15 +900,7 @@ export default {
   'thread.closeSubagentThread': 'Hide Detail',
   'thread.divider': 'Subtopic',
   'thread.openSubagentThread': 'View Detail',
-<<<<<<< HEAD:src/locales/default/chat.ts
-=======
-  'thread.subagentMetrics.modelLabel': 'Model',
-  'thread.subagentMetrics.toolCalls_one': '{{count}} tool call',
-  'thread.subagentMetrics.toolCalls_other': '{{count}} tool calls',
-  'thread.subagentMetrics.tokens': '{{count}} tokens',
-  'thread.subagentMetrics.toolsShort_one': '{{count}} tool',
-  'thread.subagentMetrics.toolsShort_other': '{{count}} tools',
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:packages/locales/src/default/chat.ts
+
   'thread.subagentReadOnlyHint':
     'SubAgent conversations are read-only — execution is driven by the parent agent.',
   'thread.threadMessageCount': '{{messageCount}} messages',
@@ -1030,13 +1019,9 @@ export default {
   'workflow.toolDisplayName.addPreferenceMemory': 'Saved memory',
   'workflow.toolDisplayName.calculate': 'Calculated',
   'workflow.toolDisplayName.callAgent': 'Called an agent',
-<<<<<<< HEAD:src/locales/default/chat.ts
   'workflow.toolDisplayName.callSubAgent': 'Call SubAgent',
   'workflow.toolDisplayName.callSubAgents': 'Call SubAgents',
-=======
-  'workflow.toolDisplayName.callMcpTool': 'Called MCP tool',
-  'workflow.toolDisplayName.callSubAgent': 'Called a sub-agent',
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:packages/locales/src/default/chat.ts
+
   'workflow.toolDisplayName.clearTodos': 'Cleared todos',
   'workflow.toolDisplayName.copyDocument': 'Copied a document',
   'workflow.toolDisplayName.crawlMultiPages': 'Crawled pages',

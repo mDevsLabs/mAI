@@ -155,23 +155,7 @@ describe('AgentDocumentsService', () => {
       expect(result).toEqual({ id: 'new-doc', filename: 'note-2' });
     });
 
-<<<<<<< HEAD:src/server/services/agentDocuments/index.test.ts
-=======
-    it('should preserve an explicit filename extension', async () => {
-      mockModel.findByFilename.mockResolvedValueOnce(undefined);
-      mockModel.create.mockResolvedValue({ id: 'new-doc', filename: 'notes.txt' });
 
-      const service = new AgentDocumentsService(db, userId);
-      await service.createDocument('agent-1', 'notes.txt', 'content');
-
-      expect(mockModel.findByFilename).toHaveBeenCalledWith('agent-1', 'notes.txt');
-      expect(mockModel.create).toHaveBeenCalledWith('agent-1', 'notes.txt', 'content', {
-        editorData: { root: { children: [] } },
-        title: 'notes.txt',
-      });
-    });
-
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/agentDocuments/index.test.ts
     it('should append collision suffix before the filename extension', async () => {
       mockModel.findByFilename
         .mockResolvedValueOnce({ id: 'existing-doc' })

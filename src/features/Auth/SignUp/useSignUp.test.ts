@@ -58,7 +58,6 @@ vi.mock('@/business/client/hooks/useBusinessSignup', () => ({
   }),
 }));
 
-<<<<<<< HEAD:src/app/[variants]/(auth)/signup/[[...signup]]/useSignUp.test.ts
 vi.mock('@/business/client/hooks/useBusinessSignin', () => ({
   useBusinessSignin: () => ({
     getAdditionalData: async () => ({}),
@@ -74,8 +73,7 @@ vi.mock('@/features/User/UserLoginOrSignup/trackLoginOrSignupClicked', () => ({
 // motion/react-m exports `form` as a motion HTML element — mock the whole module
 vi.mock('motion/react-m', () => ({ form: {} }));
 
-=======
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:src/features/Auth/SignUp/useSignUp.test.ts
+
 let mockEnableEmailVerification = false;
 vi.mock('@/features/AuthShell', () => ({
   useAuthServerConfigStore: (selector: (s: any) => any) =>
@@ -88,12 +86,9 @@ vi.mock('@/features/AuthShell', () => ({
     }),
 }));
 
-<<<<<<< HEAD:src/app/[variants]/(auth)/signup/[[...signup]]/useSignUp.test.ts
 // Mock global localStorage
 vi.stubGlobal('localStorage', mockLocalStorage);
-=======
-const originalLocation = window.location;
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:src/features/Auth/SignUp/useSignUp.test.ts
+
 
 describe('useSignUp', () => {
   beforeEach(() => {

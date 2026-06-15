@@ -83,24 +83,7 @@ describe('createResponseMeta', () => {
     expect(result.headers).toBeUndefined();
   });
 
-<<<<<<< HEAD:src/libs/trpc/utils/responseMeta.test.ts
-=======
-  it('should NOT set AUTH_REQUIRED_HEADER for runtime provider auth errors', () => {
-    const error = new TRPCError({
-      cause: { errorType: 'InvalidProviderAPIKey' },
-      code: TRPC_ERROR_CODE_UNAUTHORIZED,
-      message: 'InvalidProviderAPIKey',
-    });
 
-    const result = createResponseMeta({
-      ctx: undefined,
-      errors: [error],
-    });
-
-    expect(result.headers).toBeUndefined();
-  });
-
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:packages/trpc/src/utils/responseMeta.test.ts
   it('should handle multiple errors where one is UNAUTHORIZED', () => {
     const errors = [
       new TRPCError({ code: 'BAD_REQUEST' }),

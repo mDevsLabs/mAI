@@ -10,15 +10,7 @@ export interface FileServiceImpl {
    * Create cached pre-signed preview URL
    */
   createCachedPreSignedUrlForPreview: (url?: string | null, expiresIn?: number) => Promise<string>;
-<<<<<<< HEAD:src/server/services/file/impls/type.ts
-=======
 
-  /**
-   * Create pre-signed upload descriptor
-   */
-  createPreSignedUpload: (key: string) => Promise<PreSignedUpload>;
-
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/file/impls/type.ts
   /**
    * Create pre-signed upload URL
    */

@@ -26,16 +26,8 @@ import {
   invokeAgentSpanName,
   tracer as agentRuntimeTracer,
 } from '@lobechat/observability-otel/modules/agent-runtime';
-<<<<<<< HEAD:src/server/services/agentRuntime/AgentRuntimeService.ts
 import { type ExecSubAgentTaskParams, type UIChatMessage } from '@lobechat/types';
-=======
-import {
-  type ChatToolPayload,
-  type ExecSubAgentParams,
-  type ExecVirtualSubAgentParams,
-  type UIChatMessage,
-} from '@lobechat/types';
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/agentRuntime/AgentRuntimeService.ts
+
 import debug from 'debug';
 import urlJoin from 'url-join';
 
@@ -88,52 +80,7 @@ if (process.env.VERCEL) {
 
 const log = debug('lobe-server:agent-runtime-service');
 
-<<<<<<< HEAD:src/server/services/agentRuntime/AgentRuntimeService.ts
-=======
-/**
- * Base delay before the first `verifyAsyncToolBarrier` re-check fires after a
- * sub-agent completion found the parent not yet resumable. Long enough for
- * the parent's parking step to finish persisting, short enough that a lost
- * resume is recovered promptly. Subsequent attempts back off exponentially —
- * see {@link asyncToolVerifyDelayMs}.
- */
-const ASYNC_TOOL_VERIFY_DELAY_MS = 15_000;
 
-/**
- * Maximum number of bounded watchdog re-checks armed per parked parent. The
- * watchdog re-arms after each unsatisfied check (instead of the old single
- * shot) so a transient miss — a read-replica lag, a sibling dying between
- * backfill and resume — is retried rather than leaving the parent stuck in
- * `waiting_for_async_tool` forever. With exponential backoff from a 15s base,
- * 5 attempts span ~15s → ~7.75min total before giving up. See LOBE-10385.
- */
-const ASYNC_TOOL_VERIFY_MAX_ATTEMPTS = 5;
-
-/** Hard ceiling on a single backoff delay so late attempts don't overshoot. */
-const ASYNC_TOOL_VERIFY_MAX_DELAY_MS = 240_000;
-
-/**
- * Exponential backoff delay for the Nth (1-based) watchdog re-check:
- * 15s, 30s, 60s, 120s, 240s, capped at {@link ASYNC_TOOL_VERIFY_MAX_DELAY_MS}.
- */
-const asyncToolVerifyDelayMs = (attempt: number): number =>
-  Math.min(
-    ASYNC_TOOL_VERIFY_DELAY_MS * 2 ** (Math.max(1, attempt) - 1),
-    ASYNC_TOOL_VERIFY_MAX_DELAY_MS,
-  );
-
-/**
- * Format error for storage in message pluginError metadata.
- * Handles Error objects which don't serialize properly with JSON.stringify.
- */
-const formatErrorForMetadata = (error: unknown): Record<string, any> | undefined => {
-  if (!error) return undefined;
-  if (error instanceof Error) return { message: error.message, name: error.name };
-  if (typeof error === 'object' && 'message' in error) return error as Record<string, any>;
-  return { message: String(error) };
-};
-
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/agentRuntime/AgentRuntimeService.ts
 const toAgentSignalSnapshotEvents = (
   emission: Awaited<ReturnType<typeof emitAgentSignalSourceEvent>> | undefined,
 ) => {

@@ -412,10 +412,7 @@ export interface ReviewRuntimePrimitiveDeps {
   skillDocumentService: SkillManagementDocumentService;
   sourceId: string;
   userId: string;
-<<<<<<< HEAD:src/server/services/agentSignal/services/selfIteration/review/server.ts
-=======
-  workspaceId?: string;
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/agentSignal/services/selfIteration/review/server.ts
+
 }
 
 /**
@@ -444,10 +441,7 @@ export const createReviewRuntimePrimitives = (
     skillDocumentService,
     sourceId,
     userId,
-<<<<<<< HEAD:src/server/services/agentSignal/services/selfIteration/review/server.ts
-=======
-    workspaceId,
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/agentSignal/services/selfIteration/review/server.ts
+
   } = deps;
 
   const isSkillNameAvailable = async ({
@@ -689,11 +683,8 @@ export const createReviewRuntimePrimitives = (
               message: content,
               reason: `Agent Signal self-review memory candidate from ${evidenceRefs.length} evidence refs.`,
             },
-<<<<<<< HEAD:src/server/services/agentSignal/services/selfIteration/review/server.ts
             { db, userId },
-=======
-            { db, userId, workspaceId },
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/agentSignal/services/selfIteration/review/server.ts
+
           );
 
           if (result.status !== 'applied') {
@@ -985,9 +976,6 @@ export const createServerSelfReviewPolicyOptions = ({
     },
     collectContext: (input) => collector.collect(input),
     db,
-<<<<<<< HEAD:src/server/services/agentSignal/services/selfIteration/review/server.ts
-=======
-    workspaceId,
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/agentSignal/services/selfIteration/review/server.ts
+
   };
 };

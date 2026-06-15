@@ -132,17 +132,7 @@ describe('formatErrorForState', () => {
       expect(result.countAsFailure).toBeUndefined();
       expect(result.numericId).toBeUndefined();
     });
-<<<<<<< HEAD:src/server/modules/AgentRuntime/formatErrorForState.test.ts
-=======
 
-    it('classifies a raw Drizzle "Failed query" Error via its message instead of a bare 500', () => {
-      const result = formatErrorForState(new Error('Failed query: rollback\nparams: '));
-
-      expect(result.type).toBe(AgentRuntimeErrorType.DatabasePersistError);
-      expect(result.numericId).toBe(7004);
-      expect(result.attribution).toBe('harness');
-    });
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/modules/AgentRuntime/formatErrorForState.test.ts
   });
 
   describe('ProviderBizError refinement', () => {

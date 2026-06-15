@@ -11,11 +11,7 @@ import {
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
-<<<<<<< HEAD:src/server/routers/lambda/botMessage.ts
-=======
-import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
-import { wsCompatProcedure } from '@/business/server/trpc-middlewares/workspaceAuth';
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/routers/lambda/botMessage.ts
+
 import { getMessengerTelegramConfig } from '@/config/messenger';
 import type { DecryptedBotProvider } from '@/database/models/agentBotProvider';
 import { AgentBotProviderModel } from '@/database/models/agentBotProvider';

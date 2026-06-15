@@ -4,20 +4,12 @@ import { type AgentSignalOperationMarker, RequestTrigger, ThreadType } from '@lo
 import { ThreadModel } from '@/database/models/thread';
 import type { mAIDatabase } from '@/database/type';
 
-<<<<<<< HEAD:src/server/services/agentSignal/services/selfIteration/dispatch/enqueueSelfIterationRun.ts
 /** The three builtin self-iteration agent slugs an execAgent run can dispatch to. */
 export type SelfIterationSlug =
   | typeof BUILTIN_AGENT_SLUGS.nightlyReview
   | typeof BUILTIN_AGENT_SLUGS.selfFeedbackIntent
   | typeof BUILTIN_AGENT_SLUGS.selfReflection;
-=======
-/** The builtin self-iteration agent slugs an execAgent run can dispatch to. */
-export type SelfIterationSlug =
-  | typeof BUILTIN_AGENT_SLUGS.nightlyReview
-  | typeof BUILTIN_AGENT_SLUGS.selfFeedbackIntent
-  | typeof BUILTIN_AGENT_SLUGS.selfReflection
-  | typeof BUILTIN_AGENT_SLUGS.skillManagement;
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/agentSignal/services/selfIteration/dispatch/enqueueSelfIterationRun.ts
+
 
 export interface EnqueueSelfIterationRunInput {
   /** The user agent being reviewed — owns the run, marker, and isolated thread. */
@@ -42,11 +34,7 @@ export interface EnqueueSelfIterationRunInput {
   /** Topic the run is scoped to; a new topic is created when absent. */
   topicId?: string;
   userId: string;
-<<<<<<< HEAD:src/server/services/agentSignal/services/selfIteration/dispatch/enqueueSelfIterationRun.ts
-=======
-  /** Workspace id when the run belongs to a team workspace; scopes the operation. */
-  workspaceId?: string;
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/agentSignal/services/selfIteration/dispatch/enqueueSelfIterationRun.ts
+
 }
 
 export interface EnqueueSelfIterationRunResult {
@@ -79,11 +67,8 @@ export const enqueueSelfIterationRun = async (
   let threadId: string | undefined;
   if (input.topicId && input.sourceMessageId) {
     try {
-<<<<<<< HEAD:src/server/services/agentSignal/services/selfIteration/dispatch/enqueueSelfIterationRun.ts
       const thread = await new ThreadModel(input.db, input.userId).create({
-=======
-      const thread = await new ThreadModel(input.db, input.userId, input.workspaceId).create({
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/agentSignal/services/selfIteration/dispatch/enqueueSelfIterationRun.ts
+
         agentId: input.agentId,
         sourceMessageId: input.sourceMessageId,
         title: input.threadTitle ?? 'Agent Signal Self-Iteration',
@@ -97,13 +82,8 @@ export const enqueueSelfIterationRun = async (
   }
 
   const { AiAgentService } = await import('@/server/services/aiAgent');
-<<<<<<< HEAD:src/server/services/agentSignal/services/selfIteration/dispatch/enqueueSelfIterationRun.ts
   const result = await new AiAgentService(input.db, input.userId).execAgent({
-=======
-  const result = await new AiAgentService(input.db, input.userId, {
-    workspaceId: input.workspaceId,
-  }).execAgent({
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/agentSignal/services/selfIteration/dispatch/enqueueSelfIterationRun.ts
+
     appContext: {
       // No agentId here — the run executes under the builtin `slug` (which
       // supplies its tools / systemRole / model). The reviewed user agent

@@ -295,13 +295,8 @@ export const runMemoryActionAgent = async (
   // The durable receipt is projected on the completion path from the run's
   // finalState — no blocking executeSync.
   if (dispatch) {
-<<<<<<< HEAD:src/server/services/agentSignal/policies/analyzeIntent/actions/userMemory.ts
     const runtimeService = new AgentRuntimeService(options.db, options.userId);
-=======
-    const runtimeService = new AgentRuntimeService(options.db, options.userId, {
-      workspaceId: options.workspaceId,
-    });
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/agentSignal/policies/analyzeIntent/actions/userMemory.ts
+
     await runtimeService.createOperation({
       ...createParams,
       appContext: { ...baseAppContext, agentSignal: dispatch.marker },
@@ -321,10 +316,7 @@ export const runMemoryActionAgent = async (
     },
     queueService: null,
     streamEventManager,
-<<<<<<< HEAD:src/server/services/agentSignal/policies/analyzeIntent/actions/userMemory.ts
-=======
-    workspaceId: options.workspaceId,
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/agentSignal/policies/analyzeIntent/actions/userMemory.ts
+
   });
   await runtimeService.createOperation({
     ...createParams,

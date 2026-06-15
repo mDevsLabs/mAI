@@ -14,10 +14,7 @@ export interface BuildTaskPromptDeps {
   taskModel: TaskModel;
   taskTopicModel: TaskTopicModel;
   userId: string;
-<<<<<<< HEAD:src/server/services/taskRunner/buildTaskPrompt.ts
-=======
-  workspaceId?: string;
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/taskRunner/buildTaskPrompt.ts
+
 }
 
 export interface BuiltTaskPrompt {
@@ -39,11 +36,8 @@ export async function buildTaskPrompt(
   deps: BuildTaskPromptDeps,
   extraPrompt?: string,
 ): Promise<BuiltTaskPrompt> {
-<<<<<<< HEAD:src/server/services/taskRunner/buildTaskPrompt.ts
   const { briefModel, db, taskModel, taskTopicModel, userId } = deps;
-=======
-  const { briefModel, db, taskModel, taskTopicModel, userId, workspaceId } = deps;
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/taskRunner/buildTaskPrompt.ts
+
 
   const [topics, briefs, comments, subtasks, dependencies, documents] = await Promise.all([
     task.totalTopics && task.totalTopics > 0
@@ -61,11 +55,8 @@ export async function buildTaskPrompt(
   // Derive fileIds from the persisted Lexical state. editor_data is the
   // single source of truth — fileId is recovered from the URL in each node
   // (proxy URL form via regex; pre-signed dev URLs via files.url lookup).
-<<<<<<< HEAD:src/server/services/taskRunner/buildTaskPrompt.ts
   const extractCtx = { db, userId };
-=======
-  const extractCtx = { db, userId, workspaceId };
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/taskRunner/buildTaskPrompt.ts
+
   const [taskFileIds, ...commentFileIdLists] = await Promise.all([
     extractFileIdsFromEditorData(task.editorData, extractCtx),
     ...comments.map((c) => extractFileIdsFromEditorData(c.editorData, extractCtx)),
@@ -87,10 +78,7 @@ export async function buildTaskPrompt(
     fileIds: allFileIds,
     signUrls: false,
     userId,
-<<<<<<< HEAD:src/server/services/taskRunner/buildTaskPrompt.ts
-=======
-    workspaceId,
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/taskRunner/buildTaskPrompt.ts
+
   });
   const fileMetaById = new Map(fileMetadata.map((f) => [f.id, f]));
 

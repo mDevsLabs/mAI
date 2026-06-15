@@ -14,10 +14,7 @@ import { agentManagementRuntime } from './agentManagement';
 import { agentSignalFeedbackIntentRuntime } from './agentSignalFeedbackIntent';
 import { agentSignalReflectionRuntime } from './agentSignalReflection';
 import { agentSignalReviewRuntime } from './agentSignalReview';
-<<<<<<< HEAD:src/server/services/toolExecution/serverRuntimes/index.ts
-=======
-import { agentSignalSkillManagementRuntime } from './agentSignalSkillManagement';
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/toolExecution/serverRuntimes/index.ts
+
 import { briefRuntime } from './brief';
 import { calculatorRuntime } from './calculator';
 import { cloudSandboxRuntime } from './cloudSandbox';
@@ -83,19 +80,10 @@ registerRuntimes([
   webOnboardingRuntime,
   lobeAgentRuntime,
   selfFeedbackIntentRuntime,
-<<<<<<< HEAD:src/server/services/toolExecution/serverRuntimes/index.ts
   agentSignalReviewRuntime,
   agentSignalReflectionRuntime,
   agentSignalFeedbackIntentRuntime,
-=======
-  agentSignalSkillManagementRuntime,
-  agentSignalReviewRuntime,
-  agentSignalReflectionRuntime,
-  agentSignalFeedbackIntentRuntime,
-  pageAgentRuntime,
-  verifyResultRuntime,
-  lobeDeliveryCheckerRuntime,
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/toolExecution/serverRuntimes/index.ts
+
 ]);
 
 // ==================== Registry API ====================

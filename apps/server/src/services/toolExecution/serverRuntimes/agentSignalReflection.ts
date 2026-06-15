@@ -18,11 +18,8 @@ import type { ServerRuntimeRegistration } from './types';
  */
 export const agentSignalReflectionRuntime: ServerRuntimeRegistration = {
   factory: (context) => {
-<<<<<<< HEAD:src/server/services/toolExecution/serverRuntimes/agentSignalReflection.ts
     const { agentId, serverDB, userId } = context;
-=======
-    const { agentId, serverDB, userId, workspaceId } = context;
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/toolExecution/serverRuntimes/agentSignalReflection.ts
+
     if (!agentId || !userId || !serverDB) {
       throw new Error('agent-signal-reflection requires agentId, userId and serverDB');
     }
@@ -32,14 +29,9 @@ export const agentSignalReflectionRuntime: ServerRuntimeRegistration = {
       db: serverDB,
       memoryReason: (count) =>
         `Agent Signal self-reflection memory candidate from ${count} evidence refs.`,
-<<<<<<< HEAD:src/server/services/toolExecution/serverRuntimes/agentSignalReflection.ts
       skillDocumentService: new SkillManagementDocumentService(serverDB, userId),
       userId,
-=======
-      skillDocumentService: new SkillManagementDocumentService(serverDB, userId, workspaceId),
-      userId,
-      workspaceId,
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/toolExecution/serverRuntimes/agentSignalReflection.ts
+
     });
 
     return new AgentSignalToolExecutionRuntime({

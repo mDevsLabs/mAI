@@ -2,11 +2,8 @@
 
 **App name:** `Discord` | **Process name:** `Discord`
 
-<<<<<<<< HEAD:.agents/skills/local-testing/bot/discord/index.md
-See [osascript-common.md](../osascript-common.md) for shared patterns.
-========
-See [references/osascript.md](../../references/osascript.md) for shared patterns.
->>>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:.agents/skills/agent-testing/bot/discord/index.md
+<See [osascript-common.md](../osascript-common.md) for shared patterns.
+=
 
 ## Activate & Navigate
 
@@ -96,11 +93,7 @@ echo "Screenshot saved to /tmp/discord-test-result.png"
 ## Script
 
 ```bash
-<<<<<<<< HEAD:.agents/skills/local-testing/bot/discord/index.md
-./.agents/skills/local-testing/bot/discord/test-discord-bot.sh "bot-testing" "!ping"
+<./.agents/skills/local-testing/bot/discord/test-discord-bot.sh "bot-testing" "!ping"
 ./.agents/skills/local-testing/bot/discord/test-discord-bot.sh "bot-testing" "/ask Tell me a joke" 30
-========
-./.agents/skills/agent-testing/bot/discord/test-discord-bot.sh "bot-testing" "!ping"
-./.agents/skills/agent-testing/bot/discord/test-discord-bot.sh "bot-testing" "/ask Tell me a joke" 30
->>>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:.agents/skills/agent-testing/bot/discord/index.md
+=
 ```

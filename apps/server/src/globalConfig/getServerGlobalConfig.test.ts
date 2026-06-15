@@ -15,30 +15,15 @@ const mocks = vi.hoisted(() => ({
   ),
 }));
 
-<<<<<<< HEAD:src/server/globalConfig/getServerGlobalConfig.test.ts
 const mockGlobalConfigDependencies = (enableBusinessFeatures: boolean) => {
-=======
-interface MockGlobalConfigOptions {
-  agentGatewayUrl?: string;
-  enableAgentGateway?: boolean;
-}
 
-const mockGlobalConfigDependencies = (
-  enableBusinessFeatures: boolean,
-  options: MockGlobalConfigOptions = {},
-) => {
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/globalConfig/getServerGlobalConfig.test.ts
   vi.doMock('@lobechat/business-const', () => ({
     ENABLE_BUSINESS_FEATURES: enableBusinessFeatures,
   }));
 
-<<<<<<< HEAD:src/server/globalConfig/getServerGlobalConfig.test.ts
   vi.doMock('@/config/klavis', () => ({
     klavisEnv: {},
-=======
-  vi.doMock('@/config/composio', () => ({
-    composioEnv: {},
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/globalConfig/getServerGlobalConfig.test.ts
+
   }));
 
   vi.doMock('@/const/version', () => ({
@@ -46,16 +31,8 @@ const mockGlobalConfigDependencies = (
   }));
 
   vi.doMock('@/envs/app', () => ({
-<<<<<<< HEAD:src/server/globalConfig/getServerGlobalConfig.test.ts
     appEnv: {},
-=======
-    appEnv: {
-      ...(options.agentGatewayUrl ? { AGENT_GATEWAY_URL: options.agentGatewayUrl } : {}),
-      ...(options.enableAgentGateway === undefined
-        ? {}
-        : { ENABLE_AGENT_GATEWAY: options.enableAgentGateway }),
-    },
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/globalConfig/getServerGlobalConfig.test.ts
+
     getAppConfig: vi.fn(() => ({
       DEFAULT_AGENT_CONFIG: '',
     })),
@@ -139,21 +116,7 @@ const loadCapturedProviderConfig = async (enableBusinessFeatures: boolean) => {
   >;
 };
 
-<<<<<<< HEAD:src/server/globalConfig/getServerGlobalConfig.test.ts
-=======
-const loadServerConfig = async (
-  enableBusinessFeatures: boolean,
-  options?: MockGlobalConfigOptions,
-) => {
-  vi.resetModules();
-  mocks.genServerAiProvidersConfig.mockClear();
-  mockGlobalConfigDependencies(enableBusinessFeatures, options);
 
-  const { getServerGlobalConfig } = await import('./index');
-  return getServerGlobalConfig();
-};
-
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/globalConfig/getServerGlobalConfig.test.ts
 describe('getServerGlobalConfig', () => {
   afterEach(() => {
     vi.restoreAllMocks();
@@ -180,39 +143,5 @@ describe('getServerGlobalConfig', () => {
     expect(providerConfig[ModelProvider.OpenAI]).toBeUndefined();
     expect(providerConfig[ModelProvider.DeepSeek].enabled).toBe(true);
   });
-<<<<<<< HEAD:src/server/globalConfig/getServerGlobalConfig.test.ts
-=======
 
-  it('should enable gateway mode for business builds', async () => {
-    await expect(loadServerConfig(true)).resolves.toMatchObject({
-      enableGatewayMode: true,
-    });
-  });
-
-  it('should enable gateway mode for self-hosted builds only when explicitly enabled with a gateway url', async () => {
-    await expect(
-      loadServerConfig(false, {
-        agentGatewayUrl: 'https://gateway.test.com',
-        enableAgentGateway: true,
-      }),
-    ).resolves.toMatchObject({
-      agentGatewayUrl: 'https://gateway.test.com',
-      enableGatewayMode: true,
-    });
-
-    await expect(
-      loadServerConfig(false, {
-        agentGatewayUrl: 'https://gateway.test.com',
-        enableAgentGateway: false,
-      }),
-    ).resolves.toMatchObject({
-      agentGatewayUrl: 'https://gateway.test.com',
-      enableGatewayMode: false,
-    });
-
-    await expect(loadServerConfig(false, { enableAgentGateway: true })).resolves.toMatchObject({
-      enableGatewayMode: false,
-    });
-  });
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/globalConfig/getServerGlobalConfig.test.ts
 });

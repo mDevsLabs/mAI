@@ -11,10 +11,7 @@ import { buildFinalSnapshotKey } from '@/server/modules/AgentTracing';
 import { emitAgentSignalSourceEvent } from '@/server/services/agentSignal';
 import { toAgentSignalTraceEvents } from '@/server/services/agentSignal/observability/traceEvents';
 import { extractSelfIterationCompletionPayload } from '@/server/services/agentSignal/services/selfIteration/completion';
-<<<<<<< HEAD:src/server/services/agentRuntime/CompletionLifecycle.ts
-=======
-import { runVerifyOnCompletion } from '@/server/services/verify';
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/agentRuntime/CompletionLifecycle.ts
+
 
 import { hookDispatcher } from './hooks';
 

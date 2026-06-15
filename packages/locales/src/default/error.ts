@@ -228,10 +228,7 @@ export default {
   'upload.storageBlock.upgradeRequired':
     'Your file storage has reached the plan limit. Please upgrade your plan or delete unused files.',
   'upload.storageBlock.viewPlans': 'View plans',
-<<<<<<< HEAD:src/locales/default/error.ts
-=======
   'upload.permissionDenied': "You don't have permission to upload files in this workspace.",
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:packages/locales/src/default/error.ts
   'upload.storageLimitExceeded':
     'Your file storage has reached the plan limit. Please upgrade your plan or delete unused files to free up space.',
   'upload.title': 'File upload failed. Please check your network connection or try again later',

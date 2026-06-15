@@ -11,10 +11,8 @@ import {
   BoxIcon,
   CheckIcon,
   ChevronDownIcon,
-<<<<<<< HEAD:src/features/ChatInput/RuntimeConfig/HeteroDeviceSwitcher.tsx
   CloudIcon,
-=======
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:src/features/ChatInput/ControlBar/HeteroDeviceSwitcher.tsx
+
   ExternalLinkIcon,
   InfoIcon,
   LaptopIcon,
@@ -389,48 +387,12 @@ const HeteroDeviceSwitcher = memo<HeteroDeviceSwitcherProps>(({ agentId }) => {
     return executionTarget === target;
   };
 
-<<<<<<< HEAD:src/features/ChatInput/RuntimeConfig/HeteroDeviceSwitcher.tsx
   const content = (
     <Flexbox gap={2} style={{ maxWidth: 320, minWidth: 280 }}>
       <div className={styles.header}>
         <span className={styles.headerTitle}>{t('heteroAgent.executionTarget.title')}</span>
         <Flexbox horizontal align={'center'} gap={6}>
-=======
-  const renderDeviceRow = (d: NonNullable<typeof devices>[number]) => (
-    <OptionRow
-      active={isActive('device', d.deviceId)}
-      disabled={!d.online}
-      icon={getDeviceIcon(d.platform)}
-      key={d.deviceId}
-      label={d.friendlyName || d.hostname || d.deviceId}
-      tag={d.deviceId === currentDeviceId ? t('heteroAgent.executionTarget.local') : undefined}
-      desc={
-        <>
-          <span className={d.online ? styles.dotOnline : styles.dotOffline} />
-          <span>
-            {d.online
-              ? t('heteroAgent.executionTarget.online')
-              : t('heteroAgent.executionTarget.offline')}
-          </span>
-        </>
-      }
-      onClick={() => void handleSelect('device', d.deviceId)}
-    />
-  );
 
-  const content = (
-    <Flexbox gap={6} style={{ maxWidth: 320, minWidth: 280 }}>
-      <div className={styles.header}>
-        <Flexbox horizontal align={'center'} gap={4}>
-          <span className={styles.headerTitle}>{t('heteroAgent.executionTarget.title')}</span>
-          <Tooltip title={t('heteroAgent.executionTarget.infoTooltip')}>
-            <span className={styles.headerInfo}>
-              <Icon icon={InfoIcon} size={12} />
-            </span>
-          </Tooltip>
-        </Flexbox>
-        {isDesktop || showWebDownloadCard ? null : (
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:src/features/ChatInput/ControlBar/HeteroDeviceSwitcher.tsx
           <a
             className={styles.headerLink}
             href="https://lobehub.com/downloads"
@@ -440,16 +402,13 @@ const HeteroDeviceSwitcher = memo<HeteroDeviceSwitcherProps>(({ agentId }) => {
             <Icon icon={ExternalLinkIcon} size={11} />
             <span>{t('heteroAgent.executionTarget.downloadDesktop')}</span>
           </a>
-<<<<<<< HEAD:src/features/ChatInput/RuntimeConfig/HeteroDeviceSwitcher.tsx
           <Tooltip title={t('heteroAgent.executionTarget.infoTooltip')}>
             <span className={styles.headerInfo}>
               <Icon icon={InfoIcon} size={12} />
             </span>
           </Tooltip>
         </Flexbox>
-=======
-        )}
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:src/features/ChatInput/ControlBar/HeteroDeviceSwitcher.tsx
+
       </div>
       {isHetero ? null : (
         <OptionRow
@@ -476,7 +435,6 @@ const HeteroDeviceSwitcher = memo<HeteroDeviceSwitcherProps>(({ agentId }) => {
         label={t('heteroAgent.executionTarget.sandbox')}
         onClick={() => void handleSelect('sandbox')}
       />
-<<<<<<< HEAD:src/features/ChatInput/RuntimeConfig/HeteroDeviceSwitcher.tsx
       {(devices ?? []).map((d) => (
         <OptionRow
           active={isActive('device', d.deviceId)}
@@ -497,9 +455,7 @@ const HeteroDeviceSwitcher = memo<HeteroDeviceSwitcherProps>(({ agentId }) => {
           onClick={() => void handleSelect('device', d.deviceId)}
         />
       ))}
-=======
-      {(devices ?? []).map((d) => renderDeviceRow(d))}
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:src/features/ChatInput/ControlBar/HeteroDeviceSwitcher.tsx
+
       {hasNoDevices && isLoading ? (
         <div className={styles.empty}>{t('heteroAgent.executionTarget.loading')}</div>
       ) : null}

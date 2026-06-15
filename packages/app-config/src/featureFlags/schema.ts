@@ -36,10 +36,7 @@ export const FeatureFlagsSchema = z.object({
   auth_captcha: FeatureFlagValue.optional(),
   cloud_promotion: FeatureFlagValue.optional(),
   storage_overage: FeatureFlagValue.optional(),
-<<<<<<< HEAD:src/config/featureFlags/schema.ts
-=======
   workspace: FeatureFlagValue.optional(),
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:packages/app-config/src/featureFlags/schema.ts
 
   // the flags below can only be used with commercial license
   // if you want to use it in the commercial usage
@@ -90,10 +87,7 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
   auth_captcha: true,
   cloud_promotion: false,
   storage_overage: true,
-<<<<<<< HEAD:src/config/featureFlags/schema.ts
-=======
   workspace: false,
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:packages/app-config/src/featureFlags/schema.ts
 
   market: true,
   speech_to_text: true,

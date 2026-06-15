@@ -1332,10 +1332,7 @@ table messages {
     message_group_id [name: 'messages_message_group_id_idx']
     () [name: 'messages_usage_cost_idx']
     () [name: 'messages_usage_total_tokens_idx']
-<<<<<<< HEAD:docs/fr-FR/development/database-schema.dbml
-=======
-    workspace_id [name: 'messages_workspace_id_idx']
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:docs/development/database-schema.dbml
+
   }
 }
 
@@ -2270,10 +2267,7 @@ table topics {
   model text
   provider text
   sender_id text
-<<<<<<< HEAD:docs/fr-FR/development/database-schema.dbml
-=======
-  workspace_id text
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:docs/development/database-schema.dbml
+
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]
@@ -2291,10 +2285,7 @@ table topics {
     provider [name: 'topics_provider_idx']
     (user_id, completed_at) [name: 'topics_user_id_completed_at_idx']
     sender_id [name: 'topics_sender_id_idx']
-<<<<<<< HEAD:docs/fr-FR/development/database-schema.dbml
-=======
-    workspace_id [name: 'topics_workspace_id_idx']
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:docs/development/database-schema.dbml
+
     () [name: 'topics_extract_status_gin_idx']
   }
 }
@@ -2571,105 +2562,7 @@ table user_memory_persona_documents {
   }
 }
 
-<<<<<<< HEAD:docs/fr-FR/development/database-schema.dbml
-=======
-table verify_check_results {
-  id uuid [pk, not null, default: `gen_random_uuid()`]
-  operation_id text [not null]
-  user_id text [not null]
-  workspace_id text
-  check_item_id text [not null]
-  check_item_title text
-  required boolean [not null, default: true]
-  check_item_index integer
-  verifier_type text [not null]
-  verifier_config_hash text
-  verifier_operation_id text
-  verifier_tracing_id uuid
-  status text [not null, default: 'pending']
-  verdict text
-  confidence "numeric(3, 2)"
-  toulmin jsonb
-  suggestion text
-  user_decision text
-  is_false_positive boolean
-  is_false_negative boolean
-  repair_operation_id text
-  started_at "timestamp with time zone"
-  completed_at "timestamp with time zone"
-  created_at "timestamp with time zone" [not null, default: `now()`]
 
-  indexes {
-    operation_id [name: 'verify_check_results_operation_id_idx']
-    user_id [name: 'verify_check_results_user_id_idx']
-    (operation_id, check_item_id) [name: 'verify_check_results_operation_id_check_item_id_unique', unique]
-    verifier_type [name: 'verify_check_results_verifier_type_idx']
-    verifier_operation_id [name: 'verify_check_results_verifier_operation_id_idx']
-    verifier_tracing_id [name: 'verify_check_results_verifier_tracing_id_idx']
-    status [name: 'verify_check_results_status_idx']
-    verdict [name: 'verify_check_results_verdict_idx']
-    repair_operation_id [name: 'verify_check_results_repair_operation_id_idx']
-    workspace_id [name: 'verify_check_results_workspace_id_idx']
-  }
-}
-
-table verify_criteria {
-  id uuid [pk, not null, default: `gen_random_uuid()`]
-  user_id text [not null]
-  title text [not null]
-  description text
-  required boolean [not null, default: true]
-  verifier_type text [not null]
-  verifier_config jsonb [default: `{}`]
-  on_fail text [not null, default: 'manual']
-  document_id varchar(255)
-  workspace_id text
-  accessed_at "timestamp with time zone" [not null, default: `now()`]
-  created_at "timestamp with time zone" [not null, default: `now()`]
-  updated_at "timestamp with time zone" [not null, default: `now()`]
-
-  indexes {
-    user_id [name: 'verify_criteria_user_id_idx']
-    verifier_type [name: 'verify_criteria_verifier_type_idx']
-    document_id [name: 'verify_criteria_document_id_idx']
-    workspace_id [name: 'verify_criteria_workspace_id_idx']
-  }
-}
-
-table verify_rubric_criteria {
-  rubric_id uuid [not null]
-  criterion_id uuid [not null]
-  user_id text [not null]
-  workspace_id text
-  sort_order integer
-  created_at "timestamp with time zone" [not null, default: `now()`]
-
-  indexes {
-    (rubric_id, criterion_id) [pk]
-    criterion_id [name: 'verify_rubric_criteria_criterion_id_idx']
-    user_id [name: 'verify_rubric_criteria_user_id_idx']
-    workspace_id [name: 'verify_rubric_criteria_workspace_id_idx']
-  }
-}
-
-table verify_rubrics {
-  id uuid [pk, not null, default: `gen_random_uuid()`]
-  user_id text [not null]
-  title text [not null]
-  description text
-  config jsonb [default: `{}`]
-  workspace_id text
-  accessed_at "timestamp with time zone" [not null, default: `now()`]
-  created_at "timestamp with time zone" [not null, default: `now()`]
-  updated_at "timestamp with time zone" [not null, default: `now()`]
-
-  indexes {
-    user_id [name: 'verify_rubrics_user_id_idx']
-    workspace_id [name: 'verify_rubrics_workspace_id_idx']
-  }
-}
-
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:docs/development/database-schema.dbml
 table workspace_audit_logs {
   id text [pk, not null]
   workspace_id text [not null]

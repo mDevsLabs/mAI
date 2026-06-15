@@ -18,7 +18,6 @@ export const knowledgeBaseRuntime: ServerRuntimeRegistration = {
       throw new Error('userId and serverDB are required for Knowledge Base execution');
     }
 
-<<<<<<< HEAD:src/server/services/toolExecution/serverRuntimes/knowledgeBase.ts
     const fileModel = new FileModel(serverDB, userId);
     const knowledgeBaseModel = new KnowledgeBaseModel(serverDB, userId);
     const knowledgeRepo = new KnowledgeRepo(serverDB, userId);
@@ -26,15 +25,7 @@ export const knowledgeBaseRuntime: ServerRuntimeRegistration = {
     const fileService = new FileService(serverDB, userId);
     const searchService = new KnowledgeBaseSearchService(serverDB, userId);
     const agentModel = agentId ? new AgentModel(serverDB, userId) : null;
-=======
-    const fileModel = new FileModel(serverDB, userId, workspaceId);
-    const knowledgeBaseModel = new KnowledgeBaseModel(serverDB, userId, workspaceId);
-    const knowledgeRepo = new KnowledgeRepo(serverDB, userId, workspaceId);
-    const documentService = new DocumentService(serverDB, userId, workspaceId);
-    const fileService = new FileService(serverDB, userId, workspaceId);
-    const searchService = new KnowledgeBaseSearchService(serverDB, userId, workspaceId);
-    const agentModel = agentId ? new AgentModel(serverDB, userId, workspaceId) : null;
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/toolExecution/serverRuntimes/knowledgeBase.ts
+
 
     const resolveAgentKnowledgeBaseIds = async (override?: string[]): Promise<string[]> => {
       if (override && override.length > 0) return override;

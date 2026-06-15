@@ -89,11 +89,7 @@ export interface CreateNightlyReviewSourceHandlerDependencies {
    * @default builtin agent default
    */
   maxSteps?: number;
-<<<<<<< HEAD:src/server/services/agentSignal/services/selfIteration/review/handler.ts
-=======
-  /** Workspace id, threaded so the enqueued run targets the correct workspace. */
-  workspaceId?: string;
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/agentSignal/services/selfIteration/review/handler.ts
+
 }
 
 interface NightlyReviewSpanLike {
@@ -347,10 +343,7 @@ export const createNightlyReviewSourceHandler = (
               prompt,
               slug: BUILTIN_AGENT_SLUGS.nightlyReview,
               userId: payload.userId,
-<<<<<<< HEAD:src/server/services/agentSignal/services/selfIteration/review/handler.ts
-=======
-              workspaceId: deps.workspaceId,
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/agentSignal/services/selfIteration/review/handler.ts
+
             });
           },
           (span, result) => {

@@ -31,10 +31,7 @@ import models from './models';
 import oauth from './oauth';
 import onboarding from './onboarding';
 import openInApp from './openInApp';
-<<<<<<< HEAD:src/locales/default/index.ts
-=======
-import opStatusTray from './opStatusTray';
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:packages/locales/src/default/index.ts
+
 import pageShare from './pageShare';
 import plugin from './plugin';
 import portal from './portal';

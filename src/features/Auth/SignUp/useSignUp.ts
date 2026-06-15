@@ -12,13 +12,9 @@ import type { AuthFetchOptions } from '@/features/Auth/utils/authFetchOptions';
 import { withCaptchaToken } from '@/features/Auth/utils/authFetchOptions';
 import { useAuthServerConfigStore } from '@/features/AuthShell';
 import { trackLoginOrSignupClicked } from '@/features/User/UserLoginOrSignup/trackLoginOrSignupClicked';
-<<<<<<< HEAD:src/app/[variants]/(auth)/signup/[[...signup]]/useSignUp.ts
 import { signIn, signUp } from '@/libs/better-auth/auth-client';
 import { isBuiltinProvider, normalizeProviderId } from '@/libs/better-auth/utils/client';
-=======
-import { signUp } from '@/libs/better-auth/auth-client';
-import { buildOnboardingRedirectUrl } from '@/utils/onboardingRedirect';
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:src/features/Auth/SignUp/useSignUp.ts
+
 
 import type { BaseSignUpFormValues } from './types';
 
@@ -126,7 +122,6 @@ export const useSignUp = () => {
     }
   };
 
-<<<<<<< HEAD:src/app/[variants]/(auth)/signup/[[...signup]]/useSignUp.ts
   const handleSocialSignIn = async (provider: string) => {
     setSocialLoading(provider);
     const normalizedProvider = normalizeProviderId(provider);
@@ -184,7 +179,5 @@ export const useSignUp = () => {
     serverConfigInit: ENABLE_BUSINESS_FEATURES ? true : serverConfigInit,
     socialLoading,
   };
-=======
-  return { businessElement, form, loading, onSubmit: handleSignUp };
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:src/features/Auth/SignUp/useSignUp.ts
+
 };

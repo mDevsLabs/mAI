@@ -442,7 +442,6 @@ export const messengerRouter = router({
       // Omitting `workspaceId` (or `null`) means personal.
       const workspaceId = input?.workspaceId ?? null;
 
-<<<<<<< HEAD:src/server/routers/lambda/messenger.ts
     const mapped = rows
       .filter((row) => row.id)
       .map((row) => ({
@@ -451,57 +450,7 @@ export const messengerRouter = router({
         id: row.id,
         slug: row.slug,
         title: row.title || (row.slug === INBOX_SESSION_ID ? 'May' : 'Custom Agent'),
-=======
-      // Authorize the requested scope. Personal is always the caller's own; a
-      // workspace scope requires membership, otherwise the caller could
-      // enumerate another workspace's agents.
-      if (workspaceId) {
-        await assertWorkspaceFeatureEnabledForUser(userId);
 
-        const userWorkspaces = await new WorkspaceModel(serverDB, userId).listUserWorkspaces();
-        if (!userWorkspaces.some((w) => w.id === workspaceId)) {
-          throw new TRPCError({ code: 'FORBIDDEN', message: 'messenger.error.agentNotFound' });
-        }
-      }
-
-      const rows = await serverDB
-        .select({
-          avatar: agents.avatar,
-          backgroundColor: agents.backgroundColor,
-          id: agents.id,
-          slug: agents.slug,
-          title: agents.title,
-        })
-        .from(agents)
-        .where(
-          and(
-            buildWorkspaceWhere({ userId, workspaceId: workspaceId ?? undefined }, agents),
-            or(ne(agents.virtual, true), eq(agents.slug, INBOX_SESSION_ID)),
-          ),
-        )
-        .orderBy(desc(agents.updatedAt));
-
-      const mapped = rows
-        .filter((row) => row.id)
-        .map((row) => ({
-          avatar: row.avatar || (row.slug === INBOX_SESSION_ID ? DEFAULT_INBOX_AVATAR : null),
-          backgroundColor: row.backgroundColor,
-          id: row.id,
-          slug: row.slug,
-          title: row.title || (row.slug === INBOX_SESSION_ID ? 'LobeAI' : null),
-        }));
-
-      // Pin the inbox/LobeAI agent to the top regardless of updatedAt — it's
-      // the implicit "default" agent and should always be the first option.
-      const inboxIdx = mapped.findIndex((row) => row.slug === INBOX_SESSION_ID);
-      if (inboxIdx > 0) {
-        const [inbox] = mapped.splice(inboxIdx, 1);
-        mapped.unshift(inbox);
-      }
-      return mapped.map(({ slug, ...rest }) => ({
-        ...rest,
-        isInbox: slug === INBOX_SESSION_ID,
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/routers/lambda/messenger.ts
       }));
     }),
 

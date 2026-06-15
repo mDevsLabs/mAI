@@ -12,7 +12,6 @@ import { AuthCard } from '@/features/AuthCard';
 import { AuthAgreement } from '@/features/AuthShell';
 import { trackLoginOrSignupClicked } from '@/features/User/UserLoginOrSignup/trackLoginOrSignupClicked';
 
-<<<<<<< HEAD:src/app/[variants]/(auth)/signup/[[...signup]]/BetterAuthSignUpForm.tsx
 import SocialProviderButtons from '@/components/SocialProviderButtons';
 
 import { AuthCard } from '../../../../../features/AuthCard';
@@ -31,12 +30,7 @@ const BetterAuthSignUpForm = () => {
     serverConfigInit,
     socialLoading,
   } = useSignUp();
-=======
-import { useSignUp } from './useSignUp';
 
-const BetterAuthSignUpForm = () => {
-  const { form, loading, onSubmit, businessElement } = useSignUp();
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:src/features/Auth/SignUp/BetterAuthSignUpForm.tsx
 
   const { t } = useTranslation('auth');
   const navigate = useNavigate();
@@ -73,7 +67,6 @@ const BetterAuthSignUpForm = () => {
   );
 
   return (
-<<<<<<< HEAD:src/app/[variants]/(auth)/signup/[[...signup]]/BetterAuthSignUpForm.tsx
     <AuthCard
       footer={footer}
       subtitle={t('betterAuth.signup.subtitle')}
@@ -86,9 +79,7 @@ const BetterAuthSignUpForm = () => {
           socialLoading={socialLoading}
         />
       )}
-=======
-    <AuthCard footer={footer} title={t('betterAuth.signup.cardTitle', { appName: BRANDING_NAME })}>
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:src/features/Auth/SignUp/BetterAuthSignUpForm.tsx
+
       <Form form={form} layout="vertical" onFinish={onSubmit}>
         <Form.Item
           name="email"

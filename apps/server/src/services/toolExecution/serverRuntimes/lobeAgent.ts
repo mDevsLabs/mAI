@@ -248,13 +248,9 @@ class LobeAgentExecutionRuntime {
     let selectedRefItems: VisualFileItem[] = [];
 
     if (requestedRefs.length > 0) {
-<<<<<<< HEAD:src/server/services/toolExecution/serverRuntimes/lobeAgent.ts
       const fileService = new FileService(this.db, this.userId);
       const messageModel = new MessageModel(this.db, this.userId);
-=======
-      const fileService = new FileService(this.db, this.userId, this.workspaceId);
-      const messageModel = new MessageModel(this.db, this.userId, this.workspaceId);
->>>>>>> 1fa6f47fc9f31fb26afca2b61a9c57751eaff2e0:apps/server/src/services/toolExecution/serverRuntimes/lobeAgent.ts
+
       const postProcessUrl = (
         path: string | null,
         file: { fileType: string; id?: string | null },
