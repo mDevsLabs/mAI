@@ -66,10 +66,6 @@ const CreateTaskContent = memo<CreateTaskContentProps>(
       pickAndInsertAttachments(editor);
     }, [editor]);
 
-    const handleAttach = useCallback(() => {
-      pickAndInsertAttachments(editor);
-    }, [editor]);
-
     const handleSubmit = useCallback(async () => {
       if (!canCreateTask) return;
       const instruction = instructionRef.current.trim();
@@ -93,7 +89,7 @@ const CreateTaskContent = memo<CreateTaskContentProps>(
           identifier: result.identifier,
         });
       }
-    }, [assigneeAgentId, close, createTask, editor, onCreated, priority, title]);
+    }, [assigneeAgentId, canCreateTask, close, createTask, editor, onCreated, priority, title]);
 
     const handleSubmitRef = useRef(handleSubmit);
     useEffect(() => {

@@ -161,7 +161,13 @@ export class ChatPortalActionImpl {
   };
 
   closeLocalFileTab = (filePath: string): void => {
-    const { openLocalFiles, activeLocalFilePath, dirtyLocalFileContents } = this.#get();
+    const {
+      openLocalFiles,
+      activeLocalFilePath,
+      dirtyLocalFileContents,
+      activeLocalFileId,
+      activeLocalFileIdsByScope,
+    } = this.#get();
     const idx = openLocalFiles.findIndex((f) => f.filePath === filePath);
     if (idx === -1) return;
 
@@ -201,7 +207,6 @@ export class ChatPortalActionImpl {
       nextDirty = rest;
     }
 
-    let nextDirty = dirtyLocalFileContents;
     if (filePath in dirtyLocalFileContents) {
       const { [filePath]: _, ...rest } = dirtyLocalFileContents;
       nextDirty = rest;
@@ -209,7 +214,13 @@ export class ChatPortalActionImpl {
 
     this.#set(
       {
-        activeLocalFilePath: nextActive,
+        activeLocalFileId: legacyActive.activeLocalFileId,
+        activeLocalFileIdsByScope: setActiveLocalFileForScope(
+          activeLocalFileIdsByScope,
+          scopeKey,
+          nextScopeActiveFile,
+        ),
+        activeLocalFilePath: legacyActive.activeLocalFilePath,
         dirtyLocalFileContents: nextDirty,
         openLocalFiles: nextFiles,
       },

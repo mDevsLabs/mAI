@@ -14,7 +14,6 @@ import { message } from '@/components/AntdStaticMethods';
 import { DESKTOP_HEADER_ICON_SMALL_SIZE } from '@/const/layoutTokens';
 import NavHeader from '@/features/NavHeader';
 import ToggleRightPanelButton from '@/features/RightPanel/ToggleRightPanelButton';
-import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useCommunityPublishGuard } from '@/hooks/useCommunityPublishGuard';
 import { usePermission } from '@/hooks/usePermission';
 import { useMarketAuth } from '@/layout/AuthProvider/MarketAuth';
@@ -34,7 +33,6 @@ import { type OriginalAgentInfo, useMarketPublish } from './AgentPublishButton/u
 import AgentStatusTag from './AgentStatusTag';
 import AgentVersionReviewTag, { useVersionReviewStatus } from './AgentVersionReviewTag';
 import AutoSaveHint from './AutoSaveHint';
-import { openPublishConfirmModal } from './PublishConfirmModal';
 
 type HeaderTranslation = TFunction<
   readonly ['setting', 'marketAuth', 'chat', 'file', 'common'],
@@ -161,6 +159,7 @@ const Header = memo(() => {
   ]);
   const removeAgent = useHomeStore((s) => s.removeAgent);
   const editor = useProfileStore((s) => s.editor);
+  const { allowed: canEdit } = usePermission('edit_own_content');
   const { isAuthenticated, isLoading: isAuthLoading, signIn } = useMarketAuth();
   const { isUnderReview } = useVersionReviewStatus();
   const ensureCommunityPublishAllowed = useCommunityPublishGuard();
@@ -234,9 +233,8 @@ const Header = memo(() => {
           }
           return;
         }
-        return;
-      }
-      await doPublish();
+        await doPublish();
+      },
     });
   }, [
     action,
@@ -398,6 +396,10 @@ const Header = memo(() => {
         key: 'export',
         label: t('pageEditor.menu.export', { ns: 'file' }),
       },
+      importMenuItem ? { type: 'divider' as const } : null,
+      importMenuItem,
+      businessTransferMenuItems.length > 0 ? { type: 'divider' as const } : null,
+      ...businessTransferMenuItems,
       { type: 'divider' as const },
       {
         danger: true,
@@ -407,9 +409,17 @@ const Header = memo(() => {
         label: t('delete', { ns: 'common' }),
         onClick: handleDelete,
       },
-    ],
-    [canPublishToCommunity, handlePublishClick, handleExportMarkdown, handleDelete, t],
-  );
+    ].filter(Boolean) as any;
+  }, [
+    canPublishToCommunity,
+    handlePublishClick,
+    handleExportMarkdown,
+    handleDelete,
+    t,
+    importMenuItem,
+    transferMenuItems,
+    canEdit,
+  ]);
 
   return (
     <>
