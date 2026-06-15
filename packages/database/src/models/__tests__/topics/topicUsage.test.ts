@@ -4,10 +4,10 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../../core/getTestDB';
 import { messages, topics, users } from '../../../schemas';
-import type { LobeChatDatabase } from '../../../type';
+import type { mAIDatabase } from '../../../type';
 import { recomputeTopicUsage } from '../../topicUsage';
 
-const serverDB: LobeChatDatabase = await getTestDB();
+const serverDB: mAIDatabase = await getTestDB();
 
 const userId = 'topic-usage-user';
 const otherUserId = 'topic-usage-other-user';

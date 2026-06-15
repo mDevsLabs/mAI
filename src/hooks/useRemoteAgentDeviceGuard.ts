@@ -1,7 +1,7 @@
 import { isRemoteHeterogeneousType } from '@lobechat/heterogeneous-agents';
 import { useCallback, useEffect, useState } from 'react';
 
-import { lambdaClient } from '@/libs/trpc/client';
+import { deviceService } from '@/services/device';
 import { useAgentStore } from '@/store/agent';
 
 export type RemoteAgentDeviceStatus =
@@ -21,8 +21,9 @@ interface UseRemoteAgentDeviceGuardResult {
 }
 
 /**
- * Checks whether the bound device is online and the agent platform is available.
- * Used in HeterogeneousChatInput to gate sending for openclaw / hermes agents.
+ * Checks whether the bound device is online and, for remote-only hetero
+ * platforms, whether that platform is available on the device. Used in
+ * HeterogeneousChatInput before device-dispatched hetero runs.
  */
 export const useRemoteAgentDeviceGuard = ({
   enabled = true,
@@ -48,7 +49,7 @@ export const useRemoteAgentDeviceGuard = ({
     setStatus('checking');
 
     try {
-      const devices = await lambdaClient.device.listDevices.query();
+      const devices = await deviceService.listDevices();
       const device = devices.find((d) => d.deviceId === boundDeviceId);
 
       if (!device || !device.online) {
@@ -57,7 +58,7 @@ export const useRemoteAgentDeviceGuard = ({
       }
 
       if (providerType && isRemoteHeterogeneousType(providerType)) {
-        const capability = await lambdaClient.device.checkCapability.query({
+        const capability = await deviceService.checkCapability({
           deviceId: boundDeviceId,
           platform: providerType,
         });

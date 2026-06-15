@@ -11,7 +11,7 @@
   "features.gatewayMode.title": "サーバーサイドエージェント実行（Gateway）",
   "features.groupChat.desc": "複数のAIアシスタントによるグループチャット機能を有効にします。",
   "features.groupChat.title": "グループチャット（マルチアシスタント）",
-  "features.imessage.desc": "LobeHub Desktop BlueBubblesブリッジを介してエージェントをiMessageに接続します。",
+  "features.imessage.desc": "mAI Desktop BlueBubblesブリッジを介してエージェントをiMessageに接続します。",
   "features.imessage.title": "iMessageチャンネル",
   "features.inputMarkdown.desc": "入力エリアでMarkdown（太字、コードブロック、表など）をリアルタイムでレンダリングします。",
   "features.inputMarkdown.title": "入力欄のMarkdownレンダリング",

@@ -7,6 +7,7 @@ import { memo, use, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useIsMobile } from '@/hooks/useIsMobile';
+import { usePermission } from '@/hooks/usePermission';
 import { useAiInfraStore } from '@/store/aiInfra';
 import { aiModelSelectors } from '@/store/aiInfra/selectors';
 
@@ -83,11 +84,13 @@ const ModelTitle = memo<ModelFetcherProps>(
                   {t('providerModels.list.total', { count: totalModels })}
                   {hasRemoteModels && (
                     <ActionIcon
+                      disabled={!canManageProvider}
                       icon={CircleX}
                       loading={clearRemoteModelsLoading}
                       size={'small'}
-                      title={t('providerModels.list.fetcher.clear')}
+                      title={canManageProvider ? t('providerModels.list.fetcher.clear') : undefined}
                       onClick={async () => {
+                        if (!canManageProvider) return;
                         setClearRemoteModelsLoading(true);
                         await clearObtainedModels(provider);
                         setClearRemoteModelsLoading(false);
@@ -112,24 +115,40 @@ const ModelTitle = memo<ModelFetcherProps>(
               )}
               <Space.Compact>
                 {showModelFetcher && (
-                  <Button
-                    icon={LucideRefreshCcwDot}
-                    loading={fetchRemoteModelsLoading}
-                    size={'small'}
-                    onClick={async () => {
-                      setFetchRemoteModelsLoading(true);
-                      try {
-                        await fetchRemoteModelList(provider);
-                      } catch (e) {
-                        console.error(e);
-                      }
-                      setFetchRemoteModelsLoading(false);
-                    }}
-                  >
-                    {fetchRemoteModelsLoading
-                      ? t('providerModels.list.fetcher.fetching')
-                      : t('providerModels.list.fetcher.fetch')}
-                  </Button>
+                  <Tooltip title={canManageProvider ? '' : reason}>
+                    <Button
+                      disabled={!canManageProvider}
+                      icon={LucideRefreshCcwDot}
+                      loading={fetchRemoteModelsLoading}
+                      size={'small'}
+                      onClick={async () => {
+                        if (!canManageProvider) return;
+                        setFetchRemoteModelsLoading(true);
+                        try {
+                          await fetchRemoteModelList(provider);
+                        } catch (error) {
+                          console.error(error);
+
+                          const errorMessage =
+                            error instanceof Error
+                              ? error.message
+                              : t('providerModels.list.fetcher.errorFallback');
+
+                          message.error(
+                            t('providerModels.list.fetcher.error', {
+                              message: errorMessage,
+                            }),
+                          );
+                        } finally {
+                          setFetchRemoteModelsLoading(false);
+                        }
+                      }}
+                    >
+                      {fetchRemoteModelsLoading
+                        ? t('providerModels.list.fetcher.fetching')
+                        : t('providerModels.list.fetcher.fetch')}
+                    </Button>
+                  </Tooltip>
                 )}
                 {showAddNewModel && (
                   <Button
@@ -143,6 +162,7 @@ const ModelTitle = memo<ModelFetcherProps>(
                 <DropdownMenu
                   items={[
                     {
+                      disabled: !canManageProvider,
                       key: 'reset',
                       label: t('providerModels.list.resetAll.title'),
                       onClick: async () => {

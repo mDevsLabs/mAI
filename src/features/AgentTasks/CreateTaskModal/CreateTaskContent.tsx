@@ -36,6 +36,7 @@ const CreateTaskContent = memo<CreateTaskContentProps>(
   ({ agentId, onCreated, showInlineToggle = true }) => {
     const { t } = useTranslation('chat');
     const { close } = useModalContext();
+    const { allowed: canCreateTask, reason } = usePermission('create_content');
 
     const createTask = useTaskStore((s) => s.createTask);
     const isCreating = useTaskStore((s) => s.isCreatingTask);
@@ -56,8 +57,13 @@ const CreateTaskContent = memo<CreateTaskContentProps>(
     }, [close, updateSystemStatus]);
 
     const handleContentChange = useCallback(() => {
+      if (!canCreateTask) return;
       if (!editor) return;
       instructionRef.current = String(editor.getDocument('markdown') ?? '');
+    }, [canCreateTask, editor]);
+
+    const handleAttach = useCallback(() => {
+      pickAndInsertAttachments(editor);
     }, [editor]);
 
     const handleAttach = useCallback(() => {
@@ -65,6 +71,7 @@ const CreateTaskContent = memo<CreateTaskContentProps>(
     }, [editor]);
 
     const handleSubmit = useCallback(async () => {
+      if (!canCreateTask) return;
       const instruction = instructionRef.current.trim();
       const hasFiles = getAttachmentFileIdsFromEditor(editor).length > 0;
       if (!instruction && !title.trim() && !hasFiles) return;
@@ -106,7 +113,8 @@ const CreateTaskContent = memo<CreateTaskContentProps>(
         <Flexbox horizontal style={{ padding: '16px 24px 0' }}>
           <Flexbox flex={1} style={{ minHeight: 180 }}>
             <input
-              autoFocus
+              autoFocus={canCreateTask}
+              disabled={!canCreateTask}
               placeholder={t('createTask.titlePlaceholder')}
               value={title}
               style={{
@@ -124,6 +132,7 @@ const CreateTaskContent = memo<CreateTaskContentProps>(
               onChange={(e) => setTitle(e.target.value)}
             />
             <EditorCanvas
+              disabled={!canCreateTask}
               editor={editor}
               floatingToolbar={false}
               placeholder={t('createTask.instructionPlaceholder')}
@@ -205,10 +214,11 @@ const CreateTaskContent = memo<CreateTaskContentProps>(
           </Flexbox>
 
           <Button
-            disabled={isCreating}
+            disabled={!canCreateTask || isCreating}
             loading={isCreating}
             shape={'round'}
             size={'small'}
+            title={canCreateTask ? undefined : reason}
             type={'primary'}
             onClick={handleSubmit}
           >

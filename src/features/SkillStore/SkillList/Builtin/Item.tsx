@@ -14,6 +14,7 @@ import { MoreVerticalIcon, Plus, Trash2 } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { usePermission } from '@/hooks/usePermission';
 import { useToolStore } from '@/store/tool';
 import { builtinToolSelectors } from '@/store/tool/selectors';
 
@@ -38,6 +39,7 @@ const Item = memo<ItemProps>(({ avatar, description, identifier, onOpenDetail, t
   ]);
 
   const handleInstall = async () => {
+    if (!canCreate) return;
     await installBuiltinTool(identifier);
   };
 
@@ -63,6 +65,7 @@ const Item = memo<ItemProps>(({ avatar, description, identifier, onOpenDetail, t
           items={[
             {
               danger: true,
+              disabled: !canEdit,
               icon: <Icon icon={Trash2} />,
               key: 'uninstall',
               label: t('store.actions.uninstall', { ns: 'plugin' }),
@@ -70,12 +73,19 @@ const Item = memo<ItemProps>(({ avatar, description, identifier, onOpenDetail, t
             },
           ]}
         >
-          <ActionIcon icon={MoreVerticalIcon} />
+          <ActionIcon disabled={!canEdit} icon={MoreVerticalIcon} />
         </DropdownMenu>
       );
     }
 
-    return <ActionIcon icon={Plus} title={t('tools.builtins.install')} onClick={handleInstall} />;
+    return (
+      <ActionIcon
+        disabled={!canCreate}
+        icon={Plus}
+        title={t('tools.builtins.install')}
+        onClick={handleInstall}
+      />
+    );
   };
 
   return (

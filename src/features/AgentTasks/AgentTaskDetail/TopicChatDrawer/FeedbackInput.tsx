@@ -3,7 +3,6 @@ import { Avatar, Flexbox } from '@lobehub/ui';
 import { $getRoot } from 'lexical';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { shallow } from 'zustand/shallow';
 
 import { AttachmentUploadButton } from '@/features/AttachmentInput';
 import { EditorCanvas } from '@/features/EditorCanvas';
@@ -12,28 +11,11 @@ import {
   insertFilesIntoEditor,
 } from '@/features/EditorCanvas/editorAttachments';
 import { useEnterToSend } from '@/hooks/useEnterToSend';
-import { useUserAvatar } from '@/hooks/useUserAvatar';
-import { useTaskStore } from '@/store/task';
 
-import { styles } from '../../shared/style';
-
-interface FeedbackInputProps {
-  taskId: string;
-  topicId: string;
-}
-
-const FeedbackInput = memo<FeedbackInputProps>(({ taskId, topicId }) => {
+const FeedbackInput = memo(() => {
   const { t } = useTranslation('chat');
   const editor = useEditor();
-  const userAvatar = useUserAvatar();
-  const { addComment, runTask, closeTopicDrawer } = useTaskStore(
-    (s) => ({
-      addComment: s.addComment,
-      closeTopicDrawer: s.closeTopicDrawer,
-      runTask: s.runTask,
-    }),
-    shallow,
-  );
+  const sendMessage = useConversationStore((s) => s.sendMessage);
   const [submitting, setSubmitting] = useState(false);
   const [hasContent, setHasContent] = useState(false);
   const [hasAttachments, setHasAttachments] = useState(false);
@@ -86,7 +68,15 @@ const FeedbackInput = memo<FeedbackInputProps>(({ taskId, topicId }) => {
     } finally {
       setSubmitting(false);
     }
-  }, [taskId, topicId, editor, addComment, runTask, closeTopicDrawer, submitting]);
+  }, [editor, sendMessage, submitting]);
+
+  if (!expanded) {
+    return (
+      <Button block icon={MessageCirclePlus} variant={'filled'} onClick={() => setExpanded(true)}>
+        {t('taskDetail.sendFollowUp')}
+      </Button>
+    );
+  }
 
   return (
     <Flexbox className={styles.commentInputCard} gap={6}>
@@ -122,5 +112,7 @@ const FeedbackInput = memo<FeedbackInputProps>(({ taskId, topicId }) => {
     </Flexbox>
   );
 });
+
+FeedbackInput.displayName = 'FeedbackInput';
 
 export default FeedbackInput;

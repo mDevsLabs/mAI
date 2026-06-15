@@ -48,6 +48,7 @@ interface UploadWithProgressParams {
 interface UploadWithProgressResult {
   dimensions?: {
     height: number;
+    ratio: number;
     width: number;
   };
   filename?: string;
@@ -184,7 +185,7 @@ export class FileUploadActionImpl {
         {
           fileType,
           hash,
-          metadata,
+          metadata: { ...metadata, ...dimensions },
           name: normalizedFile.name,
           parentId,
           size: normalizedFile.size,

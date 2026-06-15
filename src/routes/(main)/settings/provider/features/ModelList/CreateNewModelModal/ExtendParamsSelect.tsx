@@ -52,6 +52,10 @@ const EXTEND_PARAMS_OPTIONS: ExtendParamsOption[] = [
     key: 'enableAdaptiveThinking',
   },
   {
+    hintKey: 'providerModels.item.modelConfig.extendParams.options.preserveThinking.hint',
+    key: 'preserveThinking',
+  },
+  {
     hintKey: 'providerModels.item.modelConfig.extendParams.options.reasoningBudgetToken.hint',
     key: 'reasoningBudgetToken',
   },
@@ -106,6 +110,10 @@ const EXTEND_PARAMS_OPTIONS: ExtendParamsOption[] = [
   {
     hintKey: 'providerModels.item.modelConfig.extendParams.options.hy3ReasoningEffort.hint',
     key: 'hy3ReasoningEffort',
+  },
+  {
+    hintKey: 'providerModels.item.modelConfig.extendParams.options.ring2_6ReasoningEffort.hint',
+    key: 'ring2_6ReasoningEffort',
   },
   {
     hintKey: 'providerModels.item.modelConfig.extendParams.options.codexMaxReasoningEffort.hint',
@@ -177,7 +185,9 @@ const TITLE_KEY_ALIASES: Partial<Record<ExtendParamsType, ExtendParamsType>> = {
   grok4_20ReasoningEffort: 'reasoningEffort',
   grok4_3ReasoningEffort: 'reasoningEffort',
   hy3ReasoningEffort: 'reasoningEffort',
+  ring2_6ReasoningEffort: 'reasoningEffort',
   imageAspectRatio2: 'imageAspectRatio',
+  imageResolution2: 'imageResolution',
   opus47Effort: 'effort',
   reasoningBudgetToken32k: 'reasoningBudgetToken',
   reasoningBudgetToken80k: 'reasoningBudgetToken',
@@ -233,6 +243,11 @@ const PREVIEW_META: Partial<Record<ExtendParamsType, PreviewMeta>> = {
   },
   hy3ReasoningEffort: {
     labelSuffix: ' (Hy3 preview)',
+    previewWidth: 300,
+    tag: 'reasoning_effort',
+  },
+  ring2_6ReasoningEffort: {
+    labelSuffix: ' (Ring 2.6)',
     previewWidth: 300,
     tag: 'reasoning_effort',
   },
@@ -383,6 +398,7 @@ const ExtendParamsSelect = memo<ExtendParamsSelectProps>(({ value, onChange }) =
       effort: <EffortSlider value="high" />,
       enableAdaptiveThinking: <Switch checked disabled />,
       enableReasoning: <Switch checked disabled />,
+      preserveThinking: <Switch checked disabled />,
       gpt5ReasoningEffort: <GPT5ReasoningEffortSlider value="medium" />,
       gpt5_1ReasoningEffort: <GPT51ReasoningEffortSlider value="none" />,
       gpt5_2ProReasoningEffort: <GPT52ProReasoningEffortSlider value="medium" />,
@@ -390,6 +406,7 @@ const ExtendParamsSelect = memo<ExtendParamsSelectProps>(({ value, onChange }) =
       grok4_20ReasoningEffort: <Grok420ReasoningEffortSlider value="medium" />,
       grok4_3ReasoningEffort: <Grok43ReasoningEffortSlider value="low" />,
       hy3ReasoningEffort: <Hy3ReasoningEffortSlider value="high" />,
+      ring2_6ReasoningEffort: <Ring26ReasoningEffortSlider value="high" />,
       imageAspectRatio: <ImageAspectRatioSelect value="1:1" />,
       imageAspectRatio2: <ImageAspectRatio2Select value="1:1" />,
       imageResolution: <ImageResolutionSlider value="1K" />,

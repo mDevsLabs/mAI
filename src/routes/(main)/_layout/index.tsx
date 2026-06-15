@@ -9,6 +9,7 @@ import { Suspense } from 'react';
 import { HotkeysProvider } from 'react-hotkeys-hook';
 import { Outlet } from 'react-router-dom';
 
+import WorkspaceContextSlot from '@/business/client/WorkspaceContextSlot';
 import Loading from '@/components/Loading/BrandTextLoading';
 import { isDesktop } from '@/const/version';
 import { BANNER_HEIGHT } from '@/features/AlertBanner/CloudBanner';

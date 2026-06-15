@@ -3,10 +3,11 @@
 import { ActionIcon, Block, DropdownMenu, Flexbox, Icon, stopPropagation } from '@lobehub/ui';
 import { confirmModal } from '@lobehub/ui/base-ui';
 import { cssVar } from 'antd-style';
-import type { Klavis } from 'klavis';
 import { Loader2, MoreVerticalIcon, Plus, Unplug } from 'lucide-react';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import { usePermission } from '@/hooks/usePermission';
 
 import { itemStyles } from '../style';
 import { useSkillConnect } from './useSkillConnect';
@@ -18,8 +19,8 @@ interface ItemProps {
   isConnected: boolean;
   label: string;
   onOpenDetail?: () => void;
-  serverName?: Klavis.McpServerName;
-  type: 'klavis' | 'lobehub';
+  serverName?: string;
+  type: 'composio' | 'lobehub';
 }
 
 const Item = memo<ItemProps>(
@@ -34,7 +35,8 @@ const Item = memo<ItemProps>(
     });
 
     // Get localized description
-    const i18nPrefix = type === 'klavis' ? 'tools.klavis.servers' : 'tools.lobehubSkill.providers';
+    const i18nPrefix =
+      type === 'composio' ? 'tools.composio.servers' : 'tools.lobehubSkill.providers';
     // @ts-ignore
     const localizedDescription = t(`${i18nPrefix}.${identifier}.description`, {
       defaultValue: description,
@@ -71,6 +73,7 @@ const Item = memo<ItemProps>(
             items={[
               {
                 danger: true,
+                disabled: !canEdit,
                 icon: <Icon icon={Unplug} />,
                 key: 'disconnect',
                 label: t('tools.lobehubSkill.disconnect'),
@@ -78,13 +81,21 @@ const Item = memo<ItemProps>(
               },
             ]}
           >
-            <ActionIcon icon={MoreVerticalIcon} />
+            <ActionIcon disabled={!canEdit} icon={MoreVerticalIcon} />
           </DropdownMenu>
         );
       }
 
       return (
-        <ActionIcon icon={Plus} title={t('tools.lobehubSkill.connect')} onClick={handleConnect} />
+        <ActionIcon
+          disabled={!canCreate || !canEdit}
+          icon={Plus}
+          title={t('tools.lobehubSkill.connect')}
+          onClick={() => {
+            if (!canCreate || !canEdit) return;
+            handleConnect();
+          }}
+        />
       );
     };
 
@@ -113,6 +124,6 @@ const Item = memo<ItemProps>(
   },
 );
 
-Item.displayName = 'LobeHubListItem';
+Item.displayName = 'mAIListItem';
 
 export default Item;

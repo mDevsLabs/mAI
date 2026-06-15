@@ -20,6 +20,7 @@ import { UsageCounter } from '@lobechat/agent-runtime';
 import { countContextTokens, type ToolsEngine } from '@lobechat/context-engine';
 import { chainCompressContext } from '@lobechat/prompts';
 import {
+  ChatErrorType,
   type ChatMessageError,
   type ChatToolPayload,
   type CreateMessageParams,
@@ -297,7 +298,7 @@ export const createAgentExecutors = (context: {
       if (!operation) {
         throw new Error(`Operation not found: ${context.operationId}`);
       }
-      const { subAgentId, groupId, topicId } = operation.context;
+      const { subAgentId, groupId, threadId, topicId } = operation.context;
       const abortController = operation.abortController;
 
       // In group orchestration, subAgentId is the actual responding agent
@@ -494,9 +495,21 @@ export const createAgentExecutors = (context: {
           });
         },
         onFinish: async (
-          content,
-          { traceId, observationId, toolCalls, reasoning, grounding, usage, speed, type },
+          _content,
+          {
+            traceId,
+            observationId,
+            planUpgradeAfterFinish,
+            toolCalls,
+            reasoning,
+            grounding,
+            usage,
+            speed,
+            type,
+          },
         ) => {
+          void _content;
+
           if (traceId) {
             messageService.updateMessage(
               assistantMessageId,
@@ -538,6 +551,34 @@ export const createAgentExecutors = (context: {
             },
             { operationId: context.operationId },
           );
+
+          if (planUpgradeAfterFinish && type !== 'abort' && type !== 'error') {
+            await context.get().optimisticCreateMessage(
+              {
+                agentId: agentId || undefined,
+                content: '',
+                error: {
+                  body: {
+                    budget: {
+                      modelId: llmPayload.model,
+                      pricingBasis: 'unknown',
+                      providerId: llmPayload.provider,
+                      scenario: 'chat',
+                    },
+                  },
+                  type: ChatErrorType.FreePlanLimit,
+                },
+                groupId,
+                model: llmPayload.model,
+                parentId: assistantMessageId,
+                provider: llmPayload.provider,
+                role: 'assistant',
+                threadId,
+                topicId: topicId ?? undefined,
+              },
+              { operationId: context.operationId },
+            );
+          }
         },
         onMessageHandle: async (chunk) => {
           handler.handleChunk(chunk as StreamChunk);
@@ -1000,17 +1041,16 @@ export const createAgentExecutors = (context: {
 
           const stateType = result.state?.type;
 
-          // Sub-agent dispatches need to be forwarded to the Agent runtime as an
-          // exec_sub_agent / exec_sub_agents instruction. Covers both server-side
-          // (execSubAgent / execSubAgents) and client-side (execClientSubAgent /
-          // execClientSubAgents) wire-level state types.
-          const subAgentStateTypes = [
+          // Legacy agent-invocation dispatches need to be forwarded to the Agent
+          // runtime as exec_sub_agent / exec_sub_agents instructions. This covers
+          // server-side callAgent task states plus the desktop client-side variants.
+          const legacyAgentInvocationStateTypes = [
             'execSubAgent',
             'execSubAgents',
             'execClientSubAgent',
             'execClientSubAgents',
           ];
-          if (subAgentStateTypes.includes(stateType)) {
+          if (legacyAgentInvocationStateTypes.includes(stateType)) {
             log(
               '[%s][call_tool] Detected %s state, passing to Agent for decision',
               sessionLogId,

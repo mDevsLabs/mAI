@@ -5,6 +5,8 @@ import { LinkIcon, ServerIcon, Trash2Icon, UserIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { usePermission } from '@/hooks/usePermission';
+
 import { buildDiscordOpenBotUrl } from '../constants';
 import { createMessengerLinkModal } from '../LinkModal';
 import {
@@ -46,6 +48,7 @@ const DiscordDetail = memo<DiscordDetailProps>(({ appId, botUsername, name, onBa
   });
 
   const handleDisconnectInstallation = (id: string) =>
+    canEdit &&
     disconnectInstallation(id, {
       confirm: t('messenger.discord.connections.disconnectConfirm'),
       failedKey: 'messenger.discord.connections.disconnectFailed',
@@ -65,6 +68,7 @@ const DiscordDetail = memo<DiscordDetailProps>(({ appId, botUsername, name, onBa
 
   const headerAction = (
     <Button
+      disabled={!canCreate || !canEdit}
       icon={<Icon icon={LinkIcon} />}
       type={hasInstallations ? 'default' : 'primary'}
       onClick={handleOpenLink}

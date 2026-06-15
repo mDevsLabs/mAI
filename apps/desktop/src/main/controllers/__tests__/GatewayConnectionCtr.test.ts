@@ -9,6 +9,7 @@ import ImessageBridgeService from '@/services/imessageBridgeSrv';
 import GatewayConnectionCtr from '../GatewayConnectionCtr';
 import HeterogeneousAgentCtr from '../HeterogeneousAgentCtr';
 import LocalFileCtr from '../LocalFileCtr';
+import McpCtr from '../McpCtr';
 import RemoteServerConfigCtr from '../RemoteServerConfigCtr';
 import ShellCommandCtr from '../ShellCommandCtr';
 
@@ -123,6 +124,7 @@ const { ipcMainHandleMock, MockGatewayClient } = vi.hoisted(() => {
 
 vi.mock('electron', () => ({
   app: {
+    getAppPath: vi.fn(() => '/mock/app'),
     getPath: vi.fn((name: string) => `/mock/${name}`),
   },
   ipcMain: { handle: ipcMainHandleMock },
@@ -247,6 +249,7 @@ const mockApp = {
     if (Cls === LocalFileCtr) return mockLocalFileCtr;
     if (Cls === ShellCommandCtr) return mockShellCommandCtr;
     if (Cls === HeterogeneousAgentCtr) return mockHeterogeneousAgentCtr;
+    if (Cls === McpCtr) return mockMcpCtr;
     return null;
   }),
   getService: vi.fn((Cls) => {
@@ -599,6 +602,149 @@ describe('GatewayConnectionCtr', () => {
         'Tool "unknownApi" is not available on this device. It may not be supported in the current desktop version. Please skip this tool and try alternative approaches.';
       expect(client.sendToolCallResponse).toHaveBeenCalledWith({
         requestId: 'req-unknown',
+        result: {
+          content: errorMsg,
+          error: errorMsg,
+          success: false,
+        },
+      });
+    });
+
+    it('should route tunneled stdio MCP calls to McpCtr.runStdioMcpTool', async () => {
+      const client = await connectAndOpen();
+
+      client.simulateMcpCallRequest(
+        'getStock',
+        { symbol: 'AAPL' },
+        { args: ['stock-mcp'], command: 'npx', env: { TOKEN: 'secret' }, name: 'kimi-datasource' },
+      );
+      await vi.advanceTimersByTimeAsync(0);
+
+      // The builtin local-system switch is keyed on apiName and would reject
+      // 'getStock'; the `type: 'mcp'` discriminator routes to the MCP client.
+      expect(mockMcpCtr.runStdioMcpTool).toHaveBeenCalledWith({
+        args: '{"symbol":"AAPL"}',
+        env: { TOKEN: 'secret' },
+        params: { args: ['stock-mcp'], command: 'npx', name: 'kimi-datasource' },
+        toolName: 'getStock',
+      });
+    });
+
+    it('should NOT route to MCP when params are present but type is not mcp', async () => {
+      // Regression: routing must follow the explicit `type` discriminator, not
+      // the mere presence of `params`. A builtin call that happens to carry a
+      // `params` field must still go to the builtin switch.
+      const client = await connectAndOpen();
+
+      client.emit('tool_call_request', {
+        requestId: 'tool-with-params',
+        toolCall: {
+          apiName: 'readFile',
+          arguments: JSON.stringify({ path: '/a.txt' }),
+          identifier: 'lobe-local-system',
+          params: { args: [], command: 'npx', name: 'x' },
+          type: 'tool',
+        },
+        type: 'tool_call_request',
+      });
+      await vi.advanceTimersByTimeAsync(0);
+
+      expect(mockMcpCtr.runStdioMcpTool).not.toHaveBeenCalled();
+      expect(mockLocalFileCtr.readFile).toHaveBeenCalled();
+    });
+
+    it('should send tool_call_response envelope for a successful MCP call', async () => {
+      vi.mocked(mockMcpCtr.runStdioMcpTool).mockResolvedValueOnce({
+        content: 'stock: 100',
+        state: { rows: 1 },
+        success: true,
+      });
+      const client = await connectAndOpen();
+
+      client.simulateMcpCallRequest(
+        'getStock',
+        {},
+        { args: [], command: 'npx', name: 'kimi-datasource' },
+        'mcp-ok',
+      );
+      await vi.advanceTimersByTimeAsync(0);
+
+      expect(client.sendToolCallResponse).toHaveBeenCalledWith({
+        requestId: 'mcp-ok',
+        result: { content: 'stock: 100', state: { rows: 1 }, success: true },
+      });
+    });
+
+    it('should send error response when the MCP call throws', async () => {
+      vi.mocked(mockMcpCtr.runStdioMcpTool).mockRejectedValueOnce(new Error('spawn ENOENT'));
+      const client = await connectAndOpen();
+
+      client.simulateMcpCallRequest(
+        'getStock',
+        {},
+        { args: [], command: 'missing-bin', name: 'kimi-datasource' },
+        'mcp-err',
+      );
+      await vi.advanceTimersByTimeAsync(0);
+
+      expect(client.sendToolCallResponse).toHaveBeenCalledWith({
+        requestId: 'mcp-err',
+        result: { content: 'spawn ENOENT', error: 'spawn ENOENT', success: false },
+      });
+    });
+  });
+
+  describe('message API routing', () => {
+    async function connectAndOpen() {
+      ctr.afterAppReady();
+      await vi.advanceTimersByTimeAsync(0);
+      const client = MockGatewayClient.lastInstance!;
+      client.simulateConnected();
+      return client;
+    }
+
+    it('should route iMessage message API requests to the iMessage bridge service', async () => {
+      vi.mocked(mockImessageBridgeSrv.handleGatewayMessageApi).mockResolvedValueOnce({
+        guid: 'sent-1',
+      });
+      const client = await connectAndOpen();
+
+      client.simulateMessageApiRequest(
+        'imessage',
+        'sendText',
+        {
+          applicationId: 'home-mac-mini',
+          chatGuid: 'iMessage;-;chat-1',
+          message: 'hello',
+        },
+        'msg-req-42',
+      );
+      await vi.advanceTimersByTimeAsync(0);
+
+      expect(mockImessageBridgeSrv.handleGatewayMessageApi).toHaveBeenCalledWith('sendText', {
+        applicationId: 'home-mac-mini',
+        chatGuid: 'iMessage;-;chat-1',
+        message: 'hello',
+      });
+      expect(client.sendMessageApiResponse).toHaveBeenCalledWith({
+        requestId: 'msg-req-42',
+        result: {
+          content: JSON.stringify({ guid: 'sent-1' }),
+          success: true,
+        },
+      });
+    });
+
+    it('should send message_api_response with error for unsupported platforms', async () => {
+      const client = await connectAndOpen();
+
+      client.simulateMessageApiRequest('unsupported', 'sendText', {}, 'msg-req-err');
+      await vi.advanceTimersByTimeAsync(0);
+
+      const errorMsg =
+        'Message API "unsupported/sendText" is not available on this device. It may not be supported in the current desktop version.';
+      expect(client.sendMessageApiResponse).toHaveBeenCalledWith({
+        requestId: 'msg-req-err',
         result: {
           content: errorMsg,
           error: errorMsg,

@@ -11,6 +11,8 @@ const opencodeCodingPlanChatModels: AIChatModelCard[] = [
       'GLM-5 by Zhipu AI — high-performance coding model with strong reasoning abilities.',
     displayName: 'GLM-5',
     enabled: false,
+    family: 'glm',
+    generation: 'glm-5',
     id: 'glm-5',
     maxOutput: 32_768,
     organization: 'Zhipu',
@@ -53,8 +55,8 @@ const opencodeCodingPlanChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    abilities: { functionCall: true, reasoning: true, vision: true },
-    contextWindowTokens: 262_144,
+    abilities: { functionCall: true, reasoning: true },
+    contextWindowTokens: 202_752,
     description:
       'Kimi K2.5 by Moonshot AI — advanced reasoning model with vision support for images and video input.',
     displayName: 'Kimi K2.5',
@@ -203,6 +205,8 @@ const opencodeCodingPlanChatModels: AIChatModelCard[] = [
       'MiniMax M2.5 — efficient coding model with strong reasoning and function call support.',
     displayName: 'MiniMax M2.5',
     enabled: false,
+    family: 'minimax',
+    generation: 'minimax-m2.5',
     id: 'minimax-m2.5',
     maxOutput: 65_536,
     organization: 'MiniMax',
@@ -247,8 +251,8 @@ const opencodeCodingPlanChatModels: AIChatModelCard[] = [
     abilities: { functionCall: true, reasoning: true, vision: true },
     contextWindowTokens: 262_144,
     description:
-      'Qwen3.5-Plus by Alibaba — cost-effective coding model with vision support for image and video input.',
-    displayName: 'Qwen3.5 Plus',
+      'Qwen3.6-Plus by Alibaba — latest Qwen coding model with strong reasoning and vision capabilities.',
+    displayName: 'Qwen3.6 Plus',
     enabled: false,
     id: 'qwen3.5-plus',
     maxOutput: 65_536,
@@ -262,7 +266,7 @@ const opencodeCodingPlanChatModels: AIChatModelCard[] = [
         { name: 'textInput_cacheWrite', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
-    releasedAt: '2026-02-16',
+    releasedAt: '2026-04-02',
     settings: {
       extendParams: ['reasoningEffort'],
     },

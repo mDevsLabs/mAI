@@ -4,6 +4,7 @@ import { type FC } from 'react';
 import { Suspense } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
+import WorkspaceContextSlot from '@/business/client/WorkspaceContextSlot';
 import Loading from '@/components/Loading/BrandTextLoading';
 import { RouteMetaBridge } from '@/features/RouteMeta';
 import { MarketAuthProvider } from '@/layout/AuthProvider/MarketAuth';
@@ -29,7 +30,7 @@ const MobileMainLayout: FC = () => {
   const pathname = location.pathname;
   const showNav = MOBILE_NAV_ROUTES.has(pathname);
   return (
-    <>
+    <WorkspaceContextSlot>
       <RouteMetaBridge />
       <MarketAuthProvider isDesktop={false}>
         <Suspense fallback={<Loading debugId="MobileMainLayout > Outlet" />}>
@@ -37,7 +38,7 @@ const MobileMainLayout: FC = () => {
           {showNav && <NavBar />}
         </Suspense>
       </MarketAuthProvider>
-    </>
+    </WorkspaceContextSlot>
   );
 };
 

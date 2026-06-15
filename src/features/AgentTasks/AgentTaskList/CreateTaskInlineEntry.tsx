@@ -48,6 +48,7 @@ const CreateTaskInlineEntry = memo<CreateTaskInlineEntryProps>((props) => {
   } = props;
   const isHero = variant === 'hero';
   const { t } = useTranslation('chat');
+  const { allowed: canCreateTask, reason } = usePermission('create_content');
 
   const createTask = useTaskStore((s) => s.createTask);
   const isCreating = useTaskStore((s) => s.isCreatingTask);
@@ -63,8 +64,9 @@ const CreateTaskInlineEntry = memo<CreateTaskInlineEntryProps>((props) => {
   const assigneeMeta = useAgentDisplayMeta(assigneeAgentId);
 
   useEffect(() => {
+    if (!canCreateTask) return;
     if (autoFocus || isHero) editor?.focus?.();
-  }, [autoFocus, editor, isHero]);
+  }, [autoFocus, canCreateTask, editor, isHero]);
 
   const handleCollapse = useCallback(() => {
     if (onCollapse) {
@@ -75,6 +77,7 @@ const CreateTaskInlineEntry = memo<CreateTaskInlineEntryProps>((props) => {
   }, [onCollapse, updateSystemStatus]);
 
   const handleContentChange = useCallback(() => {
+    if (!canCreateTask) return;
     const lexicalEditor = editor?.getLexicalEditor?.();
     if (!lexicalEditor) return;
     lexicalEditor.getEditorState().read(() => {
@@ -133,6 +136,7 @@ const CreateTaskInlineEntry = memo<CreateTaskInlineEntryProps>((props) => {
     onCreated,
     parentTaskId,
     priority,
+    canCreateTask,
   ]);
 
   const handleSubmitRef = useRef(handleSubmit);
@@ -170,6 +174,7 @@ const CreateTaskInlineEntry = memo<CreateTaskInlineEntryProps>((props) => {
         }}
       >
         <EditorCanvas
+          disabled={!canCreateTask}
           editor={editor}
           floatingToolbar={false}
           placeholder={placeholder ?? t('createTask.instructionPlaceholder')}
@@ -252,6 +257,7 @@ const CreateTaskInlineEntry = memo<CreateTaskInlineEntryProps>((props) => {
           loading={isCreating}
           shape={'round'}
           size={'small'}
+          title={canCreateTask ? undefined : reason}
           type={'primary'}
           onClick={handleSubmit}
         >

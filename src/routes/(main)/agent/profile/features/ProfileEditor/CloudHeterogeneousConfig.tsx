@@ -8,8 +8,9 @@ import { createStaticStyles, cssVar } from 'antd-style';
 import { CheckCircle2, KeyRound, X } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 
+import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
+import { usePermission } from '@/hooks/usePermission';
 import { lambdaClient, lambdaQuery } from '@/libs/trpc/client';
 
 // Fixed cred key for Claude Code OAuth token — never changes
@@ -126,6 +127,8 @@ const TokenSection = memo<TokenSectionProps>(({ existingCred, onSaved, onEnvChan
   const [saving, setSaving] = useState(false);
 
   const handleSave = async () => {
+    if (!canEdit) return;
+
     const token = tokenInput.trim();
     if (!token) return;
     setSaving(true);
@@ -153,7 +156,14 @@ const TokenSection = memo<TokenSectionProps>(({ existingCred, onSaved, onEnvChan
           <span className={styles.sectionLabel}>{t('heterogeneousStatus.cloud.tokenLabel')}</span>
         </Flexbox>
         {existingCred && !editing && (
-          <span className={styles.manageLink} onClick={() => setEditing(true)}>
+          <span
+            className={styles.manageLink}
+            onClick={() => {
+              if (!canEdit) return;
+
+              setEditing(true);
+            }}
+          >
             {t('heterogeneousStatus.cloud.tokenChange')}
           </span>
         )}
@@ -173,13 +183,14 @@ const TokenSection = memo<TokenSectionProps>(({ existingCred, onSaved, onEnvChan
         <Flexbox horizontal gap={8}>
           <Input.Password
             autoFocus={!!existingCred}
+            disabled={!canEdit}
             placeholder={t('heterogeneousStatus.cloud.tokenPlaceholder')}
             style={{ flex: 1 }}
             value={tokenInput}
             onChange={(e) => setTokenInput(e.target.value)}
             onPressEnter={handleSave}
           />
-          <Button loading={saving} type="primary" onClick={handleSave}>
+          <Button disabled={!canEdit} loading={saving} type="primary" onClick={handleSave}>
             {t('heterogeneousStatus.cloud.tokenSave')}
           </Button>
           {existingCred && (
@@ -213,6 +224,8 @@ const RepoListSection = memo<RepoListSectionProps>(({ repos, onReposChange }) =>
   const [input, setInput] = useState('');
 
   const addRepo = () => {
+    if (!canEdit) return;
+
     const v = input.trim();
     if (!v || repos.includes(v)) return;
     onReposChange([...repos, v]);
@@ -221,6 +234,8 @@ const RepoListSection = memo<RepoListSectionProps>(({ repos, onReposChange }) =>
 
   const removeRepo = (repo: string, e: React.MouseEvent) => {
     e.stopPropagation();
+    if (!canEdit) return;
+
     onReposChange(repos.filter((r) => r !== repo));
   };
 
@@ -238,6 +253,7 @@ const RepoListSection = memo<RepoListSectionProps>(({ repos, onReposChange }) =>
               </Typography.Text>
               <button
                 className={`${styles.repoDeleteBtn} repo-delete-btn`}
+                disabled={!canEdit}
                 onClick={(e) => removeRepo(repo, e)}
               >
                 <X size={12} />
@@ -249,13 +265,16 @@ const RepoListSection = memo<RepoListSectionProps>(({ repos, onReposChange }) =>
 
       <Flexbox horizontal gap={8}>
         <Input
+          disabled={!canEdit}
           placeholder={t('heterogeneousStatus.cloud.repoPlaceholder')}
           style={{ flex: 1 }}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onPressEnter={addRepo}
         />
-        <Button onClick={addRepo}>{t('heterogeneousStatus.cloud.repoAdd')}</Button>
+        <Button disabled={!canEdit} onClick={addRepo}>
+          {t('heterogeneousStatus.cloud.repoAdd')}
+        </Button>
       </Flexbox>
 
       <span className={styles.sectionDesc}>{t('heterogeneousStatus.cloud.repoDesc')}</span>
@@ -292,6 +311,8 @@ const CloudHeterogeneousConfig = memo<CloudHeterogeneousConfigProps>(
     );
 
     const saveEnv = (patch: Record<string, string>) => {
+      if (!canEdit) return;
+
       void onEnvChange({ ...currentEnv, ...patch });
     };
 
@@ -335,6 +356,7 @@ const CloudHeterogeneousConfig = memo<CloudHeterogeneousConfigProps>(
 
             <Select
               allowClear
+              disabled={!canEdit}
               placeholder={t('heterogeneousStatus.cloud.githubPlaceholder')}
               style={{ width: '100%' }}
               value={storedGithubCredKey || undefined}

@@ -133,7 +133,7 @@ export const ExtendedHumanInterventionConfigSchema = z.union([
   z.object({ dynamic: DynamicInterventionConfigSchema }),
 ]);
 
-export interface LobeChatPluginApi {
+export interface mAIPluginApi {
   /**
    * Default execution timeout in milliseconds for this API.
    *
@@ -176,7 +176,7 @@ export interface LobeChatPluginApi {
   url?: string;
 }
 
-export const LobeChatPluginApiSchema = z.object({
+export const mAIPluginApiSchema = z.object({
   defaultTimeoutMs: z.number().int().positive().optional(),
   description: z.string(),
   humanIntervention: ExtendedHumanInterventionConfigSchema.optional(),
@@ -187,7 +187,7 @@ export const LobeChatPluginApiSchema = z.object({
 });
 
 export interface BuiltinToolManifest {
-  api: LobeChatPluginApi[];
+  api: mAIPluginApi[];
 
   /**
    * Supported execution environments for this tool.
@@ -227,7 +227,7 @@ export interface BuiltinToolManifest {
 }
 
 export const BuiltinToolManifestSchema = z.object({
-  api: z.array(LobeChatPluginApiSchema),
+  api: z.array(mAIPluginApiSchema),
   executors: z.array(z.enum(['client', 'server'])).optional(),
   humanIntervention: ExtendedHumanInterventionConfigSchema.optional(),
   identifier: z.string(),
@@ -275,10 +275,30 @@ export interface BuiltinPortalProps<Arguments = Record<string, any>, State = any
   arguments: Arguments;
   identifier: string;
   messageId: string;
+  /**
+   * Extra params the opener passed to `openToolUI` — e.g. which list item the
+   * user clicked. Optional; portals that don't need a focused target ignore it.
+   */
+  params?: Record<string, any>;
   state: State;
 }
 
 export type BuiltinPortal = <T = any>(props: BuiltinPortalProps<T>) => ReactNode;
+
+/**
+ * Props for a tool's optional portal header content. The framework owns the
+ * back/close chrome and renders this in the title slot, so a tool can name and
+ * decorate its own portal without the framework hard-coding tool knowledge.
+ */
+export interface BuiltinPortalTitleProps {
+  apiName?: string;
+  identifier: string;
+  messageId: string;
+  /** Extra params the opener passed to `openToolUI` (e.g. focused item index). */
+  params?: Record<string, any>;
+}
+
+export type BuiltinPortalTitle = (props: BuiltinPortalTitleProps) => ReactNode;
 
 export interface BuiltinPlaceholderProps<T extends Record<string, any> = any> {
   apiName: string;
@@ -326,6 +346,13 @@ export type BuiltinStreaming = <A = any>(props: BuiltinStreamingProps<A>) => Rea
 
 export interface BuiltinServerRuntimeOutput {
   content: string;
+  /**
+   * When true, the tool executed a side-effect but its result is delivered
+   * out-of-band later (e.g. an async sub-agent). The agent runtime parks the
+   * operation instead of writing a tool_result, mirroring the client-tool
+   * pause path. The deferred result is filled in by a completion bridge.
+   */
+  deferred?: boolean;
   error?: any;
   state?: any;
   success: boolean;
@@ -433,6 +460,12 @@ export interface BuiltinToolContext {
    * Used by group management tools to trigger the next orchestration phase
    */
   groupOrchestration?: GroupOrchestrationCallbacks;
+
+  /**
+   * Whether the current tool is executing inside a sub-agent. Sub-agents must
+   * not spawn additional sub-agents.
+   */
+  isSubAgent?: boolean;
 
   /**
    * The tool message ID

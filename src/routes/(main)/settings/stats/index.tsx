@@ -5,11 +5,12 @@ import { ProviderIcon } from '@lobehub/ui/icons';
 import { type DatePickerProps } from 'antd';
 import { DatePicker, Divider } from 'antd';
 import dayjs from 'dayjs';
-import { Brain } from 'lucide-react';
-import { memo, useEffect, useState } from 'react';
+import { Brain, UserIcon } from 'lucide-react';
+import { memo, type ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useClientDataSWR } from '@/libs/swr';
+import { statsKeys } from '@/libs/swr/keys';
 import SettingHeader from '@/routes/(main)/settings/features/SettingHeader';
 import { usageService } from '@/services/usage';
 
@@ -24,36 +25,45 @@ import {
 import { AssistantsRank, ModelsRank, TopicsRank } from './features/rankings';
 import { UsageCards, UsageTable, UsageTrends } from './features/usage';
 import { AiHeatmaps } from './features/visualization';
-import { GroupBy } from './types';
+import { GroupBy, type UserDisplayResolver } from './types';
 
-const StatsSetting = memo<{ mobile?: boolean }>(({ mobile }) => {
-  const { t, i18n } = useTranslation('auth');
-  dayjs.locale(i18n.language);
+interface StatsSettingProps {
+  /**
+   * Enable the "By User" group-by dimension in the Usage section. Only
+   * meaningful when multiple users contribute to the data (i.e. workspace
+   * mode). Combine with `resolveUser` to render names instead of opaque IDs.
+   */
+  enableUserDimension?: boolean;
+  /**
+   * Replace the personal Welcome banner (uses user nickname / registration
+   * date) with a custom node. Pass `false` to drop the banner entirely.
+   * When set (non-undefined), the personal ShareButton is also hidden because
+   * the share link embeds user-identity context.
+   */
+  headerNode?: ReactNode | false;
+  mobile?: boolean;
+  /** Resolve userId → display info. Required when `enableUserDimension` is true. */
+  resolveUser?: UserDisplayResolver;
+}
 
-  const [groupBy, setGroupBy] = useState<GroupBy>(GroupBy.Model);
-  const [dateRange, setDateRange] = useState<dayjs.Dayjs>(dayjs(new Date()));
-  const [dateStrings, setDateStrings] = useState<string>();
+const StatsSetting = memo<StatsSettingProps>(
+  ({ mobile, headerNode, enableUserDimension, resolveUser }) => {
+    const { t, i18n } = useTranslation('auth');
+    dayjs.locale(i18n.language);
 
-  const { data, isLoading, mutate } = useClientDataSWR('usage-stat', async () =>
-    usageService.findAndGroupByDay(dateStrings),
-  );
+    const [groupBy, setGroupBy] = useState<GroupBy>(GroupBy.Model);
+    const [dateRange, setDateRange] = useState<dayjs.Dayjs>(dayjs(new Date()));
+    const [dateStrings, setDateStrings] = useState<string>();
 
-  useEffect(() => {
-    if (dateStrings) {
-      mutate();
-    }
-  }, [dateStrings]);
+    const { data, isLoading, mutate } = useClientDataSWR(statsKeys.usageStat(), async () =>
+      usageService.findAndGroupByDay(dateStrings),
+    );
 
-  const handleDateChange: DatePickerProps['onChange'] = (dates, dateStrings) => {
-    // Handle both single date and array
-    const actualDate = Array.isArray(dates) ? dates[0] : dates;
-    if (actualDate) {
-      setDateRange(actualDate);
-    }
-    if (typeof dateStrings === 'string') {
-      setDateStrings(dateStrings);
-    }
-  };
+    useEffect(() => {
+      if (dateStrings) {
+        mutate();
+      }
+    }, [dateStrings]);
 
   return (
     <>

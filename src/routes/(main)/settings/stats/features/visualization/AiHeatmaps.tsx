@@ -7,6 +7,7 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useClientDataSWR } from '@/libs/swr';
+import { statsKeys } from '@/libs/swr/keys';
 import { messageService } from '@/services/message';
 import { formatIntergerNumber, formatShortenNumber } from '@/utils/format';
 

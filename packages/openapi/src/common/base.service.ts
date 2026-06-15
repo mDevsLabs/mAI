@@ -1,4 +1,6 @@
-import { and, eq, inArray } from 'drizzle-orm';
+import { buildWorkspacePayload, buildWorkspaceWhere } from '@lobechat/database';
+import { and, eq, inArray, type SQL } from 'drizzle-orm';
+import type { AnyPgColumn } from 'drizzle-orm/pg-core';
 
 import type { PERMISSION_ACTIONS } from '@/const/rbac';
 import { ALL_SCOPE } from '@/const/rbac';
@@ -13,7 +15,7 @@ import {
   sessions,
   topics,
 } from '@/database/schemas';
-import type { LobeChatDatabase } from '@/database/type';
+import type { mAIDatabase } from '@/database/type';
 import { getScopePermissions } from '@/utils/rbac';
 
 import { getActionType, getResourceType } from '../helpers/permission';
@@ -31,13 +33,35 @@ const isNilOrEmptyObject = (value: unknown): boolean => {
  */
 export abstract class BaseService implements IBaseService {
   protected userId: string;
-  public db: LobeChatDatabase;
+  protected workspaceId?: string;
+  public db: mAIDatabase;
   private rbacModel: RbacModel;
 
-  constructor(db: LobeChatDatabase, userId: string | null) {
+  constructor(db: mAIDatabase, userId: string | null, workspaceId?: string) {
     this.db = db;
     this.userId = userId || '';
+    this.workspaceId = workspaceId;
     this.rbacModel = new RbacModel(db, this.userId);
+  }
+
+  protected buildWorkspaceWhere(cols: { userId: AnyPgColumn; workspaceId: AnyPgColumn }): SQL {
+    return buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, cols);
+  }
+
+  protected buildWorkspacePayload<T extends object>(
+    base: T,
+  ): T & { userId: string; workspaceId: string | null } {
+    return buildWorkspacePayload({ userId: this.userId, workspaceId: this.workspaceId }, base);
+  }
+
+  protected buildPermissionWhere(
+    cols: { userId: AnyPgColumn; workspaceId: AnyPgColumn },
+    condition?: { userId?: string },
+  ): SQL | undefined {
+    if (this.workspaceId)
+      return buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, cols);
+    if (condition?.userId) return buildWorkspaceWhere({ userId: condition.userId }, cols);
+    return;
   }
 
   /**
@@ -158,10 +182,10 @@ export abstract class BaseService implements IBaseService {
   protected async hasGlobalPermission(
     permissionKey: keyof typeof PERMISSION_ACTIONS,
   ): Promise<boolean> {
-    return await this.rbacModel.hasAnyPermission(
-      getScopePermissions(permissionKey, ['ALL']),
-      this.userId,
-    );
+    return await this.rbacModel.hasAnyPermission(getScopePermissions(permissionKey, ['ALL']), {
+      userId: this.userId,
+      workspaceId: this.workspaceId,
+    });
   }
 
   /**
@@ -172,10 +196,10 @@ export abstract class BaseService implements IBaseService {
   protected async hasOwnerPermission(
     permissionKey: keyof typeof PERMISSION_ACTIONS,
   ): Promise<boolean> {
-    return await this.rbacModel.hasAnyPermission(
-      getScopePermissions(permissionKey, ['OWNER']),
-      this.userId,
-    );
+    return await this.rbacModel.hasAnyPermission(getScopePermissions(permissionKey, ['OWNER']), {
+      userId: this.userId,
+      workspaceId: this.workspaceId,
+    });
   }
 
   /**

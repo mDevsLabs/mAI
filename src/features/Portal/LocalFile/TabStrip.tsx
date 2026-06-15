@@ -1,15 +1,19 @@
 'use client';
 
+import { isDesktop } from '@lobechat/const';
 import { ContextMenuTrigger, type GenericItemType, Icon } from '@lobehub/ui';
 import { confirmModal, ScrollArea } from '@lobehub/ui/base-ui';
 import { SkillsIcon } from '@lobehub/ui/icons';
 import { createStaticStyles } from 'antd-style';
-import { FileIcon, XIcon } from 'lucide-react';
+import { XIcon } from 'lucide-react';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import FileIcon from '@/components/FileIcon';
+import { localFileService } from '@/services/electron/localFileService';
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/selectors';
+import { getLocalFileTabId } from '@/store/chat/slices/portal/helpers';
 
 const SKILL_PATH_RE = /\/\.(?:agents|claude)\/skills\/([^/]+)\/SKILL\.md$/;
 
@@ -19,6 +23,15 @@ const resolveSkillName = (filePath: string): string | null => {
 };
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
+  tabIcon: css`
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+
+    width: 14px;
+    height: 14px;
+  `,
   tabClose: css`
     cursor: pointer;
 
@@ -174,25 +187,34 @@ const TabStrip = memo(() => {
   );
 
   const getContextMenuItems = useCallback(
-    (filePath: string, index: number): GenericItemType[] => [
+    (id: string, filePath: string, index: number): GenericItemType[] => [
       {
         disabled: index === 0,
         key: 'closeLeft',
         label: t('workingPanel.localFile.closeLeft'),
-        onClick: () => closeLeftLocalFileTabs(filePath),
+        onClick: () => closeLeftLocalFileTabs(id),
       },
       {
         disabled: index === openLocalFiles.length - 1,
         key: 'closeRight',
         label: t('workingPanel.localFile.closeRight'),
-        onClick: () => closeRightLocalFileTabs(filePath),
+        onClick: () => closeRightLocalFileTabs(id),
       },
       {
         disabled: openLocalFiles.length <= 1,
         key: 'closeOther',
         label: t('workingPanel.localFile.closeOther'),
-        onClick: () => closeOtherLocalFileTabs(filePath),
+        onClick: () => closeOtherLocalFileTabs(id),
       },
+      ...(isDesktop
+        ? [
+            {
+              key: 'showInSystem',
+              label: t('workingPanel.files.showInSystem'),
+              onClick: () => void localFileService.openFileFolder(filePath),
+            },
+          ]
+        : []),
       { type: 'divider' },
       {
         key: 'close',
@@ -220,29 +242,37 @@ const TabStrip = memo(() => {
       scrollbarProps={{ orientation: 'horizontal', style: SCROLL_AREA_SCROLLBAR_STYLE }}
       style={SCROLL_AREA_STYLE}
     >
-      {openLocalFiles.map(({ filePath }, index) => {
+      {openLocalFiles.map((file, index) => {
+        const { filePath } = file;
+        const id = getLocalFileTabId(file);
         const filename = filePath.split('/').at(-1) ?? filePath;
         const skillName = resolveSkillName(filePath);
         const label = skillName ?? filename;
-        const isActive = filePath === activeLocalFilePath;
+        const isActive = id === activeLocalFileId;
 
         return (
-          <ContextMenuTrigger items={() => getContextMenuItems(filePath, index)} key={filePath}>
+          <ContextMenuTrigger items={() => getContextMenuItems(id, filePath, index)} key={id}>
             <div
               aria-selected={isActive}
               className={`${styles.tabItem} ${isActive ? styles.tabItemActive : ''}`}
               role="tab"
               tabIndex={0}
               title={filePath}
-              onClick={() => setActiveLocalFile(filePath)}
+              onClick={() => setActiveLocalFile(id)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault();
-                  setActiveLocalFile(filePath);
+                  setActiveLocalFile(id);
                 }
               }}
             >
-              <Icon icon={skillName ? SkillsIcon : FileIcon} size={12} />
+              {skillName ? (
+                <Icon className={styles.tabIcon} icon={SkillsIcon} size={12} />
+              ) : (
+                <span className={styles.tabIcon}>
+                  <FileIcon fileName={filename} size={14} variant={'raw'} />
+                </span>
+              )}
               <span className={styles.tabLabel}>{label}</span>
               <button
                 aria-label={`Close ${filename}`}

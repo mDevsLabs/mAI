@@ -5,14 +5,14 @@ import type { ErrorAttribution, ErrorCategory, ErrorSeverity } from './taxonomy'
 
 /**
  * Cloud-only business codes live in `ChatErrorType` (not `AgentRuntimeErrorType`)
- * because they're emitted solely by the managed LobeHub Cloud gateway. They're
+ * because they're emitted solely by the managed mAI Cloud gateway. They're
  * still classified here, distinguished by the `9` tier digit of their
  * `numericId` (e.g. `E2902`). See `CLOUD_TIER_DIGIT` in `./taxonomy`.
  */
 export type CloudErrorCode =
   | typeof ChatErrorType.FreePlanLimit
   | typeof ChatErrorType.InsufficientBudgetForModel
-  | typeof ChatErrorType.LobeHubModelDeprecated;
+  | typeof ChatErrorType.mAIModelDeprecated;
 
 /** Every code the spec table can classify. */
 export type SpecErrorCode = CloudErrorCode | ILobeAgentRuntimeErrorType;
@@ -178,7 +178,7 @@ export const ERROR_CODE_SPECS: SpecMap = {
     httpStatus: 402,
     retryable: false,
     countAsFailure: false,
-    description: 'LobeHub Cloud free-plan usage limit reached.',
+    description: 'mAI Cloud free-plan usage limit reached.',
   },
   [ChatErrorType.InsufficientBudgetForModel]: {
     code: ChatErrorType.InsufficientBudgetForModel,
@@ -189,7 +189,7 @@ export const ERROR_CODE_SPECS: SpecMap = {
     httpStatus: 402,
     retryable: false,
     countAsFailure: false,
-    description: 'LobeHub Cloud balance is positive but below the model’s estimated cost.',
+    description: 'mAI Cloud balance is positive but below the model’s estimated cost.',
   },
 
   // ─── 3xxx Capacity ────────────────────────────────────────────────────
@@ -306,8 +306,8 @@ export const ERROR_CODE_SPECS: SpecMap = {
     description: 'Upstream rejected the request as malformed (bad JSON / schema / parameters).',
   },
   // —— Cloud-only (tier 9) ——
-  [ChatErrorType.LobeHubModelDeprecated]: {
-    code: ChatErrorType.LobeHubModelDeprecated,
+  [ChatErrorType.mAIModelDeprecated]: {
+    code: ChatErrorType.mAIModelDeprecated,
     numericId: 4901,
     category: 'request',
     severity: 'warning',
@@ -315,7 +315,7 @@ export const ERROR_CODE_SPECS: SpecMap = {
     httpStatus: 404,
     retryable: false,
     countAsFailure: false,
-    description: 'Requested LobeHub Cloud model has been deprecated / removed.',
+    description: 'Requested mAI Cloud model has been deprecated / removed.',
   },
 
   // ─── 5xxx Safety ──────────────────────────────────────────────────────

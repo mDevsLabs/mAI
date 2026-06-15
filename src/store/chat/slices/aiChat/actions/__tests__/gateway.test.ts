@@ -1,6 +1,6 @@
 import type { AgentStreamEvent } from '@lobechat/agent-gateway-client';
 import { RequestTrigger } from '@lobechat/types';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type * as ConstVersion from '@/const/version';
 import { aiAgentService } from '@/services/aiAgent';
@@ -28,9 +28,57 @@ vi.mock('@/services/topic', () => ({
   },
 }));
 
+const mockUserDefaultConfig = vi.hoisted(() => ({
+  disableGatewayMode: undefined as boolean | undefined,
+}));
+
 vi.mock('@/store/user', () => ({
   useUserStore: {
-    getState: vi.fn(() => ({ preference: { lab: {} } })),
+    getState: vi.fn(() => ({})),
+  },
+}));
+
+vi.mock('@/store/user/selectors', () => ({
+  settingsSelectors: {
+    defaultAgentConfig: () => ({
+      chatConfig: { disableGatewayMode: mockUserDefaultConfig.disableGatewayMode },
+    }),
+  },
+}));
+
+// ─── Local-device activation (本机) test seams ───
+// Controlled per-test; default off so the rest of the suite runs as web (no
+// device resolution, no electron IPC).
+const mockEnv = vi.hoisted(() => ({ isDesktop: false }));
+const mockGateway = vi.hoisted(() => ({ getDeviceInfo: vi.fn() }));
+// Effective runtime mode === 'local' (what isLocalSystemEnabledById returns).
+const mockRuntime = vi.hoisted(() => ({ isLocal: false }));
+const mockAgentStore = vi.hoisted(() => ({
+  state: { activeAgentId: undefined, agentMap: {} } as any,
+}));
+
+vi.mock('@/const/version', async (importOriginal) => {
+  const actual = await importOriginal<typeof ConstVersion>();
+  return {
+    ...actual,
+    get isDesktop() {
+      return mockEnv.isDesktop;
+    },
+  };
+});
+
+vi.mock('@/services/electron/gatewayConnection', () => ({
+  gatewayConnectionService: { getDeviceInfo: mockGateway.getDeviceInfo },
+}));
+
+vi.mock('@/store/agent', () => ({ getAgentStoreState: () => mockAgentStore.state }));
+
+vi.mock('@/store/agent/selectors', () => ({
+  agentSelectors: { currentAgentWorkingDirectory: () => () => undefined },
+  chatConfigByIdSelectors: {
+    getChatConfigById: (agentId: string) => (state: any) =>
+      state.agentMap?.[agentId]?.chatConfig ?? {},
+    isLocalSystemEnabledById: () => () => mockRuntime.isLocal,
   },
 }));
 
@@ -116,8 +164,69 @@ function createTestAction() {
 }
 
 describe('GatewayActionImpl', () => {
+  beforeEach(() => {
+    mockAgentStore.state = { activeAgentId: undefined, agentMap: {} };
+    mockUserDefaultConfig.disableGatewayMode = undefined;
+  });
+
   afterEach(() => {
     vi.restoreAllMocks();
+    delete (globalThis as any).window;
+  });
+
+  describe('isGatewayModeEnabled', () => {
+    const setServerConfig = (serverConfig: Record<string, unknown>) => {
+      (globalThis as any).window = {
+        global_serverConfigStore: {
+          getState: () => ({ serverConfig }),
+        },
+      };
+    };
+
+    it('returns true when backend enables Gateway mode and the agent does not disable it', () => {
+      const { action } = createTestAction();
+      setServerConfig({
+        agentGatewayUrl: 'https://gateway.test.com',
+        enableGatewayMode: true,
+      });
+
+      expect(action.isGatewayModeEnabled('agent-1')).toBe(true);
+    });
+
+    it('returns false when the current agent disables Gateway mode', () => {
+      const { action } = createTestAction();
+      setServerConfig({
+        agentGatewayUrl: 'https://gateway.test.com',
+        enableGatewayMode: true,
+      });
+      mockAgentStore.state = {
+        activeAgentId: 'agent-1',
+        agentMap: { 'agent-1': { chatConfig: { disableGatewayMode: true } } },
+      };
+
+      expect(action.isGatewayModeEnabled('agent-1')).toBe(false);
+    });
+
+    it('falls back to the app-level default agent config', () => {
+      const { action } = createTestAction();
+      setServerConfig({
+        agentGatewayUrl: 'https://gateway.test.com',
+        enableGatewayMode: true,
+      });
+      mockUserDefaultConfig.disableGatewayMode = true;
+
+      expect(action.isGatewayModeEnabled('agent-1')).toBe(false);
+    });
+
+    it('returns false when the backend does not enable Gateway mode', () => {
+      const { action } = createTestAction();
+      setServerConfig({
+        agentGatewayUrl: 'https://gateway.test.com',
+        enableGatewayMode: false,
+      });
+
+      expect(action.isGatewayModeEnabled('agent-1')).toBe(false);
+    });
   });
 
   describe('connectToGateway', () => {

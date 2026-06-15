@@ -42,6 +42,7 @@ const MainMenu = memo(() => {
 
       <Command.Group>
         <CommandItem
+          disabled={!canCreate}
           icon={<Bot />}
           unpinned={menuContext === 'agent' || menuContext === 'page'}
           value="create new agent assistant"
@@ -51,6 +52,7 @@ const MainMenu = memo(() => {
         </CommandItem>
 
         <CommandItem
+          disabled={!canCreate}
           icon={<Bot />}
           unpinned={menuContext === 'agent' || menuContext === 'page'}
           value="create new agent team"
@@ -61,6 +63,7 @@ const MainMenu = memo(() => {
 
         {menuContext === 'agent' && (
           <CommandItem
+            disabled={!canCreate}
             icon={<MessageSquarePlusIcon />}
             unpinned={menuContext !== 'agent'}
             value="create new topic"
@@ -70,11 +73,17 @@ const MainMenu = memo(() => {
           </CommandItem>
         )}
 
-        <CommandItem icon={<FilePen />} value="create new page" onSelect={handleCreatePage}>
+        <CommandItem
+          disabled={!canCreate}
+          icon={<FilePen />}
+          value="create new page"
+          onSelect={handleCreatePage}
+        >
           {t('cmdk.newPage')}
         </CommandItem>
 
         <CommandItem
+          disabled={!canCreate}
           icon={<LibraryBig />}
           unpinned={menuContext !== 'resource'}
           value="create new library"

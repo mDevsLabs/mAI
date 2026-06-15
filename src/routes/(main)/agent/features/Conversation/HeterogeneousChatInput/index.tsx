@@ -11,18 +11,20 @@ import { useNavigate, useParams } from 'react-router-dom';
 import urlJoin from 'url-join';
 
 import { useHeteroAgentCloudConfig } from '@/business/client/hooks/useHeteroAgentCloudConfig';
+import { isDesktop } from '@/const/version';
 import { type ActionKeys } from '@/features/ChatInput';
 import { ChatInput } from '@/features/Conversation';
 import WideScreenContainer from '@/features/WideScreenContainer';
+import { resolveExecutionTarget } from '@/helpers/executionTarget';
 import { useRemoteAgentDeviceGuard } from '@/hooks/useRemoteAgentDeviceGuard';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 
-import WorkingDirectoryBar from './WorkingDirectoryBar';
+import HeteroControlBar from './HeteroControlBar';
 
 // Heterogeneous agents (e.g. Claude Code) bring their own toolchain, memory,
-// and model, so LobeHub-side pickers don't apply. Typo is kept so the user
+// and model, so mAI-side pickers don't apply. Typo is kept so the user
 // can still toggle the rich-text formatting bar.
 const leftActions: ActionKeys[] = ['typo'];
 const rightActions: ActionKeys[] = [];
@@ -84,13 +86,14 @@ const HeterogeneousChatInput = memo(() => {
     }
 
     return (
-      <Flexbox paddingBlock={'0 6px'} paddingInline={12}>
-        <Alert
-          title={title}
-          type={'warning'}
-          description={
-            <Flexbox horizontal align={'center'} gap={8} justify={'space-between'}>
-              <span>{desc}</span>
+      <WideScreenContainer>
+        <Flexbox align={'center'} paddingBlock={'0 8px'} paddingInline={12}>
+          <Alert
+            description={desc}
+            style={{ maxWidth: 880, width: '100%' }}
+            title={title}
+            type={'warning'}
+            action={
               <Flexbox horizontal gap={6}>
                 <Button size={'small'} onClick={refresh}>
                   {t('platformAgent.deviceGuard.refresh')}
@@ -99,10 +102,10 @@ const HeterogeneousChatInput = memo(() => {
                   {t('platformAgent.deviceGuard.configure')}
                 </Button>
               </Flexbox>
-            </Flexbox>
-          }
-        />
-      </Flexbox>
+            }
+          />
+        </Flexbox>
+      </WideScreenContainer>
     );
   };
 
@@ -132,11 +135,11 @@ const HeterogeneousChatInput = memo(() => {
       )}
       {renderDeviceGuard()}
       <ChatInput
-        skipScrollMarginWithList
+        controlBarSlot={<HeteroControlBar />}
         leftActions={leftActions}
         rightActions={rightActions}
-        runtimeConfigSlot={<WorkingDirectoryBar />}
         sendButtonProps={{ disabled: inputDisabled, shape: 'round' }}
+        skipScrollMarginWithList={!hasGuard}
         onEditorReady={(instance) => {
           // Sync to global ChatStore for compatibility with other features
           useChatStore.setState({ mainInputEditor: instance });

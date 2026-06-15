@@ -2,13 +2,13 @@ import { and, eq, inArray } from 'drizzle-orm';
 
 import type { NewPushToken, PushTokenItem } from '../schemas/pushToken';
 import { pushTokens } from '../schemas/pushToken';
-import type { LobeChatDatabase } from '../type';
+import type { mAIDatabase } from '../type';
 
 export class PushTokenModel {
   private readonly userId: string;
-  private readonly db: LobeChatDatabase;
+  private readonly db: mAIDatabase;
 
-  constructor(db: LobeChatDatabase, userId: string) {
+  constructor(db: mAIDatabase, userId: string) {
     this.db = db;
     this.userId = userId;
   }
@@ -54,7 +54,7 @@ export class PushTokenModel {
  * Not bound to a userId — operates across all users at once.
  */
 export async function deletePushTokensByExpoTokens(
-  db: LobeChatDatabase,
+  db: mAIDatabase,
   tokens: string[],
 ): Promise<void> {
   if (tokens.length === 0) return;

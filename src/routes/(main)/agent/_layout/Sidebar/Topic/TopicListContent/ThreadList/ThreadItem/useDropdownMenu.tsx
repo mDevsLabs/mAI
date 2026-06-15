@@ -5,6 +5,7 @@ import { PencilLine, Trash } from 'lucide-react';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { usePermission } from '@/hooks/usePermission';
 import { useChatStore } from '@/store/chat';
 
 interface ThreadItemDropdownMenuProps {
@@ -23,6 +24,7 @@ export const useThreadItemDropdownMenu = ({
   return useCallback(() => {
     return [
       {
+        disabled: !canEditThread,
         icon: <Icon icon={PencilLine} />,
         key: 'rename',
         label: t('rename', { ns: 'common' }),
@@ -35,6 +37,7 @@ export const useThreadItemDropdownMenu = ({
       },
       {
         danger: true,
+        disabled: !canEditThread,
         icon: <Icon icon={Trash} />,
         key: 'delete',
         label: t('delete', { ns: 'common' }),

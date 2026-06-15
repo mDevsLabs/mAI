@@ -4,7 +4,6 @@ import { MaximizeIcon } from 'lucide-react';
 import qs from 'query-string';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 
 import { DEFAULT_AVATAR } from '@/const/meta';
 import { SESSION_CHAT_URL } from '@/const/url';

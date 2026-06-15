@@ -9,8 +9,8 @@ import { LogIn } from 'lucide-react';
 import { type FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { usePermission } from '@/hooks/usePermission';
 import { useMarketAuth } from '@/layout/AuthProvider/MarketAuth';
-import { lambdaClient, lambdaQuery } from '@/libs/trpc/client';
 
 import CredItem from './CredItem';
 import { createEditCredModal } from './EditCredModal';
@@ -40,13 +40,18 @@ const styles = createStaticStyles(({ css }) => ({
 const CredsList: FC = () => {
   const { t } = useTranslation('setting');
   const { isAuthenticated, isLoading: isAuthLoading, signIn } = useMarketAuth();
+  const { allowed: canManageCredentials } = usePermission('manage_provider_key');
+  const credsApi = useCredsApi();
 
-  const { data, isLoading, refetch } = lambdaQuery.market.creds.list.useQuery(undefined, {
+  const { data, isLoading, refetch } = credsApi.query.list.useQuery(undefined, {
     enabled: isAuthenticated,
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: number) => lambdaClient.market.creds.delete.mutate({ id }),
+    mutationFn: async (id: number) => {
+      if (!canManageCredentials) return;
+      await credsApi.client.delete.mutate({ id });
+    },
     onSuccess: () => {
       refetch();
     },

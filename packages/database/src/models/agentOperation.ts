@@ -9,7 +9,18 @@ import type {
   NewAgentOperation,
 } from '../schemas/agentOperations';
 import { agentOperations } from '../schemas/agentOperations';
-import type { LobeChatDatabase } from '../type';
+import type { mAIDatabase } from '../type';
+import { buildWorkspaceWhere } from '../utils/workspace';
+
+/** Verify rollup states, mirrors the `verify_status` enum column. */
+export type VerifyStatus =
+  | 'unverified'
+  | 'planned'
+  | 'verifying'
+  | 'passed'
+  | 'failed'
+  | 'repairing'
+  | 'delivered';
 
 export interface RecordOperationStartParams {
   agentId?: string | null;
@@ -42,13 +53,20 @@ export interface RecordOperationCompletionParams {
     | 'interrupted'
     | 'max_steps'
     | 'cost_limit'
-    | 'waiting_for_human';
+    | 'waiting_for_human'
+    | 'waiting_for_async_tool';
   cost?: Record<string, unknown> | null;
   error?: AgentOperationError | null;
   interruption?: AgentOperationInterruption | null;
   llmCalls?: number | null;
   processingTimeMs?: number | null;
-  status: 'running' | 'waiting_for_human' | 'done' | 'error' | 'interrupted';
+  status:
+    | 'running'
+    | 'waiting_for_human'
+    | 'waiting_for_async_tool'
+    | 'done'
+    | 'error'
+    | 'interrupted';
   stepCount?: number | null;
   toolCalls?: number | null;
   totalCost?: number | null;
@@ -60,13 +78,18 @@ export interface RecordOperationCompletionParams {
 }
 
 export class AgentOperationModel {
-  private readonly db: LobeChatDatabase;
+  private readonly db: mAIDatabase;
   private readonly userId: string;
+  private readonly workspaceId?: string;
 
-  constructor(db: LobeChatDatabase, userId: string) {
+  constructor(db: mAIDatabase, userId: string, workspaceId?: string) {
     this.db = db;
     this.userId = userId;
+    this.workspaceId = workspaceId;
   }
+
+  private ownership = () =>
+    buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, agentOperations);
 
   /**
    * Insert the initial row when an operation is created. Idempotent via
@@ -92,6 +115,7 @@ export class AgentOperationModel {
       topicId: params.topicId ?? null,
       trigger: params.trigger,
       userId: this.userId,
+      workspaceId: this.workspaceId ?? null,
     };
 
     await this.db.insert(agentOperations).values(values).onConflictDoNothing();
@@ -133,12 +157,122 @@ export class AgentOperationModel {
     await this.db
       .update(agentOperations)
       .set(updates)
-      .where(and(eq(agentOperations.id, operationId), eq(agentOperations.userId, this.userId)));
+      .where(and(eq(agentOperations.id, operationId), this.ownership()));
   }
 
   async findById(operationId: string) {
     const [row] = await this.db
       .select()
+      .from(agentOperations)
+      .where(and(eq(agentOperations.id, operationId), this.ownership()))
+      .limit(1);
+    return row ?? null;
+  }
+
+  /**
+   * Longest single operation (agent run) wall-clock execution time over the last
+   * year, in seconds. Wall clock (`completedAt - startedAt`) is the most faithful
+   * "task duration" — it spans the whole run including tool calls and waiting,
+   * not just LLM compute. Returns 0 when there are no completed operations.
+   */
+  async getMaxDurationSeconds(): Promise<number> {
+    const startDate = today().subtract(1, 'year').startOf('day').toDate();
+
+    const [row] = await this.db
+      .select({
+        seconds:
+          sql<number>`COALESCE(MAX(EXTRACT(EPOCH FROM (${agentOperations.completedAt} - ${agentOperations.startedAt}))), 0)`.mapWith(
+            Number,
+          ),
+      })
+      .from(agentOperations)
+      .where(
+        and(
+          this.ownership(),
+          isNotNull(agentOperations.startedAt),
+          isNotNull(agentOperations.completedAt),
+          gte(agentOperations.createdAt, startDate),
+        ),
+      );
+
+    return row?.seconds ?? 0;
+  }
+
+  /**
+   * Atomically flip a parked parent op from `waiting_for_async_tool` back to
+   * `running`. Returns true only for the single winner (affected === 1) so
+   * concurrent sub-op completions that lose the race no-op instead of
+   * double-resuming the parent.
+   */
+  async tryResumeFromAsyncTool(operationId: string): Promise<boolean> {
+    const rows = await this.db
+      .update(agentOperations)
+      .set({ status: 'running' })
+      .where(
+        and(
+          eq(agentOperations.id, operationId),
+          eq(agentOperations.userId, this.userId),
+          eq(agentOperations.status, 'waiting_for_async_tool'),
+        ),
+      )
+      .returning({ id: agentOperations.id });
+    return rows.length === 1;
+  }
+
+  // ============================================
+  // Verify (delivery checker) — plan snapshot lives on this row
+  // ============================================
+
+  /**
+   * Write a draft check plan onto the operation and flip the rollup to `planned`.
+   * The plan is mutable while a draft; it is frozen on `confirmVerifyPlan`.
+   */
+  async setVerifyPlan(operationId: string, items: VerifyCheckItem[]): Promise<void> {
+    await this.db
+      .update(agentOperations)
+      .set({ verifyPlan: items, verifyStatus: 'planned' })
+      .where(and(eq(agentOperations.id, operationId), eq(agentOperations.userId, this.userId)));
+  }
+
+  /** Replace the draft plan items (user edited the plan before confirming). */
+  async replaceVerifyPlanItems(operationId: string, items: VerifyCheckItem[]): Promise<void> {
+    await this.db
+      .update(agentOperations)
+      .set({ verifyPlan: items })
+      .where(
+        and(
+          eq(agentOperations.id, operationId),
+          eq(agentOperations.userId, this.userId),
+          // only a not-yet-confirmed plan may be edited
+          isNull(agentOperations.verifyPlanConfirmedAt),
+        ),
+      );
+  }
+
+  /** Freeze the plan (records confirmation time). Results relate to frozen items. */
+  async confirmVerifyPlan(operationId: string, confirmedAt: Date = new Date()): Promise<void> {
+    await this.db
+      .update(agentOperations)
+      .set({ verifyPlanConfirmedAt: confirmedAt })
+      .where(and(eq(agentOperations.id, operationId), eq(agentOperations.userId, this.userId)));
+  }
+
+  /** Update the denormalized rollup. Always go through the service-layer chokepoint. */
+  async updateVerifyStatus(operationId: string, verifyStatus: VerifyStatus | null): Promise<void> {
+    await this.db
+      .update(agentOperations)
+      .set({ verifyStatus })
+      .where(and(eq(agentOperations.id, operationId), eq(agentOperations.userId, this.userId)));
+  }
+
+  /** Read just the verify-related fields for an operation. */
+  async getVerifyState(operationId: string) {
+    const [row] = await this.db
+      .select({
+        verifyPlan: agentOperations.verifyPlan,
+        verifyPlanConfirmedAt: agentOperations.verifyPlanConfirmedAt,
+        verifyStatus: agentOperations.verifyStatus,
+      })
       .from(agentOperations)
       .where(and(eq(agentOperations.id, operationId), eq(agentOperations.userId, this.userId)))
       .limit(1);

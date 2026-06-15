@@ -269,6 +269,18 @@ export default class Browser {
     });
   }
 
+  private setupFullscreenListener(browserWindow: BrowserWindow): void {
+    logger.debug(`[${this.identifier}] Setting up fullscreen event listeners.`);
+
+    browserWindow.on('enter-full-screen', () => {
+      this.broadcast('windowFullscreenChanged', { isFullScreen: true });
+    });
+
+    browserWindow.on('leave-full-screen', () => {
+      this.broadcast('windowFullscreenChanged', { isFullScreen: false });
+    });
+  }
+
   /**
    * Setup context menu with platform-specific features
    * Delegates to MenuManager for consistent platform behavior
@@ -561,7 +573,10 @@ export default class Browser {
   }
 
   /**
-   * Rewrite tRPC requests to remote server and inject OIDC token
+   * Bind this window's session to the backend proxy. The `app://` request
+   * interceptor (wired in `App.ts`) consumes this context to route
+   * `/trpc`, `/webapi`, `/api/auth`, and `/market` requests to the remote
+   * mAI server.
    */
   private setupRemoteServerRequestHook(browserWindow: BrowserWindow): void {
     const session = browserWindow.webContents.session;
@@ -577,7 +592,6 @@ export default class Browser {
         const remoteServerUrl = await remoteServerConfigCtr.getRemoteServerUrl(config);
         return remoteServerUrl || null;
       },
-      scheme: ELECTRON_BE_PROTOCOL_SCHEME,
       source: this.identifier,
     });
   }

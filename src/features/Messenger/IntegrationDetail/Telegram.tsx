@@ -46,7 +46,15 @@ const TelegramDetail = memo<TelegramDetailProps>(({ appId, botUsername, name, on
     createMessengerLinkModal({ appId, botUsername, name, platform: 'telegram' });
 
   const headerAction = hasLinks ? (
-    <Button danger icon={<Icon icon={Trash2Icon} />} onClick={() => handleUnlink('')}>
+    <Button
+      danger
+      disabled={!canEdit}
+      icon={<Icon icon={Trash2Icon} />}
+      onClick={() => {
+        if (!canEdit) return;
+        handleUnlink('');
+      }}
+    >
       {t('messenger.unlinkCta')}
     </Button>
   ) : (

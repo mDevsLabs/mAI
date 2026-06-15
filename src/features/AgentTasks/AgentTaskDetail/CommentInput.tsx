@@ -11,6 +11,7 @@ import {
   insertFilesIntoEditor,
 } from '@/features/EditorCanvas/editorAttachments';
 import { useEnterToSend } from '@/hooks/useEnterToSend';
+import { usePermission } from '@/hooks/usePermission';
 import { useUserAvatar } from '@/hooks/useUserAvatar';
 import { useTaskStore } from '@/store/task';
 
@@ -18,6 +19,7 @@ import { styles } from '../shared/style';
 
 const CommentInput = memo<{ taskId: string }>(({ taskId }) => {
   const { t } = useTranslation('chat');
+  const { allowed: canEditTask } = usePermission('create_content');
   const editor = useEditor();
   const addComment = useTaskStore((s) => s.addComment);
   const userAvatar = useUserAvatar();
@@ -61,7 +63,7 @@ const CommentInput = memo<{ taskId: string }>(({ taskId }) => {
     } finally {
       setSubmitting(false);
     }
-  }, [taskId, editor, addComment, submitting]);
+  }, [canEditTask, taskId, editor, addComment, submitting]);
 
   return (
     <Flexbox className={styles.commentInputCard} gap={6}>

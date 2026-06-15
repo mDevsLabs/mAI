@@ -2,7 +2,7 @@ import { and, desc, eq } from 'drizzle-orm';
 
 import type { DeviceItem } from '../schemas';
 import { devices } from '../schemas';
-import type { LobeChatDatabase } from '../type';
+import type { mAIDatabase } from '../type';
 
 export interface RegisterDeviceParams {
   deviceId: string;
@@ -20,9 +20,9 @@ export interface UpdateDeviceParams {
 
 export class DeviceModel {
   private userId: string;
-  private db: LobeChatDatabase;
+  private db: mAIDatabase;
 
-  constructor(db: LobeChatDatabase, userId: string) {
+  constructor(db: mAIDatabase, userId: string) {
     this.userId = userId;
     this.db = db;
   }

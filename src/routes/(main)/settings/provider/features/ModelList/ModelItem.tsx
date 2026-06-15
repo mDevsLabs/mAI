@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { ModelInfoTags } from '@/components/ModelSelect';
 import NewModelBadge from '@/components/ModelSelect/NewModelBadge';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import { usePermission } from '@/hooks/usePermission';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { formatPriceByCurrency } from '@/utils/format';
 import {
@@ -175,9 +176,11 @@ const ModelItem = memo<ModelItemProps>(
     const EnableSwitch = canToggle ? (
       <Switch
         checked={checked}
+        disabled={!canManageProvider}
         loading={isModelLoading}
         size={'small'}
         onChange={async (e) => {
+          if (!canManageProvider) return;
           setChecked(e);
           await toggleModelEnabled({ enabled: e, id, source, type });
         }}
@@ -189,9 +192,10 @@ const ModelItem = memo<ModelItemProps>(
       ((style?: React.CSSProperties) => (
         <Flexbox horizontal className={styles.config} style={style}>
           <ActionIcon
+            disabled={!canManageProvider}
             icon={LucidePencil}
             size={'small'}
-            title={t('providerModels.item.config')}
+            title={canManageProvider ? t('providerModels.item.config') : reason}
             onClick={(e) => {
               e.stopPropagation();
               createModelConfigModal({ id, showDeployName });
@@ -199,9 +203,10 @@ const ModelItem = memo<ModelItemProps>(
           />
           {source !== AiModelSourceEnum.Builtin && (
             <ActionIcon
+              disabled={!canManageProvider}
               icon={TrashIcon}
               size={'small'}
-              title={t('providerModels.item.delete.title')}
+              title={canManageProvider ? t('providerModels.item.delete.title') : reason}
               onClick={() => {
                 confirmModal({
                   cancelText: t('cancel', { ns: 'common' }),

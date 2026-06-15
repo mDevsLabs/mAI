@@ -20,8 +20,8 @@ import {
 import { type LucideIcon } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 
+import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useEvalStore } from '@/store/eval';
 
 import { createBenchmarkEditModal } from '../../../../features/BenchmarkEditModal';

@@ -8,7 +8,6 @@ import { LobeAgentManifest } from '../../manifest';
 import type {
   AnalyzeVisualMediaParams,
   CallSubAgentParams,
-  CallSubAgentsParams,
   ClearTodosParams,
   CreatePlanParams,
   CreateTodosParams,
@@ -137,6 +136,15 @@ const createAbortController = (signal?: AbortSignal) => {
 
 const isVisualSourceMessage = (message: unknown): message is VisualSourceMessage =>
   !!message && typeof message === 'object';
+
+const nestedSubAgentDisabledResult = (): BuiltinToolResult => ({
+  content: 'Nested sub-agent execution is not allowed.',
+  error: {
+    message: 'Sub-agent calls cannot be triggered from within another sub-agent.',
+    type: 'NestedSubAgentNotAllowed',
+  },
+  success: false,
+});
 
 class LobeAgentExecutor extends BaseExecutor<typeof LobeAgentApiName> {
   readonly identifier = LobeAgentManifest.identifier;

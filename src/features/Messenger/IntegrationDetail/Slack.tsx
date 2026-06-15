@@ -43,6 +43,7 @@ const SlackDetail = memo<SlackDetailProps>(({ appId, botUsername, name, onBack }
   // dispatch is token-gated, so removing the install effectively kills the
   // workspace integration even though the bot user remains in Slack.
   const handleDisconnectInstallation = (id: string) =>
+    canEdit &&
     disconnectInstallation(id, {
       confirm: t('messenger.slack.connections.disconnectConfirm'),
       failedKey: 'messenger.slack.connections.disconnectFailed',
@@ -61,6 +62,7 @@ const SlackDetail = memo<SlackDetailProps>(({ appId, botUsername, name, onBack }
 
   const headerAction = (
     <Button
+      disabled={!canCreate || !canEdit}
       icon={<Icon icon={LinkIcon} />}
       type={hasInstallations ? 'default' : 'primary'}
       onClick={handleOpenLink}

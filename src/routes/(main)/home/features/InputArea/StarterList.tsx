@@ -45,6 +45,7 @@ const StarterList = memo(() => {
   const navigate = useStableNavigate();
   const { message } = App.useApp();
   const { agentId: activeAgentId } = useResolvedHomeAgentId();
+  const { allowed: canCreateContent, reason } = usePermission('create_content');
   const updateAgentConfigById = useAgentStore((s) => s.updateAgentConfigById);
   const [switchingKey, setSwitchingKey] = useState<string | null>(null);
   const { isLoading, items } = useHomeNewModels(DEFAULT_HOME_NEW_MODELS);
@@ -96,7 +97,16 @@ const StarterList = memo(() => {
         return;
       }
     },
-    [navigate, activeAgentId, updateAgentConfigById, switchingKey, message, t],
+    [
+      canCreateContent,
+      navigate,
+      activeAgentId,
+      applyBusinessModelModeConfig,
+      updateAgentConfigById,
+      switchingKey,
+      message,
+      t,
+    ],
   );
 
   return (

@@ -28,8 +28,11 @@ import ImessageBridgeService from '@/services/imessageBridgeSrv';
 import HeterogeneousAgentCtr from './HeterogeneousAgentCtr';
 import { ControllerModule, IpcMethod } from './index';
 import LocalFileCtr from './LocalFileCtr';
+import McpCtr from './McpCtr';
 import RemoteServerConfigCtr from './RemoteServerConfigCtr';
 import ShellCommandCtr from './ShellCommandCtr';
+
+const logger = createLogger('controllers:GatewayConnectionCtr');
 
 /**
  * Inject the m-notify protocol into the first turn of a new hetero-agent session.
@@ -170,6 +173,10 @@ export default class GatewayConnectionCtr extends ControllerModule {
     return this.app.getController(HeterogeneousAgentCtr);
   }
 
+  private get mcpCtr() {
+    return this.app.getController(McpCtr);
+  }
+
   // ─── Lifecycle ───
 
   afterAppReady() {
@@ -273,6 +280,7 @@ export default class GatewayConnectionCtr extends ControllerModule {
       this.heterogeneousAgentCtr.spawnLhHeteroExec({
         agentType: request.agentType,
         cwd: request.cwd,
+        imageList: request.imageList,
         jwt: request.jwt,
         operationId: request.operationId,
         prompt: request.prompt,

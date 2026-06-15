@@ -1,6 +1,7 @@
 import { type SWRResponse } from 'swr';
 
 import { useOnlyFetchOnceSWR } from '@/libs/swr';
+import { serverConfigKeys } from '@/libs/swr/keys';
 import { globalService } from '@/services/global';
 import { type StoreSetter } from '@/store/types';
 import { type GlobalRuntimeConfig } from '@/types/serverConfig';
@@ -27,7 +28,7 @@ export class ServerConfigActionImpl {
 
   useInitServerConfig = (): SWRResponse<GlobalRuntimeConfig> => {
     return useOnlyFetchOnceSWR<GlobalRuntimeConfig>(
-      FETCH_SERVER_CONFIG_KEY,
+      serverConfigKeys.get,
       () => globalService.getGlobalConfig(),
       {
         onError: () => {

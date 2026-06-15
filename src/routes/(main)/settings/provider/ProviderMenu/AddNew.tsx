@@ -1,6 +1,6 @@
 'use client';
 
-import { ActionIcon } from '@lobehub/ui';
+import { ActionIcon, Tooltip } from '@lobehub/ui';
 import { PlusIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -19,6 +19,8 @@ const AddNewProvider = () => {
       onClick={() => createCreateNewProviderModal()}
     />
   );
+
+  return canManageProvider ? button : <Tooltip title={reason}>{button}</Tooltip>;
 };
 
 export default AddNewProvider;

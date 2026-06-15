@@ -15,6 +15,8 @@ import { useTranslation } from 'react-i18next';
 
 import { useElectronStore } from '@/store/electron';
 
+const log = debug('lobe-client:auth-required-modal');
+
 interface AuthRequiredModalContentProps {
   onActionReady: (api: { signIn: () => Promise<void> }) => void;
   onClose: () => void;
@@ -151,14 +153,25 @@ export const useAuthRequiredModal = () => {
 const AuthRequiredModal = memo(() => {
   const { open } = useAuthRequiredModal();
 
-  useWatchBroadcast('authorizationRequired', () => {
+  useWatchBroadcast('authorizationRequired', (payload) => {
+    const reason = payload?.reason ?? 'unknown';
     const state = useElectronStore.getState();
-    if (state.isConnectionDrawerOpen) return;
+    if (state.isConnectionDrawerOpen) {
+      log('authorizationRequired ignored (connection drawer open). reason=%s', reason);
+      return;
+    }
     // Wait until remote sync config has loaded once (avoid a flash before SWR resolves).
     // Do not gate on `dataSyncConfig.active`: after sign-out `active` is false but 401 + X-Auth-Required
     // still means the user must re-authenticate; gating on active would suppress the modal forever.
-    if (!state.isInitRemoteServerConfig) return;
+    if (!state.isInitRemoteServerConfig) {
+      log(
+        'authorizationRequired ignored (remote server config not initialized). reason=%s',
+        reason,
+      );
+      return;
+    }
 
+    log('authorizationRequired: opening modal. reason=%s', reason);
     open();
   });
 

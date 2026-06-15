@@ -4,10 +4,10 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../core/getTestDB';
 import { devices, users } from '../../schemas';
-import type { LobeChatDatabase } from '../../type';
+import type { mAIDatabase } from '../../type';
 import { DeviceModel } from '../device';
 
-const serverDB: LobeChatDatabase = await getTestDB();
+const serverDB: mAIDatabase = await getTestDB();
 
 const userId = 'device-model-test-user-id';
 const deviceModel = new DeviceModel(serverDB, userId);

@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import CodeEditorPane from '@/components/CodeEditorPane';
 import Loading from '@/components/Loading/CircleLoading';
 import { useClientDataSWR } from '@/libs/swr';
-import { localFileService } from '@/services/electron/localFileService';
+import { type LocalFilePreview, projectFileService } from '@/services/projectFile';
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/selectors';
 import {
@@ -98,7 +98,13 @@ const ImagePreview = memo<ImagePreviewProps>(({ blob, filename }) => {
 
   return (
     <Center height={'100%'} style={{ overflow: 'auto' }} width={'100%'}>
-      <img alt={filename} src={imageSrc} style={{ maxWidth: '100%', objectFit: 'contain' }} />
+      <Image
+        alt={filename}
+        objectFit={'contain'}
+        src={imageSrc}
+        style={{ maxWidth: '100%' }}
+        variant={'borderless'}
+      />
     </Center>
   );
 });
@@ -165,8 +171,13 @@ SkillFrontmatterPreviewCard.displayName = 'SkillFrontmatterPreviewCard';
 
 type TextPreviewMode = 'render' | 'raw';
 
+const NO_TOPIC_KEY = '__no_topic__';
+
 interface TextPreviewPaneProps {
+  activeTopicId?: string | null;
   content: string;
+  contentType?: string;
+  deviceId?: string;
   ext: string;
   filePath: string;
   onSaved?: (savedContent: string) => void;
@@ -283,12 +294,15 @@ TextPreviewPane.displayName = 'TextPreviewPane';
 // ============== ActiveFileView ==============
 
 interface ActiveFileViewProps {
+  activeTopicId?: string | null;
+  deviceId?: string;
   filePath: string;
   workingDirectory: string;
 }
 
-const ActiveFileView = memo<ActiveFileViewProps>(({ filePath, workingDirectory }) => {
-  const { t } = useTranslation('chat');
+const ActiveFileView = memo<ActiveFileViewProps>(
+  ({ activeTopicId, deviceId, filePath, workingDirectory }) => {
+    const { t } = useTranslation('chat');
 
   const filename = filePath.split('/').at(-1) ?? '';
   const {
@@ -330,23 +344,56 @@ const ActiveFileView = memo<ActiveFileViewProps>(({ filePath, workingDirectory }
         <Empty description={t('workingPanel.localFile.binary')} />
       </Center>
     );
-  }
 
-  if (isLoading) return <Loading />;
-
-  if (error || !preview) {
-    return (
-      <Center height={'100%'} width={'100%'}>
-        <Empty description={t('workingPanel.localFile.error')} />
-      </Center>
+    const handleSavedContent = useCallback(
+      (saved: string) => {
+        mutate((prev) => (prev && prev.type === 'text' ? { ...prev, content: saved } : prev), {
+          revalidate: false,
+        });
+      },
+      [mutate],
     );
-  }
 
-  if (preview.type === 'binary') {
+    const handleReload = useCallback(() => mutate(), [mutate]);
+
+    if (isLoading) return <Loading />;
+
+    if (error || !preview) {
+      return (
+        <Center height={'100%'} width={'100%'}>
+          <Empty description={t('workingPanel.localFile.error')} />
+        </Center>
+      );
+    }
+
+    if (preview.type === 'image') {
+      return <ImagePreview blob={preview.blob} filename={filename} />;
+    }
+
+    if (preview.type !== 'text') {
+      return (
+        <Center height={'100%'} width={'100%'}>
+          <Empty description={t('workingPanel.localFile.binary')} />
+        </Center>
+      );
+    }
+
+    const ext = getFileExtension(filename);
+
     return (
-      <Center height={'100%'} width={'100%'}>
-        <Empty description={t('workingPanel.localFile.binary')} />
-      </Center>
+      <TextPreviewPane
+        activeTopicId={activeTopicId}
+        content={preview.content}
+        contentType={preview.contentType}
+        deviceId={deviceId}
+        ext={ext}
+        filePath={filePath}
+        readOnly={!!deviceId}
+        reloading={isValidating}
+        workingDirectory={workingDirectory}
+        onReload={handleReload}
+        onSaved={handleSavedContent}
+      />
     );
   }
 
@@ -373,6 +420,14 @@ ActiveFileView.displayName = 'ActiveFileView';
 const Body = memo(() => {
   const openLocalFiles = useChatStore(chatPortalSelectors.openLocalFiles);
   const activeFile = useChatStore(chatPortalSelectors.currentLocalFile);
+  const activeTopicId = useChatStore((s) => s.activeTopicId);
+  const clearPortalStack = useChatStore((s) => s.clearPortalStack);
+
+  useEffect(() => {
+    if (openLocalFiles.length > 0 && activeFile) return;
+
+    clearPortalStack();
+  }, [activeFile, clearPortalStack, openLocalFiles.length]);
 
   if (openLocalFiles.length === 0) return null;
   if (!activeFile) return null;
@@ -380,6 +435,8 @@ const Body = memo(() => {
   return (
     <Flexbox flex={1} height={'100%'} style={{ minHeight: 0, overflow: 'hidden' }}>
       <ActiveFileView
+        activeTopicId={activeTopicId}
+        deviceId={activeFile.deviceId}
         filePath={activeFile.filePath}
         workingDirectory={activeFile.workingDirectory}
       />

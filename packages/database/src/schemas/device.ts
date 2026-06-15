@@ -7,7 +7,7 @@ import { users } from './user';
  * Stable device identity anchor — one row per physical machine per user.
  *
  * `deviceId` is derived from a machine-level identifier
- * (`sha256(machineUUID + userId + salt)`), so it survives LobeHub reinstalls
+ * (`sha256(machineUUID + userId + salt)`), so it survives mAI reinstalls
  * and desktop upgrades. Online status is NOT stored here — it lives in the
  * DeviceGatewayDO in-memory WS attachments; this table only records "ever
  * seen" so offline devices stay visible and bindable.

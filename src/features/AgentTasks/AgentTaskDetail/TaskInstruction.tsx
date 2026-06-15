@@ -4,6 +4,7 @@ import { Paperclip } from 'lucide-react';
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { EditingIndicator, type EditLockClient, useEditLock } from '@/features/EditLock';
 import { EditorCanvas } from '@/features/EditorCanvas';
 import { seedAttachments } from '@/features/EditorCanvas/attachmentRegistry';
 import { pickAndInsertAttachments } from '@/features/EditorCanvas/editorAttachments';
@@ -12,8 +13,18 @@ import { taskDetailSelectors } from '@/store/task/selectors';
 
 const DEBOUNCE_MS = 300;
 
+// Stable lock RPC binding for the task resource.
+const taskLockClient: EditLockClient = {
+  acquire: (id) => lambdaClient.task.acquireTaskLock.mutate({ id }),
+  peek: (id) => lambdaClient.task.getTaskLock.query({ id }),
+  release: async (id) => {
+    await lambdaClient.task.releaseTaskLock.mutate({ id });
+  },
+};
+
 const TaskInstruction = memo(() => {
   const { t } = useTranslation('chat');
+  const { allowed: canEditTask } = usePermission('create_content');
   const instruction = useTaskStore(taskDetailSelectors.activeTaskInstruction);
   const persistedEditorData = useTaskStore(taskDetailSelectors.activeTaskEditorData);
   const taskId = useTaskStore(taskDetailSelectors.activeTaskId);
@@ -47,7 +58,10 @@ const TaskInstruction = memo(() => {
   }, [taskId]);
 
   const handleContentChange = useCallback(() => {
+    if (!editable) return;
     if (!editor || !taskId) return;
+
+    setEdited(true);
 
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
@@ -61,7 +75,11 @@ const TaskInstruction = memo(() => {
         console.error('[TaskInstruction] Failed to save:', e);
       });
     }, DEBOUNCE_MS);
-  }, [editor, taskId, updateTask]);
+  }, [editable, editor, taskId, updateTask]);
+
+  const handleAttach = useCallback(() => {
+    pickAndInsertAttachments(editor);
+  }, [editor]);
 
   const handleAttach = useCallback(() => {
     pickAndInsertAttachments(editor);

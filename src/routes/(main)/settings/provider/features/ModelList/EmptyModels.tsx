@@ -1,9 +1,11 @@
-import { Button, Center, Flexbox, Icon } from '@lobehub/ui';
+import { Button, Center, Flexbox, Icon, Tooltip } from '@lobehub/ui';
+import { App } from 'antd';
 import { createStaticStyles } from 'antd-style';
 import { BrainIcon, LucideRefreshCcwDot, PlusIcon } from 'lucide-react';
 import { memo, use, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { usePermission } from '@/hooks/usePermission';
 import { useAiInfraStore } from '@/store/aiInfra';
 
 import { createCreateNewModelModal } from './CreateNewModelModal';
@@ -47,6 +49,8 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
 
 const EmptyState = memo<{ provider: string }>(({ provider }) => {
   const { t } = useTranslation('modelProvider');
+  const { message } = App.useApp();
+  const { allowed: canManageProvider, reason } = usePermission('manage_provider_key');
 
   const [fetchRemoteModelList] = useAiInfraStore((s) => [s.fetchRemoteModelList]);
 

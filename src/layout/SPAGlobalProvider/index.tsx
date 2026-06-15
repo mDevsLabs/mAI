@@ -12,11 +12,11 @@ import AgentMockDevtools from '@/features/AgentMockDevtools';
 import DevFeatureFlagPanel from '@/features/DevFeatureFlagPanel';
 import AuthProvider from '@/layout/AuthProvider';
 import AppTheme from '@/layout/GlobalProvider/AppTheme';
+import CacheHydrationGate from '@/layout/GlobalProvider/CacheHydrationGate';
 import DynamicFavicon from '@/layout/GlobalProvider/DynamicFavicon';
 import { FaviconProvider } from '@/layout/GlobalProvider/FaviconProvider';
 import { GroupWizardProvider } from '@/layout/GlobalProvider/GroupWizardProvider';
 import ImportSettings from '@/layout/GlobalProvider/ImportSettings';
-import NextThemeProvider from '@/layout/GlobalProvider/NextThemeProvider';
 import QueryProvider from '@/layout/GlobalProvider/Query';
 import ServerVersionOutdatedAlert from '@/layout/GlobalProvider/ServerVersionOutdatedAlert';
 import StoreInitialization from '@/layout/GlobalProvider/StoreInitialization';
@@ -49,16 +49,15 @@ const SPAGlobalProvider = memo<PropsWithChildren>(({ children }) => {
 
   return (
     <Locale defaultLang={locale}>
-      <NextThemeProvider>
-        <AppTheme>
-          <ServerConfigStoreProvider
-            featureFlags={serverConfig?.featureFlags}
-            isMobile={isMobile}
-            serverConfig={serverConfig?.config}
-          >
-            <QueryProvider>
-              <AuthProvider>
-                <StoreInitialization />
+      <AppTheme>
+        <ServerConfigStoreProvider
+          featureFlags={serverConfig?.featureFlags}
+          isMobile={isMobile}
+          serverConfig={serverConfig?.config}
+        >
+          <QueryProvider>
+            <AuthProvider>
+              <StoreInitialization />
 
                 {isDesktop && <ServerVersionOutdatedAlert />}
                 <FaviconProvider>

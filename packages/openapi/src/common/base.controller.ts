@@ -4,7 +4,7 @@ import { HTTPException } from 'hono/http-exception';
 import { RBAC_PERMISSIONS } from '@/const/rbac';
 import { getServerDB } from '@/database/core/db-adaptor';
 import { RbacModel } from '@/database/models/rbac';
-import type { LobeChatDatabase } from '@/database/type';
+import type { mAIDatabase } from '@/database/type';
 
 import { parseFormData } from '../helpers/file';
 import type { ApiResponse } from '../types';
@@ -14,13 +14,13 @@ import type { ApiResponse } from '../types';
  * Provides unified response formatting, error handling, and common utility methods
  */
 export abstract class BaseController {
-  private _db: LobeChatDatabase | null = null;
+  private _db: mAIDatabase | null = null;
 
   /**
    * Get database connection instance
    * Lazy initialization to avoid initializing the database during module import
    */
-  protected async getDatabase(): Promise<LobeChatDatabase> {
+  protected async getDatabase(): Promise<mAIDatabase> {
     if (!this._db) {
       this._db = await getServerDB();
     }
@@ -154,6 +154,10 @@ export abstract class BaseController {
     return c.get('userId') || null;
   }
 
+  protected getWorkspaceId(c: Context): string | undefined {
+    return c.get('workspaceId') || undefined;
+  }
+
   /**
    * Get authentication type (from context set by middleware)
    * @param c Hono Context
@@ -194,7 +198,10 @@ export abstract class BaseController {
   ): Promise<boolean> {
     const rbacModel = await this.getRbacModel(c);
 
-    return await rbacModel.hasPermission(RBAC_PERMISSIONS[permissionKey], this.getUserId(c)!);
+    return await rbacModel.hasPermission(RBAC_PERMISSIONS[permissionKey], {
+      userId: this.getUserId(c)!,
+      workspaceId: this.getWorkspaceId(c),
+    });
   }
 
   /**
@@ -230,7 +237,10 @@ export abstract class BaseController {
     const permissions = permissionKeys.map((permission) => RBAC_PERMISSIONS[permission]);
 
     const rbacModel = await this.getRbacModel(c);
-    return await rbacModel.hasAnyPermission(permissions, this.getUserId(c)!);
+    return await rbacModel.hasAnyPermission(permissions, {
+      userId: this.getUserId(c)!,
+      workspaceId: this.getWorkspaceId(c),
+    });
   }
 
   /**

@@ -11,6 +11,7 @@ import { type ReactNode } from 'react';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { usePermission } from '@/hooks/usePermission';
 import { lambdaQuery } from '@/libs/trpc/client';
 
 import { useOAuthDeviceFlow } from './useOAuthDeviceFlow';
@@ -140,7 +141,7 @@ const OAuthDeviceFlowAuth = memo<OAuthDeviceFlowAuthProps>(
       { providerId },
       { refetchOnWindowFocus: true },
     );
-    const isAuthenticated = authStatus?.isAuthenticated ?? false;
+    const isAuthenticated = authStatus?.status === 'ACTIVE';
     const username = authStatus?.username;
     const avatarUrl = authStatus?.avatarUrl;
 
@@ -177,10 +178,12 @@ const OAuthDeviceFlowAuth = memo<OAuthDeviceFlowAuthProps>(
     }, [providerId, revokeAuth, t]);
 
     const handleStartAuth = useCallback(async () => {
+      if (!canManageProvider) return;
+
       hasAutoClosedRef.current = false;
       setIsAuthenticating(true);
       await startAuth();
-    }, [startAuth]);
+    }, [canManageProvider, startAuth]);
 
     const handleCancelAuth = useCallback(() => {
       setIsAuthenticating(false);
@@ -225,6 +228,7 @@ const OAuthDeviceFlowAuth = memo<OAuthDeviceFlowAuthProps>(
               </div>
             </Flexbox>
             <Button
+              disabled={!canManageProvider}
               icon={<Icon icon={LogOutIcon} />}
               loading={revokeAuth.isPending}
               onClick={handleDisconnect}
@@ -260,7 +264,12 @@ const OAuthDeviceFlowAuth = memo<OAuthDeviceFlowAuthProps>(
                 <Text className={styles.errorText}>{t(errorKey as any)}</Text>
               </Flexbox>
               <Flexbox gap={12} style={{ width: '100%' }} width={280}>
-                <Button block type="primary" onClick={handleStartAuth}>
+                <Button
+                  block
+                  disabled={!canManageProvider}
+                  type="primary"
+                  onClick={handleStartAuth}
+                >
                   {t('providerModels.config.oauth.retry')}
                 </Button>
                 <Button block type="text" onClick={handleCancelAuth}>
@@ -324,7 +333,12 @@ const OAuthDeviceFlowAuth = memo<OAuthDeviceFlowAuthProps>(
               <Icon color={cssVar.colorError} icon={UnplugIcon} size={18} />
               <Text className={styles.errorText}>{t(errorKey as any)}</Text>
             </Flexbox>
-            <Button size="large" type="primary" onClick={handleStartAuth}>
+            <Button
+              disabled={!canManageProvider}
+              size="large"
+              type="primary"
+              onClick={handleStartAuth}
+            >
               {t('providerModels.config.oauth.connect', { name })}
             </Button>
             <div className={styles.serviceNote}>
@@ -337,7 +351,12 @@ const OAuthDeviceFlowAuth = memo<OAuthDeviceFlowAuthProps>(
       // Default state - show connect button
       return (
         <div className={styles.content}>
-          <Button size="large" type="primary" onClick={handleStartAuth}>
+          <Button
+            disabled={!canManageProvider}
+            size="large"
+            type="primary"
+            onClick={handleStartAuth}
+          >
             {t('providerModels.config.oauth.connect', { name })}
           </Button>
           <div className={styles.serviceNote}>

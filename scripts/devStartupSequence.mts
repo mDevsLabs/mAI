@@ -1,7 +1,11 @@
-import { type ChildProcess, spawn } from 'node:child_process';
+import type { ChildProcess } from 'node:child_process';
+import { spawn } from 'node:child_process';
+import net from 'node:net';
+import path from 'node:path';
+import { pathToFileURL } from 'node:url';
+
 import dotenv from 'dotenv';
 import dotenvExpand from 'dotenv-expand';
-import net from 'node:net';
 
 const env = process.env.NODE_ENV || 'development';
 const isWindows = process.platform === 'win32';
@@ -29,6 +33,8 @@ if (dotenvResult.parsed) {
   Object.assign(process.env, expanded.parsed, shellEnv);
 }
 
+const isWindows = process.platform === 'win32';
+
 const NEXT_HOST = 'localhost';
 
 /**
@@ -44,16 +50,19 @@ const resolveNextPort = (): number => {
   return 3010;
 };
 
-const NEXT_PORT = resolveNextPort();
-const NEXT_ROOT_URL = `http://${NEXT_HOST}:${NEXT_PORT}/`;
 const NEXT_READY_TIMEOUT_MS = 180_000;
 const NEXT_READY_RETRY_MS = 400;
 const FORCE_KILL_TIMEOUT_MS = 5_000;
 
 const npmCommand = isWindows ? 'npm.cmd' : 'npm';
 
+let nextPort = 3010;
+let nextRootUrl = `http://${NEXT_HOST}:${nextPort}/`;
 let nextProcess: ChildProcess | undefined;
 let viteProcess: ChildProcess | undefined;
+let nextHandle: DevProcessHandle | undefined;
+let viteHandle: DevProcessHandle | undefined;
+let forceKillTimer: ReturnType<typeof setTimeout> | undefined;
 let shuttingDown = false;
 
 const runNpmScript = (scriptName: string) =>
@@ -63,6 +72,66 @@ const runNpmScript = (scriptName: string) =>
     stdio: 'inherit',
     shell: isWindows,
   });
+
+const loadEnv = () => {
+  const env = process.env.NODE_ENV || 'development';
+  const shellEnv = Object.entries(process.env).reduce<Record<string, string>>(
+    (acc, [key, value]) => {
+      if (typeof value === 'string') acc[key] = value;
+      return acc;
+    },
+    {},
+  );
+  const dotenvEnv: Record<string, string> = {};
+  const dotenvResult = dotenv.config({
+    override: true,
+    path: ['.env', `.env.${env}`, `.env.${env}.local`],
+    processEnv: dotenvEnv,
+  });
+
+  if (!dotenvResult.parsed) return;
+
+  const expanded = dotenvExpand.expand({
+    parsed: dotenvResult.parsed,
+    processEnv: { ...dotenvEnv, ...shellEnv },
+  });
+
+  Object.assign(process.env, expanded.parsed, shellEnv);
+};
+
+const createDevProcessHandle = ({
+  isWindows,
+  pid,
+}: {
+  isWindows: boolean;
+  pid?: number;
+}): DevProcessHandle => ({
+  directPid: pid,
+  groupPid: isWindows ? undefined : pid,
+  isWindows,
+});
+
+const sendSignalToDevProcess = (handle: DevProcessHandle | undefined, signal: NodeJS.Signals) => {
+  if (!handle) return;
+
+  if (!handle.isWindows && handle.groupPid) {
+    try {
+      process.kill(-handle.groupPid, signal);
+      return;
+    } catch {
+      // Fall through to the direct child pid below. The wrapper may already be
+      // gone while its process group has been reaped.
+    }
+  }
+
+  if (!handle.directPid) return;
+
+  try {
+    process.kill(handle.directPid, signal);
+  } catch {
+    // The process already exited.
+  }
+};
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -84,25 +153,27 @@ const waitForNextReady = async () => {
   const startedAt = Date.now();
 
   while (Date.now() - startedAt < NEXT_READY_TIMEOUT_MS) {
-    if (await isPortOpen(NEXT_HOST, NEXT_PORT)) return;
+    if (await isPortOpen(NEXT_HOST, nextPort)) return;
     await wait(NEXT_READY_RETRY_MS);
   }
 
   throw new Error(
-    `Next server was not ready within ${NEXT_READY_TIMEOUT_MS / 1000}s on ${NEXT_HOST}:${NEXT_PORT}`,
+    `Next server was not ready within ${NEXT_READY_TIMEOUT_MS / 1000}s on ${NEXT_HOST}:${nextPort}`,
   );
 };
 
 const prewarmNextRootCompile = async () => {
   const startedAt = Date.now();
-  const response = await fetch(NEXT_ROOT_URL, { signal: AbortSignal.timeout(120_000) });
+  const response = await fetch(nextRootUrl, { signal: AbortSignal.timeout(120_000) });
   const elapsed = ((Date.now() - startedAt) / 1000).toFixed(2);
-  console.log(`✅ Next prewarm request finished (${response.status}) in ${elapsed}s ${NEXT_ROOT_URL}`);
+  console.log(
+    `✅ Next prewarm request finished (${response.status}) in ${elapsed}s ${nextRootUrl}`,
+  );
 };
 
 const runNextBackgroundTasks = () => {
   setTimeout(() => {
-    console.log(`🔁 Next server URL: ${NEXT_ROOT_URL}`);
+    console.log(`🔁 Next server URL: ${nextRootUrl}`);
   }, 2_000);
 
   void (async () => {
@@ -146,11 +217,13 @@ const forceKillChild = (child?: ChildProcess) => {
 };
 
 const shutdownAll = (signal: NodeJS.Signals) => {
-  if (shuttingDown) return;
+  if (shuttingDown) {
+    forceKillChildren();
+    return;
+  }
   shuttingDown = true;
 
-  terminateChild(viteProcess);
-  terminateChild(nextProcess);
+  terminateChildren();
 
   process.exitCode = signal === 'SIGINT' ? 130 : 143;
 
@@ -163,12 +236,15 @@ const shutdownAll = (signal: NodeJS.Signals) => {
 
 const watchChildExit = (child: ChildProcess, name: 'next' | 'vite') => {
   child.once('exit', (code, signal) => {
-    if (!shuttingDown) {
-      console.error(
-        `❌ ${name} exited unexpectedly (code: ${code ?? 'null'}, signal: ${signal ?? 'null'})`,
-      );
-      shutdownAll('SIGTERM');
+    if (shuttingDown) {
+      clearForceKillTimerWhenChildrenSettle();
+      return;
     }
+
+    console.error(
+      `❌ ${name} exited unexpectedly (code: ${code ?? 'null'}, signal: ${signal ?? 'null'})`,
+    );
+    shutdownAll('SIGTERM');
   });
 };
 
@@ -199,9 +275,11 @@ const main = async () => {
     stdio: 'inherit',
     shell: isWindows,
   });
+  nextHandle = createDevProcessHandle({ isWindows, pid: nextProcess.pid });
   watchChildExit(nextProcess, 'next');
 
   viteProcess = runNpmScript('dev:spa');
+  viteHandle = createDevProcessHandle({ isWindows, pid: viteProcess.pid });
   watchChildExit(viteProcess, 'vite');
   runNextBackgroundTasks();
 
@@ -211,7 +289,19 @@ const main = async () => {
   ]);
 };
 
-void main().catch((error) => {
-  console.error('❌ dev startup sequence failed:', error);
-  shutdownAll('SIGTERM');
-});
+const isMainModule = () => {
+  const entry = process.argv[1];
+  return !!entry && import.meta.url === pathToFileURL(path.resolve(entry)).href;
+};
+
+export const __testing = {
+  createDevProcessHandle,
+  sendSignalToDevProcess,
+};
+
+if (isMainModule()) {
+  void main().catch((error) => {
+    console.error('❌ dev startup sequence failed:', error);
+    shutdownAll('SIGTERM');
+  });
+}

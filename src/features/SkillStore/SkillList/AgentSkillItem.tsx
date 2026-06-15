@@ -9,6 +9,7 @@ import { lazy, memo, Suspense, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import SkillAvatar from '@/components/SkillAvatar';
+import { usePermission } from '@/hooks/usePermission';
 import { agentSkillService } from '@/services/skill';
 import { useToolStore } from '@/store/tool';
 import { type SkillListItem } from '@/types/index';
@@ -47,6 +48,7 @@ const AgentSkillItem = memo<AgentSkillItemProps>(({ skill }) => {
   const [detailOpen, setDetailOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { allowed: canEdit } = usePermission('edit_own_content');
   const deleteAgentSkill = useToolStore((s) => s.deleteAgentSkill);
 
   const handleDownload = async () => {
@@ -102,6 +104,7 @@ const AgentSkillItem = memo<AgentSkillItemProps>(({ skill }) => {
           <Flexbox horizontal>
             {skill.source === 'user' && (
               <ActionIcon
+                disabled={!canEdit}
                 icon={PackageSearch}
                 title={t('store.actions.manifest')}
                 onClick={() => setEditOpen(true)}
@@ -124,6 +127,7 @@ const AgentSkillItem = memo<AgentSkillItemProps>(({ skill }) => {
                   : []),
                 {
                   danger: true,
+                  disabled: !canEdit,
                   icon: <Icon icon={Trash2} />,
                   key: 'uninstall',
                   label: t('store.actions.uninstall'),
@@ -131,7 +135,7 @@ const AgentSkillItem = memo<AgentSkillItemProps>(({ skill }) => {
                 },
               ]}
             >
-              <ActionIcon icon={MoreVerticalIcon} loading={loading} />
+              <ActionIcon disabled={!canEdit} icon={MoreVerticalIcon} loading={loading} />
             </DropdownMenu>
           </Flexbox>
         </Block>

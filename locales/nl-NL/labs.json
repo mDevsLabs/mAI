@@ -11,7 +11,7 @@
   "features.gatewayMode.title": "Server-side uitvoering van agenten (Gateway)",
   "features.groupChat.desc": "Schakel coördinatie van groepschats met meerdere agenten in.",
   "features.groupChat.title": "Groepschat (Meerdere Agenten)",
-  "features.imessage.desc": "Verbind agents met iMessage via de lokale LobeHub Desktop BlueBubbles-bridge.",
+  "features.imessage.desc": "Verbind agents met iMessage via de lokale mAI Desktop BlueBubbles-bridge.",
   "features.imessage.title": "iMessage-kanaal",
   "features.inputMarkdown.desc": "Toon Markdown in het invoerveld in realtime (vette tekst, codeblokken, tabellen, enz.).",
   "features.inputMarkdown.title": "Markdown-weergave bij Invoer",

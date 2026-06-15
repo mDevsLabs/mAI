@@ -1,6 +1,6 @@
 ---
 name: react
-description: 'LobeHub React component conventions. Use when editing TSX UI, choosing base-ui vs @lobehub/ui vs antd, styling with antd-style, routing, desktop variants, layouts, or component state.'
+description: 'mAI React component conventions. Use when editing TSX UI, choosing base-ui vs @lobehub/ui vs antd, styling with antd-style, routing, desktop variants, layouts, or component state.'
 user-invocable: false
 ---
 

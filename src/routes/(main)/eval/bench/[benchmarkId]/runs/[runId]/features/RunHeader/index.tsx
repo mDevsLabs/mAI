@@ -18,7 +18,6 @@ import {
 } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useNavigate } from 'react-router-dom';
 
 import { createRunEditModal } from '@/routes/(main)/eval/bench/[benchmarkId]/features/RunEditModal';
 import StatusBadge from '@/routes/(main)/eval/features/StatusBadge';
@@ -196,10 +195,10 @@ const RunHeader = memo<RunHeaderProps>(({ run, benchmarkId, hideStart }) => {
   return (
     <Flexbox gap={16}>
       {/* Back link */}
-      <Link className={styles.backLink} to={`/eval/bench/${benchmarkId}`}>
+      <WorkspaceLink className={styles.backLink} to={`/eval/bench/${benchmarkId}`}>
         <ArrowLeft size={16} />
         {t('run.detail.backToBenchmark')}
-      </Link>
+      </WorkspaceLink>
 
       {/* Header Card */}
       <Card styles={{ body: { padding: 20 } }}>
@@ -221,13 +220,13 @@ const RunHeader = memo<RunHeaderProps>(({ run, benchmarkId, hideStart }) => {
             {/* Meta info row */}
             <Flexbox horizontal align="center" className={styles.metaRow} gap={8}>
               {run.dataset && (
-                <Link
+                <WorkspaceLink
                   className={styles.datasetLink}
                   target="_blank"
                   to={`/eval/bench/${benchmarkId}/datasets/${run.dataset.id}`}
                 >
                   {run.dataset.name}
-                </Link>
+                </WorkspaceLink>
               )}
               {run.targetAgentId && (
                 <>

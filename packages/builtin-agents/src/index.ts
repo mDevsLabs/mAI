@@ -7,6 +7,7 @@ import { PAGE_AGENT } from './agents/page-agent';
 import { SELF_FEEDBACK_INTENT } from './agents/self-feedback-intent';
 import { SELF_REFLECTION } from './agents/self-reflection';
 import { TASK_AGENT } from './agents/task-agent';
+import { VERIFY_AGENT } from './agents/verify-agent';
 import { WEB_ONBOARDING } from './agents/web-onboarding';
 import type { BuiltinAgentDefinition, BuiltinAgentSlug, RuntimeContext } from './types';
 import { BUILTIN_AGENT_SLUGS } from './types';
@@ -23,6 +24,7 @@ export { PAGE_AGENT } from './agents/page-agent';
 export { SELF_FEEDBACK_INTENT } from './agents/self-feedback-intent';
 export { SELF_REFLECTION } from './agents/self-reflection';
 export { TASK_AGENT } from './agents/task-agent';
+export { VERIFY_AGENT } from './agents/verify-agent';
 export { WEB_ONBOARDING } from './agents/web-onboarding';
 
 /**
@@ -38,6 +40,7 @@ export const BUILTIN_AGENTS: Record<BuiltinAgentSlug, BuiltinAgentDefinition> = 
   [BUILTIN_AGENT_SLUGS.selfFeedbackIntent]: SELF_FEEDBACK_INTENT,
   [BUILTIN_AGENT_SLUGS.selfReflection]: SELF_REFLECTION,
   [BUILTIN_AGENT_SLUGS.taskAgent]: TASK_AGENT,
+  [BUILTIN_AGENT_SLUGS.verifyAgent]: VERIFY_AGENT,
   [BUILTIN_AGENT_SLUGS.webOnboarding]: WEB_ONBOARDING,
 };
 

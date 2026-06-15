@@ -89,6 +89,8 @@ const minimaxChatModels: AIChatModelCard[] = [
     contextWindowTokens: 204_800,
     description: 'Same performance as M2.7 with significantly faster inference (~100 tps).',
     displayName: 'MiniMax M2.7 Highspeed',
+    family: 'minimax',
+    generation: 'minimax-m2.7',
     id: 'MiniMax-M2.7-highspeed',
     maxOutput: 131_072,
     pricing: {
@@ -112,6 +114,8 @@ const minimaxChatModels: AIChatModelCard[] = [
     description:
       'Top-tier performance and ultimate cost-effectiveness, easily handling complex tasks (approx. 60 tps).',
     displayName: 'MiniMax M2.5',
+    family: 'minimax',
+    generation: 'minimax-m2.5',
     id: 'MiniMax-M2.5',
     maxOutput: 131_072,
     pricing: {
@@ -134,6 +138,8 @@ const minimaxChatModels: AIChatModelCard[] = [
     contextWindowTokens: 204_800,
     description: 'M2.5 highspeed: Same performance, faster and more agile (approx. 100 tps).',
     displayName: 'MiniMax M2.5 highspeed',
+    family: 'minimax',
+    generation: 'minimax-m2.5',
     id: 'MiniMax-M2.5-highspeed',
     maxOutput: 131_072,
     pricing: {
@@ -174,6 +180,8 @@ const minimaxChatModels: AIChatModelCard[] = [
     description:
       'Powerful multilingual programming capabilities, comprehensively upgraded programming experience',
     displayName: 'MiniMax M2.1',
+    family: 'minimax',
+    generation: 'minimax-m2.1',
     id: 'MiniMax-M2.1',
     maxOutput: 131_072,
     pricing: {
@@ -197,6 +205,8 @@ const minimaxChatModels: AIChatModelCard[] = [
     description:
       'Powerful multilingual programming capabilities, comprehensively upgraded programming experience. Faster and more efficient.',
     displayName: 'MiniMax M2.1 highspeed',
+    family: 'minimax',
+    generation: 'minimax-m2.1',
     id: 'MiniMax-M2.1-highspeed',
     maxOutput: 131_072,
     pricing: {
@@ -219,6 +229,8 @@ const minimaxChatModels: AIChatModelCard[] = [
     contextWindowTokens: 204_800,
     description: 'Built specifically for efficient coding and Agent workflows',
     displayName: 'MiniMax M2',
+    family: 'minimax',
+    generation: 'minimax-m2',
     id: 'MiniMax-M2',
     maxOutput: 131_072,
     pricing: {
@@ -242,6 +254,8 @@ const minimaxChatModels: AIChatModelCard[] = [
     description:
       'Built for efficient coding and agent workflows, with higher concurrency for commercial use.',
     displayName: 'MiniMax M2 Stable',
+    family: 'minimax',
+    generation: 'minimax-m2',
     id: 'MiniMax-M2-Stable',
     maxOutput: 131_072,
     pricing: {
@@ -265,6 +279,8 @@ const minimaxChatModels: AIChatModelCard[] = [
     description:
       'A new in-house reasoning model with 80K chain-of-thought and 1M input, delivering performance comparable to top global models.',
     displayName: 'MiniMax M1',
+    family: 'minimax',
+    generation: 'minimax-m1',
     id: 'MiniMax-M1',
     maxOutput: 40_000,
     pricing: {
@@ -286,6 +302,8 @@ const minimaxChatModels: AIChatModelCard[] = [
     description:
       'MiniMax-01 introduces large-scale linear attention beyond classic Transformers, with 456B parameters and 45.9B activated per pass. It achieves top-tier performance and supports up to 4M tokens of context (32× GPT-4o, 20× Claude-3.5-Sonnet).',
     displayName: 'MiniMax Text 01',
+    family: 'minimax',
+    generation: 'minimax-text-01',
     id: 'MiniMax-Text-01',
     maxOutput: 40_000,
     pricing: {

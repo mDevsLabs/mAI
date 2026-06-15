@@ -1,10 +1,11 @@
 'use client';
 
-import { Button, Icon } from '@lobehub/ui';
+import { Button, Icon, Tooltip } from '@lobehub/ui';
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { usePermission } from '@/hooks/usePermission';
 import SettingHeader from '@/routes/(main)/settings/features/SettingHeader';
 
 import { createCreateCredModal } from './features/CreateCredModal';

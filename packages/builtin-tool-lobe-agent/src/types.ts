@@ -3,7 +3,6 @@ export const LobeAgentIdentifier = 'lobe-agent';
 export const LobeAgentApiName = {
   analyzeVisualMedia: 'analyzeVisualMedia',
   callSubAgent: 'callSubAgent',
-  callSubAgents: 'callSubAgents',
   clearTodos: 'clearTodos',
   createPlan: 'createPlan',
   createTodos: 'createTodos',
@@ -34,33 +33,7 @@ export interface AnalyzeVisualMediaState {
   usage?: unknown;
 }
 
-// ==================== Sub-Agent Tasks ====================
-
-/**
- * Single sub-agent task definition.
- *
- * A sub-agent is a long-running, isolated execution that runs in its own
- * context (server or desktop client) and reports back to the parent
- * conversation when it finishes.
- */
-export interface SubAgentTask {
-  /** Brief description of what this sub-agent does (shown in UI) */
-  description: string;
-  /** Whether to inherit context messages from parent conversation */
-  inheritMessages?: boolean;
-  /** Detailed instruction/prompt for the sub-agent execution */
-  instruction: string;
-  /**
-   * Whether to execute the sub-agent on the client side (desktop only).
-   * When true and running on desktop, the sub-agent runs locally with
-   * access to local tools (file system, shell commands, etc.).
-   *
-   * MUST be true when the sub-agent requires local-system tools.
-   */
-  runInClient?: boolean;
-  /** Timeout in milliseconds (optional, default 30 minutes) */
-  timeout?: number;
-}
+// ==================== Sub-Agent ====================
 
 /**
  * Parameters for callSubAgent API
@@ -74,12 +47,14 @@ export interface CallSubAgentParams {
   timeout?: number;
 }
 
-/**
- * Parameters for callSubAgents API
- * Dispatch one or more sub-agents in parallel.
- */
-export interface CallSubAgentsParams {
-  tasks: SubAgentTask[];
+/** Execution stats reported back by a finished sub-agent run. */
+export interface SubAgentRunStats {
+  /** Model the sub-agent ran on */
+  model?: string;
+  /** Total tokens consumed by the sub-agent run */
+  totalTokens?: number;
+  /** Number of tool calls the sub-agent made */
+  totalToolCalls?: number;
 }
 
 /** Execution stats reported back by a finished sub-agent run. */

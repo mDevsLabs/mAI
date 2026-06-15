@@ -5,11 +5,11 @@ import { MaximizeIcon, MessageSquareIcon } from 'lucide-react';
 import qs from 'query-string';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 
 import { SESSION_CHAT_TOPIC_URL } from '@/const/url';
 import Link from '@/libs/router/Link';
 import { useClientDataSWR } from '@/libs/swr';
+import { statsKeys } from '@/libs/swr/keys';
 import { topicService } from '@/services/topic';
 import { useAgentStore } from '@/store/agent';
 import { builtinAgentSelectors } from '@/store/agent/selectors';

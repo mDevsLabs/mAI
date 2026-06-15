@@ -1,10 +1,7 @@
 'use client';
 
-import { ToolResultCard } from '@lobechat/shared-tool-ui/components';
 import type { BuiltinRenderProps } from '@lobechat/types';
-import { Highlighter, Text } from '@lobehub/ui';
-import { createStaticStyles } from 'antd-style';
-import { FileText } from 'lucide-react';
+import { Highlighter } from '@lobehub/ui';
 import path from 'path-browserify-esm';
 import { memo, useMemo } from 'react';
 
@@ -43,6 +40,7 @@ const Read = memo<BuiltinRenderProps<ReadArgs>>(({ args, content }) => {
   const ext = filePath ? path.extname(filePath).slice(1).toLowerCase() : '';
 
   const source = useMemo(() => stripLineNumbers(content || ''), [content]);
+  if (!source) return null;
 
   return (
     <ToolResultCard
@@ -58,18 +56,8 @@ const Read = memo<BuiltinRenderProps<ReadArgs>>(({ args, content }) => {
         </>
       }
     >
-      {source && (
-        <Highlighter
-          wrap
-          language={ext || 'text'}
-          showLanguage={false}
-          style={{ maxHeight: 240, overflow: 'auto' }}
-          variant={'borderless'}
-        >
-          {source}
-        </Highlighter>
-      )}
-    </ToolResultCard>
+      {source}
+    </Highlighter>
   );
 });
 

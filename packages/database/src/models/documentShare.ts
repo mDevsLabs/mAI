@@ -3,7 +3,7 @@ import { TRPCError } from '@trpc/server';
 import { and, eq, sql } from 'drizzle-orm';
 
 import { documents, documentShares, users } from '../schemas';
-import type { LobeChatDatabase } from '../type';
+import type { mAIDatabase } from '../type';
 
 export interface DocumentShareAccessResult {
   document: typeof documents.$inferSelect;
@@ -17,9 +17,9 @@ export interface DocumentShareAccessResult {
 
 export class DocumentShareModel {
   private userId: string;
-  private db: LobeChatDatabase;
+  private db: mAIDatabase;
 
-  constructor(db: LobeChatDatabase, userId: string) {
+  constructor(db: mAIDatabase, userId: string) {
     this.userId = userId;
     this.db = db;
   }
@@ -104,7 +104,7 @@ export class DocumentShareModel {
     return result[0] || null;
   };
 
-  static findByDocumentId = async (db: LobeChatDatabase, documentId: string) => {
+  static findByDocumentId = async (db: mAIDatabase, documentId: string) => {
     const result = await db
       .select({
         document: documents,
@@ -124,7 +124,7 @@ export class DocumentShareModel {
     return result[0] || null;
   };
 
-  static incrementPageViewCount = async (db: LobeChatDatabase, documentId: string) => {
+  static incrementPageViewCount = async (db: mAIDatabase, documentId: string) => {
     await db
       .update(documentShares)
       .set({ pageViewCount: sql`${documentShares.pageViewCount} + 1` })
@@ -132,7 +132,7 @@ export class DocumentShareModel {
   };
 
   static findByDocumentIdWithAccessCheck = async (
-    db: LobeChatDatabase,
+    db: mAIDatabase,
     documentId: string,
     accessUserId?: string,
   ): Promise<DocumentShareAccessResult> => {

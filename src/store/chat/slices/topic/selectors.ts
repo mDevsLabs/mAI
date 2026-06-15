@@ -152,6 +152,9 @@ const buildGroupedTopics = (
   const favTopics = topics.filter((topic) => topic.favorite);
   const unfavTopics = topics.filter((topic) => !topic.favorite);
 
+  // Favorites stay pinned at the very top. The "needs attention" bucket
+  // (byStatus mode only) follows right below, ahead of the remaining status
+  // groups, since groupTopicsByStatus emits `pending` first (STATUS_GROUP_ORDER).
   return favTopics.length > 0
     ? [
         {

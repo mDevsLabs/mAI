@@ -77,6 +77,24 @@ interface DeviceRegistrar {
 }
 
 /**
+ * Handler for generic server-internal device RPCs (e.g. workspace-init scans).
+ * Dispatches by `method` name and returns the JSON-serializable result. Distinct
+ * from {@link ToolCallHandler} — RPCs are never exposed to the agent.
+ */
+interface RpcHandler {
+  (method: string, params: unknown): Promise<unknown>;
+}
+
+interface DeviceRegistrar {
+  (info: {
+    deviceId: string;
+    hostname: string;
+    identitySource: IdentitySource;
+    platform: string;
+  }): Promise<void>;
+}
+
+/**
  * GatewayConnectionService
  *
  * Core business logic for managing WebSocket connection to the cloud device-gateway.
@@ -156,7 +174,7 @@ export default class GatewayConnectionService extends ServiceModule {
   }
 
   /**
-   * Derive the stable, user-scoped device id. Survives LobeHub reinstalls
+   * Derive the stable, user-scoped device id. Survives mAI reinstalls
    * because it hashes the OS machine id; falls back to the stored random UUID
    * when the machine id is unavailable. Caches the result for this session.
    */
@@ -312,6 +330,10 @@ export default class GatewayConnectionService extends ServiceModule {
       this.handleSystemInfoRequest(client, request);
     });
 
+    client.on('rpc_request', (request) => {
+      this.handleRpcRequest(client, request);
+    });
+
     client.on('agent_run_request', (request) => {
       this.handleAgentRunRequest(client, request);
     });
@@ -377,6 +399,32 @@ export default class GatewayConnectionService extends ServiceModule {
     });
   }
 
+  // ─── Generic Device RPC ───
+
+  private async handleRpcRequest(client: GatewayClient, request: RpcRequestMessage) {
+    const { method, params, requestId } = request;
+    logger.info(`Received rpc_request: method=${method}, requestId=${requestId}`);
+
+    if (!this.rpcHandler) {
+      client.sendRpcResponse({
+        requestId,
+        result: { error: 'No RPC handler registered', success: false },
+      });
+      return;
+    }
+
+    try {
+      const data = await this.rpcHandler(method, params);
+      client.sendRpcResponse({ requestId, result: { data, success: true } });
+    } catch (error) {
+      logger.error(`rpc_request method=${method} failed:`, serializeWireError(error));
+      client.sendRpcResponse({
+        requestId,
+        result: { error: serializeWireError(error), success: false },
+      });
+    }
+  }
+
   // ─── Agent Run ───
 
   private handleAgentRunRequest = async (
@@ -408,17 +456,53 @@ export default class GatewayConnectionService extends ServiceModule {
     client: GatewayClient,
   ) => {
     const { requestId, toolCall } = request;
-    const { apiName, arguments: argsStr } = toolCall;
+    const { apiName, arguments: argsStr, identifier, params, type } = toolCall;
 
-    logger.info(`Received tool call: apiName=${apiName}, requestId=${requestId}`);
+    logger.info(
+      `Received tool call: apiName=${apiName}, requestId=${requestId}, type=${type ?? 'tool'}`,
+    );
 
     try {
-      if (!this.toolCallHandler) {
-        throw new Error('No tool call handler configured');
+      let result: ToolCallResult;
+
+      if (type === 'mcp') {
+        // Tunneled stdio MCP call: route to the local MCP client (spawns the
+        // stdio server). Routing is driven by the explicit `type` discriminator,
+        // not by sniffing the payload — the builtin local-system tool switch
+        // keys on `apiName` and has no MCP server context.
+        if (!this.mcpCallHandler) {
+          throw new Error('No MCP call handler configured');
+        }
+        if (!params) {
+          throw new Error('MCP tool call missing connection params');
+        }
+        result = await this.mcpCallHandler({ apiName, arguments: argsStr, identifier, params });
+      } else {
+        if (!this.toolCallHandler) {
+          throw new Error('No tool call handler configured');
+        }
+        const args = JSON.parse(argsStr);
+        result = await this.toolCallHandler(apiName, args);
       }
 
-      const args = JSON.parse(argsStr);
-      const result = await this.toolCallHandler(apiName, args);
+      // Forward the typed envelope unchanged. Critically, do NOT stringify the
+      // whole result into `content` — that would bury the structured payload
+      // inside a JSON blob and lose `state`. The wire protocol carries each
+      // field separately so downstream (`DeviceGateway` → `RuntimeExecutors`)
+      // can persist `state` to `pluginState`. Optional fields are only set
+      // when present so payloads stay minimal.
+      const wireResult: ToolCallResponseMessage['result'] = {
+        content: result.content,
+        success: result.success,
+      };
+      const wireError = serializeWireError(result.error);
+      if (wireError !== undefined) wireResult.error = wireError;
+      if (result.state !== undefined) wireResult.state = result.state;
+
+      client.sendToolCallResponse({ requestId, result: wireResult });
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      logger.error(`Tool call failed: apiName=${apiName}, error=${errorMsg}`);
 
       // Forward the typed envelope unchanged. Critically, do NOT stringify the
       // whole result into `content` — that would bury the structured payload
@@ -536,7 +620,13 @@ export default class GatewayConnectionService extends ServiceModule {
   // ─── Gateway URL ───
 
   private getGatewayUrl(): string {
-    return this.app.storeManager.get('gatewayUrl') || DEFAULT_GATEWAY_URL;
+    // Env override wins (dev: point at a local `wrangler dev` gateway), then the
+    // user-configured store value, then the production default.
+    return (
+      getDesktopEnv().DEVICE_GATEWAY_URL ||
+      this.app.storeManager.get('gatewayUrl') ||
+      DEFAULT_GATEWAY_URL
+    );
   }
 
   // ─── Token Helpers ───

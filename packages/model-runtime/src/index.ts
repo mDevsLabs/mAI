@@ -33,6 +33,7 @@ export {
 } from './errors';
 export * from './helpers';
 export { LobeAkashChatAI } from './providers/akashchat';
+export { LobeAntGroupAI } from './providers/antgroup';
 export { LobeAnthropicAI } from './providers/anthropic';
 export { LobeAzureAI } from './providers/azureai';
 export { LobeAzureOpenAI } from './providers/azureOpenai';
@@ -73,6 +74,7 @@ export { LobeZeroOneAI } from './providers/zeroone';
 export { LobeZhipuAI } from './providers/zhipu';
 export * from './types';
 export * from './types/error';
+export * from './utils/claudeModelId';
 export { consumeStreamUntilDone } from './utils/consumeStream';
 export { AgentRuntimeError } from './utils/createError';
 export { getModelPropertyWithFallback } from './utils/getFallbackModelProperty';

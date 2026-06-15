@@ -182,6 +182,49 @@ export class EditorActionImpl {
     internal_dispatchDocument({ id: documentId, type: 'updateDocument', value: { isDirty: true } });
   };
 
+  /**
+   * Apply a snapshot returned by the server-side page-agent tool executor.
+   * The server has already written `documents.content` / `documents.editorData`,
+   * so this only updates in-memory store state to match: clears the dirty flag,
+   * advances `lastSaved*` and refreshes `lastUpdatedTime`. Editor-level Lexical
+   * application is handled by `EditorRuntime.applyServerSnapshot` upstream.
+   */
+  applyServerSnapshot = (
+    documentId: string,
+    snapshot: {
+      content?: string;
+      editorData?: Record<string, unknown>;
+      title?: string;
+    },
+  ): void => {
+    const { documents, internal_dispatchDocument } = this.#get();
+    const doc = documents[documentId];
+    if (!doc) return;
+
+    const value: Record<string, unknown> = {
+      isDirty: false,
+      lastUpdatedTime: new Date(),
+      saveStatus: 'saved',
+    };
+
+    if (typeof snapshot.content === 'string') {
+      value.content = snapshot.content;
+      value.lastSavedContent = snapshot.content;
+    }
+    if (snapshot.editorData && isValidEditorData(snapshot.editorData)) {
+      value.editorData = structuredClone(snapshot.editorData);
+      value.lastSavedEditorData = structuredClone(snapshot.editorData);
+    }
+    if (typeof snapshot.title === 'string') {
+      value.title = snapshot.title;
+    }
+
+    internal_dispatchDocument(
+      { id: documentId, type: 'updateDocument', value: value as Partial<typeof doc> },
+      n('applyServerSnapshot'),
+    );
+  };
+
   onEditorInit = async (editor: IEditor): Promise<void> => {
     const { activeDocumentId, documents } = this.#get();
     if (!editor || !activeDocumentId) return;
@@ -302,12 +345,22 @@ export class EditorActionImpl {
           lastSavedContent: currentContent,
           lastSavedEditorData: structuredClone(currentEditorData),
           lastUpdatedTime: result.savedAt ? new Date(result.savedAt) : new Date(),
+          saveBlockedByLock: false,
           saveStatus: 'saved',
         },
       });
     } catch (error) {
-      console.error('[DocumentStore] Failed to save:', error);
-      internal_dispatchDocument({ id, type: 'updateDocument', value: { saveStatus: 'idle' } });
+      // The server rejects writes to a workspace document another collaborator is
+      // actively editing (CONFLICT). Surface it as a lock block so the editor can
+      // flip to read-only at once instead of silently dropping the edit, and keep
+      // `isDirty` so the unsaved content stays visible to copy out.
+      const lockBlocked = (error as { data?: { code?: string } })?.data?.code === 'CONFLICT';
+      if (!lockBlocked) console.error('[DocumentStore] Failed to save:', error);
+      internal_dispatchDocument({
+        id,
+        type: 'updateDocument',
+        value: { saveBlockedByLock: lockBlocked || undefined, saveStatus: 'idle' },
+      });
     }
   };
 

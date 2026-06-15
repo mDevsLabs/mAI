@@ -6,7 +6,22 @@ const DAYJS_LOCALE_ALIASES: Record<string, string> = {
   'zh': 'zh-cn',
 };
 
+interface DayjsLocaleModule {
+  default: ILocale;
+}
+
+type DayjsLocaleLoader = () => DayjsLocaleModule | Promise<DayjsLocaleModule>;
+
+export type DayjsLocaleGlobEntry = DayjsLocaleLoader | DayjsLocaleModule;
+
+export const loadDayjsLocaleModule = async (
+  entry: DayjsLocaleGlobEntry,
+): Promise<DayjsLocaleModule> => (typeof entry === 'function' ? entry() : entry);
+
 export const normalizeDayjsLocale = (lang: string): string => {
   const lower = lang.toLowerCase();
+  if (lower.startsWith('zh-hans')) return 'zh-cn';
+  if (lower.startsWith('zh-hant')) return 'zh-tw';
+
   return DAYJS_LOCALE_ALIASES[lower] ?? lower;
 };

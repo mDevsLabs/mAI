@@ -2,7 +2,7 @@ import type { ComponentType } from 'react';
 
 import ImessageCredentialExtras from './imessage/CredentialExtras';
 import LineCredentialExtras from './line/CredentialExtras';
-import type { PlatformCredentialBodyProps } from './types';
+import type { PlatformCredentialBodyProps, PlatformCredentialExtrasProps } from './types';
 import WechatCredentialBody from './wechat/CredentialBody';
 
 export const platformCredentialBodyMap: Record<

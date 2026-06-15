@@ -11,7 +11,7 @@
   "features.gatewayMode.title": "اجرای ایجنت در سمت سرور (Gateway)",
   "features.groupChat.desc": "فعال‌سازی هماهنگی گفت‌وگوی گروهی چندعاملی.",
   "features.groupChat.title": "گفت‌وگوی گروهی (چندعاملی)",
-  "features.imessage.desc": "اتصال نمایندگان به iMessage از طریق پل BlueBubbles دسکتاپ LobeHub محلی.",
+  "features.imessage.desc": "اتصال نمایندگان به iMessage از طریق پل BlueBubbles دسکتاپ mAI محلی.",
   "features.imessage.title": "کانال iMessage",
   "features.inputMarkdown.desc": "نمایش زنده Markdown در ناحیه ورودی (متن پررنگ، بلوک‌های کد، جدول‌ها و غیره).",
   "features.inputMarkdown.title": "نمایش Markdown در ورودی",

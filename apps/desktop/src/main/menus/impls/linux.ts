@@ -265,6 +265,25 @@ export class LinuxMenu extends BaseMenuPlatform implements IMenuPlatform {
           { type: 'separator' },
           {
             click: () => {
+              const heteroAgentPath = path.join(this.app.appStoragePath, HETERO_AGENT_DIR);
+              console.info(`[Menu] Opening HeteroAgent directory: ${heteroAgentPath}`);
+              shell.openPath(heteroAgentPath).catch((err) => {
+                console.error(`[Menu] Error opening path ${heteroAgentPath}:`, err);
+              });
+            },
+            label: t('help.openHeteroAgentDir'),
+          },
+          {
+            checked: this.app.storeManager.get('heteroTracingEnabled', false),
+            click: (item) => {
+              this.app.storeManager.set('heteroTracingEnabled', item.checked);
+            },
+            label: t('help.toggleHeteroTracing'),
+            type: 'checkbox',
+          },
+          { type: 'separator' },
+          {
+            click: () => {
               const commonT = this.app.i18n.ns('common');
               const dialogT = this.app.i18n.ns('dialog');
 

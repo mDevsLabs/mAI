@@ -6,11 +6,11 @@ import { uuid } from '@/utils/uuid';
 
 import { getTestDB } from '../../../core/getTestDB';
 import { agents, embeddings, files, messages, sessions, topics, users } from '../../../schemas';
-import type { LobeChatDatabase } from '../../../type';
+import type { mAIDatabase } from '../../../type';
 import { MessageModel } from '../../message';
 import { codeEmbedding } from '../fixtures/embedding';
 
-const serverDB: LobeChatDatabase = await getTestDB();
+const serverDB: mAIDatabase = await getTestDB();
 
 const userId = 'message-stats-test';
 const otherUserId = 'message-stats-test-other';
@@ -158,8 +158,8 @@ describe('MessageModel Statistics Tests', () => {
       // @ts-ignore - accessing private method for testing
       const id2 = model.genId();
 
-      expect(id1).toHaveLength(18);
-      expect(id2).toHaveLength(18);
+      expect(id1).toHaveLength(22);
+      expect(id2).toHaveLength(22);
       expect(id1).not.toBe(id2);
       expect(id1).toMatch(/^msg_/);
       expect(id2).toMatch(/^msg_/);
