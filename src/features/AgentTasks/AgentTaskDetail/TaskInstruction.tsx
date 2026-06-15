@@ -77,9 +77,6 @@ const TaskInstruction = memo(() => {
     }, DEBOUNCE_MS);
   }, [editable, editor, taskId, updateTask]);
 
-  const handleAttach = useCallback(() => {
-    pickAndInsertAttachments(editor);
-  }, [editor]);
 
   const handleAttach = useCallback(() => {
     pickAndInsertAttachments(editor);

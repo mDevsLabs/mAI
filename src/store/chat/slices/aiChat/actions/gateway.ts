@@ -23,36 +23,6 @@ import { settingsSelectors } from '@/store/user/selectors';
 
 import { createGatewayEventHandler } from './gatewayEventHandler';
 
-/**
- * When the agent runs against the local machine ("本机"), resolve this desktop's
- * own gateway deviceId so it can be passed as the run's `deviceId`. The server
- * then presets `activeDeviceId` and injects `lobe-local-system` into the very
- * first LLM payload — skipping the extra `activateDevice` round-trip the model
- * is otherwise forced to make whenever more than one device is online (with a
- * single device the server's heuristic already covered it).
- *
- * Gated on the effective runtime mode (`isLocalSystemEnabledById`), which
- * derives from `agencyConfig.executionTarget` — only a `local` target presets
- * the device. Resolving a device for `sandbox` / `none` / `device` targets
- * would wrongly route the run to this machine.
- *
- * Desktop-only and best-effort: any failure falls back to the server-side
- * device-resolution heuristics. We don't pre-check online status here — an
- * offline id simply fails the server's `onlineDevices` guard and stays unrouted.
- */
-const resolveLocalDeviceId = async (agentId?: string): Promise<string | undefined> => {
-  if (!isDesktop || !agentId) return undefined;
-
-  const isLocal = chatConfigByIdSelectors.isLocalSystemEnabledById(agentId)(getAgentStoreState());
-  if (!isLocal) return undefined;
-
-  try {
-    const info = await gatewayConnectionService.getDeviceInfo();
-    return info?.deviceId;
-  } catch {
-    return undefined;
-  }
-};
 
 /**
  * When the agent runs against the local machine ("本机"), resolve this desktop's

@@ -32,6 +32,7 @@ const LobehubSkillItem = memo<LobehubSkillItemProps>(({ provider, server }) => {
   const { t } = useTranslation('setting');
   const [isConnecting, setIsConnecting] = useState(false);
   const [isWaitingAuth, setIsWaitingAuth] = useState(false);
+  const { canCreate, canEdit, createReason, editReason } = usePermission();
 
     const oauthWindowRef = useRef<Window | null>(null);
     const windowCheckIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -189,38 +190,6 @@ const LobehubSkillItem = memo<LobehubSkillItemProps>(({ provider, server }) => {
       });
     };
 
-  const handleConnect = async () => {
-    if (server?.isConnected) return;
-
-    setIsConnecting(true);
-    try {
-      // Skip redirectUri on desktop (app:// protocol) since the system browser can't navigate to it
-      const redirectUri = window.location.protocol.startsWith('http')
-        ? `${window.location.origin}/oauth/callback/success?provider=${encodeURIComponent(provider.id)}`
-        : undefined;
-      const { authorizeUrl } = await getAuthorizeUrl(provider.id, { redirectUri });
-      openOAuthWindow(authorizeUrl);
-    } catch (error) {
-      console.error('[LobehubSkill] Failed to get authorize URL:', error);
-    } finally {
-      setIsConnecting(false);
-    }
-  };
-
-  const handleDisconnect = () => {
-    if (!server) return;
-    confirmModal({
-      cancelText: t('cancel', { ns: 'common' }),
-      content: t('tools.lobehubSkill.disconnectConfirm.desc', { name: provider.label }),
-      okButtonProps: { danger: true },
-      okText: t('tools.lobehubSkill.disconnect'),
-      onOk: async () => {
-        await revokeConnect(server.identifier);
-      },
-      title: t('tools.lobehubSkill.disconnectConfirm.title', { name: provider.label }),
-    });
-  };
-
   const renderIcon = () => {
     const { icon, label } = provider;
     if (typeof icon === 'string') {
@@ -229,25 +198,6 @@ const LobehubSkillItem = memo<LobehubSkillItemProps>(({ provider, server }) => {
     return <Icon fill={cssVar.colorText} icon={icon} size={32} />;
   };
 
-  const renderStatus = () => {
-    if (!server) {
-      return (
-        <span className={styles.disconnected}>
-          {t('tools.lobehubSkill.disconnected', { defaultValue: 'Disconnected' })}
-        </span>
-      );
-    }
-
-    switch (server.status) {
-      case LobehubSkillStatus.CONNECTED: {
-        return (
-          <span className={styles.connected}>
-            {t('tools.lobehubSkill.connected', { defaultValue: 'Connected' })}
-          </span>
-        );
-      }
-      return <Icon fill={cssVar.colorText} icon={icon} size={16} />;
-    };
 
     const renderStatus = () => {
       if (!server) {

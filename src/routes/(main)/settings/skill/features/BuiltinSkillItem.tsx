@@ -48,17 +48,6 @@ const BuiltinSkillItem = memo<BuiltinSkillItemProps>(({ identifier, title, avata
     });
   };
 
-      confirmModal({
-        cancelText: t('cancel', { ns: 'common' }),
-        content: t('store.actions.confirmUninstall', { ns: 'plugin' }),
-        okButtonProps: { danger: true },
-        okText: t('store.actions.uninstall', { ns: 'plugin' }),
-        onOk: async () => {
-          await uninstallBuiltinTool(identifier);
-        },
-        title: t('store.actions.uninstall', { ns: 'plugin' }),
-      });
-    };
 
     const renderStatus = () => {
       if (isInstalled) {

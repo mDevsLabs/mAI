@@ -1,5 +1,5 @@
 {
-  "name": "mai-cli",
+  "name": "@mdevs/mai-cli",
   "version": "1.0.3",
   "type": "module",
   "bin": {
