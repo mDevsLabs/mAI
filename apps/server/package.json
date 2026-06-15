@@ -1,8 +1,11 @@
 {
-  "name": "mai-server",
-  "version": "0.0.0",
-  "private": true,
+  "name": "@mdevs/mai-server",
+  "version": "0.0.3",
+  "private": false,
   "scripts": {
     "type-check": "tsc --noEmit"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

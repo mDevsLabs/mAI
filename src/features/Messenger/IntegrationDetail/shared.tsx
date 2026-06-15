@@ -415,6 +415,7 @@ export const useLinkActions = ({ linksMutate, name, platform }: UseLinkActionsAr
   const { t } = useTranslation('messenger');
   const { message } = App.useApp();
 
+  const handleSetActive = async (agentId: string, tenantId: string) => {
     try {
       await messengerService.setActiveAgent({
         agentId,

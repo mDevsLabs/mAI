@@ -31,9 +31,8 @@ const AuthContainer: FC<PropsWithChildren> = ({ children }) => {
           width={'100%'}
         >
           <Link aria-label={'mAI'} href={'/'} style={{ display: 'inline-flex' }}>
-
             <ProductLogo size={40} />
-          </a>
+          </Link>
         </Flexbox>
         <Center height={'100%'} padding={16} width={'100%'}>
           {children}
@@ -54,7 +53,6 @@ const AuthContainer: FC<PropsWithChildren> = ({ children }) => {
             {COPYRIGHT_FULL}
           </Text>
         </Center>
-
       </Flexbox>
     </Flexbox>
   );

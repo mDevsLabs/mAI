@@ -1,7 +1,7 @@
 {
   "name": "@mdevs/mai-app",
-  "version": "0.4.0",
-  "private": true,
+  "version": "0.4.1",
+  "private": false,
   "description": "Avec mAI, passez à la vitesse supérieure !",
   "homepage": "https://github.com/mDevsLabs/mAI",
   "repository": {
@@ -117,6 +117,9 @@
   },
   "optionalDependencies": {
     "node-mac-permissions": "^2.5.0"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
