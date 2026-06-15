@@ -1,16 +1,12 @@
 {
   "name": "mai-cli",
-  "version": "0.0.24",
+  "version": "0.4.0",
   "type": "module",
   "bin": {
-    "lh": "./dist/index.js",
-    "lobe": "./dist/index.js",
-    "lobehub": "./dist/index.js"
+    "mai": "./dist/index.js"
   },
   "man": [
-    "./man/man1/lh.1",
-    "./man/man1/lobe.1",
-    "./man/man1/lobehub.1"
+    "./man/man1/mai.1"
   ],
   "files": [
     "dist",

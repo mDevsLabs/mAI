@@ -50,7 +50,6 @@ import { marketRouter } from './market';
 import { messageRouter } from './message';
 import { messengerRouter } from './messenger';
 import { notebookRouter } from './notebook';
-import { notificationRouter } from './notification';
 import { oauthDeviceFlowRouter } from './oauthDeviceFlow';
 import { pluginRouter } from './plugin';
 import { pushTokenRouter } from './pushToken';
@@ -113,7 +112,6 @@ export const lambdaRouter = router({
   message: messageRouter,
   messenger: messengerRouter,
   notebook: notebookRouter,
-  notification: notificationRouter,
   oauthDeviceFlow: oauthDeviceFlowRouter,
   plugin: pluginRouter,
   pushToken: pushTokenRouter,

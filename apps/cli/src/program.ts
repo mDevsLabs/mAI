@@ -41,10 +41,7 @@ const { version } = require('../package.json');
 export function createProgram() {
   const program = new Command();
 
-  program
-    .name('lh')
-    .description('LobeHub CLI - manage and connect to LobeHub services')
-    .version(version);
+  program.name('mai').description('mAI CLI - manage and connect to mAI services').version(version);
 
   registerLoginCommand(program);
   registerLogoutCommand(program);

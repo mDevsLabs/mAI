@@ -15,7 +15,7 @@ import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 const PARTITION_ID = 'persist:subscription';
 
 interface SubscriptionIframeWrapperProps {
-  page: 'billing' | 'credits' | 'notification' | 'plans' | 'referral' | 'usage';
+  page: 'billing' | 'credits' | 'plans' | 'referral' | 'usage';
 }
 
 export const SubscriptionIframeWrapper = memo<SubscriptionIframeWrapperProps>(({ page }) => {
@@ -31,8 +31,7 @@ export const SubscriptionIframeWrapper = memo<SubscriptionIframeWrapperProps>(({
   const iframeUrl = useMemo(() => {
     if (!isCloudActive) return null;
 
-    const path =
-      page === 'notification' ? '/embed/settings/notification' : `/embed/subscription/${page}`;
+    const path = `/embed/subscription/${page}`;
     const url = new URL(path, OFFICIAL_URL);
     // Sync locale to embed page via hl parameter
     if (i18n.language) {

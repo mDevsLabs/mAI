@@ -225,7 +225,7 @@ async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
   };
 
   // Print device info
-  info('─── LobeHub CLI ───');
+  info('─── mAI CLI ───');
   info(`  Device ID : ${client.currentDeviceId}`);
   info(`  Hostname  : ${os.hostname()}`);
   info(`  Platform  : ${process.platform}`);
