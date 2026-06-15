@@ -5,7 +5,6 @@ import type { ChatModelCard } from '@lobechat/types';
 import debug from 'debug';
 import type { Pricing } from 'model-bank';
 
-import { shouldDropUnsupportedClaudeAssistantPrefill } from '../../const/models';
 import { ErrorClassifier } from '../../errors';
 import type {
   ChatCompletionErrorPayload,

@@ -56,8 +56,8 @@ const Read = memo<BuiltinRenderProps<ReadArgs>>(({ args, content }) => {
         </>
       }
     >
-      {source}
-    </Highlighter>
+      <Highlighter language={ext}>{source}</Highlighter>
+    </ToolResultCard>
   );
 });
 

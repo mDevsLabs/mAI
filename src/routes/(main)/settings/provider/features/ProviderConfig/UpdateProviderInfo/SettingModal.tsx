@@ -1,14 +1,4 @@
 import { ProviderIcon } from '@lobehub/icons';
-import { type FormItemProps } from '@lobehub/ui';
-import { Button, Flexbox, FormModal, Icon, Input, Select, TextArea } from '@lobehub/ui';
-import { confirmModal } from '@lobehub/ui/base-ui';
-import { App } from 'antd';
-import { BrainIcon } from 'lucide-react';
-import { memo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-
-import { ProviderIcon } from '@lobehub/icons';
 import { Flexbox, Icon, Input, Text, TextArea } from '@lobehub/ui';
 import {
   Button,
@@ -25,8 +15,8 @@ import { t as i18nT } from 'i18next';
 import { BrainIcon } from 'lucide-react';
 import { memo, type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
-import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useAiInfraStore } from '@/store/aiInfra/store';
 import { type AiProviderDetailItem, type UpdateAiProviderParams } from '@/types/aiProvider';
 
@@ -59,6 +49,7 @@ const SettingContent = memo<SettingContentProps>(({ initialValues, id }) => {
 
   const { message } = App.useApp();
   const navigate = useNavigate();
+  const { close } = useModalContext();
 
   const onFinish = async (values: UpdateAiProviderParams) => {
     setLoading(true);
@@ -110,27 +101,9 @@ const SettingContent = memo<SettingContentProps>(({ initialValues, id }) => {
   };
 
   return (
-    <FormModal
-      initialValues={initialValues}
-      open={open}
-      scrollToFirstError={{ behavior: 'instant', block: 'end', focus: true }}
-      submitText={t('createNewAiProvider.confirm')}
-      footer={
-        <Flexbox horizontal justify={'space-between'}>
-          <Button
-            danger
-            disabled={loading}
-            type={'primary'}
-            onClick={() => {
-              confirmModal({
-                okButtonProps: {
-                  danger: true,
-                },
-                okText: t('delete', { ns: 'common' }),
-                onOk: async () => {
-                  await deleteAiProvider(id);
-                  navigate('/settings/provider/all');
-
+    <Flexbox gap={16}>
+      <Form form={form} initialValues={initialValues} layout={'vertical'} onFinish={onFinish}>
+        <Flexbox gap={16}>
           <Form.Item label={t('createNewAiProvider.id.title')} style={itemStyle}>
             <Text type={'secondary'}>{initialValues.id}</Text>
           </Form.Item>

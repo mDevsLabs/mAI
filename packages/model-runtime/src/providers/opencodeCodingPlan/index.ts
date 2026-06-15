@@ -6,7 +6,6 @@ import { createRouterRuntime } from '../../core/RouterRuntime';
 import type { CreateRouterRuntimeOptions } from '../../core/RouterRuntime/createRuntime';
 import type { ChatStreamPayload } from '../../types';
 import { processMultiProviderModelList } from '../../utils/modelParse';
-import { resolveProviderRouteModels } from '../utils/resolveProviderRouteModels';
 
 // ============================================================================
 // Constants
@@ -17,7 +16,13 @@ const MODELS_DEV_URL = 'https://models.dev/api.json';
 
 // MiniMax and Qwen models in Go use @ai-sdk/anthropic (Anthropic Messages API format)
 // Endpoint: /go/v1/messages
-const anthropicModels = ['minimax-m2.5', 'minimax-m2.7', 'qwen3.5-plus', 'qwen3.6-plus', 'qwen3.7-max'];
+const _anthropicModels = [
+  'minimax-m2.5',
+  'minimax-m2.7',
+  'qwen3.5-plus',
+  'qwen3.6-plus',
+  'qwen3.7-max',
+];
 
 // Moonshot Kimi thinking toggle models (kimi-k2.N) expose reasoning on the
 // OpenAI-compatible route. Matches the official Moonshot provider's prefix logic.
@@ -40,64 +45,10 @@ const reasoningInterleavedModels = [
   'deepseek-v4-flash',
 ];
 
-const hasValidReasoning = (reasoning: any) =>
-  typeof reasoning?.content === 'string';
+const hasValidReasoning = (reasoning: any) => typeof reasoning?.content === 'string';
 
 const isEmptyContent = (content: any) =>
   content === '' || content === null || content === undefined;
-
-/**
- * Recursively remove `null` values from `enum` arrays in a JSON Schema.
- * The opencode-go backend ("could not translate the enum None") rejects
- * nullable enums produced by Zod schema `.nullable()` / `.nullish()`.
- */
-export const sanitizeJsonSchema = (schema: any): any => {
-  if (!schema || typeof schema !== 'object') return schema;
-  if (Array.isArray(schema)) return schema.map(sanitizeJsonSchema);
-
-  const result: any = {};
-  for (const [key, value] of Object.entries(schema)) {
-    if (key === 'enum' && Array.isArray(value)) {
-      const filtered = value.filter((v: any) => v !== null);
-      if (filtered.length > 0) result[key] = filtered;
-      continue;
-    }
-    // For `type: ['string', 'null']` → just `type: 'string'`
-    if (key === 'type' && Array.isArray(value) && value.includes('null') && value.length >= 2) {
-      const nonNullTypes = value.filter((v: any) => v !== 'null' && v !== null);
-      if (nonNullTypes.length === 1) result.type = nonNullTypes[0];
-      else if (nonNullTypes.length > 1) result.type = nonNullTypes;
-      continue;
-    }
-    // Recurse into schema traversals:
-    //   properties, additionalProperties, items, prefixItems
-    //   allOf, anyOf, oneOf, not
-    //   if/then/else
-    //   $defs, definitions
-    //   contains, unevaluatedItems, unevaluatedProperties
-    if (key === 'properties' || key === '$defs' || key === 'definitions') {
-      const nested: any = {};
-      for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
-        nested[k] = sanitizeJsonSchema(v);
-      }
-      result[key] = nested;
-    } else if (
-      ['allOf', 'anyOf', 'oneOf', 'prefixItems'].includes(key) &&
-      Array.isArray(value)
-    ) {
-      result[key] = value.map(sanitizeJsonSchema);
-    } else if (
-      ['items', 'additionalProperties', 'not', 'contains', 'if', 'then', 'else',
-       'unevaluatedItems', 'unevaluatedProperties']
-        .includes(key)
-    ) {
-      result[key] = sanitizeJsonSchema(value);
-    } else {
-      result[key] = sanitizeJsonSchema(value);
-    }
-  }
-  return result;
-};
 
 /**
  * Build OpenAI-compatible payload with reasoning_content handling.
@@ -350,7 +301,7 @@ const getAnthropicModels = async (): Promise<string[]> => {
  * `writeCacheInput` shape; processModelCard's `formatPricing` converts it
  * into the new `units` array.
  */
-const enrichWithModelsDev = (
+const _enrichWithModelsDev = (
   id: string,
   dev?: ModelsDevModel,
 ): { id: string; [key: string]: any } => {
@@ -590,7 +541,7 @@ export const params = {
       );
     }
   },
-  routers: async (options, runtimeContext?: { model?: string }) => {
+  routers: async (options, _runtimeContext?: { model?: string }) => {
     const baseURL = options.baseURL || GO_BASE_URL;
 
     const anthropicModels = await getAnthropicModels();
