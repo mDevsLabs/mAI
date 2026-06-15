@@ -1,6 +1,6 @@
 {
   "name": "@mdevs/mai",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Avec mAI, passez à la vitesse supérieure !",
   "keywords": [
     "framework",
@@ -95,7 +95,7 @@
     "lint:style": "stylelint \"{src,tests}/**/*.{js,jsx,ts,tsx}\" --fix",
     "lint:ts": "eslint src/ tests/ --concurrency=auto",
     "lint:unused": "knip --include files,exports,types,enumMembers,duplicates",
-    "prepare": "git rev-parse --git-dir > /dev/null 2>&1 && git config core.hooksPath .githooks || true",
+    "prepare": "node -e \"try { require('child_process').execSync('git config core.hooksPath .githooks') } catch (e) {}\"",
     "prettier": "prettier -c --write \"**/**\"",
     "pull": "git pull",
     "qstash": "pnpx @upstash/qstash-cli@latest dev",
@@ -291,7 +291,7 @@
     "@lobechat/web-crawler": "workspace:*",
     "@lobehub/analytics": "^1.6.2",
     "@lobehub/charts": "^5.0.0",
-    "@lobehub/editor": "^4.15.0",
+    "@lobehub/editor": "^4.17.1",
     "@lobehub/icons": "^5.0.0",
     "@lobehub/market-sdk": "0.34.0",
     "@lobehub/tts": "^5.1.2",
