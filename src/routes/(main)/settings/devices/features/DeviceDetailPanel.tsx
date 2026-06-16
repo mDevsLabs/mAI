@@ -8,7 +8,7 @@ import { FolderOpenIcon, FolderPlusIcon, XIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { nextRecentCwds } from '@/features/ChatInput/RuntimeConfig/deviceCwd';
+import { nextRecentCwds } from '@/features/ChatInput/ControlBar/deviceCwd';
 import { lambdaQuery } from '@/libs/trpc/client';
 import { electronSystemService } from '@/services/electron/system';
 
