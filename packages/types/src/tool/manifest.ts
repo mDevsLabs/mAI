@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { type LobeChatPluginApi, LobeChatPluginApiSchema, type Meta, MetaSchema } from './builtin';
+import { type mAIPluginApi, mAIPluginApiSchema, type Meta, MetaSchema } from './builtin';
 
 export type ToolManifestType = 'builtin' | 'default' | 'markdown' | 'mcp' | 'standalone';
 
@@ -18,7 +18,7 @@ export const ToolManifestSettingsSchema = z.object({
 
 export interface ToolManifest {
   $schema?: string;
-  api: LobeChatPluginApi[];
+  api: mAIPluginApi[];
   author?: string;
   createdAt?: string;
   gateway?: string;
@@ -35,7 +35,7 @@ export interface ToolManifest {
 
 export const ToolManifestSchema = z.object({
   $schema: z.string().optional(),
-  api: z.array(LobeChatPluginApiSchema),
+  api: z.array(mAIPluginApiSchema),
   author: z.string().optional(),
   createdAt: z.string().optional(),
   gateway: z.string().optional(),

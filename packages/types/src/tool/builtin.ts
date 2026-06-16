@@ -186,6 +186,12 @@ export const mAIPluginApiSchema = z.object({
   url: z.string().optional(),
 });
 
+// Backward-compatible aliases — keep until all call-sites migrate to the new names
+/** @deprecated Use {@link mAIPluginApi} instead */
+export type LobeChatPluginApi = mAIPluginApi;
+/** @deprecated Use {@link mAIPluginApiSchema} instead */
+export const LobeChatPluginApiSchema = mAIPluginApiSchema;
+
 export interface BuiltinToolManifest {
   api: mAIPluginApi[];
 
