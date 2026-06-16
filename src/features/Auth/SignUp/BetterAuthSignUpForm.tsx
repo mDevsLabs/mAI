@@ -14,8 +14,6 @@ import { trackLoginOrSignupClicked } from '@/features/User/UserLoginOrSignup/tra
 
 import SocialProviderButtons from '@/components/SocialProviderButtons';
 
-import { AuthCard } from '../../../../../features/AuthCard';
-import { trackLoginOrSignupClicked } from '../../../../../features/User/UserLoginOrSignup/trackLoginOrSignupClicked';
 import { type SignUpFormValues } from './useSignUp';
 import { useSignUp } from './useSignUp';
 

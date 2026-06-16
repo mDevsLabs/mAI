@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import SocialProviderButtons from '@/components/SocialProviderButtons';
 import { PRIVACY_URL, TERMS_URL } from '@/const/url';
 
-import AuthCard from '../../../../features/AuthCard';
+import { AuthCard } from '@/features/AuthCard';
 
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
