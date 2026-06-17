@@ -8,6 +8,8 @@ import { eq, inArray } from 'drizzle-orm';
 import { after } from 'next/server';
 import { z } from 'zod';
 
+import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
+import { wsCompatProcedure } from '@/business/server/trpc-middlewares/workspaceAuth';
 
 import { AgentOperationModel } from '@/database/models/agentOperation';
 import { MessageModel } from '@/database/models/message';
