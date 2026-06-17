@@ -1,7 +1,7 @@
 import { getServerFeatureFlagsValue } from '@/config/featureFlags';
 import { appEnv } from '@/envs/app';
 import { authEnv } from '@/envs/auth';
-import { type Locales, normalizeLocale } from '@/locales/resources';
+import { type Locales, locales, normalizeLocale } from '@/locales/resources';
 import { getServerAuthConfig } from '@/server/globalConfig/getServerAuthConfig';
 import { buildAnalyticsConfig, fetchViteDevTemplate, renderSpaHtml } from '@/server/spaHtml';
 import { type AuthSPAServerConfig } from '@/types/spaServerConfig';
@@ -9,7 +9,7 @@ import { type AuthSPAServerConfig } from '@/types/spaServerConfig';
 import { buildSeoMeta } from './seoMeta';
 
 export function generateStaticParams() {
-  const staticLocales: Locales[] = ['en-US', 'zh-CN'];
+  const staticLocales: Locales[] = [...locales];
 
   return staticLocales.map((locale) => ({ locale }));
 }

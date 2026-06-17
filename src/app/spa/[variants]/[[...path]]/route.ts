@@ -7,7 +7,7 @@ import { isCustomORG, isDesktop } from '@/const/version';
 import { appEnv } from '@/envs/app';
 import { fileEnv } from '@/envs/file';
 import { pythonEnv } from '@/envs/python';
-import { type Locales } from '@/locales/resources';
+import { type Locales, locales } from '@/locales/resources';
 import { getServerGlobalConfig } from '@/server/globalConfig';
 import { buildAnalyticsConfig, fetchViteDevTemplate, renderSpaHtml } from '@/server/spaHtml';
 import { translation } from '@/server/translation';
@@ -16,7 +16,7 @@ import { RouteVariants } from '@/utils/server/routeVariants';
 
 export function generateStaticParams() {
   const mobileOptions = isDesktop ? [false] : [true, false];
-  const staticLocales: Locales[] = ['en-US', 'zh-CN'];
+  const staticLocales: Locales[] = [...locales];
 
   const variants: { variants: string }[] = [];
 
