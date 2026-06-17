@@ -145,6 +145,8 @@ const fileProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) => 
   });
 });
 
+const fileTransferEntityTypeSchema = z.enum(['file', 'document', 'folder']);
+
 export const fileRouter = router({
   checkFileHash: fileProcedure
     .use(withScopedPermission('file:upload'))
