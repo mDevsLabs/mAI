@@ -103,7 +103,6 @@ import type { ConversationHistoryEntry } from '@/server/services/heterogeneousAg
 import { MarketService } from '@/server/services/market';
 import { markdownToTxt } from '@/utils/markdownToTxt';
 
-import { deviceProxy } from '../toolExecution/deviceProxy';
 import { resolveDeviceAccessPolicy } from './deviceAccessPolicy';
 import { buildAllowedBuiltinTools, isDeviceToolIdentifier } from './deviceToolRegistry';
 import { ingestAttachment } from './ingestAttachment';
@@ -1442,7 +1441,7 @@ export class AiAgentService {
           // Resolve the working directory for the run: a topic-level override
           // wins, else the device's user-configured defaultCwd. The device row
           // lives in the DB (the gateway only knows live connections), so read
-          // it directly rather than via deviceProxy.
+          // it directly rather than via deviceGateway.
           const boundDevice = await new DeviceModel(this.db, this.userId).findByDeviceId(
             dispatchDeviceId,
           );
@@ -1467,7 +1466,7 @@ export class AiAgentService {
             cwd: deviceCwd,
           });
 
-          const result = await deviceProxy.dispatchAgentRun({
+          const result = await deviceGateway.dispatchAgentRun({
             ...heteroParams,
             cwd: deviceCwd,
             deviceId: dispatchDeviceId,
