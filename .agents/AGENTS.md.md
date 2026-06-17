@@ -8,7 +8,6 @@ Ce document définit les règles et directives que chaque agent de codage interv
 
 - **`package.json`** : Vous devez incrémenter la version du projet vers la version supérieure appropriée.
 - **`CHANGELOG.md`** : Vous devez ajouter une section décrivant les modifications apportées par la nouvelle version.
-- **Documentation (`docs/`)** : Vous devez créer un nouveau fichier de notes de version au format MD dans les répertoires `docs/en-US/changelog/` et `docs/fr-FR/changelog/` (par exemple : `010-30-05-2026.md` pour la version `0.1.0`).
 
 ## 2. Style de Communication 💬🇫🇷
 
@@ -23,4 +22,5 @@ Ce document définit les règles et directives que chaque agent de codage interv
 
 ## 4. Autres
 
-- **Actions** : Pour chaque action que tu fait, préviens moi de l'avancée des choses.
+- **Actions** : Pour chaque action que tu fait, préviens moi de l'avancée des choses. A chaque recherche, édition ou création ou commande, me dire ce que tu fais entre chaque action.
+- **Notes de version** : Il faut changer de version que si je te le demande. Si je te le demande pas, suggère le moi à la fin des modifications.

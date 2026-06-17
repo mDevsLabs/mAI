@@ -21,14 +21,6 @@ export interface FileAccessUrlItem {
   url?: string | null;
 }
 
-export const getFileProxyUrl = (fileId: string): string => `${appEnv.APP_URL}/f/${fileId}`;
-
-export interface FileAccessUrlItem {
-  fileId?: string | null;
-  id?: string | null;
-  url?: string | null;
-}
-
 /**
  * File service class
  * Provides file operation services using a modular implementation approach

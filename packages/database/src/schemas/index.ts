@@ -23,6 +23,7 @@ export * from './messengerAccountLink';
 export * from './messengerInstallation';
 export * from './nextauth';
 export * from './oidc';
+export * from './plugin';
 export * from './pushToken';
 export * from './rag';
 export * from './ragEvals';

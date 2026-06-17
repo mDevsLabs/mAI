@@ -183,7 +183,6 @@ export class TopicModel {
     triggers,
     withDetails = false,
   }: QueryTopicParams = {}) => {
-    const orderBy = buildTopicOrderBy(sortBy);
     const queryStartedAt = Date.now();
     logTiming(timing, 'db.topic.query:start', {
       current,

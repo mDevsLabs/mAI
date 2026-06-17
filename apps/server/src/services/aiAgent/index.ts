@@ -50,7 +50,6 @@ import { AgentModel } from '@/database/models/agent';
 import { AgentOperationModel } from '@/database/models/agentOperation';
 import { AgentSkillModel } from '@/database/models/agentSkill';
 import { AiModelModel } from '@/database/models/aiModel';
-
 import { DeviceModel } from '@/database/models/device';
 import { FileModel } from '@/database/models/file';
 import { MessageModel } from '@/database/models/message';
@@ -102,10 +101,9 @@ import { resolveAttachmentsByFileIds } from '@/server/services/file/resolveAttac
 import { HeterogeneousAgentService } from '@/server/services/heterogeneousAgent';
 import type { ConversationHistoryEntry } from '@/server/services/heterogeneousAgent/cloudHeteroContext';
 import { MarketService } from '@/server/services/market';
-import { deviceProxy } from '@/server/services/toolExecution/deviceProxy';
-
 import { markdownToTxt } from '@/utils/markdownToTxt';
 
+import { deviceProxy } from '../toolExecution/deviceProxy';
 import { resolveDeviceAccessPolicy } from './deviceAccessPolicy';
 import { buildAllowedBuiltinTools, isDeviceToolIdentifier } from './deviceToolRegistry';
 import { ingestAttachment } from './ingestAttachment';
@@ -2370,201 +2368,9 @@ export class AiAgentService {
 
     await throwIfExecutionAborted('message history loading');
 
-    // 12. Collect Phase 2 warnings (ingestion/parsing errors) alongside Phase 1 warnings
-    // Phase 1 warnings (e.g. file too large) are already in botPlatformContext.warnings
-    const warnings: string[] = [];
-
-    // 13. Upload external files to S3 and collect file IDs
-    let fileIds: string[] | undefined;
-    let imageList: Array<{ alt: string; id: string; url: string }> | undefined;
-    let videoList: ChatVideoItem[] | undefined;
-    let fileList: ChatFileItem[] | undefined;
-
-    if (files && files.length > 0) {
-      fileIds = [];
-      imageList = [];
-      videoList = [];
-      fileList = [];
-      const documentService = new DocumentService(this.db, this.userId);
-
-      for (const file of files) {
-        await throwIfExecutionAborted('file upload');
-
-        try {
-          const result = await ingestAttachment(file, fileService, this.userId);
-          fileIds.push(result.fileId);
-
-          if (result.isImage) {
-            imageList.push({
-              alt: file.name || 'image',
-              id: result.fileId,
-              url: result.resolvedUrl,
-            });
-            continue;
-          }
-
-          if (result.isVideo) {
-            videoList.push({
-              alt: file.name || 'video',
-              id: result.fileId,
-              url: result.resolvedUrl,
-            });
-            continue;
-          }
-
-          // Non-image / non-video: parse file content into the documents table so
-          // the MessageContentProcessor can inject it via filesPrompts(). Mirrors
-          // what the web upload path does, ensuring bot-uploaded PDFs / text /
-          // JSON / .skill files are actually visible to the LLM (instead of
-          // being silently uploaded but never read).
-          let content: string | undefined;
-          try {
-            const document = await documentService.parseFile(result.fileId);
-            content = document.content ?? undefined;
-          } catch (parseError) {
-            log(
-              'execAgent: parseFile failed for %s (fileId=%s): %O',
-              file.name,
-              result.fileId,
-              parseError,
-            );
-            warnings.push(
-              `File "${file.name || 'unknown'}" was uploaded but its contents could not be extracted.`,
-            );
-          }
-
-          fileList.push({
-            content,
-            fileType: file.mimeType ?? 'application/octet-stream',
-            id: result.fileId,
-            name: file.name ?? 'file',
-            size: file.size ?? 0,
-            url: result.resolvedUrl || '',
-          });
-        } catch (error) {
-          log('execAgent: failed to ingest file %s: %O', file.name || file.url, error);
-          warnings.push(`File "${file.name || 'unknown'}" could not be uploaded and was skipped.`);
-        }
-      }
-
-      if (fileIds.length > 0) {
-        log(
-          'execAgent: uploaded %d files to S3 (%d images, %d videos, %d documents)',
-          fileIds.length,
-          imageList.length,
-          videoList.length,
-          fileList.length,
-        );
-      }
-      if (imageList.length === 0) imageList = undefined;
-      if (videoList.length === 0) videoList = undefined;
-      if (fileList.length === 0) fileList = undefined;
-    }
-
-    // 13b. Attach already-uploaded files referenced by fileIds (e.g. SPA Gateway mode).
-    // These files are already in the `files` table; resolve URLs + classify, and
-    // merge into the imageList/videoList/fileList passed to the LLM and stored
-    // as message relations via messagesFiles.
-    if (attachedFileIds && attachedFileIds.length > 0) {
-      await throwIfExecutionAborted('file resolution');
-
-      const resolved = await resolveAttachmentsByFileIds({
-        db: this.db,
-        fileIds: attachedFileIds,
-        userId: this.userId,
-      });
-
-      warnings.push(...resolved.warnings);
-
-      if (resolved.orderedFileIds.length > 0) {
-        fileIds = [...(fileIds ?? []), ...resolved.orderedFileIds];
-
-        if (resolved.imageList.length > 0) {
-          imageList = [...(imageList ?? []), ...resolved.imageList];
-        }
-        if (resolved.videoList.length > 0) {
-          videoList = [...(videoList ?? []), ...resolved.videoList];
-        }
-        if (resolved.fileList.length > 0) {
-          fileList = [...(fileList ?? []), ...resolved.fileList];
-        }
-      }
-    }
-
-    await throwIfExecutionAborted('message creation');
-
-    const requestTriggerMetadata =
-      trigger && Object.values(RequestTrigger).includes(trigger as RequestTrigger)
-        ? { trigger: trigger as RequestTrigger }
-        : undefined;
-
-    // 13. Create user message in database
-    // Include threadId if provided (for SubAgent task execution in isolated Thread)
-    const userMessageRecord = effectiveResume
-      ? undefined
-      : await this.messageModel.create({
-          agentId: resolvedAgentId,
-          content: prompt,
-          files: fileIds,
-          metadata: requestTriggerMetadata,
-          role: 'user',
-          threadId: appContext?.threadId ?? undefined,
-          topicId,
-        });
-    if (userMessageRecord) {
-      log('execAgent: created user message %s', userMessageRecord.id);
-      // Agent Signal is a governance side-channel for feedback and self-iteration.
-      // It must not block the primary agent execution path; local Workflow/QStash
-      // stalls would otherwise leave the conversation with only the user message
-      // persisted and no assistant placeholder or operation row.
-      //
-      // Skip when this execAgent invocation is itself an Agent Signal background run
-      // (e.g. memory writer, self-iteration reviewer). Otherwise the analyzeIntent
-      // policy would re-analyze the synthesised user prompt and recursively trigger
-      // another Agent Signal pass.
-      if (!shouldSuppressSignal({ appContext, slug: agentSlug ?? undefined })) {
-        void enqueueAgentSignalSourceEvent(
-          {
-            payload: {
-              agentId: resolvedAgentId,
-              message: prompt,
-              threadId: appContext?.threadId ?? undefined,
-              topicId,
-              trigger,
-              messageId: userMessageRecord.id,
-            },
-            sourceId: userMessageRecord.id,
-            sourceType: 'agent.user.message',
-          },
-          {
-            agentId: resolvedAgentId,
-            userId: this.userId,
-          },
-        ).catch((error) => {
-          log('execAgent: failed to enqueue user message Agent Signal source event: %O', error);
-        });
-      }
-    }
-
-    // 14. Create assistant message placeholder in database
-    // Include threadId if provided (for SubAgent task execution in isolated Thread)
-    const assistantMessageRecord = await this.messageModel.create({
-      agentId: resolvedAgentId,
-      content: LOADING_FLAT,
-      model,
-      parentId: parentMessageId ?? userMessageRecord?.id,
-      provider,
-      role: 'assistant',
-      threadId: appContext?.threadId ?? undefined,
-      topicId,
-    });
-    log('execAgent: created assistant message %s', assistantMessageRecord.id);
-    assistantMessageRef.current = assistantMessageRecord.id;
-
-    // Append Phase 2 warnings (ingestion/parsing errors) to botPlatformContext
+    // 12. Append Phase 2 warnings (ingestion/parsing errors) to botPlatformContext
     // so the context engine can inject them alongside Phase 1 warnings
-    if (warnings.length > 0 && botPlatformContext) {
-
+    if (runAttachments.warnings.length > 0 && botPlatformContext) {
       const existing = (botPlatformContext as any).warnings as string[] | undefined;
       (botPlatformContext as any).warnings = [...(existing ?? []), ...runAttachments.warnings];
     }
