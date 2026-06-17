@@ -11,6 +11,8 @@ import {
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
+import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
+import { wsCompatProcedure } from '@/business/server/trpc-middlewares/workspaceAuth';
 
 import { getMessengerTelegramConfig } from '@/config/messenger';
 import type { DecryptedBotProvider } from '@/database/models/agentBotProvider';
