@@ -71,6 +71,23 @@ declare global {
       AUTH_OKTA_ISSUER?: string;
       AUTH_OKTA_SECRET?: string;
 
+      AUTH_CANVA_ID?: string;
+      AUTH_CANVA_SECRET?: string;
+      AUTH_NOTION_ID?: string;
+      AUTH_NOTION_SECRET?: string;
+      AUTH_RAILWAY_ID?: string;
+      AUTH_RAILWAY_SECRET?: string;
+      AUTH_SLACK_ID?: string;
+      AUTH_SLACK_SECRET?: string;
+      AUTH_SPOTIFY_ID?: string;
+      AUTH_SPOTIFY_SECRET?: string;
+      AUTH_TELEGRAM_ID?: string;
+      AUTH_TELEGRAM_SECRET?: string;
+      AUTH_TWITCH_ID?: string;
+      AUTH_TWITCH_SECRET?: string;
+      AUTH_X_ID?: string;
+      AUTH_X_SECRET?: string;
+
       // ===== Better Auth ===== //
       AUTH_SECRET?: string;
       AUTH_SSO_PROVIDERS?: string;
@@ -178,6 +195,23 @@ export const getAuthConfig = () => {
       AUTH_OKTA_SECRET: z.string().optional(),
       AUTH_OKTA_ISSUER: z.string().optional(),
 
+      AUTH_CANVA_ID: z.string().optional(),
+      AUTH_CANVA_SECRET: z.string().optional(),
+      AUTH_NOTION_ID: z.string().optional(),
+      AUTH_NOTION_SECRET: z.string().optional(),
+      AUTH_RAILWAY_ID: z.string().optional(),
+      AUTH_RAILWAY_SECRET: z.string().optional(),
+      AUTH_SLACK_ID: z.string().optional(),
+      AUTH_SLACK_SECRET: z.string().optional(),
+      AUTH_SPOTIFY_ID: z.string().optional(),
+      AUTH_SPOTIFY_SECRET: z.string().optional(),
+      AUTH_TELEGRAM_ID: z.string().optional(),
+      AUTH_TELEGRAM_SECRET: z.string().optional(),
+      AUTH_TWITCH_ID: z.string().optional(),
+      AUTH_TWITCH_SECRET: z.string().optional(),
+      AUTH_X_ID: z.string().optional(),
+      AUTH_X_SECRET: z.string().optional(),
+
       AUTH_WECHAT_ID: z.string().optional(),
       AUTH_WECHAT_SECRET: z.string().optional(),
 
@@ -270,6 +304,23 @@ export const getAuthConfig = () => {
       AUTH_OKTA_ID: process.env.AUTH_OKTA_ID,
       AUTH_OKTA_SECRET: process.env.AUTH_OKTA_SECRET,
       AUTH_OKTA_ISSUER: process.env.AUTH_OKTA_ISSUER,
+
+      AUTH_CANVA_ID: process.env.AUTH_CANVA_ID,
+      AUTH_CANVA_SECRET: process.env.AUTH_CANVA_SECRET,
+      AUTH_NOTION_ID: process.env.AUTH_NOTION_ID,
+      AUTH_NOTION_SECRET: process.env.AUTH_NOTION_SECRET,
+      AUTH_RAILWAY_ID: process.env.AUTH_RAILWAY_ID,
+      AUTH_RAILWAY_SECRET: process.env.AUTH_RAILWAY_SECRET,
+      AUTH_SLACK_ID: process.env.AUTH_SLACK_ID,
+      AUTH_SLACK_SECRET: process.env.AUTH_SLACK_SECRET,
+      AUTH_SPOTIFY_ID: process.env.AUTH_SPOTIFY_ID,
+      AUTH_SPOTIFY_SECRET: process.env.AUTH_SPOTIFY_SECRET,
+      AUTH_TELEGRAM_ID: process.env.AUTH_TELEGRAM_ID,
+      AUTH_TELEGRAM_SECRET: process.env.AUTH_TELEGRAM_SECRET,
+      AUTH_TWITCH_ID: process.env.AUTH_TWITCH_ID,
+      AUTH_TWITCH_SECRET: process.env.AUTH_TWITCH_SECRET,
+      AUTH_X_ID: process.env.AUTH_X_ID,
+      AUTH_X_SECRET: process.env.AUTH_X_SECRET,
 
       AUTH_WECHAT_ID: process.env.AUTH_WECHAT_ID,
       AUTH_WECHAT_SECRET: process.env.AUTH_WECHAT_SECRET,

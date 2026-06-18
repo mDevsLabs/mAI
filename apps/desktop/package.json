@@ -1,14 +1,14 @@
 {
-  "name": "lobehub-desktop-dev",
-  "version": "0.0.0",
+  "name": "@mdevs/mai-app",
+  "version": "0.4.0",
   "private": true,
-  "description": "LobeHub Desktop Application",
-  "homepage": "https://lobehub.com",
+  "description": "mAI Desktop Application",
+  "homepage": "https://mprojects.odoo.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lobehub/lobe-chat.git"
+    "url": "https://github.com/mDevsLabs/mAI.git"
   },
-  "author": "LobeHub",
+  "author": "mDevlopers",
   "main": "./dist/main/index.js",
   "scripts": {
     "build:cli": "cd ../cli && cross-env MINIFY=1 bun run build",

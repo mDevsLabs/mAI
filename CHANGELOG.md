@@ -2,6 +2,16 @@
 
 # Changelog
 
+## [Version 0.4.0](https://github.com/mDevsLabs/mAI/compare/v2.2.6...v0.4.0)
+
+<sup>Released on **2026-06-18**</sup>
+
+#### 🎨 Rebranding & Customization
+- **mAI**: Rebranding complet de l'application LobeHub vers la marque **mAI** et l'assistant **May**.
+- **Auth**: Configuration et intégration exclusive des fournisseurs SSO Canva, Google, Github, Notion, Railway, Slack, Spotify, Telegram, Twitch et X.
+- **Branding**: Remplacement des logos de marque et de l'avatar par `/avatars/may.PNG`.
+- **Version**: Mise à jour de la version du projet vers la version supérieure `0.4.0` sous l'auteur `mDevlopers`.
+
 ## [Version 2.2.6](https://github.com/lobehub/lobe-chat/compare/v2.2.6-canary.8...v2.2.6)
 
 <sup>Released on **2026-06-17**</sup>

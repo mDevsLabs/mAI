@@ -7,7 +7,7 @@ import { BUILTIN_AGENT_SLUGS } from '../../types';
 import { systemRoleTemplate } from './systemRole';
 
 export const VERIFY_AGENT: BuiltinAgentDefinition = {
-  avatar: '/avatars/lobe-ai.png',
+  avatar: '/avatars/may.PNG',
   persist: {
     // Custom tool mode: the verifier's toolset is EXACTLY its declared plugins
     // (its writeback tool + any investigation tools the run injects), with no
