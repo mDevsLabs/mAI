@@ -1,0 +1,51 @@
+name: 🏷️ Auto Update PR Title
+
+on:
+  pull_request:
+    types: [opened, reopened]
+
+# 🔒 Permissions minimales nécessaires
+permissions:
+  pull-requests: write
+
+# 🚫 Évite que plusieurs runs se marchent dessus sur la même PR
+concurrency:
+  group: pr-title-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  update-title:
+    runs-on: ubuntu-latest
+    # ✅ On ignore les PR venant de forks (sécurité + permissions)
+    if: github.event.pull_request.head.repo.full_name == github.repository
+
+    steps:
+      - name: 🏷️ Update PR title with number and branch
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const branch = pr.head.ref;
+            const number = pr.number;
+
+            // 🎯 Le format de titre qu'on veut
+            const expectedTitle = `Pull request #${number} - ${branch}`;
+
+            // 🛑 On évite de re-update si le titre est déjà bon (anti-boucle)
+            if (pr.title === expectedTitle) {
+              core.info(`✅ Le titre est déjà correct : "${expectedTitle}"`);
+              return;
+            }
+
+            core.info(`🔄 Ancien titre : "${pr.title}"`);
+            core.info(`✨ Nouveau titre : "${expectedTitle}"`);
+
+            // 🚀 On met à jour la PR
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: number,
+              title: expectedTitle,
+            });
+
+            core.info(`🎉 Titre mis à jour avec succès !`);
