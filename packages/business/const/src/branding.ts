@@ -2,7 +2,7 @@
 // if you want to use it in the commercial usage
 // please contact us for more information: hello@lobehub.com
 
-export const LOBE_CHAT_CLOUD = 'mAI Cloud';
+export const LOBE_CHAT_CLOUD = 'mCloud';
 
 export const BRANDING_NAME = 'mAI';
 export const BRANDING_LOGO_URL = '/avatars/may.PNG';
@@ -10,9 +10,9 @@ export const BRANDING_LOGO_URL = '/avatars/may.PNG';
 export const ORG_NAME = 'mAI';
 
 export const BRANDING_URL = {
-  help: 'https://mprojects.odoo.com',
+  help: 'https://mprojects.odoo.com/contact',
   privacy: 'https://mprojects.odoo.com',
-  subscription: 'https://app.lobehub.com/settings/plans',
+  subscription: 'https://mprojects.odoo.com',
   support: 'https://mprojects.odoo.com',
   terms: 'https://mprojects.odoo.com',
 };
@@ -22,7 +22,7 @@ export const SOCIAL_URL = {
   github: 'https://github.com/mDevsLabs/mAI',
   medium: 'https://medium.com/mdevslabs',
   x: 'https://x.com/mdevslabs',
-  youtube: 'https://www.youtube.com/@lobehub',
+  youtube: 'https://www.youtube.com/@mDevsLabs',
 };
 
 export const FILE_URL = {
@@ -30,8 +30,8 @@ export const FILE_URL = {
 };
 
 export const BRANDING_EMAIL = {
-  business: 'hello@lobehub.com',
-  support: 'support@lobehub.com',
+  business: 'hello@mprojects.odoo.com',
+  support: 'support@mprojects.odoo.com',
 };
 
 export const BRANDING_PROVIDER = 'lobehub';

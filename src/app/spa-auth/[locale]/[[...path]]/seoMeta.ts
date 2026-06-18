@@ -61,6 +61,6 @@ export async function buildSeoMeta(locale: string, pathname: string): Promise<st
     `<meta name="twitter:title" content="${title}" />`,
     `<meta name="twitter:description" content="${description}" />`,
     `<meta name="twitter:image" content="${OG_URL}" />`,
-    `<meta name="twitter:site" content="${isCustomORG ? `@${ORG_NAME}` : '@lobehub'}" />`,
+    `<meta name="twitter:site" content="${isCustomORG ? `@${ORG_NAME}` : '@mdevslabs'}" />`,
   ].join('\n    ');
 }
