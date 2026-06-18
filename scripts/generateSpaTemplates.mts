@@ -61,5 +61,11 @@ export const authHtmlTemplate = ${JSON.stringify(authHtml)};
 
   console.log('Generated authHtmlTemplate.ts');
 } else {
-  console.log('Skipped authHtmlTemplate.ts (no dist/auth build)');
+  const authOutput = `// Auto-generated fallback by scripts/generateSpaTemplates.mts
+// Do not edit manually
+
+export const authHtmlTemplate = "<!doctype html><html><head><meta charset=\\"utf-8\\" /><meta name=\\"viewport\\" content=\\"width=device-width, initial-scale=1\\" /><!--SEO_META--></head><body><div id=\\"root\\"></div><!--ANALYTICS_SCRIPTS--></body></html>";
+`;
+  writeFileSync(resolve(root, 'src/app/spa-auth/authHtmlTemplate.ts'), authOutput, 'utf8');
+  console.log('Generated fallback authHtmlTemplate.ts (no dist/auth build)');
 }

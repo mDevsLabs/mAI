@@ -1,21 +1,71 @@
-name: '🌠 Feature Request'
-description: 'Suggest an idea'
-title: '[Request] '
+name: '🌠 Demande de Fonctionnalité'
+description: 'Proposer une nouvelle idée ou amélioration pour mAI'
+title: '[Demande] '
 type: Feature
 body:
   - type: textarea
     attributes:
-      label: '🥰 Feature Description'
-      description: Please add a clear and concise description of the problem you are seeking to solve with this feature request.
+      label: '🥰 Description de la Fonctionnalité'
+      description: 'Décrivez clairement le problème que vous souhaitez résoudre ou le besoin auquel cette fonctionnalité répondrait.'
+      placeholder: 'Je trouve frustrant de ne pas pouvoir faire X, ce qui m''oblige à...'
     validations:
       required: true
+
   - type: textarea
     attributes:
-      label: '🧐 Proposed Solution'
-      description: Describe the solution you'd like in a clear and concise manner.
+      label: '🧐 Solution Proposée'
+      description: 'Décrivez la solution que vous envisagez de manière claire et précise.'
+      placeholder: 'Il serait idéal d''avoir une option permettant de...'
     validations:
       required: true
+
   - type: textarea
     attributes:
-      label: '📝 Additional Information'
-      description: Add any other context about the problem here.
+      label: '🔄 Alternatives Envisagées'
+      description: 'Avez-vous pensé à d''autres solutions ou fonctionnalités alternatives ?'
+      placeholder: 'J''ai également pensé à...'
+    validations:
+      required: false
+
+  - type: dropdown
+    attributes:
+      label: '🎯 Priorité Estimée'
+      description: 'Selon vous, quelle est l''importance de cette fonctionnalité ?'
+      options:
+        - '🔴 Critique - Bloque mon utilisation de mAI'
+        - '🟠 Haute - Améliorerait considérablement mon expérience'
+        - '🟡 Moyenne - Serait un bon ajout'
+        - '🟢 Basse - Simple suggestion'
+    validations:
+      required: true
+
+  - type: dropdown
+    attributes:
+      label: '🛠️ Prêt à Soumettre une PR ?'
+      description: 'Seriez-vous prêt(e) à contribuer au développement de cette fonctionnalité ?'
+      options:
+        - 'Oui, je suis prêt(e) à soumettre une PR'
+        - 'Non, mais je suis disponible pour tester la fonctionnalité'
+        - 'Je ne sais pas encore'
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: '📝 Informations Complémentaires'
+      description: 'Ajoutez tout contexte supplémentaire utile : captures d''écran, exemples, références, etc.'
+      placeholder: 'Contexte additionnel, liens utiles, captures d''écran...'
+    validations:
+      required: false
+
+  - type: checkboxes
+    attributes:
+      label: '✅ Validations'
+      description: 'Merci de vérifier les points suivants avant de soumettre'
+      options:
+        - label: "J'ai vérifié qu'il n'existe pas [déjà une demande similaire](https://github.com/mDevsLabs/mAI/issues) afin d'éviter les doublons."
+          required: true
+        - label: 'Cette demande concerne directement mAI et non une dépendance ou un service tiers.'
+          required: true
+        - label: "Pour toute question générale, j'utiliserai les [GitHub Discussions](https://github.com/mDevsLabs/mAI/discussions) ou le [Serveur Discord](https://discord.gg/fV7zwdGPpY)."
+          required: true

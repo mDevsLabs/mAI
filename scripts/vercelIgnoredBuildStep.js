@@ -1,10 +1,10 @@
 const { execSync } = require('node:child_process');
 
-// Get current branch name
+// 获取当前分支名
 const branchName = process.env.VERCEL_GIT_COMMIT_REF || '';
 
 function shouldProceedBuild() {
-  // If the branch is 'lighthouse' or starts with a skip prefix, cancel the build
+  // 如果是 lighthouse 分支或以 testgru 开头的分支，取消构建
   if (
     branchName === 'lighthouse' ||
     ['gru', 'automatic', 'reproduction'].some((item) =>
@@ -15,7 +15,7 @@ function shouldProceedBuild() {
   }
 
   try {
-    // Check file changes, excluding specific files and directories
+    // 检查文件变更，排除特定文件和目录
     const diffCommand =
       'git diff HEAD^ HEAD --quiet -- \
       ":!./*.md" \

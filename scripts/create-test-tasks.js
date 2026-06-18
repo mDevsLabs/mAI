@@ -15,7 +15,7 @@ const api = (path, json) =>
 
 async function main() {
   // ════════════════════════════════════════
-  // 1. Full task tree (3-level nesting + mixed states)
+  // 1. 完整任务树（3层嵌套 + 混合状态）
   // ════════════════════════════════════════
   const root = await api('task.create', {
     name: 'Launch v2.0 Release',
@@ -30,7 +30,7 @@ async function main() {
     content: 'Kickoff meeting completed, all teams aligned',
   });
 
-  // Subtask 1: Frontend (with its own 3 subtasks)
+  // 子任务1：Frontend（有自己的3个子任务）
   const frontend = await api('task.create', {
     name: 'Frontend overhaul',
     instruction: 'Redesign all major pages with new component library.',
@@ -60,7 +60,7 @@ async function main() {
     assigneeAgentId: agentId,
   });
 
-  // Subtask 2: Backend (with 2 subtasks, 1 completed)
+  // 子任务2：Backend（有2个子任务，1个已完成）
   const backend = await api('task.create', {
     name: 'Backend API v2',
     instruction: 'Implement v2 API endpoints with breaking changes.',
@@ -84,7 +84,7 @@ async function main() {
     assigneeAgentId: agentId,
   });
 
-  // Subtask 3: Leaf node
+  // 子任务3：叶子节点
   await api('task.create', {
     name: 'Write release notes',
     instruction: 'Draft user-facing release notes covering all v2 changes.',
@@ -93,7 +93,7 @@ async function main() {
     assigneeAgentId: agentId,
   });
 
-  // Subtask 4: Completed
+  // 子任务4：已完成
   const designReview = await api('task.create', {
     name: 'Design review',
     instruction: 'Review all new designs with the team.',
@@ -104,7 +104,7 @@ async function main() {
   await api('task.updateStatus', { id: designReview.id, status: 'completed' });
 
   // ════════════════════════════════════════
-  // 2. Urgent task (no subtasks)
+  // 2. 紧急任务（无子任务）
   // ════════════════════════════════════════
   await api('task.create', {
     name: 'Fix production login bug',
@@ -115,7 +115,7 @@ async function main() {
   });
 
   // ════════════════════════════════════════
-  // 3. Completed standalone task (with comments)
+  // 3. 已完成的独立任务（带评论）
   // ════════════════════════════════════════
   const cicd = await api('task.create', {
     name: 'Setup CI/CD pipeline',
@@ -127,7 +127,7 @@ async function main() {
   await api('task.addComment', { id: cicd.id, content: 'Pipeline is live, all checks green' });
 
   // ════════════════════════════════════════
-  // 4. No-priority backlog task
+  // 4. 无优先级 backlog 任务
   // ════════════════════════════════════════
   await api('task.create', {
     name: 'Evaluate new database options',
@@ -138,7 +138,7 @@ async function main() {
   });
 
   // ════════════════════════════════════════
-  // 5. Markdown long-description task
+  // 5. Markdown 长描述任务
   // ════════════════════════════════════════
   await api('task.create', {
     name: 'Update API documentation',
@@ -164,7 +164,7 @@ async function main() {
   });
 
   // ════════════════════════════════════════
-  // 6. Cancelled task
+  // 6. 已取消的任务
   // ════════════════════════════════════════
   const canceled = await api('task.create', {
     name: 'Migrate to Redis cluster',
@@ -175,7 +175,7 @@ async function main() {
   await api('task.updateStatus', { id: canceled.id, status: 'canceled' });
 
   // ════════════════════════════════════════
-  // 7. Simple parent-child relationship (2 subtasks)
+  // 7. 简单父子关系（2个子任务）
   // ════════════════════════════════════════
   const okr = await api('task.create', {
     name: 'Q2 OKR planning',

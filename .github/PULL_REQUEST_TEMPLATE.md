@@ -1,8 +1,7 @@
-#### 💻 Change Type
-
-<!-- For change type, change [ ] to [x]. -->
+## 💻 Type de Changement
 
 - [ ] ✨ feat
+- [x] 🚀 improve
 - [ ] 🐛 fix
 - [ ] ♻️ refactor
 - [ ] 💄 style
@@ -12,36 +11,43 @@
 - [ ] 📝 docs
 - [ ] 🔨 chore
 
-#### 🔗 Related Issue
+## 🔢 Version
 
-<!-- Link to the issue that is fixed by this PR -->
+- [ ] 🔴 Majeure
+- [x] 🟡 Mineure
+- [ ] 🟢 Correctif
 
-<!-- Example: Fixes #xxx, Closes #xxx, Related to #xxx -->
+## 📂 Dossier
 
-#### 🔀 Description of Change
+- [ ] docs
+- [x] src
+- [ ] packages
+- [ ] desktop
+- [ ] .github
+- [ ] public
+- [ ] tests
+- [ ] plugins
+- [ ] locales
+- [ ] e2e
+- [ ] .agents
+- [ ] autre
 
-<!-- Thank you for your Pull Request. Please provide a description above. -->
+## 🔗 Issue Liée
 
-#### 🧪 How to Test
+## 🔀 Pull Request Liée
 
-<!-- Please describe how you tested your changes -->
+## 🔀 Description du Changement
 
-<!-- For AI features, please include test prompts or scenarios -->
+## 🧪 Comment Tester
 
-- [ ] Tested locally
-- [ ] Added/updated tests
-- [ ] No tests needed
+- [x] Testé localement
+- [ ] Tests ajoutés/mis à jour
+- [ ] Aucun test requis
 
-#### 📸 Screenshots / Videos
+## 📸 Captures d'Écran / Vidéos
 
-<!-- If this PR includes UI changes, please provide screenshots or videos -->
+| Avant | Après |
+| ----- | ----- |
+| ...   | ...   |
 
-| Before | After |
-| ------ | ----- |
-| ...    | ...   |
-
-#### 📝 Additional Information
-
-<!-- Add any other context about the Pull Request here. -->
-
-<!-- Breaking changes? Migration guide? Performance impact? -->
+## 📝 Informations Supplémentaires
