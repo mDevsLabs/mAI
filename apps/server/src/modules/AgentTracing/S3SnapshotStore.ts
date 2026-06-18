@@ -6,8 +6,17 @@ import debug from 'debug';
 
 import { FileS3 } from '@/server/modules/S3';
 
-const compressZstd = promisify(zstdCompress);
-const decompressZstd = promisify(zstdDecompress);
+const compressZstd = zstdCompress
+  ? promisify(zstdCompress)
+  : () => {
+      throw new Error('zstdCompress is not supported on this Node.js version. Please upgrade to Node.js v22.12.0 or higher.');
+    };
+
+const decompressZstd = zstdDecompress
+  ? promisify(zstdDecompress)
+  : () => {
+      throw new Error('zstdDecompress is not supported on this Node.js version. Please upgrade to Node.js v22.12.0 or higher.');
+    };
 
 const log = debug('lobe-server:agent-tracing:s3');
 
