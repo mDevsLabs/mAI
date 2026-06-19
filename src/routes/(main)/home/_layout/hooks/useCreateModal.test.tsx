@@ -62,15 +62,23 @@ vi.mock('@lobehub/ui', () => ({
   Button: ({
     children,
     disabled,
+    loading,
     onClick,
     type,
   }: {
     children?: ReactNode;
     disabled?: boolean;
+    loading?: boolean;
     onClick?: () => void;
     type?: string;
   }) => (
-    <button data-button-type={type} disabled={disabled} type="button" onClick={onClick}>
+    <button
+      data-button-loading={loading ? 'true' : undefined}
+      data-button-type={type}
+      disabled={disabled}
+      type="button"
+      onClick={onClick}
+    >
       {children}
     </button>
   ),
@@ -91,8 +99,12 @@ vi.mock('@/services/skill', () => ({
 }));
 
 vi.mock('@lobehub/ui/base-ui', () => ({
-  Modal: ({ children, open }: { children?: ReactNode; open?: boolean }) =>
-    open ? <div role="dialog">{children}</div> : null,
+  Modal: ({ children, open, width }: { children?: ReactNode; open?: boolean; width?: string }) =>
+    open ? (
+      <div data-modal-width={width} role="dialog">
+        {children}
+      </div>
+    ) : null,
 }));
 
 vi.mock('antd-style', () => ({
@@ -108,33 +120,40 @@ vi.mock('antd-style', () => ({
 
 vi.mock('react-i18next', () => ({
   useTranslation: (namespace: string) => ({
-    t: (key: string) =>
-      (
-        ({
-          'chat:createModal.createBlank': 'Create Blank',
-          'chat:createModal.groupPlaceholder': 'Describe what this group should do...',
-          'chat:createModal.groupTitle': 'What should your group do?',
-          'chat:createModal.placeholder': 'Describe what your agent should do...',
-          'chat:createModal.skillSuggestion.actions.createAnyway': 'Create Agent Anyway',
-          'chat:createModal.skillSuggestion.actions.createAnywayHint': 'Skill not a fit?',
-          'chat:createModal.skillSuggestion.actions.install': 'Add Skill',
-          'chat:createModal.skillSuggestion.actions.openSkills': 'Open Skills',
-          'chat:createModal.skillSuggestion.actions.tryInLobeAI': 'Try in LobeAI',
-          'chat:createModal.skillSuggestion.description':
-            'Even though this is phrased as a role, the reusable part is the workflow. Install it once, then use it across Agents.',
-          'chat:createModal.skillSuggestion.installed.description':
-            'You can now use this Skill in LobeAI or add it to any Agent.',
-          'chat:createModal.skillSuggestion.installed.title': 'Skill added',
-          'chat:createModal.skillSuggestion.installError':
-            "Skill wasn't added. Retry, or create an Agent anyway.",
-          'chat:createModal.skillSuggestion.title': 'This can use a Skill',
-          'chat:createModal.title': 'What should your agent do?',
-          'common:home.suggestQuestions': 'Try these examples',
-          'common:switch': 'Switch',
-          'suggestQuestions:example.prompt': 'Use this example prompt',
-          'suggestQuestions:example.title': 'Example title',
-        }) as Record<string, string>
-      )[`${namespace}:${key}`] ?? key,
+    t: (key: string, options?: Record<string, string>) => {
+      const text =
+        (
+          {
+            'chat:createModal.createBlank': 'Start Blank',
+            'chat:createModal.groupPlaceholder': 'Describe what this Group should do...',
+            'chat:createModal.groupTitle': 'What should this Group do?',
+            'chat:createModal.placeholder': 'Describe what this Agent should do...',
+            'chat:inbox.title': 'Lobe AI',
+            'chat:createModal.skillSuggestion.actions.createAnyway': 'Create Agent Anyway',
+            'chat:createModal.skillSuggestion.actions.createAnywayHint': 'Skill not a fit?',
+            'chat:createModal.skillSuggestion.actions.install': 'Install Skill',
+            'chat:createModal.skillSuggestion.actions.installing': 'Installing…',
+            'chat:createModal.skillSuggestion.actions.openSkills': 'View in Skills',
+            'chat:createModal.skillSuggestion.actions.tryInLobeAI': 'Use in {{name}}',
+            'chat:createModal.skillSuggestion.description':
+              'This looks like a reusable workflow. Install the Skill once, then use it across Agents.',
+            'chat:createModal.skillSuggestion.installed.description':
+              'You can use this Skill in {{name}}, or enable it for any Agent.',
+            'chat:createModal.skillSuggestion.installed.ready': 'Ready in {{name}}',
+            'chat:createModal.skillSuggestion.installed.title': 'Skill installed',
+            'chat:createModal.skillSuggestion.installError':
+              "Skill wasn't installed. Retry, or create an Agent anyway.",
+            'chat:createModal.skillSuggestion.title': 'A Skill may fit better',
+            'chat:createModal.title': 'What should this Agent do?',
+            'common:home.suggestQuestions': 'Try these examples',
+            'common:switch': 'Switch',
+            'suggestQuestions:example.prompt': 'Use this example prompt',
+            'suggestQuestions:example.title': 'Example title',
+          } as Record<string, string>
+        )[`${namespace}:${key}`] ?? key;
+
+      return text.replaceAll('{{name}}', options?.name ?? 'LobeAI');
+    },
   }),
 }));
 
@@ -214,20 +233,23 @@ const renderModal = (type: 'agent' | 'group' = 'agent') => {
   const onCreateBlank = vi.fn().mockResolvedValue(undefined);
   const onOpenSkills = vi.fn();
   const onSubmit = vi.fn().mockResolvedValue(undefined);
+  const onTryInLobeAI = vi.fn();
 
   render(
     <CreateAgentModal
       open
       agentId="inbox-agent"
+      inboxAgentName="Nova"
       type={type}
       onClose={onClose}
       onCreateBlank={onCreateBlank}
       onOpenSkills={onOpenSkills}
       onSubmit={onSubmit}
+      onTryInLobeAI={onTryInLobeAI}
     />,
   );
 
-  return { onClose, onCreateBlank, onOpenSkills, onSubmit };
+  return { onClose, onCreateBlank, onOpenSkills, onSubmit, onTryInLobeAI };
 };
 
 const expectTrackedSkillSuggestionAction = async (
@@ -334,10 +356,10 @@ describe('CreateAgentModal analytics', () => {
     });
   });
 
-  it('tracks blank source when Create Blank succeeds', async () => {
+  it('tracks blank source when Start Blank succeeds', async () => {
     const { onCreateBlank } = renderModal();
 
-    fireEvent.click(screen.getByText('Create Blank'));
+    fireEvent.click(screen.getByText('Start Blank'));
 
     await waitFor(() => {
       expect(onCreateBlank).toHaveBeenCalled();
@@ -413,7 +435,7 @@ describe('CreateAgentModal analytics', () => {
       );
     });
     expect(onSubmit).not.toHaveBeenCalled();
-    expect(await screen.findByText('This can use a Skill')).toBeInTheDocument();
+    expect(await screen.findByText('A Skill may fit better')).toBeInTheDocument();
     expect(screen.getByText('Resume Reviewer')).toBeInTheDocument();
     expect(screen.queryByText('Example title')).not.toBeInTheDocument();
     expect(screen.getByText('Skill not a fit?')).toBeInTheDocument();
@@ -423,7 +445,7 @@ describe('CreateAgentModal analytics', () => {
       top_skill_identifier: 'resume-reviewer',
     });
 
-    expect(screen.getByText('Add Skill')).toHaveAttribute('data-button-type', 'primary');
+    expect(screen.getByText('Install Skill')).toHaveAttribute('data-button-type', 'primary');
 
     const createAnywayButton = screen.getByText('Create Agent Anyway');
     expect(createAnywayButton).not.toHaveAttribute('data-button-type', 'primary');
@@ -459,7 +481,7 @@ describe('CreateAgentModal analytics', () => {
       expect(onSubmit).toHaveBeenCalledWith('创建一个代码学习导师，长期跟进我的学习计划');
     });
     expect(marketApiMocks.searchSkill).not.toHaveBeenCalled();
-    expect(screen.queryByText('This can use a Skill')).not.toBeInTheDocument();
+    expect(screen.queryByText('A Skill may fit better')).not.toBeInTheDocument();
   });
 
   it('interrupts role-framed reusable prompts when the role maps to a skill workflow', async () => {
@@ -492,7 +514,101 @@ describe('CreateAgentModal analytics', () => {
       );
     });
     expect(onSubmit).not.toHaveBeenCalled();
-    expect(await screen.findByText('This can use a Skill')).toBeInTheDocument();
+    expect(await screen.findByText('A Skill may fit better')).toBeInTheDocument();
+  });
+
+  it('keeps install skill buttons visually consistent when multiple skill suggestions are shown', async () => {
+    marketApiMocks.searchSkill.mockResolvedValueOnce({
+      currentPage: 1,
+      items: [
+        {
+          createdAt: '2026-01-01',
+          description: 'Guided statistical analysis with test selection and reporting.',
+          identifier: 'statistical-analysis',
+          installCount: 12,
+          name: 'statistical-analysis',
+          updatedAt: '2026-01-01',
+        },
+        {
+          createdAt: '2026-01-01',
+          description: 'Perform comprehensive exploratory data analysis.',
+          identifier: 'exploratory-data-analysis',
+          installCount: 8,
+          name: 'exploratory-data-analysis',
+          updatedAt: '2026-01-01',
+        },
+        {
+          createdAt: '2026-01-01',
+          description: 'Neuropixels neural recording analysis.',
+          identifier: 'neuropixels-analysis',
+          installCount: 5,
+          name: 'neuropixels-analysis',
+          updatedAt: '2026-01-01',
+        },
+      ],
+      pageSize: 3,
+      totalCount: 3,
+      totalPages: 1,
+    });
+    renderModal();
+
+    fireEvent.change(screen.getByLabelText('chat input'), {
+      target: { value: '创建一个擅长做 PPT Word Excel 的 Agent' },
+    });
+    fireEvent.click(screen.getByText('Send'));
+
+    expect(await screen.findByText('A Skill may fit better')).toBeInTheDocument();
+
+    const installSkillButtons = screen.getAllByText('Install Skill');
+    expect(installSkillButtons).toHaveLength(3);
+    installSkillButtons.forEach((button) => {
+      expect(button).not.toHaveAttribute('data-button-type', 'primary');
+    });
+  });
+
+  it('shows an installing state while installing the suggested skill', async () => {
+    marketApiMocks.searchSkill.mockResolvedValueOnce({
+      currentPage: 1,
+      items: [
+        {
+          createdAt: '2026-01-01',
+          description: 'Review and improve resumes with a reusable checklist.',
+          identifier: 'resume-reviewer',
+          installCount: 12,
+          name: 'Resume Reviewer',
+          updatedAt: '2026-01-01',
+        },
+      ],
+      pageSize: 3,
+      totalCount: 1,
+      totalPages: 1,
+    });
+    let resolveImport: (value: {
+      skill: { id: string; name: string };
+      status: string;
+    }) => void = () => {};
+    skillServiceMocks.importFromMarket.mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          resolveImport = resolve;
+        }),
+    );
+    renderModal();
+
+    fireEvent.change(screen.getByLabelText('chat input'), {
+      target: { value: '帮我做一个简历优化检查清单' },
+    });
+    fireEvent.click(screen.getByText('Send'));
+
+    expect(await screen.findByText('A Skill may fit better')).toBeInTheDocument();
+    fireEvent.click(screen.getByText('Install Skill'));
+
+    const installingButton = await screen.findByText('Installing…');
+    expect(installingButton).toHaveAttribute('data-button-loading', 'true');
+    expect(screen.queryByText('Install Skill')).not.toBeInTheDocument();
+
+    resolveImport({ skill: { id: 'skill-1', name: 'Resume Reviewer' }, status: 'created' });
+    expect(await screen.findByText('Skill installed')).toBeInTheDocument();
   });
 
   it('shows a completed skill state after installing the recommended skill', async () => {
@@ -512,15 +628,15 @@ describe('CreateAgentModal analytics', () => {
       totalCount: 1,
       totalPages: 1,
     });
-    const { onClose, onOpenSkills, onSubmit } = renderModal();
+    const { onClose, onOpenSkills, onSubmit, onTryInLobeAI } = renderModal();
 
     fireEvent.change(screen.getByLabelText('chat input'), {
       target: { value: '帮我做一个简历优化检查清单' },
     });
     fireEvent.click(screen.getByText('Send'));
 
-    expect(await screen.findByText('This can use a Skill')).toBeInTheDocument();
-    fireEvent.click(screen.getByText('Add Skill'));
+    expect(await screen.findByText('A Skill may fit better')).toBeInTheDocument();
+    fireEvent.click(screen.getByText('Install Skill'));
 
     await waitFor(() => {
       expect(skillServiceMocks.importFromMarket).toHaveBeenCalledWith('resume-reviewer');
@@ -534,14 +650,20 @@ describe('CreateAgentModal analytics', () => {
     expect(toolStoreMocks.refreshAgentSkills).toHaveBeenCalled();
     expect(onClose).not.toHaveBeenCalled();
     expect(onSubmit).not.toHaveBeenCalled();
-    expect(await screen.findByText('Skill added')).toBeInTheDocument();
+    expect(await screen.findByText('Skill installed')).toBeInTheDocument();
     expect(screen.getByText('Resume Reviewer')).toBeInTheDocument();
+    expect(screen.getByText('Ready in Nova')).toBeInTheDocument();
+    expect(
+      screen.getByText('You can use this Skill in Nova, or enable it for any Agent.'),
+    ).toBeInTheDocument();
+    expect(screen.queryByText('resume-reviewer')).not.toBeInTheDocument();
+    expect(screen.getByRole('dialog')).toHaveAttribute('data-modal-width', 'min(90vw, 560px)');
     expect(screen.queryByText('Skill not a fit?')).not.toBeInTheDocument();
     expect(screen.queryByText('Create Agent Anyway')).not.toBeInTheDocument();
 
-    const tryInLobeAIButton = screen.getByText('Try in LobeAI');
+    const tryInLobeAIButton = screen.getByText('Use in Nova');
     expect(tryInLobeAIButton).toHaveAttribute('data-button-type', 'primary');
-    const openSkillsButton = screen.getByText('Open Skills');
+    const openSkillsButton = screen.getByText('View in Skills');
     expect(openSkillsButton).not.toHaveAttribute('data-button-type', 'primary');
     fireEvent.click(openSkillsButton);
 
@@ -551,6 +673,7 @@ describe('CreateAgentModal analytics', () => {
     });
 
     fireEvent.click(tryInLobeAIButton);
+    expect(onTryInLobeAI).toHaveBeenCalledTimes(1);
     expect(onClose).toHaveBeenCalled();
     await expectTrackedSkillSuggestionAction('try_in_lobeai_clicked', {
       selected_skill_identifier: 'resume-reviewer',
@@ -582,8 +705,8 @@ describe('CreateAgentModal analytics', () => {
     });
     fireEvent.click(screen.getByText('Send'));
 
-    expect(await screen.findByText('This can use a Skill')).toBeInTheDocument();
-    fireEvent.click(screen.getByText('Add Skill'));
+    expect(await screen.findByText('A Skill may fit better')).toBeInTheDocument();
+    fireEvent.click(screen.getByText('Install Skill'));
 
     await waitFor(() => {
       expect(skillServiceMocks.importFromMarket).toHaveBeenCalledWith('resume-reviewer');
@@ -594,7 +717,7 @@ describe('CreateAgentModal analytics', () => {
       selected_skill_identifier: 'resume-reviewer',
     });
     expect(
-      await screen.findByText("Skill wasn't added. Retry, or create an Agent anyway."),
+      await screen.findByText("Skill wasn't installed. Retry, or create an Agent anyway."),
     ).toBeInTheDocument();
   });
 });

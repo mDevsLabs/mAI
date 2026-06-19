@@ -82,6 +82,20 @@ function runCmdInteractive(cmd) {
   }
 }
 
+async function askString(promptText, defaultVal) {
+  if (process.stdin.isTTY) process.stdin.setRawMode(false);
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+  return new Promise(resolve => {
+    rl.question(`${promptText} [défaut: ${defaultVal}] : `, (answer) => {
+      rl.close();
+      resolve(answer.trim() || defaultVal);
+    });
+  });
+}
+
 async function askKey(promptText, allowedKeys) {
   process.stdout.write(promptText);
   return new Promise(resolve => {
@@ -169,37 +183,50 @@ async function handleNoConflicts() {
     console.log(`\n======================================================`);
     console.log(`🛠️  MENU DE SYNCHRONISATION M-AI`);
     console.log(`======================================================`);
-    console.log(`  [1] Fetch & Pull depuis upstream/canary`);
-    console.log(`  [2] Fetch & Pull depuis upstream/main`);
+    console.log(`  [1] Pull (fetch + merge) depuis upstream/canary`);
+    console.log(`  [2] Pull (fetch + merge) depuis upstream/main`);
     console.log(`  [3] Mettre à jour l'état (Fetch All) & Voir les stats`);
-    console.log(`  [4] Annuler la fusion en cours (git merge --abort)`);
+    console.log(`  [4] Nettoyer le cache du projet (node_modules, .next)`);
+    console.log(`  [5] Push la branche courante vers origin`);
+    console.log(`  [6] Annuler la fusion en cours (git merge --abort)`);
     console.log(`  [q] Quitter le script`);
     
-    const choice = await askKey('\n👉 Votre choix : ', ['1', '2', '3', '4', 'q']);
+    const choice = await askKey('\n👉 Votre choix : ', ['1', '2', '3', '4', '5', '6', 'q']);
     if (choice === 'CANCEL') continue;
     
     switch (choice) {
       case '1':
-        console.log('\n📥 Pull depuis upstream canary en cours...');
-        runCmdInteractive('git fetch upstream canary');
-        runCmdInteractive('git merge upstream/canary');
+      case '2': {
+        const branch = choice === '1' ? 'canary' : 'main';
+        const pullArgs = await askString(`\n⚙️ Arguments pour 'git pull upstream ${branch}'`, '--no-edit --no-commit');
+        console.log(`\n📥 Pull depuis upstream ${branch} avec: ${pullArgs}`);
+        runCmdInteractive(`git pull upstream ${branch} ${pullArgs}`);
         menuActive = false;
         main(); 
         break;
-      case '2':
-        console.log('\n📥 Pull depuis upstream main en cours...');
-        runCmdInteractive('git fetch upstream main');
-        runCmdInteractive('git merge upstream/main');
-        menuActive = false;
-        main(); 
-        break;
+      }
       case '3':
         console.log('\n🔄 Fetch de tous les remotes...');
         runCmdInteractive('git fetch --all');
         console.log('\n📊 Statut Git :');
         runCmdInteractive('git status -sb');
         break;
-      case '4':
+      case '4': {
+        const confirm = await askKey('\n⚠️ Voulez-vous supprimer "node_modules", ".next" et nettoyer le cache pnpm ? (y/n) : ', ['y', 'n']);
+        if (confirm === 'y') {
+          console.log('\n🧹 Nettoyage en cours...');
+          try { fs.rmSync('node_modules', { recursive: true, force: true }); } catch (e) {}
+          try { fs.rmSync('.next', { recursive: true, force: true }); } catch (e) {}
+          runCmdInteractive('pnpm store prune');
+          console.log('✅ Nettoyage terminé.');
+        }
+        break;
+      }
+      case '5':
+        console.log('\n📤 Push vers origin...');
+        runCmdInteractive('git push origin HEAD');
+        break;
+      case '6':
         console.log('\n🛑 Annulation du merge...');
         runCmdInteractive('git merge --abort');
         console.log('✅ Merge annulé.');
