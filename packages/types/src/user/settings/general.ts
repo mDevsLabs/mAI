@@ -26,4 +26,18 @@ export interface UserGeneralConfig {
   telemetry: boolean;
   timezone?: string;
   transitionMode?: ResponseAnimationStyle;
+  enablePets?: boolean;
+  pets?: string[];
+  petsLevel?: number;
+  petsMsgCount?: number;
+  petsZoom?: number;
+  petsSound?: boolean;
+  petsVolume?: number;
+  petsAnim?: boolean;
+  petsAcc?: boolean;
+  petsBg?: boolean;
+  petsColor?: boolean;
+  petsWeather?: boolean;
+  petsAura?: boolean;
 }
+

@@ -10,6 +10,7 @@ import About from '../about';
 import Advanced from '../advanced';
 import APIKey from '../apikey';
 import Appearance from '../appearance';
+import Pets from '../pets';
 import Creds from '../creds';
 import Devices from '../devices';
 import Hotkey from '../hotkey';
@@ -28,6 +29,7 @@ import SystemTools from '../system-tools';
 export const componentMap = {
   [SettingsTabs.Advanced]: Advanced,
   [SettingsTabs.Appearance]: Appearance,
+  [SettingsTabs.Pets]: Pets,
   [SettingsTabs.Provider]: Provider,
   [SettingsTabs.ServiceModel]: ServiceModel,
   [SettingsTabs.Memory]: Memory,

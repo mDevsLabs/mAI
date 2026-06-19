@@ -62,6 +62,7 @@ export enum SettingsTabs {
   Notification = 'notification',
   // business
   Plans = 'plans',
+  Pets = 'pets',
   Profile = 'profile',
   Provider = 'provider',
   Proxy = 'proxy',

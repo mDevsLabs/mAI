@@ -20,6 +20,7 @@ import {
   MessageCircleIcon,
   MonitorSmartphoneIcon,
   PaletteIcon,
+  PawPrint,
   Sparkles,
   TerminalSquare,
 } from 'lucide-react';
@@ -99,6 +100,11 @@ export const useCategory = () => {
         icon: PaletteIcon,
         key: SettingsTabs.Appearance,
         label: t('tab.appearance'),
+      },
+      {
+        icon: PawPrint,
+        key: SettingsTabs.Pets,
+        label: t('tab.pets'),
       },
       {
         icon: MonitorSmartphoneIcon,

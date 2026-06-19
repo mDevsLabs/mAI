@@ -98,6 +98,7 @@ export default {
   'betterAuth.signin.magicLinkButton': 'Send sign-in link',
   'betterAuth.signin.magicLinkError': 'Failed to send sign-in link, please try again later',
   'betterAuth.signin.magicLinkSent': 'Sign-in link sent, please check your email',
+  'betterAuth.signin.moreOptions': 'More options',
   'betterAuth.signin.lastUsed': 'Last used',
   'betterAuth.signin.nextStep': 'Next',
   'betterAuth.signin.noAccount': "Don't have an account?",

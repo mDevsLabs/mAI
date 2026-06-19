@@ -13,4 +13,18 @@ export const DEFAULT_COMMON_SETTINGS: UserGeneralConfig = {
   mermaidTheme: 'lobe-theme',
   telemetry: true,
   transitionMode: 'fadeIn',
+  enablePets: false,
+  pets: ['claude-pixel'],
+  petsLevel: 1,
+  petsMsgCount: 0,
+  petsZoom: 1,
+  petsSound: false,
+  petsVolume: 0.5,
+  petsAnim: false,
+  petsAcc: false,
+  petsBg: false,
+  petsColor: false,
+  petsWeather: false,
+  petsAura: false,
 };
+
