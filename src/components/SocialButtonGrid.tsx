@@ -3,7 +3,6 @@
 import { Flexbox } from '@lobehub/ui';
 import { createStaticStyles } from 'antd-style';
 import { memo } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import AuthIcons from '@/components/AuthIcons';
 
@@ -12,29 +11,34 @@ import AuthIcons from '@/components/AuthIcons';
 // createStaticStyles returns a plain object, NOT a hook.
 // ─────────────────────────────────────────────────────────────
 const styles = createStaticStyles(({ css, cssVar }) => ({
+  // ── Grid container ──────────────────────────────────────────
+  gridContainer: css`
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  `,
+
   // ── Shared row wrapper ──────────────────────────────────────
   row: css`
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-between;
     align-items: flex-start;
-    gap: 12px;
-    padding: 18px 16px;
-    border-radius: 16px;
+    gap: 8px;
+    padding: 14px 12px;
+    border-radius: 12px;
   `,
 
   // ── Dark row (ligne 1) ──────────────────────────────────────
   rowDark: css`
-    background: #0a0a0a;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06),
-      0 4px 24px rgba(0, 0, 0, 0.35);
+    background: #111111;
+    border: 1px solid rgba(255, 255, 255, 0.08);
   `,
 
   // ── Light row (ligne 2) ─────────────────────────────────────
   rowLight: css`
-    background: #ffffff;
+    background: ${cssVar.colorBgContainer};
     border: 1px solid ${cssVar.colorBorderSecondary};
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
   `,
 
   // ── Individual button wrapper ───────────────────────────────
@@ -42,118 +46,87 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     cursor: pointer;
     flex: 1;
     min-width: 0;
     user-select: none;
+    border-radius: 8px;
+    padding: 4px 2px;
+    transition: background 0.15s ease;
 
-    &:hover .social-circle {
-      transform: translateY(-3px) scale(1.07);
+    &:hover {
+      background: rgba(128, 128, 128, 0.1);
     }
 
-    &:active .social-circle {
-      transform: translateY(0) scale(0.97);
+    &:active {
+      background: rgba(128, 128, 128, 0.18);
     }
   `,
 
   // ── Circle — dark variant ───────────────────────────────────
   circleDark: css`
-    width: 54px;
-    height: 54px;
+    width: 46px;
+    height: 46px;
     border-radius: 50%;
-    background: #1a1a1a;
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: #222222;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
-      box-shadow 0.2s ease, background 0.2s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    transition: background 0.15s ease, border-color 0.15s ease;
     position: relative;
-    overflow: hidden;
-
-    &::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      background: radial-gradient(
-        circle at 35% 30%,
-        rgba(255, 255, 255, 0.08) 0%,
-        transparent 70%
-      );
-      pointer-events: none;
-    }
+    flex-shrink: 0;
 
     &:hover {
-      background: #242424;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.55),
-        0 0 0 1px rgba(255, 255, 255, 0.18);
+      background: #2e2e2e;
+      border-color: rgba(255, 255, 255, 0.18);
     }
   `,
 
   // ── Circle — light variant ──────────────────────────────────
   circleLight: css`
-    width: 54px;
-    height: 54px;
+    width: 46px;
+    height: 46px;
     border-radius: 50%;
-    background: #f8f8f8;
+    background: ${cssVar.colorFillQuaternary};
     border: 1px solid ${cssVar.colorBorderSecondary};
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
-      box-shadow 0.2s ease, background 0.2s ease;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    transition: background 0.15s ease, border-color 0.15s ease;
     position: relative;
-    overflow: hidden;
-
-    &::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      background: radial-gradient(
-        circle at 35% 25%,
-        rgba(255, 255, 255, 0.9) 0%,
-        transparent 65%
-      );
-      pointer-events: none;
-    }
+    flex-shrink: 0;
 
     &:hover {
-      background: #ffffff;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12),
-        0 0 0 1px ${cssVar.colorBorder};
+      background: ${cssVar.colorFillTertiary};
+      border-color: ${cssVar.colorBorder};
     }
   `,
 
   // ── Provider label below circle ─────────────────────────────
   labelDark: css`
     font-size: 10px;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.6);
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.5);
     text-align: center;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     width: 100%;
-    letter-spacing: 0.01em;
-    transition: color 0.2s ease;
+    line-height: 1.3;
   `,
 
   labelLight: css`
     font-size: 10px;
-    font-weight: 500;
-    color: ${cssVar.colorTextTertiary};
+    font-weight: 400;
+    color: ${cssVar.colorTextQuaternary};
     text-align: center;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     width: 100%;
-    letter-spacing: 0.01em;
-    transition: color 0.2s ease;
+    line-height: 1.3;
   `,
 
   // ── Loading spinner overlay ─────────────────────────────────
@@ -164,14 +137,13 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.35);
-    backdrop-filter: blur(2px);
+    background: rgba(0, 0, 0, 0.45);
   `,
 
   loadingSpinner: css`
-    width: 20px;
-    height: 20px;
-    border: 2px solid rgba(255, 255, 255, 0.25);
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
     border-top-color: #ffffff;
     border-radius: 50%;
     animation: spin 0.7s linear infinite;
@@ -209,10 +181,33 @@ const DEFAULT_DARK_ROW = ['google', 'slack', 'canva', 'telegram', 'railway'];
 const DEFAULT_LIGHT_ROW = ['github', 'x', 'twitch', 'notion', 'spotify'];
 
 // ─────────────────────────────────────────────────────────────
-// Helper: turn 'my-provider' → 'My Provider'
+// Helper: turn provider id into a short display name only
+// e.g. 'google' → 'Google', 'microsoft-entra-id' → 'Microsoft'
 // ─────────────────────────────────────────────────────────────
-const toDisplayName = (id: string) =>
-  id.toLowerCase().replaceAll(/(^|[_-])([a-z])/g, (_, __, c: string) => c.toUpperCase());
+const DISPLAY_NAMES: Record<string, string> = {
+  'google': 'Google',
+  'github': 'GitHub',
+  'slack': 'Slack',
+  'canva': 'Canva',
+  'telegram': 'Telegram',
+  'railway': 'Railway',
+  'x': 'X',
+  'twitch': 'Twitch',
+  'notion': 'Notion',
+  'spotify': 'Spotify',
+  'microsoft': 'Microsoft',
+  'apple': 'Apple',
+  'auth0': 'Auth0',
+  'logto': 'Logto',
+};
+
+const toShortName = (id: string): string => {
+  if (DISPLAY_NAMES[id]) return DISPLAY_NAMES[id];
+  // Fallback: capitalise first segment before dash/underscore
+  return id
+    .split(/[-_]/)[0]!
+    .replace(/^\w/, (c) => c.toUpperCase());
+};
 
 // ─────────────────────────────────────────────────────────────
 // Single circular button
@@ -231,7 +226,7 @@ const CircleButton = memo<CircleButtonProps>(({ provider, variant, isLoading, la
   return (
     <div
       aria-label={label}
-      className={`${styles.btnWrapper} social-btn-wrapper`}
+      className={styles.btnWrapper}
       role="button"
       tabIndex={0}
       onClick={onClick}
@@ -239,11 +234,8 @@ const CircleButton = memo<CircleButtonProps>(({ provider, variant, isLoading, la
         if (e.key === 'Enter' || e.key === ' ') onClick();
       }}
     >
-      <div
-        className={`social-circle ${isDark ? styles.circleDark : styles.circleLight}`}
-        style={{ position: 'relative' }}
-      >
-        {AuthIcons(provider, 24)}
+      <div className={isDark ? styles.circleDark : styles.circleLight}>
+        {AuthIcons(provider, 22)}
         {isLoading && (
           <div className={styles.loadingOverlay}>
             <div className={styles.loadingSpinner} />
@@ -267,22 +259,12 @@ const SocialButtonGrid = memo<SocialButtonGridProps>(
     socialLoading,
     onSocialSignIn,
   }) => {
-    const { t } = useTranslation('auth');
-
-    const getLabel = (provider: string) => {
-      const normalized = toDisplayName(provider);
-      const key = normalized.replaceAll(/[^a-z\d]/gi, '');
-      return t(`betterAuth.signin.continueWith${key}`, {
-        defaultValue: normalized,
-      });
-    };
-
     const renderRow = (providers: string[], variant: 'dark' | 'light') =>
       providers.map((provider) => (
         <CircleButton
           isLoading={socialLoading === provider}
           key={provider}
-          label={getLabel(provider)}
+          label={toShortName(provider)}
           provider={provider}
           variant={variant}
           onClick={() => onSocialSignIn(provider)}
@@ -290,7 +272,7 @@ const SocialButtonGrid = memo<SocialButtonGridProps>(
       ));
 
     return (
-      <Flexbox gap={10}>
+      <div className={styles.gridContainer}>
         {/* ── Row 1 — dark background ── */}
         <div className={`${styles.row} ${styles.rowDark}`}>{renderRow(darkRowProviders, 'dark')}</div>
 
@@ -298,7 +280,7 @@ const SocialButtonGrid = memo<SocialButtonGridProps>(
         <div className={`${styles.row} ${styles.rowLight}`}>
           {renderRow(lightRowProviders, 'light')}
         </div>
-      </Flexbox>
+      </div>
     );
   },
 );
