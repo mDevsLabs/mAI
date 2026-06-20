@@ -49,7 +49,7 @@ export const oidcRouter = router({
         log('Error exchanging authorization code: %O', error);
         throw new TRPCError({
           cause: error,
-          code: 'INTERNAL_SERVER_ERROR',
+          code: 'BAD_REQUEST',
           message: error instanceof Error ? error.message : 'Failed to exchange authorization code',
         });
       }
@@ -71,7 +71,7 @@ export const oidcRouter = router({
         log('Error getting OAuth handoff: %O', error);
         throw new TRPCError({
           cause: error,
-          code: 'INTERNAL_SERVER_ERROR',
+          code: 'NOT_FOUND',
           message: error instanceof Error ? error.message : 'Failed to get OAuth handoff',
         });
       }
@@ -100,7 +100,7 @@ export const oidcRouter = router({
         }
 
         throw new TRPCError({
-          code: 'BAD_REQUEST',
+          code: 'UNAUTHORIZED',
           message: 'Token is required for userinfo',
         });
       } catch (error) {
@@ -109,7 +109,7 @@ export const oidcRouter = router({
         log('Error getting user info: %O', error);
         throw new TRPCError({
           cause: error,
-          code: 'INTERNAL_SERVER_ERROR',
+          code: 'UNAUTHORIZED',
           message: error instanceof Error ? error.message : 'Failed to get user info',
         });
       }
@@ -139,7 +139,7 @@ export const oidcRouter = router({
         log('Error refreshing token: %O', error);
         throw new TRPCError({
           cause: error,
-          code: 'INTERNAL_SERVER_ERROR',
+          code: 'UNAUTHORIZED',
           message: error instanceof Error ? error.message : 'Failed to refresh token',
         });
       }
