@@ -63,7 +63,7 @@ const QUOTES = [
   { text: "Croyez en vos rêves et ils se réaliseront peut-être. Croyez en vous et ils se réaliseront sûrement.", author: "Martin Luther King" },
 ];
 
-const useStaticStyles = createStaticStyles(({ css }) => ({
+const styles = createStaticStyles(({ css }) => ({
   fadeInUp: css`
     @keyframes petFadeInUp {
       from {
@@ -93,7 +93,6 @@ const Pet = memo(
     zoom: number;
     config: any;
   }) => {
-    const styles = useStaticStyles();
     const [animation, setAnimation] = useState<string>('waving');
     const [mounted, setMounted] = useState(false);
     const [currentQuote, setCurrentQuote] = useState<{ text: string; author: string } | null>(null);
@@ -197,7 +196,6 @@ const Pet = memo(
 
     return (
       <m.div
-        animate={controls}
         drag
         dragElastic={0.1}
         dragMomentum={false}
