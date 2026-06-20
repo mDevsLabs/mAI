@@ -2,6 +2,18 @@
 
 # Changelog
 
+## [Version 0.9.0](https://github.com/mDevsLabs/mAI/compare/v2.2.6...v0.4.0)
+
+<sup>Released on **2026-06-23**</sup>
+
+#### 🎨 Rebranding & Customization
+- **Desktop**: Rebranding complet et améliorations importantes de l'expérience
+- **Pets**: Intégration de **dix nouveaux pets** pour vous accompagner et ajouts de leurs effets sonores.
+- **CLI**: Lancement amélioré avec mai et pas lh ou lobehub. Installation via **npm install -g @mdevs/mai-cli**.
+- **Fix**: Corrections de divers bugs et problèmes
+- **Improve**: Améliorations importantes de l'interface et divers autres
+- **Version**: Mise à jour de la version du projet vers la version supérieure `0.9.0` sous l'auteur `mDevlopers`.
+
 ## [Version 0.4.0](https://github.com/mDevsLabs/mAI/compare/v2.2.6...v0.4.0)
 
 <sup>Released on **2026-06-20**</sup>

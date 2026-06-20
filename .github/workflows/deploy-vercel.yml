@@ -19,11 +19,20 @@ on:
       - canary
       - main
   pull_request: {}
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      channel:
+        description: 'Canal de déploiement (preview ou production)'
+        required: true
+        default: 'preview'
+        type: choice
+        options:
+          - preview
+          - production
 
 jobs:
   Deploy-Production:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/canary'
+    if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && github.event.inputs.channel == 'production')
     runs-on: ubuntu-latest
     steps:
       - name: 📦 Checkout du code
@@ -92,7 +101,7 @@ jobs:
         run: vercel deploy --prebuilt --archive=tgz --prod --token=${{ env.VERCEL_TOKEN }}
 
   Deploy-Preview:
-    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref != 'refs/heads/canary')
+    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/canary') || (github.event_name == 'workflow_dispatch' && github.event.inputs.channel == 'preview')
     runs-on: ubuntu-latest
     steps:
       - name: 📦 Checkout du code

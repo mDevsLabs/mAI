@@ -1,12 +1,17 @@
 export type PetId =
   | 'apupepe'
+  | 'bytepilot'
   | 'chibi-rilakkuma'
   | 'claude-pixel'
+  | 'clerkhausen'
   | 'codix'
   | 'dario'
+  | 'doxi'
   | 'dudu-bubu'
   | 'einstein'
   | 'gork'
+  | 'gugu'
+  | 'helmet-bunny'
   | 'jiji'
   | 'laughing-gemini'
   | 'mini-elon'
@@ -17,6 +22,8 @@ export type PetId =
   | 'plum-tang'
   | 'problem'
   | 'quillfox'
+  | 'red'
+  | 'tibo'
   | 'traffic-light';
 
 export type PetCategory = 'Mascot' | 'Human' | 'Robot' | 'Alien' | 'Animal';
@@ -132,5 +139,47 @@ export const PETS_LIST: PetConfig[] = [
     name: 'Traffic Light',
     description: 'Un feu de circulation pour réguler votre code.',
     category: 'Robot',
+  },
+  {
+    id: 'bytepilot',
+    name: 'Bytepilot',
+    description: 'Un pilote binaire pour vos aventures.',
+    category: 'Robot',
+  },
+  {
+    id: 'clerkhausen',
+    name: 'Clerkhausen',
+    description: 'Le majordome de vos données.',
+    category: 'Human',
+  },
+  {
+    id: 'doxi',
+    name: 'Doxi',
+    description: 'Votre petit renard de documentation.',
+    category: 'Animal',
+  },
+  {
+    id: 'gugu',
+    name: 'Gugu',
+    description: 'Le mystérieux Gugu.',
+    category: 'Mascot',
+  },
+  {
+    id: 'helmet-bunny',
+    name: 'Helmet Bunny',
+    description: 'Un lapin prêt pour la course.',
+    category: 'Animal',
+  },
+  {
+    id: 'red',
+    name: 'Red',
+    description: 'Le petit Red.',
+    category: 'Mascot',
+  },
+  {
+    id: 'tibo',
+    name: 'Tibo',
+    description: 'Tibo le compagnon d\\'aventures.',
+    category: 'Human',
   },
 ];
