@@ -2,7 +2,7 @@
 
 import { createStaticStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { memo, useEffect, useRef, useState } from 'react';
 
 import { useChatStore } from '@/store/chat';
