@@ -179,7 +179,7 @@ export const PETS_LIST: PetConfig[] = [
   {
     id: 'tibo',
     name: 'Tibo',
-    description: 'Tibo le compagnon d\\'aventures.',
+    description: 'Tibo le compagnon d\'aventures.',
     category: 'Human',
   },
 ];
