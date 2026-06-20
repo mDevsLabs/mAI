@@ -190,7 +190,7 @@ export default {
   'heteroAgent.executionTarget.autoDesc':
     'Use an online device automatically, picking one when several are available',
   'heteroAgent.executionTarget.infoTooltip':
-    'Pick a device and the agent uses it as its runtime environment — reading and writing files and operating the computer. Cloud sandbox is provided by LobeHub Marketplace.',
+    'Pick a device and the agent uses it as its runtime environment — reading and writing files and operating the computer. Cloud sandbox is provided by mAI Marketplace.',
   'heteroAgent.executionTarget.gateway': 'Gateway',
   'heteroAgent.executionTarget.gatewayDesc':
     'Run through the device gateway so other clients can follow progress',
@@ -217,7 +217,7 @@ export default {
   'historySummary': 'Historical Message Summary',
   'inactive': 'Inactive',
   'inbox.desc': 'Collaborate in one Workspace and move ideas into outcomes.',
-  'inbox.title': 'Lobe AI',
+  'inbox.title': 'May',
   'input.addAi': 'Add an AI message',
   'input.addUser': 'Add a user message',
   'input.agentModeUnsupportedModel':
@@ -363,7 +363,7 @@ export default {
   'claudeCodeInstallGuide.installWithBrew': 'Homebrew',
   'claudeCodeInstallGuide.installWithNpm': 'Recommended install',
   'claudeCodeInstallGuide.menuNotification.title': 'Claude Code CLI not found',
-  'claudeCodeInstallGuide.reason': 'LobeHub could not start Claude Code: {{message}}',
+  'claudeCodeInstallGuide.reason': 'mAI could not start Claude Code: {{message}}',
   'claudeCodeInstallGuide.title': 'Install Claude Code CLI',
   'cliAuthGuide.actions.openDocs': 'Open Sign-in Guide',
   'cliAuthGuide.actions.openSystemTools': 'Open System Tools',
@@ -408,7 +408,7 @@ export default {
   'codexInstallGuide.installWithBrew': 'Homebrew (macOS)',
   'codexInstallGuide.installWithNpm': 'Recommended install',
   'codexInstallGuide.menuNotification.title': 'Codex CLI not found',
-  'codexInstallGuide.reason': 'LobeHub could not start Codex: {{message}}',
+  'codexInstallGuide.reason': 'mAI could not start Codex: {{message}}',
   'codexInstallGuide.title': 'Install Codex CLI',
   'newAgent': 'Create Agent',
   'newClaudeCodeAgent': 'Add Claude Code',
@@ -516,13 +516,13 @@ export default {
   'gatewayMode.beta': 'Beta',
   'gatewayMode.cardTitle': 'Agent Gateway Mode',
   'gatewayMode.desc':
-    "Run agents in the cloud through LobeHub's Agent Gateway. Tasks keep running even after you close the page.",
+    "Run agents in the cloud through mAI's Agent Gateway. Tasks keep running even after you close the page.",
   'search.grounding.imageSearchQueries': 'Image Search Keywords',
   'search.grounding.imageTitle': 'Found {{count}} images',
   'chatMode.agent': 'Agent',
   'plus.search.appSearch': 'Smart Search',
   'plus.search.appSearchDesc':
-    'LobeHub optimized search service, delivering best retrieval results.',
+    'mAI optimized search service, delivering best retrieval results.',
   'plus.search.modelSearch': 'Provider Search',
   'plus.search.modelSearchDesc': 'May cause unexpected behavior when enabled, not recommended.',
   'plus.search.off': 'Off',
@@ -666,11 +666,11 @@ export default {
   'sharePage.error.unauthorized.subtitle': 'Please sign in to view this shared topic.',
   'sharePage.error.unauthorized.title': 'Sign In Required',
   'sharePage.menu.copyLink': 'Copy Link',
-  'sharePage.menu.goToLobeHub': 'Go to LobeHub',
+  'sharePage.menu.goToLobeHub': 'Go to mAI',
   'sharePage.menu.more': 'More',
   'sharePage.menu.report': 'Report',
   'sharePageDisclaimer':
-    "Shared by a user. The content reflects their views, not LobeHub's, and LobeHub takes no responsibility for it.",
+    "Shared by a user. The content reflects their views, not mAI's, and mAI takes no responsibility for it.",
   'signalCallbacks.collapse': 'Hide details',
   'signalCallbacks.empty': 'No callback messages',
   'signalCallbacks.expand': 'Show details',

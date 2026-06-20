@@ -16,6 +16,7 @@ const REDIRECT_MAP: Record<string, string> = {
   [SettingsTabs.Agent]: SettingsTabs.ServiceModel,
   [SettingsTabs.TTS]: SettingsTabs.ServiceModel,
   [SettingsTabs.Image]: SettingsTabs.ServiceModel,
+  [SettingsTabs.Messenger]: SettingsTabs.Profile,
 };
 
 interface SettingsContentProps {

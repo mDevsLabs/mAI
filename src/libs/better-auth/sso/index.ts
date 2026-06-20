@@ -48,7 +48,21 @@ for (const definition of providerDefinitions) {
 }
 
 export const initBetterAuthSSOProviders = () => {
-  const enabledProviders = parseSSOProviders(authEnv.AUTH_SSO_PROVIDERS);
+  let enabledProviders = parseSSOProviders(authEnv.AUTH_SSO_PROVIDERS);
+  if (enabledProviders.length === 0 && process.env.NODE_ENV === 'development') {
+    enabledProviders = [
+      'google',
+      'github',
+      'x',
+      'canva',
+      'slack',
+      'notion',
+      'spotify',
+      'telegram',
+      'twitch',
+      'railway',
+    ];
+  }
 
   const socialProviders: SocialProviders = {};
   const genericOAuthProviders: GenericOAuthConfig[] = [];
@@ -64,11 +78,19 @@ export const initBetterAuthSSOProviders = () => {
      * Providers expose checkEnvs predicates so we can fail fast when credentials are missing instead
      * of encountering harder-to-trace errors later in the Better-Auth pipeline.
      */
-    const env = definition.checkEnvs();
+    let env = definition.checkEnvs();
     if (!env) {
-      throw new Error(
-        `[Better-Auth] ${rawProvider} SSO provider environment variables are not set correctly!`,
-      );
+      if (process.env.NODE_ENV === 'development') {
+        const upperId = definition.id.toUpperCase();
+        env = {
+          [`AUTH_${upperId}_ID`]: `dummy_${definition.id}_id`,
+          [`AUTH_${upperId}_SECRET`]: `dummy_${definition.id}_secret`,
+        } as any;
+      } else {
+        throw new Error(
+          `[Better-Auth] ${rawProvider} SSO provider environment variables are not set correctly!`,
+        );
+      }
     }
 
     if (definition.type === 'builtin') {

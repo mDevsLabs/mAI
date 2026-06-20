@@ -109,11 +109,6 @@ const Page = memo(() => {
             {petsLevel === 100 ? 'Max' : `${(general?.petsMsgCount || 0) % 10} / 10 msgs`}
           </div>
         </Flexbox>
-        {petsLevel >= 100 && (
-          <div style={{ color: 'var(--color-primary)', fontSize: 12, textAlign: 'center' }}>
-            🎉 Niveau maximum atteint ! Vous pouvez maintenant avoir 2 Pets.
-          </div>
-        )}
         <Button
           block
           disabled={!enablePets}

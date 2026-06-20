@@ -37,6 +37,7 @@ import DesktopAutoOidcOnFirstOpen from './DesktopAutoOidcOnFirstOpen';
 import DesktopLayoutContainer from './DesktopLayoutContainer';
 import RegisterHotkeys from './RegisterHotkeys';
 import { styles } from './style';
+import { GlobalPets } from '@/features/GlobalPets';
 
 const CloudBanner = dynamic(() => import('@/features/AlertBanner/CloudBanner'));
 
@@ -91,6 +92,7 @@ const Layout: FC = () => {
           <RegisterHotkeys />
           <CmdkLazy />
         </Suspense>
+        <GlobalPets />
       </WorkspaceContextSlot>
     </HotkeysProvider>
   );

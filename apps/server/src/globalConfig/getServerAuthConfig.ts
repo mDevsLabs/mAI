@@ -6,7 +6,22 @@ import { parseSSOProviders } from '@/libs/better-auth/utils/server';
 import { type GlobalServerConfig } from '@/types/serverConfig';
 
 const getBetterAuthSSOProviders = () => {
-  return parseSSOProviders(authEnv.AUTH_SSO_PROVIDERS);
+  const providers = parseSSOProviders(authEnv.AUTH_SSO_PROVIDERS);
+  if (providers.length === 0 && process.env.NODE_ENV === 'development') {
+    return [
+      'google',
+      'github',
+      'x',
+      'canva',
+      'slack',
+      'notion',
+      'spotify',
+      'telegram',
+      'twitch',
+      'railway',
+    ];
+  }
+  return providers;
 };
 
 export const getServerAuthConfig = (): GlobalServerConfig => {

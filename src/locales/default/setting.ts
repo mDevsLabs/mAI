@@ -144,6 +144,7 @@ export default {
   'settingPets.store.title': 'Pets Store',
   'settingPets.store.searchPlaceholder': 'Search for a pet...',
   'settingPets.store.category.all': 'All',
+  'settingPets.store.category.animal': 'Animals',
   'settingPets.store.category.mascot': 'Mascots',
   'settingPets.store.category.human': 'Humans',
   'settingPets.store.category.robot': 'Robots',
