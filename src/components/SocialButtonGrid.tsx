@@ -9,8 +9,9 @@ import AuthIcons from '@/components/AuthIcons';
 
 // ─────────────────────────────────────────────────────────────
 // Static styles — zero runtime (createStaticStyles + cssVar.*)
+// createStaticStyles returns a plain object, NOT a hook.
 // ─────────────────────────────────────────────────────────────
-const useStyles = createStaticStyles(({ css, cssVar }) => ({
+const styles = createStaticStyles(({ css, cssVar }) => ({
   // ── Shared row wrapper ──────────────────────────────────────
   row: css`
     display: flex;
@@ -140,10 +141,6 @@ const useStyles = createStaticStyles(({ css, cssVar }) => ({
     width: 100%;
     letter-spacing: 0.01em;
     transition: color 0.2s ease;
-
-    .social-btn-wrapper:hover & {
-      color: rgba(255, 255, 255, 0.9);
-    }
   `,
 
   labelLight: css`
@@ -157,10 +154,6 @@ const useStyles = createStaticStyles(({ css, cssVar }) => ({
     width: 100%;
     letter-spacing: 0.01em;
     transition: color 0.2s ease;
-
-    .social-btn-wrapper:hover & {
-      color: ${cssVar.colorText};
-    }
   `,
 
   // ── Loading spinner overlay ─────────────────────────────────
@@ -225,45 +218,42 @@ const toDisplayName = (id: string) =>
 // Single circular button
 // ─────────────────────────────────────────────────────────────
 interface CircleButtonProps {
-  provider: string;
-  variant: 'dark' | 'light';
   isLoading: boolean;
   label: string;
-  styles: ReturnType<typeof useStyles>;
+  provider: string;
+  variant: 'dark' | 'light';
   onClick: () => void;
 }
 
-const CircleButton = memo<CircleButtonProps>(
-  ({ provider, variant, isLoading, label, styles: s, onClick }) => {
-    const isDark = variant === 'dark';
+const CircleButton = memo<CircleButtonProps>(({ provider, variant, isLoading, label, onClick }) => {
+  const isDark = variant === 'dark';
 
-    return (
+  return (
+    <div
+      aria-label={label}
+      className={`${styles.btnWrapper} social-btn-wrapper`}
+      role="button"
+      tabIndex={0}
+      onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') onClick();
+      }}
+    >
       <div
-        aria-label={label}
-        className={`${s.btnWrapper} social-btn-wrapper`}
-        role="button"
-        tabIndex={0}
-        onClick={onClick}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') onClick();
-        }}
+        className={`social-circle ${isDark ? styles.circleDark : styles.circleLight}`}
+        style={{ position: 'relative' }}
       >
-        <div
-          className={`social-circle ${isDark ? s.circleDark : s.circleLight}`}
-          style={{ position: 'relative' }}
-        >
-          {AuthIcons(provider, 24)}
-          {isLoading && (
-            <div className={s.loadingOverlay}>
-              <div className={s.loadingSpinner} />
-            </div>
-          )}
-        </div>
-        <span className={isDark ? s.labelDark : s.labelLight}>{label}</span>
+        {AuthIcons(provider, 24)}
+        {isLoading && (
+          <div className={styles.loadingOverlay}>
+            <div className={styles.loadingSpinner} />
+          </div>
+        )}
       </div>
-    );
-  },
-);
+      <span className={isDark ? styles.labelDark : styles.labelLight}>{label}</span>
+    </div>
+  );
+});
 
 CircleButton.displayName = 'CircleButton';
 
@@ -278,7 +268,6 @@ const SocialButtonGrid = memo<SocialButtonGridProps>(
     onSocialSignIn,
   }) => {
     const { t } = useTranslation('auth');
-    const s = useStyles();
 
     const getLabel = (provider: string) => {
       const normalized = toDisplayName(provider);
@@ -295,7 +284,6 @@ const SocialButtonGrid = memo<SocialButtonGridProps>(
           key={provider}
           label={getLabel(provider)}
           provider={provider}
-          styles={s}
           variant={variant}
           onClick={() => onSocialSignIn(provider)}
         />
@@ -304,10 +292,12 @@ const SocialButtonGrid = memo<SocialButtonGridProps>(
     return (
       <Flexbox gap={10}>
         {/* ── Row 1 — dark background ── */}
-        <div className={`${s.row} ${s.rowDark}`}>{renderRow(darkRowProviders, 'dark')}</div>
+        <div className={`${styles.row} ${styles.rowDark}`}>{renderRow(darkRowProviders, 'dark')}</div>
 
         {/* ── Row 2 — light background ── */}
-        <div className={`${s.row} ${s.rowLight}`}>{renderRow(lightRowProviders, 'light')}</div>
+        <div className={`${styles.row} ${styles.rowLight}`}>
+          {renderRow(lightRowProviders, 'light')}
+        </div>
       </Flexbox>
     );
   },
