@@ -3,7 +3,7 @@
 import { BRANDING_NAME } from '@lobechat/business-const';
 import { ActionIcon, Flexbox, FluentEmoji, SideNav } from '@lobehub/ui';
 import { createStaticStyles, cssVar, cx } from 'antd-style';
-import { motion } from 'motion/react';
+import { m as motion } from 'motion/react';
 import { XIcon } from 'lucide-react';
 import { memo, type ReactNode, useEffect, useState } from 'react';
 

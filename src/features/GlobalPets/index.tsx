@@ -2,7 +2,7 @@
 
 import { createStaticStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { motion } from 'motion/react';
+import { m } from 'motion/react';
 import { memo, useEffect, useRef, useState } from 'react';
 
 import { useChatStore } from '@/store/chat';
@@ -196,9 +196,10 @@ const Pet = memo(
     };
 
     return (
-      // motion.div with drag replaces react-rnd (which uses react-draggable/findDOMNode, removed in React 19)
-      <motion.div
+      <m.div
+        animate={controls}
         drag
+        dragElastic={0.1}
         dragMomentum={false}
         initial={{ x: startX, y: startY }}
         onDrag={(_e, info) => {
@@ -348,7 +349,7 @@ const Pet = memo(
             )}
           </div>
         </div>
-      </motion.div>
+      </m.div>
     );
   },
 );
