@@ -37,9 +37,11 @@ import DesktopAutoOidcOnFirstOpen from './DesktopAutoOidcOnFirstOpen';
 import DesktopLayoutContainer from './DesktopLayoutContainer';
 import RegisterHotkeys from './RegisterHotkeys';
 import { styles } from './style';
-import { GlobalPets } from '@/features/GlobalPets';
 
 const CloudBanner = dynamic(() => import('@/features/AlertBanner/CloudBanner'));
+const GlobalPets = dynamic(() =>
+  import('@/features/GlobalPets').then((m) => ({ default: m.GlobalPets })),
+);
 
 const Layout: FC = () => {
   const { isPWA } = usePlatform();
@@ -92,7 +94,9 @@ const Layout: FC = () => {
           <RegisterHotkeys />
           <CmdkLazy />
         </Suspense>
-        <GlobalPets />
+        <Suspense fallback={null}>
+          <GlobalPets />
+        </Suspense>
       </WorkspaceContextSlot>
     </HotkeysProvider>
   );

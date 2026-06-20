@@ -11,7 +11,7 @@ const { upstashWorkflowExtraHeaders } = parseMemoryExtractionConfig();
 export const createWorkflowQstashClient = () =>
   new Client({
     headers: { ...upstashWorkflowExtraHeaders },
-    token: process.env.QSTASH_TOKEN!,
+    token: process.env.YOUR_QSTASH_TOKEN ?? process.env.QSTASH_TOKEN ?? '',
   });
 
 export { upstashWorkflowExtraHeaders };
