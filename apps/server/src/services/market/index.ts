@@ -59,6 +59,66 @@ export interface MarketServiceOptions {
   trustedClientToken?: string;
   /** User info for generating trusted client token */
   userInfo?: TrustedClientUserInfo;
+  /** Database instance to clear invalid token */
+  db?: any;
+  /** User ID to identify user settings */
+  userId?: string;
+}
+
+/**
+ * Creates a dynamic proxy around MarketSDK to catch invalid_token errors,
+ * handle them (clear token and database settings), and retry the call once.
+ */
+function createMarketSDKProxy(
+  service: MarketService,
+  handleError: (error: any) => Promise<boolean> | boolean
+): MarketSDK {
+  const wrap = (targetGetter: () => any): any => {
+    return new Proxy(
+      {},
+      {
+        get(dummy, prop, receiver) {
+          const target = targetGetter();
+          const value = Reflect.get(target, prop);
+
+          if (typeof value === 'function') {
+            return async function (this: any, ...args: any[]) {
+              try {
+                return await value.apply(target, args);
+              } catch (error: any) {
+                const errorMessage = error?.message || (typeof error === 'string' ? error : '');
+                const errorStr = JSON.stringify(error) || '';
+                const isInvalidToken =
+                  errorMessage.toLowerCase().includes('invalid_token') ||
+                  errorMessage.toLowerCase().includes('access token is invalid or expired') ||
+                  errorMessage.toLowerCase().includes('token is invalid or has expired') ||
+                  errorStr.toLowerCase().includes('invalid_token') ||
+                  error?.error === 'invalid_token';
+
+                if (isInvalidToken) {
+                  const handled = await handleError(error);
+                  if (handled) {
+                    const newTarget = targetGetter();
+                    const newValue = Reflect.get(newTarget, prop);
+                    return await newValue.apply(newTarget, args);
+                  }
+                }
+                throw error;
+              }
+            };
+          }
+
+          if (value !== null && typeof value === 'object') {
+            return wrap(() => Reflect.get(targetGetter(), prop));
+          }
+
+          return value;
+        },
+      }
+    );
+  };
+
+  return wrap(() => service.marketInstance);
 }
 
 /**
@@ -87,23 +147,48 @@ export interface MarketServiceOptions {
  * ```
  */
 export class MarketService {
+  marketInstance: MarketSDK;
   market: MarketSDK;
 
   constructor(options: MarketServiceOptions = {}) {
-    const { accessToken, userInfo, clientCredentials, trustedClientToken, ownerAccountId } =
+    const { accessToken, userInfo, clientCredentials, trustedClientToken, ownerAccountId, db, userId } =
       options;
 
     // Use provided trustedClientToken or generate from userInfo
     const resolvedTrustedClientToken =
       trustedClientToken || (userInfo ? generateTrustedClientToken(userInfo) : undefined);
 
-    this.market = new MarketSDK({
-      accessToken,
-      baseURL: MARKET_BASE_URL,
-      clientId: clientCredentials?.clientId,
-      clientSecret: clientCredentials?.clientSecret,
-      ownerAccountId,
-      trustedClientToken: resolvedTrustedClientToken,
+    const initMarket = (token?: string) => {
+      return new MarketSDK({
+        accessToken: token,
+        baseURL: MARKET_BASE_URL,
+        clientId: clientCredentials?.clientId,
+        clientSecret: clientCredentials?.clientSecret,
+        ownerAccountId,
+        trustedClientToken: resolvedTrustedClientToken,
+      });
+    };
+
+    this.marketInstance = initMarket(accessToken);
+
+    this.market = createMarketSDKProxy(this, async (err) => {
+      log('Caught invalid_token error, clearing access token and retrying...');
+
+      // Re-initialize marketInstance without the access token
+      this.marketInstance = initMarket(undefined);
+
+      // Clear token from database if db and userId are provided
+      if (db && userId) {
+        try {
+          const { UserModel } = await import('@/database/models/user');
+          const userModel = new UserModel(db, userId);
+          await userModel.updateSetting({ market: null });
+          log('Successfully cleared invalid market token from database.');
+        } catch (dbErr) {
+          log('Failed to clear invalid token from database:', dbErr);
+        }
+      }
+      return true;
     });
 
     log(

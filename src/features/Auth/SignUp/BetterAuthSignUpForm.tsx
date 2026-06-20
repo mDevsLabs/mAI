@@ -19,7 +19,7 @@ import { useSignUp } from './useSignUp';
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
   socialButtonsContainer: css`
-    max-height: 180px;
+    max-height: 400px;
     overflow-y: auto;
     overflow-x: hidden;
     padding-right: 4px;

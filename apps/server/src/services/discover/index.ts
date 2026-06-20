@@ -85,6 +85,10 @@ export interface DiscoverServiceOptions {
   accessToken?: string;
   /** User info for generating trusted client token */
   userInfo?: TrustedClientUserInfo;
+  /** Database instance to clear invalid token */
+  db?: any;
+  /** User ID to identify user settings */
+  userId?: string;
 }
 
 export class DiscoverService {
@@ -93,10 +97,10 @@ export class DiscoverService {
   market: MarketSDK;
 
   constructor(options: DiscoverServiceOptions = {}) {
-    const { accessToken, userInfo } = options;
+    const { accessToken, userInfo, db, userId } = options;
 
     // Use MarketService to initialize MarketSDK
-    const marketService = new MarketService({ accessToken, userInfo });
+    const marketService = new MarketService({ accessToken, userInfo, db, userId });
     this.market = marketService.market;
 
     log(

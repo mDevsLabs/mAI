@@ -149,7 +149,6 @@ const Page = memo(() => {
     minWidth: undefined,
     name: 'petsSound',
     valuePropName: 'checked',
-    divider: false,
   };
 
   const soundEnabled = enablePets && !!general?.petsSound;
@@ -181,6 +180,7 @@ const Page = memo(() => {
     label: 'Volume du son',
     minWidth: undefined,
     name: 'petsVolume',
+    divider: false,
   };
 
   return (

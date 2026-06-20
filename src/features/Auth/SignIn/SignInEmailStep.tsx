@@ -18,7 +18,7 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
     text-decoration: underline;
   `,
   socialButtonsContainer: css`
-    max-height: 180px;
+    max-height: 400px;
     overflow-y: auto;
     overflow-x: hidden;
     padding-right: 4px;

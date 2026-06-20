@@ -214,6 +214,8 @@ const Pet = memo(
           cursor: 'grab',
           height: size,
           position: 'fixed',
+          top: 0,
+          left: 0,
           width: size,
           zIndex: 999999,
         }}
@@ -249,6 +251,8 @@ const Pet = memo(
                   color: 'var(--color-text)',
                   fontWeight: '500',
                   textAlign: 'center',
+                  wordBreak: 'break-word',
+                  whiteSpace: 'pre-wrap',
                 }}
               >
                 &ldquo;{currentQuote.text}&rdquo;
@@ -280,7 +284,7 @@ const Pet = memo(
             </div>
           )}
 
-          <div style={getContainerStyle()} title={petId} onMouseDown={handleInteraction}>
+          <div style={getContainerStyle()} title={petId} onClick={handleInteraction}>
             {config?.petsBg && (
               <div
                 style={{

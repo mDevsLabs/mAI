@@ -68,11 +68,15 @@ const marketToolProcedure = wsCompatProcedure
         discoverService: new DiscoverService({
           accessToken: ctx.marketAccessToken,
           userInfo: ctx.marketUserInfo,
+          db: ctx.serverDB,
+          userId: ctx.userId,
         }),
         fileService: new FileService(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined),
         marketService: new MarketService({
           accessToken: ctx.marketAccessToken,
           userInfo: ctx.marketUserInfo,
+          db: ctx.serverDB,
+          userId: ctx.userId,
         }),
         userModel,
         workspaceId: ctx.workspaceId,

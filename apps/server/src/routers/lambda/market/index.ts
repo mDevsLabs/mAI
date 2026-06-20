@@ -30,7 +30,6 @@ const log = debug('lambda-router:market');
 
 const marketSourceSchema = z.enum(['legacy', 'new']);
 
-// Public procedure with optional user info for trusted client token
 const marketProcedure = publicProcedure
   .use(serverDatabase)
   .use(marketUserInfo)
@@ -40,10 +39,14 @@ const marketProcedure = publicProcedure
         discoverService: new DiscoverService({
           accessToken: ctx.marketAccessToken,
           userInfo: ctx.marketUserInfo,
+          db: ctx.serverDB,
+          userId: ctx.userId,
         }),
         marketService: new MarketService({
           accessToken: ctx.marketAccessToken,
           userInfo: ctx.marketUserInfo,
+          db: ctx.serverDB,
+          userId: ctx.userId,
         }),
       },
     });

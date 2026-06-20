@@ -26,7 +26,11 @@ const searchProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) =
 
   return opts.next({
     ctx: {
-      discoverService: new DiscoverService({ accessToken: ctx.marketAccessToken }),
+      discoverService: new DiscoverService({
+        accessToken: ctx.marketAccessToken,
+        db: ctx.serverDB,
+        userId: ctx.userId,
+      }),
       searchRepo: new SearchRepo(ctx.serverDB, ctx.userId, wsId),
     },
   });
