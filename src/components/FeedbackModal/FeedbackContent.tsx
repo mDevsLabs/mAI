@@ -1,11 +1,12 @@
 'use client';
 
+import { BRANDING_EMAIL } from '@lobechat/business-const';
 import { Button, Flexbox, Icon } from '@lobehub/ui';
 import { useModalContext } from '@lobehub/ui/base-ui';
 import { App, Form, Input, Upload } from 'antd';
 import { ImagePlus, Send } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import TextArea from '@/components/TextArea';
 import { lambdaClient } from '@/libs/trpc/client';
@@ -20,7 +21,6 @@ interface FeedbackContentProps {
 }
 
 interface FormValues {
-  email: string;
   message: string;
   title: string;
 }
@@ -79,7 +79,7 @@ const FeedbackContent = memo<FeedbackContentProps>(({ initialValues }) => {
           url: window.location.href,
           userAgent: navigator.userAgent,
         },
-        email: values.email || userEmail || undefined,
+        email: userEmail || undefined,
         message: values.message,
         screenshotUrl: screenshotUrl || undefined,
         title: values.title,
@@ -104,7 +104,25 @@ const FeedbackContent = memo<FeedbackContentProps>(({ initialValues }) => {
   }, [close, form]);
 
   return (
-    <Flexbox gap={12}>
+    <Flexbox gap={16}>
+      <p style={{ color: 'var(--colorTextSecondary)', fontSize: 14, margin: 0 }}>
+        <Trans
+          i18nKey="feedback.emailContact"
+          ns="common"
+          values={{ email: BRANDING_EMAIL.business }}
+          components={{
+            email: (
+              <a
+                href={`mailto:${BRANDING_EMAIL.business}`}
+                rel="noopener noreferrer"
+                style={{ color: 'inherit', textDecoration: 'underline' }}
+                target="_blank"
+              />
+            ),
+          }}
+        />
+      </p>
+
       <Form form={form} initialValues={initialValues} layout="vertical">
         <Form.Item
           label={t('feedback.fields.title.label')}
@@ -113,21 +131,8 @@ const FeedbackContent = memo<FeedbackContentProps>(({ initialValues }) => {
             { message: t('feedback.fields.title.required'), required: true },
             { max: 200, message: t('feedback.fields.title.maxLength') },
           ]}
-          style={{ marginBottom: 12 }}
         >
           <Input showCount maxLength={200} placeholder={t('feedback.fields.title.placeholder')} />
-        </Form.Item>
-
-        <Form.Item
-          label={t('feedback.fields.email.label')}
-          name="email"
-          rules={[
-            { max: 200, message: t('feedback.fields.email.maxLength') },
-            { message: t('feedback.fields.email.invalid'), type: 'email' },
-          ]}
-          style={{ marginBottom: 12 }}
-        >
-          <Input placeholder={t('feedback.fields.email.placeholder')} />
         </Form.Item>
 
         <Form.Item
@@ -137,7 +142,6 @@ const FeedbackContent = memo<FeedbackContentProps>(({ initialValues }) => {
             { message: t('feedback.fields.message.required'), required: true },
             { max: 5000, message: t('feedback.fields.message.maxLength') },
           ]}
-          style={{ marginBottom: 12 }}
         >
           <TextArea
             showCount

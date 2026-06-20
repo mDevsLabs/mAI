@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { parse } from '../parse';
+import type { Message } from '../types/shared';
 import { inputs, outputs } from './fixtures';
 
 function serializeParseResult(result: ReturnType<typeof parse>) {
@@ -38,6 +39,316 @@ describe('parse', () => {
       expect(result.flatList[2].id).toBe('msg-4'); // This is the critical one that might be missing
 
       expect(serializeParseResult(result)).toEqual(outputs.assistantChainWithFollowup);
+    });
+
+    it('should keep assistant tool results scoped when tool call IDs repeat', () => {
+      const result = parse([
+        {
+          content: 'Current request',
+          createdAt: 0,
+          id: 'user-current',
+          role: 'user',
+          updatedAt: 0,
+        },
+        {
+          agentId: 'agent-1',
+          content: 'First step',
+          createdAt: 1,
+          id: 'assistant-current-1',
+          parentId: 'user-current',
+          role: 'assistant',
+          tools: [
+            {
+              apiName: 'command_execution',
+              arguments: '{}',
+              id: 'item_1',
+              identifier: 'codex',
+              result_msg_id: 'tool-current-1',
+              type: 'default',
+            },
+          ],
+          updatedAt: 1,
+        },
+        {
+          content: 'Current tool result',
+          createdAt: 2,
+          id: 'tool-current-1',
+          parentId: 'assistant-current-1',
+          role: 'tool',
+          tool_call_id: 'item_1',
+          updatedAt: 2,
+        },
+        {
+          agentId: 'agent-1',
+          content: 'Second step',
+          createdAt: 3,
+          id: 'assistant-current-2',
+          parentId: 'tool-current-1',
+          role: 'assistant',
+          tools: [
+            {
+              apiName: 'command_execution',
+              arguments: '{}',
+              id: 'item_2',
+              identifier: 'codex',
+              result_msg_id: 'tool-current-2',
+              type: 'default',
+            },
+          ],
+          updatedAt: 3,
+        },
+        {
+          content: 'Second tool result',
+          createdAt: 4,
+          id: 'tool-current-2',
+          parentId: 'assistant-current-2',
+          role: 'tool',
+          tool_call_id: 'item_2',
+          updatedAt: 4,
+        },
+        {
+          agentId: 'agent-1',
+          content: 'Final summary',
+          createdAt: 5,
+          id: 'assistant-current-final',
+          parentId: 'tool-current-2',
+          role: 'assistant',
+          updatedAt: 5,
+        },
+        {
+          content: 'Later request',
+          createdAt: 6,
+          id: 'user-later',
+          role: 'user',
+          updatedAt: 6,
+        },
+        {
+          agentId: 'agent-1',
+          content: 'Another turn reuses Codex item ids',
+          createdAt: 7,
+          id: 'assistant-later',
+          parentId: 'user-later',
+          role: 'assistant',
+          tools: [
+            {
+              apiName: 'command_execution',
+              arguments: '{}',
+              id: 'item_1',
+              identifier: 'codex',
+              result_msg_id: 'tool-later-1',
+              type: 'default',
+            },
+          ],
+          updatedAt: 7,
+        },
+        {
+          content: 'Later tool result',
+          createdAt: 8,
+          id: 'tool-later-1',
+          parentId: 'assistant-later',
+          role: 'tool',
+          tool_call_id: 'item_1',
+          updatedAt: 8,
+        },
+      ]);
+
+      const currentGroup = result.flatList.find((message) => message.id === 'assistant-current-1');
+
+      expect(currentGroup?.role).toBe('assistantGroup');
+      expect((currentGroup as any).children.map((child: any) => child.id)).toEqual([
+        'assistant-current-1',
+        'assistant-current-2',
+        'assistant-current-final',
+      ]);
+      expect((currentGroup as any).children[0].tools[0].result_msg_id).toBe('tool-current-1');
+    });
+
+    it('should keep sibling assistant continuations before later user turns under another tool result', () => {
+      const time = (seconds: number) =>
+        new Date(`2026-01-01T00:00:${String(seconds).padStart(2, '0')}.000Z`).getTime();
+      const messages: Message[] = [
+        { content: 'root', createdAt: time(0), id: 'u0', role: 'user', updatedAt: time(0) },
+        {
+          content: 'assistant with two tools',
+          createdAt: time(1),
+          id: 'a0',
+          parentId: 'u0',
+          role: 'assistant',
+          tools: [
+            {
+              apiName: 'update',
+              arguments: '{}',
+              id: 'tc-later',
+              identifier: 'internal',
+              result_msg_id: 'tool-later',
+              type: 'default',
+            },
+            {
+              apiName: 'read',
+              arguments: '{}',
+              id: 'tc-first',
+              identifier: 'internal',
+              result_msg_id: 'tool-first',
+              type: 'default',
+            },
+          ],
+          updatedAt: time(1),
+        },
+        {
+          content: 'todo updated',
+          createdAt: time(2),
+          id: 'tool-later',
+          parentId: 'a0',
+          role: 'tool',
+          tool_call_id: 'tc-later',
+          updatedAt: time(2),
+        },
+        {
+          content: 'context result',
+          createdAt: time(3),
+          id: 'tool-first',
+          parentId: 'a0',
+          role: 'tool',
+          tool_call_id: 'tc-first',
+          updatedAt: time(3),
+        },
+        {
+          content: 'summary before question',
+          createdAt: time(4),
+          id: 'summary',
+          parentId: 'tool-first',
+          role: 'assistant',
+          updatedAt: time(4),
+        },
+        {
+          content: 'Earlier assistant continuation',
+          createdAt: time(5),
+          id: 'first-question',
+          parentId: 'tool-first',
+          role: 'assistant',
+          updatedAt: time(5),
+        },
+        {
+          content: 'later answer',
+          createdAt: time(6),
+          id: 'later-answer',
+          parentId: 'tool-later',
+          role: 'assistant',
+          updatedAt: time(6),
+        },
+        {
+          content: 'Later user follow-up',
+          createdAt: time(7),
+          id: 'status-user',
+          parentId: 'tool-later',
+          role: 'user',
+          updatedAt: time(7),
+        },
+        {
+          content: '...',
+          createdAt: time(8),
+          id: 'status-assistant',
+          parentId: 'status-user',
+          role: 'assistant',
+          updatedAt: time(8),
+        },
+      ];
+
+      const result = parse(messages);
+      const ids = result.flatList.map((message) => message.id);
+
+      // ROOT CAUSE:
+      //
+      // If one assistantGroup owns multiple tool results, and one tool result has
+      // multiple assistant children while another tool result later receives user
+      // turns, FlatListBuilder currently walks the other tool result first. That
+      // renders later user turns before the earlier assistant continuation.
+      //
+      // We fixed this by preserving the chronological continuation order across
+      // sibling tool-result children instead of deferring the second assistant.
+      expect(ids.indexOf('first-question')).toBeLessThan(ids.indexOf('status-user'));
+    });
+
+    it('should interleave continuations from sibling tool results by child creation time', () => {
+      const time = (seconds: number) =>
+        new Date(`2026-01-01T00:01:${String(seconds).padStart(2, '0')}.000Z`).getTime();
+      const messages: Message[] = [
+        { content: 'root', createdAt: time(0), id: 'u0', role: 'user', updatedAt: time(0) },
+        {
+          content: 'assistant with sibling tools',
+          createdAt: time(1),
+          id: 'a0',
+          parentId: 'u0',
+          role: 'assistant',
+          tools: [
+            {
+              apiName: 'first',
+              arguments: '{}',
+              id: 'tc-a',
+              identifier: 'internal',
+              result_msg_id: 'tool-a',
+              type: 'default',
+            },
+            {
+              apiName: 'second',
+              arguments: '{}',
+              id: 'tc-b',
+              identifier: 'internal',
+              result_msg_id: 'tool-b',
+              type: 'default',
+            },
+          ],
+          updatedAt: time(1),
+        },
+        {
+          content: 'tool a result',
+          createdAt: time(2),
+          id: 'tool-a',
+          parentId: 'a0',
+          role: 'tool',
+          tool_call_id: 'tc-a',
+          updatedAt: time(2),
+        },
+        {
+          content: 'tool b result',
+          createdAt: time(3),
+          id: 'tool-b',
+          parentId: 'a0',
+          role: 'tool',
+          tool_call_id: 'tc-b',
+          updatedAt: time(3),
+        },
+        {
+          content: 'first user continuation',
+          createdAt: time(4),
+          id: 'tool-a-first',
+          parentId: 'tool-a',
+          role: 'user',
+          updatedAt: time(4),
+        },
+        {
+          content: 'middle user continuation',
+          createdAt: time(5),
+          id: 'tool-b-middle',
+          parentId: 'tool-b',
+          role: 'user',
+          updatedAt: time(5),
+        },
+        {
+          content: 'last user continuation',
+          createdAt: time(6),
+          id: 'tool-a-last',
+          parentId: 'tool-a',
+          role: 'user',
+          updatedAt: time(6),
+        },
+      ];
+
+      const result = parse(messages);
+      const ids = result.flatList.map((message) => message.id);
+
+      expect(ids.indexOf('tool-a-first')).toBeLessThan(ids.indexOf('tool-b-middle'));
+      expect(ids.indexOf('tool-b-middle')).toBeLessThan(ids.indexOf('tool-a-last'));
     });
   });
 
@@ -130,6 +441,149 @@ describe('parse', () => {
       const result = parse(inputs.assistantGroup.toolsWithBranches);
 
       expect(serializeParseResult(result)).toEqual(outputs.assistantGroup.toolsWithBranches);
+    });
+
+    // Regression: a hetero-agent (e.g. Claude Code) turn often opens with a
+    // TOOLLESS narration step streamed in reply to the user BEFORE the first
+    // tool call, with the tool-using step as its direct child. Previously the
+    // toolless head fell through to "Priority 4: regular message" and rendered
+    // as its own standalone bubble, while the tool step opened a SEPARATE
+    // assistantGroup — so the UI showed two disconnected assistant cards (a
+    // visually broken chain). The head must instead seed the single
+    // assistantGroup.
+    it('should fold a toolless turn-head into the following tool chain (single group)', () => {
+      const messages: Message[] = [
+        {
+          content: 'Can you check the build status?',
+          createdAt: 0,
+          id: 'u1',
+          role: 'user',
+          updatedAt: 0,
+        },
+        {
+          content: 'Sure — let me first find where the CI config lives.',
+          createdAt: 1,
+          id: 'a-head', // toolless narration, parent is the user message
+          parentId: 'u1',
+          role: 'assistant',
+          updatedAt: 1,
+        },
+        {
+          content: 'Found it. Reading the workflow file now.',
+          createdAt: 2,
+          id: 'a-tool',
+          parentId: 'a-head', // direct child of the toolless head
+          role: 'assistant',
+          tools: [
+            { apiName: 'readFile', arguments: '{}', id: 't1', identifier: 'fs', type: 'default' },
+          ],
+          updatedAt: 2,
+        },
+        {
+          content: 'name: CI\non: [push]',
+          createdAt: 3,
+          id: 't1',
+          parentId: 'a-tool',
+          role: 'tool',
+          tool_call_id: 't1',
+          updatedAt: 3,
+        },
+        {
+          content: 'The build runs on every push and is currently green.',
+          createdAt: 4,
+          id: 'a-final',
+          parentId: 't1',
+          role: 'assistant',
+          updatedAt: 4,
+        },
+      ] as Message[];
+
+      const result = parse(messages);
+
+      // user + ONE assistantGroup (not user + standalone assistant + group)
+      expect(result.flatList).toHaveLength(2);
+      expect(result.flatList[0].id).toBe('u1');
+      expect(result.flatList[1].role).toBe('assistantGroup');
+
+      // The toolless head is the first child of the group, with its prose intact,
+      // followed by the tool step and the final answer — all in one card.
+      const children = (result.flatList[1] as any).children;
+      expect(children.map((c: any) => c.id)).toEqual(['a-head', 'a-tool', 'a-final']);
+      expect(children[0].content).toBe('Sure — let me first find where the CI config lives.');
+      expect(children[0].tools).toBeUndefined();
+      expect(children[1].tools[0].result_msg_id).toBe('t1');
+    });
+
+    // Guard for the narrow scope above: when MORE than one toolless prose step
+    // precedes the first tool call, the head is NOT folded. collectAssistantChain
+    // stops at the first toolless continuation, so folding here would emit a
+    // tools-less assistantGroup and still leave the tool step split. The multi-
+    // prose prelude must instead stay as plain assistant bubbles — and crucially
+    // we must never produce an assistantGroup with no tools.
+    it('should not fold a multi-step toolless prelude (no tools-less assistantGroup)', () => {
+      const messages: Message[] = [
+        {
+          content: 'Can you check the build status?',
+          createdAt: 0,
+          id: 'u1',
+          role: 'user',
+          updatedAt: 0,
+        },
+        {
+          content: 'Sure, let me think about where to look.',
+          createdAt: 1,
+          id: 'a-head', // toolless, parent is the user message
+          parentId: 'u1',
+          role: 'assistant',
+          updatedAt: 1,
+        },
+        {
+          content: 'The CI config is probably under .github/workflows.',
+          createdAt: 2,
+          id: 'a-prose', // SECOND toolless prose step before any tool
+          parentId: 'a-head',
+          role: 'assistant',
+          updatedAt: 2,
+        },
+        {
+          content: 'Reading it now.',
+          createdAt: 3,
+          id: 'a-tool',
+          parentId: 'a-prose',
+          role: 'assistant',
+          tools: [
+            { apiName: 'readFile', arguments: '{}', id: 't1', identifier: 'fs', type: 'default' },
+          ],
+          updatedAt: 3,
+        },
+        {
+          content: 'name: CI',
+          createdAt: 4,
+          id: 't1',
+          parentId: 'a-tool',
+          role: 'tool',
+          tool_call_id: 't1',
+          updatedAt: 4,
+        },
+      ] as Message[];
+
+      const result = parse(messages);
+
+      // No assistantGroup may exist without tools in any of its children.
+      const toollessGroups = result.flatList.filter(
+        (m) =>
+          m.role === 'assistantGroup' &&
+          ((m as any).children ?? []).every((c: any) => !c.tools || c.tools.length === 0),
+      );
+      expect(toollessGroups).toHaveLength(0);
+
+      // The two prose steps render as plain assistant bubbles; the tool step
+      // forms its own (well-formed) assistantGroup.
+      const head = result.flatList.find((m) => m.id === 'a-head');
+      expect(head?.role).toBe('assistant');
+      const toolGroup = result.flatList.find((m) => m.id === 'a-tool');
+      expect(toolGroup?.role).toBe('assistantGroup');
+      expect((toolGroup as any).children[0].tools[0].result_msg_id).toBe('t1');
     });
   });
 

@@ -22,6 +22,12 @@ export type ListLocalFileSortOrder = 'asc' | 'desc';
 
 export interface ListLocalFileParams {
   /**
+   * Working directory a relative `path` resolves against (the device-bound
+   * directory, injected by the server runtime — not model-supplied). Absolute
+   * paths ignore it; absent → the daemon's process cwd.
+   */
+  cwd?: string;
+  /**
    * Maximum number of files to return
    * @default 100
    */
@@ -59,6 +65,8 @@ export interface MoveLocalFileParams {
 }
 
 export interface MoveLocalFilesParams {
+  /** Working directory each item's relative paths resolve against. See {@link ListLocalFileParams.cwd}. */
+  cwd?: string;
   items: MoveLocalFileParams[];
 }
 
@@ -81,12 +89,16 @@ export interface RenameLocalFileResult {
 }
 
 export interface LocalReadFileParams {
+  /** Working directory a relative `path` resolves against. See {@link ListLocalFileParams.cwd}. */
+  cwd?: string;
   fullContent?: boolean;
   loc?: [number, number];
   path: string;
 }
 
 export interface LocalReadFilesParams {
+  /** Working directory each relative path resolves against. See {@link ListLocalFileParams.cwd}. */
+  cwd?: string;
   paths: string[];
 }
 
@@ -95,6 +107,8 @@ export interface WriteLocalFileParams {
    * Content to write
    */
   content: string;
+  /** Working directory a relative `path` resolves against. See {@link ListLocalFileParams.cwd}. */
+  cwd?: string;
 
   /**
    * File path to write to
@@ -111,7 +125,15 @@ export interface AuditSafePathsResult {
   allSafe: boolean;
 }
 
+export type LocalFilePreviewAccept = 'image';
+
 export interface LocalFilePreviewUrlParams {
+  accept?: LocalFilePreviewAccept;
+  /**
+   * Allows previewing one user-selected file outside approved workspace roots.
+   * This is only for renderer previews and must not expand agent file access.
+   */
+  allowExternalFile?: boolean;
   path: string;
   workingDirectory: string;
 }
@@ -120,6 +142,34 @@ export interface LocalFilePreviewUrlResult {
   error?: string;
   success: boolean;
   url?: string;
+}
+
+export interface LocalFilePreviewText {
+  content: string;
+  contentType: string;
+  type: 'text';
+}
+
+export interface LocalFilePreviewImage {
+  base64: string;
+  contentType: string;
+  type: 'image';
+}
+
+export interface LocalFilePreviewUnsupported {
+  contentType: string;
+  type: 'binary' | 'pdf' | 'video';
+}
+
+export type LocalFilePreview =
+  | LocalFilePreviewImage
+  | LocalFilePreviewText
+  | LocalFilePreviewUnsupported;
+
+export interface LocalFilePreviewResult {
+  error?: string;
+  preview?: LocalFilePreview;
+  success: boolean;
 }
 
 export interface LocalReadFileResult {
@@ -315,6 +365,8 @@ export interface GlobFilesResult {
 
 // Edit types
 export interface EditLocalFileParams {
+  /** Working directory a relative `file_path` resolves against. See {@link ListLocalFileParams.cwd}. */
+  cwd?: string;
   file_path: string;
   new_string: string;
   old_string: string;
@@ -452,4 +504,33 @@ export interface ListProjectSkillsResult {
   skills: ProjectSkillItem[];
   /** Source directory actually scanned (after fallback resolution). */
   source: ProjectSkillItem['source'] | null;
+}
+
+export interface InitWorkspaceParams {
+  /** Working directory used to resolve the project root. */
+  scope: string;
+}
+
+/**
+ * Project-root agent instructions (`AGENTS.md` / `CLAUDE.md`) read in one shot
+ * during workspace init. Full body is carried (capped) so the server can inject
+ * it into the system role and the web UI can render it without a second call.
+ * Mirrors `WorkspaceInstructions` in `@lobechat/types` (kept local — this is a
+ * leaf package with no `@lobechat/types` dependency).
+ */
+export interface WorkspaceInstructionsItem {
+  content: string;
+  source: 'AGENTS.md' | 'CLAUDE.md';
+}
+
+/**
+ * One-call workspace scan: project-root instructions + project skills (both
+ * `.agents/skills` and `.claude/skills`, merged). Mirrors `WorkspaceInitResult`
+ * in `@lobechat/types`; the server narrows `skills` to `ProjectSkillMeta` when
+ * caching onto `devices.workingDirs[].workspace`.
+ */
+export interface InitWorkspaceResult {
+  instructions: WorkspaceInstructionsItem[];
+  root: string;
+  skills: ProjectSkillItem[];
 }

@@ -1,26 +1,26 @@
 // the code below can only be modified with commercial license
 // if you want to use it in the commercial usage
-// please contact us for more information: hello@mprojects.odoo.com
+// please contact us for more information: hello@lobehub.com
 
-export const LOBE_CHAT_CLOUD = 'mAI Cloud';
+export const LOBE_CHAT_CLOUD = 'mCloud';
 
 export const BRANDING_NAME = 'mAI';
-export const BRANDING_LOGO_URL = '/icons/icon-192x192.png';
+export const BRANDING_LOGO_URL = '/avatars/may.PNG';
 
 export const ORG_NAME = 'mAI';
 
 export const BRANDING_URL = {
-  help: undefined,
-  privacy: undefined,
-  subscription: undefined,
-  support: undefined,
-  terms: undefined,
+  help: 'https://mprojects.odoo.com/contact',
+  privacy: 'https://mprojects.odoo.com',
+  subscription: 'https://mprojects.odoo.com',
+  support: 'https://mprojects.odoo.com',
+  terms: 'https://mprojects.odoo.com',
 };
 
 export const SOCIAL_URL = {
-  discord: 'https://discord.gg/fV7zwdGPpY',
+  discord: 'https://discord.com/invite/fV7zwdGPpY',
   github: 'https://github.com/mDevsLabs/mAI',
-  medium: 'https://medium.com/@mDevsLabs',
+  medium: 'https://medium.com/mdevslabs',
   x: 'https://x.com/mdevslabs',
   youtube: 'https://www.youtube.com/@mDevsLabs',
 };
@@ -34,7 +34,7 @@ export const BRANDING_EMAIL = {
   support: 'support@mprojects.odoo.com',
 };
 
-export const BRANDING_PROVIDER = 'mai';
+export const BRANDING_PROVIDER = 'lobehub';
 
 export const COPYRIGHT = `© ${new Date().getFullYear()} ${ORG_NAME}`;
 export const COPYRIGHT_FULL = `${COPYRIGHT}. All rights reserved.`;

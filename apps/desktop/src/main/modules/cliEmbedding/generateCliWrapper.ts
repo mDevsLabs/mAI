@@ -57,11 +57,11 @@ export async function generateCliWrapper(): Promise<void> {
       `"${electronBin}" "${cliScript}" %*`,
     ].join('\r\n');
 
-    const cmdPath = path.join(wrapperDir, 'mai.cmd');
+    const cmdPath = path.join(wrapperDir, 'lobehub.cmd');
     await atomicWrite(cmdPath, content);
 
-    // Create short aliases: m.cmd (copies on Windows, symlinks unreliable)
-    for (const alias of ['m.cmd']) {
+    // Create short aliases: lh.cmd, lobe.cmd (copies on Windows, symlinks unreliable)
+    for (const alias of ['lh.cmd', 'lobe.cmd']) {
       await atomicWrite(path.join(wrapperDir, alias), content);
     }
 
@@ -72,15 +72,15 @@ export async function generateCliWrapper(): Promise<void> {
       `ELECTRON_RUN_AS_NODE=1 exec "${electronBin}" "${cliScript}" "$@"`,
     ].join('\n');
 
-    const wrapperPath = path.join(wrapperDir, 'mai');
+    const wrapperPath = path.join(wrapperDir, 'lobehub');
     await atomicWrite(wrapperPath, content);
     await chmod(wrapperPath, 0o755);
 
-    // Create short aliases: m → mai
-    for (const alias of ['m']) {
+    // Create short aliases: lh, lobe → lobehub
+    for (const alias of ['lh', 'lobe']) {
       const linkPath = path.join(wrapperDir, alias);
       await unlink(linkPath).catch(() => {});
-      await symlink('mai', linkPath);
+      await symlink('lobehub', linkPath);
     }
 
     logger.info(`CLI wrapper generated: ${wrapperPath}`);

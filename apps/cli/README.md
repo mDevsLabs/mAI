@@ -1,52 +1,52 @@
 # @lobehub/cli
 
-LobeHub command-line interface.
+Interface en ligne de commande (CLI) mAI.
 
-## Local Development
+## Développement Local
 
-| Task                                       | Command                    |
-| ------------------------------------------ | -------------------------- |
-| Run in dev mode                            | `bun run dev -- <command>` |
-| Build the CLI                              | `bun run build`            |
-| Link `lh`/`lobe`/`lobehub` into your shell | `bun run cli:link`         |
-| Remove the global link                     | `bun run cli:unlink`       |
+| Tâche | Commande |
+| --- | --- |
+| Lancer en mode dev | `bun run dev -- <command>` |
+| Build le CLI | `bun run build` |
+| Lier `lh`/`lobe`/`lobehub` à votre terminal | `bun run cli:link` |
+| Supprimer le lien global | `bun run cli:unlink` |
 
-- `bun run build` only generates `dist/index.js`.
-- To make `lh` available in your shell, run `bun run cli:link`.
-- After linking, if your shell still cannot find `lh`, run `rehash` in `zsh`.
+- `bun run build` génère uniquement `dist/index.js`.
+- Pour rendre `lh` disponible dans votre terminal, lancez `bun run cli:link`.
+- Après avoir créé le lien, si votre terminal ne trouve toujours pas `lh`, lancez `rehash` dans `zsh`.
 
-## Custom Server URL
+## URL Serveur Personnalisée
 
-By default the CLI connects to `https://app.lobehub.com`. To point it at a different server (e.g. a local instance):
+Par défaut, le CLI se connecte à `https://app.lobehub.com`. Pour le faire pointer vers un serveur différent (par ex. une instance locale) :
 
-| Method               | Command                                                         | Persistence                         |
-| -------------------- | --------------------------------------------------------------- | ----------------------------------- |
-| Environment variable | `LOBEHUB_SERVER=http://localhost:4000 bun run dev -- <command>` | Current command only                |
-| Login flag           | `lh login --server http://localhost:4000`                       | Saved to `~/.lobehub/settings.json` |
+| Méthode | Commande | Persistance |
+| --- | --- | --- |
+| Variable d'environnement | `LOBEHUB_SERVER=http://localhost:4000 bun run dev -- <command>` | Commande en cours uniquement |
+| Option de connexion | `lh login --server http://localhost:4000` | Sauvegardé dans `~/.lobehub/settings.json` |
 
-Priority: `LOBEHUB_SERVER` env var > `settings.json` > default official URL.
+Priorité : Variable d'env `LOBEHUB_SERVER` > `settings.json` > URL officielle par défaut.
 
-## Shell Completion
+## Auto-complétion de Terminal
 
-### Install completion for a linked CLI
+### Installer l'auto-complétion pour un CLI lié
 
-| Shell  | Command                        |
-| ------ | ------------------------------ |
-| `zsh`  | `source <(lh completion zsh)`  |
+| Terminal | Commande |
+| --- | --- |
+| `zsh` | `source <(lh completion zsh)` |
 | `bash` | `source <(lh completion bash)` |
 
-### Use completion during local development
+### Utiliser l'auto-complétion pendant le développement local
 
-| Shell  | Command                                      |
-| ------ | -------------------------------------------- |
-| `zsh`  | `source <(bun src/index.ts completion zsh)`  |
+| Terminal | Commande |
+| --- | --- |
+| `zsh` | `source <(bun src/index.ts completion zsh)` |
 | `bash` | `source <(bun src/index.ts completion bash)` |
 
-- Completion is context-aware. For example, `lh agent <Tab>` shows agent subcommands instead of top-level commands.
-- If you update completion logic locally, re-run the corresponding `source <(...)` command to reload it in the current shell session.
-- Completion only registers shell functions. It does not install the `lh` binary by itself.
+- L'auto-complétion dépend du contexte. Par exemple, `lh agent <Tab>` affiche les sous-commandes de l'agent au lieu des commandes principales.
+- Si vous mettez à jour la logique d'auto-complétion localement, réexécutez la commande `source <(...)` correspondante pour recharger la configuration.
+- L'auto-complétion enregistre uniquement les fonctions shell. Elle n'installe pas le binaire `lh` en lui-même.
 
-## Quick Check
+## Vérification Rapide
 
 ```bash
 which lh

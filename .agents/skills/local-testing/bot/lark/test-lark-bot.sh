@@ -80,5 +80,9 @@ echo "[$APP] Waiting ${WAIT}s for bot response..."
 sleep "$WAIT"
 
 echo "[$APP] Capturing screenshot..."
+<<<<<<<< HEAD:.agents/skills/agent-testing/bot/lark/test-lark-bot.sh
+"$SCRIPT_DIR/../../scripts/capture-app-window.sh" "$APP" "$SCREENSHOT"
+========
 "$SCRIPT_DIR/../capture-app-window.sh" "$APP" "$SCREENSHOT"
+>>>>>>>> origin:.agents/skills/local-testing/bot/lark/test-lark-bot.sh
 echo "[$APP] Done! Screenshot saved to $SCREENSHOT"

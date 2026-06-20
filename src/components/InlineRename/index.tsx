@@ -1,7 +1,7 @@
 'use client';
 
 import { type InputProps } from '@lobehub/ui';
-import { Input, Popover } from '@lobehub/ui';
+import { Input, Popover, stopPropagation } from '@lobehub/ui';
 import { type InputRef, type PopoverProps } from 'antd';
 import { type KeyboardEvent } from 'react';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
@@ -11,10 +11,9 @@ import { useOverlayPopoverPortalProps } from '@/features/NavPanel/OverlayContain
 function FocusableInput(props: InputProps) {
   const ref = useRef<InputRef>(null);
   useEffect(() => {
-    const timer = setTimeout(() => {
+    queueMicrotask(() => {
       ref.current?.input?.focus();
-    }, 100);
-    return () => clearTimeout(timer);
+    });
   }, []);
   return <Input {...props} ref={ref} />;
 }
@@ -100,11 +99,8 @@ const InlineRename = memo<InlineRenameProps>(
             defaultValue={title}
             onBlur={handleSave}
             onChange={(e) => setNewTitle(e.target.value)}
+            onClick={stopPropagation}
             onKeyDown={handleKeyDown}
-            onClick={(e) => {
-              e.stopPropagation();
-              e.nativeEvent.stopImmediatePropagation();
-            }}
             onPressEnter={() => {
               handleSave();
               handleClose();

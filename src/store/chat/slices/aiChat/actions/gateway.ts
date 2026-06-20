@@ -9,66 +9,33 @@ import type { ConversationContext, ExecAgentResult, MessageMetadata } from '@lob
 import { isDesktop } from '@/const/version';
 import { aiAgentService, type ResumeApprovalParam } from '@/services/aiAgent';
 import { gatewayConnectionService } from '@/services/electron/gatewayConnection';
-import { localFileService } from '@/services/electron/localFileService';
 import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
 import { getAgentStoreState } from '@/store/agent';
-import { agentSelectors, chatConfigByIdSelectors } from '@/store/agent/selectors';
+import { chatConfigByIdSelectors } from '@/store/agent/selectors';
 import { consumePendingTopicRepos, getPendingTopicRepos } from '@/store/chat/pendingTopicRepos';
 import { topicSelectors } from '@/store/chat/selectors';
 import type { ChatStore } from '@/store/chat/store';
 import type { StoreSetter } from '@/store/types';
 import { useUserStore } from '@/store/user';
+import { settingsSelectors } from '@/store/user/selectors';
 
-import { createGatewayEventHandler } from './gatewayEventHandler';
-
-/**
- * Scan the active working directory for project-level skills
- * (`.agents/skills` / `.claude/skills`) so the server can surface them in
- * `<available_skills>`. Desktop-only and best-effort: a failed scan must not
- * block the send.
- */
-const resolveProjectSkills = async (
-  get: () => ChatStore,
-): Promise<{ description?: string; name: string; path: string }[] | undefined> => {
-  if (!isDesktop) return undefined;
-
-  const topicWorkingDirectory = topicSelectors.currentTopicWorkingDirectory(get());
-  const agentWorkingDirectory = agentSelectors.currentAgentWorkingDirectory(getAgentStoreState());
-  const workingDirectory = topicWorkingDirectory ?? agentWorkingDirectory;
-  if (!workingDirectory) return undefined;
-
-  try {
-    const { skills } = await localFileService.listProjectSkills({ scope: workingDirectory });
-    if (skills.length === 0) return undefined;
-    // The directory tree is enumerated lazily at activation time by the Skills
-    // runtime (via the local-system `listFiles` tool), so we drop `files` here
-    // — keeps the op-param payload small.
-    return skills.map((skill) => ({
-      description: skill.description,
-      name: skill.name,
-      path: skill.path,
-    }));
-  } catch {
-    return undefined;
-  }
-};
+import { createGatewayEventHandler, isCompletedRuntimeEnd } from './gatewayEventHandler';
+import { buildRunLifecycle } from './runLifecycle/buildRunLifecycle';
+import type { RunScope } from './runLifecycle/types';
 
 /**
- * When the agent runs against the local machine ("本机"), resolve this desktop's
+ * When the agent runs against the local machine, resolve this desktop's
  * own gateway deviceId so it can be passed as the run's `deviceId`. The server
  * then presets `activeDeviceId` and injects `lobe-local-system` into the very
  * first LLM payload — skipping the extra `activateDevice` round-trip the model
  * is otherwise forced to make whenever more than one device is online (with a
  * single device the server's heuristic already covered it).
  *
- * Gated on the effective runtime mode (`isLocalSystemEnabledById`), NOT on
- * `agencyConfig.executionTarget`: the latter is only written by the newer
- * HeteroDeviceSwitcher, whereas the legacy ModeSelector writes just
- * `runtimeMode`. Resolving a device whenever the target is unset would override
- * an explicit `cloud` / `none` choice and wrongly route a cloud run to the
- * local machine. `runtimeMode` is the single source of truth both selectors
- * agree on (and what the server gates CloudSandbox on).
+ * Gated on the effective runtime mode (`isLocalSystemEnabledById`), which
+ * derives from `agencyConfig.executionTarget` — only a `local` target presets
+ * the device. Resolving a device for `sandbox` / `none` / `device` targets
+ * would wrongly route the run to this machine.
  *
  * Desktop-only and best-effort: any failure falls back to the server-side
  * device-resolution heuristics. We don't pre-check online status here — an
@@ -77,7 +44,14 @@ const resolveProjectSkills = async (
 const resolveLocalDeviceId = async (agentId?: string): Promise<string | undefined> => {
   if (!isDesktop || !agentId) return undefined;
 
-  const isLocal = chatConfigByIdSelectors.isLocalSystemEnabledById(agentId)(getAgentStoreState());
+  const agentState = getAgentStoreState();
+  // Chat mode means "no execution environment" — never resolve a device, even
+  // when the target is `local`. The server enforces this too (it auto-activates
+  // a single online device), but skipping the deviceId round-trip here avoids
+  // sending an id the server would only discard.
+  if (chatConfigByIdSelectors.isChatModeById(agentId)(agentState)) return undefined;
+
+  const isLocal = chatConfigByIdSelectors.isLocalSystemEnabledById(agentId)(agentState);
   if (!isLocal) return undefined;
 
   try {
@@ -116,9 +90,21 @@ export interface ConnectGatewayParams {
    */
   onEvent?: (event: AgentStreamEvent) => void;
   /**
-   * Called when the session completes (agent_runtime_end or session_complete)
+   * Called when the session completes (agent_runtime_end or session_complete).
+   *
+   * `succeeded` is true only for a clean `agent_runtime_end`; callers use it to
+   * avoid stomping the `unread` status a background completion writes (the
+   * completion's `markTopicUnread` and this terminal `active` write
+   * partition the cases by `succeeded && !viewing`).
+   *
+   * `terminalReceived` is true when a terminal agent event (`agent_runtime_end` /
+   * `error`) was processed — meaning the gateway event handler already completed
+   * the op via the shared run lifecycle, so `onSessionComplete` is pure transport
+   * cleanup. When false (terminal-missing: `session_complete` / `auth_failed` /
+   * token-refresh failure arrived with no terminal agent event), the callback must
+   * itself complete the op as the explicit fallback so it never sticks `running`.
    */
-  onSessionComplete?: () => void;
+  onSessionComplete?: (info: { succeeded: boolean; terminalReceived: boolean }) => void;
   /**
    * The operation ID returned by execAgent
    */
@@ -199,17 +185,31 @@ export class GatewayActionImpl {
     // so we can fire onSessionComplete from the subsequent disconnect.
     // session_complete is handled separately as an explicit server signal.
     let receivedTerminalEvent = false;
+    let terminalSucceeded = false;
     let sessionCompleted = false;
     const fireSessionComplete = () => {
       if (sessionCompleted) return;
       sessionCompleted = true;
-      onSessionComplete?.();
+      onSessionComplete?.({
+        succeeded: terminalSucceeded,
+        terminalReceived: receivedTerminalEvent,
+      });
     };
 
     // Forward agent events to caller, and track terminal events
     client.on('agent_event', (event) => {
       if (event.type === 'agent_runtime_end' || event.type === 'error') {
         receivedTerminalEvent = true;
+      }
+      // Only a clean completion counts as success — a cancel ('interrupted') or
+      // deferred-tool park ('waiting_for_async_tool') must take the non-success
+      // branch so onSessionComplete clears the run back to 'active' instead of
+      // leaving the topic persisted as an unread completion.
+      if (
+        event.type === 'agent_runtime_end' &&
+        isCompletedRuntimeEnd((event.data as { reason?: string } | undefined)?.reason)
+      ) {
+        terminalSucceeded = true;
       }
       onEvent?.(event);
     });
@@ -297,14 +297,25 @@ export class GatewayActionImpl {
 
   /**
    * Check if Gateway mode is available and enabled.
-   * Returns true if both server config and user lab toggle are set.
+   * Returns true when the server supports Gateway mode and the agent config
+   * has not disabled it. `disableGatewayMode: undefined` means enabled.
    */
-  isGatewayModeEnabled = (): boolean => {
-    const agentGatewayUrl =
-      window.global_serverConfigStore?.getState()?.serverConfig?.agentGatewayUrl;
-    const enableGatewayMode = useUserStore.getState().preference.lab?.enableGatewayMode;
+  isGatewayModeEnabled = (agentId?: string): boolean => {
+    const serverConfig = window.global_serverConfigStore?.getState()?.serverConfig;
+    const agentState = getAgentStoreState();
+    const resolvedAgentId = agentId ?? agentState.activeAgentId;
+    const agentDisableGatewayMode = resolvedAgentId
+      ? chatConfigByIdSelectors.getChatConfigById(resolvedAgentId)(agentState).disableGatewayMode
+      : undefined;
+    const defaultDisableGatewayMode = settingsSelectors.defaultAgentConfig(useUserStore.getState())
+      .chatConfig?.disableGatewayMode;
+    const disableGatewayMode = agentDisableGatewayMode ?? defaultDisableGatewayMode;
 
-    return !!agentGatewayUrl && !!enableGatewayMode;
+    return (
+      !!serverConfig?.agentGatewayUrl &&
+      !!serverConfig.enableGatewayMode &&
+      disableGatewayMode !== true
+    );
   };
 
   /**
@@ -348,6 +359,13 @@ export class GatewayActionImpl {
      * a fresh user prompt.
      */
     resumeApproval?: ResumeApprovalParam;
+    /**
+     * Temporary message IDs created during the initial sendMessage phase.
+     * These are associated with the new gateway operation so the UI doesn't
+     * show a blank loading state while waiting for the first `step_start`
+     * event to call `replaceMessages` with the server's real message IDs.
+     */
+    tempMessageIds?: string[];
   }): Promise<ExecAgentResult> => {
     const {
       context,
@@ -358,6 +376,7 @@ export class GatewayActionImpl {
       parentMessageId,
       parentOperationId,
       resumeApproval,
+      tempMessageIds,
     } = params;
 
     const agentGatewayUrl =
@@ -388,10 +407,7 @@ export class GatewayActionImpl {
       ? this.#get().getOperationAbortSignal(parentOperationId)
       : undefined;
 
-    const [projectSkills, localDeviceId] = await Promise.all([
-      resolveProjectSkills(this.#get),
-      resolveLocalDeviceId(context.agentId),
-    ]);
+    const localDeviceId = await resolveLocalDeviceId(context.agentId);
 
     const result = await aiAgentService.execAgentTask(
       {
@@ -400,6 +416,13 @@ export class GatewayActionImpl {
           agentDocumentId: context.agentDocumentId,
           defaultTaskAssigneeAgentId: context.defaultTaskAssigneeAgentId,
           documentId: context.documentId,
+          // When AgentBuilder runs, context.agentId is the builtin builder agent.
+          // The actual editing target is chatStore.activeAgentId (kept in sync by
+          // AgentBuilderProvider). Pass it so the server can route tool calls to
+          // the correct agent rather than the builder itself.
+          ...(context.scope === 'agent_builder' && {
+            editingAgentId: this.#get().activeAgentId ?? undefined,
+          }),
           groupId: context.groupId,
           ...(initialTopicMetadata && { initialTopicMetadata }),
           scope: context.scope,
@@ -410,7 +433,6 @@ export class GatewayActionImpl {
         deviceId: localDeviceId,
         fileIds,
         parentMessageId,
-        projectSkills,
         prompt: message,
         resumeApproval,
         trigger: metadata?.trigger,
@@ -487,6 +509,15 @@ export class GatewayActionImpl {
     // Associate the server-created assistant message with the gateway operation
     this.#get().associateMessageWithOperation(result.assistantMessageId, gatewayOpId);
 
+    // Also associate temp message IDs so the UI doesn't show a blank loading
+    // state while waiting for the first `step_start` event to call
+    // `replaceMessages` with the server's real message IDs.
+    if (tempMessageIds?.length) {
+      for (const tempId of tempMessageIds) {
+        this.#get().associateMessageWithOperation(tempId, gatewayOpId);
+      }
+    }
+
     // Phase-1 init done: child op is running. Hand off loading state from
     // the caller's op (e.g. `sendMessage`) to the child without a gap.
     if (parentOperationId) this.#get().completeOperation(parentOperationId);
@@ -534,21 +565,42 @@ export class GatewayActionImpl {
       // the same WS that gatewayConnections is keyed on.
       gatewayOperationId: result.operationId,
       operationId: gatewayOpId,
+      // Shared run lifecycle: drives the terminal completeRun / afterRunComplete
+      // for the gateway transport (op completion + unread + queue drain +
+      // notification) at `agent_runtime_end` / `error`.
+      runLifecycle: buildRunLifecycle(this.#get, {
+        context: execContext,
+        parentMessageId: result.assistantMessageId,
+        parentMessageType: 'assistant',
+        runId: gatewayOpId,
+        runScope: (execContext.scope === 'sub_agent' ? 'sub_agent' : 'top_level') as RunScope,
+        runtimeType: 'gateway',
+      }),
     });
 
     this.#get().connectToGateway({
       gatewayUrl: agentGatewayUrl,
       onEvent: eventHandler,
-      onSessionComplete: () => {
-        this.#get().completeOperation(gatewayOpId);
+      onSessionComplete: ({ succeeded, terminalReceived }) => {
+        // The gateway event handler already completed the op via the shared run
+        // lifecycle on `agent_runtime_end` / `error`. Only complete here as the
+        // terminal-missing fallback so the op never sticks `running`.
+        if (!terminalReceived) this.#get().completeOperation(gatewayOpId);
         if (result.topicId) {
           this.#get().internal_updateTopicLoading(result.topicId, false);
-          void this.#get().updateTopicStatus?.({
-            agentId: execContext.agentId,
-            groupId: execContext.groupId,
-            status: 'active',
-            topicId: result.topicId,
-          });
+          // A clean completion the user isn't watching is owned by
+          // `markTopicUnread` (status: 'unread'); skip the 'active' write so
+          // the two never race over the status field. Every other case (viewing,
+          // error, abort) clears the running state back to 'active' as before.
+          const viewing = this.#get().activeTopicId === result.topicId;
+          if (viewing || !succeeded) {
+            void this.#get().updateTopicStatus?.({
+              agentId: execContext.agentId,
+              groupId: execContext.groupId,
+              status: 'active',
+              topicId: result.topicId,
+            });
+          }
           // Clear running operation from topic metadata (best-effort from frontend;
           // if browser was closed, reconnect logic will handle stale entries)
           topicService
@@ -620,11 +672,30 @@ export class GatewayActionImpl {
       topicId,
     };
 
+    // Anchor the operation to the run's real start: the assistant message was
+    // created when the run began. Defaulting to Date.now() here would reset
+    // elapsed-time displays (OpStatusTray) to zero on every page refresh.
+    const assistantMessage = Object.values(this.#get().messagesMap)
+      .flat()
+      .find((m) => m.id === assistantMessageId);
+
+    // `createdAt` is typed as a number but, after a DB rehydrate, it can arrive
+    // as a Date / ISO string (the message service casts rows `as unknown` without
+    // converting). Normalize to epoch ms here so the elapsed-time math stays a
+    // number — passing a string/Invalid Date straight through makes
+    // `Date.now() - startTime` resolve to NaN and renders as "NaN:NaN".
+    const startTime = assistantMessage?.createdAt
+      ? new Date(assistantMessage.createdAt).getTime()
+      : undefined;
+
     // Create a local operation for UI loading state, stashing the server op id
     // so intervention flows can find it after reconnect as well.
     const { operationId: gatewayOpId } = this.#get().startOperation({
       context,
-      metadata: { serverOperationId: operationId },
+      metadata: {
+        serverOperationId: operationId,
+        ...(Number.isFinite(startTime) ? { startTime } : {}),
+      },
       type: 'execServerAgentRuntime',
     });
 
@@ -645,19 +716,35 @@ export class GatewayActionImpl {
       // the same WS that gatewayConnections is keyed on.
       gatewayOperationId: operationId,
       operationId: gatewayOpId,
+      runLifecycle: buildRunLifecycle(this.#get, {
+        context,
+        parentMessageId: assistantMessageId,
+        parentMessageType: 'assistant',
+        runId: gatewayOpId,
+        runScope: (context.scope === 'sub_agent' ? 'sub_agent' : 'top_level') as RunScope,
+        runtimeType: 'gateway',
+      }),
     });
 
     this.#get().connectToGateway({
       gatewayUrl: agentGatewayUrl,
       onEvent: eventHandler,
-      onSessionComplete: () => {
-        this.#get().completeOperation(gatewayOpId);
+      onSessionComplete: ({ succeeded, terminalReceived }) => {
+        // See executeGatewayAgent's onSessionComplete: the handler owns op
+        // completion via the run lifecycle; complete here only as the
+        // terminal-missing fallback.
+        if (!terminalReceived) this.#get().completeOperation(gatewayOpId);
         this.#get().internal_updateTopicLoading(topicId, false);
-        void this.#get().updateTopicStatus?.({
-          agentId: context.agentId,
-          status: 'active',
-          topicId,
-        });
+        // See executeGatewayAgent's onSessionComplete: a clean background
+        // completion is left to markTopicUnread (status: 'unread').
+        const viewing = this.#get().activeTopicId === topicId;
+        if (viewing || !succeeded) {
+          void this.#get().updateTopicStatus?.({
+            agentId: context.agentId,
+            status: 'active',
+            topicId,
+          });
+        }
         topicService.updateTopicMetadata(topicId, { runningOperation: null }).catch(() => {});
       },
       operationId,

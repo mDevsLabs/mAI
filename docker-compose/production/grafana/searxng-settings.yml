@@ -325,16 +325,16 @@ checker:
           - has_infobox
 
 categories_as_tabs:
-  general: null
-  images: null
-  videos: null
-  news: null
-  map: null
-  music: null
-  it: null
-  science: null
-  files: null
-  social media: null
+  general:
+  images:
+  videos:
+  news:
+  map:
+  music:
+  it:
+  science:
+  files:
+  social media:
 
 engines:
   - name: 9gag
@@ -729,7 +729,7 @@ engines:
     about:
       website: https://www.erowid.org/
       wikidata_id: Q1430691
-      official_api_documentation: null
+      official_api_documentation:
       use_official_api: false
       require_api_key: false
       results: HTML
@@ -819,7 +819,7 @@ engines:
     about:
       website: https://www.etymonline.com/
       wikidata_id: Q1188617
-      official_api_documentation: null
+      official_api_documentation:
       use_official_api: false
       require_api_key: false
       results: HTML
@@ -1144,7 +1144,7 @@ engines:
     about:
       website: https://libgen.fun/
       wikidata_id: Q22017206
-      official_api_documentation: null
+      official_api_documentation:
       use_official_api: false
       require_api_key: false
       results: HTML
@@ -1189,7 +1189,7 @@ engines:
     about:
       website: https://lobste.rs/
       wikidata_id: Q60762874
-      official_api_documentation: null
+      official_api_documentation:
       use_official_api: false
       require_api_key: false
       results: HTML
@@ -1394,8 +1394,8 @@ engines:
     shortcut: or
     about:
       website: https://openrepos.net/
-      wikidata_id: null
-      official_api_documentation: null
+      wikidata_id:
+      official_api_documentation:
       use_official_api: false
       require_api_key: false
       results: HTML
@@ -2314,7 +2314,7 @@ engines:
     no_result_for_http_status: [404]
     about:
       website: https://www.woxikon.de/
-      wikidata_id: null # No Wikidata ID
+      wikidata_id: # No Wikidata ID
       use_official_api: false
       require_api_key: false
       results: HTML

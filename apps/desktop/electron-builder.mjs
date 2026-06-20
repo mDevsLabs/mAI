@@ -65,9 +65,9 @@ const getPublishConfig = () => {
   console.info(`📦 ${channelPath} channel: No UPDATE_SERVER_URL, falling back to GitHub provider`);
   return [
     {
-      owner: 'mDevsLabs',
+      owner: 'lobehub',
       provider: 'github',
-      repo: 'mAI',
+      repo: 'lobehub',
     },
   ];
 };
@@ -85,9 +85,9 @@ if (!hasAppleCertificate) {
 
 // 根据版本类型确定协议 scheme
 const getProtocolScheme = () => {
-  if (isCanary) return 'mai-canary';
-  if (isNightly) return 'mai-nightly';
-  return 'mai';
+  if (isCanary) return 'lobehub-canary';
+  if (isNightly) return 'lobehub-nightly';
+  return 'lobehub';
 };
 
 const protocolScheme = getProtocolScheme();
@@ -213,7 +213,7 @@ const config = {
       console.info(`⏭️  Skipping Assets.car (not found or copy failed)`);
     }
   },
-  appId: 'com.mai.mai-desktop',
+  appId: 'com.lobehub.lobehub-desktop',
   appImage: {
     artifactName: '${productName}-${version}.${ext}',
   },
@@ -273,7 +273,7 @@ const config = {
       CFBundleIconName: 'AppIcon',
       CFBundleURLTypes: [
         {
-          CFBundleURLName: 'mAI Protocol',
+          CFBundleURLName: 'LobeHub Protocol',
           CFBundleURLSchemes: [protocolScheme],
         },
       ],
@@ -311,7 +311,7 @@ const config = {
   },
   protocols: [
     {
-      name: 'mAI Protocol',
+      name: 'LobeHub Protocol',
       schemes: [protocolScheme],
     },
   ],
@@ -330,7 +330,7 @@ const config = {
   ],
 
   win: {
-    executableName: 'mAI',
+    executableName: 'LobeHub',
   },
 };
 

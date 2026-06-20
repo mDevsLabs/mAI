@@ -22,21 +22,24 @@ export interface UserGeneralConfig {
   mermaidTheme?: MermaidProps['theme'];
   neutralColor?: NeutralColors;
   primaryColor?: PrimaryColors;
+  responseLanguage?: string;
+  telemetry: boolean;
+  timezone?: string;
+  transitionMode?: ResponseAnimationStyle;
   enablePets?: boolean;
   pets?: string[];
-  petsZoom?: number;
   petsLevel?: number;
+  petsMsgCount?: number;
+  petsZoom?: number;
   petsSound?: boolean;
+  petsVolume?: number;
   petsAnim?: boolean;
   petsAcc?: boolean;
   petsBg?: boolean;
   petsColor?: boolean;
   petsWeather?: boolean;
-  petsVoice?: boolean;
   petsAura?: boolean;
-  petsMsgCount?: number;
-  responseLanguage?: string;
-  telemetry: boolean;
-  timezone?: string;
-  transitionMode?: ResponseAnimationStyle;
+  petsCitations?: boolean;
+  petsEncouragements?: boolean;
 }
+

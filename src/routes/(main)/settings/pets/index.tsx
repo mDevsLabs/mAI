@@ -3,7 +3,7 @@
 import { Avatar, Flexbox, Form, Icon, SliderWithInput } from '@lobehub/ui';
 import { Button, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
-import { Lock, PawPrint, Store } from 'lucide-react';
+import { PawPrint, Sliders, Store } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -79,41 +79,6 @@ const Page = memo(() => {
             </div>
           )}
         </Flexbox>
-        <Flexbox
-          horizontal
-          align={'center'}
-          gap={12}
-          padding={12}
-          style={{ background: 'var(--color-fill-secondary)', borderRadius: 8 }}
-        >
-          <div style={{ fontWeight: 'bold', fontSize: 14 }}>Niveau {petsLevel}</div>
-          <div
-            style={{
-              flex: 1,
-              height: 8,
-              background: 'var(--color-fill-tertiary)',
-              borderRadius: 4,
-              overflow: 'hidden',
-            }}
-          >
-            <div
-              style={{
-                width: `${petsLevel === 100 ? 100 : ((general?.petsMsgCount || 0) % 10) * 10}%`,
-                height: '100%',
-                background: 'var(--color-primary)',
-                transition: 'width 0.3s',
-              }}
-            />
-          </div>
-          <div style={{ fontSize: 12, color: 'var(--color-text-description)' }}>
-            {petsLevel === 100 ? 'Max' : `${(general?.petsMsgCount || 0) % 10} / 10 msgs`}
-          </div>
-        </Flexbox>
-        {petsLevel >= 100 && (
-          <div style={{ color: 'var(--color-primary)', fontSize: 12, textAlign: 'center' }}>
-            🎉 Niveau maximum atteint ! Vous pouvez maintenant avoir 2 Pets.
-          </div>
-        )}
         <Button
           block
           disabled={!enablePets}
@@ -133,7 +98,7 @@ const Page = memo(() => {
   const petsZoomItem = {
     children: (
       <SliderWithInput
-        disabled={!enablePets || petsLevel < 10}
+        disabled={!enablePets}
         marks={{ 0.5: <span style={{ whiteSpace: 'nowrap' }}>Min</span>, 3: <span style={{ whiteSpace: 'nowrap' }}>Max</span> }}
         max={3}
         min={0.5}
@@ -141,37 +106,22 @@ const Page = memo(() => {
         style={{ width: 350 }}
       />
     ),
-    desc:
-      petsLevel >= 10 ? (
-        t('settingPets.zoom.desc')
-      ) : (
-        <>
-          <Icon icon={Lock} /> Débloqué au niveau 10
-        </>
-      ),
+    desc: t('settingPets.zoom.desc'),
     label: t('settingPets.zoom.title'),
     minWidth: undefined,
     name: 'petsZoom',
   };
 
   const petsSoundItem = {
-    children: <Switch disabled={!enablePets || petsLevel < 90} defaultChecked={false} />,
-    desc:
-      petsLevel >= 90 ? (
-        'Activer les sons ludiques des pets.'
-      ) : (
-        <>
-          <Icon icon={Lock} /> Débloqué au niveau 90
-        </>
-      ),
+    children: <Switch disabled={!enablePets} defaultChecked={false} />,
+    desc: 'Activer les sons ludiques des pets.',
     label: 'Son du pet',
     minWidth: undefined,
     name: 'petsSound',
     valuePropName: 'checked',
-    divider: false,
   };
 
-  const soundEnabled = enablePets && petsLevel >= 90 && !!general?.petsSound;
+  const soundEnabled = enablePets && !!general?.petsSound;
 
   const petsVolumeItem = {
     children: (
@@ -200,103 +150,25 @@ const Page = memo(() => {
     label: 'Volume du son',
     minWidth: undefined,
     name: 'petsVolume',
+    divider: false,
   };
 
-  const petsAnimItem = {
-    children: <Switch disabled={!enablePets || petsLevel < 30} />,
-    desc:
-      petsLevel >= 30 ? (
-        'Activer des animations avancées pour vos pets.'
-      ) : (
-        <>
-          <Icon icon={Lock} /> Débloqué au niveau 30
-        </>
-      ),
-    label: 'Animations Avancées',
+  const petsCitationsItem = {
+    children: <Switch disabled={!enablePets} defaultChecked={false} />,
+    desc: 'Activer l\'affichage de textes et citations.',
+    label: 'Citations',
     minWidth: undefined,
-    name: 'petsAnim',
+    name: 'petsCitations',
     valuePropName: 'checked',
   };
 
-  const petsAccItem = {
-    children: <Switch disabled={!enablePets || petsLevel < 40} />,
-    desc:
-      petsLevel >= 40 ? (
-        'Activer les accessoires pour vos pets.'
-      ) : (
-        <>
-          <Icon icon={Lock} /> Débloqué au niveau 40
-        </>
-      ),
-    label: 'Accessoires virtuels',
+  const petsEncouragementsItem = {
+    children: <Switch disabled={!enablePets} defaultChecked={false} />,
+    desc: 'Activer les encouragements et félicitations du pet.',
+    label: 'Encouragements et félicitations',
     minWidth: undefined,
-    name: 'petsAcc',
+    name: 'petsEncouragements',
     valuePropName: 'checked',
-  };
-
-  const petsBgItem = {
-    children: <Switch disabled={!enablePets || petsLevel < 50} />,
-    desc:
-      petsLevel >= 50 ? (
-        'Activer les arrière-plans animés.'
-      ) : (
-        <>
-          <Icon icon={Lock} /> Débloqué au niveau 50
-        </>
-      ),
-    label: 'Arrière-plans',
-    minWidth: undefined,
-    name: 'petsBg',
-    valuePropName: 'checked',
-  };
-
-  const petsColorItem = {
-    children: <Switch disabled={!enablePets || petsLevel < 60} />,
-    desc:
-      petsLevel >= 60 ? (
-        'Activer les couleurs personnalisées.'
-      ) : (
-        <>
-          <Icon icon={Lock} /> Débloqué au niveau 60
-        </>
-      ),
-    label: 'Couleurs',
-    minWidth: undefined,
-    name: 'petsColor',
-    valuePropName: 'checked',
-  };
-
-  const petsWeatherItem = {
-    children: <Switch disabled={!enablePets || petsLevel < 70} />,
-    desc:
-      petsLevel >= 70 ? (
-        'Activer les effets météo.'
-      ) : (
-        <>
-          <Icon icon={Lock} /> Débloqué au niveau 70
-        </>
-      ),
-    label: 'Météo',
-    minWidth: undefined,
-    name: 'petsWeather',
-    valuePropName: 'checked',
-  };
-
-  const petsAuraItem = {
-    children: <Switch disabled={!enablePets || petsLevel < 80} />,
-    desc:
-      petsLevel >= 80 ? (
-        "Activer l'aura magique autour du pet."
-      ) : (
-        <>
-          <Icon icon={Lock} /> Débloqué au niveau 80
-        </>
-      ),
-    label: 'Aura',
-    minWidth: undefined,
-    name: 'petsAura',
-    valuePropName: 'checked',
-    divider: true,
   };
 
   return (
@@ -312,18 +184,20 @@ const Page = memo(() => {
             children: [
               enablePetsItem,
               petsItem,
+            ],
+            title: t('settingPets.section.choice'),
+            icon: PawPrint,
+          },
+          {
+            children: [
               petsZoomItem,
-              petsAnimItem,
-              petsAccItem,
-              petsBgItem,
-              petsColorItem,
-              petsWeatherItem,
-              petsAuraItem,
               petsSoundItem,
               petsVolumeItem,
+              petsCitationsItem,
+              petsEncouragementsItem,
             ],
-            title: 'Pets',
-            icon: PawPrint,
+            title: t('settingPets.section.options'),
+            icon: Sliders,
           },
         ]}
         onValuesChange={async (value) => {

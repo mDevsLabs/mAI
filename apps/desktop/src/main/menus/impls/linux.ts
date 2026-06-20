@@ -1,7 +1,7 @@
 import path from 'node:path';
 
 import type { MenuItemConstructorOptions } from 'electron';
-import { app, BrowserWindow, clipboard, dialog, Menu, shell } from 'electron';
+import { app, clipboard, dialog, Menu, shell } from 'electron';
 
 import { isDev } from '@/const/env';
 import { HETERO_AGENT_DIR } from '@/const/heteroAgent';
@@ -122,16 +122,7 @@ export class LinuxMenu extends BaseMenuPlatform implements IMenuPlatform {
           { type: 'separator' },
           {
             accelerator: 'CmdOrCtrl+W',
-            click: () => {
-              const focused = BrowserWindow.getFocusedWindow();
-              if (!focused) return;
-              const mainWindow = this.app.browserManager.getMainWindow();
-              if (focused === mainWindow.browserWindow) {
-                mainWindow.broadcast('closeCurrentTabOrWindow');
-              } else {
-                focused.close();
-              }
-            },
+            click: (_item, targetWindow) => this.closeFocusedTabOrWindow(targetWindow),
             label: t('window.close'),
           },
           { label: t('window.minimize'), role: 'minimize' },
@@ -212,36 +203,9 @@ export class LinuxMenu extends BaseMenuPlatform implements IMenuPlatform {
           },
           {
             click: async () => {
-              await shell.openExternal('https://github.com/mDevsLabs/mAI');
+              await shell.openExternal('https://github.com/lobehub/lobe-chat');
             },
             label: t('help.githubRepo'),
-          },
-          {
-            click: async () => {
-              const mainWindow = this.app.browserManager.getMainWindow();
-              mainWindow.show();
-              mainWindow.broadcast('navigate', { path: '/settings/changelog' });
-            },
-            label: t('help.changelog') || 'Journal des modifications',
-          },
-          { type: 'separator' },
-          {
-            click: () => {
-              const heteroAgentPath = path.join(this.app.appStoragePath, HETERO_AGENT_DIR);
-              console.info(`[Menu] Opening HeteroAgent directory: ${heteroAgentPath}`);
-              shell.openPath(heteroAgentPath).catch((err) => {
-                console.error(`[Menu] Error opening path ${heteroAgentPath}:`, err);
-              });
-            },
-            label: t('help.openHeteroAgentDir'),
-          },
-          {
-            checked: this.app.storeManager.get('heteroTracingEnabled', false),
-            click: (item) => {
-              this.app.storeManager.set('heteroTracingEnabled', item.checked);
-            },
-            label: t('help.toggleHeteroTracing'),
-            type: 'checkbox',
           },
           { type: 'separator' },
           {

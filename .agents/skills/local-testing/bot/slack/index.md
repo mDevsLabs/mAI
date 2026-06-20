@@ -2,7 +2,11 @@
 
 **App name:** `Slack` | **Process name:** `Slack`
 
+<<<<<<<< HEAD:.agents/skills/agent-testing/bot/slack/index.md
+See [references/osascript.md](../../references/osascript.md) for shared patterns.
+========
 See [osascript-common.md](../osascript-common.md) for shared patterns.
+>>>>>>>> origin:.agents/skills/local-testing/bot/slack/index.md
 
 ## Activate & Navigate
 
@@ -68,6 +72,11 @@ screencapture /tmp/slack-bot-response.png
 ## Script
 
 ```bash
+<<<<<<<< HEAD:.agents/skills/agent-testing/bot/slack/index.md
+./.agents/skills/agent-testing/bot/slack/test-slack-bot.sh "bot-testing" "@mybot hello"
+./.agents/skills/agent-testing/bot/slack/test-slack-bot.sh "bot-testing" "/ask What is 2+2?" 20
+========
 ./.agents/skills/local-testing/bot/slack/test-slack-bot.sh "bot-testing" "@mybot hello"
 ./.agents/skills/local-testing/bot/slack/test-slack-bot.sh "bot-testing" "/ask What is 2+2?" 20
+>>>>>>>> origin:.agents/skills/local-testing/bot/slack/index.md
 ```

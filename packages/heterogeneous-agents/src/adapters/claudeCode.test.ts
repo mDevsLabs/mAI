@@ -176,6 +176,38 @@ describe('ClaudeCodeAdapter', () => {
       });
     });
 
+    it('does not treat an allowed rate_limit_event window as a quota limit on a later network error', () => {
+      const adapter = new ClaudeCodeAdapter();
+      // CC stamps a rate_limit_info onto an *allowed* request — it carries the
+      // rolling-window metadata (resetsAt / rateLimitType) even though nothing
+      // was rejected. A later ECONNRESET must surface as a generic error, NOT
+      // inherit this window and render a bogus "usage limit reached" guide.
+      const rawError = 'API Error: Unable to connect to API (ECONNRESET)';
+
+      adapter.adapt({ subtype: 'init', type: 'system' });
+      adapter.adapt({
+        rate_limit_info: {
+          isUsingOverage: false,
+          rateLimitType: 'five_hour',
+          resetsAt: 1_781_853_000,
+          status: 'allowed',
+        },
+        type: 'rate_limit_event',
+      });
+
+      const events = adapter.adapt({
+        api_error_status: null,
+        is_error: true,
+        result: rawError,
+        type: 'result',
+      });
+
+      expect(events.map((e) => e.type)).toEqual(['stream_end', 'error']);
+      expect(events[1].data).toMatchObject({ error: rawError, message: rawError });
+      expect(events[1].data).not.toHaveProperty('code', 'rate_limit');
+      expect(events[1].data).not.toHaveProperty('rateLimitInfo');
+    });
+
     it('classifies rate-limit failures from paired rate_limit_event + result events', () => {
       const adapter = new ClaudeCodeAdapter();
       const rawError = "You've hit your limit · resets 9am (Asia/Shanghai)";
@@ -1291,14 +1323,20 @@ describe('ClaudeCodeAdapter', () => {
   });
 
   describe('usage and model extraction', () => {
-    // Under `--include-partial-messages`, CC emits a stale
+    // Under `--include-partial-messages` (partial mode), CC emits a stale
     // `message_start.usage` snapshot (e.g. `output_tokens: 8`) that it echoes
     // verbatim on every content-block `assistant` event. The authoritative
-    // per-turn total only arrives later as `message_delta`. So turn_metadata
-    // emission is wired to `message_delta`, not `assistant`.
-    it('does NOT emit turn_metadata on assistant events (usage there is stale)', () => {
+    // per-turn total only arrives later as `message_delta`. So in partial mode
+    // turn_metadata emission is wired to `message_delta`, not `assistant`.
+    // Seeing a `stream_event` is what tells the adapter it is in partial mode.
+    it('does NOT emit turn_metadata on assistant events in partial mode (usage there is stale)', () => {
       const adapter = new ClaudeCodeAdapter();
       adapter.adapt({ subtype: 'init', type: 'system' });
+      // A stream_event marks partial mode — message_delta will own usage.
+      adapter.adapt({
+        event: { message: { id: 'msg_1', model: 'claude-sonnet-4-6' }, type: 'message_start' },
+        type: 'stream_event',
+      });
 
       const events = adapter.adapt({
         message: {
@@ -1313,6 +1351,42 @@ describe('ClaudeCodeAdapter', () => {
       expect(
         events.find((e) => e.type === 'step_complete' && e.data?.phase === 'turn_metadata'),
       ).toBeUndefined();
+    });
+
+    // BATCH mode (no `--include-partial-messages`, e.g. the `lh hetero exec`
+    // CLI used by device + sandbox runs): no `message_delta` arrives, and the
+    // `assistant` event's usage is authoritative — not a stale echo. The
+    // adapter must emit turn_metadata here so token counts land, carrying the
+    // clean `assistant` model id (NOT the `[1m]` beta-tagged `system init` one).
+    it('emits turn_metadata on assistant events in batch mode (no stream_event)', () => {
+      const adapter = new ClaudeCodeAdapter();
+      // `system init` reports the beta-tagged id; the assistant event is clean.
+      adapter.adapt({ model: 'claude-opus-4-8[1m]', subtype: 'init', type: 'system' });
+
+      const events = adapter.adapt({
+        message: {
+          id: 'msg_1',
+          content: [{ text: 'hello', type: 'text' }],
+          model: 'claude-opus-4-8',
+          usage: { input_tokens: 100, output_tokens: 50 },
+        },
+        type: 'assistant',
+      });
+
+      const meta = events.find(
+        (e) => e.type === 'step_complete' && e.data?.phase === 'turn_metadata',
+      );
+      expect(meta).toBeDefined();
+      expect(meta!.data.model).toBe('claude-opus-4-8');
+      expect(meta!.data.provider).toBe('claude-code');
+      expect(meta!.data.usage).toEqual({
+        inputCacheMissTokens: 100,
+        inputCachedTokens: undefined,
+        inputWriteCacheTokens: undefined,
+        totalInputTokens: 100,
+        totalOutputTokens: 50,
+        totalTokens: 150,
+      });
     });
 
     it('emits turn_metadata on message_delta with authoritative usage', () => {
@@ -2014,7 +2088,7 @@ describe('ClaudeCodeAdapter', () => {
       expect(starts.some((e) => e.data?.newStep)).toBe(false);
     });
 
-    it('does NOT emit turn_metadata step_complete for subagent events', () => {
+    it('emits subagent-tagged turn_metadata step_complete carrying message.usage', () => {
       const adapter = new ClaudeCodeAdapter();
       adapter.adapt(init);
       adapter.adapt(
@@ -2032,6 +2106,41 @@ describe('ClaudeCodeAdapter', () => {
           id: 'msg_sub',
           model: 'claude-sonnet-4-6',
           usage: { input_tokens: 5, output_tokens: 10 },
+        },
+        parent_tool_use_id: 'toolu_parent',
+        type: 'assistant',
+      });
+
+      const meta = events.find(
+        (e) => e.type === 'step_complete' && e.data?.phase === 'turn_metadata',
+      );
+      expect(meta).toBeDefined();
+      // Subagent ctx tag is what stops the executor from writing this usage
+      // onto the main agent (which would double-count vs the result event).
+      expect(meta?.data?.subagent?.parentToolCallId).toBe('toolu_parent');
+      expect(meta?.data?.subagent?.subagentMessageId).toBe('msg_sub');
+      expect(meta?.data?.model).toBe('claude-sonnet-4-6');
+      expect(meta?.data?.usage?.totalInputTokens).toBe(5);
+      expect(meta?.data?.usage?.totalOutputTokens).toBe(10);
+    });
+
+    it('does NOT emit turn_metadata for subagent events without message.usage', () => {
+      const adapter = new ClaudeCodeAdapter();
+      adapter.adapt(init);
+      adapter.adapt(
+        mainAssistant('msg_main', {
+          id: 'toolu_parent',
+          input: {},
+          name: 'Agent',
+          type: 'tool_use',
+        }),
+      );
+
+      const events = adapter.adapt({
+        message: {
+          content: [{ id: 'toolu_child', input: {}, name: 'Bash', type: 'tool_use' }],
+          id: 'msg_sub',
+          model: 'claude-sonnet-4-6',
         },
         parent_tool_use_id: 'toolu_parent',
         type: 'assistant',
@@ -2481,6 +2590,51 @@ describe('ClaudeCodeAdapter', () => {
       ).toBeUndefined();
     });
 
+    /**
+     * Real-world regression (recorded on tpc_joZS2mksoY5L): a slow `git commit`
+     * (running a lint-staged hook) makes CC track the Bash call as a task and
+     * emit `task_started` + `task_notification` back-to-back, with NO out-of-band
+     * callback turn in between, immediately followed by the tool_result. That is
+     * an inline synchronous tool, not a Monitor-style long-running task — the next
+     * turn is the normal main-chain continuation and must NOT be tagged
+     * `task-completion` (doing so mis-anchors it and drops it from the rendered
+     * chain).
+     */
+    it('does NOT tag the next turn when a task started and ended with no callbacks (inline tool)', () => {
+      const adapter = new ClaudeCodeAdapter();
+      init(adapter);
+
+      // A Bash `git commit` tool_use.
+      adapter.adapt({
+        message: {
+          content: [
+            {
+              id: 'toolu_commit',
+              input: { command: 'git commit' },
+              name: 'Bash',
+              type: 'tool_use',
+            },
+          ],
+          id: 'msg_01',
+        },
+        type: 'assistant',
+      });
+
+      // CC tracks the slow commit as a task, then notifies completion
+      // back-to-back — NO callback turn opened while it was alive.
+      adapter.adapt(ccTaskStarted('task_1', 'toolu_commit'));
+      adapter.adapt(ccTaskNotification('task_1'));
+
+      // The commit's tool_result is consumed inline by the next turn.
+      adapter.adapt(ccUser('toolu_commit', 'committed'));
+
+      // Next turn is plain continuation — must carry NO externalSignal.
+      const next = adapter.adapt(ccMessageStart('msg_02'));
+      expect(
+        next.find((e) => e.type === 'stream_start' && e.data?.newStep)!.data.externalSignal,
+      ).toBeUndefined();
+    });
+
     it('clears unconsumed task-completion lineage on `result`', () => {
       const adapter = new ClaudeCodeAdapter();
       init(adapter);
@@ -2495,13 +2649,18 @@ describe('ClaudeCodeAdapter', () => {
       adapter.adapt(ccTaskStarted('task_1', 'toolu_mon'));
       adapter.adapt(ccUser('toolu_mon', 'Monitor started'));
       adapter.adapt(ccMessageStart('msg_02'));
+      // A signal callback fires while the task is alive (callbackCount > 0), so
+      // `task_notification` genuinely arms pendingTaskCompletion — otherwise (an
+      // inline tool with no callbacks) nothing is armed and this test would pass
+      // vacuously, no longer guarding the `result` clear path.
+      adapter.adapt(ccMessageStart('msg_03'));
       adapter.adapt(ccTaskNotification('task_1'));
       // Run ends before the summary turn fires (unusual but possible).
       adapter.adapt({ result: 'ok', type: 'result', usage: undefined });
 
       // A later turn (e.g. follow-up user message) must NOT inherit
-      // the unconsumed task-completion lineage.
-      const next = adapter.adapt(ccMessageStart('msg_03'));
+      // the unconsumed task-completion lineage — `result` dropped it.
+      const next = adapter.adapt(ccMessageStart('msg_04'));
       expect(
         next.find((e) => e.type === 'stream_start' && e.data?.newStep)!.data.externalSignal,
       ).toBeUndefined();

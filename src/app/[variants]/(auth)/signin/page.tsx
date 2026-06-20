@@ -3,7 +3,7 @@ import { translation } from '@/server/translation';
 import { type DynamicLayoutProps } from '@/types/next';
 import { RouteVariants } from '@/utils/server/routeVariants';
 
-import SignInClientPage from './ClientPage';
+import SignInClientPage from '@/features/Auth/SignIn/ClientPage';
 
 export const generateMetadata = async (props: DynamicLayoutProps) => {
   const locale = await RouteVariants.getLocale(props);

@@ -25,15 +25,17 @@ export const componentMap = {
   [SettingsTabs.Memory]: dynamic(() => import('../memory'), {
     loading: loading('Settings > Memory'),
   }),
-
-  [SettingsTabs.Notification]: dynamic(() => import('../notification'), {
-    loading: loading('Settings > Notification'),
+  [SettingsTabs.Messenger]: dynamic(() => import('../messenger'), {
+    loading: loading('Settings > Messenger'),
   }),
+  [SettingsTabs.Notification]: dynamic(
+    () => import('@/business/client/BusinessSettingPages/Notification'),
+    {
+      loading: loading('Settings > Notification'),
+    },
+  ),
   [SettingsTabs.About]: dynamic(() => import('../about'), {
     loading: loading('Settings > About'),
-  }),
-  [SettingsTabs.Changelog]: dynamic(() => import('../changelog'), {
-    loading: loading('Settings > Changelog'),
   }),
   [SettingsTabs.Hotkey]: dynamic(() => import('../hotkey'), {
     loading: loading('Settings > Hotkey'),

@@ -11,7 +11,7 @@ import type { ElectronMainStore } from '@/types/store';
 /**
  * Storage name
  */
-export const STORE_NAME = 'mai-settings';
+export const STORE_NAME = 'lobehub-settings';
 
 export const defaultProxySettings: NetworkProxySettings = {
   enableProxy: false,

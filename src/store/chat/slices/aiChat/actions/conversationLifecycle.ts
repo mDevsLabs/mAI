@@ -5,7 +5,6 @@ import {
   AgentManagementIdentifier,
   createCallAgentManifest,
 } from '@lobechat/builtin-tool-agent-management';
-import { ENABLE_BUSINESS_FEATURES } from '@lobechat/business-const';
 import { isDesktop, LOADING_FLAT } from '@lobechat/const';
 import { formatSelectedSkillsContext, formatSelectedToolsContext } from '@lobechat/context-engine';
 import { chainCompressContext } from '@lobechat/prompts';
@@ -24,7 +23,6 @@ import { nanoid } from '@lobechat/utils';
 import { TRPCClientError } from '@trpc/client';
 import { t } from 'i18next';
 
-import { markUserValidAction } from '@/business/client/markUserValidAction';
 import { message as antdMessage } from '@/components/AntdStaticMethods';
 import { agentService } from '@/services/agent';
 import { aiChatService } from '@/services/aiChat';
@@ -42,6 +40,8 @@ import { agentGroupByIdSelectors, getChatGroupStoreState } from '@/store/agentGr
 import { selectRuntimeType } from '@/store/chat/slices/aiChat/actions/agentDispatcher';
 import { resolveHeteroResume } from '@/store/chat/slices/aiChat/actions/heteroResume';
 import { dispatchNonHeteroSubAgent } from '@/store/chat/slices/aiChat/actions/nonHeteroSubAgentDispatcher';
+import { buildRunLifecycle } from '@/store/chat/slices/aiChat/actions/runLifecycle/buildRunLifecycle';
+import type { RunScope } from '@/store/chat/slices/aiChat/actions/runLifecycle/types';
 import { PortalViewType } from '@/store/chat/slices/portal/initialState';
 import { chatPortalSelectors } from '@/store/chat/slices/portal/selectors';
 import { type ChatStore } from '@/store/chat/store';
@@ -54,12 +54,12 @@ import {
   getCompressionCandidateMessageIds,
   hasRunningCompressionOperation,
 } from '@/store/chat/utils/compression';
+import { getElectronStoreState } from '@/store/electron';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
+import { pageAgentRuntime } from '@/store/tool/slices/builtin/executors/lobe-page-agent';
 import { type StoreSetter } from '@/store/types';
 import { useUserMemoryStore } from '@/store/userMemory';
-import { useUserStore } from '@/store/user';
-import { settingsSelectors } from '@/store/user/slices/settings/selectors';
 import { markdownToTxt } from '@/utils/markdownToTxt';
 
 import { dbMessageSelectors, displayMessageSelectors, topicSelectors } from '../../../selectors';
@@ -113,6 +113,10 @@ export interface SendMessageResult {
   userMessageId: string;
 }
 
+type SendMessageServerResponseMeta = SendMessageServerResponse & {
+  __isPartialMessages?: boolean;
+};
+
 /**
  * Actions managing the complete lifecycle of conversations including sending,
  * regenerating, and resending messages
@@ -156,6 +160,22 @@ const attachSendTimeMetadataToUserMessage = (
   return changed ? nextMessages : messages;
 };
 
+const mergePartialPersistedMessages = (
+  currentMessages: UIChatMessage[],
+  persistedMessages: UIChatMessage[],
+  replacedMessageIds: string[],
+): UIChatMessage[] => {
+  const replacedIdSet = new Set(replacedMessageIds);
+  const persistedIdSet = new Set(persistedMessages.map((message) => message.id));
+
+  return [
+    ...currentMessages.filter(
+      (message) => !replacedIdSet.has(message.id) && !persistedIdSet.has(message.id),
+    ),
+    ...persistedMessages,
+  ];
+};
+
 export class ConversationLifecycleActionImpl {
   readonly #get: () => ChatStore;
 
@@ -193,6 +213,7 @@ export class ConversationLifecycleActionImpl {
     message,
     editorData: inputEditorData,
     files,
+    forceRuntime,
     metadata,
     onlyAddUserMessage,
     context,
@@ -230,9 +251,14 @@ export class ConversationLifecycleActionImpl {
     const agentConfig = agentSelectors.getAgentConfigById(agentId)(getAgentStoreState());
     const heterogeneousProvider = agentConfig?.agencyConfig?.heterogeneousProvider;
     const runtimeType = selectRuntimeType({
+      boundDeviceId: agentConfig?.agencyConfig?.boundDeviceId,
       executionTarget: agentConfig?.agencyConfig?.executionTarget,
       heterogeneousProvider,
-      isGatewayMode: this.#get().isGatewayModeEnabled(),
+      isGatewayMode: this.#get().isGatewayModeEnabled(agentId),
+      // Callers that need to pin the runtime (e.g. task topics that were
+      // started server-side via runTask) pass `forceRuntime` to override
+      // the agent's local/cloud preference.
+      parentRuntime: forceRuntime,
     });
 
     // ── Command Bus: extract and process built-in commands from editorData ──
@@ -296,12 +322,30 @@ export class ConversationLifecycleActionImpl {
     const hasMentionedAgents =
       !context.groupId && !directMentionRoute && mentionedAgents.length > 0;
 
+    // Page-scoped conversations: the page editor runtime tracks the currently
+    // open document. Inject its id at send time so the agent-runtime context
+    // (and downstream server-side PageAgent tool calls, which only receive that
+    // context) is scoped to the open document. Without this the server runtime
+    // throws "received a tool call without documentId in context".
+    //
+    // This fallback is only authoritative when the active page's editor is
+    // mounted (StoreUpdater has called setCurrentDocId for it). Callers that
+    // create a document and send before that editor mounts (e.g. sendAsWrite)
+    // MUST pass the new documentId in context explicitly — the `!context.documentId`
+    // guard preserves it, so the singleton (still bound to the previous page) is
+    // not consulted and a stale id is never injected.
+    const activePageDocumentId =
+      context.scope === 'page' && !context.documentId
+        ? pageAgentRuntime.getCurrentDocId()
+        : undefined;
+
     const operationContext = {
       ...context,
       ...(isCreatingNewThread && { threadId: undefined }),
       // Only set isSupervisor for actual group supervisors — NOT for @agent mentions.
       // isSupervisor triggers group-specific UI rendering (SupervisorMessage with group avatars).
       ...(isGroupSupervisor && { isSupervisor: true }),
+      ...(activePageDocumentId ? { documentId: activePageDocumentId } : {}),
     };
 
     const fileIdList = files?.map((f) => f.id);
@@ -342,22 +386,6 @@ export class ConversationLifecycleActionImpl {
     // if message is empty or no files, then stop
     if (!message && !hasFile) return;
 
-    // Increment petsMsgCount and update petsLevel if pets are enabled (10 messages = 1 level)
-    const userStore = useUserStore.getState();
-    const generalSettings = settingsSelectors.currentSettings(userStore).general;
-    if (generalSettings?.enablePets) {
-      const currentMsgCount = generalSettings.petsMsgCount || 0;
-      const nextMsgCount = currentMsgCount + 1;
-      const nextLevel = Math.min(100, Math.floor(nextMsgCount / 10) + 1);
-      
-      await userStore.setSettings({
-        general: {
-          petsMsgCount: nextMsgCount,
-          petsLevel: nextLevel,
-        },
-      });
-    }
-
     // ━━━ Message Queue: enqueue if agent is currently running ━━━
     // Check if there's a running agent-runtime operation in the current context.
     // If so, enqueue the message instead of starting a new operation. Covers all
@@ -389,6 +417,7 @@ export class ConversationLifecycleActionImpl {
           editorData: editorData ?? undefined,
           files: fileIdList,
           filesPreview: filesPreview.length > 0 ? filesPreview : undefined,
+          ...(forceRuntime ? { forceRuntime } : {}),
           interruptMode: 'soft',
           metadata: userMessageMetadata,
           createdAt: Date.now(),
@@ -436,6 +465,21 @@ export class ConversationLifecycleActionImpl {
         // Mark this as thread operation if threadId exists
         inThread: !!operationContext.threadId,
       },
+    });
+
+    // Shared run lifecycle for the post-persist topic-title hook. Built once here
+    // so all three runtime branches fire the SAME `afterUserMessagePersisted`
+    // (LOBE-10379 "补齐缺列 title" — gateway/hetero previously had no LLM title).
+    // `parentMessage*` are unused by this hook.
+    const sendRunScope: RunScope =
+      operationContext.scope === 'sub_agent' ? 'sub_agent' : 'top_level';
+    const sendRunLifecycle = buildRunLifecycle(this.#get, {
+      context: operationContext,
+      parentMessageId: parentId ?? tempId,
+      parentMessageType: 'user',
+      runId: operationId,
+      runScope: sendRunScope,
+      runtimeType,
     });
 
     // Construct local media preview for server-mode temporary messages (S3 URL takes priority).
@@ -516,8 +560,11 @@ export class ConversationLifecycleActionImpl {
       const existingTopic = operationContext.topicId
         ? topicSelectors.getTopicById(operationContext.topicId)(this.#get())
         : undefined;
-      const agentWorkingDirectory =
-        agentByIdSelectors.getAgentWorkingDirectoryById(agentId)(getAgentStoreState());
+      const currentDeviceId = getElectronStoreState().gatewayDeviceInfo?.deviceId;
+      const agentWorkingDirectory = agentByIdSelectors.getAgentWorkingDirectoryById(
+        agentId,
+        currentDeviceId,
+      )(getAgentStoreState());
       const workingDirectory = existingTopic?.metadata?.workingDirectory || agentWorkingDirectory;
 
       // Persist messages to DB first (same as client mode)
@@ -573,9 +620,18 @@ export class ConversationLifecycleActionImpl {
         ...operationContext,
         topicId: heteroData.topicId ?? operationContext.topicId,
       };
+      const heteroResponseMeta = heteroData as SendMessageServerResponseMeta;
+      const heteroMessageKey = messageMapKey(heteroContext);
+      const heteroMessages = heteroResponseMeta.__isPartialMessages
+        ? mergePartialPersistedMessages(
+            this.#get().messagesMap[heteroMessageKey] || [],
+            heteroData.messages,
+            [tempId, tempAssistantId],
+          )
+        : heteroData.messages;
 
       // Replace optimistic messages with persisted ones
-      this.#get().replaceMessages(heteroData.messages, {
+      this.#get().replaceMessages(heteroMessages, {
         action: 'sendMessage/serverResponse',
         context: heteroContext,
       });
@@ -605,6 +661,22 @@ export class ConversationLifecycleActionImpl {
 
       // Complete sendMessage operation, start ACP execution as child operation
       this.#get().completeOperation(operationId);
+
+      // Topic title (LOBE-10379): hetero used to set only a sliced placeholder
+      // title on new topics — upgrade it to the LLM summary via the shared hook
+      // (reads the just-persisted conversation from the store). Fire-and-forget.
+      void sendRunLifecycle
+        .afterUserMessagePersisted({
+          assistantMessageId: heteroData.assistantMessageId,
+          context: heteroContext,
+          isCreateNewTopic: heteroData.isCreateNewTopic,
+          operationId,
+          runId: operationId,
+          runScope: sendRunScope,
+          runtimeType,
+          topicId: heteroData.topicId,
+        })
+        .catch(console.error);
 
       // Clear editor temp state — the user's message is already persisted, so
       // a later Stop click must NOT restore it into the input (would feel like
@@ -688,7 +760,30 @@ export class ConversationLifecycleActionImpl {
           message,
           metadata: requestMetadata,
           parentOperationId: operationId,
+          // Pass temp message IDs so the UI doesn't show a blank loading
+          // state while waiting for the first step_start event to replace
+          // messages with the server's real IDs.
+          tempMessageIds: [tempAssistantId],
         });
+
+        // Topic title (LOBE-10379): gateway-created topics had no LLM-summarized
+        // title. executeGatewayAgent has already replaced messages + switched to
+        // the new topic, so the shared hook reads the persisted conversation from
+        // the store and titles it. Fire-and-forget.
+        if (result.topicId) {
+          void sendRunLifecycle
+            .afterUserMessagePersisted({
+              assistantMessageId: result.assistantMessageId,
+              context: { ...operationContext, topicId: result.topicId },
+              isCreateNewTopic: !operationContext.topicId,
+              operationId,
+              runId: operationId,
+              runScope: sendRunScope,
+              runtimeType,
+              topicId: result.topicId,
+            })
+            .catch(console.error);
+        }
 
         return {
           assistantMessageId: result.assistantMessageId,
@@ -788,6 +883,7 @@ export class ConversationLifecycleActionImpl {
         },
         abortController,
       );
+      const responseMeta = data as SendMessageServerResponseMeta;
       // Use created topicId/threadId if available, otherwise use original from context
       let finalTopicId = data.topicId ?? operationContext.topicId;
       const finalThreadId = data.createdThreadId ?? operationContext.threadId;
@@ -824,6 +920,7 @@ export class ConversationLifecycleActionImpl {
           'sendMessage/createTopicPlaceholder',
         );
         this.#get().updateOperationMetadata(operationId, { createdTopicId: data.topicId });
+        void Promise.resolve(this.#get().refreshTopic()).catch(console.error);
       } else if (operationContext.topicId) {
         // Optimistically update topic's updatedAt so sidebar re-groups immediately
         this.#get().internal_dispatchTopic({
@@ -856,13 +953,21 @@ export class ConversationLifecycleActionImpl {
 
       // Create final context with updated topicId/threadId from server response
       const finalContext = { ...operationContext, topicId: finalTopicId, threadId: finalThreadId };
+      const persistedMessages = attachSendTimeMetadataToUserMessage(
+        data.messages,
+        data.userMessageId,
+        userMessageMetadata,
+      );
+      const finalMessageKey = messageMapKey(finalContext);
       data = {
         ...data,
-        messages: attachSendTimeMetadataToUserMessage(
-          data.messages,
-          data.userMessageId,
-          userMessageMetadata,
-        ),
+        messages: responseMeta.__isPartialMessages
+          ? mergePartialPersistedMessages(
+              this.#get().messagesMap[finalMessageKey] || [],
+              persistedMessages,
+              [tempId, tempAssistantId],
+            )
+          : persistedMessages,
       };
 
       this.#get().replaceMessages(data.messages, {
@@ -919,54 +1024,27 @@ export class ConversationLifecycleActionImpl {
       this.#get().updateOperationMetadata(operationId, { inputEditorTempState: null });
     }
 
-    if (ENABLE_BUSINESS_FEATURES) {
-      markUserValidAction();
-    }
-
     if (!data) return;
 
     if (data.topicId) this.#get().internal_updateTopicLoading(data.topicId, true);
 
-    // Dev-only fast path: fall back to slicing the first user message instead of calling
-    // the LLM. Keeps chat logs uncluttered while still giving the topic a usable title.
-    // Only honored in non-production builds so a misconfigured prod env can't disable it.
-    const shouldSliceTopicTitle = __DEV__ && process.env.NEXT_PUBLIC_DEV_DISABLE_AUTO_TOPIC === '1';
-
-    const applyTopicTitle = async (topicId: string, messages: UIChatMessage[]) => {
-      if (!shouldSliceTopicTitle) {
-        await this.#get().summaryTopicTitle(topicId, messages);
-        return;
-      }
-
-      const firstUserText = messages.find((m) => m.role === 'user')?.content?.trim() ?? '';
-      const title = markdownToTxt(firstUserText).slice(0, 80) || 'New Topic';
-      await this.#get().internal_updateTopic(topicId, { title });
-      // summaryTopicTitle would normally clear loading via onLoadingChange; do it manually.
-      this.#get().internal_updateTopicLoading(topicId, false);
-      console.info('[dev] sliced topic title (NEXT_PUBLIC_DEV_DISABLE_AUTO_TOPIC=1):', title);
-    };
-
-    const summaryTitle = async () => {
-      // check activeTopic and then auto update topic title
-      if (data.isCreateNewTopic) {
-        await applyTopicTitle(data.topicId, data.messages);
-        return;
-      }
-
-      if (!data.topicId) return;
-
-      const topic = topicSelectors.getTopicById(data.topicId)(this.#get());
-
-      if (topic && !topic.title) {
-        const chats = displayMessageSelectors
-          .getDisplayMessagesByKey(messageMapKey({ agentId, topicId: topic.id }))(this.#get())
-          .filter((item) => item.id !== data.assistantMessageId);
-
-        await applyTopicTitle(topic.id, chats);
-      }
-    };
-
-    summaryTitle().catch(console.error);
+    // Topic title auto-generation, now via the shared `afterUserMessagePersisted`
+    // hook (LOBE-10379). The client passes its freshly-created `data.messages`
+    // (not yet in the store under the real topicId); gateway/hetero call the same
+    // hook from their branches and let it read the persisted conversation.
+    void sendRunLifecycle
+      .afterUserMessagePersisted({
+        assistantMessageId: data.assistantMessageId,
+        context: operationContext,
+        isCreateNewTopic: data.isCreateNewTopic,
+        messages: data.messages,
+        operationId,
+        runId: operationId,
+        runScope: sendRunScope,
+        runtimeType,
+        topicId: data.topicId,
+      })
+      .catch(console.error);
 
     // Complete sendMessage operation here - message creation is done
     // execAgentRuntime is a separate operation (child) that handles AI response generation
@@ -1226,9 +1304,10 @@ export class ConversationLifecycleActionImpl {
         { kind: 'mention', targetAgentId, instruction, parentMessageId: toolMessage.id },
         {
           conversationContext: context,
+          boundDeviceId: parentAgentConfig?.agencyConfig?.boundDeviceId,
           heterogeneousProvider: parentAgentConfig?.agencyConfig?.heterogeneousProvider,
           inPortalThread,
-          isGatewayMode: this.#get().isGatewayModeEnabled(),
+          isGatewayMode: this.#get().isGatewayModeEnabled(context.agentId),
           messages: messagesWithInstruction,
           parentOperationId: operationId,
         },

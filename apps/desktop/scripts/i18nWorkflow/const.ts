@@ -1,6 +1,5 @@
 import { readdirSync } from 'node:fs';
-import path from 'node:path';
-const { resolve } = path;
+import { resolve } from 'node:path';
 
 import i18nConfig from '../../.i18nrc';
 

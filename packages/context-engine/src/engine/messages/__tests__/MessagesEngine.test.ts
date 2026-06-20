@@ -114,6 +114,35 @@ describe('MessagesEngine', () => {
       expect(result.messages[0].content).toBe(systemRole);
     });
 
+    it('should inject model knowledge cutoff when provided', async () => {
+      const params = createBasicParams({
+        modelKnowledgeCutoff: '2024-06',
+        systemRole: 'You are a helpful assistant',
+      });
+      const engine = new MessagesEngine(params);
+
+      const result = await engine.process();
+
+      expect(result.messages[0]).toEqual({
+        content: 'You are a helpful assistant\n\nModel knowledge cutoff: 2024-06',
+        role: 'system',
+      });
+      expect(result.metadata.modelKnowledgeCutoffInjected).toBe(true);
+    });
+
+    it('should skip model knowledge cutoff injection when unknown', async () => {
+      const params = createBasicParams({ systemRole: 'You are a helpful assistant' });
+      const engine = new MessagesEngine(params);
+
+      const result = await engine.process();
+
+      expect(result.messages[0]).toEqual({
+        content: 'You are a helpful assistant',
+        role: 'system',
+      });
+      expect(result.metadata.modelKnowledgeCutoffInjected).toBeUndefined();
+    });
+
     it('should inject history summary when provided', async () => {
       const historySummary = 'We discussed AI and machine learning';
       const params = createBasicParams({ historySummary });
@@ -389,13 +418,34 @@ describe('MessagesEngine', () => {
       expect(result).toBeDefined();
     });
 
-    it('should default to enabled without file URLs', async () => {
-      const params = createBasicParams();
+    it('should default to enabled with file URLs', async () => {
+      const params = createBasicParams({
+        messages: [
+          {
+            content: 'Read this',
+            createdAt: Date.now(),
+            fileList: [
+              {
+                fileType: 'text/plain',
+                id: 'file1',
+                name: 'test.txt',
+                size: 100,
+                url: 'https://files.example.com/test.txt',
+              },
+            ],
+            id: 'msg-1',
+            role: 'user',
+            updatedAt: Date.now(),
+          } as UIChatMessage,
+        ],
+      });
       const engine = new MessagesEngine(params);
 
-      // Should not throw
       const result = await engine.process();
-      expect(result).toBeDefined();
+      const userMessage = result.messages.find((message) => message.role === 'user');
+      const content = userMessage?.content as any[];
+
+      expect(content[0].text).toContain('url="https://files.example.com/test.txt"');
     });
   });
 

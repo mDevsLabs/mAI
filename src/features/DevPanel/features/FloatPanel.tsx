@@ -3,9 +3,9 @@
 import { BRANDING_NAME } from '@lobechat/business-const';
 import { ActionIcon, Flexbox, FluentEmoji, SideNav } from '@lobehub/ui';
 import { createStaticStyles, cssVar, cx } from 'antd-style';
+import { m as motion } from 'motion/react';
 import { XIcon } from 'lucide-react';
 import { memo, type ReactNode, useEffect, useState } from 'react';
-import { Rnd } from 'react-rnd';
 
 import { isDesktop } from '@/const/version';
 import { usePathname } from '@/libs/next/navigation';
@@ -128,23 +128,36 @@ const CollapsibleFloatPanel = memo<CollapsibleFloatPanelProps>(({ items }) => {
         )
       }
       {isExpanded && (
-        <Rnd
-          bounds="window"
+        <motion.div
           className={cx(styles.panel, isExpanded ? styles.expanded : styles.collapsed)}
-          dragHandleClassName="panel-drag-handle"
-          minHeight={minHeight}
-          minWidth={minWidth}
-          position={position}
-          size={size}
-          onDragStop={(e, d) => {
-            setPosition({ x: d.x, y: d.y });
+          drag
+          dragMomentum={false}
+          initial={position}
+          style={{
+            height: size.height,
+            width: size.width,
+            resize: 'both',
+            overflow: 'hidden',
           }}
-          onResizeStop={(e, direction, ref, delta, position) => {
-            setSize({
-              height: Number(ref.style.height),
-              width: Number(ref.style.width),
-            });
-            setPosition(position);
+          onDragEnd={(_e, info) => {
+            const newPos = {
+              x: position.x + info.offset.x,
+              y: position.y + info.offset.y,
+            };
+            setPosition(newPos);
+            try {
+              localStorage.setItem('debug-panel-position', JSON.stringify(newPos));
+            } catch { /* empty */ }
+          }}
+          onMouseUp={(e) => {
+            const el = e.currentTarget;
+            const newSize = { height: el.offsetHeight, width: el.offsetWidth };
+            if (newSize.width !== size.width || newSize.height !== size.height) {
+              setSize(newSize);
+              try {
+                localStorage.setItem('debug-panel-size', JSON.stringify(newSize));
+              } catch { /* empty */ }
+            }
           }}
         >
           <Flexbox
@@ -206,7 +219,7 @@ const CollapsibleFloatPanel = memo<CollapsibleFloatPanelProps>(({ items }) => {
               ))}
             </Flexbox>
           </Flexbox>
-        </Rnd>
+        </motion.div>
       )}
     </>
   );

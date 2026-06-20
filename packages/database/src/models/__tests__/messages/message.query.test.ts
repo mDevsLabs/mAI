@@ -96,6 +96,35 @@ describe('MessageModel Query Tests', () => {
       expect(result[1].id).toBe('2');
     });
 
+    it('reads usage from the dedicated column and falls back to metadata.usage', async () => {
+      await serverDB.insert(messages).values([
+        // dedicated column must win over the legacy metadata.usage
+        {
+          id: 'usage-col',
+          userId,
+          role: 'assistant',
+          content: 'a',
+          createdAt: new Date('2023-01-01'),
+          usage: { totalTokens: 100 } as any,
+          metadata: { usage: { totalTokens: 999 } },
+        },
+        // legacy row: only metadata.usage → falls back
+        {
+          id: 'usage-meta',
+          userId,
+          role: 'assistant',
+          content: 'b',
+          createdAt: new Date('2023-01-02'),
+          metadata: { usage: { totalTokens: 50 } },
+        },
+      ]);
+
+      const result = await messageModel.query();
+
+      expect(result.find((m) => m.id === 'usage-col')?.usage).toEqual({ totalTokens: 100 });
+      expect(result.find((m) => m.id === 'usage-meta')?.usage).toEqual({ totalTokens: 50 });
+    });
+
     it('should return empty messages if not match the user ID', async () => {
       // Create test data
       await serverDB.insert(messages).values([
@@ -2925,6 +2954,125 @@ describe('MessageModel Query Tests', () => {
         expect(agent1Result[1].groupId).toBe('group-1');
         expect(agent2Result[1].groupId).toBe('group-1');
       });
+    });
+  });
+
+  describe('getLastMainThreadSpineMessageId', () => {
+    it('returns the latest non-tool main-thread message in a topic (tools excluded)', async () => {
+      await serverDB.insert(sessions).values([{ id: 'session1', userId }]);
+      await serverDB.insert(topics).values([{ id: 'topic1', sessionId: 'session1', userId }]);
+      await serverDB.insert(messages).values([
+        {
+          id: 'a1',
+          userId,
+          topicId: 'topic1',
+          role: 'assistant',
+          content: 'step',
+          createdAt: new Date('2023-01-01T00:00:00'),
+        },
+        {
+          // newest row, but a tool — must NOT be the spine
+          id: 'tool-1',
+          userId,
+          topicId: 'topic1',
+          role: 'tool',
+          parentId: 'a1',
+          content: 'result',
+          createdAt: new Date('2023-01-01T00:00:01'),
+        },
+        {
+          id: 'a2',
+          userId,
+          topicId: 'topic1',
+          role: 'assistant',
+          content: 'final',
+          createdAt: new Date('2023-01-01T00:00:02'),
+        },
+      ]);
+
+      expect(await messageModel.getLastMainThreadSpineMessageId('topic1')).toBe('a2');
+    });
+
+    it('excludes signal-tagged reactive callbacks', async () => {
+      await serverDB.insert(sessions).values([{ id: 'session1', userId }]);
+      await serverDB.insert(topics).values([{ id: 'topic1', sessionId: 'session1', userId }]);
+      await serverDB.insert(messages).values([
+        {
+          id: 'a1',
+          userId,
+          topicId: 'topic1',
+          role: 'assistant',
+          content: 'spine',
+          createdAt: new Date('2023-01-01T00:00:00'),
+        },
+        {
+          id: 'tool-1',
+          userId,
+          topicId: 'topic1',
+          role: 'tool',
+          parentId: 'a1',
+          content: 'result',
+          createdAt: new Date('2023-01-01T00:00:01'),
+        },
+        {
+          // newest, but a Monitor-stdout callback (metadata.signal) — excluded,
+          // so a normal turn doesn't re-mount onto a callback
+          id: 'cb-1',
+          userId,
+          topicId: 'topic1',
+          role: 'assistant',
+          parentId: 'tool-1',
+          content: 'callback',
+          metadata: {
+            signal: { sourceToolCallId: 'tc', sourceToolName: 'Monitor', type: 'tool-stdout' },
+          },
+          createdAt: new Date('2023-01-01T00:00:02'),
+        },
+      ]);
+
+      expect(await messageModel.getLastMainThreadSpineMessageId('topic1')).toBe('a1');
+    });
+
+    it('excludes subagent-thread messages and scopes to the current user', async () => {
+      const otherModel = new MessageModel(serverDB, otherUserId);
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(sessions).values([{ id: 'session1', userId }]);
+        await trx.insert(topics).values([{ id: 'topic1', sessionId: 'session1', userId }]);
+        await trx.insert(threads).values([
+          {
+            id: 'subagent-thread',
+            userId,
+            topicId: 'topic1',
+            sourceMessageId: 'a1',
+            type: 'standalone',
+          },
+        ]);
+        await trx.insert(messages).values([
+          {
+            id: 'a1',
+            userId,
+            topicId: 'topic1',
+            role: 'assistant',
+            threadId: null,
+            content: 'main',
+            createdAt: new Date('2023-01-01T00:00:00'),
+          },
+          {
+            // newer, but on a subagent thread — must not anchor the main wire
+            id: 'sub-asst',
+            userId,
+            topicId: 'topic1',
+            role: 'assistant',
+            threadId: 'subagent-thread',
+            content: 'subagent',
+            createdAt: new Date('2023-01-01T00:00:01'),
+          },
+        ]);
+      });
+
+      expect(await messageModel.getLastMainThreadSpineMessageId('topic1')).toBe('a1');
+      // another user sees nothing in this topic
+      expect(await otherModel.getLastMainThreadSpineMessageId('topic1')).toBeUndefined();
     });
   });
 });

@@ -3,13 +3,12 @@
  * Keep this list in sync with provider definitions in `src/libs/better-auth/sso/providers`.
  */
 export const BUILTIN_BETTER_AUTH_PROVIDERS = [
-  'github',
   'google',
+  'github',
   'notion',
   'slack',
   'spotify',
   'twitch',
-  'railway',
 ] as const;
 
 /**
@@ -17,5 +16,5 @@ export const BUILTIN_BETTER_AUTH_PROVIDERS = [
  * This is used on the client to normalize configured provider keys.
  */
 export const PROVIDER_ALIAS_MAP: Record<string, string> = {
-  twitter: 'x',
+  'microsoft-entra-id': 'microsoft',
 };

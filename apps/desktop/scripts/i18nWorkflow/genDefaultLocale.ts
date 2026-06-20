@@ -1,8 +1,7 @@
 import { consola } from 'consola';
 import { colors } from 'consola/utils';
 import { existsSync, mkdirSync } from 'node:fs';
-import path from 'node:path';
-const { dirname } = path;
+import { dirname } from 'node:path';
 
 import { entryLocaleJsonFilepath, i18nConfig, localeDir, srcDefaultLocales } from './const';
 import { tagWhite, writeJSON } from './utils';

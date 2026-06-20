@@ -193,9 +193,11 @@ export interface RunCommandState {
 }
 
 export interface GetCommandOutputState {
+  durationMs?: number;
   error?: string;
   exitCode?: number;
   newOutput?: string;
+  running?: boolean;
   success: boolean;
 }
 

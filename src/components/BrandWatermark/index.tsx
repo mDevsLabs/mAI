@@ -1,9 +1,8 @@
 'use client';
 
-import { ORG_NAME, UTM_SOURCE } from '@lobechat/business-const';
+import { ORG_NAME } from '@lobechat/business-const';
 import { type FlexboxProps } from '@lobehub/ui';
 import { Flexbox } from '@lobehub/ui';
-import { LobeHub } from '@lobehub/ui/brand';
 import { createStaticStyles, cssVar } from 'antd-style';
 import { memo } from 'react';
 
@@ -37,11 +36,11 @@ const BrandWatermark = memo<Omit<FlexboxProps, 'children'>>(({ style, ...rest })
       ) : (
         <a
           className={styles.logoLink}
-          href={`https://lobehub.com?utm_source=${UTM_SOURCE}&utm_content=brand_watermark`}
+          href={`https://github.com/mDevsLabs/mAI`}
           rel="noreferrer"
           target="_blank"
         >
-          <img src="/avatars/may.PNG" alt="Watermark Logo" style={{ height: 20 }} />
+          <span style={{ fontWeight: 700, color: cssVar.colorText }}>mAI</span>
         </a>
       )}
     </Flexbox>

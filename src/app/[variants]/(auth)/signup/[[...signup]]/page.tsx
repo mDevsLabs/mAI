@@ -6,7 +6,7 @@ import { translation } from '@/server/translation';
 import { type DynamicLayoutProps } from '@/types/next';
 import { RouteVariants } from '@/utils/server/routeVariants';
 
-import BetterAuthSignUpForm from './BetterAuthSignUpForm';
+import BetterAuthSignUpForm from '@/features/Auth/SignUp/BetterAuthSignUpForm';
 
 export const generateMetadata = async (props: DynamicLayoutProps) => {
   const locale = await RouteVariants.getLocale(props);

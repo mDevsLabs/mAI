@@ -20,8 +20,7 @@ const PetsStoreModal = memo<PetsStoreModalProps>(({ onOpenChange, open }) => {
   const { general } = useUserStore(settingsSelectors.currentSettings);
   const setSettings = useUserStore((s) => s.setSettings);
   const selectedPets = general?.pets || ['claude-pixel'];
-  const petsLevel = general?.petsLevel || 1;
-  const maxPets = petsLevel >= 100 ? 2 : 1;
+  const maxPets = 1;
 
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState<'All' | PetCategory>('All');
@@ -65,16 +64,13 @@ const PetsStoreModal = memo<PetsStoreModalProps>(({ onOpenChange, open }) => {
 
   const togglePet = (petId: string) => {
     playSound();
-    let newPets = [...selectedPets];
-    if (newPets.includes(petId)) {
-      newPets = newPets.filter((id) => id !== petId);
+    let newPets: string[] = [];
+    if (!selectedPets.includes(petId)) {
+      newPets = [petId];
+      setSettings({ general: { pets: newPets, enablePets: true } });
     } else {
-      if (newPets.length >= maxPets) {
-        newPets = newPets.slice(newPets.length - maxPets + 1); // keep max allowed
-      }
-      newPets.push(petId);
+      setSettings({ general: { pets: newPets, enablePets: false } });
     }
-    setSettings({ general: { pets: newPets } });
   };
 
   return (

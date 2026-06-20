@@ -4,8 +4,7 @@ import { BUILTIN_BETTER_AUTH_PROVIDERS, PROVIDER_ALIAS_MAP } from '@/libs/better
  * Normalize provider id using configured alias map (e.g. microsoft-entra-id -> microsoft).
  */
 export const normalizeProviderId = (provider: string) => {
-  const lowercaseProvider = provider.toLowerCase();
-  return PROVIDER_ALIAS_MAP[lowercaseProvider] || lowercaseProvider;
+  return PROVIDER_ALIAS_MAP[provider] || provider;
 };
 
 /**

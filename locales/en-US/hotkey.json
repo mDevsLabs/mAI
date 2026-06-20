@@ -17,7 +17,7 @@
   "desktop.showApp.title": "Show/Hide Main Window",
   "editMessage.desc": "Enter edit mode by holding Alt and double-clicking the message",
   "editMessage.title": "Edit Message",
-  "navigateToChat.desc": "Switch to the Chat tab and enter Lobe AI",
+  "navigateToChat.desc": "Switch to the Chat tab and enter May",
   "navigateToChat.title": "Switch to Default Chat",
   "openChatSettings.desc": "View and modify the settings for the current conversation",
   "openChatSettings.title": "Open Chat Settings",
@@ -38,7 +38,5 @@
   "toggleLeftPanel.desc": "Show or hide the left panel",
   "toggleLeftPanel.title": "Toggle Left Panel",
   "toggleRightPanel.desc": "Show or hide the right panel",
-  "toggleRightPanel.title": "Toggle Right Panel",
-  "toggleZenMode.desc": "In focus mode, only display the current conversation and hide other UI elements",
-  "toggleZenMode.title": "Toggle Focus Mode"
+  "toggleRightPanel.title": "Toggle Right Panel"
 }

@@ -33,6 +33,34 @@ export interface CheckpointConfig {
   };
 }
 
+/**
+ * Task-level delivery-acceptance (verify) gate config, persisted under
+ * `tasks.config.verify`. This is the authoritative source for a task run's
+ * verify gate — it is *not* unioned with any agent-level mount
+ * (`agencyConfig.verifyRubricId`). See LOBE-10614 §2.
+ *
+ * Subtasks inherit with whole-config override semantics: a subtask uses its own
+ * config when present, otherwise the nearest ancestor's config in full (never a
+ * field-level merge). Resolved at runtime via `TaskModel.resolveVerifyConfig`.
+ */
+export interface TaskVerifyConfig {
+  /** Whether the verify gate runs on topic completion. */
+  enabled?: boolean;
+  /** Task-level cap on verify repair / re-run iterations. */
+  maxIterations?: number;
+  /**
+   * Which agent executes the verify run (the Push-model review agent). When
+   * omitted, falls back to the built-in verify agent. The execution target /
+   * bound device is inherited from the chosen agent's `agencyConfig`, not
+   * written here.
+   */
+  verifierAgentId?: string;
+  /** One-off ad-hoc criteria ids (references `verify_criteria.id`). */
+  verifyCriteriaIds?: string[];
+  /** Reuse a rubric template (references `verify_rubrics.id`). */
+  verifyRubricId?: string;
+}
+
 export interface WorkspaceDocNode {
   charCount: number | null;
   createdAt: string;
@@ -149,6 +177,7 @@ export interface TaskItem {
   status: string;
   totalTopics: number | null;
   updatedAt: Date;
+  workspaceId: string | null;
 }
 
 export type TaskListItem = TaskItem & {
@@ -188,6 +217,7 @@ export interface NewTask {
   status?: string;
   totalTopics?: number | null;
   updatedAt?: Date;
+  workspaceId?: string | null;
 }
 
 // ── Task Detail (shared across CLI, viewTask tool, task.detail router) ──
@@ -319,7 +349,6 @@ export interface TaskDetailData {
   name?: string | null;
   parent?: { agentId?: string | null; identifier: string; name: string | null } | null;
   priority?: number | null;
-  review?: Record<string, any> | null;
   schedule?: {
     maxExecutions?: number | null;
     pattern?: string | null;
@@ -329,5 +358,9 @@ export interface TaskDetailData {
   subtasks?: TaskDetailSubtask[];
   topicCount?: number;
   userId?: string | null;
+  /** Task-level verify (delivery-acceptance) gate config; `tasks.config.verify`. */
+  verify?: TaskVerifyConfig | null;
   workspace?: TaskDetailWorkspaceNode[];
+  /** Owning workspace; null for personal (non-workspace) tasks. */
+  workspaceId?: string | null;
 }

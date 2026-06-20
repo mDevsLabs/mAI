@@ -17,10 +17,10 @@ import {
   KeyIcon,
   KeyRound,
   Map,
+  MessageCircleIcon,
   MonitorSmartphoneIcon,
   PaletteIcon,
   PawPrint,
-  ScrollText,
   Sparkles,
   TerminalSquare,
 } from 'lucide-react';
@@ -36,7 +36,6 @@ import {
   useServerConfigStore,
 } from '@/store/serverConfig';
 import { useUserStore } from '@/store/user';
-import { labPreferSelectors } from '@/store/user/selectors';
 import { userProfileSelectors } from '@/store/user/slices/auth/selectors';
 import { userGeneralSettingsSelectors } from '@/store/user/slices/settings/selectors';
 
@@ -48,6 +47,8 @@ export enum SettingsGroupKey {
 }
 
 export interface CategoryItem {
+  /** Override the navigation URL. When omitted, Body derives the URL from `key`. */
+  href?: string;
   icon: any;
   key: SettingsTabs;
   label: string;
@@ -61,7 +62,6 @@ export interface CategoryGroup {
 
 export const useCategory = () => {
   const { t } = useTranslation('setting');
-  const { t: tCommon } = useTranslation('common');
   const { t: tAuth } = useTranslation('auth');
   const { t: tSubscription } = useTranslation('subscription');
   const mobile = useServerConfigStore((s) => s.isMobile);
@@ -72,9 +72,6 @@ export const useCategory = () => {
   ]);
   const remoteServerUrl = useElectronStore(electronSyncSelectors.remoteServerUrl);
   const isDevMode = useUserStore((s) => userGeneralSettingsSelectors.config(s).isDevMode);
-  const enableExecutionDeviceSwitcher = useUserStore(
-    labPreferSelectors.enableExecutionDeviceSwitcher,
-  );
 
   const avatarUrl = useMemo(() => {
     if (!avatar) return undefined;
@@ -109,7 +106,7 @@ export const useCategory = () => {
         key: SettingsTabs.Pets,
         label: t('tab.pets'),
       },
-      enableExecutionDeviceSwitcher && {
+      {
         icon: MonitorSmartphoneIcon,
         key: SettingsTabs.Devices,
         label: t('tab.devices'),
@@ -119,7 +116,7 @@ export const useCategory = () => {
         key: SettingsTabs.Hotkey,
         label: t('tab.hotkey'),
       },
-      {
+      enableBusinessFeatures && {
         icon: BellIcon,
         key: SettingsTabs.Notification,
         label: t('tab.notification'),
@@ -132,7 +129,9 @@ export const useCategory = () => {
       title: t('group.common'),
     });
 
-    // Subscription group
+    // Personal subscription / billing items. Always shown when business
+    // features are enabled — workspace settings live under a separate
+    // `/:workspaceSlug/settings/*` surface and never share this sidebar.
     if (enableBusinessFeatures) {
       const subscriptionItems: CategoryItem[] = [
         { icon: Map, key: SettingsTabs.Plans, label: tSubscription('tab.plans') },
@@ -219,11 +218,6 @@ export const useCategory = () => {
         label: t('tab.advanced'),
       },
       !hideDocs && {
-        icon: ScrollText,
-        key: SettingsTabs.Changelog,
-        label: tCommon('changelog'),
-      },
-      !hideDocs && {
         icon: Info,
         key: SettingsTabs.About,
         label: t('tab.about'),
@@ -240,10 +234,8 @@ export const useCategory = () => {
   }, [
     t,
     tAuth,
-    tCommon,
     tSubscription,
     enableBusinessFeatures,
-    enableExecutionDeviceSwitcher,
     hideDocs,
     mobile,
     showApiKeyManage,

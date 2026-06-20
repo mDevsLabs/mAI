@@ -18,7 +18,7 @@ const headers = {
  */
 export const qstashClient = new Client({
   headers,
-  token: process.env.QSTASH_TOKEN!,
+  token: process.env.YOUR_QSTASH_TOKEN ?? process.env.QSTASH_TOKEN ?? '',
 });
 
 /**
@@ -27,7 +27,7 @@ export const qstashClient = new Client({
  */
 export const workflowClient = new WorkflowClient({
   headers,
-  token: process.env.QSTASH_TOKEN!,
+  token: process.env.YOUR_QSTASH_TOKEN ?? process.env.QSTASH_TOKEN ?? '',
 });
 
 /**

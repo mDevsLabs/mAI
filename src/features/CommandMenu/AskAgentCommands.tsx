@@ -54,15 +54,15 @@ const AskAgentCommands = memo(() => {
   // Only show when user types "@"
   if (!isAtMention) return null;
 
-  // Check if Lobe AI matches the query
+  // Check if May matches the query
   const showLobeAI = !mentionQuery || 'may'.includes(mentionQuery);
 
   return (
     <Command.Group heading={t('cmdk.mentionAgent')}>
-      {/* @Lobe AI option */}
+      {/* @May option */}
       {showLobeAI && (
         <Command.Item
-          value="@lobe-ai"
+          value="@may"
           onMouseDown={preventDefault}
           onSelect={() => handleAgentSelect(inboxAgentId, 'May', DEFAULT_INBOX_AVATAR)}
         >

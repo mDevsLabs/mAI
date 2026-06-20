@@ -4,7 +4,7 @@ import { Flexbox } from '@lobehub/ui';
 import { AnimatePresence, m as motion } from 'motion/react';
 import type { ComponentType } from 'react';
 import { memo } from 'react';
-import { useMatch } from 'react-router-dom';
+import { useMatch } from 'react-router';
 
 import NavHeader from '@/features/NavHeader';
 import WideScreenContainer from '@/features/WideScreenContainer';
@@ -18,11 +18,12 @@ interface CreateGenerationPageProps {
 }
 
 const CreateGenerationPage = memo<CreateGenerationPageProps>(({ path, Workspace, PromptInput }) => {
-  const isCurrent = useMatch({ path, end: true });
+  const isPersonalPath = useMatch({ end: true, path });
+  const isWorkspacePath = useMatch({ end: true, path: `/:workspaceSlug${path}` });
   const [topic] = useQueryState('topic');
   const isHome = !topic;
 
-  if (!isCurrent) return null;
+  if (!isPersonalPath && !isWorkspacePath) return null;
 
   return (
     <>

@@ -60,5 +60,9 @@ echo "[$APP] Waiting ${WAIT}s for bot response..."
 sleep "$WAIT"
 
 echo "[$APP] Capturing screenshot..."
+<<<<<<<< HEAD:.agents/skills/agent-testing/bot/discord/test-discord-bot.sh
+"$SCRIPT_DIR/../../scripts/capture-app-window.sh" "$APP" "$SCREENSHOT"
+========
 "$SCRIPT_DIR/../capture-app-window.sh" "$APP" "$SCREENSHOT"
+>>>>>>>> origin:.agents/skills/local-testing/bot/discord/test-discord-bot.sh
 echo "[$APP] Done! Screenshot saved to $SCREENSHOT"

@@ -2,11 +2,11 @@
 
 import { type FC } from 'react';
 import { Suspense } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router';
 
+import WorkspaceContextSlot from '@/business/client/WorkspaceContextSlot';
 import Loading from '@/components/Loading/BrandTextLoading';
 import { RouteMetaBridge } from '@/features/RouteMeta';
-import { MarketAuthProvider } from '@/layout/AuthProvider/MarketAuth';
 import dynamic from '@/libs/next/dynamic';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
@@ -25,19 +25,19 @@ const MOBILE_NAV_ROUTES = new Set([
 ]);
 
 const MobileMainLayout: FC = () => {
+  const { showCloudPromotion } = useServerConfigStore(featureFlagsSelectors);
   const location = useLocation();
   const pathname = location.pathname;
   const showNav = MOBILE_NAV_ROUTES.has(pathname);
   return (
-    <>
+    <WorkspaceContextSlot>
       <RouteMetaBridge />
-      <MarketAuthProvider isDesktop={false}>
-        <Suspense fallback={<Loading debugId="MobileMainLayout > Outlet" />}>
-          <Outlet />
-          {showNav && <NavBar />}
-        </Suspense>
-      </MarketAuthProvider>
-    </>
+      <Suspense fallback={null}>{showCloudPromotion && <CloudBanner mobile />}</Suspense>
+      <Suspense fallback={<Loading debugId="MobileMainLayout > Outlet" />}>
+        <Outlet />
+        {showNav && <NavBar />}
+      </Suspense>
+    </WorkspaceContextSlot>
   );
 };
 

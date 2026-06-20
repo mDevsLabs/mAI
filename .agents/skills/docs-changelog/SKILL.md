@@ -23,11 +23,12 @@ For every docs changelog task, you MUST load:
 
 ## File and Naming Convention
 
-Use the strict format naming convention for changelog files:
+Use date-based file names:
 
-- Standard: `XXX-XX-XX-XXXX.md` (e.g., `004-29-05-2026.md` for version 0.0.4 released on May 29, 2026)
+- English: `docs/changelog/YYYY-MM-DD-topic.mdx`
+- Chinese: `docs/changelog/YYYY-MM-DD-topic.zh-CN.mdx`
 
-Always create the files inside `docs/changelog` using this precise format. Old changelog files in this directory must be deleted.
+EN and ZH files must exist as a pair and describe the same release facts.
 
 ## Frontmatter Requirements
 

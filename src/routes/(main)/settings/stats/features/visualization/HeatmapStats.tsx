@@ -5,6 +5,7 @@ import { Fragment, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useClientDataSWR } from '@/libs/swr';
+import { statsKeys } from '@/libs/swr/keys';
 import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
 import { formatShortenNumber } from '@/utils/format';
@@ -35,13 +36,12 @@ const formatDuration = (seconds?: number) => {
 const HeatmapStats = memo(() => {
   const { t } = useTranslation('auth');
 
-  const { data, isLoading } = useClientDataSWR(
-    ['stats-heatmaps', HeatmapType.Tokens].join('-'),
-    () => messageService.getTokenHeatmaps(),
+  const { data, isLoading } = useClientDataSWR(statsKeys.heatmaps(HeatmapType.Tokens), () =>
+    messageService.getTokenHeatmaps(),
   );
   const loading = isLoading || !data;
 
-  const { data: maxTaskDuration } = useClientDataSWR('stats-max-task-duration', () =>
+  const { data: maxTaskDuration } = useClientDataSWR(statsKeys.maxTaskDuration(), () =>
     topicService.getMaxTaskDuration(),
   );
 
@@ -76,31 +76,14 @@ const HeatmapStats = memo(() => {
   const days = (n: number) => [n, t('stats.days')].join(' ');
 
   const items = [
-    {
-      label: t('stats.heatmapStats.peakTokens'),
-      value: formatShortenNumber(stats.peak),
-      isStreak: false,
-      rawValue: stats.peak,
-    },
+    { label: t('stats.heatmapStats.peakTokens'), value: formatShortenNumber(stats.peak) },
     {
       label: t('stats.heatmapStats.longestTask'),
       loading: maxTaskDuration === undefined,
       value: formatDuration(maxTaskDuration),
-      isStreak: false,
-      rawValue: maxTaskDuration ?? 0,
     },
-    {
-      label: t('stats.heatmapStats.currentStreak'),
-      value: days(stats.current),
-      isStreak: true,
-      rawValue: stats.current,
-    },
-    {
-      label: t('stats.heatmapStats.longestStreak'),
-      value: days(stats.longest),
-      isStreak: true,
-      rawValue: stats.longest,
-    },
+    { label: t('stats.heatmapStats.currentStreak'), value: days(stats.current) },
+    { label: t('stats.heatmapStats.longestStreak'), value: days(stats.longest) },
   ];
 
   return (
@@ -110,21 +93,11 @@ const HeatmapStats = memo(() => {
           <Fragment key={item.label}>
             {index > 0 && <Divider style={{ height: 32, margin: 0 }} type={'vertical'} />}
             <Flexbox align={'center'} flex={1} gap={4}>
-              <div
-                style={{
-                  fontSize: 20,
-                  fontWeight: 'bold',
-                  color: item.isStreak && item.rawValue >= 30 ? 'var(--color-error)' : 'inherit',
-                  textShadow:
-                    item.isStreak && item.rawValue >= 30 ? '0 0 8px rgba(255, 69, 0, 0.5)' : 'none',
-                }}
-              >
+              <div style={{ fontSize: 20, fontWeight: 'bold' }}>
                 {loading || item.loading ? (
                   <Skeleton.Button active size={'small'} style={{ width: 56 }} />
                 ) : (
-                  <>
-                    {item.value} {item.isStreak && item.rawValue >= 30 && '🔥'}
-                  </>
+                  item.value
                 )}
               </div>
               <div style={{ color: cssVar.colorTextDescription, fontSize: 12 }}>{item.label}</div>

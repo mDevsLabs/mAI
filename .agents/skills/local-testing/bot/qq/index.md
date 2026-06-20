@@ -2,7 +2,11 @@
 
 **App name:** `QQ` | **Process name:** `QQ`
 
+<<<<<<<< HEAD:.agents/skills/agent-testing/bot/qq/index.md
+See [references/osascript.md](../../references/osascript.md) for shared patterns.
+========
 See [osascript-common.md](../osascript-common.md) for shared patterns.
+>>>>>>>> origin:.agents/skills/local-testing/bot/qq/index.md
 
 ## Activate & Navigate
 
@@ -57,6 +61,11 @@ screencapture /tmp/qq-bot-response.png
 ## Script
 
 ```bash
+<<<<<<<< HEAD:.agents/skills/agent-testing/bot/qq/index.md
+./.agents/skills/agent-testing/bot/qq/test-qq-bot.sh "bot-testing" "Hello bot" 15
+./.agents/skills/agent-testing/bot/qq/test-qq-bot.sh "MyBot" "/help" 10
+========
 ./.agents/skills/local-testing/bot/qq/test-qq-bot.sh "bot-testing" "Hello bot" 15
 ./.agents/skills/local-testing/bot/qq/test-qq-bot.sh "MyBot" "/help" 10
+>>>>>>>> origin:.agents/skills/local-testing/bot/qq/index.md
 ```

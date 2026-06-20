@@ -1,14 +1,13 @@
 import { Flexbox } from '@lobehub/ui';
-import { type ComponentType, type FC } from 'react';
-import { useState } from 'react';
-import { Rnd } from 'react-rnd';
+import { type ComponentType, type FC, useState } from 'react';
 
+import { useBusinessModelPricingPrefetch } from '@/business/client/hooks/useBusinessModelPricing';
 import { useEnabledChatModels } from '@/hooks/useEnabledChatModels';
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/slices/settings/selectors/general';
 import type { EnabledProviderWithModels } from '@/types/aiProvider';
 
-import { DEFAULT_WIDTH, ENABLE_RESIZING, MAX_WIDTH, MIN_WIDTH } from '../const';
+import { DEFAULT_WIDTH, MAX_WIDTH, MIN_WIDTH } from '../const';
 import { usePanelSize } from '../hooks/usePanelSize';
 import { usePanelState } from '../hooks/usePanelState';
 import { List } from './List';
@@ -41,6 +40,8 @@ export const PanelContent: FC<PanelContentProps> = ({
   const { groupMode, handleGroupModeChange } = usePanelState();
   const { panelHeight, panelWidth, handlePanelWidthChange } = usePanelSize(enabledList.length);
 
+  useBusinessModelPricingPrefetch();
+
   const content = (
     <>
       <Toolbar
@@ -66,20 +67,27 @@ export const PanelContent: FC<PanelContentProps> = ({
 
   if (isDevMode) {
     return (
-      <Rnd
-        disableDragging
-        enableResizing={ENABLE_RESIZING}
-        maxWidth={MAX_WIDTH}
-        minWidth={MIN_WIDTH}
-        position={{ x: 0, y: 0 }}
-        size={{ height: panelHeight, width: panelWidth }}
-        style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}
-        onResizeStop={(_e, _direction, ref) => {
-          handlePanelWidthChange(ref.offsetWidth);
+      // react-rnd was removed (react-draggable uses findDOMNode, removed in React 19).
+      // Using a native resizable div instead for devMode resize-only usage.
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: panelHeight,
+          minWidth: MIN_WIDTH,
+          maxWidth: MAX_WIDTH,
+          overflow: 'hidden',
+          position: 'relative',
+          resize: 'horizontal',
+          width: panelWidth,
+        }}
+        onMouseUp={(e) => {
+          const el = e.currentTarget;
+          handlePanelWidthChange(el.offsetWidth);
         }}
       >
         {content}
-      </Rnd>
+      </div>
     );
   }
 

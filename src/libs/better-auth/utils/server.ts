@@ -7,32 +7,12 @@
 export const parseSSOProviders = (providersEnv?: string): string[] => {
   const providers = providersEnv?.trim();
 
-  let result: string[];
   if (!providers) {
-    result = [
-      'google',
-      'github',
-      'canva',
-      'twitch',
-      'slack',
-      'telegram',
-      'x',
-      'notion',
-      'spotify',
-    ];
-  } else {
-    result = providers
-      .split(/[,，]/)
-      .map((p) => p.trim())
-      .filter(Boolean);
+    return [];
   }
 
-  const forcedProviders = ['railway'];
-  forcedProviders.forEach((p) => {
-    if (!result.includes(p)) {
-      result.push(p);
-    }
-  });
-
-  return result;
+  return providers
+    .split(/[,，]/)
+    .map((p) => p.trim())
+    .filter(Boolean);
 };

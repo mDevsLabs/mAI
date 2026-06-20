@@ -14,11 +14,30 @@ import type {
   UIChatMessage,
 } from '@lobechat/types';
 import { AgentRuntimeErrorType } from '@lobechat/types';
+import { isRecord, pickNonEmptyString, toRecord } from '@lobechat/utils/object';
 
 import { messageService } from '@/services/message';
 import { emitClientAgentSignalSourceEvent } from '@/store/chat/slices/aiChat/actions/agentSignalBridge';
+import type {
+  AgentRunLifecycle,
+  RunScope,
+} from '@/store/chat/slices/aiChat/actions/runLifecycle/types';
 import type { ChatStore } from '@/store/chat/store';
 import { notifyDesktopHumanApprovalRequired } from '@/store/chat/utils/desktopNotification';
+
+// `agent_runtime_end` reasons that are NOT a clean completion: a mid-stream
+// cancel and a deferred-tool park. These must NOT mark the topic unread, and
+// must take the non-success branch in `onSessionComplete` so the run clears
+// back to 'active' rather than persisting as an unread completion.
+const NON_COMPLETION_RUNTIME_END_REASONS = new Set(['interrupted', 'waiting_for_async_tool']);
+
+/**
+ * Whether an `agent_runtime_end` event represents a clean completion (vs. a
+ * cancel / park). A clean completion is the only ending that should surface an
+ * unread badge.
+ */
+export const isCompletedRuntimeEnd = (reason?: string | null): boolean =>
+  !NON_COMPLETION_RUNTIME_END_REASONS.has(reason ?? '');
 
 // Lazy-loaded to break the import cycle:
 //   gateway.ts → gatewayEventHandler.ts → executors/index.ts (which pulls in
@@ -155,21 +174,103 @@ const findNextAssistantMessageId = (
   }
 };
 
+const isErrorType = (value: unknown): value is ChatMessageError['type'] =>
+  typeof value === 'string' || typeof value === 'number';
+
+const getMessageFromErrorData = (data: unknown): string | undefined => {
+  if (!isRecord(data)) return undefined;
+
+  const message = pickNonEmptyString(data.message);
+  if (message) return message;
+
+  const error = data.error;
+  const errorString = pickNonEmptyString(error);
+  if (errorString) return errorString;
+  if (isRecord(error)) {
+    const errorMessage = pickNonEmptyString(error.message);
+    if (errorMessage) return errorMessage;
+
+    const nestedError = error.error;
+    if (isRecord(nestedError)) {
+      const nestedMessage = pickNonEmptyString(nestedError.message);
+      if (nestedMessage) return nestedMessage;
+    }
+  }
+
+  const responseBody = data._responseBody;
+  const responseBodyMessage = getMessageFromErrorData(responseBody);
+  if (responseBodyMessage) return responseBodyMessage;
+
+  const body = data.body;
+  if (isRecord(body)) {
+    const bodyMessage = pickNonEmptyString(body.message);
+    if (bodyMessage) return bodyMessage;
+  }
+};
+
+const mergeGatewayPayloadError = (
+  sourceBody: Record<string, unknown>,
+  payloadError: unknown,
+): Record<string, unknown> => {
+  if (payloadError === undefined) return sourceBody;
+  if (!('error' in sourceBody)) return { ...sourceBody, error: payloadError };
+  if (isRecord(sourceBody.error) && isRecord(payloadError)) {
+    return { ...sourceBody, error: { ...payloadError, ...sourceBody.error } };
+  }
+  return sourceBody;
+};
+
+const buildGatewayRuntimeErrorBody = (
+  data: Record<string, unknown>,
+  message: string,
+): Record<string, unknown> => {
+  const body = toRecord(data.body);
+  const responseBody = toRecord(data._responseBody);
+  const errorBody = toRecord(data.error);
+  const sourceBody = body ?? responseBody ?? errorBody ?? {};
+  const shouldMergePayloadError = body === undefined && data._responseBody !== undefined;
+  const mergedBody = shouldMergePayloadError
+    ? mergeGatewayPayloadError(sourceBody, data.error)
+    : sourceBody;
+
+  return {
+    ...mergedBody,
+    ...(data.budget === undefined || 'budget' in mergedBody ? {} : { budget: data.budget }),
+    ...(typeof data.provider === 'string' && !('provider' in mergedBody)
+      ? { provider: data.provider }
+      : {}),
+    ...('message' in mergedBody ? {} : { message }),
+  };
+};
+
 const toChatMessageError = (data: unknown): ChatMessageError => {
-  if (typeof data === 'object' && data && 'type' in data && typeof data.type === 'string') {
-    const error = data as ChatMessageError;
+  if (isRecord(data) && isErrorType(data.type)) {
+    const message =
+      typeof data.message === 'string' && data.message
+        ? data.message
+        : getMessageFromErrorData({ body: data.body });
+
     return {
-      ...error,
-      message: error.message || error.body?.message,
+      ...data,
+      ...(message ? { message } : {}),
+      type: data.type,
     };
   }
 
-  const message =
-    typeof data === 'object' && data && 'message' in data && typeof data.message === 'string'
-      ? data.message
-      : typeof data === 'object' && data && 'error' in data && typeof data.error === 'string'
-        ? data.error
-        : 'Unknown error';
+  // Gateway realtime error events can carry the model-runtime payload shape
+  // (`errorType` + `error`) before the terminal DB message is refreshed. Treat
+  // it as the same semantic error instead of falling back to AgentRuntimeError.
+  if (isRecord(data) && isErrorType(data.errorType)) {
+    const message = getMessageFromErrorData(data) || String(data.errorType);
+
+    return {
+      body: buildGatewayRuntimeErrorBody(data, message),
+      message,
+      type: data.errorType,
+    };
+  }
+
+  const message = getMessageFromErrorData(data) || 'Unknown error';
 
   return {
     body: { message },
@@ -203,10 +304,39 @@ export const createGatewayEventHandler = (
      */
     gatewayOperationId?: string;
     operationId: string;
+    /**
+     * Shared run lifecycle for this run, assembled by the caller (gateway.ts).
+     * Only the gateway transport supplies it — it drives the terminal lifecycle
+     * (completeRun / afterRunComplete) here. hetero reuses this handler ONLY for
+     * per-event message reconciliation; its executor owns the terminal lifecycle
+     * (completeRun + notification + queue drain) in `onComplete`, so it omits this
+     * and the handler must NOT double-complete or double-notify.
+     *
+     * Injected (not built here) to avoid statically importing `buildRunLifecycle`
+     * — which pulls `@/store/chat/store` into this module's evaluation and breaks
+     * the gateway.ts → gatewayEventHandler import cycle.
+     */
+    runLifecycle?: AgentRunLifecycle;
+    /**
+     * Which transport owns this handler. `gateway` (default) drives the terminal
+     * run lifecycle here (completeRun / afterRunComplete). `hetero` reuses the
+     * handler ONLY for per-event message reconciliation.
+     */
+    runtimeType?: 'gateway' | 'hetero';
   },
 ) => {
-  const { context, operationId } = params;
+  const { context, operationId, runLifecycle } = params;
   const gatewayOperationId = params.gatewayOperationId ?? operationId;
+  const runtimeType = params.runtimeType ?? 'gateway';
+
+  const runScope: RunScope = context.scope === 'sub_agent' ? 'sub_agent' : 'top_level';
+  const lifecycleEventBase = {
+    context,
+    operationId,
+    runId: operationId,
+    runScope,
+    runtimeType: 'gateway' as const,
+  };
 
   // Dispatch context — ensures internal_dispatchMessage resolves the correct messageMapKey
   const dispatchContext = { operationId };
@@ -261,6 +391,13 @@ export const createGatewayEventHandler = (
 
   return (event: AgentStreamEvent) => {
     if (terminalState) return;
+
+    // Subagent (`Agent`/`Task`) inner-tool events are tagged `data.subagent` and
+    // belong to an isolation Thread. This handler is main-agent-only, so
+    // dispatching them leaks the subagent's tools into the parent bubble
+    // mid-stream until the terminal fetch corrects it. The local executor drops
+    // them before forwarding; the gateway path doesn't. (DB is unaffected.)
+    if ((event.data as { subagent?: unknown } | undefined)?.subagent) return;
 
     if (event.type === 'agent_runtime_end' || event.type === 'error') {
       terminalState = event.type === 'error' ? 'error' : 'completed';
@@ -440,6 +577,13 @@ export const createGatewayEventHandler = (
           uiMessages?: UIChatMessage[];
         };
 
+        // The server's stepIndex is the authoritative step counter — mirror it
+        // onto the operation so step-based UI (OpStatusTray) stays correct
+        // even across page-refresh reconnects.
+        if (typeof event.stepIndex === 'number') {
+          get().updateOperationMetadata(operationId, { stepCount: event.stepIndex + 1 });
+        }
+
         // Server attaches the canonical UIChatMessage[] snapshot at every
         // step boundary (agent-runtime #15152). Use it as Source of Truth
         // instead of issuing a DB refetch — the refetch returns a stale
@@ -535,13 +679,10 @@ export const createGatewayEventHandler = (
           });
           get().internal_toggleToolCallingStreaming(currentAssistantMessageId, undefined);
           endReasoningIfNeeded();
-          get().completeOperation(operationId);
 
-          const completedOp = get().operations[operationId];
-          if (completedOp?.context.agentId) {
-            get().markUnreadCompleted(completedOp.context.agentId, completedOp.context.topicId);
-          }
-
+          // Reconcile messages FIRST so the terminal run lifecycle's notification
+          // (afterRunComplete) can read the final assistant content from the store.
+          //
           // Terminal step has no later step_start to carry SoT — server
           // pushes the canonical snapshot directly on this event. Fall back
           // to a DB refetch only if the snapshot is absent (older server
@@ -551,10 +692,14 @@ export const createGatewayEventHandler = (
               action: 'gateway/agent_runtime_end',
               context,
             });
-          } else if (data?.reason === 'interrupted' && hasStreamedContent) {
-            // MID-stream cancel. The server's
+          } else if (
+            (data?.reason === 'interrupted' || data?.reason === 'waiting_for_async_tool') &&
+            hasStreamedContent
+          ) {
+            // MID-stream cancel, or a deferred-tool pause
+            // (`waiting_for_async_tool`). The server's
             // `AgentRuntimeCoordinator.resolveUiMessages` omits uiMessages
-            // for status='interrupted' precisely so we can preserve the
+            // for both statuses precisely so we can preserve the
             // in-memory streamed content here. The executor's partial-
             // finalize catch writes the real content to DB asynchronously,
             // but it may not be durable yet — refetching here would race
@@ -571,6 +716,39 @@ export const createGatewayEventHandler = (
             // refetch to be reconciled with the server-side rows.
           } else {
             await fetchAndReplaceMessages(get, context).catch(console.error);
+          }
+
+          // Terminal run lifecycle. `isCompletedRuntimeEnd` is the clean-vs-not
+          // gate (a mid-stream cancel 'interrupted' or deferred-tool park
+          // 'waiting_for_async_tool' is NOT a clean completion):
+          //   • completed → completeRun completes the op, marks the topic unread,
+          //     drains the input queue, then afterRunComplete fires the desktop
+          //     notification (skipped if a queued follow-up was scheduled).
+          //   • cancelled → completeRun only completes the op (no unread badge,
+          //     no queue drain, no notification) — same as the old inline path.
+          if (runtimeType === 'gateway' && runLifecycle) {
+            const status = isCompletedRuntimeEnd(data?.reason) ? 'completed' : 'cancelled';
+            const { requeued } = await runLifecycle.completeRun({
+              ...lifecycleEventBase,
+              status,
+            });
+            if (!requeued && status === 'completed') {
+              await runLifecycle.afterRunComplete({ ...lifecycleEventBase, status });
+            }
+          } else {
+            // hetero reuses this handler only for message reconciliation; its
+            // executor owns completeRun + notification + queue drain. Complete the
+            // op here so loading clears, and mark unread on a clean completion —
+            // matching the legacy inline path the hetero executor still relies on.
+            get().completeOperation(operationId);
+            const completedOp = get().operations[operationId];
+            if (completedOp?.context.agentId && isCompletedRuntimeEnd(data?.reason)) {
+              get().markTopicUnread({
+                agentId: completedOp.context.agentId,
+                groupId: completedOp.context.groupId,
+                topicId: completedOp.context.topicId,
+              });
+            }
           }
         });
         break;
@@ -603,7 +781,18 @@ export const createGatewayEventHandler = (
 
           get().internal_toggleToolCallingStreaming(currentAssistantMessageId, undefined);
           endReasoningIfNeeded();
-          get().completeOperation(operationId);
+
+          // An errored run is a FAILED run, not a completed one (LOBE-10379
+          // "error→fail"). For gateway, drive the terminal disposition through the
+          // shared lifecycle so the op lands in `failed` (no unread badge, no queue
+          // drain, no notification). hetero never forwards `error` to this handler
+          // (its executor routes errors through persistTerminalError), but keep the
+          // legacy completeOperation for any other caller for safety.
+          if (runtimeType === 'gateway' && runLifecycle) {
+            await runLifecycle.completeRun({ ...lifecycleEventBase, status: 'failed' });
+          } else {
+            get().completeOperation(operationId);
+          }
 
           const updateResult = await messageService
             .updateMessageError(currentAssistantMessageId, messageError, {

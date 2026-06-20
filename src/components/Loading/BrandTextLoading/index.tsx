@@ -22,7 +22,7 @@ const BrandTextLoading = ({ debugId }: BrandTextLoadingProps) => {
   return (
     <div className={styles.container}>
       <div aria-label="Loading" className={styles.brand} role="status">
-        <BrandLoading size={40} text={() => <span style={{ fontSize: 28, fontWeight: 'bold', marginLeft: 8 }}>mAI</span>} />
+        <BrandLoading size={40} text={LobeHubText} />
       </div>
       {showDebug && (
         <div className={styles.debug}>

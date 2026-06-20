@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 // @ts-nocheck
 import OpenAI from 'openai';
 

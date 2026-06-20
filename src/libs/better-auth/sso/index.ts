@@ -18,16 +18,16 @@ import Twitch from './providers/twitch';
 import X from './providers/x';
 
 const providerDefinitions = [
+  Canva,
   Google,
   Github,
+  Notion,
+  Railway,
   Slack,
   Spotify,
-  Twitch,
-  Notion,
-  X,
-  Canva,
   Telegram,
-  Railway,
+  Twitch,
+  X,
 ] as const;
 
 const builtInProviderIds = new Set(BUILTIN_BETTER_AUTH_PROVIDERS);
@@ -48,7 +48,21 @@ for (const definition of providerDefinitions) {
 }
 
 export const initBetterAuthSSOProviders = () => {
-  const enabledProviders = parseSSOProviders(authEnv.AUTH_SSO_PROVIDERS);
+  let enabledProviders = parseSSOProviders(authEnv.AUTH_SSO_PROVIDERS);
+  if (enabledProviders.length === 0) {
+    enabledProviders = [
+      'google',
+      'github',
+      'x',
+      'canva',
+      'slack',
+      'notion',
+      'spotify',
+      'telegram',
+      'twitch',
+      'railway',
+    ];
+  }
 
   const socialProviders: SocialProviders = {};
   const genericOAuthProviders: GenericOAuthConfig[] = [];
@@ -64,12 +78,16 @@ export const initBetterAuthSSOProviders = () => {
      * Providers expose checkEnvs predicates so we can fail fast when credentials are missing instead
      * of encountering harder-to-trace errors later in the Better-Auth pipeline.
      */
-    const env = definition.checkEnvs();
+    let env = definition.checkEnvs();
     if (!env) {
       console.warn(
-        `[Better-Auth] ${rawProvider} SSO provider environment variables are not set correctly!`,
+        `[Better-Auth] WARNING: ${rawProvider} SSO provider environment variables are not set correctly! Using dummy credentials for preview.`,
       );
-      continue;
+      const upperId = definition.id.toUpperCase();
+      env = {
+        [`AUTH_${upperId}_ID`]: `dummy_${definition.id}_id`,
+        [`AUTH_${upperId}_SECRET`]: `dummy_${definition.id}_secret`,
+      } as any;
     }
 
     if (definition.type === 'builtin') {

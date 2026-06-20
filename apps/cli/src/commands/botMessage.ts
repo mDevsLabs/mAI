@@ -1,6 +1,5 @@
 import { readFile } from 'node:fs/promises';
-import path from 'node:path';
-const { basename, extname } = path;
+import { basename, extname } from 'node:path';
 
 import { DEFAULT_BOT_HISTORY_LIMIT } from '@lobechat/const';
 import type { Command } from 'commander';
