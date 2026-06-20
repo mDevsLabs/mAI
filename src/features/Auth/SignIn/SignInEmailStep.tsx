@@ -8,8 +8,14 @@ import { type CSSProperties, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import AuthIcons from '@/components/AuthIcons';
+import SocialButtonGrid from '@/components/SocialButtonGrid';
 import AuthCard from '@/features/AuthCard';
 import { AuthAgreement } from '@/features/AuthShell';
+
+// Fixed ordering for the two circular grid rows
+const DARK_ROW_PROVIDERS = ['google', 'slack', 'canva', 'telegram', 'railway'];
+const LIGHT_ROW_PROVIDERS = ['github', 'x', 'twitch', 'notion', 'spotify'];
+const GRID_PROVIDERS = new Set([...DARK_ROW_PROVIDERS, ...LIGHT_ROW_PROVIDERS]);
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
   setPasswordLink: css`
@@ -17,26 +23,12 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
     color: ${cssVar.colorPrimary};
     text-decoration: underline;
   `,
-  socialButtonsContainer: css`
-    max-height: 400px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding-right: 4px;
+  // Fallback list for extra providers not in the grid
+  extraProvidersContainer: css`
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     flex-shrink: 0;
-    
-    &::-webkit-scrollbar {
-      width: 4px;
-    }
-    &::-webkit-scrollbar-thumb {
-      background: ${cssVar.colorTextQuaternary};
-      border-radius: 2px;
-    }
-    &::-webkit-scrollbar-thumb:hover {
-      background: ${cssVar.colorTextTertiary};
-    }
   `,
 }));
 
@@ -101,10 +93,12 @@ export const SignInEmailStep = ({
     return t(key, { defaultValue: `Continue with ${normalized}` });
   };
 
-  const hasMoreProviders = oAuthSSOProviders.length > 3;
-  const visibleProviders = hasMoreProviders && !showAllProviders
-    ? oAuthSSOProviders.slice(0, 3)
-    : oAuthSSOProviders;
+  // Providers that fall outside the two fixed grid rows
+  const extraProviders = oAuthSSOProviders.filter((p) => !GRID_PROVIDERS.has(p));
+  const hasMoreProviders = extraProviders.length > 3;
+  const visibleExtraProviders = hasMoreProviders && !showAllProviders
+    ? extraProviders.slice(0, 3)
+    : extraProviders;
 
   return (
     <AuthCard
@@ -112,50 +106,59 @@ export const SignInEmailStep = ({
       subtitle={t('signin.subtitle', { appName: BRANDING_NAME })}
     >
       {!serverConfigInit && (
-        <Flexbox gap={12}>
-          <Skeleton.Button active block size="large" />
-          <Skeleton.Button active block size="large" />
+        <Flexbox gap={10}>
+          <Skeleton.Button active block size="large" style={{ height: 88, borderRadius: 16 }} />
+          <Skeleton.Button active block size="large" style={{ height: 88, borderRadius: 16 }} />
           {divider}
         </Flexbox>
       )}
       {serverConfigInit && oAuthSSOProviders.length > 0 && (
         <Flexbox gap={12}>
-          <div className={styles.socialButtonsContainer}>
-            {visibleProviders.map((provider) => {
-              const button = (
-                <Button
-                  block
-                  icon={
-                    <span style={PROVIDER_ICON_STYLE}>
-                      {AuthIcons(provider, 18)}
-                    </span>
-                  }
-                  key={provider}
-                  loading={socialLoading === provider}
-                  size="large"
-                  onClick={() => onSocialSignIn(provider)}
-                >
-                  {getProviderLabel(provider)}
-                </Button>
-              );
-              const showLastUsed =
-                provider === lastAuthProvider &&
-                (oAuthSSOProviders.length > 1 ||
-                  (oAuthSSOProviders.length === 1 && !disableEmailPassword));
-              return showLastUsed ? (
-                <Badge
-                  color="var(--ant-color-info)"
-                  count={t('betterAuth.signin.lastUsed')}
-                  key={provider}
-                  styles={{ root: { display: 'block', width: '100%' } }}
-                >
-                  {button}
-                </Badge>
-              ) : (
-                button
-              );
-            })}
-          </div>
+          {/* ── 5×2 circular button grid ── */}
+          <SocialButtonGrid
+            socialLoading={socialLoading}
+            onSocialSignIn={onSocialSignIn}
+          />
+
+          {/* ── Extra providers not in the grid, shown as classic buttons ── */}
+          {visibleExtraProviders.length > 0 && (
+            <div className={styles.extraProvidersContainer}>
+              {visibleExtraProviders.map((provider) => {
+                const button = (
+                  <Button
+                    block
+                    icon={
+                      <span style={PROVIDER_ICON_STYLE}>
+                        {AuthIcons(provider, 18)}
+                      </span>
+                    }
+                    key={provider}
+                    loading={socialLoading === provider}
+                    size="large"
+                    onClick={() => onSocialSignIn(provider)}
+                  >
+                    {getProviderLabel(provider)}
+                  </Button>
+                );
+                const showLastUsed =
+                  provider === lastAuthProvider &&
+                  (oAuthSSOProviders.length > 1 ||
+                    (oAuthSSOProviders.length === 1 && !disableEmailPassword));
+                return showLastUsed ? (
+                  <Badge
+                    color="var(--ant-color-info)"
+                    count={t('betterAuth.signin.lastUsed')}
+                    key={provider}
+                    styles={{ root: { display: 'block', width: '100%' } }}
+                  >
+                    {button}
+                  </Badge>
+                ) : (
+                  button
+                );
+              })}
+            </div>
+          )}
           {hasMoreProviders && !showAllProviders && (
             <Button
               block
