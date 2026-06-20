@@ -7,7 +7,7 @@ import { type GlobalServerConfig } from '@/types/serverConfig';
 
 const getBetterAuthSSOProviders = () => {
   const providers = parseSSOProviders(authEnv.AUTH_SSO_PROVIDERS);
-  if (providers.length === 0 && process.env.NODE_ENV === 'development') {
+  if (providers.length === 0) {
     return [
       'google',
       'github',

@@ -2,8 +2,8 @@
 
 import { createStaticStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
+import { motion } from 'framer-motion';
 import { memo, useEffect, useRef, useState } from 'react';
-import { Rnd } from 'react-rnd';
 
 import { useChatStore } from '@/store/chat';
 import { operationSelectors } from '@/store/chat/slices/operation/selectors';
@@ -14,23 +14,23 @@ const QUOTES = [
   { text: "Je ne perds jamais. Soit je gagne, soit j'apprends.", author: "Nelson Mandela" },
   { text: "Le seul moyen de faire du bon travail, c'est d'aimer ce que vous faites.", author: "Steve Jobs" },
   { text: "La vie est un mystère qu'il faut vivre, et non un problème à résoudre.", author: "Gandhi" },
-  { text: "Dans vingt ans vous serez plus déçus par les choses que vous n’avez pas faites que par celles que vous avez faites.", author: "Mark Twain" },
+  { text: "Dans vingt ans vous serez plus déçus par les choses que vous n'avez pas faites que par celles que vous avez faites.", author: "Mark Twain" },
   { text: "L'échec est seulement l'opportunité de recommencer d'une façon plus intelligente.", author: "Henry Ford" },
-  { text: "Tout seems toujours impossible jusqu'à ce que ce soit fait.", author: "Nelson Mandela" },
+  { text: "Tout semble toujours impossible jusqu'à ce que ce soit fait.", author: "Nelson Mandela" },
   { text: "Ce qui ne me tue pas me rend plus fort.", author: "Friedrich Nietzsche" },
   { text: "Le plus grand risque est de n'en prendre aucun.", author: "Mark Zuckerberg" },
   { text: "La meilleure façon de prédire l'avenir est de le créer.", author: "Peter Drucker" },
   { text: "Si vous traversez l'enfer, continuez d'avancer.", author: "Winston Churchill" },
   { text: "Un voyage de mille lieues commence toujours par un premier pas.", author: "Lao Tseu" },
-  { text: "La folie, c’est de faire toujours la même chose et de s’attendre à un résultat différent.", author: "Albert Einstein" },
+  { text: "La folie, c'est de faire toujours la même chose et de s'attendre à un résultat différent.", author: "Albert Einstein" },
   { text: "Il n'y a qu'une façon d'échouer, c'est d'abandonner avant d'avoir réussi.", author: "Georges Clemenceau" },
   { text: "Tout ce que l'esprit peut concevoir et croire, il peut l'accomplir.", author: "Napoleon Hill" },
-  { text: "N’attendez pas. Le moment ne sera jamais le bon.", author: "Napoleon Hill" },
+  { text: "N'attendez pas. Le moment ne sera jamais le bon.", author: "Napoleon Hill" },
   { text: "L'avenir appartient à ceux qui croient à la beauté de leurs rêves.", author: "Eleanor Roosevelt" },
   { text: "Soyez le changement que vous voulez voir dans le monde.", author: "Gandhi" },
   { text: "Il est toujours trop tôt pour abandonner.", author: "Norman Vincent Peale" },
   { text: "Rien de grand ne s'est accompli dans le monde sans passion.", author: "Hegel" },
-  { text: "N’essayez pas de devenir un homme qui a du succès. Essayez plutôt de devenir un homme qui a de la valeur.", author: "Albert Einstein" },
+  { text: "N'essayez pas de devenir un homme qui a du succès. Essayez plutôt de devenir un homme qui a de la valeur.", author: "Albert Einstein" },
   { text: "Ne rêvez pas votre vie, mais vivez vos rêves.", author: "Mark Twain" },
   { text: "L'action est la clé fondamentale de tout succès.", author: "Pablo Picasso" },
   { text: "Il faut viser la lune, parce qu'au moins, si vous échouez, vous finirez dans les étoiles.", author: "Oscar Wilde" },
@@ -55,12 +55,12 @@ const QUOTES = [
   { text: "Ceux qui ne font rien ne se trompent jamais.", author: "Théodore de Banville" },
   { text: "Le moment présent a un avantage sur tous les autres : il nous appartient.", author: "Charles Caleb Colton" },
   { text: "Choisissez un travail que vous aimez et vous n'aurez pas à travailler un seul jour de votre vie.", author: "Confucius" },
-  { text: "C’est dans l’effort que l’on trouve la satisfaction et non dans la réussite.", author: "Gandhi" },
+  { text: "C'est dans l'effort que l'on trouve la satisfaction et non dans la réussite.", author: "Gandhi" },
   { text: "Le courage n'est pas l'absence de peur, mais la capacité de la vaincre.", author: "Nelson Mandela" },
   { text: "Tout homme a le droit de douter de sa tâche, et d'y faillir de temps en temps, mais il n'a pas le droit de s'en détourner.", author: "Paulo Coelho" },
   { text: "La vie est un défi à relever, un bonheur à mériter, une aventure à tenter.", author: "Mère Teresa" },
   { text: "Le succès, c'est tomber sept fois, se relever huit.", author: "Proverbe japonais" },
-  { text: "Croyez en vos rêves et ils se réaliseront peut-être. Croyez en vous et ils se réaliseront sûrement.", author: "Martin Luther King" }
+  { text: "Croyez en vos rêves et ils se réaliseront peut-être. Croyez en vous et ils se réaliseront sûrement.", author: "Martin Luther King" },
 ];
 
 const useStaticStyles = createStaticStyles(({ css }) => ({
@@ -99,7 +99,7 @@ const Pet = memo(
     const [currentQuote, setCurrentQuote] = useState<{ text: string; author: string } | null>(null);
     const [showQuote, setShowQuote] = useState(false);
     const quoteTimerRef = useRef<any>(null);
-    
+
     // Store previous isGenerating value to detect changes
     const prevIsGenerating = useRef(isGenerating);
 
@@ -117,7 +117,7 @@ const Pet = memo(
       if (!mounted) return;
       if (isGenerating !== prevIsGenerating.current) {
         prevIsGenerating.current = isGenerating;
-        
+
         // Play pet sound on AI action
         if (config?.petsSound) {
           try {
@@ -128,7 +128,7 @@ const Pet = memo(
             // Ignore audio errors
           }
         }
-        
+
         setAnimation(isGenerating ? 'running' : 'idle');
       }
     }, [isGenerating, mounted, petId, config]);
@@ -172,7 +172,7 @@ const Pet = memo(
       }, 4000);
     };
 
-    const getContainerStyle = () => {
+    const getContainerStyle = (): React.CSSProperties => {
       const style: React.CSSProperties = {
         width: size,
         height: size,
@@ -196,26 +196,29 @@ const Pet = memo(
     };
 
     return (
-      <Rnd
-        bounds="window"
-        enableResizing={false}
-        style={{ zIndex: 9999, position: 'fixed' }}
-        default={{
-          x: startX,
-          y: startY,
-          width: size,
-          height: size,
-        }}
-        onDrag={(e, data) => {
-          if (data.deltaX < 0) {
+      // motion.div with drag replaces react-rnd (which uses react-draggable/findDOMNode, removed in React 19)
+      <motion.div
+        drag
+        dragMomentum={false}
+        initial={{ x: startX, y: startY }}
+        onDrag={(_e, info) => {
+          if (info.delta.x < 0) {
             setAnimation('running-left');
-          } else if (data.deltaX > 0) {
+          } else if (info.delta.x > 0) {
             setAnimation('running-right');
           }
         }}
-        onDragStop={() => {
+        onDragEnd={() => {
           setAnimation('idle');
         }}
+        style={{
+          cursor: 'grab',
+          height: size,
+          position: 'fixed',
+          width: size,
+          zIndex: 9999,
+        }}
+        whileDrag={{ cursor: 'grabbing' }}
       >
         <div style={{ position: 'relative' }}>
           {/* Quote Speech Bubble */}
@@ -249,7 +252,7 @@ const Pet = memo(
                   textAlign: 'center',
                 }}
               >
-                "{currentQuote.text}"
+                &ldquo;{currentQuote.text}&rdquo;
               </div>
               <div
                 style={{
@@ -345,7 +348,7 @@ const Pet = memo(
             )}
           </div>
         </div>
-      </Rnd>
+      </motion.div>
     );
   },
 );

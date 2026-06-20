@@ -49,7 +49,7 @@ for (const definition of providerDefinitions) {
 
 export const initBetterAuthSSOProviders = () => {
   let enabledProviders = parseSSOProviders(authEnv.AUTH_SSO_PROVIDERS);
-  if (enabledProviders.length === 0 && process.env.NODE_ENV === 'development') {
+  if (enabledProviders.length === 0) {
     enabledProviders = [
       'google',
       'github',
@@ -80,17 +80,14 @@ export const initBetterAuthSSOProviders = () => {
      */
     let env = definition.checkEnvs();
     if (!env) {
-      if (process.env.NODE_ENV === 'development') {
-        const upperId = definition.id.toUpperCase();
-        env = {
-          [`AUTH_${upperId}_ID`]: `dummy_${definition.id}_id`,
-          [`AUTH_${upperId}_SECRET`]: `dummy_${definition.id}_secret`,
-        } as any;
-      } else {
-        throw new Error(
-          `[Better-Auth] ${rawProvider} SSO provider environment variables are not set correctly!`,
-        );
-      }
+      console.warn(
+        `[Better-Auth] WARNING: ${rawProvider} SSO provider environment variables are not set correctly! Using dummy credentials for preview.`,
+      );
+      const upperId = definition.id.toUpperCase();
+      env = {
+        [`AUTH_${upperId}_ID`]: `dummy_${definition.id}_id`,
+        [`AUTH_${upperId}_SECRET`]: `dummy_${definition.id}_secret`,
+      } as any;
     }
 
     if (definition.type === 'builtin') {
