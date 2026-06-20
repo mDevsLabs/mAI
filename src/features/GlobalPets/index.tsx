@@ -63,6 +63,29 @@ const QUOTES = [
   { text: "Croyez en vos rêves et ils se réaliseront peut-être. Croyez en vous et ils se réaliseront sûrement.", author: "Martin Luther King" },
 ];
 
+const ENCOURAGEMENTS = [
+  { text: "Super question ! Voyons ça ensemble.", author: "mAI" },
+  { text: "Tu es sur la bonne voie, continue !", author: "mAI" },
+  { text: "Génial, j'adore cette idée !", author: "mAI" },
+  { text: "C'est une excellente réflexion !", author: "mAI" },
+  { text: "Je suis là pour t'aider à briller.", author: "mAI" },
+  { text: "Rien ne t'arrête aujourd'hui !", author: "mAI" },
+  { text: "Quelle belle inspiration !", author: "mAI" },
+  { text: "On fait une super équipe !", author: "mAI" },
+  { text: "Ton esprit est vraiment vif aujourd'hui.", author: "mAI" },
+  { text: "C'est un plaisir de discuter avec toi.", author: "mAI" },
+  { text: "Continue comme ça, tu gères !", author: "mAI" },
+  { text: "Je suis prêt(e), allons-y !", author: "mAI" },
+  { text: "Encore une belle réussite en perspective.", author: "mAI" },
+  { text: "Tu poses toujours les bonnes questions.", author: "mAI" },
+  { text: "C'est parti pour une nouvelle aventure !", author: "mAI" },
+  { text: "Ta curiosité est ta plus grande force.", author: "mAI" },
+  { text: "On va faire des merveilles avec ça.", author: "mAI" },
+  { text: "C'est toujours un bonheur de t'assister.", author: "mAI" },
+  { text: "Bravo pour cette belle avancée !", author: "mAI" },
+  { text: "Tu m'impressionnes de jour en jour.", author: "mAI" }
+];
+
 const styles = createStaticStyles(({ css }) => ({
   fadeInUp: css`
     @keyframes petFadeInUp {
@@ -118,7 +141,7 @@ const Pet = memo(
         prevIsGenerating.current = isGenerating;
 
         // Play pet sound on AI action
-        if (config?.petsSound) {
+        if (config?.petsSound && isGenerating) {
           try {
             const audio = new Audio(`/pets/${petId}/${petId}.mp3`);
             audio.volume = config?.petsVolume ?? 0.5;
@@ -128,7 +151,22 @@ const Pet = memo(
           }
         }
 
-        setAnimation(isGenerating ? 'running' : 'idle');
+        if (isGenerating && config?.petsEncouragements) {
+           const randomIndex = Math.floor(Math.random() * ENCOURAGEMENTS.length);
+           setCurrentQuote(ENCOURAGEMENTS[randomIndex]);
+           setShowQuote(true);
+           setAnimation('jumping');
+           if (quoteTimerRef.current) clearTimeout(quoteTimerRef.current);
+           quoteTimerRef.current = setTimeout(() => {
+             setShowQuote(false);
+             setAnimation('running');
+           }, 4000);
+        } else {
+           setAnimation(isGenerating ? 'running' : 'idle');
+           if (!isGenerating) {
+             setShowQuote(false);
+           }
+        }
       }
     }, [isGenerating, mounted, petId, config]);
 
@@ -150,10 +188,14 @@ const Pet = memo(
         }
       }
 
-      // Pick a random quote
-      const randomIndex = Math.floor(Math.random() * QUOTES.length);
-      setCurrentQuote(QUOTES[randomIndex]);
-      setShowQuote(true);
+      // Pick a random quote if citations are enabled
+      if (config?.petsCitations) {
+        const randomIndex = Math.floor(Math.random() * QUOTES.length);
+        setCurrentQuote(QUOTES[randomIndex]);
+        setShowQuote(true);
+      } else {
+        setShowQuote(false);
+      }
 
       // Temporarily change animation to jumping or waving
       const possibleAnimations = ['jumping', 'waving'];
@@ -202,9 +244,9 @@ const Pet = memo(
         initial={{ x: startX, y: startY }}
         onDrag={(_e, info) => {
           if (info.delta.x < 0) {
-            setAnimation('running-left');
-          } else if (info.delta.x > 0) {
             setAnimation('running-right');
+          } else if (info.delta.x > 0) {
+            setAnimation('running-left');
           }
         }}
         onDragEnd={() => {

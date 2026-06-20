@@ -79,36 +79,6 @@ const Page = memo(() => {
             </div>
           )}
         </Flexbox>
-        <Flexbox
-          horizontal
-          align={'center'}
-          gap={12}
-          padding={12}
-          style={{ background: 'var(--color-fill-secondary)', borderRadius: 8 }}
-        >
-          <div style={{ fontWeight: 'bold', fontSize: 14 }}>Niveau {petsLevel}</div>
-          <div
-            style={{
-              flex: 1,
-              height: 8,
-              background: 'var(--color-fill-tertiary)',
-              borderRadius: 4,
-              overflow: 'hidden',
-            }}
-          >
-            <div
-              style={{
-                width: `${petsLevel === 100 ? 100 : ((general?.petsMsgCount || 0) % 10) * 10}%`,
-                height: '100%',
-                background: 'var(--color-primary)',
-                transition: 'width 0.3s',
-              }}
-            />
-          </div>
-          <div style={{ fontSize: 12, color: 'var(--color-text-description)' }}>
-            {petsLevel === 100 ? 'Max' : `${(general?.petsMsgCount || 0) % 10} / 10 msgs`}
-          </div>
-        </Flexbox>
         <Button
           block
           disabled={!enablePets}
@@ -183,6 +153,24 @@ const Page = memo(() => {
     divider: false,
   };
 
+  const petsCitationsItem = {
+    children: <Switch disabled={!enablePets} defaultChecked={false} />,
+    desc: 'Activer l\'affichage de textes et citations.',
+    label: 'Citations',
+    minWidth: undefined,
+    name: 'petsCitations',
+    valuePropName: 'checked',
+  };
+
+  const petsEncouragementsItem = {
+    children: <Switch disabled={!enablePets} defaultChecked={false} />,
+    desc: 'Activer les encouragements et félicitations du pet.',
+    label: 'Encouragements et félicitations',
+    minWidth: undefined,
+    name: 'petsEncouragements',
+    valuePropName: 'checked',
+  };
+
   return (
     <>
       <SettingHeader title={t('tab.pets')} />
@@ -205,6 +193,8 @@ const Page = memo(() => {
               petsZoomItem,
               petsSoundItem,
               petsVolumeItem,
+              petsCitationsItem,
+              petsEncouragementsItem,
             ],
             title: t('settingPets.section.options'),
             icon: Sliders,

@@ -39,5 +39,7 @@ export interface UserGeneralConfig {
   petsColor?: boolean;
   petsWeather?: boolean;
   petsAura?: boolean;
+  petsCitations?: boolean;
+  petsEncouragements?: boolean;
 }
 

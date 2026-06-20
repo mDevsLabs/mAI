@@ -69,10 +69,6 @@ const SocialProviderButtons = memo<SocialProviderButtonsProps>(
       </Divider>
     );
 
-    const primaryKeys = ['google', 'github', 'x'];
-    const primaryProviders = providers.filter((p) => primaryKeys.includes(p.toLowerCase()));
-    const otherProviders = providers.filter((p) => !primaryKeys.includes(p.toLowerCase()));
-
     const renderButton = (provider: string) => {
       const button = (
         <Button
@@ -80,12 +76,20 @@ const SocialProviderButtons = memo<SocialProviderButtonsProps>(
           key={provider}
           loading={socialLoading === provider}
           size="large"
+          style={{
+            borderRadius: 24,
+            height: 48,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'relative'
+          }}
           icon={
             <div
               style={{
-                left: 12,
+                left: 16,
                 position: 'absolute',
-                top: 13,
+                top: 15,
               }}
             >
               {AuthIcons(provider, 18)}
@@ -115,16 +119,9 @@ const SocialProviderButtons = memo<SocialProviderButtonsProps>(
 
     return (
       <Flexbox gap={12}>
-        {primaryProviders.map((provider) => renderButton(provider))}
-        
-        {showAll && otherProviders.map((provider) => renderButton(provider))}
-
-        {!showAll && otherProviders.length > 0 && (
-          <Button block size="large" icon={<MoreHorizontal size={18} />} onClick={() => setShowAll(true)}>
-            {t('betterAuth.signin.moreOptions', { defaultValue: 'More options' })}
-          </Button>
-        )}
-
+        <Flexbox gap={12} style={{ maxHeight: 380, overflowY: 'auto', paddingRight: 6 }}>
+          {providers.map((provider) => renderButton(provider))}
+        </Flexbox>
         {!hideBottomDivider && divider}
       </Flexbox>
     );

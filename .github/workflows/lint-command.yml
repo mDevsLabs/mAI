@@ -52,7 +52,7 @@ jobs:
 
       - name: 🐛 Exécution de ESLint
         continue-on-error: true
-        run: pnpx eslint .
+        run: pnpx eslint . --fix --quiet
 
   other-lints:
     name: 🐛 Other Lints
