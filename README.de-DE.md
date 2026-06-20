@@ -263,10 +263,10 @@ Dieses Projekt bietet einige zusätzliche Konfigurationsoptionen, die über Umge
 
 | NPM | Repository | Beschreibung | Version |
 | --------------------------------- | --------------------------------------- | ----------------------------------------------------------------------------------------------------- | ----------------------------------------- |
-| [@mAI/ui][lobe-ui-link] | [mAI/lobe-ui][lobe-ui-github] | Open-Source-UI-Komponentenbibliothek speziell für die Erstellung von AIGC-Webanwendungen. | [![][lobe-ui-shield]][lobe-ui-link] |
-| [@mAI/icons][lobe-icons-link] | [mAI/lobe-icons][lobe-icons-github] | SVG-Logo- und Icon-Sammlung bekannter KI- und LLM-Modellmarken. | [![][lobe-icons-shield]][lobe-icons-link] |
-| [@mAI/tts][lobe-tts-link] | [mAI/lobe-tts][lobe-tts-github] | Hochwertige und zuverlässige TTS/STT-Bibliothek für React-Hooks. | [![][lobe-tts-shield]][lobe-tts-link] |
-| [@mAI/lint][lobe-lint-link] | [mAI/lobe-lint][lobe-lint-github] | Konfigurationen für ESLint, Stylelint, Commitlint, Prettier, Remark und Semantic Release für mAI. | [![][lobe-lint-shield]][lobe-lint-link] |
+| [@lobehub/ui][lobe-ui-link] | [lobehub/lobe-ui][lobe-ui-github] | Open-Source-UI-Komponentenbibliothek speziell für die Erstellung von AIGC-Webanwendungen. | [![][lobe-ui-shield]][lobe-ui-link] |
+| [@lobehub/icons][lobe-icons-link] | [lobehub/lobe-icons][lobe-icons-github] | SVG-Logo- und Icon-Sammlung bekannter KI- und LLM-Modellmarken. | [![][lobe-icons-shield]][lobe-icons-link] |
+| [@lobehub/tts][lobe-tts-link] | [lobehub/lobe-tts][lobe-tts-github] | Hochwertige und zuverlässige TTS/STT-Bibliothek für React-Hooks. | [![][lobe-tts-shield]][lobe-tts-link] |
+| [@lobehub/lint][lobe-lint-link] | [lobehub/lobe-lint][lobe-lint-github] | Konfigurationen für ESLint, Stylelint, Commitlint, Prettier, Remark und Semantic Release für mAI. | [![][lobe-lint-shield]][lobe-lint-link] |
 
 <div align="right">
 
@@ -280,8 +280,8 @@ Plugins bieten eine Möglichkeit, die [Function Calling][docs-function-call]-Fä
 
 - [lobe-chat-plugins][lobe-chat-plugins]: Dies ist das Plugin-Verzeichnis für mAI. Es greift auf die Datei index.json aus diesem Repository zu, um dem Benutzer eine Liste der verfügbaren mAI-Plugins anzuzeigen.
 - [chat-plugin-template][chat-plugin-template]: Dies ist die Plugin-Vorlage für die mAI-Plugin-Entwicklung.
-- [@mAI/chat-plugin-sdk][chat-plugin-sdk]: Das mAI Plugin SDK unterstützt Sie bei der Erstellung herausragender Chat-Plugins für mAI.
-- [@mAI/chat-plugins-gateway][chat-plugins-gateway]: Das mAI Plugins Gateway ist ein Backend-Dienst, der ein Gateway für mAI-Plugins bereitstellt. Wir stellen diesen Dienst über Vercel bereit. Die primäre API POST /api/v1/runner ist als Edge Function bereitgestellt.
+- [@lobehub/chat-plugin-sdk][chat-plugin-sdk]: Das mAI Plugin SDK unterstützt Sie bei der Erstellung herausragender Chat-Plugins für mAI.
+- [@lobehub/chat-plugins-gateway][chat-plugins-gateway]: Das mAI Plugins Gateway ist ein Backend-Dienst, der ein Gateway für mAI-Plugins bereitstellt. Wir stellen diesen Dienst über Vercel bereit. Die primäre API POST /api/v1/runner is als Edge Function bereitgestellt.
 
 > [!NOTE]
 >
@@ -445,12 +445,12 @@ Dieses Projekt ist unter der [mAI-Community-Lizenz](./LICENSE) lizenziert.
 [discord-link]: https://discord.gg/fV7zwdGPpY
 [discord-shield]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=flat-square
 [discord-shield-badge]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=for-the-badge
-[docker-pulls-link]: https://hub.docker.com/r/mAI/mAI
-[docker-pulls-shield]: https://img.shields.io/docker/pulls/mAI/mAI?color=45cc11&labelColor=black&style=flat-square&sort=semver
-[docker-release-link]: https://hub.docker.com/r/mAI/mAI
-[docker-release-shield]: https://img.shields.io/docker/v/mAI/mAI?color=369eff&label=docker&labelColor=black&logo=docker&logoColor=white&style=flat-square&sort=semver
-[docker-size-link]: https://hub.docker.com/r/mAI/mAI
-[docker-size-shield]: https://img.shields.io/docker/image-size/mAI/mAI?color=369eff&labelColor=black&style=flat-square&sort=semver
+[docker-pulls-link]: https://hub.docker.com/r/lobehub/lobe-chat
+[docker-pulls-shield]: https://img.shields.io/docker/pulls/lobehub/lobe-chat?color=45cc11&labelColor=black&style=flat-square&sort=semver
+[docker-release-link]: https://hub.docker.com/r/lobehub/lobe-chat
+[docker-release-shield]: https://img.shields.io/docker/v/lobehub/lobe-chat?color=369eff&label=docker&labelColor=black&logo=docker&logoColor=white&style=flat-square&sort=semver
+[docker-size-link]: https://hub.docker.com/r/lobehub/lobe-chat
+[docker-size-shield]: https://img.shields.io/docker/image-size/lobehub/lobe-chat?color=369eff&labelColor=black&style=flat-square&sort=semver
 [docs]: https://mAI.com/docs/usage/start
 [docs-dev-guide]: https://mAI.com/docs/development/start
 [docs-docker]: https://mAI.com/docs/self-hosting/server-database/docker-compose
@@ -483,7 +483,7 @@ Dieses Projekt ist unter der [mAI-Community-Lizenz](./LICENSE) lizenziert.
 [image-banner]: ./public/avatars/may.PNG
 [image-star]: https://github.com/user-attachments/assets/3216e25b-186f-4a54-9cb4-2f124aec0471
 [issues-link]: https://img.shields.io/github/issues/lobehub/mAI.svg?style=flat
-[lobe-chat-plugins]: https://github.com/mDevsLabs/mAI-plugins
+[lobe-chat-plugins]: https://github.com/lobehub/lobe-chat-plugins
 [lobe-commit]: https://github.com/lobehub/lobe-commit/tree/master/packages/lobe-commit
 [lobe-i18n]: https://github.com/lobehub/lobe-commit/tree/master/packages/lobe-i18n
 [lobe-icons-github]: https://github.com/lobehub/lobe-icons
@@ -494,12 +494,12 @@ Dieses Projekt ist unter der [mAI-Community-Lizenz](./LICENSE) lizenziert.
 [lobe-lint-shield]: https://img.shields.io/npm/v/@lobehub/lint?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
 [lobe-midjourney-webui]: https://github.com/lobehub/lobe-midjourney-webui
 [lobe-theme]: https://github.com/lobehub/sd-webui-lobe-theme
-[lobe-tts-github]: https://github.com/mAI/lobe-tts
-[lobe-tts-link]: https://www.npmjs.com/package/@mAI/tts
-[lobe-tts-shield]: https://img.shields.io/npm/v/@mAI/tts?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
-[lobe-ui-github]: https://github.com/mAI/lobe-ui
-[lobe-ui-link]: https://www.npmjs.com/package/@mAI/ui
-[lobe-ui-shield]: https://img.shields.io/npm/v/@mAI/ui?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
+[lobe-tts-github]: https://github.com/lobehub/lobe-tts
+[lobe-tts-link]: https://www.npmjs.com/package/@lobehub/tts
+[lobe-tts-shield]: https://img.shields.io/npm/v/@lobehub/tts?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
+[lobe-ui-github]: https://github.com/lobehub/lobe-ui
+[lobe-ui-link]: https://www.npmjs.com/package/@lobehub/ui
+[lobe-ui-shield]: https://img.shields.io/npm/v/@lobehub/ui?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
 [official-site]: https://mAI.com
 [pr-welcome-link]: https://github.com/mDevsLabs/mAI/pulls
 [pr-welcome-shield]: https://img.shields.io/badge/🤯_pr_welcome-%E2%86%92-ffcb47?labelColor=black&style=for-the-badge

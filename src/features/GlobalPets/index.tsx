@@ -215,7 +215,7 @@ const Pet = memo(
           height: size,
           position: 'fixed',
           width: size,
-          zIndex: 9999,
+          zIndex: 999999,
         }}
         whileDrag={{ cursor: 'grabbing' }}
       >

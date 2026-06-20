@@ -67,8 +67,10 @@ const PetsStoreModal = memo<PetsStoreModalProps>(({ onOpenChange, open }) => {
     let newPets: string[] = [];
     if (!selectedPets.includes(petId)) {
       newPets = [petId];
+      setSettings({ general: { pets: newPets, enablePets: true } });
+    } else {
+      setSettings({ general: { pets: newPets, enablePets: false } });
     }
-    setSettings({ general: { pets: newPets } });
   };
 
   return (

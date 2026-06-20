@@ -19,9 +19,14 @@ import { useSignUp } from './useSignUp';
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
   socialButtonsContainer: css`
-    max-height: 220px;
+    max-height: 180px;
     overflow-y: auto;
+    overflow-x: hidden;
     padding-right: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex-shrink: 0;
     
     &::-webkit-scrollbar {
       width: 4px;
@@ -123,13 +128,16 @@ const BetterAuthSignUpForm = () => {
       )}
       {serverConfigInit && oAuthSSOProviders.length > 0 && (
         <Flexbox gap={12} style={{ marginBottom: 12 }}>
-          <Flexbox className={styles.socialButtonsContainer} gap={12}>
+          <div className={styles.socialButtonsContainer}>
             {visibleProviders.map((provider) => {
               const button = (
                 <Button
                   block
-                  icon={<Icon icon={AuthIcons(provider, 18)} style={PROVIDER_ICON_STYLE} />}
-                  iconProps={{ size: 18, style: PROVIDER_ICON_STYLE }}
+                  icon={
+                    <span style={PROVIDER_ICON_STYLE}>
+                      {AuthIcons(provider, 18)}
+                    </span>
+                  }
                   key={provider}
                   loading={socialLoading === provider}
                   size="large"
@@ -152,7 +160,7 @@ const BetterAuthSignUpForm = () => {
                 button
               );
             })}
-          </Flexbox>
+          </div>
           {hasMoreProviders && !showAllProviders && (
             <Button
               block

@@ -128,7 +128,7 @@ vi.mock('react-i18next', () => ({
             'chat:createModal.groupPlaceholder': 'Describe what this Group should do...',
             'chat:createModal.groupTitle': 'What should this Group do?',
             'chat:createModal.placeholder': 'Describe what this Agent should do...',
-            'chat:inbox.title': 'Lobe AI',
+            'chat:inbox.title': 'May',
             'chat:createModal.skillSuggestion.actions.createAnyway': 'Create Agent Anyway',
             'chat:createModal.skillSuggestion.actions.createAnywayHint': 'Skill not a fit?',
             'chat:createModal.skillSuggestion.actions.install': 'Install Skill',
@@ -152,7 +152,7 @@ vi.mock('react-i18next', () => ({
           } as Record<string, string>
         )[`${namespace}:${key}`] ?? key;
 
-      return text.replaceAll('{{name}}', options?.name ?? 'LobeAI');
+      return text.replaceAll('{{name}}', options?.name ?? 'May');
     },
   }),
 }));

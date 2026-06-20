@@ -742,6 +742,8 @@
   "settingPets.list.empty": "No pet selected. Open the store to add one.",
   "settingPets.list.openStore": "Open Pets Store",
   "settingPets.list.title": "Virtual Companions",
+  "settingPets.section.choice": "Companion Selection",
+  "settingPets.section.options": "Options",
   "settingPets.store.action.add": "Add",
   "settingPets.store.action.remove": "Remove",
   "settingPets.store.category.alien": "Aliens",

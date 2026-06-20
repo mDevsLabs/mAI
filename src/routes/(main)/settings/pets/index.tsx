@@ -3,7 +3,7 @@
 import { Avatar, Flexbox, Form, Icon, SliderWithInput } from '@lobehub/ui';
 import { Button, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
-import { PawPrint, Store } from 'lucide-react';
+import { PawPrint, Sliders, Store } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -183,61 +183,6 @@ const Page = memo(() => {
     name: 'petsVolume',
   };
 
-  const petsAnimItem = {
-    children: <Switch disabled={!enablePets} />,
-    desc: 'Activer des animations avancées pour vos pets.',
-    label: 'Animations Avancées',
-    minWidth: undefined,
-    name: 'petsAnim',
-    valuePropName: 'checked',
-  };
-
-  const petsAccItem = {
-    children: <Switch disabled={!enablePets} />,
-    desc: 'Activer les accessoires pour vos pets.',
-    label: 'Accessoires virtuels',
-    minWidth: undefined,
-    name: 'petsAcc',
-    valuePropName: 'checked',
-  };
-
-  const petsBgItem = {
-    children: <Switch disabled={!enablePets} />,
-    desc: 'Activer les arrière-plans animés.',
-    label: 'Arrière-plans',
-    minWidth: undefined,
-    name: 'petsBg',
-    valuePropName: 'checked',
-  };
-
-  const petsColorItem = {
-    children: <Switch disabled={!enablePets} />,
-    desc: 'Activer les couleurs personnalisées.',
-    label: 'Couleurs',
-    minWidth: undefined,
-    name: 'petsColor',
-    valuePropName: 'checked',
-  };
-
-  const petsWeatherItem = {
-    children: <Switch disabled={!enablePets} />,
-    desc: 'Activer les effets météo.',
-    label: 'Météo',
-    minWidth: undefined,
-    name: 'petsWeather',
-    valuePropName: 'checked',
-  };
-
-  const petsAuraItem = {
-    children: <Switch disabled={!enablePets} />,
-    desc: "Activer l'aura magique autour du pet.",
-    label: 'Aura',
-    minWidth: undefined,
-    name: 'petsAura',
-    valuePropName: 'checked',
-    divider: true,
-  };
-
   return (
     <>
       <SettingHeader title={t('tab.pets')} />
@@ -251,18 +196,18 @@ const Page = memo(() => {
             children: [
               enablePetsItem,
               petsItem,
+            ],
+            title: t('settingPets.section.choice'),
+            icon: PawPrint,
+          },
+          {
+            children: [
               petsZoomItem,
-              petsAnimItem,
-              petsAccItem,
-              petsBgItem,
-              petsColorItem,
-              petsWeatherItem,
-              petsAuraItem,
               petsSoundItem,
               petsVolumeItem,
             ],
-            title: 'Pets',
-            icon: PawPrint,
+            title: t('settingPets.section.options'),
+            icon: Sliders,
           },
         ]}
         onValuesChange={async (value) => {

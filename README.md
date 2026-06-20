@@ -15,13 +15,10 @@ Vous gardez le contrôle — sans avoir besoin de rester en ligne.
 <!-- SHIELD GROUP -->
 
 [![][github-release-shield]][github-release-link]
-[![][docker-release-shield]][docker-release-link]
 [![][vercel-shield]][vercel-link]
 [![][discord-shield]][discord-link]<br/>
-[![][codecov-shield]][codecov-link]
 [![][github-action-test-shield]][github-action-test-link]
 [![][github-action-release-shield]][github-action-release-link]
-[![][github-releasedate-shield]][github-releasedate-link]<br/>
 [![][github-contributors-shield]][github-contributors-link]
 [![][github-forks-shield]][github-forks-link]
 [![][github-stars-shield]][github-stars-link]
@@ -259,10 +256,10 @@ This project provides some additional configuration items set with environment v
 
 | NPM                               | Repository                              | Description                                                                                           | Version                                   |
 | --------------------------------- | --------------------------------------- | ----------------------------------------------------------------------------------------------------- | ----------------------------------------- |
-| [@mAI/ui][lobe-ui-link]       | [mAI/lobe-ui][lobe-ui-github]       | Open-source UI component library dedicated to building AIGC web applications.                         | [![][lobe-ui-shield]][lobe-ui-link]       |
-| [@mAI/icons][lobe-icons-link] | [mAI/lobe-icons][lobe-icons-github] | Popular AI / LLM Model Brand SVG Logo and Icon Collection.                                            | [![][lobe-icons-shield]][lobe-icons-link] |
-| [@mAI/tts][lobe-tts-link]     | [mAI/lobe-tts][lobe-tts-github]     | High-quality & reliable TTS/STT React Hooks library                                                   | [![][lobe-tts-shield]][lobe-tts-link]     |
-| [@mAI/lint][lobe-lint-link]   | [mAI/lobe-lint][lobe-lint-github]   | Configurations for ESlint, Stylelint, Commitlint, Prettier, Remark, and Semantic Release for mAI. | [![][lobe-lint-shield]][lobe-lint-link]   |
+| [@lobehub/ui][lobe-ui-link]       | [lobehub/lobe-ui][lobe-ui-github]       | Open-source UI component library dedicated to building AIGC web applications.                         | [![][lobe-ui-shield]][lobe-ui-link]       |
+| [@lobehub/icons][lobe-icons-link] | [lobehub/lobe-icons][lobe-icons-github] | Popular AI / LLM Model Brand SVG Logo and Icon Collection.                                            | [![][lobe-icons-shield]][lobe-icons-link] |
+| [@lobehub/tts][lobe-tts-link]     | [lobehub/lobe-tts][lobe-tts-github]     | High-quality & reliable TTS/STT React Hooks library                                                   | [![][lobe-tts-shield]][lobe-tts-link]     |
+| [@lobehub/lint][lobe-lint-link]   | [lobehub/lobe-lint][lobe-lint-github]   | Configurations for ESlint, Stylelint, Commitlint, Prettier, Remark, and Semantic Release for mAI. | [![][lobe-lint-shield]][lobe-lint-link]   |
 
 <div align="right">
 
@@ -276,8 +273,8 @@ Plugins provide a means to extend the [Function Calling][docs-function-call] cap
 
 - [lobe-chat-plugins][lobe-chat-plugins]: This is the plugin index for mAI. It accesses index.json from this repository to display a list of available plugins for mAI to the user.
 - [chat-plugin-template][chat-plugin-template]: This is the plugin template for mAI plugin development.
-- [@mAI/chat-plugin-sdk][chat-plugin-sdk]: The mAI Plugin SDK assists you in creating exceptional chat plugins for mAI.
-- [@mAI/chat-plugins-gateway][chat-plugins-gateway]: The mAI Plugins Gateway is a backend service that provides a gateway for mAI plugins. We deploy this service using Vercel. The primary API POST /api/v1/runner is deployed as an Edge Function.
+- [@lobehub/chat-plugin-sdk][chat-plugin-sdk]: The mAI Plugin SDK assists you in creating exceptional chat plugins for mAI.
+- [@lobehub/chat-plugins-gateway][chat-plugins-gateway]: The mAI Plugins Gateway is a backend service that provides a gateway for mAI plugins. We deploy this service using Vercel. The primary API POST /api/v1/runner is deployed as an Edge Function.
 
 > \[!NOTE]
 >
@@ -403,12 +400,12 @@ This project is [mAI Community License](./LICENSE) licensed.
 [discord-link]: https://discord.gg/fV7zwdGPpY
 [discord-shield]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=flat-square
 [discord-shield-badge]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=for-the-badge
-[docker-pulls-link]: https://hub.docker.com/r/mAI/mAI
-[docker-pulls-shield]: https://img.shields.io/docker/pulls/mAI/mAI?color=45cc11&labelColor=black&style=flat-square&sort=semver
-[docker-release-link]: https://hub.docker.com/r/mAI/mAI
-[docker-release-shield]: https://img.shields.io/docker/v/mAI/mAI?color=369eff&label=docker&labelColor=black&logo=docker&logoColor=white&style=flat-square&sort=semver
-[docker-size-link]: https://hub.docker.com/r/mAI/mAI
-[docker-size-shield]: https://img.shields.io/docker/image-size/mAI/mAI?color=369eff&labelColor=black&style=flat-square&sort=semver
+[docker-pulls-link]: https://hub.docker.com/r/lobehub/lobe-chat
+[docker-pulls-shield]: https://img.shields.io/docker/pulls/lobehub/lobe-chat?color=45cc11&labelColor=black&style=flat-square&sort=semver
+[docker-release-link]: https://hub.docker.com/r/lobehub/lobe-chat
+[docker-release-shield]: https://img.shields.io/docker/v/lobehub/lobe-chat?color=369eff&label=docker&labelColor=black&logo=docker&logoColor=white&style=flat-square&sort=semver
+[docker-size-link]: https://hub.docker.com/r/lobehub/lobe-chat
+[docker-size-shield]: https://img.shields.io/docker/image-size/lobehub/lobe-chat?color=369eff&labelColor=black&style=flat-square&sort=semver
 [docs]: https://mAI.com/docs/usage/start
 [docs-dev-guide]: https://mAI.com/docs/development/start
 [docs-docker]: https://mAI.com/docs/self-hosting/server-database/docker-compose
@@ -441,7 +438,7 @@ This project is [mAI Community License](./LICENSE) licensed.
 [image-banner]: ./public/avatars/may.PNG
 [image-star]: https://github.com/user-attachments/assets/3216e25b-186f-4a54-9cb4-2f124aec0471
 [issues-link]: https://img.shields.io/github/issues/lobehub/mAI.svg?style=flat
-[lobe-chat-plugins]: https://github.com/mDevsLabs/mAI-plugins
+[lobe-chat-plugins]: https://github.com/lobehub/lobe-chat-plugins
 [lobe-commit]: https://github.com/lobehub/lobe-commit/tree/master/packages/lobe-commit
 [lobe-i18n]: https://github.com/lobehub/lobe-commit/tree/master/packages/lobe-i18n
 [lobe-icons-github]: https://github.com/lobehub/lobe-icons
@@ -452,12 +449,12 @@ This project is [mAI Community License](./LICENSE) licensed.
 [lobe-lint-shield]: https://img.shields.io/npm/v/@lobehub/lint?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
 [lobe-midjourney-webui]: https://github.com/lobehub/lobe-midjourney-webui
 [lobe-theme]: https://github.com/lobehub/sd-webui-lobe-theme
-[lobe-tts-github]: https://github.com/mAI/lobe-tts
-[lobe-tts-link]: https://www.npmjs.com/package/@mAI/tts
-[lobe-tts-shield]: https://img.shields.io/npm/v/@mAI/tts?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
-[lobe-ui-github]: https://github.com/mAI/lobe-ui
-[lobe-ui-link]: https://www.npmjs.com/package/@mAI/ui
-[lobe-ui-shield]: https://img.shields.io/npm/v/@mAI/ui?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
+[lobe-tts-github]: https://github.com/lobehub/lobe-tts
+[lobe-tts-link]: https://www.npmjs.com/package/@lobehub/tts
+[lobe-tts-shield]: https://img.shields.io/npm/v/@lobehub/tts?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
+[lobe-ui-github]: https://github.com/lobehub/lobe-ui
+[lobe-ui-link]: https://www.npmjs.com/package/@lobehub/ui
+[lobe-ui-shield]: https://img.shields.io/npm/v/@lobehub/ui?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
 [official-site]: https://mprojects.odoo.com
 [pr-welcome-link]: https://github.com/mDevsLabs/mAI/pulls
 [pr-welcome-shield]: https://img.shields.io/badge/🤯_pr_welcome-%E2%86%92-ffcb47?labelColor=black&style=for-the-badge

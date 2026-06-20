@@ -325,10 +325,10 @@ API Key 是使用 mAI 进行大语言模型会话的必要信息，本节以 Ope
 
 | NPM                               | 仓库                                    | 描述                                                                                     | 版本                                      |
 | --------------------------------- | --------------------------------------- | ---------------------------------------------------------------------------------------- | ----------------------------------------- |
-| [@mAI/ui][lobe-ui-link]       | [mAI/lobe-ui][lobe-ui-github]       | 构建 AIGC 网页应用程序而设计的开源 UI 组件库                                             | [![][lobe-ui-shield]][lobe-ui-link]       |
-| [@mAI/icons][lobe-icons-link] | [mAI/lobe-icons][lobe-icons-github] | 主流 AI / LLM 模型和公司 SVG Logo 与 Icon 合集                                           | [![][lobe-icons-shield]][lobe-icons-link] |
-| [@mAI/tts][lobe-tts-link]     | [mAI/lobe-tts][lobe-tts-github]     | AI TTS / STT 语音合成 / 识别 React Hooks 库                                              | [![][lobe-tts-shield]][lobe-tts-link]     |
-| [@mAI/lint][lobe-lint-link]   | [mAI/lobe-lint][lobe-lint-github]   | mAI 代码样式规范 ESlint，Stylelint，Commitlint，Prettier，Remark 和 Semantic Release | [![][lobe-lint-shield]][lobe-lint-link]   |
+| [@lobehub/ui][lobe-ui-link]       | [lobehub/lobe-ui][lobe-ui-github]       | 构建 AIGC 网页应用程序而设计的开源 UI 组件库                                             | [![][lobe-ui-shield]][lobe-ui-link]       |
+| [@lobehub/icons][lobe-icons-link] | [lobehub/lobe-icons][lobe-icons-github] | 主流 AI / LLM 模型和公司 SVG Logo 与 Icon 合集                                           | [![][lobe-icons-shield]][lobe-icons-link] |
+| [@lobehub/tts][lobe-tts-link]     | [lobehub/lobe-tts][lobe-tts-github]     | AI TTS / STT 语音合成 / 识别 React Hooks 库                                              | [![][lobe-tts-shield]][lobe-tts-link]     |
+| [@lobehub/lint][lobe-lint-link]   | [lobehub/lobe-lint][lobe-lint-github]   | mAI 代码样式规范 ESlint，Stylelint，Commitlint，Prettier，Remark 和 Semantic Release | [![][lobe-lint-shield]][lobe-lint-link]   |
 
 <div align="right">
 
@@ -340,10 +340,10 @@ API Key 是使用 mAI 进行大语言模型会话的必要信息，本节以 Ope
 
 插件提供了扩展 mAI [Function Calling][docs-function-call] 能力的方法。可以用于引入新的 Function Calling，甚至是新的消息结果渲染方式。如果你对插件开发感兴趣，请在 Wiki 中查阅我们的 [📘 插件开发指引][docs-plugin-dev] 。
 
-- [lobe-chat-plugins][lobe-chat-plugins]：插件索引从该仓库的 index.json 中获取插件列表并显示给用户。
+- [lobe-chat-plugins][lobe-chat-plugins]：插件索引从该仓库 of index.json 中获取插件列表并显示给用户。
 - [chat-plugin-template][chat-plugin-template]：插件开发模版，你可以通过项目模版快速新建插件项目。
-- [@mAI/chat-plugin-sdk][chat-plugin-sdk]：插件 SDK 可帮助您创建出色的 mAI 插件。
-- [@mAI/chat-plugins-gateway][chat-plugins-gateway]：插件网关是一个后端服务，作为 mAI 插件的网关。我们使用 Vercel 部署此服务。主要的 API POST /api/v1/runner 被部署为 Edge Function。
+- [@lobehub/chat-plugin-sdk][chat-plugin-sdk]：插件 SDK 可帮助您创建出色的 mAI 插件。
+- [@lobehub/chat-plugins-gateway][chat-plugins-gateway]：插件网关是一个后端服务，作为 mAI 插件的网关。我们使用 Vercel 部署此服务。主要的 API POST /api/v1/runner 被部署为 Edge Function。
 
 > \[!NOTE]
 >
@@ -504,12 +504,12 @@ This project is [mAI Community License](./LICENSE) licensed.
 [discord-link]: https://discord.gg/fV7zwdGPpY
 [discord-shield]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=flat-square
 [discord-shield-badge]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=for-the-badge
-[docker-pulls-link]: https://hub.docker.com/r/mAI/mAI
-[docker-pulls-shield]: https://img.shields.io/docker/pulls/mAI/mAI?color=45cc11&labelColor=black&style=flat-square&sort=semver
-[docker-release-link]: https://hub.docker.com/r/mAI/mAI
-[docker-release-shield]: https://img.shields.io/docker/v/mAI/mAI?color=369eff&label=docker&labelColor=black&logo=docker&logoColor=white&style=flat-square&sort=semver
-[docker-size-link]: https://hub.docker.com/r/mAI/mAI
-[docker-size-shield]: https://img.shields.io/docker/image-size/mAI/mAI?color=369eff&labelColor=black&style=flat-square&sort=semver
+[docker-pulls-link]: https://hub.docker.com/r/lobehub/lobe-chat
+[docker-pulls-shield]: https://img.shields.io/docker/pulls/lobehub/lobe-chat?color=45cc11&labelColor=black&style=flat-square&sort=semver
+[docker-release-link]: https://hub.docker.com/r/lobehub/lobe-chat
+[docker-release-shield]: https://img.shields.io/docker/v/lobehub/lobe-chat?color=369eff&label=docker&labelColor=black&logo=docker&logoColor=white&style=flat-square&sort=semver
+[docker-size-link]: https://hub.docker.com/r/lobehub/lobe-chat
+[docker-size-shield]: https://img.shields.io/docker/image-size/lobehub/lobe-chat?color=369eff&labelColor=black&style=flat-square&sort=semver
 [docs]: https://mAI.com/zh/docs/usage/start
 [docs-dev-guide]: https://mAI.com/docs/development/start
 [docs-docker]: https://mAI.com/zh/docs/self-hosting/server-database/docker-compose
@@ -544,23 +544,23 @@ This project is [mAI Community License](./LICENSE) licensed.
 [image-banner]: ./public/avatars/may.PNG
 [image-star]: https://github.com/user-attachments/assets/c3b482e7-cef5-4e94-bef9-226900ecfaab
 [issues-link]: https://img.shields.io/github/issues/mAI/mAI.svg?style=flat
-[lobe-chat-plugins]: https://github.com/mAI/lobe-chat-plugins
-[lobe-commit]: https://github.com/mAI/lobe-commit/tree/master/packages/lobe-commit
-[lobe-i18n]: https://github.com/mAI/lobe-commit/tree/master/packages/lobe-i18n
-[lobe-icons-github]: https://github.com/mAI/lobe-icons
-[lobe-icons-link]: https://www.npmjs.com/package/@mAI/icons
-[lobe-icons-shield]: https://img.shields.io/npm/v/@mAI/icons?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
-[lobe-lint-github]: https://github.com/mAI/lobe-lint
-[lobe-lint-link]: https://www.npmjs.com/package/@mAI/lint
-[lobe-lint-shield]: https://img.shields.io/npm/v/@mAI/lint?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
-[lobe-midjourney-webui]: https://github.com/mAI/lobe-midjourney-webui
-[lobe-theme]: https://github.com/mAI/sd-webui-lobe-theme
-[lobe-tts-github]: https://github.com/mAI/lobe-tts
-[lobe-tts-link]: https://www.npmjs.com/package/@mAI/tts
-[lobe-tts-shield]: https://img.shields.io/npm/v/@mAI/tts?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
-[lobe-ui-github]: https://github.com/mAI/lobe-ui
-[lobe-ui-link]: https://www.npmjs.com/package/@mAI/ui
-[lobe-ui-shield]: https://img.shields.io/npm/v/@mAI/ui?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
+[lobe-chat-plugins]: https://github.com/lobehub/lobe-chat-plugins
+[lobe-commit]: https://github.com/lobehub/lobe-commit/tree/master/packages/lobe-commit
+[lobe-i18n]: https://github.com/lobehub/lobe-commit/tree/master/packages/lobe-i18n
+[lobe-icons-github]: https://github.com/lobehub/lobe-icons
+[lobe-icons-link]: https://www.npmjs.com/package/@lobehub/icons
+[lobe-icons-shield]: https://img.shields.io/npm/v/@lobehub/icons?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
+[lobe-lint-github]: https://github.com/lobehub/lobe-lint
+[lobe-lint-link]: https://www.npmjs.com/package/@lobehub/lint
+[lobe-lint-shield]: https://img.shields.io/npm/v/@lobehub/lint?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
+[lobe-midjourney-webui]: https://github.com/lobehub/lobe-midjourney-webui
+[lobe-theme]: https://github.com/lobehub/sd-webui-lobe-theme
+[lobe-tts-github]: https://github.com/lobehub/lobe-tts
+[lobe-tts-link]: https://www.npmjs.com/package/@lobehub/tts
+[lobe-tts-shield]: https://img.shields.io/npm/v/@lobehub/tts?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
+[lobe-ui-github]: https://github.com/lobehub/lobe-ui
+[lobe-ui-link]: https://www.npmjs.com/package/@lobehub/ui
+[lobe-ui-shield]: https://img.shields.io/npm/v/@lobehub/ui?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
 [official-site]: https://mAI.com
 [pr-welcome-link]: https://github.com/mAI/mAI/pulls
 [pr-welcome-shield]: https://img.shields.io/badge/🤯_pr_welcome-%E2%86%92-ffcb47?labelColor=black&style=for-the-badge
