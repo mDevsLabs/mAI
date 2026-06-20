@@ -198,7 +198,7 @@ async function handleNoConflicts() {
       case '1':
       case '2': {
         const branch = choice === '1' ? 'canary' : 'main';
-        const pullArgs = await askString(`\n⚙️ Arguments pour 'git pull upstream ${branch}'`, '--no-edit --no-commit');
+        const pullArgs = await askString(`\n⚙️ Arguments pour 'git pull upstream ${branch}'`, '--no-commit');
         console.log(`\n📥 Pull depuis upstream ${branch} avec: ${pullArgs}`);
         runCmdInteractive(`git pull upstream ${branch} ${pullArgs}`);
         menuActive = false;

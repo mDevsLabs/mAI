@@ -132,7 +132,7 @@ export const useCategory = () => {
     // Personal subscription / billing items. Always shown when business
     // features are enabled — workspace settings live under a separate
     // `/:workspaceSlug/settings/*` surface and never share this sidebar.
-    if (enableBusinessFeatures) {
+    if (enableBusinessFeatures && !isDesktop) {
       const subscriptionItems: CategoryItem[] = [
         { icon: Map, key: SettingsTabs.Plans, label: tSubscription('tab.plans') },
         { icon: ChartColumnBigIcon, key: SettingsTabs.Usage, label: t('tab.usage') },

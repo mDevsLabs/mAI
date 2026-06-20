@@ -40,12 +40,12 @@ function saveHermesSessionId(topicId: string, sessionId: string): void {
   fs.writeFileSync(HERMES_SESSIONS_FILE, JSON.stringify(data), 'utf8');
 }
 
-/** Resolve the absolute path to the `lh` binary to avoid PATH issues in child processes. */
-function resolveLhPath(): string {
+/** Resolve the absolute path to the `mai` binary to avoid PATH issues in child processes. */
+function resolveMaiPath(): string {
   try {
-    return execFileSync('which', ['lh'], { encoding: 'utf8' }).trim();
+    return execFileSync('which', ['mai'], { encoding: 'utf8' }).trim();
   } catch {
-    return 'lh';
+    return 'mai';
   }
 }
 
@@ -140,7 +140,7 @@ function buildNotifyProtocol(lhPath: string, topicId: string): string {
 export async function runHeteroTask(params: RunHeteroTaskParams): Promise<string> {
   const { agentId, agentType, cwd, operationId, prompt, taskId, topicId } = params;
   const workDir = cwd || process.cwd();
-  const lhPath = resolveLhPath();
+  const lhPath = resolveMaiPath();
 
   if (agentType === 'openclaw') {
     // openclaw agent --local is one-shot: each invocation processes one message and exits.

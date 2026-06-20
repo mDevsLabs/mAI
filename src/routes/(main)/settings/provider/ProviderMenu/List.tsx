@@ -56,17 +56,17 @@ const ProviderList = (props: {
   const enabledModelProviderList = useAiInfraStore(
     aiProviderSelectors.enabledAiProviderList,
     isEqual,
-  );
+  ).filter((p) => p.id !== 'lobehub');
 
   const disabledModelProviderList = useAiInfraStore(
     aiProviderSelectors.disabledAiProviderList,
     isEqual,
-  );
+  ).filter((p) => p.id !== 'lobehub');
 
   const disabledCustomProviderList = useAiInfraStore(
     aiProviderSelectors.disabledCustomAiProviderList,
     isEqual,
-  );
+  ).filter((p) => p.id !== 'lobehub');
 
   // Sort model providers based on sort type
   const sortedDisabledProviders = useMemo(() => {

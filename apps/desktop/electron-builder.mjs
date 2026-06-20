@@ -65,9 +65,9 @@ const getPublishConfig = () => {
   console.info(`📦 ${channelPath} channel: No UPDATE_SERVER_URL, falling back to GitHub provider`);
   return [
     {
-      owner: 'lobehub',
+      owner: 'mDevsLabs',
       provider: 'github',
-      repo: 'lobehub',
+      repo: 'mAI',
     },
   ];
 };
@@ -85,9 +85,9 @@ if (!hasAppleCertificate) {
 
 // 根据版本类型确定协议 scheme
 const getProtocolScheme = () => {
-  if (isCanary) return 'lobehub-canary';
-  if (isNightly) return 'lobehub-nightly';
-  return 'lobehub';
+  if (isCanary) return 'mai-canary';
+  if (isNightly) return 'mai-nightly';
+  return 'mai';
 };
 
 const protocolScheme = getProtocolScheme();
@@ -104,6 +104,7 @@ const getIconFileName = () => {
  * @see https://www.electron.build/configuration
  */
 const config = {
+  productName: 'mAI',
   /**
    * BeforePack hook to resolve pnpm symlinks for native modules.
    * This ensures native modules are properly included in the asar archive.
@@ -213,7 +214,7 @@ const config = {
       console.info(`⏭️  Skipping Assets.car (not found or copy failed)`);
     }
   },
-  appId: 'com.lobehub.lobehub-desktop',
+  appId: 'com.mdevs.mai-desktop',
   appImage: {
     artifactName: '${productName}-${version}.${ext}',
   },
@@ -273,7 +274,7 @@ const config = {
       CFBundleIconName: 'AppIcon',
       CFBundleURLTypes: [
         {
-          CFBundleURLName: 'LobeHub Protocol',
+          CFBundleURLName: 'mAI Protocol',
           CFBundleURLSchemes: [protocolScheme],
         },
       ],
@@ -311,7 +312,7 @@ const config = {
   },
   protocols: [
     {
-      name: 'LobeHub Protocol',
+      name: 'mAI Protocol',
       schemes: [protocolScheme],
     },
   ],
@@ -330,7 +331,7 @@ const config = {
   ],
 
   win: {
-    executableName: 'LobeHub',
+    executableName: 'mAI',
   },
 };
 

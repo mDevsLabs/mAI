@@ -2,7 +2,7 @@
   "name": "@mdevs/mai-app",
   "version": "0.4.0",
   "private": true,
-  "description": "mAI Desktop Application",
+  "description": "Avec mAI sur bureau, augmentez votre productivité !",
   "homepage": "https://mprojects.odoo.com",
   "repository": {
     "type": "git",

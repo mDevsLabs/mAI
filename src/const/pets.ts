@@ -5,6 +5,7 @@ export type PetId =
   | 'codix'
   | 'dario'
   | 'dudu-bubu'
+  | 'einstein'
   | 'gork'
   | 'jiji'
   | 'laughing-gemini'
@@ -12,8 +13,10 @@ export type PetId =
   | 'mini-sama'
   | 'maomao-the-cat'
   | 'mr-poopybutthole'
+  | 'pingu'
   | 'plum-tang'
   | 'problem'
+  | 'quillfox'
   | 'traffic-light';
 
 export type PetCategory = 'Mascot' | 'Human' | 'Robot' | 'Alien' | 'Animal';
@@ -56,6 +59,12 @@ export const PETS_LIST: PetConfig[] = [
     name: 'Dudu Bubu',
     description: "L'inséparable duo Dudu et Bubu.",
     category: 'Animal',
+  },
+  {
+    id: 'einstein',
+    name: 'Einstein',
+    description: 'Le légendaire scientifique pour éclairer vos lignes de code.',
+    category: 'Human',
   },
   { id: 'gork', name: 'Gork', description: 'Un extra-terrestre amical.', category: 'Alien' },
   {
@@ -101,10 +110,22 @@ export const PETS_LIST: PetConfig[] = [
     category: 'Alien',
   },
   {
+    id: 'pingu',
+    name: 'Pingu',
+    description: 'Le plus célèbre des petits manchots, noot noot !',
+    category: 'Animal',
+  },
+  {
     id: 'plum-tang',
     name: 'Plum Tang',
     description: 'Le compagnon fruité de vos aventures.',
     category: 'Mascot',
+  },
+  {
+    id: 'quillfox',
+    name: 'Quillfox',
+    description: 'Un renard agile et astucieux pour guider vos projets.',
+    category: 'Animal',
   },
   {
     id: 'traffic-light',

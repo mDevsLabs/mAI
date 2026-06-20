@@ -11,7 +11,5 @@ await mkdir(outputDir, { recursive: true });
 const program = createProgram();
 
 await Promise.all([
-  writeFile(`${outputDir}lh.1`, generateRootManPage(program, cliVersion)),
-  writeFile(`${outputDir}lobe.1`, generateAliasManPage('lh')),
-  writeFile(`${outputDir}lobehub.1`, generateAliasManPage('lh')),
+  writeFile(`${outputDir}mai.1`, generateRootManPage(program, cliVersion)),
 ]);
