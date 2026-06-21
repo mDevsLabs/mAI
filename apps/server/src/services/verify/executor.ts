@@ -201,13 +201,17 @@ export class VerifyExecutorService {
 
   /** Program verifiers are a v1 placeholder (no shell environment) — mark skipped. */
   private async runProgramItems(verifyRunId: string, items: VerifyCheckItem[]): Promise<void> {
-    for (const item of items) {
-      await this.resultModel.updateByCheckItem(verifyRunId, item.id, {
-        completedAt: new Date(),
-        status: 'skipped',
-        toulmin: { limitation: 'Program verifier is not executed in v1.' },
-      });
-    }
+    if (items.length === 0) return;
+    const completedAt = new Date();
+    await Promise.all(
+      items.map((item) =>
+        this.resultModel.updateByCheckItem(verifyRunId, item.id, {
+          completedAt,
+          status: 'skipped',
+          toulmin: { limitation: 'Program verifier is not executed in v1.' },
+        }),
+      ),
+    );
   }
 
   /** Judge all LLM items via the Toulmin judge (one batched call by default). */
