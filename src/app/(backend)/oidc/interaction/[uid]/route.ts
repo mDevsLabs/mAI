@@ -10,11 +10,6 @@ import type { OidcInteractionDetailsResponse, OidcInteractionErrorResponse } fro
 const log = debug('lobe-oidc:interaction');
 
 export async function GET(request: NextRequest, props: { params: Promise<{ uid: string }> }) {
-  if (!authEnv.ENABLE_OIDC) {
-    log('OIDC is not enabled');
-    return new NextResponse(null, { status: 404 });
-  }
-
   const { uid } = await props.params;
   log('Received GET request for /oidc/interaction/%s, URL: %s', uid, request.url);
 

@@ -33,14 +33,10 @@ const iconComponents: { [key: string]: any } = {
  */
 const AuthIcons = (id: string, size = 36) => {
   const logos: Record<string, string> = {
-    'canva': '/auth/canva-logo.png',
     'google': '/auth/google-logo.png',
     'github': '/auth/github-logo.png',
     'notion': '/auth/notion-logo.png',
     'railway': '/auth/railway-logo.png',
-    'slack': '/auth/slack-logo.png',
-    'spotify': '/auth/spotify-logo.png',
-    'telegram': '/auth/telegram-logo.png',
     'twitch': '/auth/twitch-logo.png',
     'x': '/auth/x-logo.png',
   };

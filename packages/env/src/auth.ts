@@ -336,7 +336,7 @@ export const getAuthConfig = () => {
       CASDOOR_WEBHOOK_SECRET: process.env.CASDOOR_WEBHOOK_SECRET,
 
       JWKS_KEY: process.env.JWKS_KEY,
-      ENABLE_OIDC: !!process.env.JWKS_KEY,
+      ENABLE_OIDC: process.env.ENABLE_OIDC !== '0',
 
       // Internal JWT expiration time
       INTERNAL_JWT_EXPIRATION: process.env.INTERNAL_JWT_EXPIRATION,

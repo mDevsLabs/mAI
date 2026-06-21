@@ -14,4 +14,4 @@ packages:
   - '../../packages/file-loaders'
   - '.'
 allowBuilds:
-  esbuild: set this to true or false
+  esbuild: true

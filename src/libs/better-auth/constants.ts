@@ -6,8 +6,6 @@ export const BUILTIN_BETTER_AUTH_PROVIDERS = [
   'google',
   'github',
   'notion',
-  'slack',
-  'spotify',
   'twitch',
 ] as const;
 

@@ -18,7 +18,7 @@ export interface TaskEntry {
 }
 
 function getRegistryPath(): string {
-  return path.join(os.homedir(), '.lobehub', 'task-registry.json');
+  return path.join(os.homedir(), '.mai', 'task-registry.json');
 }
 
 function readRegistry(): Record<string, TaskEntry> {

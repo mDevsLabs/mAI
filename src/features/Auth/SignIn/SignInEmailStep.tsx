@@ -13,8 +13,8 @@ import AuthCard from '@/features/AuthCard';
 import { AuthAgreement } from '@/features/AuthShell';
 
 // Fixed ordering for the two circular grid rows
-const DARK_ROW_PROVIDERS = ['google', 'slack', 'canva', 'telegram', 'railway'];
-const LIGHT_ROW_PROVIDERS = ['github', 'x', 'twitch', 'notion', 'spotify'];
+const DARK_ROW_PROVIDERS = ['google', 'railway'];
+const LIGHT_ROW_PROVIDERS = ['github', 'x', 'twitch', 'notion'];
 const GRID_PROVIDERS = new Set([...DARK_ROW_PROVIDERS, ...LIGHT_ROW_PROVIDERS]);
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
