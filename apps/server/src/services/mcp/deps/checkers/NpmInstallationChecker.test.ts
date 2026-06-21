@@ -3,9 +3,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { NpmInstallationChecker } from './NpmInstallationChecker';
 
 // Hoist the mock to ensure it's available in the factory
-const { mockExecPromise } = vi.hoisted(() => {
+const { mockExecFilePromise } = vi.hoisted(() => {
   return {
-    mockExecPromise: vi.fn(),
+    mockExecFilePromise: vi.fn(),
   };
 });
 
@@ -15,9 +15,9 @@ vi.mock('node:child_process');
 // Mock node:util to return our hoisted mock when promisify is called
 vi.mock('node:util', () => ({
   default: {
-    promisify: () => mockExecPromise,
+    promisify: () => mockExecFilePromise,
   },
-  promisify: () => mockExecPromise,
+  promisify: () => mockExecFilePromise,
 }));
 
 describe('NpmInstallationChecker', () => {
@@ -38,7 +38,7 @@ describe('NpmInstallationChecker', () => {
           installed: false,
           packageName: '',
         });
-        expect(mockExecPromise).not.toHaveBeenCalled();
+        expect(mockExecFilePromise).not.toHaveBeenCalled();
       });
 
       it('should return error when packageName is undefined', async () => {
@@ -51,6 +51,7 @@ describe('NpmInstallationChecker', () => {
         });
       });
 
+
       it('should return error when packageName is empty string', async () => {
         const result = await checker.checkPackageInstalled({ packageName: '' });
 
@@ -60,18 +61,41 @@ describe('NpmInstallationChecker', () => {
           packageName: '',
         });
       });
+
+      it('should return error when packageName has command injection characters (e.g. &)', async () => {
+        const result = await checker.checkPackageInstalled({ packageName: 'foo&calc' });
+
+        expect(result).toEqual({
+          error: 'Invalid package name format',
+          installed: false,
+          packageName: 'foo&calc',
+        });
+        expect(mockExecFilePromise).not.toHaveBeenCalled();
+      });
+
+      it('should return error when packageName has command injection characters (e.g. ;)', async () => {
+        const result = await checker.checkPackageInstalled({ packageName: 'package;rm -rf /' });
+
+        expect(result).toEqual({
+          error: 'Invalid package name format',
+          installed: false,
+          packageName: 'package;rm -rf /',
+        });
+        expect(mockExecFilePromise).not.toHaveBeenCalled();
+      });
+
     });
 
     describe('global package detection', () => {
       it('should detect globally installed package', async () => {
-        mockExecPromise.mockResolvedValueOnce({
+        mockExecFilePromise.mockResolvedValueOnce({
           stdout: '/usr/local/lib\n└── typescript@5.0.4\n',
           stderr: '',
         });
 
         const result = await checker.checkPackageInstalled({ packageName: 'typescript' });
 
-        expect(mockExecPromise).toHaveBeenCalledWith('npm list -g typescript --depth=0');
+        expect(mockExecFilePromise).toHaveBeenCalledWith(expect.any(String), ['list', '-g', 'typescript', '--depth=0'], expect.objectContaining({ shell: expect.any(Boolean) }));
         expect(result).toEqual({
           installed: true,
           packageName: 'typescript',
@@ -79,19 +103,19 @@ describe('NpmInstallationChecker', () => {
       });
 
       it('should detect globally installed package with @scope', async () => {
-        mockExecPromise.mockResolvedValueOnce({
+        mockExecFilePromise.mockResolvedValueOnce({
           stdout: '/usr/local/lib\n└── @angular/cli@16.0.0\n',
           stderr: '',
         });
 
         const result = await checker.checkPackageInstalled({ packageName: '@angular/cli' });
 
-        expect(mockExecPromise).toHaveBeenCalledWith('npm list -g @angular/cli --depth=0');
+        expect(mockExecFilePromise).toHaveBeenCalledWith(expect.any(String), ['list', '-g', '@angular/cli', '--depth=0'], expect.objectContaining({ shell: expect.any(Boolean) }));
         expect(result.installed).toBe(true);
       });
 
       it('should detect package with different version format', async () => {
-        mockExecPromise.mockResolvedValueOnce({
+        mockExecFilePromise.mockResolvedValueOnce({
           stdout: '/usr/local/lib\n└── eslint@8.41.0 (deduped)\n',
           stderr: '',
         });
@@ -102,7 +126,7 @@ describe('NpmInstallationChecker', () => {
       });
 
       it('should handle npm list output with multiple packages', async () => {
-        mockExecPromise.mockResolvedValueOnce({
+        mockExecFilePromise.mockResolvedValueOnce({
           stdout: '/usr/local/lib\n├── package1@1.0.0\n├── react@18.2.0\n└── package2@2.0.0\n',
           stderr: '',
         });
@@ -115,7 +139,7 @@ describe('NpmInstallationChecker', () => {
 
     describe('npm list empty detection', () => {
       it('should fallback to npx when npm list returns (empty)', async () => {
-        mockExecPromise
+        mockExecFilePromise
           .mockResolvedValueOnce({
             stdout: '/usr/local/lib\n(empty)\n',
             stderr: '',
@@ -127,11 +151,13 @@ describe('NpmInstallationChecker', () => {
 
         const result = await checker.checkPackageInstalled({ packageName: 'create-react-app' });
 
-        expect(mockExecPromise).toHaveBeenNthCalledWith(
+        expect(mockExecFilePromise).toHaveBeenNthCalledWith(
           1,
-          'npm list -g create-react-app --depth=0',
+          expect.any(String),
+          ['list', '-g', 'create-react-app', '--depth=0'],
+          expect.objectContaining({ shell: expect.any(Boolean) })
         );
-        expect(mockExecPromise).toHaveBeenNthCalledWith(2, 'npx -y create-react-app --version');
+        expect(mockExecFilePromise).toHaveBeenNthCalledWith(2, expect.any(String), ['-y', 'create-react-app', '--version'], expect.objectContaining({ shell: expect.any(Boolean) }));
         expect(result).toEqual({
           installed: true,
           packageName: 'create-react-app',
@@ -139,7 +165,7 @@ describe('NpmInstallationChecker', () => {
       });
 
       it('should fallback to npx when package not in global list', async () => {
-        mockExecPromise
+        mockExecFilePromise
           .mockResolvedValueOnce({
             stdout: '/usr/local/lib\n└── other-package@1.0.0\n',
             stderr: '',
@@ -151,14 +177,14 @@ describe('NpmInstallationChecker', () => {
 
         const result = await checker.checkPackageInstalled({ packageName: 'cowsay' });
 
-        expect(mockExecPromise).toHaveBeenNthCalledWith(2, 'npx -y cowsay --version');
+        expect(mockExecFilePromise).toHaveBeenNthCalledWith(2, expect.any(String), ['-y', 'cowsay', '--version'], expect.objectContaining({ shell: expect.any(Boolean) }));
         expect(result.installed).toBe(true);
       });
     });
 
     describe('npx fallback mechanism', () => {
       it('should use npx -y flag to auto-install if needed', async () => {
-        mockExecPromise
+        mockExecFilePromise
           .mockResolvedValueOnce({
             stdout: '(empty)\n',
             stderr: '',
@@ -170,11 +196,11 @@ describe('NpmInstallationChecker', () => {
 
         await checker.checkPackageInstalled({ packageName: 'prettier' });
 
-        expect(mockExecPromise).toHaveBeenCalledWith('npx -y prettier --version');
+        expect(mockExecFilePromise).toHaveBeenCalledWith(expect.any(String), ['-y', 'prettier', '--version'], expect.objectContaining({ shell: expect.any(Boolean) }));
       });
 
       it('should succeed if npx can execute package', async () => {
-        mockExecPromise
+        mockExecFilePromise
           .mockResolvedValueOnce({
             stdout: '(empty)\n',
             stderr: '',
@@ -191,7 +217,7 @@ describe('NpmInstallationChecker', () => {
       });
 
       it('should handle npx with @scope packages', async () => {
-        mockExecPromise
+        mockExecFilePromise
           .mockResolvedValueOnce({
             stdout: '(empty)\n',
             stderr: '',
@@ -203,13 +229,13 @@ describe('NpmInstallationChecker', () => {
 
         await checker.checkPackageInstalled({ packageName: '@vue/cli' });
 
-        expect(mockExecPromise).toHaveBeenNthCalledWith(2, 'npx -y @vue/cli --version');
+        expect(mockExecFilePromise).toHaveBeenNthCalledWith(2, expect.any(String), ['-y', '@vue/cli', '--version'], expect.objectContaining({ shell: expect.any(Boolean) }));
       });
     });
 
     describe('package not found scenarios', () => {
       it('should return not installed when npm list fails and npx fails', async () => {
-        mockExecPromise
+        mockExecFilePromise
           .mockResolvedValueOnce({
             stdout: '(empty)\n',
             stderr: '',
@@ -226,7 +252,7 @@ describe('NpmInstallationChecker', () => {
       });
 
       it('should return not installed when both checks fail', async () => {
-        mockExecPromise.mockRejectedValue(new Error('Network error'));
+        mockExecFilePromise.mockRejectedValue(new Error('Network error'));
 
         const result = await checker.checkPackageInstalled({ packageName: 'some-package' });
 
@@ -237,7 +263,7 @@ describe('NpmInstallationChecker', () => {
 
     describe('error handling', () => {
       it('should handle npm not installed error', async () => {
-        mockExecPromise.mockRejectedValueOnce(new Error('npm: command not found'));
+        mockExecFilePromise.mockRejectedValueOnce(new Error('npm: command not found'));
 
         const result = await checker.checkPackageInstalled({ packageName: 'es-toolkit' });
 
@@ -249,7 +275,7 @@ describe('NpmInstallationChecker', () => {
       });
 
       it('should handle permission errors', async () => {
-        mockExecPromise.mockRejectedValueOnce(new Error('EACCES: permission denied'));
+        mockExecFilePromise.mockRejectedValueOnce(new Error('EACCES: permission denied'));
 
         const result = await checker.checkPackageInstalled({ packageName: 'webpack' });
 
@@ -258,7 +284,7 @@ describe('NpmInstallationChecker', () => {
       });
 
       it('should handle non-Error exceptions', async () => {
-        mockExecPromise.mockRejectedValueOnce('string error');
+        mockExecFilePromise.mockRejectedValueOnce('string error');
 
         const result = await checker.checkPackageInstalled({ packageName: 'babel' });
 
@@ -270,7 +296,7 @@ describe('NpmInstallationChecker', () => {
       });
 
       it('should handle npm registry timeout', async () => {
-        mockExecPromise.mockRejectedValueOnce(new Error('ETIMEDOUT: connection timeout'));
+        mockExecFilePromise.mockRejectedValueOnce(new Error('ETIMEDOUT: connection timeout'));
 
         const result = await checker.checkPackageInstalled({ packageName: 'axios' });
 
@@ -281,7 +307,7 @@ describe('NpmInstallationChecker', () => {
 
     describe('edge cases', () => {
       it('should handle package names with hyphens', async () => {
-        mockExecPromise.mockResolvedValueOnce({
+        mockExecFilePromise.mockResolvedValueOnce({
           stdout: '/usr/local/lib\n└── create-next-app@13.4.0\n',
           stderr: '',
         });
@@ -292,7 +318,7 @@ describe('NpmInstallationChecker', () => {
       });
 
       it('should handle package names with dots', async () => {
-        mockExecPromise.mockResolvedValueOnce({
+        mockExecFilePromise.mockResolvedValueOnce({
           stdout: '/usr/local/lib\n└── package.name@1.0.0\n',
           stderr: '',
         });
@@ -303,7 +329,7 @@ describe('NpmInstallationChecker', () => {
       });
 
       it('should handle npm list with warnings in stderr', async () => {
-        mockExecPromise.mockResolvedValueOnce({
+        mockExecFilePromise.mockResolvedValueOnce({
           stdout: '/usr/local/lib\n└── typescript@5.0.4\n',
           stderr: 'npm WARN deprecated package@1.0.0\n',
         });
@@ -314,7 +340,7 @@ describe('NpmInstallationChecker', () => {
       });
 
       it('should handle npm list with extra whitespace', async () => {
-        mockExecPromise.mockResolvedValueOnce({
+        mockExecFilePromise.mockResolvedValueOnce({
           stdout: '  /usr/local/lib  \n  └── jest@29.5.0  \n',
           stderr: '',
         });
@@ -324,19 +350,15 @@ describe('NpmInstallationChecker', () => {
         expect(result.installed).toBe(true);
       });
 
-      it('should handle case-sensitive package names', async () => {
-        mockExecPromise.mockResolvedValueOnce({
-          stdout: '/usr/local/lib\n└── MyPackage@1.0.0\n',
-          stderr: '',
-        });
-
+      it('should reject invalid package names (e.g. uppercase characters are not allowed in npm packages)', async () => {
         const result = await checker.checkPackageInstalled({ packageName: 'MyPackage' });
 
-        expect(result.installed).toBe(true);
+        expect(result.installed).toBe(false);
+        expect(result.error).toBe('Invalid package name format');
       });
 
       it('should handle npm list output with symlink info', async () => {
-        mockExecPromise.mockResolvedValueOnce({
+        mockExecFilePromise.mockResolvedValueOnce({
           stdout: '/usr/local/lib\n└── react@18.2.0 -> /custom/path/react\n',
           stderr: '',
         });
@@ -347,7 +369,7 @@ describe('NpmInstallationChecker', () => {
       });
 
       it('should handle npm list with peer dependency warnings', async () => {
-        mockExecPromise.mockResolvedValueOnce({
+        mockExecFilePromise.mockResolvedValueOnce({
           stdout: '/usr/local/lib\n└── UNMET PEER DEPENDENCY eslint@8.0.0\n└── webpack@5.88.0\n',
           stderr: '',
         });
@@ -358,7 +380,7 @@ describe('NpmInstallationChecker', () => {
       });
 
       it('should match substring package names in global list', async () => {
-        mockExecPromise.mockResolvedValueOnce({
+        mockExecFilePromise.mockResolvedValueOnce({
           stdout: '/usr/local/lib\n└── react-native@0.72.0\n',
           stderr: '',
         });
