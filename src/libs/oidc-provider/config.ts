@@ -12,11 +12,11 @@ export const defaultClients: ClientMetadata[] = [
   {
     application_type: 'web',
     client_id: 'lobehub-desktop',
-    client_name: 'LobeHub Desktop',
+    client_name: 'mAI',
     // Only supports authorization code flow
     grant_types: ['authorization_code', 'refresh_token'],
 
-    logo_uri: 'https://hub-apac-1.lobeobjects.space/lobehub-desktop-icon.png',
+    logo_uri: appEnv.APP_URL ? urlJoin(appEnv.APP_URL, '/icons/icon-512x512.png') : 'http://localhost:3210/icons/icon-512x512.png',
 
     post_logout_redirect_uris: [
       // Dynamically construct web page callback URL

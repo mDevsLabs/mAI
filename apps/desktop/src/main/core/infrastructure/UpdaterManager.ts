@@ -123,8 +123,9 @@ export class UpdaterManager {
     this.registerEvents();
 
     if (updaterConfig.app.autoCheckUpdate) {
-      setTimeout(() => this.checkForUpdates(), 60 * 1000);
-      setInterval(() => this.checkForUpdates(), updaterConfig.app.checkUpdateInterval);
+      // Disable automatic updates as requested
+      // setTimeout(() => this.checkForUpdates(), 60 * 1000);
+      // setInterval(() => this.checkForUpdates(), updaterConfig.app.checkUpdateInterval);
     }
 
     logger.debug(
