@@ -1,39 +1,10 @@
 name: ✨ Release Desktop Stable
 
 on:
-  release:
-    types: [published]
+  push:
+    branches:
+      - main
   workflow_dispatch:
-    inputs:
-      version:
-        description: '🔢 Version to build (e.g., 2.0.0)'
-        required: true
-        type: string
-      build_mac:
-        description: '🍏 Build macOS (ARM64)'
-        required: false
-        type: boolean
-        default: true
-      build_windows:
-        description: '🪟 Build Windows'
-        required: false
-        type: boolean
-        default: true
-      build_linux:
-        description: '🐧 Build Linux'
-        required: false
-        type: boolean
-        default: true
-      skip_s3_upload:
-        description: '🪣 Skip S3 upload (for testing)'
-        required: false
-        type: boolean
-        default: true
-      skip_github_release:
-        description: '🐙 Skip GitHub release upload (for testing)'
-        required: false
-        type: boolean
-        default: false
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
@@ -54,38 +25,18 @@ jobs:
       is_manual: ${{ steps.check.outputs.is_manual }}
       release_notes: ${{ steps.check.outputs.release_notes }}
     steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v6
+
       - name: ℹ️ Check release info
         id: check
-        env:
-          RELEASE_BODY: ${{ github.event.release.body || '' }}
         run: |
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            version="${{ inputs.version }}"
-            version="${version#v}"
-            echo "is_manual=true" >> $GITHUB_OUTPUT
-            echo "version=${version}" >> $GITHUB_OUTPUT
-            echo "release_notes=" >> $GITHUB_OUTPUT
-            echo "🔧 Manual trigger: version=${version}"
-          else
-            version="${{ github.event.release.tag_name }}"
-            version="${version#v}"
-            echo "is_manual=false" >> $GITHUB_OUTPUT
-            echo "version=${version}" >> $GITHUB_OUTPUT
-            release_body="${RELEASE_BODY:-}"
-            {
-              echo "release_notes<<EOF"
-              printf '%s\n' "$release_body"
-              echo "EOF"
-            } >> $GITHUB_OUTPUT
-          fi
-
-          if [[ "$version" == *"-"* ]]; then
-            echo "is_stable=false" >> $GITHUB_OUTPUT
-            echo "⏭️ Skipping: $version is not a stable release"
-          else
-            echo "is_stable=true" >> $GITHUB_OUTPUT
-            echo "✅ Stable release detected: $version"
-          fi
+          version=$(jq -r .version package.json)
+          echo "is_manual=false" >> $GITHUB_OUTPUT
+          echo "version=${version}" >> $GITHUB_OUTPUT
+          echo "release_notes=" >> $GITHUB_OUTPUT
+          echo "is_stable=true" >> $GITHUB_OUTPUT
+          echo "✅ Stable release detected from package.json: $version"
 
   configure-build:
     needs: [check-stable]
@@ -245,7 +196,6 @@ jobs:
     needs: [merge-mac-files, check-stable]
     name: 🐙 Publish to GitHub Release
     runs-on: ubuntu-latest
-    if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.skip_github_release) }}
     permissions:
       contents: write
     steps:
@@ -261,8 +211,8 @@ jobs:
       - name: 🚀 Upload to Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.event_name == 'workflow_dispatch' && format('v{0}', needs.check-stable.outputs.version) || github.event.release.tag_name }}
-          draft: ${{ github.event_name == 'workflow_dispatch' }}
+          tag_name: v${{ needs.check-stable.outputs.version }}
+          draft: false
           files: |
             release/stable*
             release/latest*
@@ -281,7 +231,6 @@ jobs:
     needs: [merge-mac-files, check-stable]
     name: 🪣 Publish to S3
     runs-on: ubuntu-latest
-    if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.skip_s3_upload) }}
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/desktop-publish-s3
