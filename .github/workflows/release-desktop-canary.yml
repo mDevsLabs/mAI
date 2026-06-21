@@ -4,13 +4,7 @@ on:
   push:
     branches:
       - canary
-  workflow_dispatch:
-    inputs:
-      force:
-        description: '💪 Force build (skip commit message check)'
-        required: false
-        type: boolean
-        default: false
+  workflow_dispatch: {}
 
 concurrency:
   group: ${{ github.workflow }}
@@ -29,42 +23,19 @@ jobs:
       release_notes: ${{ steps.release-notes.outputs.release_notes }}
       version: ${{ steps.version.outputs.version }}
       tag: ${{ steps.version.outputs.tag }}
-      should_build: ${{ steps.check.outputs.should_build }}
     steps:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
-      - name: 🔍 Check commit message prefix
-        id: check
-        run: |
-          if [ "${{ inputs.force }}" == "true" ]; then
-            echo "should_build=true" >> $GITHUB_OUTPUT
-            echo "🔧 Force build requested, skipping commit check"
-            exit 0
-          fi
-
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            echo "should_build=true" >> $GITHUB_OUTPUT
-            echo "🔧 Manual trigger, proceeding with build"
-            exit 0
-          fi
-
-          commit_msg=$(git log -1 --pretty=%s HEAD)
-          echo "📝 Head commit: $commit_msg"
-
-          echo "should_build=true" >> $GITHUB_OUTPUT
-          echo "✅ Canary build trigger: $commit_msg"
-
       - name: 🧮 Calculate canary version
-        if: steps.check.outputs.should_build == 'true'
         id: version
         run: |
           latest_tag=$(git tag --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -n 1)
 
           if [ -z "$latest_tag" ]; then
-            echo "⚠️ No stable tag found, fallback to package.json version"
-            pkg_version=$(node -p "require('./package.json').version")
+            echo "⚠️ No stable tag found, fallback to e2e/package.json version"
+            pkg_version=$(node -p "require('./e2e/package.json').version")
             latest_tag="v${pkg_version}"
           fi
 
@@ -93,7 +64,6 @@ jobs:
           echo "🏷️ Tag: ${tag}"
 
       - name: 📝 Generate canary release notes
-        if: steps.check.outputs.should_build == 'true'
         id: release-notes
         env:
           TAG: ${{ steps.version.outputs.tag }}
@@ -152,26 +122,8 @@ jobs:
             echo "EOF"
           } >> $GITHUB_OUTPUT
 
-  test:
-    name: 🧪 Code quality check
-    needs: [calculate-version]
-    if: needs.calculate-version.outputs.should_build == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - name: 📥 Checkout base
-        uses: actions/checkout@v6
-
-      - name: ⚙️ Setup environment
-        uses: ./.github/actions/setup-env
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: 📦 Install deps
-        run: pnpm install
-
   build:
-    needs: [calculate-version, test]
-    if: needs.calculate-version.outputs.should_build == 'true'
+    needs: [calculate-version]
     name: 📦 Build Desktop App (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
