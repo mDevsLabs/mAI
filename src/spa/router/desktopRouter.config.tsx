@@ -866,6 +866,13 @@ export const desktopRoutes: RouteObject[] = [
                     ),
                     path: 'storage',
                   },
+                  {
+                    element: dynamicElement(
+                      () => import('@/routes/(main)/[workspaceSlug]/settings/devices'),
+                      'Desktop > Workspace > Settings > Devices',
+                    ),
+                    path: 'devices',
+                  },
                 ],
                 element: dynamicLayout(
                   () => import('@/routes/(main)/[workspaceSlug]/settings/_content-layout'),
@@ -953,6 +960,13 @@ export const desktopRoutes: RouteObject[] = [
     element: dynamicElement(() => import('@/routes/verify-im'), 'Desktop > VerifyIm'),
     errorElement: <ErrorBoundary />,
     path: '/verify-im',
+  },
+
+  // Standalone verification-report viewer (outside main layout)
+  {
+    element: dynamicElement(() => import('@/routes/verify/[runId]'), 'Desktop > VerifyReport'),
+    errorElement: <ErrorBoundary />,
+    path: '/verify/:runId',
   },
 
   // Devtools route (outside main layout, dev-only)

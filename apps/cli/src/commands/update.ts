@@ -117,7 +117,7 @@ function runInstall(command: string, args: string[]): Promise<void> {
 export function registerUpdateCommand(program: Command) {
   program
     .command('update')
-    .description('Update the LobeHub CLI to the latest published version')
+    .description('Update the mAI CLI to the latest published version')
     .option('--check', 'Only check for a newer version without installing')
     .option('--tag <tag>', 'npm dist-tag to update to', 'latest')
     .option(

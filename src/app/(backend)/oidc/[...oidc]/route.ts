@@ -19,10 +19,8 @@ const handler = async (req: NextRequest) => {
   let responseCollector;
 
   try {
-    if (!authEnv.ENABLE_OIDC) {
-      log('OIDC is not enabled');
-      return new NextResponse('OIDC is not enabled', { status: 404 });
-    }
+    // OIDC is forced enabled
+    log('OIDC is forced enabled');
 
     // Get the OIDC Provider instance
     const provider = await getOIDCProvider();

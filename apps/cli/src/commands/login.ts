@@ -13,7 +13,7 @@ import { registerDevice, resolveDeviceIdentity } from '../device/register';
 import { loadSettings, normalizeUrl, saveSettings } from '../settings';
 import { log } from '../utils/logger';
 
-const CLIENT_ID = 'lobehub-cli';
+const CLIENT_ID = 'mai-cli';
 const SCOPES = 'openid profile email offline_access';
 
 interface LoginOptions {
@@ -55,8 +55,8 @@ async function parseJsonResponse<T>(res: Response, endpoint: string): Promise<T>
 export function registerLoginCommand(program: Command) {
   program
     .command('login')
-    .description('Log in to LobeHub via browser (Device Code Flow) or configure API key server')
-    .option('--server <url>', 'LobeHub server URL', OFFICIAL_SERVER_URL)
+    .description('Log in to mAI via browser (Device Code Flow) or configure API key server')
+    .option('--server <url>', 'mAI server URL', OFFICIAL_SERVER_URL)
     .action(async (options: LoginOptions) => {
       const serverUrl = normalizeUrl(options.server) || OFFICIAL_SERVER_URL;
 

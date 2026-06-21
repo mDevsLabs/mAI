@@ -12,7 +12,7 @@ export interface StoredSettings {
   serverUrl?: string;
 }
 
-const LOBEHUB_DIR_NAME = process.env.LOBEHUB_CLI_HOME || '.lobehub';
+const LOBEHUB_DIR_NAME = process.env.LOBEHUB_CLI_HOME || '.mai';
 const SETTINGS_DIR = path.join(os.homedir(), LOBEHUB_DIR_NAME);
 const SETTINGS_FILE = path.join(SETTINGS_DIR, 'settings.json');
 // Kept in its own file rather than settings.json, which is unlinked whenever
@@ -24,7 +24,7 @@ export function normalizeUrl(url: string | undefined): string | undefined {
 }
 
 export function resolveServerUrl(): string {
-  const envServerUrl = normalizeUrl(process.env.LOBEHUB_SERVER);
+  const envServerUrl = normalizeUrl(process.env.MAI_SERVER || process.env.LOBEHUB_SERVER);
   const settingsServerUrl = normalizeUrl(loadSettings()?.serverUrl);
 
   return envServerUrl || settingsServerUrl || OFFICIAL_SERVER_URL;

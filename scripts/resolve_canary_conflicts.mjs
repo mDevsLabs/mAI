@@ -198,7 +198,7 @@ async function handleNoConflicts() {
       case '1':
       case '2': {
         const branch = choice === '1' ? 'canary' : 'main';
-        const pullArgs = await askString(`\n⚙️ Arguments pour 'git pull upstream ${branch}'`, '--no-edit --no-commit');
+        const pullArgs = await askString(`\n⚙️ Arguments pour 'git pull upstream ${branch}'`, '--no-commit');
         console.log(`\n📥 Pull depuis upstream ${branch} avec: ${pullArgs}`);
         runCmdInteractive(`git pull upstream ${branch} ${pullArgs}`);
         menuActive = false;
@@ -302,6 +302,20 @@ async function main() {
     console.log(`   Statut Git : ${status} | Marqueurs de conflit : ${conflictCount}`);
     console.log(`   Stats : mAI (${stats.ours}) | Canary (${stats.theirs}) | Auto (${stats.auto})`);
     console.log(`======================================================`);
+
+    const upstreamFolders = [
+      '.agents', '.codex', '.claude', '.conductor', '.cursor',
+      '.devcontainer', '.githooks', '.vscode', 'docker-compose',
+      'locales', 'packages', 'patches'
+    ];
+    if (upstreamFolders.some(folder => file.startsWith(folder + '/') || file === folder)) {
+      console.log(`📥 Règle automatique : Conservation de la version entrante (theirs) pour ${file}`);
+      runCmd(`git checkout --theirs "${file}"`);
+      runCmd(`git add "${file}"`);
+      stats.auto++;
+      i++;
+      continue;
+    }
 
     if (file.startsWith('docs/')) {
       console.log('🗑️  Règle automatique : Suppression du dossier docs/');

@@ -1,19 +1,29 @@
 export type PetId =
   | 'apupepe'
+  | 'bytepilot'
   | 'chibi-rilakkuma'
   | 'claude-pixel'
+  | 'clerkhausen'
   | 'codix'
   | 'dario'
+  | 'doxi'
   | 'dudu-bubu'
+  | 'einstein'
   | 'gork'
+  | 'gugu'
+  | 'helmet-bunny'
   | 'jiji'
   | 'laughing-gemini'
   | 'mini-elon'
   | 'mini-sama'
   | 'maomao-the-cat'
   | 'mr-poopybutthole'
+  | 'pingu'
   | 'plum-tang'
   | 'problem'
+  | 'quillfox'
+  | 'red'
+  | 'tibo'
   | 'traffic-light';
 
 export type PetCategory = 'Mascot' | 'Human' | 'Robot' | 'Alien' | 'Animal';
@@ -56,6 +66,12 @@ export const PETS_LIST: PetConfig[] = [
     name: 'Dudu Bubu',
     description: "L'inséparable duo Dudu et Bubu.",
     category: 'Animal',
+  },
+  {
+    id: 'einstein',
+    name: 'Einstein',
+    description: 'Le légendaire scientifique pour éclairer vos lignes de code.',
+    category: 'Human',
   },
   { id: 'gork', name: 'Gork', description: 'Un extra-terrestre amical.', category: 'Alien' },
   {
@@ -101,15 +117,69 @@ export const PETS_LIST: PetConfig[] = [
     category: 'Alien',
   },
   {
+    id: 'pingu',
+    name: 'Pingu',
+    description: 'Le plus célèbre des petits manchots, noot noot !',
+    category: 'Animal',
+  },
+  {
     id: 'plum-tang',
     name: 'Plum Tang',
     description: 'Le compagnon fruité de vos aventures.',
     category: 'Mascot',
   },
   {
+    id: 'quillfox',
+    name: 'Quillfox',
+    description: 'Un renard agile et astucieux pour guider vos projets.',
+    category: 'Animal',
+  },
+  {
     id: 'traffic-light',
     name: 'Traffic Light',
     description: 'Un feu de circulation pour réguler votre code.',
     category: 'Robot',
+  },
+  {
+    id: 'bytepilot',
+    name: 'Bytepilot',
+    description: 'Un pilote binaire pour vos aventures.',
+    category: 'Robot',
+  },
+  {
+    id: 'clerkhausen',
+    name: 'Clerkhausen',
+    description: 'Le majordome de vos données.',
+    category: 'Human',
+  },
+  {
+    id: 'doxi',
+    name: 'Doxi',
+    description: 'Votre petit renard de documentation.',
+    category: 'Animal',
+  },
+  {
+    id: 'gugu',
+    name: 'Gugu',
+    description: 'Le mystérieux Gugu.',
+    category: 'Mascot',
+  },
+  {
+    id: 'helmet-bunny',
+    name: 'Helmet Bunny',
+    description: 'Un lapin prêt pour la course.',
+    category: 'Animal',
+  },
+  {
+    id: 'red',
+    name: 'Red',
+    description: 'Le petit Red.',
+    category: 'Mascot',
+  },
+  {
+    id: 'tibo',
+    name: 'Tibo',
+    description: 'Tibo le compagnon d\'aventures.',
+    category: 'Human',
   },
 ];
