@@ -270,12 +270,16 @@ const SocialButtonGrid = memo<SocialButtonGridProps>(
     return (
       <div className={styles.gridContainer}>
         {/* ── Row 1 — dark background ── */}
-        <div className={`${styles.row} ${styles.rowDark}`}>{renderRow(darkRowProviders, 'dark')}</div>
+        {darkRowProviders.length > 0 && (
+          <div className={`${styles.row} ${styles.rowDark}`}>{renderRow(darkRowProviders, 'dark')}</div>
+        )}
 
         {/* ── Row 2 — light background ── */}
-        <div className={`${styles.row} ${styles.rowLight}`}>
-          {renderRow(lightRowProviders, 'light')}
-        </div>
+        {lightRowProviders.length > 0 && (
+          <div className={`${styles.row} ${styles.rowLight}`}>
+            {renderRow(lightRowProviders, 'light')}
+          </div>
+        )}
       </div>
     );
   },

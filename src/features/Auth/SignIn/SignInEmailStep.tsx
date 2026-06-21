@@ -13,8 +13,8 @@ import AuthCard from '@/features/AuthCard';
 import { AuthAgreement } from '@/features/AuthShell';
 
 // Fixed ordering for the two circular grid rows
-const DARK_ROW_PROVIDERS = ['google', 'railway'];
-const LIGHT_ROW_PROVIDERS = ['github', 'x', 'twitch', 'notion'];
+const DARK_ROW_PROVIDERS: string[] = [];
+const LIGHT_ROW_PROVIDERS = ['google', 'railway', 'github', 'x', 'twitch', 'notion'];
 const GRID_PROVIDERS = new Set([...DARK_ROW_PROVIDERS, ...LIGHT_ROW_PROVIDERS]);
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
@@ -93,8 +93,9 @@ export const SignInEmailStep = ({
     return t(key, { defaultValue: `Continue with ${normalized}` });
   };
 
-  // Providers that fall outside the two fixed grid rows
-  const extraProviders = oAuthSSOProviders.filter((p) => !GRID_PROVIDERS.has(p));
+  // Providers that fall outside the two fixed grid rows and aren't blacklisted
+  const HIDDEN_PROVIDERS = new Set(['canva', 'slack', 'spotify', 'telegram']);
+  const extraProviders = oAuthSSOProviders.filter((p) => !GRID_PROVIDERS.has(p) && !HIDDEN_PROVIDERS.has(p));
   const hasMoreProviders = extraProviders.length > 3;
   const visibleExtraProviders = hasMoreProviders && !showAllProviders
     ? extraProviders.slice(0, 3)
@@ -116,6 +117,8 @@ export const SignInEmailStep = ({
         <Flexbox gap={12}>
           {/* ── 5×2 circular button grid ── */}
           <SocialButtonGrid
+            darkRowProviders={DARK_ROW_PROVIDERS}
+            lightRowProviders={LIGHT_ROW_PROVIDERS}
             socialLoading={socialLoading}
             onSocialSignIn={onSocialSignIn}
           />
