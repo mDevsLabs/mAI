@@ -36,8 +36,7 @@ jobs:
           PR_NUMBER=$(gh pr list --head "$BRANCH_NAME" --json number --jq '.[0].number')
 
           if [ -n "$PR_NUMBER" ]; then
-            echo "🔄 La PR #$PR_NUMBER existe déjà. Mise à jour du titre avec le dernier commit..."
-            gh pr edit "$PR_NUMBER" --title "$COMMIT_MSG"
+            echo "🔄 La PR #$PR_NUMBER existe déjà. Aucune action requise."
           else
             echo "🆕 Aucune PR trouvée. Création d'une nouvelle PR..."
             gh pr create \
