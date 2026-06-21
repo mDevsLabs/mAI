@@ -3,9 +3,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PythonInstallationChecker } from './PythonInstallationChecker';
 
 // Hoist the mock to ensure it's available in the factory
-const { mockExecPromise } = vi.hoisted(() => {
+const { mockExecFilePromise } = vi.hoisted(() => {
   return {
-    mockExecPromise: vi.fn(),
+    mockExecFilePromise: vi.fn(),
   };
 });
 
@@ -15,9 +15,9 @@ vi.mock('node:child_process');
 // Mock node:util to return our hoisted mock when promisify is called
 vi.mock('node:util', () => ({
   default: {
-    promisify: () => mockExecPromise,
+    promisify: () => mockExecFilePromise,
   },
-  promisify: () => mockExecPromise,
+  promisify: () => mockExecFilePromise,
 }));
 
 describe('PythonInstallationChecker', () => {
@@ -38,7 +38,7 @@ describe('PythonInstallationChecker', () => {
           installed: false,
           packageName: '',
         });
-        expect(mockExecPromise).not.toHaveBeenCalled();
+        expect(mockExecFilePromise).not.toHaveBeenCalled();
       });
 
       it('should return error when packageName is undefined', async () => {
@@ -64,14 +64,14 @@ describe('PythonInstallationChecker', () => {
 
     describe('pip list detection', () => {
       it('should detect installed package via pip list (exact match)', async () => {
-        mockExecPromise.mockResolvedValueOnce({
+        mockExecFilePromise.mockResolvedValueOnce({
           stdout: 'numpy                1.24.3\n',
           stderr: '',
         });
 
         const result = await checker.checkPackageInstalled({ packageName: 'numpy' });
 
-        expect(mockExecPromise).toHaveBeenCalledWith('python -m pip list | grep -i "numpy"');
+        expect(mockExecFilePromise).toHaveBeenCalledWith('python', ['-m', 'pip', 'list']);
         expect(result).toEqual({
           installed: true,
           packageName: 'numpy',
@@ -79,7 +79,7 @@ describe('PythonInstallationChecker', () => {
       });
 
       it('should detect installed package via pip list (case insensitive)', async () => {
-        mockExecPromise.mockResolvedValueOnce({
+        mockExecFilePromise.mockResolvedValueOnce({
           stdout: 'NumPy                1.24.3\n',
           stderr: '',
         });
@@ -91,7 +91,7 @@ describe('PythonInstallationChecker', () => {
       });
 
       it('should detect package with hyphen in name', async () => {
-        mockExecPromise.mockResolvedValueOnce({
+        mockExecFilePromise.mockResolvedValueOnce({
           stdout: 'scikit-learn         1.2.2\n',
           stderr: '',
         });
@@ -102,7 +102,7 @@ describe('PythonInstallationChecker', () => {
       });
 
       it('should use custom python command when provided', async () => {
-        mockExecPromise.mockResolvedValueOnce({
+        mockExecFilePromise.mockResolvedValueOnce({
           stdout: 'requests             2.28.1\n',
           stderr: '',
         });
@@ -112,11 +112,11 @@ describe('PythonInstallationChecker', () => {
           pythonCommand: 'python3',
         });
 
-        expect(mockExecPromise).toHaveBeenCalledWith('python3 -m pip list | grep -i "requests"');
+        expect(mockExecFilePromise).toHaveBeenCalledWith('python3', ['-m', 'pip', 'list']);
       });
 
       it('should handle pip list output with extra whitespace', async () => {
-        mockExecPromise.mockResolvedValueOnce({
+        mockExecFilePromise.mockResolvedValueOnce({
           stdout: '  pandas               2.0.0  \n',
           stderr: '',
         });
@@ -129,7 +129,7 @@ describe('PythonInstallationChecker', () => {
 
     describe('fallback import check', () => {
       it('should use import fallback when pip list returns empty', async () => {
-        mockExecPromise
+        mockExecFilePromise
           .mockResolvedValueOnce({
             stdout: '',
             stderr: '',
@@ -141,14 +141,22 @@ describe('PythonInstallationChecker', () => {
 
         const result = await checker.checkPackageInstalled({ packageName: 'requests' });
 
-        expect(mockExecPromise).toHaveBeenNthCalledWith(
-          1,
-          'python -m pip list | grep -i "requests"',
-        );
-        expect(mockExecPromise).toHaveBeenNthCalledWith(
-          2,
-          'python -c "import requests; print(\'Package installed\')"',
-        );
+        expect(mockExecFilePromise).toHaveBeenNthCalledWith(1, 'python', ['-m', 'pip', 'list']);
+        expect(mockExecFilePromise).toHaveBeenNthCalledWith(2, 'python', [
+          '-c',
+          `
+import importlib
+import sys
+
+try:
+    pkg = sys.argv[1].replace('-', '_')
+    importlib.import_module(pkg)
+    print('Package installed')
+except ImportError:
+    pass
+        `,
+          'requests',
+        ]);
         expect(result).toEqual({
           installed: true,
           packageName: 'requests',
@@ -156,7 +164,7 @@ describe('PythonInstallationChecker', () => {
       });
 
       it('should convert hyphens to underscores for import check', async () => {
-        mockExecPromise
+        mockExecFilePromise
           .mockResolvedValueOnce({
             stdout: '',
             stderr: '',
@@ -168,14 +176,25 @@ describe('PythonInstallationChecker', () => {
 
         await checker.checkPackageInstalled({ packageName: 'scikit-learn' });
 
-        expect(mockExecPromise).toHaveBeenNthCalledWith(
-          2,
-          'python -c "import scikit_learn; print(\'Package installed\')"',
-        );
+        expect(mockExecFilePromise).toHaveBeenNthCalledWith(2, 'python', [
+          '-c',
+          `
+import importlib
+import sys
+
+try:
+    pkg = sys.argv[1].replace('-', '_')
+    importlib.import_module(pkg)
+    print('Package installed')
+except ImportError:
+    pass
+        `,
+          'scikit-learn',
+        ]);
       });
 
       it('should use custom python command for import check', async () => {
-        mockExecPromise
+        mockExecFilePromise
           .mockResolvedValueOnce({
             stdout: '',
             stderr: '',
@@ -190,14 +209,25 @@ describe('PythonInstallationChecker', () => {
           pythonCommand: 'python3.11',
         });
 
-        expect(mockExecPromise).toHaveBeenNthCalledWith(
-          2,
-          'python3.11 -c "import numpy; print(\'Package installed\')"',
-        );
+        expect(mockExecFilePromise).toHaveBeenNthCalledWith(2, 'python3.11', [
+          '-c',
+          `
+import importlib
+import sys
+
+try:
+    pkg = sys.argv[1].replace('-', '_')
+    importlib.import_module(pkg)
+    print('Package installed')
+except ImportError:
+    pass
+        `,
+          'numpy',
+        ]);
       });
 
       it('should return not installed when import fallback fails', async () => {
-        mockExecPromise
+        mockExecFilePromise
           .mockResolvedValueOnce({
             stdout: '',
             stderr: '',
@@ -215,7 +245,7 @@ describe('PythonInstallationChecker', () => {
 
     describe('package not found scenarios', () => {
       it('should return not installed when pip list finds no match', async () => {
-        mockExecPromise
+        mockExecFilePromise
           .mockResolvedValueOnce({
             stdout: '',
             stderr: '',
@@ -231,7 +261,7 @@ describe('PythonInstallationChecker', () => {
       });
 
       it('should return not installed when pip list output does not contain package', async () => {
-        mockExecPromise
+        mockExecFilePromise
           .mockResolvedValueOnce({
             stdout: 'other-package        1.0.0\n',
             stderr: '',
@@ -246,7 +276,7 @@ describe('PythonInstallationChecker', () => {
 
     describe('error handling', () => {
       it('should handle pip list command execution error', async () => {
-        mockExecPromise.mockRejectedValueOnce(new Error('pip: command not found'));
+        mockExecFilePromise.mockRejectedValueOnce(new Error('pip: command not found'));
 
         const result = await checker.checkPackageInstalled({ packageName: 'requests' });
 
@@ -258,7 +288,7 @@ describe('PythonInstallationChecker', () => {
       });
 
       it('should handle python command not found error', async () => {
-        mockExecPromise.mockRejectedValueOnce(
+        mockExecFilePromise.mockRejectedValueOnce(
           new Error('python: command not found. Try installing Python'),
         );
 
@@ -269,7 +299,7 @@ describe('PythonInstallationChecker', () => {
       });
 
       it('should handle non-Error exceptions', async () => {
-        mockExecPromise.mockRejectedValueOnce('string error');
+        mockExecFilePromise.mockRejectedValueOnce('string error');
 
         const result = await checker.checkPackageInstalled({ packageName: 'pandas' });
 
@@ -282,7 +312,7 @@ describe('PythonInstallationChecker', () => {
 
       it('should handle timeout errors gracefully', async () => {
         const timeoutError = new Error('Command execution timeout');
-        mockExecPromise.mockRejectedValueOnce(timeoutError);
+        mockExecFilePromise.mockRejectedValueOnce(timeoutError);
 
         const result = await checker.checkPackageInstalled({ packageName: 'slow-package' });
 
@@ -293,7 +323,7 @@ describe('PythonInstallationChecker', () => {
 
     describe('edge cases', () => {
       it('should handle package name with multiple hyphens', async () => {
-        mockExecPromise
+        mockExecFilePromise
           .mockResolvedValueOnce({
             stdout: '',
             stderr: '',
@@ -306,14 +336,25 @@ describe('PythonInstallationChecker', () => {
         await checker.checkPackageInstalled({ packageName: 'my-test-package' });
 
         // Note: The implementation only replaces the first hyphen, not all hyphens
-        expect(mockExecPromise).toHaveBeenNthCalledWith(
-          2,
-          'python -c "import my_test-package; print(\'Package installed\')"',
-        );
+        expect(mockExecFilePromise).toHaveBeenNthCalledWith(2, 'python', [
+          '-c',
+          `
+import importlib
+import sys
+
+try:
+    pkg = sys.argv[1].replace('-', '_')
+    importlib.import_module(pkg)
+    print('Package installed')
+except ImportError:
+    pass
+        `,
+          'my-test-package',
+        ]);
       });
 
       it('should handle pip list output with version in parentheses', async () => {
-        mockExecPromise.mockResolvedValueOnce({
+        mockExecFilePromise.mockResolvedValueOnce({
           stdout: 'numpy                1.24.3 (from /usr/lib/python3)\n',
           stderr: '',
         });
@@ -324,7 +365,7 @@ describe('PythonInstallationChecker', () => {
       });
 
       it('should handle multiline pip list output', async () => {
-        mockExecPromise.mockResolvedValueOnce({
+        mockExecFilePromise.mockResolvedValueOnce({
           stdout:
             'package1             1.0.0\nnumpy                1.24.3\npackage2             2.0.0\n',
           stderr: '',
@@ -336,7 +377,7 @@ describe('PythonInstallationChecker', () => {
       });
 
       it('should not match partial package names', async () => {
-        mockExecPromise
+        mockExecFilePromise
           .mockResolvedValueOnce({
             stdout: 'numpy-extras         1.0.0\n',
             stderr: '',
@@ -347,11 +388,11 @@ describe('PythonInstallationChecker', () => {
 
         // Should not be installed since 'numpy' is only a substring of 'numpy-extras'
         // The grep -i will match, but the actual contains check should verify exact match
-        expect(result.installed).toBe(true); // Actually this will pass because contains is substring match
+        expect(result.installed).toBe(false);
       });
 
       it('should handle different python version commands', async () => {
-        mockExecPromise.mockResolvedValueOnce({
+        mockExecFilePromise.mockResolvedValueOnce({
           stdout: 'requests             2.28.1\n',
           stderr: '',
         });
@@ -361,7 +402,7 @@ describe('PythonInstallationChecker', () => {
           pythonCommand: 'python3.10',
         });
 
-        expect(mockExecPromise).toHaveBeenCalledWith('python3.10 -m pip list | grep -i "requests"');
+        expect(mockExecFilePromise).toHaveBeenCalledWith('python3.10', ['-m', 'pip', 'list']);
       });
     });
   });
