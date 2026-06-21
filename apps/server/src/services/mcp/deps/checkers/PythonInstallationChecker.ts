@@ -1,9 +1,9 @@
-import { exec } from 'node:child_process';
+import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 
 import { type InstallationChecker, type PackageInstallCheckResult } from '../types';
 
-const execPromise = promisify(exec);
+const execFilePromise = promisify(execFile);
 
 /**
  * Python Installation Checker
@@ -28,22 +28,25 @@ export class PythonInstallationChecker implements InstallationChecker {
       const packageName = details.packageName;
       const pythonCommand = details.pythonCommand || 'python';
 
-      // Use pip list to check if package is installed
-      const command = `${pythonCommand} -m pip list | grep -i "${packageName}"`;
-      const { stdout } = await execPromise(command);
+      // Use pip show to check if package is installed (safe from command injection)
+      try {
+        await execFilePromise(pythonCommand, ['-m', 'pip', 'show', packageName]);
 
-      // If there's output and it contains the package name, consider it installed
-      if (stdout.trim() && stdout.toLowerCase().includes(packageName.toLowerCase())) {
         return {
           installed: true,
           packageName,
         };
+      } catch {
+        // pip show failed, package not found or pip error. Let's fall back to import
       }
 
       // Try to directly import the package to verify
-      const importCommand = `${pythonCommand} -c "import ${packageName.replace('-', '_')}; print('Package installed')"`;
       try {
-        const { stdout: importStdout } = await execPromise(importCommand);
+        const { stdout: importStdout } = await execFilePromise(pythonCommand, [
+          '-c',
+          `import sys; __import__(sys.argv[1].replace("-", "_")); print("Package installed")`,
+          packageName,
+        ]);
         if (importStdout.includes('Package installed')) {
           return {
             installed: true,
