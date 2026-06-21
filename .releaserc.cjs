@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const config = require('@lobehub/lint').semanticRelease;
 
 config.branches = [

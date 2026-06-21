@@ -37,7 +37,7 @@ const userMemoryModel = new UserMemoryModel(serverDB, userId);
  * @returns Normalized random vector
  */
 function generateRandomEmbedding(dimensions: number = 1024): number[] {
-  const vector = new Array(dimensions).fill(0).map(() => Math.random() * 2 - 1); // Random values between -1 and 1
+  const vector = Array.from({ length: dimensions }).fill(0).map(() => Math.random() * 2 - 1); // Random values between -1 and 1
 
   // Normalize the vector
   const magnitude = Math.sqrt(vector.reduce((sum, val) => sum + val * val, 0));

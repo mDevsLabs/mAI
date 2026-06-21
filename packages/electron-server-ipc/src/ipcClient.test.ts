@@ -156,9 +156,9 @@ describe('ElectronIpcClient', () => {
 
     it('should handle write errors', async () => {
       // Setup connection callback
-      let connectionCallback: Function | undefined;
+      let connectionCallback: (...args: any[]) => void | undefined;
       vi.mocked(net.createConnection).mockImplementation((path, callback) => {
-        connectionCallback = callback as Function;
+        connectionCallback = callback as (...args: any[]) => void;
         return mockSocket as unknown as net.Socket;
       });
 
@@ -184,17 +184,17 @@ describe('ElectronIpcClient', () => {
 
     it('should handle successful request-response cycle', async () => {
       // Setup connection callback
-      let connectionCallback: Function | undefined;
-      let dataCallback: Function | undefined;
+      let connectionCallback: (...args: any[]) => void | undefined;
+      let dataCallback: (...args: any[]) => void | undefined;
 
       vi.mocked(net.createConnection).mockImplementation((path, callback) => {
-        connectionCallback = callback as Function;
+        connectionCallback = callback as (...args: any[]) => void;
         return mockSocket as unknown as net.Socket;
       });
 
       mockSocket.on.mockImplementation((event, callback) => {
         if (event === 'data') {
-          dataCallback = callback as Function;
+          dataCallback = callback as (...args: any[]) => void;
         }
         return mockSocket;
       });
@@ -243,17 +243,17 @@ describe('ElectronIpcClient', () => {
 
     it('should handle server error responses', async () => {
       // Setup connection and data callbacks
-      let connectionCallback: Function | undefined;
-      let dataCallback: Function | undefined;
+      let connectionCallback: (...args: any[]) => void | undefined;
+      let dataCallback: (...args: any[]) => void | undefined;
 
       vi.mocked(net.createConnection).mockImplementation((path, callback) => {
-        connectionCallback = callback as Function;
+        connectionCallback = callback as (...args: any[]) => void;
         return mockSocket as unknown as net.Socket;
       });
 
       mockSocket.on.mockImplementation((event, callback) => {
         if (event === 'data') {
-          dataCallback = callback as Function;
+          dataCallback = callback as (...args: any[]) => void;
         }
         return mockSocket;
       });
@@ -297,17 +297,17 @@ describe('ElectronIpcClient', () => {
     });
 
     it('should handle multiple messages in single data chunk', async () => {
-      let connectionCallback: Function | undefined;
-      let dataCallback: Function | undefined;
+      let connectionCallback: (...args: any[]) => void | undefined;
+      let dataCallback: (...args: any[]) => void | undefined;
 
       vi.mocked(net.createConnection).mockImplementation((path, callback) => {
-        connectionCallback = callback as Function;
+        connectionCallback = callback as (...args: any[]) => void;
         return mockSocket as unknown as net.Socket;
       });
 
       mockSocket.on.mockImplementation((event, callback) => {
         if (event === 'data') {
-          dataCallback = callback as Function;
+          dataCallback = callback as (...args: any[]) => void;
         }
         return mockSocket;
       });
@@ -356,17 +356,17 @@ describe('ElectronIpcClient', () => {
     });
 
     it('should handle fragmented messages', async () => {
-      let connectionCallback: Function | undefined;
-      let dataCallback: Function | undefined;
+      let connectionCallback: (...args: any[]) => void | undefined;
+      let dataCallback: (...args: any[]) => void | undefined;
 
       vi.mocked(net.createConnection).mockImplementation((path, callback) => {
-        connectionCallback = callback as Function;
+        connectionCallback = callback as (...args: any[]) => void;
         return mockSocket as unknown as net.Socket;
       });
 
       mockSocket.on.mockImplementation((event, callback) => {
         if (event === 'data') {
-          dataCallback = callback as Function;
+          dataCallback = callback as (...args: any[]) => void;
         }
         return mockSocket;
       });
@@ -412,10 +412,10 @@ describe('ElectronIpcClient', () => {
     });
 
     it('should handle request timeout', async () => {
-      let connectionCallback: Function | undefined;
+      let connectionCallback: (...args: any[]) => void | undefined;
 
       vi.mocked(net.createConnection).mockImplementation((path, callback) => {
-        connectionCallback = callback as Function;
+        connectionCallback = callback as (...args: any[]) => void;
         return mockSocket as unknown as net.Socket;
       });
 
@@ -443,17 +443,17 @@ describe('ElectronIpcClient', () => {
     }, 10000);
 
     it('should handle socket close event', async () => {
-      let connectionCallback: Function | undefined;
-      let closeCallback: Function | undefined;
+      let connectionCallback: (...args: any[]) => void | undefined;
+      let closeCallback: (...args: any[]) => void | undefined;
 
       vi.mocked(net.createConnection).mockImplementation((path, callback) => {
-        connectionCallback = callback as Function;
+        connectionCallback = callback as (...args: any[]) => void;
         return mockSocket as unknown as net.Socket;
       });
 
       mockSocket.on.mockImplementation((event, callback) => {
         if (event === 'close') {
-          closeCallback = callback as Function;
+          closeCallback = callback as (...args: any[]) => void;
         }
         return mockSocket;
       });
@@ -483,17 +483,17 @@ describe('ElectronIpcClient', () => {
     });
 
     it('should handle malformed JSON responses', async () => {
-      let connectionCallback: Function | undefined;
-      let dataCallback: Function | undefined;
+      let connectionCallback: (...args: any[]) => void | undefined;
+      let dataCallback: (...args: any[]) => void | undefined;
 
       vi.mocked(net.createConnection).mockImplementation((path, callback) => {
-        connectionCallback = callback as Function;
+        connectionCallback = callback as (...args: any[]) => void;
         return mockSocket as unknown as net.Socket;
       });
 
       mockSocket.on.mockImplementation((event, callback) => {
         if (event === 'data') {
-          dataCallback = callback as Function;
+          dataCallback = callback as (...args: any[]) => void;
         }
         return mockSocket;
       });
@@ -532,17 +532,17 @@ describe('ElectronIpcClient', () => {
     }, 10000);
 
     it('should handle response for unknown request ID', async () => {
-      let connectionCallback: Function | undefined;
-      let dataCallback: Function | undefined;
+      let connectionCallback: (...args: any[]) => void | undefined;
+      let dataCallback: (...args: any[]) => void | undefined;
 
       vi.mocked(net.createConnection).mockImplementation((path, callback) => {
-        connectionCallback = callback as Function;
+        connectionCallback = callback as (...args: any[]) => void;
         return mockSocket as unknown as net.Socket;
       });
 
       mockSocket.on.mockImplementation((event, callback) => {
         if (event === 'data') {
-          dataCallback = callback as Function;
+          dataCallback = callback as (...args: any[]) => void;
         }
         return mockSocket;
       });
@@ -583,17 +583,17 @@ describe('ElectronIpcClient', () => {
     }, 10000);
 
     it('should skip empty messages', async () => {
-      let connectionCallback: Function | undefined;
-      let dataCallback: Function | undefined;
+      let connectionCallback: (...args: any[]) => void | undefined;
+      let dataCallback: (...args: any[]) => void | undefined;
 
       vi.mocked(net.createConnection).mockImplementation((path, callback) => {
-        connectionCallback = callback as Function;
+        connectionCallback = callback as (...args: any[]) => void;
         return mockSocket as unknown as net.Socket;
       });
 
       mockSocket.on.mockImplementation((event, callback) => {
         if (event === 'data') {
-          dataCallback = callback as Function;
+          dataCallback = callback as (...args: any[]) => void;
         }
         return mockSocket;
       });
@@ -630,10 +630,10 @@ describe('ElectronIpcClient', () => {
     });
 
     it('should handle connection attempt on already connected client', async () => {
-      let connectionCallback: Function | undefined;
+      let connectionCallback: (...args: any[]) => void | undefined;
 
       vi.mocked(net.createConnection).mockImplementation((path, callback) => {
-        connectionCallback = callback as Function;
+        connectionCallback = callback as (...args: any[]) => void;
         return mockSocket as unknown as net.Socket;
       });
 
@@ -680,17 +680,17 @@ describe('ElectronIpcClient', () => {
     });
 
     it('should attempt reconnection after connection loss', async () => {
-      let connectionCallback: Function | undefined;
-      let errorCallback: Function | undefined;
+      let connectionCallback: (...args: any[]) => void | undefined;
+      let errorCallback: (...args: any[]) => void | undefined;
 
       vi.mocked(net.createConnection).mockImplementation((path, callback) => {
-        connectionCallback = callback as Function;
+        connectionCallback = callback as (...args: any[]) => void;
         return mockSocket as unknown as net.Socket;
       });
 
       mockSocket.on.mockImplementation((event, callback) => {
         if (event === 'error') {
-          errorCallback = callback as Function;
+          errorCallback = callback as (...args: any[]) => void;
         }
         return mockSocket;
       });
@@ -724,18 +724,18 @@ describe('ElectronIpcClient', () => {
     });
 
     it('should give up after max reconnection attempts', async () => {
-      let connectionCallback: Function | undefined;
-      let errorCallback: Function | undefined;
+      let connectionCallback: (...args: any[]) => void | undefined;
+      let errorCallback: (...args: any[]) => void | undefined;
 
       // Mock multiple connection attempts that fail
       vi.mocked(net.createConnection).mockImplementation((path, callback) => {
-        connectionCallback = callback as Function;
+        connectionCallback = callback as (...args: any[]) => void;
         return mockSocket as unknown as net.Socket;
       });
 
       mockSocket.on.mockImplementation((event, callback) => {
         if (event === 'error') {
-          errorCallback = callback as Function;
+          errorCallback = callback as (...args: any[]) => void;
         }
         return mockSocket;
       });
@@ -767,17 +767,17 @@ describe('ElectronIpcClient', () => {
 
     it('should clear existing reconnect timeout when handling new disconnect', async () => {
       // This test verifies that clearTimeout is called during client close
-      let connectionCallback: Function | undefined;
-      let errorCallback: Function | undefined;
+      let connectionCallback: (...args: any[]) => void | undefined;
+      let errorCallback: (...args: any[]) => void | undefined;
 
       vi.mocked(net.createConnection).mockImplementation((path, callback) => {
-        connectionCallback = callback as Function;
+        connectionCallback = callback as (...args: any[]) => void;
         return mockSocket as unknown as net.Socket;
       });
 
       mockSocket.on.mockImplementation((event, callback) => {
         if (event === 'error') {
-          errorCallback = callback as Function;
+          errorCallback = callback as (...args: any[]) => void;
         }
         return mockSocket;
       });
@@ -838,10 +838,10 @@ describe('ElectronIpcClient', () => {
     });
 
     it('should handle JSON stringify error in sendRequest', async () => {
-      let connectionCallback: Function | undefined;
+      let connectionCallback: (...args: any[]) => void | undefined;
 
       vi.mocked(net.createConnection).mockImplementation((path, callback) => {
-        connectionCallback = callback as Function;
+        connectionCallback = callback as (...args: any[]) => void;
         return mockSocket as unknown as net.Socket;
       });
 
@@ -861,17 +861,17 @@ describe('ElectronIpcClient', () => {
     });
 
     it('should handle write failure without pending request', async () => {
-      let connectionCallback: Function | undefined;
+      let connectionCallback: (...args: any[]) => void | undefined;
 
       vi.mocked(net.createConnection).mockImplementation((path, callback) => {
-        connectionCallback = callback as Function;
+        connectionCallback = callback as (...args: any[]) => void;
         return mockSocket as unknown as net.Socket;
       });
 
       // Mock write to fail after clearing the request from queue
-      let writeCallback: Function | undefined;
+      let writeCallback: (...args: any[]) => void | undefined;
       mockSocket.write.mockImplementation((data, callback) => {
-        writeCallback = callback as Function;
+        writeCallback = callback as (...args: any[]) => void;
         return true;
       });
 
@@ -923,9 +923,9 @@ describe('ElectronIpcClient', () => {
 
     it('should close the socket connection', async () => {
       // Setup connection callback
-      let connectionCallback: Function | undefined;
+      let connectionCallback: (...args: any[]) => void | undefined;
       vi.mocked(net.createConnection).mockImplementation((path, callback) => {
-        connectionCallback = callback as Function;
+        connectionCallback = callback as (...args: any[]) => void;
         return mockSocket as unknown as net.Socket;
       });
 
@@ -951,17 +951,17 @@ describe('ElectronIpcClient', () => {
     });
 
     it('should clear reconnect timeout when closing', async () => {
-      let connectionCallback: Function | undefined;
-      let errorCallback: Function | undefined;
+      let connectionCallback: (...args: any[]) => void | undefined;
+      let errorCallback: (...args: any[]) => void | undefined;
 
       vi.mocked(net.createConnection).mockImplementation((path, callback) => {
-        connectionCallback = callback as Function;
+        connectionCallback = callback as (...args: any[]) => void;
         return mockSocket as unknown as net.Socket;
       });
 
       mockSocket.on.mockImplementation((event, callback) => {
         if (event === 'error') {
-          errorCallback = callback as Function;
+          errorCallback = callback as (...args: any[]) => void;
         }
         return mockSocket;
       });

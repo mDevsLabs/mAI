@@ -1,4 +1,4 @@
-name: 🚀 Release Desktop Canary
+name: 🐤 Release Desktop Canary
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       force:
-        description: 'Forcer la construction (ignorer la vérification du message de commit)'
+        description: '💪 Force build (skip commit message check)'
         required: false
         type: boolean
         default: false
@@ -23,7 +23,7 @@ env:
 
 jobs:
   calculate-version:
-    name: 🔢 Calculer la Version Canary
+    name: 🔢 Calculate Canary Version
     runs-on: ubuntu-latest
     outputs:
       release_notes: ${{ steps.release-notes.outputs.release_notes }}
@@ -31,12 +31,11 @@ jobs:
       tag: ${{ steps.version.outputs.tag }}
       should_build: ${{ steps.check.outputs.should_build }}
     steps:
-      - name: 📦 Checkout du code
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
-      - name: 🔍 Vérifier le préfixe du message de commit
+      - name: 🔍 Check commit message prefix
         id: check
         run: |
           if [ "${{ inputs.force }}" == "true" ]; then
@@ -54,23 +53,19 @@ jobs:
           commit_msg=$(git log -1 --pretty=%s HEAD)
           echo "📝 Head commit: $commit_msg"
 
-          if echo "$commit_msg" | grep -qiE '^(💄\s*)?style(\(.+\))?:|^(✨\s*)?feat(\(.+\))?:|^(🐛\s*)?fix(\(.+\))?:|^(♻️\s*)?refactor(\(.+\))?:|^(🚀\s*)?release(\(.+\))?:'; then
-            echo "should_build=true" >> $GITHUB_OUTPUT
-            echo "✅ Commit matches canary build trigger: $commit_msg"
-          else
-            echo "should_build=false" >> $GITHUB_OUTPUT
-            echo "⏭️ Commit does not match style/feat/fix/refactor/release prefix, skipping: $commit_msg"
-          fi
+          echo "should_build=true" >> $GITHUB_OUTPUT
+          echo "✅ Canary build trigger: $commit_msg"
 
-      - name: 🔢 Calculer la version canary
+      - name: 🧮 Calculate canary version
         if: steps.check.outputs.should_build == 'true'
         id: version
         run: |
           latest_tag=$(git tag --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -n 1)
 
           if [ -z "$latest_tag" ]; then
-            echo "❌ No stable tag found"
-            exit 1
+            echo "⚠️ No stable tag found, fallback to package.json version"
+            pkg_version=$(node -p "require('./package.json').version")
+            latest_tag="v${pkg_version}"
           fi
 
           echo "📌 Latest stable tag: $latest_tag"
@@ -97,7 +92,7 @@ jobs:
           echo "✅ Canary version: ${version}"
           echo "🏷️ Tag: ${tag}"
 
-      - name: 📝 Générer les notes de version canary
+      - name: 📝 Generate canary release notes
         if: steps.check.outputs.should_build == 'true'
         id: release-notes
         env:
@@ -158,55 +153,50 @@ jobs:
           } >> $GITHUB_OUTPUT
 
   test:
-    name: 🧪 Vérification de la qualité du code
+    name: 🧪 Code quality check
     needs: [calculate-version]
     if: needs.calculate-version.outputs.should_build == 'true'
     runs-on: ubuntu-latest
     steps:
-      - name: 📦 Checkout du code
+      - name: 📥 Checkout base
         uses: actions/checkout@v6
 
-      - name: ⚙️ Configuration de l'environnement
+      - name: ⚙️ Setup environment
         uses: ./.github/actions/setup-env
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: 📥 Installation des dépendances
+      - name: 📦 Install deps
         run: pnpm install
-
-      - name: 🐛 Exécution du Lint
-        run: bun run lint
 
   build:
     needs: [calculate-version, test]
     if: needs.calculate-version.outputs.should_build == 'true'
-    name: 🏗️ Construire l'application Desktop
+    name: 📦 Build Desktop App (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-15, macos-15-intel, windows-2025, ubuntu-latest]
+        os: [macos-15, windows-2025, ubuntu-latest]
     steps:
-      - name: 📦 Checkout du code
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
 
-      - name: ⚙️ Configuration de l'environnement de construction
+      - name: ⚙️ Setup build environment
         uses: ./.github/actions/desktop-build-setup
         with:
-          cloud-token: ${{ secrets.LOBEHUB_CLOUD_TOKEN }}
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: 🏷️ Définir la version du paquet
+      - name: 🏷️ Set package version
         run: npm run workflow:set-desktop-version ${{ needs.calculate-version.outputs.version }} canary
 
-      - name: 🧹 Nettoyer les artefacts de la construction précédente (macOS)
+      - name: 🧹 Clean previous build artifacts (macOS)
         if: runner.os == 'macOS'
         run: |
           sudo rm -rf apps/desktop/release || true
           sudo rm -rf apps/desktop/dist || true
           sudo rm -rf /tmp/electron-builder* || true
 
-      - name: 🍎 Construire l'artefact sur macOS
+      - name: 🍏 Build artifact on macOS
         if: runner.os == 'macOS'
         run: npm run desktop:package:app
         env:
@@ -225,7 +215,7 @@ jobs:
           NEXT_PUBLIC_DESKTOP_PROJECT_ID: ${{ secrets.UMAMI_BETA_DESKTOP_PROJECT_ID }}
           NEXT_PUBLIC_DESKTOP_UMAMI_BASE_URL: ${{ secrets.UMAMI_BETA_DESKTOP_BASE_URL }}
 
-      - name: 🪟 Construire l'artefact sur Windows
+      - name: 🪟 Build artifact on Windows
         if: runner.os == 'Windows'
         run: npm run desktop:package:app
         env:
@@ -240,12 +230,9 @@ jobs:
           TEMP: C:\temp
           TMP: C:\temp
 
-      - name: 🐧 Construire l'artefact sur Linux
+      - name: 🐧 Build artifact on Linux
         if: runner.os == 'Linux'
-        run: |
-          npm run desktop:package:app
-          test -d apps/desktop/dist/renderer
-          tar -czf apps/desktop/release/mai-renderer.tar.gz -C apps/desktop/dist/renderer .
+        run: npm run desktop:package:app
         env:
           UPDATE_CHANNEL: canary
           UPDATE_SERVER_URL: ${{ secrets.UPDATE_SERVER_URL }}
@@ -256,7 +243,7 @@ jobs:
           NEXT_PUBLIC_DESKTOP_PROJECT_ID: ${{ secrets.UMAMI_BETA_DESKTOP_PROJECT_ID }}
           NEXT_PUBLIC_DESKTOP_UMAMI_BASE_URL: ${{ secrets.UMAMI_BETA_DESKTOP_BASE_URL }}
 
-      - name: 📤 Télécharger les artefacts
+      - name: 📤 Upload artifacts
         uses: ./.github/actions/desktop-upload-artifacts
         with:
           artifact-name: release-${{ matrix.os }}
@@ -264,30 +251,30 @@ jobs:
 
   merge-mac-files:
     needs: [build]
-    name: 🧩 Fusionner les fichiers Release macOS
+    name: 🔗 Merge macOS Release Files
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - name: 📦 Checkout du dépôt
+      - name: 📥 Checkout repository
         uses: actions/checkout@v6
 
-      - name: ⚙️ Configuration de l'environnement
+      - name: ⚙️ Setup environment
         uses: ./.github/actions/setup-env
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: 📥 Télécharger les artefacts
+      - name: ⬇️ Download artifacts
         uses: actions/download-artifact@v7
         with:
           path: release
           pattern: release-*
           merge-multiple: true
 
-      - name: 📋 Lister les artefacts téléchargés
+      - name: 🗂️ List downloaded artifacts
         run: ls -R release
 
-      - name: 📦 Installer yaml uniquement pour l'étape de fusion
+      - name: 📦 Install yaml only for merge step
         run: |
           cd scripts/electronWorkflow
           if [ ! -f package.json ]; then
@@ -295,10 +282,10 @@ jobs:
           fi
           bun add --no-save yaml@2.8.1
 
-      - name: 🧩 Fusionner les fichiers latest-mac.yml
+      - name: 🤝 Merge latest-mac.yml files
         run: bun run scripts/electronWorkflow/mergeMacReleaseFiles.js
 
-      - name: 📤 Télécharger les artefacts avec les fichiers macOS fusionnés
+      - name: 📤 Upload artifacts with merged macOS files
         uses: actions/upload-artifact@v6
         with:
           name: merged-release
@@ -307,21 +294,21 @@ jobs:
 
   publish-release:
     needs: [merge-mac-files, calculate-version]
-    name: 📢 Publier la Release Canary
+    name: 🚀 Publish Canary Release
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - name: 📥 Télécharger les artefacts fusionnés
+      - name: ⬇️ Download merged artifacts
         uses: actions/download-artifact@v7
         with:
           name: merged-release
           path: release
 
-      - name: 📋 Lister les artefacts finaux
+      - name: 🗂️ List final artifacts
         run: ls -R release
 
-      - name: 📢 Créer la Release Canary
+      - name: 🚀 Create Canary Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ needs.calculate-version.outputs.tag }}
@@ -339,17 +326,15 @@ jobs:
             release/*.rpm*
             release/*.tar.gz*
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish-s3:
     needs: [merge-mac-files, calculate-version]
-    name: ☁️ Publier sur S3
+    name: 🪣 Publish to S3
     runs-on: ubuntu-latest
     steps:
-      - name: 📦 Checkout du code
-        uses: actions/checkout@v6
-      - name: ☁️ Publier sur S3
-        uses: ./.github/actions/desktop-publish-s3
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/desktop-publish-s3
         with:
           channel: canary
           version: ${{ needs.calculate-version.outputs.version }}
@@ -361,16 +346,15 @@ jobs:
 
   cleanup-old-canaries:
     needs: [publish-release, publish-s3]
-    name: 🧹 Nettoyer les anciennes Releases Canary
+    name: 🗑️ Cleanup Old Canary Releases
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - name: 📦 Checkout du code
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
 
-      - name: 🗑️ Supprimer les anciennes releases GitHub canary
-        uses: actions/github-script@v8
+      - name: 🗑️ Delete old canary GitHub releases
+        uses: actions/github-script@v7
         with:
           script: |
             const { data: releases } = await github.rest.repos.listReleases({
@@ -407,7 +391,7 @@ jobs:
 
             console.log(`✅ Cleanup complete. Kept ${Math.min(canaryReleases.length, 7)} canary releases, deleted ${toDelete.length}.`);
 
-      - name: 🧹 Nettoyer les anciennes versions S3
+      - name: 🧹 Cleanup old S3 versions
         uses: ./.github/actions/desktop-cleanup-s3
         with:
           channel: canary

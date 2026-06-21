@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { defineConfig } = require('@lobehub/seo-cli');
 
 module.exports = defineConfig({
