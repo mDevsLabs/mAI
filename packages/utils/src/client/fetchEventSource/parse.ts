@@ -1,5 +1,6 @@
 //@ts-nocheck
 
+// eslint-disable-next-line @eslint-community/eslint-comments/no-unlimited-disable, unicorn/no-abusive-eslint-disable
 /* eslint-disable */
 /**
  * Represents a message sent in an event stream

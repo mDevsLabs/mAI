@@ -1,4 +1,5 @@
 // @ts-nocheck
+/* eslint-disable no-console */
 import OpenAI from 'openai';
 
 import type { Agent, AgentRuntimeContext, AgentState } from '../src';

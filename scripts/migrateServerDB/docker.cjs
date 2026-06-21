@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 const { join } = require('node:path');
 const { Pool } = require('pg');
 const { drizzle } = require('drizzle-orm/node-postgres');

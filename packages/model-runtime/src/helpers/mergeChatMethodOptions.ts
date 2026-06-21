@@ -104,22 +104,22 @@ export const mergeMultipleChatMethodOptions = (options: ChatMethodOptions[]): Ch
         }
       },
     },
+    headers: options.reduce((acc, option) => {
+      if (option)
+        return {
+          ...acc,
+          ...option.headers,
+        };
+      return acc;
+    }, {}),
+    requestHeaders: options.reduce((acc, option) => {
+      if (option)
+        return {
+          ...acc,
+          ...option.requestHeaders,
+        };
+      return acc;
+    }, {}),
   };
-  completionOptions.headers = options.reduce((acc, option) => {
-    if (option)
-      return {
-        ...acc,
-        ...option.headers,
-      };
-    return acc;
-  }, {});
-  completionOptions.requestHeaders = options.reduce((acc, option) => {
-    if (option)
-      return {
-        ...acc,
-        ...option.requestHeaders,
-      };
-    return acc;
-  }, {});
   return completionOptions;
 };

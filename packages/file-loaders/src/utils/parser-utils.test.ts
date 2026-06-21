@@ -49,7 +49,7 @@ describe('parser-utils', () => {
     it('should read entries via yauzl.fromBuffer and filter matches', async () => {
       // Arrange: build a fake zipfile object with two file entries and one directory
       const entryHandlers: Record<string, (cb: () => void) => void> = {};
-      const listeners: Record<string, Function[]> = { entry: [], end: [], error: [] };
+      const listeners: Record<string, ((...args: any[]) => void)[]> = { entry: [], end: [], error: [] };
       let idx = 0;
       const sequence = [
         { fileName: 'folder/' },
@@ -91,7 +91,7 @@ describe('parser-utils', () => {
             cb(null, undefined as any);
           }
         }),
-        on: vi.fn((evt: string, handler: Function) => {
+        on: vi.fn((evt: string, handler: (...args: any[]) => void) => {
           listeners[evt] = listeners[evt] || [];
           listeners[evt].push(handler);
         }),
@@ -117,7 +117,7 @@ describe('parser-utils', () => {
     });
 
     it('should open zip by file path when input is string', async () => {
-      const listeners: Record<string, Function[]> = { entry: [], end: [], error: [] };
+      const listeners: Record<string, ((...args: any[]) => void)[]> = { entry: [], end: [], error: [] };
       let idx = 0;
       const entries = [{ fileName: 'keep.txt' }];
       const emit2 = (name: string, payload?: any) =>
@@ -146,7 +146,7 @@ describe('parser-utils', () => {
           };
           cb(null, stream);
         }),
-        on: vi.fn((evt: string, handler: Function) => {
+        on: vi.fn((evt: string, handler: (...args: any[]) => void) => {
           listeners[evt] = listeners[evt] || [];
           listeners[evt].push(handler);
         }),
@@ -168,7 +168,7 @@ describe('parser-utils', () => {
     });
 
     it('should handle openReadStream error', async () => {
-      const listeners: Record<string, Function[]> = { entry: [], end: [], error: [] };
+      const listeners: Record<string, ((...args: any[]) => void)[]> = { entry: [], end: [], error: [] };
       const emit = (name: string, payload?: any) =>
         (listeners[name] || []).forEach((fn) => fn(payload));
 
@@ -179,7 +179,7 @@ describe('parser-utils', () => {
         openReadStream: vi.fn((entry: any, cb: (err: any, stream?: any) => void) => {
           cb(new Error('Failed to open stream'));
         }),
-        on: vi.fn((evt: string, handler: Function) => {
+        on: vi.fn((evt: string, handler: (...args: any[]) => void) => {
           listeners[evt] = listeners[evt] || [];
           listeners[evt].push(handler);
         }),
@@ -201,7 +201,7 @@ describe('parser-utils', () => {
     });
 
     it('should handle null readStream', async () => {
-      const listeners: Record<string, Function[]> = { entry: [], end: [], error: [] };
+      const listeners: Record<string, ((...args: any[]) => void)[]> = { entry: [], end: [], error: [] };
       const emit = (name: string, payload?: any) =>
         (listeners[name] || []).forEach((fn) => fn(payload));
 
@@ -212,7 +212,7 @@ describe('parser-utils', () => {
         openReadStream: vi.fn((entry: any, cb: (err: any, stream?: any) => void) => {
           cb(null, null); // readStream is null
         }),
-        on: vi.fn((evt: string, handler: Function) => {
+        on: vi.fn((evt: string, handler: (...args: any[]) => void) => {
           listeners[evt] = listeners[evt] || [];
           listeners[evt].push(handler);
         }),
@@ -234,8 +234,8 @@ describe('parser-utils', () => {
     });
 
     it('should handle readStream error', async () => {
-      const listeners: Record<string, Function[]> = { entry: [], end: [], error: [] };
-      const streamListeners: Record<string, Function[]> = { error: [] };
+      const listeners: Record<string, ((...args: any[]) => void)[]> = { entry: [], end: [], error: [] };
+      const streamListeners: Record<string, ((...args: any[]) => void)[]> = { error: [] };
       const emit = (name: string, payload?: any) =>
         (listeners[name] || []).forEach((fn) => fn(payload));
 
@@ -246,7 +246,7 @@ describe('parser-utils', () => {
         openReadStream: vi.fn((entry: any, cb: (err: any, stream?: any) => void) => {
           const stream = {
             pipe: vi.fn().mockReturnThis(),
-            on: vi.fn((evt: string, handler: Function) => {
+            on: vi.fn((evt: string, handler: (...args: any[]) => void) => {
               streamListeners[evt] = streamListeners[evt] || [];
               streamListeners[evt].push(handler);
               // Immediately trigger error
@@ -257,7 +257,7 @@ describe('parser-utils', () => {
           };
           cb(null, stream);
         }),
-        on: vi.fn((evt: string, handler: Function) => {
+        on: vi.fn((evt: string, handler: (...args: any[]) => void) => {
           listeners[evt] = listeners[evt] || [];
           listeners[evt].push(handler);
         }),
@@ -279,7 +279,7 @@ describe('parser-utils', () => {
     });
 
     it('should handle zipfile error', async () => {
-      const listeners: Record<string, Function[]> = { entry: [], end: [], error: [] };
+      const listeners: Record<string, ((...args: any[]) => void)[]> = { entry: [], end: [], error: [] };
       const emit = (name: string, payload?: any) =>
         (listeners[name] || []).forEach((fn) => fn(payload));
 
@@ -287,7 +287,7 @@ describe('parser-utils', () => {
         readEntry: vi.fn().mockImplementation(() => {
           queueMicrotask(() => emit('error', new Error('Zipfile error')));
         }),
-        on: vi.fn((evt: string, handler: Function) => {
+        on: vi.fn((evt: string, handler: (...args: any[]) => void) => {
           listeners[evt] = listeners[evt] || [];
           listeners[evt].push(handler);
         }),

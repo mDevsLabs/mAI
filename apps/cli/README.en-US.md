@@ -1,6 +1,6 @@
-# @lobehub/cli
+# @mdevs/mai-cli
 
-LobeHub command-line interface.
+mAI command-line interface.
 
 ## Local Development
 
@@ -8,23 +8,23 @@ LobeHub command-line interface.
 | --- | --- |
 | Run in dev mode | `bun run dev -- <command>` |
 | Build the CLI | `bun run build` |
-| Link `lh`/`lobe`/`lobehub` into your shell | `bun run cli:link` |
+| Link `mai` into your shell | `bun run cli:link` |
 | Remove the global link | `bun run cli:unlink` |
 
 - `bun run build` only generates `dist/index.js`.
-- To make `lh` available in your shell, run `bun run cli:link`.
-- After linking, if your shell still cannot find `lh`, run `rehash` in `zsh`.
+- To make `mai` available in your shell, run `bun run cli:link`.
+- After linking, if your shell still cannot find `mai`, run `rehash` in `zsh`.
 
 ## Custom Server URL
 
-By default the CLI connects to `https://app.lobehub.com`. To point it at a different server (e.g. a local instance):
+By default the CLI connects to `https://mai-officiel.vercel.app`. To point it at a different server (e.g. a local instance):
 
 | Method | Command | Persistence |
 | --- | --- | --- |
-| Environment variable | `LOBEHUB_SERVER=http://localhost:4000 bun run dev -- <command>` | Current command only |
-| Login flag | `lh login --server http://localhost:4000` | Saved to `~/.lobehub/settings.json` |
+| Environment variable | `MAI_SERVER=http://localhost:4000 bun run dev -- <command>` | Current command only |
+| Login flag | `mai login --server http://localhost:4000` | Saved to `~/.mai/settings.json` |
 
-Priority: `LOBEHUB_SERVER` env var > `settings.json` > default official URL.
+Priority: `MAI_SERVER` env var > `settings.json` > default official URL.
 
 ## Shell Completion
 
@@ -32,8 +32,8 @@ Priority: `LOBEHUB_SERVER` env var > `settings.json` > default official URL.
 
 | Shell | Command |
 | --- | --- |
-| `zsh` | `source <(lh completion zsh)` |
-| `bash` | `source <(lh completion bash)` |
+| `zsh` | `source <(mai completion zsh)` |
+| `bash` | `source <(mai completion bash)` |
 
 ### Use completion during local development
 
@@ -42,14 +42,14 @@ Priority: `LOBEHUB_SERVER` env var > `settings.json` > default official URL.
 | `zsh` | `source <(bun src/index.ts completion zsh)` |
 | `bash` | `source <(bun src/index.ts completion bash)` |
 
-- Completion is context-aware. For example, `lh agent <Tab>` shows agent subcommands instead of top-level commands.
+- Completion is context-aware. For example, `mai agent <Tab>` shows agent subcommands instead of top-level commands.
 - If you update completion logic locally, re-run the corresponding `source <(...)` command to reload it in the current shell session.
-- Completion only registers shell functions. It does not install the `lh` binary by itself.
+- Completion only registers shell functions. It does not install the `mai` binary by itself.
 
 ## Quick Check
 
 ```bash
-which lh
-lh --help
-lh agent <TAB>
+which mai
+mai --help
+mai agent <TAB>
 ```

@@ -69,46 +69,8 @@ const Version = memo<{ mobile?: boolean }>(({ mobile }) => {
       return null;
     }
 
-    const { stage, progress } = updaterState;
-
-    switch (stage) {
-      case 'checking': {
-        return (
-          <Button loading block={mobile}>
-            {t('checkForUpdates')}
-          </Button>
-        );
-      }
-      case 'downloading': {
-        const percent = progress ? Math.round(progress.percent) : 0;
-        return (
-          <Button loading block={mobile}>
-            {t('downloadingUpdate', { percent })}
-          </Button>
-        );
-      }
-      case 'downloaded': {
-        return (
-          <Button block={mobile} type="primary" onClick={() => void autoUpdateService.installNow()}>
-            {t('restartToUpdate')}
-          </Button>
-        );
-      }
-      case 'latest': {
-        return (
-          <Button disabled block={mobile}>
-            {t('alreadyUpToDate')}
-          </Button>
-        );
-      }
-      default: {
-        return (
-          <Button block={mobile} onClick={() => void autoUpdateService.checkUpdate()}>
-            {t('checkForUpdates')}
-          </Button>
-        );
-      }
-    }
+    // Mise à jour désactivée sur la version Desktop
+    return null;
   };
 
   return (

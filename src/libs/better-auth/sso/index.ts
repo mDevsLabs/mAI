@@ -6,26 +6,18 @@ import { authEnv } from '@/envs/auth';
 import { BUILTIN_BETTER_AUTH_PROVIDERS } from '@/libs/better-auth/constants';
 import { parseSSOProviders } from '@/libs/better-auth/utils/server';
 
-import Canva from './providers/canva';
 import Github from './providers/github';
 import Google from './providers/google';
 import Notion from './providers/notion';
 import Railway from './providers/railway';
-import Slack from './providers/slack';
-import Spotify from './providers/spotify';
-import Telegram from './providers/telegram';
 import Twitch from './providers/twitch';
 import X from './providers/x';
 
 const providerDefinitions = [
-  Canva,
   Google,
   Github,
   Notion,
   Railway,
-  Slack,
-  Spotify,
-  Telegram,
   Twitch,
   X,
 ] as const;
@@ -54,11 +46,7 @@ export const initBetterAuthSSOProviders = () => {
       'google',
       'github',
       'x',
-      'canva',
-      'slack',
       'notion',
-      'spotify',
-      'telegram',
       'twitch',
       'railway',
     ];

@@ -10,10 +10,15 @@ export interface TaskEntry {
   startedAt: string;
   taskId: string;
   topicId: string;
+  /**
+   * Workspace that owns the dispatched topic. Persisted so the cancel-time
+   * notify still scopes to the right workspace after the daemon restarts.
+   */
+  workspaceId?: string;
 }
 
 function getRegistryPath(): string {
-  return path.join(os.homedir(), '.lobehub', 'task-registry.json');
+  return path.join(os.homedir(), '.mai', 'task-registry.json');
 }
 
 function readRegistry(): Record<string, TaskEntry> {

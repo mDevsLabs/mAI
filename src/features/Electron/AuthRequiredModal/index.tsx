@@ -172,7 +172,8 @@ const AuthRequiredModal = memo(() => {
     }
 
     log('authorizationRequired: opening modal. reason=%s', reason);
-    open();
+    // Suppress the modal to prevent the infinite reconnect loop bug
+    // open();
   });
 
   return null;

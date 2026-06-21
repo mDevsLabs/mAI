@@ -13,6 +13,26 @@ const getJwksKeyString = () => {
   return authEnv.JWKS_KEY;
 };
 
+import crypto from 'node:crypto';
+
+let memoizedJwks: any = null;
+
+const generateFallbackJWKS = () => {
+  if (memoizedJwks) return memoizedJwks;
+
+  const { privateKey } = crypto.generateKeyPairSync('rsa', {
+    modulusLength: 2048,
+  });
+
+  const jwk = privateKey.export({ format: 'jwk' }) as any;
+  jwk.use = 'sig';
+  jwk.kid = crypto.randomBytes(8).toString('hex');
+  jwk.alg = 'RS256';
+
+  memoizedJwks = { keys: [jwk] };
+  return memoizedJwks;
+};
+
 /**
  * Get JWKS from environment variables
  * This JWKS is a JSON object containing RS256 private keys
@@ -22,9 +42,8 @@ export const getJWKS = (): object => {
     const jwksString = getJwksKeyString();
 
     if (!jwksString) {
-      throw new Error(
-        'JWKS_KEY environment variable is required. Please use scripts/generate-oidc-jwk.mjs to generate JWKS.',
-      );
+      log('JWKS_KEY environment variable is missing, generating a fallback in-memory JWKS key pair.');
+      return generateFallbackJWKS();
     }
 
     // Attempt to parse JWKS JSON string
@@ -52,11 +71,12 @@ const getVerificationKey = async () => {
   try {
     const jwksString = getJwksKeyString();
 
+    let jwks;
     if (!jwksString) {
-      throw new Error('JWKS_KEY environment variable is not set');
+      jwks = generateFallbackJWKS();
+    } else {
+      jwks = JSON.parse(jwksString);
     }
-
-    const jwks = JSON.parse(jwksString);
 
     if (!jwks.keys || !Array.isArray(jwks.keys) || jwks.keys.length === 0) {
       throw new Error('Invalid JWKS format: missing or empty keys array');

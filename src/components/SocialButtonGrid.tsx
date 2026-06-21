@@ -163,12 +163,12 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
 interface SocialButtonGridProps {
   /**
    * Ordered list of provider IDs for the dark row (row 1).
-   * Defaults to: ['google', 'slack', 'canva', 'telegram', 'railway']
+   * Defaults to: ['google', 'railway']
    */
   darkRowProviders?: string[];
   /**
    * Ordered list of provider IDs for the light row (row 2).
-   * Defaults to: ['github', 'x', 'twitch', 'notion', 'spotify']
+   * Defaults to: ['github', 'x', 'twitch', 'notion']
    */
   lightRowProviders?: string[];
   /** Provider ID currently in loading state */
@@ -177,8 +177,8 @@ interface SocialButtonGridProps {
   onSocialSignIn: (provider: string) => void;
 }
 
-const DEFAULT_DARK_ROW = ['google', 'slack', 'canva', 'telegram', 'railway'];
-const DEFAULT_LIGHT_ROW = ['github', 'x', 'twitch', 'notion', 'spotify'];
+const DEFAULT_DARK_ROW = ['google', 'railway'];
+const DEFAULT_LIGHT_ROW = ['github', 'x', 'twitch', 'notion'];
 
 // ─────────────────────────────────────────────────────────────
 // Helper: turn provider id into a short display name only
@@ -187,14 +187,10 @@ const DEFAULT_LIGHT_ROW = ['github', 'x', 'twitch', 'notion', 'spotify'];
 const DISPLAY_NAMES: Record<string, string> = {
   'google': 'Google',
   'github': 'GitHub',
-  'slack': 'Slack',
-  'canva': 'Canva',
-  'telegram': 'Telegram',
   'railway': 'Railway',
   'x': 'X',
   'twitch': 'Twitch',
   'notion': 'Notion',
-  'spotify': 'Spotify',
   'microsoft': 'Microsoft',
   'apple': 'Apple',
   'auth0': 'Auth0',
@@ -274,12 +270,16 @@ const SocialButtonGrid = memo<SocialButtonGridProps>(
     return (
       <div className={styles.gridContainer}>
         {/* ── Row 1 — dark background ── */}
-        <div className={`${styles.row} ${styles.rowDark}`}>{renderRow(darkRowProviders, 'dark')}</div>
+        {darkRowProviders.length > 0 && (
+          <div className={`${styles.row} ${styles.rowDark}`}>{renderRow(darkRowProviders, 'dark')}</div>
+        )}
 
         {/* ── Row 2 — light background ── */}
-        <div className={`${styles.row} ${styles.rowLight}`}>
-          {renderRow(lightRowProviders, 'light')}
-        </div>
+        {lightRowProviders.length > 0 && (
+          <div className={`${styles.row} ${styles.rowLight}`}>
+            {renderRow(lightRowProviders, 'light')}
+          </div>
+        )}
       </div>
     );
   },

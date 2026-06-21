@@ -166,10 +166,10 @@ export function registerProviderCommand(program: Command) {
           show?: boolean;
         },
       ) => {
-        // lobehub is a platform-managed provider, users cannot configure its API key or base URL
-        if (id === 'lobehub' && (options.apiKey !== undefined || options.baseUrl !== undefined)) {
+        // mai is a platform-managed provider, users cannot configure its API key or base URL
+        if (id === 'mai' && (options.apiKey !== undefined || options.baseUrl !== undefined)) {
           log.error(
-            `Provider "lobehub" is managed by the LobeHub platform. You cannot set --api-key or --base-url for it.`,
+            `Provider "mai" is managed by the mAI platform. You cannot set --api-key or --base-url for it.`,
           );
           process.exit(1);
         }

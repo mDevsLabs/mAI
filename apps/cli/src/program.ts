@@ -40,8 +40,8 @@ export function createProgram() {
   const program = new Command();
 
   program
-    .name('lh')
-    .description('LobeHub CLI - manage and connect to LobeHub services')
+    .name('mai')
+    .description('mAI CLI - manage and connect to mAI services')
     .version(cliVersion);
 
   registerLoginCommand(program);
