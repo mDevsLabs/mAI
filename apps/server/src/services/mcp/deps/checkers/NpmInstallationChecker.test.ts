@@ -51,7 +51,6 @@ describe('NpmInstallationChecker', () => {
         });
       });
 
-
       it('should return error when packageName is empty string', async () => {
         const result = await checker.checkPackageInstalled({ packageName: '' });
 
@@ -83,7 +82,6 @@ describe('NpmInstallationChecker', () => {
         });
         expect(mockExecFilePromise).not.toHaveBeenCalled();
       });
-
     });
 
     describe('global package detection', () => {
@@ -95,7 +93,11 @@ describe('NpmInstallationChecker', () => {
 
         const result = await checker.checkPackageInstalled({ packageName: 'typescript' });
 
-        expect(mockExecFilePromise).toHaveBeenCalledWith(expect.any(String), ['list', '-g', 'typescript', '--depth=0'], expect.objectContaining({ shell: expect.any(Boolean) }));
+        expect(mockExecFilePromise).toHaveBeenCalledWith(
+          expect.any(String),
+          ['list', '-g', 'typescript', '--depth=0'],
+          expect.objectContaining({ shell: expect.any(Boolean) }),
+        );
         expect(result).toEqual({
           installed: true,
           packageName: 'typescript',
@@ -110,7 +112,11 @@ describe('NpmInstallationChecker', () => {
 
         const result = await checker.checkPackageInstalled({ packageName: '@angular/cli' });
 
-        expect(mockExecFilePromise).toHaveBeenCalledWith(expect.any(String), ['list', '-g', '@angular/cli', '--depth=0'], expect.objectContaining({ shell: expect.any(Boolean) }));
+        expect(mockExecFilePromise).toHaveBeenCalledWith(
+          expect.any(String),
+          ['list', '-g', '@angular/cli', '--depth=0'],
+          expect.objectContaining({ shell: expect.any(Boolean) }),
+        );
         expect(result.installed).toBe(true);
       });
 
@@ -155,9 +161,14 @@ describe('NpmInstallationChecker', () => {
           1,
           expect.any(String),
           ['list', '-g', 'create-react-app', '--depth=0'],
-          expect.objectContaining({ shell: expect.any(Boolean) })
+          expect.objectContaining({ shell: expect.any(Boolean) }),
         );
-        expect(mockExecFilePromise).toHaveBeenNthCalledWith(2, expect.any(String), ['-y', 'create-react-app', '--version'], expect.objectContaining({ shell: expect.any(Boolean) }));
+        expect(mockExecFilePromise).toHaveBeenNthCalledWith(
+          2,
+          expect.any(String),
+          ['-y', 'create-react-app', '--version'],
+          expect.objectContaining({ shell: expect.any(Boolean) }),
+        );
         expect(result).toEqual({
           installed: true,
           packageName: 'create-react-app',
@@ -177,7 +188,12 @@ describe('NpmInstallationChecker', () => {
 
         const result = await checker.checkPackageInstalled({ packageName: 'cowsay' });
 
-        expect(mockExecFilePromise).toHaveBeenNthCalledWith(2, expect.any(String), ['-y', 'cowsay', '--version'], expect.objectContaining({ shell: expect.any(Boolean) }));
+        expect(mockExecFilePromise).toHaveBeenNthCalledWith(
+          2,
+          expect.any(String),
+          ['-y', 'cowsay', '--version'],
+          expect.objectContaining({ shell: expect.any(Boolean) }),
+        );
         expect(result.installed).toBe(true);
       });
     });
@@ -196,7 +212,11 @@ describe('NpmInstallationChecker', () => {
 
         await checker.checkPackageInstalled({ packageName: 'prettier' });
 
-        expect(mockExecFilePromise).toHaveBeenCalledWith(expect.any(String), ['-y', 'prettier', '--version'], expect.objectContaining({ shell: expect.any(Boolean) }));
+        expect(mockExecFilePromise).toHaveBeenCalledWith(
+          expect.any(String),
+          ['-y', 'prettier', '--version'],
+          expect.objectContaining({ shell: expect.any(Boolean) }),
+        );
       });
 
       it('should succeed if npx can execute package', async () => {
@@ -229,7 +249,12 @@ describe('NpmInstallationChecker', () => {
 
         await checker.checkPackageInstalled({ packageName: '@vue/cli' });
 
-        expect(mockExecFilePromise).toHaveBeenNthCalledWith(2, expect.any(String), ['-y', '@vue/cli', '--version'], expect.objectContaining({ shell: expect.any(Boolean) }));
+        expect(mockExecFilePromise).toHaveBeenNthCalledWith(
+          2,
+          expect.any(String),
+          ['-y', '@vue/cli', '--version'],
+          expect.objectContaining({ shell: expect.any(Boolean) }),
+        );
       });
     });
 
