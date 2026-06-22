@@ -3,9 +3,9 @@ import { useEffect } from 'react';
 import { resourceService } from '@/services/resource';
 import { useFileStore } from '@/store/file';
 import { AsyncTaskStatus } from '@/types/asyncTask';
-import { type FileListItem } from '@/types/files';
+import { type ResourceItem } from '@/types/resource';
 
-export const useCheckTaskStatus = (data: FileListItem[] | undefined) => {
+export const useCheckTaskStatus = (data: ResourceItem[] | undefined) => {
   const processingFileIds =
     data
       ?.filter(

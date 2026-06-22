@@ -3,7 +3,7 @@ import { cssVar } from 'antd-style';
 import { useTranslation } from 'react-i18next';
 
 import { useGlobalStore } from '@/store/global';
-import type { FileListItem } from '@/types/files';
+import type { ResourceItem } from '@/types/resource';
 
 import {
   useExplorerSelectionActions,
@@ -19,7 +19,7 @@ interface ListViewHeaderProps {
     name: number;
     size: number;
   };
-  data: FileListItem[];
+  data: ResourceItem[];
   hasMore: boolean;
 }
 

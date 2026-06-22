@@ -5,7 +5,7 @@ import { Virtuoso } from 'react-virtuoso';
 
 import { useResourceManagerStore } from '@/routes/(main)/resource/features/store';
 import { isExplorerItemSelected } from '@/routes/(main)/resource/features/store/selectors';
-import type { FileListItem } from '@/types/files';
+import type { ResourceItem } from '@/types/resource';
 
 import { useExplorerSelectionActions } from '../hooks/useExplorerSelection';
 import FileListItemComponent from './ListItem';
@@ -17,7 +17,7 @@ interface VirtualizedFileListProps {
     name: number;
     size: number;
   };
-  data: FileListItem[];
+  data: ResourceItem[];
   hasMore: boolean;
   virtuosoRef: RefObject<VirtuosoHandle | null>;
 }
@@ -40,7 +40,7 @@ const VirtualizedFileList = ({
     dataLength: data.length,
     hasMore,
   });
-  const dataRef = useRef<FileListItem[]>(data);
+  const dataRef = useRef<ResourceItem[]>(data);
   const lastSelectedIndexRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -95,7 +95,7 @@ const VirtualizedFileList = ({
       ref={virtuosoRef}
       style={{ height: 'calc(100vh - 100px)' }}
       itemContent={useCallback(
-        (index: number, item: FileListItem) => {
+        (index: number, item: ResourceItem) => {
           if (!item) return null;
 
           return (

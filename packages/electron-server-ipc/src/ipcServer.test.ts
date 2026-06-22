@@ -84,7 +84,7 @@ describe('ElectronIPCServer', () => {
 
       // Verify
       expect(net.createServer).toHaveBeenCalled();
-      expect(mockServer.listen).toHaveBeenCalledWith(mockSocketPath, expect.any((...args: any[]) => void));
+      expect(mockServer.listen).toHaveBeenCalledWith(mockSocketPath, expect.any(Function));
       expect(fs.writeFileSync).toHaveBeenCalledWith(
         mockSocketInfoPath,
         JSON.stringify({ socketPath: mockSocketPath }),
@@ -156,9 +156,9 @@ describe('ElectronIPCServer', () => {
       connectionHandler(mockSocket);
 
       // Verify socket listeners setup
-      expect(mockSocket.on).toHaveBeenCalledWith('data', expect.any((...args: any[]) => void));
-      expect(mockSocket.on).toHaveBeenCalledWith('error', expect.any((...args: any[]) => void));
-      expect(mockSocket.on).toHaveBeenCalledWith('close', expect.any((...args: any[]) => void));
+      expect(mockSocket.on).toHaveBeenCalledWith('data', expect.any(Function));
+      expect(mockSocket.on).toHaveBeenCalledWith('error', expect.any(Function));
+      expect(mockSocket.on).toHaveBeenCalledWith('close', expect.any(Function));
     });
 
     it('should parse messages with \n separator and execute handler', async () => {
