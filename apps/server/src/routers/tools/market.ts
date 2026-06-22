@@ -228,9 +228,7 @@ const execInSandboxHandler = async ({
       if (skillNames.length > 0) {
         const skills = await agentSkillModel.findByNames(skillNames);
 
-        const zipFileHashes = skills
-          .map((s) => s.zipFileHash)
-          .filter(Boolean) as string[];
+        const zipFileHashes = skills.map((s) => s.zipFileHash).filter(Boolean) as string[];
 
         if (zipFileHashes.length > 0) {
           const fileInfos = await fileModel.checkHashes(zipFileHashes);
@@ -248,7 +246,7 @@ const execInSandboxHandler = async ({
                   log('Resolved zipUrl for skill %s', matchingSkill.name);
                 }
               }
-            })
+            }),
           );
         }
       }
