@@ -467,9 +467,7 @@ export class DocumentService {
       });
 
       // Recursively delete all children
-      for (const child of children) {
-        await this.deleteDocument(child.id);
-      }
+      await Promise.all(children.map((child) => this.deleteDocument(child.id)));
 
       // Also delete all files in this folder
       const childFiles = await this.db.query.files.findMany({
@@ -479,9 +477,7 @@ export class DocumentService {
         ),
       });
 
-      for (const file of childFiles) {
-        await this.deleteFileRecordAndStorage(file.id);
-      }
+      await Promise.all(childFiles.map((file) => this.deleteFileRecordAndStorage(file.id)));
     }
 
     // Delete the associated file record if it exists
