@@ -23,19 +23,29 @@ export class NpmInstallationChecker implements InstallationChecker {
       };
     }
 
+    // Validate package name to prevent any unexpected shell execution, even with shell: true on Windows
+    const validPackageNameRegex = /^(?:@[a-z0-9\-*~][\w\-*.~]*\/)?[a-z0-9\-~][\w\-.~]*$/i;
+    if (!validPackageNameRegex.test(details.packageName)) {
+      return {
+        error: 'Invalid package name format',
+        installed: false,
+        packageName: details.packageName,
+      };
+    }
+
     try {
       const packageName = details.packageName;
 
       const npmCmd = process.platform === 'win32' ? 'npm.cmd' : 'npm';
       const npxCmd = process.platform === 'win32' ? 'npx.cmd' : 'npx';
+      const execOptions = { shell: process.platform === 'win32' };
 
       // Use npm list to check if package is globally installed
-      const { stdout: globalStdout } = await execPromise(npmCmd, [
-        'list',
-        '-g',
-        packageName,
-        '--depth=0',
-      ]);
+      const { stdout: globalStdout } = await execPromise(
+        npmCmd,
+        ['list', '-g', packageName, '--depth=0'],
+        execOptions,
+      );
       if (!globalStdout.includes('(empty)') && globalStdout.includes(packageName)) {
         return {
           installed: true,
@@ -44,7 +54,7 @@ export class NpmInstallationChecker implements InstallationChecker {
       }
 
       // Check if package can be used directly via npx (which also verifies if package is available)
-      await execPromise(npxCmd, ['-y', packageName, '--version']);
+      await execPromise(npxCmd, ['-y', packageName, '--version'], execOptions);
       return {
         installed: true,
         packageName,
