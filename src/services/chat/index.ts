@@ -60,15 +60,6 @@ import {
 import { type FetchOptions } from './types';
 
 const defaultProvider = ModelProvider.OpenAI;
-const providersWithDeploymentName = new Set<string>([
-  ModelProvider.Azure,
-  ModelProvider.AzureAI,
-  ModelProvider.KimiCodingPlan,
-  ModelProvider.Qwen,
-  ModelProvider.Spark,
-  ModelProvider.Volcengine,
-  ModelProvider.VolcengineCodingPlan,
-]);
 interface GetChatCompletionPayload extends Partial<Omit<ChatStreamPayload, 'messages'>> {
   agentId?: string;
   groupId?: string;
@@ -364,9 +355,7 @@ class ChatService {
     // =================== process model =================== //
     // ===================================================== //
     let model = res.model || DEFAULT_AGENT_CONFIG.model;
-    const deploymentName = providersWithDeploymentName.has(provider)
-      ? findDeploymentName(model, provider)
-      : undefined;
+    const deploymentName = findDeploymentName(model, provider);
     const shouldUseDeploymentField =
       (provider === ModelProvider.Azure && isResponsesAPIModel(model)) ||
       provider === ModelProvider.Spark;

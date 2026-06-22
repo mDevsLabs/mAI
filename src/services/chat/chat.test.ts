@@ -1758,6 +1758,12 @@ describe('ChatService', () => {
 
     it('should preserve Azure Responses-only logical model and pass deploymentName separately', async () => {
       useAiInfraStore.setState({
+        aiProviderDetailMap: {
+          [ModelProvider.Azure]: {
+            id: ModelProvider.Azure,
+            settings: { showDeployName: true },
+          } as any,
+        },
         enabledAiModels: [
           {
             config: { deploymentName: 'prod-gpt-54' },

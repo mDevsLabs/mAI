@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { useAiInfraStore } from '@/store/aiInfra';
 
 import {
+  findDeploymentName,
   getRuntimeModelKnowledgeCutoff,
   isCanUseAudio,
   isCanUseVideo,
@@ -12,7 +13,63 @@ import {
 
 describe('chat helper', () => {
   afterEach(() => {
-    useAiInfraStore.setState({ enabledAiModels: [] });
+    useAiInfraStore.setState({ enabledAiModels: [], aiProviderDetailMap: {} });
+  });
+
+  describe('findDeploymentName', () => {
+    it('should return undefined if provider settings do not show deploy name', () => {
+      useAiInfraStore.setState({
+        aiProviderDetailMap: {
+          'test-provider': {
+            id: 'test-provider',
+            settings: { showDeployName: false },
+          } as any,
+        },
+      });
+
+      expect(findDeploymentName('test-model', 'test-provider')).toBeUndefined();
+    });
+
+    it('should return the model id if provider shows deploy name but model has no specific deploymentName config', () => {
+      useAiInfraStore.setState({
+        aiProviderDetailMap: {
+          'test-provider': {
+            id: 'test-provider',
+            settings: { showDeployName: true },
+          } as any,
+        },
+        enabledAiModels: [
+          {
+            id: 'test-model',
+            providerId: 'test-provider',
+          } as any,
+        ],
+      });
+
+      expect(findDeploymentName('test-model', 'test-provider')).toBe('test-model');
+    });
+
+    it('should return the specific deploymentName if configured on the model and provider shows deploy name', () => {
+      useAiInfraStore.setState({
+        aiProviderDetailMap: {
+          'test-provider': {
+            id: 'test-provider',
+            settings: { showDeployName: true },
+          } as any,
+        },
+        enabledAiModels: [
+          {
+            id: 'test-model',
+            providerId: 'test-provider',
+            config: {
+              deploymentName: 'my-custom-deployment',
+            },
+          } as any,
+        ],
+      });
+
+      expect(findDeploymentName('test-model', 'test-provider')).toBe('my-custom-deployment');
+    });
   });
 
   it('should resolve LobeHub routed model abilities by model id fallback', () => {

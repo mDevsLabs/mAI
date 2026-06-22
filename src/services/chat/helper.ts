@@ -39,22 +39,20 @@ export const getRuntimeModelKnowledgeCutoff = (
   provider: string,
 ): string | undefined => getEnabledRuntimeModel(model, provider)?.knowledgeCutoff;
 
-/**
- * TODO: we need to update this function to auto find deploymentName with provider setting config
- */
-export const findDeploymentName = (model: string, provider: string) => {
-  let deploymentId = model;
+export const findDeploymentName = (model: string, provider: string): string | undefined => {
+  const state = getAiInfraStoreState();
+  const providerDetail = aiProviderSelectors.providerDetailById(provider)(state);
+
+  if (!providerDetail?.settings?.showDeployName) return undefined;
 
   // find the model by id
-  const modelItem = getAiInfraStoreState().enabledAiModels?.find(
+  const modelItem = state.enabledAiModels?.find(
     (i) => i.id === model && i.providerId === provider,
   );
 
-  if (modelItem && modelItem.config?.deploymentName) {
-    deploymentId = modelItem.config?.deploymentName;
-  }
+  if (modelItem && modelItem.config?.deploymentName) return modelItem.config?.deploymentName;
 
-  return deploymentId;
+  return model;
 };
 
 export const isEnableFetchOnClient = (provider: string) => {
