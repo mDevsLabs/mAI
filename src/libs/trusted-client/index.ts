@@ -60,8 +60,7 @@ export const generateTrustedClientToken = (userInfo: TrustedClientUserInfo): str
   try {
     const payload = buildTrustedClientPayload({
       clientId: MARKET_TRUSTED_CLIENT_ID,
-      // TODO: remove '' when sdk update
-      email: userInfo.email || '',
+      email: userInfo.email,
       name: userInfo.name,
       userId: userInfo.userId,
       workspaceId: userInfo.workspaceId,
