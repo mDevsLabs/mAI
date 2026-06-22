@@ -55,7 +55,7 @@ async function parseJsonResponse<T>(res: Response, endpoint: string): Promise<T>
 export function registerLoginCommand(program: Command) {
   program
     .command('login')
-    .description('Log in to mAI via browser (Device Code Flow) or configure API key server')
+    .description('Authenticate with the mAI server using the browser (Device Code Flow) or configure API key access')
     .option('--server <url>', 'mAI server URL', OFFICIAL_SERVER_URL)
     .action(async (options: LoginOptions) => {
       const serverUrl = normalizeUrl(options.server) || OFFICIAL_SERVER_URL;
@@ -112,7 +112,13 @@ export function registerLoginCommand(program: Command) {
           return;
         }
 
-        deviceAuth = await parseJsonResponse<DeviceAuthResponse>(res, '/oidc/device/auth');
+        const data = await parseJsonResponse<any>(res, '/oidc/device/auth');
+        if (data.error) {
+          log.error(`Failed to start device authorization: ${data.error} - ${data.error_description || ''}`);
+          process.exit(1);
+          return;
+        }
+        deviceAuth = data as DeviceAuthResponse;
       } catch (error: any) {
         log.error(`Failed to reach server: ${error.message}`);
         log.error(`Make sure ${serverUrl} is reachable.`);

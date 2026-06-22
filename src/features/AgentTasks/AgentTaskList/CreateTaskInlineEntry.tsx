@@ -6,7 +6,7 @@ import { Button } from 'antd';
 import { cssVar } from 'antd-style';
 import { $getRoot } from 'lexical';
 import { ChevronUp, Paperclip, UserCircle2 } from 'lucide-react';
-import { type KeyboardEvent, memo, useCallback, useEffect, useRef, useState } from 'react';
+import { type KeyboardEvent, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { EditorCanvas } from '@/features/EditorCanvas';
@@ -56,6 +56,8 @@ const CreateTaskInlineEntry = memo<CreateTaskInlineEntryProps>((props) => {
   const isHero = variant === 'hero';
   const { t } = useTranslation('chat');
   const { allowed: canCreateTask, reason } = usePermission('create_content');
+
+  const randomPlaceholderIndex = useMemo(() => Math.floor(Math.random() * 20), []);
 
   const createTask = useTaskStore((s) => s.createTask);
   const isCreating = useTaskStore((s) => s.isCreatingTask);
@@ -192,7 +194,7 @@ const CreateTaskInlineEntry = memo<CreateTaskInlineEntryProps>((props) => {
           disabled={!canCreateTask}
           editor={editor}
           floatingToolbar={false}
-          placeholder={placeholder ?? t('createTask.instructionPlaceholder')}
+          placeholder={placeholder ?? t(`createTask.instructionPlaceholder_${randomPlaceholderIndex}` as any)}
           style={{
             fontSize: isHero ? 16 : 14,
             minHeight: isHero ? 80 : undefined,

@@ -10,7 +10,7 @@ import { Notion } from '@lobehub/icons';
 import { type MenuProps } from '@lobehub/ui';
 import { Button, DropdownMenu, Icon, Tooltip } from '@lobehub/ui';
 import { Upload } from 'antd';
-import { FilePenLine, FileUp, FolderIcon, FolderUp, Link, Plus } from 'lucide-react';
+import { FilePenLine, FileUp, FolderIcon, FolderUp } from 'lucide-react';
 import { type ChangeEvent } from 'react';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -232,22 +232,6 @@ const AddButton = () => {
         key: 'upload-folder',
         label: <label htmlFor="folder-upload-input">{t('header.actions.uploadFolder')}</label>,
       },
-      {
-        type: 'divider',
-      },
-      {
-        children: [
-          {
-            icon: <Notion />,
-            key: 'connect-notion',
-            label: 'Notion',
-            onClick: handleOpenNotionGuide,
-          },
-        ],
-        icon: <Icon icon={Link} />,
-        key: 'connect',
-        label: t('header.actions.connect'),
-      },
     ],
     [
       category,
@@ -274,7 +258,7 @@ const AddButton = () => {
         }}
       >
         <Tooltip title={reason}>
-          <Button data-no-highlight disabled={!canCreate} icon={Plus} type="primary">
+          <Button data-no-highlight disabled={!canCreate} type="primary">
             {t('addLibrary')}
           </Button>
         </Tooltip>

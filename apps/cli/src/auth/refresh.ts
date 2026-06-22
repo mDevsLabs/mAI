@@ -1,7 +1,7 @@
 import { resolveServerUrl } from '../settings';
 import { loadCredentials, saveCredentials, type StoredCredentials } from './credentials';
 
-const CLIENT_ID = 'lobehub-cli';
+const CLIENT_ID = 'mai-cli';
 
 /**
  * Get a valid access token, refreshing if expired.
