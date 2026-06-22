@@ -422,8 +422,7 @@ export default class Browser {
     const { parentIdentifier } = this.options;
     if (!parentIdentifier) return;
 
-    // todo: fix ts type
-    const parentWin = this.app.browserManager.retrieveByIdentifier(parentIdentifier as any);
+    const parentWin = this.app.browserManager.retrieveByIdentifier(parentIdentifier);
     if (!parentWin) return;
 
     logger.debug(`[${this.identifier}] Found parent window: ${parentIdentifier}`);
