@@ -87,6 +87,14 @@ export class AgentSkillModel {
     return result;
   };
 
+  findByNames = async (names: string[]): Promise<SkillItem[]> => {
+    if (names.length === 0) return [];
+    return this.db
+      .select(skillItemColumns)
+      .from(agentSkills)
+      .where(and(inArray(agentSkills.name, names), this.scopeWhere()));
+  };
+
   findAll = async (): Promise<{ data: SkillListItem[]; total: number }> => {
     const data = await this.db
       .select(skillListColumns)

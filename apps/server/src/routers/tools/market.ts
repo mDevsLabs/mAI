@@ -221,19 +221,35 @@ const execInSandboxHandler = async ({
       // Resolve zipUrls for all activated skills
       const skillZipUrls: Record<string, string> = {};
 
-      for (const activatedSkill of enhancedParams.activatedSkills) {
-        if (!activatedSkill.name) continue;
+      const skillNames = enhancedParams.activatedSkills
+        .map((s: any) => s?.name)
+        .filter(Boolean) as string[];
 
-        const skill = await agentSkillModel.findByName(activatedSkill.name);
-        if (!skill?.zipFileHash) continue;
+      if (skillNames.length > 0) {
+        const skills = await agentSkillModel.findByNames(skillNames);
 
-        const fileInfo = await fileModel.checkHash(skill.zipFileHash);
-        if (!fileInfo.isExist || !fileInfo.url) continue;
+        const zipFileHashes = skills
+          .map((s) => s.zipFileHash)
+          .filter(Boolean) as string[];
 
-        const fullUrl = await ctx.fileService.getFullFileUrl(fileInfo.url);
-        if (fullUrl) {
-          skillZipUrls[activatedSkill.name] = fullUrl;
-          log('Resolved zipUrl for skill %s', activatedSkill.name);
+        if (zipFileHashes.length > 0) {
+          const fileInfos = await fileModel.checkHashes(zipFileHashes);
+
+          const validFiles = fileInfos.filter((f) => f.isExist && f.url);
+
+          await Promise.all(
+            validFiles.map(async (fileInfo) => {
+              const fullUrl = await ctx.fileService.getFullFileUrl(fileInfo.url);
+              if (fullUrl) {
+                // Find the corresponding skill for this hash
+                const matchingSkills = skills.filter((s) => s.zipFileHash === fileInfo.hashId);
+                for (const matchingSkill of matchingSkills) {
+                  skillZipUrls[matchingSkill.name] = fullUrl;
+                  log('Resolved zipUrl for skill %s', matchingSkill.name);
+                }
+              }
+            })
+          );
         }
       }
 

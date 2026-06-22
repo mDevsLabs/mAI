@@ -146,6 +146,23 @@ export class FileModel {
     };
   };
 
+  checkHashes = async (hashes: string[]) => {
+    if (hashes.length === 0) return [];
+
+    const items = await this.db.query.globalFiles.findMany({
+      where: inArray(globalFiles.hashId, hashes),
+    });
+
+    return items.map((item) => ({
+      fileType: item.fileType,
+      hashId: item.hashId,
+      isExist: true,
+      metadata: item.metadata,
+      size: item.size,
+      url: item.url,
+    }));
+  };
+
   delete = async (id: string, removeGlobalFile: boolean = true, trx?: Transaction) => {
     const executeInTransaction = async (tx: Transaction) => {
       // In pglite environment, non-transactional operations cannot be used within a transaction as it will block
