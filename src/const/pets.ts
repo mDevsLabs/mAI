@@ -1,6 +1,7 @@
 export type PetId =
   | 'apupepe'
   | 'boba-style'
+  | 'burgy'
   | 'bytepilot'
   | 'chibi-rilakkuma'
   | 'claude-pixel'
@@ -16,6 +17,7 @@ export type PetId =
   | 'grogu'
   | 'gugu'
   | 'helmet-bunny'
+  | 'jige'
   | 'jiji'
   | 'laughing-gemini'
   | 'levi'
@@ -239,5 +241,17 @@ export const PETS_LIST: PetConfig[] = [
     name: 'Tibo',
     description: "Tibo, un aventurier intrépide toujours prêt à explorer de nouvelles lignes de code.",
     category: 'Human',
+  },
+  {
+    id: 'burgy',
+    name: 'Burgy',
+    description: 'Un délicieux burger pour vous tenir compagnie.',
+    category: 'Mascot',
+  },
+  {
+    id: 'jige',
+    name: 'Jige',
+    description: 'Jige, votre nouveau compagnon dynamique.',
+    category: 'Animal',
   },
 ];

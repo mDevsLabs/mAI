@@ -11,6 +11,7 @@ import {
   Database,
   EllipsisIcon,
   EthernetPort,
+  FileClockIcon,
   Gift,
   Info,
   KeyboardIcon,
@@ -205,6 +206,11 @@ export const useCategory = () => {
         icon: Database,
         key: SettingsTabs.Storage,
         label: t('tab.storage'),
+      },
+      {
+        icon: FileClockIcon,
+        key: SettingsTabs.Changelog,
+        label: t('changelog'),
       },
       isDevMode && {
         icon: KeyIcon,

@@ -19,4 +19,4 @@ Ce document définit les règles et directives que chaque agent de codage interv
 - **Vérifications de types** : Ne lancez pas de vérifications globales comme `bun run type-check`. Limitez-vous à exécuter des tests uniquement sur les fichiers complexes qui viennent d'être modifiés.
 
 ## 5. Suivi et Améliorations Futures 🚀
-- À la fin de chaque mise à jour ou intervention, analysez les modifications et proposez à l'utilisateur d'autres changements futurs pertinents pour améliorer la base de code ou l'expérience utilisateur.
+- À la fin de chaque mise à jour ou intervention, analysez les modifications et proposez à l'utilisateur d'autres changements futurs pertinents pour améliorer la base de code ou l'expérience utilisateur. Proposez environ 3 améliorations.
