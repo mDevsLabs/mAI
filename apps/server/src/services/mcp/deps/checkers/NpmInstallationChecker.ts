@@ -1,9 +1,9 @@
-import { exec } from 'node:child_process';
+import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 
 import { type InstallationChecker, type PackageInstallCheckResult } from '../types';
 
-const execPromise = promisify(exec);
+const execPromise = promisify(execFile);
 
 /**
  * NPM Installation Checker
@@ -25,8 +25,17 @@ export class NpmInstallationChecker implements InstallationChecker {
 
     try {
       const packageName = details.packageName;
+
+      const npmCmd = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+      const npxCmd = process.platform === 'win32' ? 'npx.cmd' : 'npx';
+
       // Use npm list to check if package is globally installed
-      const { stdout: globalStdout } = await execPromise(`npm list -g ${packageName} --depth=0`);
+      const { stdout: globalStdout } = await execPromise(npmCmd, [
+        'list',
+        '-g',
+        packageName,
+        '--depth=0',
+      ]);
       if (!globalStdout.includes('(empty)') && globalStdout.includes(packageName)) {
         return {
           installed: true,
@@ -35,7 +44,7 @@ export class NpmInstallationChecker implements InstallationChecker {
       }
 
       // Check if package can be used directly via npx (which also verifies if package is available)
-      await execPromise(`npx -y ${packageName} --version`);
+      await execPromise(npxCmd, ['-y', packageName, '--version']);
       return {
         installed: true,
         packageName,

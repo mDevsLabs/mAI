@@ -71,7 +71,12 @@ describe('NpmInstallationChecker', () => {
 
         const result = await checker.checkPackageInstalled({ packageName: 'typescript' });
 
-        expect(mockExecPromise).toHaveBeenCalledWith('npm list -g typescript --depth=0');
+        expect(mockExecPromise).toHaveBeenCalledWith(expect.stringMatching(/^npm(\.cmd)?$/), [
+          'list',
+          '-g',
+          'typescript',
+          '--depth=0',
+        ]);
         expect(result).toEqual({
           installed: true,
           packageName: 'typescript',
@@ -86,7 +91,12 @@ describe('NpmInstallationChecker', () => {
 
         const result = await checker.checkPackageInstalled({ packageName: '@angular/cli' });
 
-        expect(mockExecPromise).toHaveBeenCalledWith('npm list -g @angular/cli --depth=0');
+        expect(mockExecPromise).toHaveBeenCalledWith(expect.stringMatching(/^npm(\.cmd)?$/), [
+          'list',
+          '-g',
+          '@angular/cli',
+          '--depth=0',
+        ]);
         expect(result.installed).toBe(true);
       });
 
@@ -127,11 +137,17 @@ describe('NpmInstallationChecker', () => {
 
         const result = await checker.checkPackageInstalled({ packageName: 'create-react-app' });
 
-        expect(mockExecPromise).toHaveBeenNthCalledWith(
-          1,
-          'npm list -g create-react-app --depth=0',
-        );
-        expect(mockExecPromise).toHaveBeenNthCalledWith(2, 'npx -y create-react-app --version');
+        expect(mockExecPromise).toHaveBeenNthCalledWith(1, expect.stringMatching(/^npm(\.cmd)?$/), [
+          'list',
+          '-g',
+          'create-react-app',
+          '--depth=0',
+        ]);
+        expect(mockExecPromise).toHaveBeenNthCalledWith(2, expect.stringMatching(/^npx(\.cmd)?$/), [
+          '-y',
+          'create-react-app',
+          '--version',
+        ]);
         expect(result).toEqual({
           installed: true,
           packageName: 'create-react-app',
@@ -151,7 +167,11 @@ describe('NpmInstallationChecker', () => {
 
         const result = await checker.checkPackageInstalled({ packageName: 'cowsay' });
 
-        expect(mockExecPromise).toHaveBeenNthCalledWith(2, 'npx -y cowsay --version');
+        expect(mockExecPromise).toHaveBeenNthCalledWith(2, expect.stringMatching(/^npx(\.cmd)?$/), [
+          '-y',
+          'cowsay',
+          '--version',
+        ]);
         expect(result.installed).toBe(true);
       });
     });
@@ -170,7 +190,11 @@ describe('NpmInstallationChecker', () => {
 
         await checker.checkPackageInstalled({ packageName: 'prettier' });
 
-        expect(mockExecPromise).toHaveBeenCalledWith('npx -y prettier --version');
+        expect(mockExecPromise).toHaveBeenCalledWith(expect.stringMatching(/^npx(\.cmd)?$/), [
+          '-y',
+          'prettier',
+          '--version',
+        ]);
       });
 
       it('should succeed if npx can execute package', async () => {
@@ -203,7 +227,11 @@ describe('NpmInstallationChecker', () => {
 
         await checker.checkPackageInstalled({ packageName: '@vue/cli' });
 
-        expect(mockExecPromise).toHaveBeenNthCalledWith(2, 'npx -y @vue/cli --version');
+        expect(mockExecPromise).toHaveBeenNthCalledWith(2, expect.stringMatching(/^npx(\.cmd)?$/), [
+          '-y',
+          '@vue/cli',
+          '--version',
+        ]);
       });
     });
 
