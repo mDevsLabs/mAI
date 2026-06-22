@@ -86,13 +86,15 @@ export function registerReviewCommands(task: Command) {
 
         if (options.recursive) {
           const subtasks = await client.task.getSubtasks.query({ id });
-          for (const s of subtasks.data || []) {
-            const subCurrent = (await client.task.getReview.query({ id: s.id })).data as any;
-            await client.task.updateReview.mutate({
-              id: s.id,
-              review: { ...review, rubrics: subCurrent?.rubrics || existingRubrics },
-            });
-          }
+          await Promise.all(
+            (subtasks.data || []).map(async (s) => {
+              const subCurrent = (await client.task.getReview.query({ id: s.id })).data as any;
+              await client.task.updateReview.mutate({
+                id: s.id,
+                review: { ...review, rubrics: subCurrent?.rubrics || existingRubrics },
+              });
+            })
+          );
           log.info(
             `Review enabled for ${pc.bold(id)} + ${(subtasks.data || []).length} subtask(s).`,
           );
@@ -236,9 +238,9 @@ export function registerReviewCommands(task: Command) {
 
         if (options.recursive) {
           const subtasks = await client.task.getSubtasks.query({ id });
-          for (const s of subtasks.data || []) {
-            await addToTask(s.id);
-          }
+          await Promise.all(
+            (subtasks.data || []).map((s) => addToTask(s.id))
+          );
           log.info(
             `Rubric "${options.name}" [${options.type}] added to ${pc.bold(id)} + ${(subtasks.data || []).length} subtask(s).`,
           );
@@ -271,9 +273,9 @@ export function registerReviewCommands(task: Command) {
 
       if (options.recursive) {
         const subtasks = await client.task.getSubtasks.query({ id });
-        for (const s of subtasks.data || []) {
-          await removeFromTask(s.id);
-        }
+        await Promise.all(
+          (subtasks.data || []).map((s) => removeFromTask(s.id))
+        );
         log.info(
           `Rubric "${options.name}" removed from ${pc.bold(id)} + ${(subtasks.data || []).length} subtask(s).`,
         );
