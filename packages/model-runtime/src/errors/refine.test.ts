@@ -127,6 +127,16 @@ describe('refineErrorCode', () => {
         }),
       ).toBe(AgentRuntimeErrorType.UpstreamHttpError);
     });
+
+    it('uses the structured status to detect InvalidProviderAPIKey (401)', () => {
+      expect(
+        refineErrorCode({
+          errorType: AgentRuntimeErrorType.ProviderBizError,
+          httpStatus: 401,
+          message: 'unauthorized',
+        }),
+      ).toBe(AgentRuntimeErrorType.InvalidProviderAPIKey);
+    });
   });
 
   describe('HTTP-status fallback (no message match)', () => {

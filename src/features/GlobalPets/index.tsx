@@ -7,6 +7,7 @@ import { memo, useEffect, useRef, useState } from 'react';
 
 import { useChatStore } from '@/store/chat';
 import { operationSelectors } from '@/store/chat/slices/operation/selectors';
+import { PETS_LIST } from '@/const/pets';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/slices/settings/selectors';
 
@@ -121,6 +122,9 @@ const Pet = memo(
     const [currentQuote, setCurrentQuote] = useState<{ text: string; author: string } | null>(null);
     const [showQuote, setShowQuote] = useState(false);
     const quoteTimerRef = useRef<any>(null);
+
+    const petConfig = PETS_LIST.find((p) => p.id === petId);
+    const imagePrefix = petConfig?.imagePrefix || petId;
 
     // Store previous isGenerating value to detect changes
     const prevIsGenerating = useRef(isGenerating);
@@ -274,7 +278,9 @@ const Pet = memo(
                 left: '50%',
                 transform: 'translateX(-50%)',
                 width: 260,
-                backgroundColor: 'var(--color-bg-container)',
+                background: 'var(--color-bg-elevated)',
+                backdropFilter: 'blur(12px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(12px) saturate(180%)',
                 border: '1px solid var(--color-border)',
                 borderRadius: '16px',
                 padding: '12px 16px',
@@ -318,7 +324,9 @@ const Pet = memo(
                   transform: 'translateX(-50%) rotate(45deg)',
                   width: 12,
                   height: 12,
-                  backgroundColor: 'var(--color-bg-container)',
+                  backgroundColor: 'var(--color-bg-elevated)',
+                  backdropFilter: 'blur(12px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(12px) saturate(180%)',
                   borderRight: '1px solid var(--color-border)',
                   borderBottom: '1px solid var(--color-border)',
                 }}
@@ -346,7 +354,7 @@ const Pet = memo(
             )}
             <img
               alt={petId}
-              src={`/pets/${petId}/${petId}-${animation}.gif`}
+              src={`/pets/${petId}/${imagePrefix}-${animation}.gif`}
               style={{
                 width: '100%',
                 height: '100%',

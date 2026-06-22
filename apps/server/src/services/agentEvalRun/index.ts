@@ -2133,19 +2133,21 @@ export class AgentEvalRunService {
     }
 
     // Write evalResult with duration for each timed-out topic
-    for (const row of timedOutRows) {
-      const duration = row.createdAt ? now - new Date(row.createdAt).getTime() : undefined;
-      await this.runTopicModel.updateByRunAndTopic(row.runId, row.topicId, {
-        evalResult: {
-          ...(row.evalResult as EvalRunTopicResult),
-          completionReason: 'timeout',
-          duration,
-          rubricScores: (row.evalResult as EvalRunTopicResult)?.rubricScores ?? [],
-        },
-        passed: false,
-        score: 0,
-      });
-    }
+    await Promise.all(
+      timedOutRows.map((row) => {
+        const duration = row.createdAt ? now - new Date(row.createdAt).getTime() : undefined;
+        return this.runTopicModel.updateByRunAndTopic(row.runId, row.topicId, {
+          evalResult: {
+            ...(row.evalResult as EvalRunTopicResult),
+            completionReason: 'timeout',
+            duration,
+            rubricScores: (row.evalResult as EvalRunTopicResult)?.rubricScores ?? [],
+          },
+          passed: false,
+          score: 0,
+        });
+      }),
+    );
 
     // Re-aggregate metrics from all RunTopics (including newly timed-out ones)
     const allTopics = await this.runTopicModel.findByRunId(run.id);

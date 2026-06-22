@@ -1,7 +1,7 @@
 import { memo } from 'react';
 
 import { isExplorerItemSelected } from '@/routes/(main)/resource/features/store/selectors';
-import { type FileListItem } from '@/types/files';
+import { type ResourceItem } from '@/types/resource';
 
 import MasonryFileItem from '.';
 
@@ -12,7 +12,7 @@ interface MasonryItemWrapperProps {
     selectAllState: 'all' | 'loaded' | 'none';
     selectFileIds: string[];
   };
-  data: FileListItem;
+  data: ResourceItem;
   index: number;
 }
 

@@ -8,7 +8,7 @@ import { shallow } from 'zustand/shallow';
 import { useResourceManagerStore } from '@/routes/(main)/resource/features/store';
 import { isExplorerItemSelected } from '@/routes/(main)/resource/features/store/selectors';
 import { fileManagerSelectors, useFileStore } from '@/store/file';
-import type { FileListItem as FileListItemType } from '@/types/files';
+import type { ResourceItem } from '@/types/resource';
 import { formatSize } from '@/utils/format';
 
 import { useFileItemClick } from '../../hooks/useFileItemClick';
@@ -106,7 +106,7 @@ const styles = createStaticStyles(({ css }) => {
   };
 });
 
-interface FileListItemProps extends FileListItemType {
+interface FileListItemProps extends ResourceItem {
   columnWidths: {
     date: number;
     name: number;

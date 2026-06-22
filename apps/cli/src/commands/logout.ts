@@ -7,7 +7,7 @@ import { log } from '../utils/logger';
 export function registerLogoutCommand(program: Command) {
   program
     .command('logout')
-    .description('Log out and remove stored credentials')
+    .description('Log out from the mAI server, terminate the device daemon, and remove stored credentials')
     .action(() => {
       // Tear down the connect daemon first — otherwise it keeps the device
       // online on the gateway with the cached token even after credentials are

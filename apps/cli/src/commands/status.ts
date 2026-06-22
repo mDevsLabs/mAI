@@ -18,7 +18,7 @@ interface StatusOptions {
 export function registerStatusCommand(program: Command) {
   program
     .command('status')
-    .description('Check if gateway connection can be established')
+    .description('Verify connection to the device gateway and test authentication credentials')
     .option('--token <jwt>', 'JWT access token')
     .option('--service-token <token>', 'Service token (requires --user-id)')
     .option('--user-id <id>', 'User ID (required with --service-token)')

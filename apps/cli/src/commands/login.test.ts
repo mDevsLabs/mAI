@@ -7,6 +7,8 @@ import { getUserIdFromApiKey } from '../auth/apiKey';
 import { saveCredentials } from '../auth/credentials';
 import { loadSettings, saveSettings } from '../settings';
 import { log } from '../utils/logger';
+import { CLI_API_KEY_ENV } from '../constants/auth';
+import { OFFICIAL_SERVER_URL } from '../constants/urls';
 import { registerLoginCommand, resolveCommandExecutable } from './login';
 
 vi.mock('../auth/apiKey', () => ({
@@ -17,6 +19,7 @@ vi.mock('../auth/credentials', () => ({
 }));
 vi.mock('../settings', () => ({
   loadSettings: vi.fn().mockReturnValue(null),
+  normalizeUrl: vi.fn((url) => url ? url.replace(/\/$/, '') : url),
   saveSettings: vi.fn(),
 }));
 
@@ -41,7 +44,7 @@ vi.mock('node:child_process', () => ({
 
 describe('login command', () => {
   let exitSpy: ReturnType<typeof vi.spyOn>;
-  const originalApiKey = process.env.LOBEHUB_CLI_API_KEY;
+  const originalApiKey = process.env[CLI_API_KEY_ENV];
   const originalPath = process.env.PATH;
   const originalPathext = process.env.PATHEXT;
   const originalSystemRoot = process.env.SystemRoot;
@@ -51,13 +54,17 @@ describe('login command', () => {
     vi.stubGlobal('fetch', vi.fn());
     exitSpy = vi.spyOn(process, 'exit').mockImplementation((() => {}) as any);
     vi.mocked(loadSettings).mockReturnValue(null);
-    delete process.env.LOBEHUB_CLI_API_KEY;
+    delete process.env[CLI_API_KEY_ENV];
   });
 
   afterEach(() => {
     vi.useRealTimers();
     exitSpy.mockRestore();
-    process.env.LOBEHUB_CLI_API_KEY = originalApiKey;
+    if (originalApiKey !== undefined) {
+      process.env[CLI_API_KEY_ENV] = originalApiKey;
+    } else {
+      delete process.env[CLI_API_KEY_ENV];
+    }
     process.env.PATH = originalPath;
     process.env.PATHEXT = originalPathext;
     process.env.SystemRoot = originalSystemRoot;
@@ -137,20 +144,20 @@ describe('login command', () => {
         refreshToken: 'refresh-tok',
       }),
     );
-    expect(saveSettings).toHaveBeenCalledWith({ serverUrl: 'https://app.lobehub.com' });
+    expect(saveSettings).toHaveBeenCalledWith({ serverUrl: OFFICIAL_SERVER_URL });
     expect(log.info).toHaveBeenCalledWith(expect.stringContaining('Login successful'));
   });
 
   it('should use environment api key without storing credentials', async () => {
-    process.env.LOBEHUB_CLI_API_KEY = 'sk-lh-env-test';
+    process.env[CLI_API_KEY_ENV] = 'sk-lh-env-test';
     vi.mocked(getUserIdFromApiKey).mockResolvedValue('user-123');
 
     const program = createProgram();
     await runLogin(program);
 
-    expect(getUserIdFromApiKey).toHaveBeenCalledWith('sk-lh-env-test', 'https://app.lobehub.com');
+    expect(getUserIdFromApiKey).toHaveBeenCalledWith('sk-lh-env-test', OFFICIAL_SERVER_URL);
     expect(saveCredentials).not.toHaveBeenCalled();
-    expect(saveSettings).toHaveBeenCalledWith({ serverUrl: 'https://app.lobehub.com' });
+    expect(saveSettings).toHaveBeenCalledWith({ serverUrl: OFFICIAL_SERVER_URL });
     expect(log.info).toHaveBeenCalledWith(expect.stringContaining('Login successful'));
   });
 
@@ -184,7 +191,7 @@ describe('login command', () => {
   });
 
   it('should preserve existing gateway for environment api key on the same server', async () => {
-    process.env.LOBEHUB_CLI_API_KEY = 'sk-lh-env-test';
+    process.env[CLI_API_KEY_ENV] = 'sk-lh-env-test';
     vi.mocked(getUserIdFromApiKey).mockResolvedValue('user-123');
     vi.mocked(loadSettings).mockReturnValueOnce({
       gatewayUrl: 'https://gateway.example.com',
@@ -237,6 +244,24 @@ describe('login command', () => {
     await runLoginAndAdvanceTimers(program);
 
     expect(log.error).toHaveBeenCalledWith(expect.stringContaining('Failed to start'));
+    expect(exitSpy).toHaveBeenCalledWith(1);
+  });
+
+  it('should handle device auth JSON error response', async () => {
+    vi.mocked(fetch).mockResolvedValueOnce({
+      json: vi.fn().mockResolvedValue({
+        error: 'invalid_client',
+        error_description: 'client authentication failed',
+      }),
+      ok: true,
+    } as any);
+
+    const program = createProgram();
+    await runLoginAndAdvanceTimers(program);
+
+    expect(log.error).toHaveBeenCalledWith(
+      expect.stringContaining('Failed to start device authorization: invalid_client - client authentication failed'),
+    );
     expect(exitSpy).toHaveBeenCalledWith(1);
   });
 

@@ -63,6 +63,15 @@ export const defaultClients: ClientMetadata[] = [
     token_endpoint_auth_method: 'none',
   },
   {
+    application_type: 'native',
+    client_id: 'mai-cli',
+    client_name: 'mAI CLI',
+    grant_types: ['urn:ietf:params:oauth:grant-type:device_code', 'refresh_token'],
+    logo_uri: 'https://hub-apac-1.lobeobjects.space/lobehub-desktop-icon.png',
+    response_types: [],
+    token_endpoint_auth_method: 'none',
+  },
+  {
     application_type: 'web',
     client_id: 'lobehub-market',
     client_name: 'LobeHub Marketplace',
