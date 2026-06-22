@@ -27,9 +27,7 @@ export const sessionsReducer = (state: LobeSessions, payload: SessionDispatch): 
         const { session } = payload;
         if (!session) return;
 
-        // TODO: Migrate Date type in the future to remove this ignore
-        // @ts-ignore
-        draft.unshift({ ...session, createdAt: new Date(), updatedAt: new Date() });
+        draft.unshift({ ...session, createdAt: Date.now(), updatedAt: Date.now() });
       });
     }
 
@@ -48,8 +46,7 @@ export const sessionsReducer = (state: LobeSessions, payload: SessionDispatch): 
         const index = draftState.findIndex((item) => item.id === id);
 
         if (index !== -1) {
-          // @ts-ignore
-          draftState[index] = { ...draftState[index], ...value, updatedAt: new Date() };
+          draftState[index] = { ...draftState[index], ...value, updatedAt: Date.now() };
         }
       });
     }

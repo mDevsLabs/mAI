@@ -32,8 +32,8 @@ describe('sessionsReducer', () => {
     expect(newState).toHaveLength(1);
     expect(newState[0]).toMatchObject({
       ...mockSession,
-      createdAt: expect.any(Date),
-      updatedAt: expect.any(Date),
+      createdAt: expect.any(Number),
+      updatedAt: expect.any(Number),
     });
   });
 
@@ -63,7 +63,7 @@ describe('sessionsReducer', () => {
     expect(newState[0]).toMatchObject({
       ...mockSession,
       group: 'abc',
-      updatedAt: expect.any(Date),
+      updatedAt: expect.any(Number),
     });
   });
 

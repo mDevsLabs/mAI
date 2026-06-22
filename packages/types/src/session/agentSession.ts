@@ -22,7 +22,7 @@ export type GroupMemberWithAgent = NewChatGroupAgent & AgentItem;
  */
 export interface LobeAgentSession {
   config: LobeAgentConfig;
-  createdAt: Date;
+  createdAt: number;
   group?: string;
   id: string;
   /** Market agent identifier for published agents */
@@ -32,14 +32,14 @@ export interface LobeAgentSession {
   pinned?: boolean;
   tags?: string[];
   type: LobeSessionType.Agent;
-  updatedAt: Date;
+  updatedAt: number;
 }
 
 /**
  * Group chat (not confuse with session group)
  */
 export interface LobeGroupSession {
-  createdAt: Date;
+  createdAt: number;
   group?: string;
   id: string; // Start with CHAT_GROUP_SESSION_ID_PREFIX
   members?: GroupMemberWithAgent[];
@@ -47,7 +47,7 @@ export interface LobeGroupSession {
   pinned?: boolean;
   tags?: string[];
   type: LobeSessionType.Group;
-  updatedAt: Date;
+  updatedAt: number;
 }
 
 export interface LobeAgentSettings {
