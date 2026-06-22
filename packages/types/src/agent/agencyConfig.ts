@@ -97,3 +97,23 @@ export interface LobeAgentAgencyConfig {
    */
   workingDirByDevice?: Record<string, string>;
 }
+
+/**
+ * Prunes keys from a merged agency config's workingDirByDevice if the patch
+ * explicitly provides `undefined` for those keys. (Merge functions typically
+ * skip undefined values, so explicit deletes must be handled manually).
+ */
+export function pruneWorkingDirByDeviceDeletes(
+  mergedTarget: Partial<LobeAgentAgencyConfig> | undefined | null,
+  patch: Partial<LobeAgentAgencyConfig> | undefined | null,
+): void {
+  if (!mergedTarget?.workingDirByDevice || !patch?.workingDirByDevice) {
+    return;
+  }
+
+  for (const [deviceId, dir] of Object.entries(patch.workingDirByDevice)) {
+    if (dir === undefined) {
+      delete mergedTarget.workingDirByDevice[deviceId];
+    }
+  }
+}
