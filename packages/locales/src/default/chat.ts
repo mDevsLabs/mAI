@@ -891,7 +891,7 @@ export default {
   'taskList.emptyHero.greeting_2': 'What shall we create today?',
   'taskList.emptyHero.greeting_3': 'How can I help you today?',
   'taskList.emptyHero.greeting_4': 'A new idea to explore?',
-  'taskList.emptyHero.greeting_5': 'What's the plan today?',
+  'taskList.emptyHero.greeting_5': 'What\'s the plan today?',
   'taskList.emptyHero.greeting_6': 'Ready to bring your projects to life?',
   'taskList.emptyHero.greeting_7': 'How can I be of service?',
   'taskList.emptyHero.greeting_8': 'A new challenge to tackle?',
