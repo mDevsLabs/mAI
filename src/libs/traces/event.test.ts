@@ -1,4 +1,4 @@
-import { TraceEventType } from '@lobechat/types';
+import { TraceEventType, TraceNameMap } from '@lobechat/types';
 import { diffChars } from 'diff';
 import { type LangfuseTraceClient } from 'langfuse-core';
 import { describe, expect, it } from 'vitest';
@@ -142,7 +142,7 @@ describe('TraceEventClient', () => {
       // 验证 _trace.update 是否被调用
       expect(updateSpy).toHaveBeenCalledWith({
         output: params.nextContent,
-        // tags: [TraceNameMap.UserEvents] // 当支持时添加
+        tags: [TraceNameMap.UserEvents],
       });
 
       // 验证 scoreObservation 是否被正确调用

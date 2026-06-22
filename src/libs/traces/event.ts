@@ -1,4 +1,4 @@
-import { TraceEventType } from '@lobechat/types';
+import { TraceEventType, TraceNameMap } from '@lobechat/types';
 import { diffChars } from 'diff';
 import { type LangfuseTraceClient } from 'langfuse-core';
 
@@ -118,8 +118,7 @@ export class TraceEventClient {
 
     this._trace.update({
       output: next,
-      // TODO: add tag when supported
-      // tags: [TraceNameMap.UserEvents]
+      tags: [TraceNameMap.UserEvents],
     });
 
     // score the observation if there is an id

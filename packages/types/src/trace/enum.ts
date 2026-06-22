@@ -11,6 +11,7 @@ export enum TraceNameMap {
   SummaryHistoryMessages = 'Summary History Messages',
   SummaryTopicTitle = 'Summary Topic Title',
   Translator = 'Translator',
+  UserEvents = 'User Events',
 }
 
 export enum TraceEventType {
