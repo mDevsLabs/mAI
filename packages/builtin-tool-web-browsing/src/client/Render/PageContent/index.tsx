@@ -1,5 +1,4 @@
 import type { CrawlPluginState } from '@lobechat/types';
-import type { CrawlErrorResult } from '@lobechat/web-crawler';
 import { Flexbox, ScrollShadow } from '@lobehub/ui';
 import { memo } from 'react';
 
@@ -31,16 +30,7 @@ const PagesContent = memo<PagesContentProps>(({ results, messageId, urls = [] })
           key={result.originalUrl}
           messageId={messageId}
           originalUrl={result.originalUrl}
-          result={
-            result.data ||
-            // TODO: Remove this in v2 as it's deprecated
-            ({
-              content: (result as any)?.content,
-              errorMessage: (result as any)?.errorMessage,
-              errorType: (result as any)?.errorType,
-              url: result.originalUrl,
-            } as CrawlErrorResult)
-          }
+          result={result.data!}
         />
       ))}
     </ScrollShadow>
