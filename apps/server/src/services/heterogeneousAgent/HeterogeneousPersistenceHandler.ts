@@ -38,7 +38,7 @@ const generateThreadId = () => `thd_${createNanoId(16)()}`;
  * output is short enough to keep the per-operation `processedKeys` set small.
  */
 const fnv1a = (input: string): string => {
-  let hash = 0x81_1c_9d_c5;
+  let hash = 0x81_1C_9D_C5;
   for (let i = 0; i < input.length; i += 1) {
     hash ^= input.charCodeAt(i);
     // FNV prime 0x01000193, applied via bit shifts to stay in 32-bit math.
@@ -810,10 +810,12 @@ export class HeterogeneousPersistenceHandler {
         await this.deps.messageModel.update(intent.assistantMessageId, buildUpdate(false));
 
         // Phase 2: create new tool rows with reducer-preallocated ids.
-        for (const tool of intent.tools) {
-          if (!tool.isNew) continue;
-          await this.deps.messageModel.create(
-            {
+        const newTools = intent.tools.filter((t) => t.isNew);
+        if (newTools.length > 0) {
+          const toolsToCreate = newTools.map((tool) => {
+            state.toolMsgIdByCallId.set(tool.payload.id, tool.toolMessageId);
+            return {
+              id: tool.toolMessageId,
               agentId: state.agentId ?? undefined,
               content: '',
               parentId: intent.assistantMessageId,
@@ -827,10 +829,9 @@ export class HeterogeneousPersistenceHandler {
               threadId: null,
               tool_call_id: tool.payload.id,
               topicId: state.topicId,
-            } as any,
-            tool.toolMessageId,
-          );
-          state.toolMsgIdByCallId.set(tool.payload.id, tool.toolMessageId);
+            } as any;
+          });
+          await this.deps.messageModel.batchCreate(toolsToCreate);
         }
 
         // Phase 3: backfill result_msg_id.
@@ -1045,10 +1046,12 @@ export class HeterogeneousPersistenceHandler {
 
         // Phase 2: create rows for new tools with their pre-allocated ids and
         // register them in the global tool-message map for tool_result lookup.
-        for (const t of intent.tools) {
-          if (!t.isNew) continue;
-          await this.deps.messageModel.create(
-            {
+        const newSubTools = intent.tools.filter((t) => t.isNew);
+        if (newSubTools.length > 0) {
+          const subToolsToCreate = newSubTools.map((t) => {
+            state.toolMsgIdByCallId.set(t.payload.id, t.toolMessageId);
+            return {
+              id: t.toolMessageId,
               agentId: state.agentId ?? undefined,
               content: '',
               parentId: intent.assistantMessageId,
@@ -1062,10 +1065,9 @@ export class HeterogeneousPersistenceHandler {
               threadId: intent.threadId,
               tool_call_id: t.payload.id,
               topicId: state.topicId,
-            } as any,
-            t.toolMessageId,
-          );
-          state.toolMsgIdByCallId.set(t.payload.id, t.toolMessageId);
+            } as any;
+          });
+          await this.deps.messageModel.batchCreate(subToolsToCreate);
         }
 
         // Phase 3: backfill result_msg_id on assistant.tools[].

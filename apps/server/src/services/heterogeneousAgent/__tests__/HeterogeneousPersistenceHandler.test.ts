@@ -93,6 +93,13 @@ const createHarness = (params: {
       messages.set(msgId, msg);
       return msg;
     }),
+    batchCreate: vi.fn(async (inputs: any[]) => {
+      return Promise.all(
+        inputs.map((input) => {
+          return messageModel.create(input, input.id);
+        })
+      );
+    }),
     update: vi.fn(async (id: string, patch: Partial<FakeMessage>) => {
       const existing = messages.get(id);
       if (!existing) return { success: false };
