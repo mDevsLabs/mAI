@@ -494,12 +494,14 @@ export class AgentDocumentVfsService {
       );
     }
 
-    for (const item of subtree) {
-      await this.agentDocumentModel.delete(
-        item.id,
-        item.fileType === DOCUMENT_FOLDER_TYPE ? 'recursive-delete' : 'user-delete',
-      );
-    }
+    await Promise.all(
+      subtree.map((item) =>
+        this.agentDocumentModel.delete(
+          item.id,
+          item.fileType === DOCUMENT_FOLDER_TYPE ? 'recursive-delete' : 'user-delete',
+        ),
+      ),
+    );
   }
 
   /**
