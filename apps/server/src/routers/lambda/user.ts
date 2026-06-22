@@ -14,6 +14,7 @@ import {
   SaveUserQuestionInputSchema,
   UserAgentOnboardingSchema,
   UserGuideSchema,
+  UserKeyVaultsSchema,
   UserOnboardingSchema,
   UserPreferenceSchema,
   UserSettingsSchema,
@@ -532,8 +533,8 @@ export const userRouter = router({
     let encryptedKeyVaults: string | null = null;
 
     if (keyVaults) {
-      // TODO: better to add a validation
-      const data = JSON.stringify(keyVaults);
+      const parsedKeyVaults = UserKeyVaultsSchema.parse(keyVaults);
+      const data = JSON.stringify(parsedKeyVaults);
       const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey();
 
       encryptedKeyVaults = await gateKeeper.encrypt(data);

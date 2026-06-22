@@ -51,13 +51,15 @@ export interface UserSettings {
  * Zod schema for partial UserSettings updates
  * Uses passthrough to allow any nested settings fields
  */
+import { UserKeyVaultsSchema } from './keyVaults';
+
 export const UserSettingsSchema = z
   .object({
     defaultAgent: z.any().optional(),
     general: z.any().optional(),
     hotkey: z.any().optional(),
     image: z.any().optional(),
-    keyVaults: z.any().optional(),
+    keyVaults: UserKeyVaultsSchema.optional(),
     languageModel: z.any().optional(),
     market: z.any().optional(),
     memory: z.any().optional(),
