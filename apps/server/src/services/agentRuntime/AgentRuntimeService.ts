@@ -33,6 +33,7 @@ import {
   type UIChatMessage,
 } from '@lobechat/types';
 import debug from 'debug';
+import { inArray } from 'drizzle-orm';
 import urlJoin from 'url-join';
 
 import { AgentOperationModel } from '@/database/models/agentOperation';
@@ -2037,17 +2038,27 @@ export class AgentRuntimeService {
       where: (m, { and, eq }) => and(eq(m.parentId, groupToolMessageId), eq(m.role, 'tool')),
     });
     let fulfilled = 0;
+    const unfulfilledIds: string[] = [];
+
     for (const child of children) {
       if (child.content && child.content.length > 0) {
         fulfilled += 1;
-        continue;
+      } else {
+        unfulfilledIds.push(child.id);
       }
-      const plugin = await this.serverDB.query.messagePlugins.findFirst({
-        where: (mp, { eq }) => eq(mp.id, child.id),
-      });
-      const pluginState = plugin?.state as { status?: string } | null;
-      if (pluginState?.status === 'completed' || pluginState?.status === 'error') fulfilled += 1;
     }
+
+    if (unfulfilledIds.length > 0) {
+      const plugins = await this.serverDB.query.messagePlugins.findMany({
+        where: (mp) => inArray(mp.id, unfulfilledIds),
+      });
+
+      for (const plugin of plugins) {
+        const pluginState = plugin?.state as { status?: string } | null;
+        if (pluginState?.status === 'completed' || pluginState?.status === 'error') fulfilled += 1;
+      }
+    }
+
     return fulfilled;
   }
 

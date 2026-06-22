@@ -1953,7 +1953,7 @@ describe('AgentRuntimeService', () => {
 
     it('multi-member: holds (no group-tool backfill, no resume) until the barrier is met', async () => {
       (service as any).serverDB.query = {
-        messagePlugins: { findFirst: vi.fn() },
+        messagePlugins: { findMany: vi.fn().mockResolvedValue([]) },
         messages: {
           findMany: vi
             .fn()
@@ -1985,7 +1985,7 @@ describe('AgentRuntimeService', () => {
 
     it('multi-member: last completion backfills the group tool and resumes', async () => {
       (service as any).serverDB.query = {
-        messagePlugins: { findFirst: vi.fn() },
+        messagePlugins: { findMany: vi.fn().mockResolvedValue([]) },
         messages: {
           findMany: vi.fn().mockResolvedValue([
             { content: 'a', id: 'anchor-0', role: 'tool' },
