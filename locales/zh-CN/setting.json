@@ -747,6 +747,7 @@
   "settingPets.section.choice": "宠物选择",
   "settingPets.section.options": "选项",
   "settingPets.store.action.add": "添加",
+  "settingPets.store.action.downloading": "下载中...",
   "settingPets.store.action.remove": "移除",
   "settingPets.store.category.alien": "外星人",
   "settingPets.store.category.all": "全部",

@@ -45,6 +45,7 @@ const Page = memo(() => {
           {selectedPets.map((petId) => {
             const petConfig = PETS_LIST.find((p) => p.id === petId);
             if (!petConfig) return null;
+            const imagePrefix = petConfig.imagePrefix || petId;
             return (
               <Flexbox
                 horizontal
@@ -60,7 +61,7 @@ const Page = memo(() => {
                 }}
               >
                 <Avatar
-                  avatar={`/pets/${petId}/${petId}-idle.gif`}
+                  avatar={`/pets/${petId}/${imagePrefix}-idle.gif`}
                   size={48}
                   style={{ background: 'transparent' }}
                 />

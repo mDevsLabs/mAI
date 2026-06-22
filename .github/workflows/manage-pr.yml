@@ -1,0 +1,99 @@
+name: 🔀 Gestion des PRs (Création & Maintenance)
+
+on:
+  push:
+    branches-ignore:
+      - 'canary'
+      - 'main'
+      - 'master'
+  schedule:
+    - cron: '0 0 */2 * *'
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  auto-pr:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Récupération du code
+        uses: actions/checkout@v4
+
+      - name: 🚀 Création ou Mise à jour de la PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TEMPLATE_PATH=".github/PULL_REQUEST_TEMPLATE.md"
+          
+          # Vérifier si le template existe, sinon utiliser un texte par défaut
+          if [ -f "$TEMPLATE_PATH" ]; then
+            BODY_ARG="--body-file $TEMPLATE_PATH"
+          else
+            BODY_ARG="--body \"PR générée automatiquement pour la branche ${GITHUB_REF_NAME}\""
+          fi
+
+          COMMIT_MSG="${{ github.event.head_commit.message }}"
+          # Fallback si le message de commit est vide ou indisponible
+          if [ -z "$COMMIT_MSG" ]; then
+            COMMIT_MSG="Mise à jour automatique de la branche ${GITHUB_REF_NAME}"
+          fi
+          
+          # Ne garder que la première ligne du commit pour le titre
+          PR_TITLE=$(echo "$COMMIT_MSG" | head -n 1)
+
+          BRANCH_NAME="${GITHUB_REF_NAME}"
+
+          # On vérifie si une PR existe déjà pour cette branche (ouverte)
+          PR_NUMBER=$(gh pr list --head "$BRANCH_NAME" --state open --json number --jq '.[0].number')
+
+          if [ -n "$PR_NUMBER" ]; then
+            echo "🔄 La PR #$PR_NUMBER existe déjà et est ouverte. Aucune action requise."
+          else
+            echo "🆕 Aucune PR trouvée. Création d'une nouvelle PR..."
+            eval "gh pr create --title \"$PR_TITLE\" --head \"$BRANCH_NAME\" --base main $BODY_ARG" || echo "⚠️ Erreur lors de la création de la PR (peut-être déjà fusionnée ou bloquée)."
+          fi
+
+  maintenance-pr:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Récupération du code
+        uses: actions/checkout@v4
+
+      - name: 🧹 Fermeture des PRs obsolètes (> 15 jours)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Lister les PRs ouvertes depuis plus de 15 jours
+          DATE_LIMIT=$(date -d "15 days ago" --iso-8601=seconds)
+          
+          # On boucle sur les vieilles PRs pour les fermer
+          PR_LIST=$(gh pr list --state open --json number,updatedAt -q ".[] | select(.updatedAt < \"$DATE_LIMIT\") | .number")
+          
+          for pr in $PR_LIST; do
+            echo "Fermeture de la PR #$pr pour inactivité de plus de 15 jours..."
+            gh pr comment $pr --body "🛑 Fermeture automatique car cette PR est inactive depuis plus de 15 jours."
+            gh pr close $pr
+          done
+
+      - name: 🔍 Détection de conflits et déclenchement d'OpenCode
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Lister toutes les PRs ouvertes qui sont en conflit (DIRTY)
+          PR_LIST=$(gh pr list --state open --json number,mergeStateStatus -q ".[] | select(.mergeStateStatus == \"DIRTY\") | .number")
+          
+          for pr in $PR_LIST; do
+            echo "⚠️ Conflit détecté sur la PR #$pr."
+            # Vérifier si OpenCode a déjà commenté récemment pour éviter le spam
+            LAST_COMMENT=$(gh pr view $pr --json comments -q ".comments[-1].body")
+            if [[ "$LAST_COMMENT" != *"/oc"* ]] && [[ "$LAST_COMMENT" != *"/opencode"* ]]; then
+               echo "Ajout du commentaire pour déclencher OpenCode..."
+               gh pr comment $pr --body "/oc Veuillez résoudre les conflits sur cette PR."
+            else
+               echo "OpenCode a déjà été sollicité récemment."
+            fi
+          done

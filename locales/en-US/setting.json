@@ -747,6 +747,7 @@
   "settingPets.section.choice": "Companion Selection",
   "settingPets.section.options": "Options",
   "settingPets.store.action.add": "Add",
+  "settingPets.store.action.downloading": "Downloading...",
   "settingPets.store.action.remove": "Remove",
   "settingPets.store.category.alien": "Aliens",
   "settingPets.store.category.all": "All",

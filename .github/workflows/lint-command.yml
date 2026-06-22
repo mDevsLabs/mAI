@@ -1,11 +1,25 @@
 name: 🐛 lint-command
 
 on:
-  push:
-    branches:
-      - '**'
-  pull_request: {}
-  workflow_dispatch: {}
+  pull_request:
+    types: [opened]
+  workflow_dispatch:
+    inputs:
+      quiet:
+        description: 'Activer le mode silencieux (--quiet)'
+        required: false
+        type: boolean
+        default: true
+      lint:
+        description: 'Quel linter exécuter ?'
+        required: false
+        type: choice
+        options:
+          - eslint
+          - prettier
+          - stylelint
+          - all
+        default: 'eslint'
 
 jobs:
   eslint:
@@ -33,6 +47,44 @@ jobs:
       - name: 📥 Installation des dépendances
         run: pnpm install
 
-      - name: 🐛 Exécution de ESLint
+      - name: 🐛 Exécution du Linter
         continue-on-error: true
-        run: pnpx eslint . --fix --quiet
+        run: |
+          LINT_TARGET="${{ github.event.inputs.lint || 'eslint' }}"
+          QUIET_FLAG="${{ github.event.inputs.quiet }}"
+          
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            QUIET_FLAG="true"
+          fi
+
+          QUIET_ARG=""
+          if [ "$QUIET_FLAG" == "true" ]; then
+            QUIET_ARG="--quiet"
+          fi
+
+          run_eslint() {
+            echo "Exécution de ESLint..."
+            pnpx eslint . --fix $QUIET_ARG
+          }
+
+          run_prettier() {
+            echo "Exécution de Prettier..."
+            pnpx prettier -c --write "**/**"
+          }
+
+          run_stylelint() {
+            echo "Exécution de Stylelint..."
+            pnpx stylelint "src/**/*.{js,jsx,ts,tsx}" --fix $QUIET_ARG
+          }
+
+          if [ "$LINT_TARGET" == "eslint" ]; then
+            run_eslint
+          elif [ "$LINT_TARGET" == "prettier" ]; then
+            run_prettier
+          elif [ "$LINT_TARGET" == "stylelint" ]; then
+            run_stylelint
+          elif [ "$LINT_TARGET" == "all" ]; then
+            run_eslint
+            run_prettier
+            run_stylelint
+          fi
