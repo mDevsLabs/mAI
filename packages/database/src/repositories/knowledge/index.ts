@@ -334,8 +334,8 @@ export class KnowledgeRepo {
         ),
       });
 
-      for (const child of children) {
-        await this.deleteDocumentWithRelations(child.id);
+      if (children.length > 0) {
+        await Promise.all(children.map((child) => this.deleteDocumentWithRelations(child.id)));
       }
 
       const childFiles = await this.db.query.files.findMany({
@@ -345,8 +345,8 @@ export class KnowledgeRepo {
         ),
       });
 
-      for (const file of childFiles) {
-        await this.fileModel.delete(file.id);
+      if (childFiles.length > 0) {
+        await Promise.all(childFiles.map((file) => this.fileModel.delete(file.id)));
       }
     }
 
