@@ -3,7 +3,7 @@
 import { Flexbox, Icon, Text } from '@lobehub/ui';
 import { createStaticStyles, cssVar, responsive } from 'antd-style';
 import { RefreshCw } from 'lucide-react';
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { TaskTemplateCard } from '@/features/RecommendTaskTemplates/TaskTemplateCard';
@@ -14,7 +14,7 @@ import WideScreenContainer from '@/features/WideScreenContainer';
 import CreateTaskInlineEntry from './CreateTaskInlineEntry';
 
 const HERO_MAX_WIDTH = 960;
-const EMPTY_STATE_RECOMMEND_COUNT = 10;
+const EMPTY_STATE_RECOMMEND_COUNT = 4;
 
 const styles = createStaticStyles(({ css }) => ({
   grid: css`
@@ -37,6 +37,7 @@ const EmptyState = memo<EmptyStateProps>(({ agentId }) => {
   const { t } = useTranslation('chat');
   const { t: tCommon } = useTranslation('common');
   const templatesState = useDailyBriefRecommendationsUI({ count: EMPTY_STATE_RECOMMEND_COUNT });
+  const randomGreetingIndex = useMemo(() => Math.floor(Math.random() * 10), []);
 
   return (
     <WideScreenContainer
@@ -47,7 +48,7 @@ const EmptyState = memo<EmptyStateProps>(({ agentId }) => {
     >
       <Flexbox align={'center'} gap={8}>
         <Text as={'h1'} style={{ fontSize: 24, fontWeight: 600, margin: 0 }}>
-          {t('taskList.emptyHero.greeting')}
+          {t(`taskList.emptyHero.greeting_${randomGreetingIndex}` as any)}
         </Text>
         <Text fontSize={14} type={'secondary'}>
           {t('taskList.emptyHero.subtitle')}
