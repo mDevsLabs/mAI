@@ -15,8 +15,7 @@ import { useResourceManagerStore } from '@/routes/(main)/resource/features/store
 import { resourceService } from '@/services/resource';
 import { useGlobalStore } from '@/store/global';
 import { INITIAL_STATUS } from '@/store/global/initialState';
-import type { AsyncTaskStatus } from '@/types/asyncTask';
-import type { FileListItem } from '@/types/files';
+import type { ResourceItem } from '@/types/resource';
 
 import FileListItemComponent from './ListView/ListItem';
 import MasonryItemWrapper from './MasonryView/MasonryItem/MasonryItemWrapper';
@@ -40,7 +39,7 @@ const SearchResultsOverlay = memo(() => {
 
   const isActive = !!searchQuery && searchQuery.length > 0;
 
-  const { data: rawData, isLoading } = useClientDataSWR(
+  const { data, isLoading } = useClientDataSWR<ResourceItem[]>(
     isActive
       ? resourceKeys.search({
           category: libraryId ? undefined : category,
@@ -55,23 +54,8 @@ const SearchResultsOverlay = memo(() => {
         offset: 0,
         showFilesInKnowledgeBase: false,
       } as any);
-      return response.items;
+      return response.items as unknown as ResourceItem[];
     },
-  );
-
-  const data: FileListItem[] | undefined = useMemo(
-    () =>
-      rawData?.map((item) => ({
-        ...item,
-        chunkCount: item.chunkCount ?? null,
-        chunkingError: item.chunkingError ?? null,
-        chunkingStatus: (item.chunkingStatus ?? null) as AsyncTaskStatus | null,
-        embeddingError: item.embeddingError ?? null,
-        embeddingStatus: (item.embeddingStatus ?? null) as AsyncTaskStatus | null,
-        finishEmbedding: item.finishEmbedding ?? false,
-        url: item.url ?? '',
-      })),
-    [rawData],
   );
 
   const masonryContext = useMemo(

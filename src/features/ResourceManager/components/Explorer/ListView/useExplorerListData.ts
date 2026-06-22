@@ -6,8 +6,6 @@ import { sortFileList } from '@/routes/(main)/resource/features/store/selectors'
 import { useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
 import { INITIAL_STATUS } from '@/store/global/initialState';
-import type { AsyncTaskStatus } from '@/types/asyncTask';
-import type { FileListItem } from '@/types/files';
 import type { ResourceQueryParams } from '@/types/resource';
 
 interface UseExplorerListDataParams {
@@ -42,24 +40,9 @@ export const useExplorerListData = ({
     );
   }, [currentQueryParams, queryParams]);
 
-  const rawData = useMemo(
-    () =>
-      resourceList?.map<FileListItem>((item) => ({
-        ...item,
-        chunkCount: item.chunkCount ?? null,
-        chunkingError: item.chunkingError ?? null,
-        chunkingStatus: (item.chunkingStatus ?? null) as AsyncTaskStatus | null,
-        embeddingError: item.embeddingError ?? null,
-        embeddingStatus: (item.embeddingStatus ?? null) as AsyncTaskStatus | null,
-        finishEmbedding: item.finishEmbedding ?? false,
-        url: item.url ?? '',
-      })) ?? [],
-    [resourceList],
-  );
-
   const data = useMemo(
-    () => sortFileList(rawData, sorter, sortType) || [],
-    [rawData, sorter, sortType],
+    () => sortFileList(resourceList, sorter, sortType) || [],
+    [resourceList, sorter, sortType],
   );
 
   const showSkeleton =

@@ -10,7 +10,6 @@ import { useTranslation } from 'react-i18next';
 import { useResourceManagerStore } from '@/routes/(main)/resource/features/store';
 import { sortFileList } from '@/routes/(main)/resource/features/store/selectors';
 import { useFileStore } from '@/store/file';
-import { type FileListItem } from '@/types/files';
 import type { ResourceQueryParams } from '@/types/resource';
 
 import {
@@ -89,39 +88,10 @@ const MasonryView = memo(function MasonryView({
     );
   }, [currentQueryParams, queryParams]);
 
-  // Map ResourceItem[] to FileListItem[] for compatibility
-  const rawData = useMemo(
-    () =>
-      resourceList?.map(
-        (item): FileListItem => ({
-          chunkCount: item.chunkCount ?? null,
-          chunkingError: item.chunkingError ?? null,
-          chunkingStatus: (item.chunkingStatus as any) ?? null,
-          content: item.content,
-          createdAt: item.createdAt,
-          editorData: item.editorData,
-          embeddingError: item.embeddingError ?? null,
-          embeddingStatus: (item.embeddingStatus as any) ?? null,
-          fileType: item.fileType,
-          finishEmbedding: item.finishEmbedding ?? false,
-          id: item.id,
-          metadata: item.metadata,
-          name: item.name,
-          parentId: item.parentId,
-          size: item.size,
-          slug: item.slug,
-          sourceType: item.sourceType,
-          updatedAt: item.updatedAt,
-          url: item.url ?? '',
-        }),
-      ) ?? [],
-    [resourceList],
-  );
-
   // Sort data using current sort settings
   const data = useMemo(
-    () => sortFileList(rawData, sorter, sortType) || [],
-    [rawData, sorter, sortType],
+    () => sortFileList(resourceList, sorter, sortType) || [],
+    [resourceList, sorter, sortType],
   );
 
   const dataLength = data.length;
