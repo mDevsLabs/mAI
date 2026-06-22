@@ -238,9 +238,7 @@ export function registerReviewCommands(task: Command) {
 
         if (options.recursive) {
           const subtasks = await client.task.getSubtasks.query({ id });
-          await Promise.all(
-            (subtasks.data || []).map((s) => addToTask(s.id))
-          );
+          await Promise.all((subtasks.data || []).map((s) => addToTask(s.id)));
           log.info(
             `Rubric "${options.name}" [${options.type}] added to ${pc.bold(id)} + ${(subtasks.data || []).length} subtask(s).`,
           );
@@ -273,9 +271,7 @@ export function registerReviewCommands(task: Command) {
 
       if (options.recursive) {
         const subtasks = await client.task.getSubtasks.query({ id });
-        await Promise.all(
-          (subtasks.data || []).map((s) => removeFromTask(s.id))
-        );
+        await Promise.all((subtasks.data || []).map((s) => removeFromTask(s.id)));
         log.info(
           `Rubric "${options.name}" removed from ${pc.bold(id)} + ${(subtasks.data || []).length} subtask(s).`,
         );
