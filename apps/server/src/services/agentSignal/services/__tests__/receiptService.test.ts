@@ -10,7 +10,7 @@ import { persistAgentSignalReceipts, projectAgentSignalReceipts } from '../recei
 const source = createSource({
   payload: {
     agentId: 'agent-1',
-    assistantMessageId: 'assistant-1',
+    anchorMessageId: 'assistant-1',
     operationId: 'op-1',
     topicId: 'topic-1',
   },
