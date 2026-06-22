@@ -21,6 +21,8 @@ jobs:
       - name: 🚀 Création ou Mise à jour de la PR
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HEAD_COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+          HEAD_REF_NAME: ${{ github.ref_name }}
         run: |
           TEMPLATE_PATH=".github/PULL_REQUEST_TEMPLATE.md"
           
@@ -29,8 +31,8 @@ jobs:
             exit 1
           fi
 
-          COMMIT_MSG="${{ github.event.head_commit.message }}"
-          BRANCH_NAME="${{ github.ref_name }}"
+          COMMIT_MSG="$HEAD_COMMIT_MESSAGE"
+          BRANCH_NAME="$HEAD_REF_NAME"
 
           # On vérifie si une PR existe déjà pour cette branche pour éviter les doublons
           PR_NUMBER=$(gh pr list --head "$BRANCH_NAME" --json number --jq '.[0].number')
