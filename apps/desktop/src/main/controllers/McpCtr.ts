@@ -1,8 +1,9 @@
-import { exec } from 'node:child_process';
+import { execFile } from 'node:child_process';
 import { createHash, randomUUID } from 'node:crypto';
 import path from 'node:path';
 import { promisify } from 'node:util';
 
+import { parse } from 'shell-quote';
 import superjson from 'superjson';
 
 import FileService from '@/services/fileSrv';
@@ -12,7 +13,7 @@ import { MCPClient, MCPConnectionError } from '../libs/mcp/client';
 import type { MCPClientParams, ToolCallContent, ToolCallResult } from '../libs/mcp/types';
 import { ControllerModule, IpcMethod } from './index';
 
-const execPromise = promisify(exec);
+const execPromise = promisify(execFile);
 const logger = createLogger('controllers:McpCtr');
 
 /**
@@ -412,7 +413,24 @@ export default class McpCtr extends ControllerModule {
     const checkCommand = dependency.checkCommand || `${dependency.name} --version`;
 
     try {
-      const { stdout, stderr } = await execPromise(checkCommand);
+      const parsed = parse(checkCommand);
+      const args = parsed.filter((arg): arg is string => typeof arg === 'string');
+      if (args.length === 0) {
+        return {
+          error: 'Invalid command',
+          installInstructions: this.getInstallInstructions(dependency.installInstructions),
+          installed: false,
+          meetRequirement: false,
+          name: dependency.name,
+          requiredVersion: dependency.requiredVersion,
+        };
+      }
+      const command = args[0];
+      const commandArgs = args.slice(1);
+
+      const { stdout, stderr } = await execPromise(command, commandArgs, {
+        shell: process.platform === 'win32',
+      });
 
       if (stderr && !stdout) {
         return {
@@ -491,11 +509,18 @@ export default class McpCtr extends ControllerModule {
   private async checkPackageInstalled(installationMethod: string, details: any) {
     if (installationMethod === 'npm') {
       const packageName = details?.packageName;
-      if (!packageName) return { installed: false };
+      if (!packageName || typeof packageName !== 'string') return { installed: false };
+
+      // Validate package name to prevent injection (allow scoped packages e.g. @scope/name)
+      if (!/^[\w\-.@/]+$/.test(packageName)) {
+        return { installed: false };
+      }
 
       // Only check global npm list - do NOT use npx as it may download packages
       try {
-        const { stdout } = await execPromise(`npm list -g ${packageName} --depth=0`);
+        const { stdout } = await execPromise('npm', ['list', '-g', packageName, '--depth=0'], {
+          shell: process.platform === 'win32',
+        });
         if (!stdout.includes('(empty)') && stdout.includes(packageName)) {
           return { installed: true };
         }
@@ -510,13 +535,20 @@ export default class McpCtr extends ControllerModule {
 
     if (installationMethod === 'python') {
       const packageName = details?.packageName;
-      if (!packageName) return { installed: false };
+      if (!packageName || typeof packageName !== 'string') return { installed: false };
+
+      // Validate package name to prevent injection (allow scoped packages just in case)
+      if (!/^[\w\-.@/]+$/.test(packageName)) {
+        return { installed: false };
+      }
 
       const pythonCommand = details?.pythonCommand || 'python';
+      const safePythonCommand = typeof pythonCommand === 'string' ? pythonCommand : 'python';
 
       try {
-        const command = `${pythonCommand} -m pip list | grep -i "${packageName}"`;
-        const { stdout } = await execPromise(command);
+        const { stdout } = await execPromise(safePythonCommand, ['-m', 'pip', 'list'], {
+          shell: process.platform === 'win32',
+        });
         if (stdout.trim() && stdout.toLowerCase().includes(String(packageName).toLowerCase())) {
           return { installed: true };
         }
@@ -525,8 +557,11 @@ export default class McpCtr extends ControllerModule {
       }
 
       try {
-        const importCommand = `${pythonCommand} -c "import ${String(packageName).replace('-', '_')}; print('Package installed')"`;
-        const { stdout } = await execPromise(importCommand);
+        const { stdout } = await execPromise(
+          safePythonCommand,
+          ['-c', `import ${String(packageName).replace('-', '_')}; print('Package installed')`],
+          { shell: process.platform === 'win32' },
+        );
         if (stdout.includes('Package installed')) return { installed: true };
       } catch {
         // ignore

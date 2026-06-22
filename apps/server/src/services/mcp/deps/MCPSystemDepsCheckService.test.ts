@@ -13,14 +13,29 @@ const { mockExecPromise } = vi.hoisted(() => {
 });
 
 // Mock node:child_process
-vi.mock('node:child_process');
+vi.mock('node:child_process', async (importOriginal) => {
+  const actual: any = await importOriginal();
+  return {
+    ...actual,
+    execFile: vi.fn(),
+  };
+});
 
 // Mock node:util to return our hoisted mock when promisify is called
-vi.mock('node:util', () => ({
-  default: {
+vi.mock('node:util', async (importOriginal) => {
+  const actual: any = await importOriginal();
+  return {
+    ...actual,
+    default: {
+      ...actual.default,
+      promisify: () => mockExecPromise,
+    },
     promisify: () => mockExecPromise,
-  },
-  promisify: () => mockExecPromise,
+  };
+});
+
+vi.mock('shell-quote', () => ({
+  parse: vi.fn().mockImplementation((cmd: string) => cmd.split(' ')),
 }));
 
 describe('MCPSystemDepsCheckService', () => {

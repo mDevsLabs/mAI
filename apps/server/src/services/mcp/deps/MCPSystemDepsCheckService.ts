@@ -1,14 +1,15 @@
-import { exec } from 'node:child_process';
+import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 
 import { type DeploymentOption, type SystemDependency } from '@lobehub/market-sdk';
 import debug from 'debug';
+import { parse } from 'shell-quote';
 
 import { type SystemDependencyCheckResult } from '@/types/plugins';
 
 import { type InstallationChecker } from './types';
 
-const execPromise = promisify(exec);
+const execPromise = promisify(execFile);
 const log = debug('lobe-mcp:deps-check');
 
 // Helper function to get current platform install instructions
@@ -64,7 +65,17 @@ class MCPSystemDepsCheckService {
       const checkCommand = dependency.checkCommand || `${dependency.name} --version`;
       log(`Checking system dependency: ${dependency.name}, command: ${checkCommand}`);
 
-      const { stdout, stderr } = await execPromise(checkCommand);
+      const parsed = parse(checkCommand);
+      const args = parsed.filter((arg): arg is string => typeof arg === 'string');
+      if (args.length === 0) {
+        throw new Error('Invalid command');
+      }
+      const command = args[0];
+      const commandArgs = args.slice(1);
+
+      const { stdout, stderr } = await execPromise(command, commandArgs, {
+        shell: process.platform === 'win32',
+      });
       if (stderr && !stdout) {
         return {
           error: stderr,
