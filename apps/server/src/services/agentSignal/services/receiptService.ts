@@ -528,14 +528,8 @@ export const projectAgentSignalReceipts = ({
   if (!agentId || !topicId) return [];
 
   const actionById = new Map(actions.map((action) => [action.actionId, action]));
-  const anchorMessageId =
-    getPayloadString(payload, 'anchorMessageId') ??
-    // TODO: Remove after producers stop emitting only assistantMessageId.
-    getPayloadString(payload, 'assistantMessageId');
-  const triggerMessageId =
-    getPayloadString(payload, 'triggerMessageId') ??
-    // TODO: Remove after producers stop emitting only messageId.
-    getPayloadString(payload, 'messageId');
+  const anchorMessageId = getPayloadString(payload, 'anchorMessageId');
+  const triggerMessageId = getPayloadString(payload, 'triggerMessageId');
 
   return results.flatMap((result) => {
     if (result.status !== 'applied') return [];
