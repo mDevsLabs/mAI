@@ -46,9 +46,7 @@ export const findDeploymentName = (model: string, provider: string): string | un
   if (!providerDetail?.settings?.showDeployName) return undefined;
 
   // find the model by id
-  const modelItem = state.enabledAiModels?.find(
-    (i) => i.id === model && i.providerId === provider,
-  );
+  const modelItem = state.enabledAiModels?.find((i) => i.id === model && i.providerId === provider);
 
   if (modelItem && modelItem.config?.deploymentName) return modelItem.config?.deploymentName;
 
