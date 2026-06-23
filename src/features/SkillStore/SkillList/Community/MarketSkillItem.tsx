@@ -15,6 +15,8 @@ import { agentSkillsSelectors } from '@/store/tool/selectors';
 import { type DiscoverSkillItem } from '@/types/discover';
 import { downloadFile } from '@/utils/client/downloadFile';
 
+import Highlight from '@/components/Highlight';
+
 import { itemStyles } from '../style';
 
 const MarketSkillDetail = lazy(() => import('../MarketSkills/MarketSkillDetail'));
@@ -37,7 +39,7 @@ const styles = createStaticStyles(({ css }) => ({
   `,
 }));
 
-const MarketSkillItem = memo<DiscoverSkillItem>(({ name, icon, description, identifier }) => {
+const MarketSkillItem = memo<DiscoverSkillItem & { keyword?: string }>(({ name, icon, description, identifier, keyword }) => {
   const { t } = useTranslation('plugin');
   const { t: tc } = useTranslation('common');
   const [detailOpen, setDetailOpen] = useState(false);
@@ -153,11 +155,15 @@ const MarketSkillItem = memo<DiscoverSkillItem>(({ name, icon, description, iden
           <Flexbox flex={1} gap={4} style={{ minWidth: 0, overflow: 'hidden' }}>
             <Flexbox horizontal align="center" gap={8}>
               <span className={styles.title} onClick={() => setDetailOpen(true)}>
-                {name}
+                <Highlight keyword={keyword} text={name} />
               </span>
               <Tag icon={<Icon icon={SkillsIcon} />} size={'small'} />
             </Flexbox>
-            {description && <span className={itemStyles.description}>{description}</span>}
+            {description && (
+              <span className={itemStyles.description}>
+                <Highlight keyword={keyword} text={description} />
+              </span>
+            )}
           </Flexbox>
           {renderAction()}
         </Block>

@@ -417,6 +417,7 @@
   "retry": "重试",
   "run": "运行",
   "save": "保存",
+  "search": "搜索",
   "send": "发送",
   "serverVersionOutdated.desc": "当前客户端版本（v{{version}}）需要更新的服务端版本。",
   "serverVersionOutdated.dismiss": "继续使用",

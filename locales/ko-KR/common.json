@@ -398,6 +398,7 @@
   "retry": "다시 시도",
   "run": "실행",
   "save": "저장",
+  "search": "검색",
   "send": "보내기",
   "serverVersionOutdated.desc": "현재 클라이언트 버전(v{{version}})은 더 최신의 서버 버전이 필요합니다.",
   "serverVersionOutdated.dismiss": "계속 진행하기",

@@ -398,6 +398,7 @@
   "retry": "重試",
   "run": "執行",
   "save": "儲存",
+  "search": "搜尋",
   "send": "發送",
   "serverVersionOutdated.desc": "您的用戶端版本（v{{version}}）需要較新的伺服器版本。",
   "serverVersionOutdated.dismiss": "仍要繼續",

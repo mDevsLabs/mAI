@@ -398,6 +398,7 @@
   "retry": "Tekrar Dene",
   "run": "Çalıştır",
   "save": "Kaydet",
+  "search": "Ara",
   "send": "Gönder",
   "serverVersionOutdated.desc": "İstemci sürümünüz (v{{version}}), daha yeni bir sunucu sürümü gerektiriyor.",
   "serverVersionOutdated.dismiss": "Yine de devam et",

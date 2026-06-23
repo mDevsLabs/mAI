@@ -398,6 +398,7 @@
   "retry": "Thử lại",
   "run": "Chạy",
   "save": "Lưu",
+  "search": "Tìm kiếm",
   "send": "Gửi",
   "serverVersionOutdated.desc": "Phiên bản ứng dụng của bạn (v{{version}}) yêu cầu phiên bản máy chủ mới hơn.",
   "serverVersionOutdated.dismiss": "Vẫn tiếp tục",

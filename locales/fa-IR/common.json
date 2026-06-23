@@ -398,6 +398,7 @@
   "retry": "تلاش مجدد",
   "run": "اجرا",
   "save": "ذخیره",
+  "search": "جستجو",
   "send": "ارسال",
   "serverVersionOutdated.desc": "نسخه کلاینت شما (v{{version}}) به نسخه جدیدتری از سرور نیاز دارد.",
   "serverVersionOutdated.dismiss": "ادامه با همین وضعیت",

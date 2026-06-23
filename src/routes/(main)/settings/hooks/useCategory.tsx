@@ -62,6 +62,7 @@ export interface CategoryGroup {
 
 export const useCategory = () => {
   const { t } = useTranslation('setting');
+  const { t: tCommon } = useTranslation('common');
   const { t: tAuth } = useTranslation('auth');
   const { t: tSubscription } = useTranslation('subscription');
   const mobile = useServerConfigStore((s) => s.isMobile);
@@ -210,7 +211,7 @@ export const useCategory = () => {
       {
         icon: FileClockIcon,
         key: SettingsTabs.Changelog,
-        label: t('changelog'),
+        label: tCommon('changelog'),
       },
       isDevMode && {
         icon: KeyIcon,

@@ -398,6 +398,7 @@
   "retry": "Опитай отново",
   "run": "Стартирай",
   "save": "Запази",
+  "search": "Търсене",
   "send": "Изпрати",
   "serverVersionOutdated.desc": "Вашата клиентска версия (v{{version}}) изисква по-нова версия на сървъра.",
   "serverVersionOutdated.dismiss": "Продължи въпреки това",
