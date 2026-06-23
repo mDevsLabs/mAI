@@ -213,7 +213,6 @@ const AddButton = () => {
         key: 'upload-folder',
         label: <label htmlFor="folder-upload-input">{t('header.actions.uploadFolder')}</label>,
       },
-      },
     ],
     [
       category,
