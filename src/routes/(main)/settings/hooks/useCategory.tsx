@@ -102,6 +102,11 @@ export const useCategory = () => {
         key: SettingsTabs.Appearance,
         label: t('tab.appearance'),
       },
+      {
+        icon: MessageCircleIcon,
+        key: SettingsTabs.Pets,
+        label: t('tab.pets'),
+      },
       !mobile && {
         icon: KeyboardIcon,
         key: SettingsTabs.Hotkey,
