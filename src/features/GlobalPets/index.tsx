@@ -248,9 +248,9 @@ const Pet = memo(
         initial={{ x: startX, y: startY }}
         onDrag={(_e, info) => {
           if (info.delta.x < 0) {
-            setAnimation('running-right');
-          } else if (info.delta.x > 0) {
             setAnimation('running-left');
+          } else if (info.delta.x > 0) {
+            setAnimation('running-right');
           }
         }}
         onDragEnd={() => {

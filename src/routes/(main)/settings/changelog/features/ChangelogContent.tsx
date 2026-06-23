@@ -1,5 +1,9 @@
-import { Markdown } from '@lobehub/ui';
-import { memo, useEffect, useState } from 'react';
+import { Suspense, memo, useEffect, useState } from 'react';
+import { type Components } from 'react-markdown';
+
+import { CustomMDX } from '@/components/mdx';
+import CollapsibleSection from '@/components/mdx/CollapsibleSection';
+import remarkCollapsibleSections from '@/components/mdx/remarkCollapsibleSections';
 
 import changelogRaw from '../../../../../../CHANGELOG.md?raw';
 
@@ -30,9 +34,13 @@ const ChangelogContent = memo<ChangelogContentProps>(({ mobile }) => {
 
   return (
     <div style={{ padding: mobile ? 16 : 24, userSelect: 'text' }}>
-      <Markdown allowHtml variant={'default'}>
-        {formattedChangelog || 'Chargement...'}
-      </Markdown>
+      <Suspense fallback={<div>Chargement...</div>}>
+        <CustomMDX
+          components={{ 'collapsible-section': CollapsibleSection } as Components}
+          remarkPlugins={[remarkCollapsibleSections]}
+          source={formattedChangelog || 'Chargement...'}
+        />
+      </Suspense>
     </div>
   );
 });
