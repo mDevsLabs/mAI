@@ -251,7 +251,6 @@ const AddButton = () => {
         webkitdirectory=""
         onChange={handleFolderUploadWithClose}
       />
-      />
     </>
   );
 };
