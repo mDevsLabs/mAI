@@ -168,5 +168,6 @@
   "workspaceFrozenByRiskControl.description": "Cet espace de travail a été automatiquement gelé par le contrôle des risques après la détection de dépenses anormales. Contactez le support pour examiner et demander le dégel.",
   "workspaceFrozenByRiskControl.frozenAt": "Gelé le",
   "workspaceFrozenByRiskControl.title": "Espace de travail automatiquement gelé par le contrôle des risques",
-  "workspaceFrozenByRiskControl.topup": "Recharger des crédits"
+  "workspaceFrozenByRiskControl.topup": "Recharger des crédits",
+  "response.WorkspaceAgentRequiresWorkspaceDevice": "Cet agent est dans un espace de travail, il ne peut donc se lier qu'aux appareils accessibles par toute l'équipe. Les appareils personnels restent avec l'utilisateur qui les a enregistrés. Choisissez un appareil de l'espace de travail, ou ajoutez d'abord cet appareil à l'espace de travail."
 }

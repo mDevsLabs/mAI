@@ -1233,5 +1233,21 @@
   "workingPanel.skills.title": "Compétences",
   "workingPanel.space": "Espace",
   "workingPanel.title": "Working Panel",
-  "you": "Vous"
+  "you": "Vous",
+  "heteroAgent.modelSelector.defaultReasoning": "Effort par défaut",
+  "heteroAgent.modelSelector.reasoning.max": "Maximum",
+  "heteroAgent.modelSelector.reasoning.xhigh": "Très élevé",
+  "group.profile.addMember.newMemberTitle": "Nouveau membre",
+  "heteroAgent.modelSelector.defaultModel": "Modèle par défaut",
+  "group.profile.addMember.addExisting": "Ajouter un assistant existant",
+  "heteroAgent.modelSelector.reasoning.high": "Élevé",
+  "heteroAgent.modelSelector.reasoning": "Raisonnement",
+  "heteroAgent.modelSelector.default": "Par défaut",
+  "heteroAgent.modelSelector.defaultConfig": "Configuration par défaut",
+  "heteroAgent.executionTarget.autoUnavailableDesc": "Aucun appareil connecté n'est en ligne pour le moment",
+  "heteroAgent.modelSelector.ariaLabel": "Modèle : {{model}}. Raisonnement : {{reasoning}}",
+  "heteroAgent.modelSelector.model": "Modèle",
+  "heteroAgent.modelSelector.reasoning.medium": "Moyen",
+  "group.profile.addMember.createNew": "Créer un nouveau membre",
+  "heteroAgent.modelSelector.reasoning.low": "Faible"
 }

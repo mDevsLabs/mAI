@@ -1,30 +1,25 @@
 'use client';
 
-import { FILE_URL } from '@lobechat/business-const';
 import {
   CUSTOM_DOCUMENT_FILE_TYPE,
   CUSTOM_FOLDER_FILE_TYPE,
   DERIVED_DOCUMENT_SOURCE_TYPE,
 } from '@lobechat/const';
-import { Notion } from '@lobehub/icons';
-import { type MenuProps } from '@lobehub/ui';
+import { type DropdownItem } from '@lobehub/ui';
 import { Button, DropdownMenu, Icon, Tooltip } from '@lobehub/ui';
 import { Upload } from 'antd';
-import { FilePenLine, FileUp, FolderIcon, FolderUp } from 'lucide-react';
+import { FilePenLine, FileUp, FolderIcon, FolderUp, Plus } from 'lucide-react';
 import { type ChangeEvent } from 'react';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { message } from '@/components/AntdStaticMethods';
-import GuideModal from '@/components/GuideModal';
-import GuideVideo from '@/components/GuideVideo';
 import { usePermission } from '@/hooks/usePermission';
 import { useCurrentFolderId } from '@/routes/(main)/resource/features/hooks/useCurrentFolderId';
 import { useResourceManagerStore } from '@/routes/(main)/resource/features/store';
 import { useFileStore } from '@/store/file';
 import { FilesTabs } from '@/types/files';
 
-import useNotionImport from './hooks/useNotionImport';
 import useUploadFolder from './hooks/useUploadFolder';
 
 const getAcceptedFileTypes = (category: FilesTabs): string | undefined => {
@@ -157,20 +152,6 @@ const AddButton = () => {
     t,
   ]);
 
-  const {
-    handleCloseNotionGuide,
-    handleNotionImport,
-    handleOpenNotionGuide,
-    handleStartNotionImport,
-    notionGuideOpen,
-    notionInputRef,
-  } = useNotionImport({
-    createDocument,
-    currentFolderId,
-    libraryId,
-    t,
-  });
-
   const { handleFolderUpload } = useUploadFolder({
     currentFolderId,
     libraryId,
@@ -185,7 +166,7 @@ const AddButton = () => {
     [handleFolderUpload],
   );
 
-  const items = useMemo<MenuProps['items']>(
+  const items = useMemo<DropdownItem[]>(
     () => [
       {
         icon: <Icon icon={FilePenLine} />,
@@ -232,13 +213,13 @@ const AddButton = () => {
         key: 'upload-folder',
         label: <label htmlFor="folder-upload-input">{t('header.actions.uploadFolder')}</label>,
       },
+      },
     ],
     [
       category,
       currentFolderId,
       handleCreateFolder,
       handleOpenPageEditor,
-      handleOpenNotionGuide,
       libraryId,
       pushDockFileList,
       t,
@@ -247,32 +228,21 @@ const AddButton = () => {
 
   return (
     <>
-      <DropdownMenu
-        items={canCreate ? items : []}
-        open={menuOpen}
-        placement="bottomRight"
-        trigger="both"
-        onOpenChange={(open) => {
-          if (!canCreate) return;
-          setMenuOpen(open);
-        }}
-      >
-        <Tooltip title={reason}>
-          <Button data-no-highlight disabled={!canCreate} type="primary">
+      <Tooltip title={canCreate ? undefined : reason}>
+        <DropdownMenu
+          items={canCreate ? items : []}
+          open={menuOpen}
+          placement="bottomRight"
+          onOpenChange={(open) => {
+            if (!canCreate) return;
+            setMenuOpen(open);
+          }}
+        >
+          <Button data-no-highlight disabled={!canCreate} icon={Plus} type="primary">
             {t('addLibrary')}
           </Button>
-        </Tooltip>
-      </DropdownMenu>
-      <GuideModal
-        cancelText={t('header.actions.notionGuide.cancel')}
-        cover={<GuideVideo height={269} src={FILE_URL.importFromNotionGuide} width={358} />}
-        desc={t('header.actions.notionGuide.desc')}
-        okText={t('header.actions.notionGuide.ok')}
-        open={notionGuideOpen}
-        title={t('header.actions.notionGuide.title')}
-        onCancel={handleCloseNotionGuide}
-        onOk={handleStartNotionImport}
-      />
+        </DropdownMenu>
+      </Tooltip>
       <input
         multiple
         id="folder-upload-input"
@@ -282,12 +252,6 @@ const AddButton = () => {
         webkitdirectory=""
         onChange={handleFolderUploadWithClose}
       />
-      <input
-        accept=".zip"
-        ref={notionInputRef}
-        style={{ display: 'none' }}
-        type="file"
-        onChange={handleNotionImport}
       />
     </>
   );
