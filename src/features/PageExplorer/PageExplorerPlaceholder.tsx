@@ -1,5 +1,4 @@
 import { CUSTOM_DOCUMENT_FILE_TYPE } from '@lobechat/const';
-import { Notion } from '@lobehub/icons';
 import { Center, FileTypeIcon, Flexbox, Icon, Text } from '@lobehub/ui';
 import { Upload } from 'antd';
 import { createStaticStyles, cssVar } from 'antd-style';
@@ -8,7 +7,6 @@ import React, { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import NavHeader from '@/features/NavHeader';
-import useNotionImport from '@/features/ResourceManager/components/Header/hooks/useNotionImport';
 import { usePermission } from '@/hooks/usePermission';
 import { useFileStore } from '@/store/file';
 import { usePageStore } from '@/store/page';
@@ -95,23 +93,6 @@ const PageExplorerPlaceholder = memo<PageExplorerPlaceholderProps>(
 
     // File operations from FileStore (for uploads and notion import)
     const [createDocument] = useFileStore((s) => [s.createDocument]);
-
-    const notionImport = useNotionImport({
-      createDocument,
-      currentFolderId: null,
-      libraryId: knowledgeBaseId ?? null,
-      refetchResources: fetchDocuments,
-      t,
-    });
-
-    // Wrap handleNotionImport to ensure UI updates
-    const handleNotionImportWithLocalUpdate = async (
-      event: React.ChangeEvent<HTMLInputElement>,
-    ) => {
-      if (!canCreate) return;
-
-      await notionImport.handleNotionImport(event);
-    };
 
     const handleCreateDocument = async (content: string, title: string) => {
       if (!canCreate) return;
@@ -307,37 +288,9 @@ const PageExplorerPlaceholder = memo<PageExplorerPlaceholderProps>(
                 />
               </Flexbox>
             </Upload>
-
-            {/* Import from Notion */}
-            <Flexbox
-              className={styles.card}
-              padding={16}
-              style={canCreate ? undefined : { cursor: 'not-allowed', opacity: 0.5 }}
-              onClick={() => {
-                if (!canCreate) return;
-
-                notionImport.handleOpenNotionGuide();
-              }}
-            >
-              <span className={styles.actionTitle}>{t('pageEditor.empty.importNotion')}</span>
-              <div className={styles.glow} style={{ background: cssVar.geekblue }} />
-              <FileTypeIcon
-                className={styles.icon}
-                color={cssVar.geekblue}
-                icon={<Notion color={'#fff'} />}
-                size={ICON_SIZE}
-                type={'file'}
-              />
-            </Flexbox>
           </Flexbox>
         </Center>
-        <input
-          accept=".zip"
-          ref={notionImport.notionInputRef}
-          style={{ display: 'none' }}
-          type="file"
-          onChange={handleNotionImportWithLocalUpdate}
-        />
+
       </>
     );
   },
