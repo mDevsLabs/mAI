@@ -2,6 +2,20 @@
 
 # Changelog
 
+## [Version 0.10.0](https://github.com/mDevsLabs/mAI/compare/v0.9.0...v0.10.0)
+
+<sup>Released on **2026-06-24**</sup>
+
+#### 🐾 Animaux de Compagnie & Personnalisation
+- **Agrandissement Étendu** : Il est désormais possible de régler la taille de vos compagnons avec une plage élargie de 0.1x (très petit) à 5.0x (très grand).
+- **Aura & Traînées Lumineuses** : Ajout d'une option d'Aura colorée avec personnalisation complète de sa couleur et de son opacité globale.
+- **Traînées Dynamiques** : Intégration de styles de traînées personnalisés (Étoiles, Confettis, Pixels Rétro, Bulles).
+- **Effet selon l'Humeur** : Une nouvelle option permet à l'Aura d'adapter automatiquement sa couleur et son intensité selon l'activité de l'agent mAI.
+- **Logique de Cascade** : Les menus d'options de personnalisation se dégrisent de manière fluide et intuitive uniquement lorsque leurs fonctionnalités parentes sont activées.
+
+#### 🎨 Branding & Expérience
+- **Logo de Chargement** : Correction du bug affichant le logo LobeHub lors du chargement initial de l'application, désormais correctement remplacé par le logo mAI.
+
 ## [Version 0.9.0](https://github.com/mDevsLabs/mAI/compare/v2.2.6...v0.4.0)
 
 <sup>Released on **2026-06-23**</sup>

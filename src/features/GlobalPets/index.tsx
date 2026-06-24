@@ -307,7 +307,7 @@ const Pet = memo(
               style={{
                 position: 'fixed', left: 0, top: 0, width: size, height: size,
                 x: ghost3X, y: ghost3Y,
-                pointerEvents: 'none', opacity: 0.2,
+                pointerEvents: 'none', opacity: 0.2 * (config?.petsAuraOpacity ?? 1),
                 filter: `drop-shadow(0 0 ${getAuraIntensity(20)}px ${getAuraColor()}) drop-shadow(0 0 ${getAuraIntensity(20)}px ${getAuraColor()}) brightness(1.5)`,
                 zIndex: 999996,
                 transform: animation === 'waving' || animation === 'jumping' ? 'scale(1.1)' : 'scale(1)',
@@ -318,7 +318,7 @@ const Pet = memo(
               style={{
                 position: 'fixed', left: 0, top: 0, width: size, height: size,
                 x: ghost2X, y: ghost2Y,
-                pointerEvents: 'none', opacity: 0.4,
+                pointerEvents: 'none', opacity: 0.4 * (config?.petsAuraOpacity ?? 1),
                 filter: `drop-shadow(0 0 ${getAuraIntensity(15)}px ${getAuraColor()}) drop-shadow(0 0 ${getAuraIntensity(15)}px ${getAuraColor()}) brightness(1.5)`,
                 zIndex: 999997,
                 transform: animation === 'waving' || animation === 'jumping' ? 'scale(1.1)' : 'scale(1)',
@@ -329,7 +329,7 @@ const Pet = memo(
               style={{
                 position: 'fixed', left: 0, top: 0, width: size, height: size,
                 x: ghost1X, y: ghost1Y,
-                pointerEvents: 'none', opacity: 0.6,
+                pointerEvents: 'none', opacity: 0.6 * (config?.petsAuraOpacity ?? 1),
                 filter: `drop-shadow(0 0 ${getAuraIntensity(10)}px ${getAuraColor()}) drop-shadow(0 0 ${getAuraIntensity(10)}px ${getAuraColor()}) brightness(1.5)`,
                 zIndex: 999998,
                 transform: animation === 'waving' || animation === 'jumping' ? 'scale(1.1)' : 'scale(1)',
@@ -343,7 +343,7 @@ const Pet = memo(
               style={{
                 position: 'fixed', left: 0, top: 0, width: size, height: size,
                 x: ghost3X, y: ghost3Y,
-                pointerEvents: 'none', opacity: 0.3,
+                pointerEvents: 'none', opacity: 0.3 * (config?.petsAuraOpacity ?? 1),
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: size * 0.4,
                 filter: `drop-shadow(0 0 ${getAuraIntensity(10)}px ${getAuraColor()})`,
@@ -356,7 +356,7 @@ const Pet = memo(
               style={{
                 position: 'fixed', left: 0, top: 0, width: size, height: size,
                 x: ghost2X, y: ghost2Y,
-                pointerEvents: 'none', opacity: 0.6,
+                pointerEvents: 'none', opacity: 0.6 * (config?.petsAuraOpacity ?? 1),
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: size * 0.5,
                 filter: `drop-shadow(0 0 ${getAuraIntensity(10)}px ${getAuraColor()})`,
@@ -369,7 +369,7 @@ const Pet = memo(
               style={{
                 position: 'fixed', left: 0, top: 0, width: size, height: size,
                 x: ghost1X, y: ghost1Y,
-                pointerEvents: 'none', opacity: 0.9,
+                pointerEvents: 'none', opacity: 0.9 * (config?.petsAuraOpacity ?? 1),
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: size * 0.6,
                 filter: `drop-shadow(0 0 ${getAuraIntensity(10)}px ${getAuraColor()})`,

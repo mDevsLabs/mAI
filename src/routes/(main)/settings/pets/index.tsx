@@ -100,9 +100,9 @@ const Page = memo(() => {
     children: (
       <SliderWithInput
         disabled={!enablePets}
-        marks={{ 0.5: <span style={{ whiteSpace: 'nowrap' }}>Min</span>, 3: <span style={{ whiteSpace: 'nowrap' }}>Max</span> }}
-        max={3}
-        min={0.5}
+        marks={{ 0.1: <span style={{ whiteSpace: 'nowrap' }}>Min</span>, 5: <span style={{ whiteSpace: 'nowrap' }}>Max</span> }}
+        max={5}
+        min={0.1}
         step={0.1}
         style={{ width: 350 }}
       />
@@ -169,15 +169,23 @@ const Page = memo(() => {
     children: (
       <Flexbox horizontal align={'center'} gap={12}>
         <Switch disabled={!enablePets} defaultChecked={false} />
-        <ColorPicker
-          disabled={!auraEnabled}
-          showText
-          format="hex"
-          onChange={(color) => {
-            setSettings({ general: { ...general, petsAuraColor: color.toHexString() } });
+        <Flexbox
+          style={{
+            opacity: auraEnabled ? 1 : 0.45,
+            pointerEvents: auraEnabled ? 'auto' : 'none',
+            transition: 'opacity 0.2s ease',
           }}
-          value={general?.petsAuraColor || '#1677ff'}
-        />
+        >
+          <ColorPicker
+            disabled={!auraEnabled}
+            showText
+            format="hex"
+            onChange={(color) => {
+              setSettings({ general: { ...general, petsAuraColor: color.toHexString() } });
+            }}
+            value={general?.petsAuraColor || '#1677ff'}
+          />
+        </Flexbox>
       </Flexbox>
     ),
     desc: 'Activer une traînée lumineuse suivant le pet au déplacement.',
@@ -187,27 +195,74 @@ const Page = memo(() => {
     valuePropName: 'checked',
   };
 
-  const petsAuraDynamicTrailsItem = {
+  const petsAuraOpacityItem = {
     children: (
-      <Flexbox horizontal align={'center'} gap={12}>
-        <Switch disabled={!enablePets} defaultChecked={false} />
-        <Select
-          disabled={!enablePets || !general?.petsAuraDynamicTrails}
-          options={[
-            { label: 'Étoiles', value: 'stars' },
-            { label: 'Confettis', value: 'confetti' },
-            { label: 'Pixels Rétro', value: 'retro-pixels' },
-            { label: 'Bulles', value: 'bubbles' },
-          ]}
-          onChange={(value) => {
-            setSettings({ general: { ...general, petsAuraTrailStyle: value } });
-          }}
-          value={general?.petsAuraTrailStyle || 'stars'}
-          style={{ width: 140 }}
+      <Flexbox
+        horizontal
+        align={'center'}
+        gap={12}
+        width={'100%'}
+        style={{
+          opacity: auraEnabled ? 1 : 0.45,
+          pointerEvents: auraEnabled ? 'auto' : 'none',
+          transition: 'opacity 0.2s ease',
+        }}
+      >
+        <SliderWithInput
+          disabled={!auraEnabled}
+          marks={{ 0.1: <span style={{ whiteSpace: 'nowrap' }}>Min</span>, 1: <span style={{ whiteSpace: 'nowrap' }}>Max</span> }}
+          max={1}
+          min={0.1}
+          step={0.1}
+          style={{ width: 350 }}
         />
       </Flexbox>
     ),
-    desc: 'Permet de choisir différents styles de traînées au lieu d\'une simple traînée lumineuse.',
+    desc: auraEnabled ? 'Réglez l\'opacité globale de la traînée d\'Aura' : 'Activez Aura pour régler l\'opacité',
+    label: 'Opacité de l\'Aura',
+    minWidth: undefined,
+    name: 'petsAuraOpacity',
+  };
+
+  const trailsEnabled = auraEnabled && !!general?.petsAuraDynamicTrails;
+
+  const petsAuraDynamicTrailsItem = {
+    children: (
+      <Flexbox horizontal align={'center'} gap={12}>
+        <Flexbox
+          style={{
+            opacity: auraEnabled ? 1 : 0.45,
+            pointerEvents: auraEnabled ? 'auto' : 'none',
+            transition: 'opacity 0.2s ease',
+          }}
+        >
+          <Switch disabled={!auraEnabled} defaultChecked={false} />
+        </Flexbox>
+        <Flexbox
+          style={{
+            opacity: trailsEnabled ? 1 : 0.45,
+            pointerEvents: trailsEnabled ? 'auto' : 'none',
+            transition: 'opacity 0.2s ease',
+          }}
+        >
+          <Select
+            disabled={!trailsEnabled}
+            options={[
+              { label: 'Étoiles', value: 'stars' },
+              { label: 'Confettis', value: 'confetti' },
+              { label: 'Pixels Rétro', value: 'retro-pixels' },
+              { label: 'Bulles', value: 'bubbles' },
+            ]}
+            onChange={(value) => {
+              setSettings({ general: { ...general, petsAuraTrailStyle: value } });
+            }}
+            value={general?.petsAuraTrailStyle || 'stars'}
+            style={{ width: 140 }}
+          />
+        </Flexbox>
+      </Flexbox>
+    ),
+    desc: auraEnabled ? 'Permet de choisir différents styles de traînées au lieu d\'une simple traînée lumineuse.' : 'Activez Aura pour choisir les traînées',
     label: 'Traînées dynamiques',
     minWidth: undefined,
     name: 'petsAuraDynamicTrails',
@@ -215,8 +270,18 @@ const Page = memo(() => {
   };
 
   const petsAuraMoodItem = {
-    children: <Switch disabled={!enablePets} defaultChecked={false} />,
-    desc: 'Modifie automatiquement la couleur et l\'intensité de l\'Aura selon l\'activité de l\'agent mAI.',
+    children: (
+      <Flexbox
+        style={{
+          opacity: auraEnabled ? 1 : 0.45,
+          pointerEvents: auraEnabled ? 'auto' : 'none',
+          transition: 'opacity 0.2s ease',
+        }}
+      >
+        <Switch disabled={!auraEnabled} defaultChecked={false} />
+      </Flexbox>
+    ),
+    desc: auraEnabled ? 'Modifie automatiquement la couleur et l\'intensité de l\'Aura selon l\'activité de l\'agent mAI.' : 'Activez Aura pour utiliser cet effet',
     label: 'Effet selon l\'humeur',
     minWidth: undefined,
     name: 'petsAuraMood',
@@ -265,6 +330,7 @@ const Page = memo(() => {
               petsVolumeItem,
               petsCitationsItem,
               petsAuraItem,
+              petsAuraOpacityItem,
               petsAuraDynamicTrailsItem,
               petsAuraMoodItem,
               petsEncouragementsItem,
