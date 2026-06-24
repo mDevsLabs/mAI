@@ -1,12 +1,12 @@
 ---
-title: Configuring ZITADEL Authentication for LobeHub
+title: Configuring ZITADEL Authentication for mAI
 description: >-
-  Learn how to configure ZITADEL SSO for LobeHub, including creating an
+  Learn how to configure ZITADEL SSO for mAI, including creating an
   application and setting up environment variables.
 tags:
   - ZITADEL
   - Authentication
-  - LobeHub
+  - mAI
   - Single Sign-On
   - OIDC
 ---
@@ -23,7 +23,7 @@ tags:
   3. Click **New** to create a new application
   4. Select **Web** as the application type
   5. Configure:
-     - Name: `LobeHub`
+     - Name: `mAI`
      - Authentication Method: `CODE` (for confidential clients)
   6. Add redirect URI:
 
@@ -42,12 +42,12 @@ tags:
 
   ### Configure Environment Variables
 
-  When deploying LobeHub, you need to configure the following environment variables:
+  When deploying mAI, you need to configure the following environment variables:
 
   | Environment Variable  | Type     | Description                                                                   |
   | --------------------- | -------- | ----------------------------------------------------------------------------- |
   | `AUTH_SECRET`         | Required | Key used to encrypt session tokens. Generate using: `openssl rand -base64 32` |
-  | `AUTH_SSO_PROVIDERS`  | Required | SSO provider for LobeHub. Use `zitadel` for ZITADEL                           |
+  | `AUTH_SSO_PROVIDERS`  | Required | SSO provider for mAI. Use `zitadel` for ZITADEL                           |
   | `AUTH_ZITADEL_ID`     | Required | Client ID from ZITADEL application                                            |
   | `AUTH_ZITADEL_SECRET` | Required | Client Secret from ZITADEL application                                        |
   | `AUTH_ZITADEL_ISSUER` | Required | ZITADEL issuer URL (e.g., `https://your-instance.zitadel.cloud`)              |
@@ -64,7 +64,7 @@ tags:
 </Steps>
 
 <Callout type={'info'}>
-  After successful deployment, users will be able to authenticate with ZITADEL and use LobeHub.
+  After successful deployment, users will be able to authenticate with ZITADEL and use mAI.
 </Callout>
 
 ## Related Resources

@@ -9,7 +9,7 @@ tags:
 
 # Configuring Cloud Sandbox
 
-Cloud Sandbox powers the built-in code execution, shell command, file operation, and file export tools. By default, LobeHub uses the Market sandbox. Self-hosted deployments can switch the same tool surface to an Onlyboxes-compatible sandbox provider.
+Cloud Sandbox powers the built-in code execution, shell command, file operation, and file export tools. By default, mAI uses the Market sandbox. Self-hosted deployments can switch the same tool surface to an Onlyboxes-compatible sandbox provider.
 
 ## Core Environment Variables
 
@@ -35,7 +35,7 @@ Supported values:
 ### `MARKET_TRUSTED_CLIENT_ID`
 
 - Type: Optional
-- Description: Market Trusted Client ID used by the LobeHub server to call Market capabilities on behalf of the current user. It must be registered by the target Market service.
+- Description: Market Trusted Client ID used by the mAI server to call Market capabilities on behalf of the current user. It must be registered by the target Market service.
 - Default: -
 - Example: `lobechat-com`
 
@@ -70,7 +70,7 @@ Supported values:
 ### `ONLYBOXES_JIT_TTL_SEC`
 
 - Type: Optional
-- Description: Lifetime of each Onlyboxes JIT token minted by LobeHub.
+- Description: Lifetime of each Onlyboxes JIT token minted by mAI.
 - Default: `1800`
 - Example: `900`
 
@@ -83,7 +83,7 @@ Supported values:
 
 ## Market Configuration
 
-By default, LobeHub uses the official Market sandbox and does not require extra sandbox configuration:
+By default, mAI uses the official Market sandbox and does not require extra sandbox configuration:
 
 ```bash
 # SANDBOX_PROVIDER=market
@@ -96,7 +96,7 @@ SANDBOX_PROVIDER=market
 MARKET_BASE_URL=https://market.example.com
 ```
 
-If that Market service requires the LobeHub server to call sandbox, credential, or skill capabilities on behalf of the current user, also configure Trusted Client credentials:
+If that Market service requires the mAI server to call sandbox, credential, or skill capabilities on behalf of the current user, also configure Trusted Client credentials:
 
 ```bash
 MARKET_TRUSTED_CLIENT_ID=lobechat-com
@@ -107,7 +107,7 @@ MARKET_TRUSTED_CLIENT_SECRET=your-market-trusted-client-secret
 
 ## Onlyboxes Runtime Requirements
 
-The configured Onlyboxes worker should expose `terminalExec` and `terminalResource`. LobeHub uses `terminalExec` as the compatibility layer for shell commands, code execution, and file operations, and uses `terminalResource` for file export through a pre-signed upload URL.
+The configured Onlyboxes worker should expose `terminalExec` and `terminalResource`. mAI uses `terminalExec` as the compatibility layer for shell commands, code execution, and file operations, and uses `terminalResource` for file export through a pre-signed upload URL.
 
 For feature parity with the Market sandbox, the terminal runtime image should include:
 
@@ -131,6 +131,6 @@ CONSOLE_JIT_SIGNING_KEY=onlyboxes-jit-signing-secret
 ```
 
 <Callout type={'info'}>
-  File export still writes the exported artifact to the configured LobeHub S3 storage. Configure the
+  File export still writes the exported artifact to the configured mAI S3 storage. Configure the
   S3 environment variables when users need to download files generated inside the sandbox.
 </Callout>

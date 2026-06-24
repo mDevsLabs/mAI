@@ -9,7 +9,7 @@ tags:
 
 # 配置云端沙箱
 
-云端沙箱用于内置的代码执行、Shell 命令、文件操作和文件导出工具。默认情况下，LobeHub 使用 Market 沙箱；自托管部署可以把同一套工具能力切换到兼容 Onlyboxes 的沙箱提供方。
+云端沙箱用于内置的代码执行、Shell 命令、文件操作和文件导出工具。默认情况下，mAI 使用 Market 沙箱；自托管部署可以把同一套工具能力切换到兼容 Onlyboxes 的沙箱提供方。
 
 ## 核心环境变量
 
@@ -35,7 +35,7 @@ tags:
 ### `MARKET_TRUSTED_CLIENT_ID`
 
 - 类型：可选
-- 描述：Market Trusted Client 的客户端 ID，用于让 LobeHub 服务端代表当前用户调用 Market 能力。需要由对应 Market 服务登记。
+- 描述：Market Trusted Client 的客户端 ID，用于让 mAI 服务端代表当前用户调用 Market 能力。需要由对应 Market 服务登记。
 - 默认值：-
 - 示例：`lobechat-com`
 
@@ -70,7 +70,7 @@ tags:
 ### `ONLYBOXES_JIT_TTL_SEC`
 
 - 类型：可选
-- 描述：LobeHub 签发的每个 Onlyboxes JIT Token 的有效期。
+- 描述：mAI 签发的每个 Onlyboxes JIT Token 的有效期。
 - 默认值：`1800`
 - 示例：`900`
 
@@ -83,7 +83,7 @@ tags:
 
 ## Market 配置
 
-默认情况下，LobeHub 使用官方 Market 沙箱，不需要额外配置：
+默认情况下，mAI 使用官方 Market 沙箱，不需要额外配置：
 
 ```bash
 # SANDBOX_PROVIDER=market
@@ -96,7 +96,7 @@ SANDBOX_PROVIDER=market
 MARKET_BASE_URL=https://market.example.com
 ```
 
-如果该 Market 服务要求 LobeHub 服务端代表当前用户调用沙箱、凭据或技能能力，还需要配置 Trusted Client：
+如果该 Market 服务要求 mAI 服务端代表当前用户调用沙箱、凭据或技能能力，还需要配置 Trusted Client：
 
 ```bash
 MARKET_TRUSTED_CLIENT_ID=lobechat-com
@@ -107,7 +107,7 @@ MARKET_TRUSTED_CLIENT_SECRET=your-market-trusted-client-secret
 
 ## Onlyboxes 运行时要求
 
-配置的 Onlyboxes worker 需要暴露 `terminalExec` 和 `terminalResource`。LobeHub 使用 `terminalExec` 作为 Shell 命令、代码执行和文件操作的兼容层，并使用 `terminalResource` 通过预签名上传 URL 导出文件。
+配置的 Onlyboxes worker 需要暴露 `terminalExec` 和 `terminalResource`。mAI 使用 `terminalExec` 作为 Shell 命令、代码执行和文件操作的兼容层，并使用 `terminalResource` 通过预签名上传 URL 导出文件。
 
 为了和 Market 沙箱保持能力对等，终端运行镜像应包含：
 
@@ -131,6 +131,6 @@ CONSOLE_JIT_SIGNING_KEY=onlyboxes-jit-signing-secret
 ```
 
 <Callout type={'info'}>
-  文件导出仍会把沙箱内产物写入 LobeHub 配置的 S3 存储。如果用户需要下载沙箱生成的文件，请同时配置 S3
+  文件导出仍会把沙箱内产物写入 mAI 配置的 S3 存储。如果用户需要下载沙箱生成的文件，请同时配置 S3
   相关环境变量。
 </Callout>

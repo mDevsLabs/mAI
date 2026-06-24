@@ -1,7 +1,7 @@
 ---
-title: Connect LobeHub to WeChat
+title: Connect mAI to WeChat
 description: >-
-  Learn how to connect a WeChat bot to your LobeHub agent via the iLink Bot API,
+  Learn how to connect a WeChat bot to your mAI agent via the iLink Bot API,
   enabling your AI assistant to chat with users on WeChat through private and group
   conversations.
 tags:
@@ -11,18 +11,18 @@ tags:
   - Integration
 ---
 
-# Connect LobeHub to WeChat
+# Connect mAI to WeChat
 
-By connecting a WeChat channel to your LobeHub agent, users can interact with the AI assistant through WeChat private chats and group conversations.
+By connecting a WeChat channel to your mAI agent, users can interact with the AI assistant through WeChat private chats and group conversations.
 
 ## Prerequisites
 
-- A LobeHub account with an active subscription
+- A mAI account with an active subscription
 - A WeChat account
 
 ## Step 1: Open Channel Settings
 
-In LobeHub, navigate to your agent's settings, then select the **Channels** tab. Click **WeChat** from the platform list.
+In mAI, navigate to your agent's settings, then select the **Channels** tab. Click **WeChat** from the platform list.
 
 ## Step 2: Scan QR Code to Connect
 
@@ -33,7 +33,7 @@ In LobeHub, navigate to your agent's settings, then select the **Channels** tab.
 
   ### Scan with WeChat
 
-  Open WeChat on your phone, go to **Scan** (via the + button in the top right), and scan the QR code displayed in LobeHub.
+  Open WeChat on your phone, go to **Scan** (via the + button in the top right), and scan the QR code displayed in mAI.
 
   ### Confirm Login
 
@@ -43,12 +43,12 @@ In LobeHub, navigate to your agent's settings, then select the **Channels** tab.
 
   ### Connection Complete
 
-  Once confirmed, LobeHub will automatically save your credentials and connect the bot. You should see a success message in the channel settings.
+  Once confirmed, mAI will automatically save your credentials and connect the bot. You should see a success message in the channel settings.
 </Steps>
 
 ## Step 3: Test the Bot
 
-Open WeChat, find your bot contact, and send a message. The bot should respond through your LobeHub agent.
+Open WeChat, find your bot contact, and send a message. The bot should respond through your mAI agent.
 
 ## Adding the Bot to Group Chats
 
@@ -70,9 +70,9 @@ To use the bot in WeChat groups:
 
 Unlike webhook-based platforms (Telegram, Slack), WeChat uses a **long-polling** mechanism via the iLink Bot API:
 
-1. When you scan the QR code, LobeHub obtains a bot token from WeChat's iLink API
-2. LobeHub continuously polls the iLink API for new messages (\~35 second intervals)
-3. When a message arrives, it is routed through the LobeHub agent for processing
+1. When you scan the QR code, mAI obtains a bot token from WeChat's iLink API
+2. mAI continuously polls the iLink API for new messages (\~35 second intervals)
+3. When a message arrives, it is routed through the mAI agent for processing
 4. The agent's response is sent back to WeChat via the iLink API
 
 This polling is managed by a background cron job, so the connection is maintained automatically.

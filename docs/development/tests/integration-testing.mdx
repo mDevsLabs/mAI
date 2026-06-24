@@ -90,13 +90,13 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '@/database/models/__tests__/_util';
 import { messages, sessions, users } from '@/database/schemas';
-import { LobeHubDatabase } from '@/database/type';
+import { mAIDatabase } from '@/database/type';
 import { messageRouter } from '@/server/routers/lambda/message';
 
 import { cleanupTestUser, createTestContext, createTestUser } from '../setup';
 
 describe('Your Feature Integration Tests', () => {
-  let serverDB: LobeHubDatabase;
+  let serverDB: mAIDatabase;
   let userId: string;
 
   beforeEach(async () => {

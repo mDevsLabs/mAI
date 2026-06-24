@@ -12,14 +12,14 @@ export const debugStream = async (stream: ReadableStream) => {
 
   const reader = stream.getReader();
 
-  console.log(`[stream start] ${getTime()}`);
+  console.info(`[stream start] ${getTime()}`);
 
   while (!finished) {
     try {
       const { value, done } = await reader.read();
 
       if (done) {
-        console.log(`[stream finished] total chunks: ${chunk}\n`);
+        console.info(`[stream finished] total chunks: ${chunk}\n`);
         finished = true;
         break;
       }
@@ -33,9 +33,9 @@ export const debugStream = async (stream: ReadableStream) => {
         chunkValue = JSON.stringify(value);
       }
 
-      console.log(`[chunk ${chunk}] ${getTime()}`);
-      console.log(chunkValue);
-      console.log('');
+      console.info(`[chunk ${chunk}] ${getTime()}`);
+      console.info(chunkValue);
+      console.info('');
 
       finished = done;
       chunk++;
@@ -48,6 +48,6 @@ export const debugStream = async (stream: ReadableStream) => {
 };
 
 export const debugResponse = (response: any) => {
-  console.log(`\n[no stream response] ${getTime()}\n`);
-  console.log(JSON.stringify(response) + '\n');
+  console.info(`\n[no stream response] ${getTime()}\n`);
+  console.info(JSON.stringify(response) + '\n');
 };

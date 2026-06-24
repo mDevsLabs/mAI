@@ -116,6 +116,7 @@ describe('sanitizeJsonSchema', () => {
         },
       },
       if: { properties: { x: { enum: ['a', null] } } },
+      // eslint-disable-next-line unicorn/no-thenable
       then: { properties: { y: { type: ['string', 'null'] } } },
       else: { properties: { z: { enum: ['b', null] } } },
     };

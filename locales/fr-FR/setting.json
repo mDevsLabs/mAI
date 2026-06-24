@@ -1033,6 +1033,7 @@
   "tools.activation.pinned.desc": "Toujours Activé",
   "tools.add": "Ajouter une compétence",
   "tools.addSkillOrConnector": "Ajouter des compétences / connecteur",
+  "tools.noConfigurablePermissions": "Cette compétence n'expose pas de permissions d'outil configurables.",
   "tools.builtins.configure": "Configurer",
   "tools.builtins.find-skills.description": "Aide les utilisateurs à découvrir et installer des compétences d’agent lorsqu’ils demandent « comment faire X », « trouver une compétence pour X », ou souhaitent étendre les capacités",
   "tools.builtins.find-skills.title": "Trouver des Compétences",

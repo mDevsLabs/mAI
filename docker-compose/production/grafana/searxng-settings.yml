@@ -1,4 +1,4 @@
-general:
+general: null
   # Debug mode, only for development. Is overwritten by ${SEARXNG_DEBUG}
   debug: false
   # displayed name
@@ -17,7 +17,7 @@ general:
   # open_metrics: <password>
   open_metrics: ''
 
-brand:
+brand: null
   new_issue_url: https://github.com/searxng/searxng/issues/new
   docs_url: https://docs.searxng.org/
   public_instances: https://searx.space
@@ -30,7 +30,7 @@ brand:
   #     Uptime: https://uptime.searxng.org/history/darmarit-org
   #     About: "https://searxng.org"
 
-search:
+search: null
   # Filter results. 0: None, 1: Moderate, 2: Strict
   safe_search: 0
   # Existing autocomplete backends: "baidu", "brave", "dbpedia", "duckduckgo", "google", "yandex",
@@ -59,7 +59,7 @@ search:
   ban_time_on_fail: 5
   # max ban time in seconds after engine errors
   max_ban_time_on_fail: 120
-  suspended_times:
+  suspended_times: null
     # Engine suspension time after error (in seconds; set to 0 to disable)
     # For error "Access denied" and "HTTP error [402, 403]"
     SearxEngineAccessDenied: 86400
@@ -75,10 +75,10 @@ search:
 
   # remove format to deny access, use lower case.
   # formats: [html, csv, json, rss]
-  formats:
+  formats: null
     - html
     - json
-server:
+server: null
   # Is overwritten by ${SEARXNG_PORT} and ${SEARXNG_BIND_ADDRESS}
   port: 8888
   bind_address: '127.0.0.1'
@@ -103,18 +103,18 @@ server:
   # POST queries are more secure as they don't show up in history but may cause
   # problems when using Firefox containers
   method: 'POST'
-  default_http_headers:
+  default_http_headers: null
     X-Content-Type-Options: nosniff
     X-Download-Options: noopen
     X-Robots-Tag: noindex, nofollow
     Referrer-Policy: no-referrer
 
-redis:
+redis: null
   # URL to connect redis database. Is overwritten by ${SEARXNG_REDIS_URL}.
   # https://docs.searxng.org/admin/settings/settings_redis.html#settings-redis
   url: false
 
-ui:
+ui: null
   # Custom static path - leave it blank if you didn't change
   static_path: ''
   # Is overwritten by ${SEARXNG_STATIC_USE_HASH}.
@@ -137,7 +137,7 @@ ui:
   default_locale: ''
   # Open result links in a new tab by default
   # results_on_new_tab: false
-  theme_args:
+  theme_args: null
     # style of simple theme: auto, light, dark
     simple_style: auto
   # Perform search immediately if a category selected.
@@ -182,7 +182,7 @@ ui:
 
 # communication with search engines
 #
-outgoing:
+outgoing: null
   # default timeout in seconds, can be override by engine
   request_timeout: 3.0
   # the maximum timeout in seconds
@@ -276,7 +276,7 @@ outgoing:
 # '(.*\.)?youtu\.be$': 'invidious.example.com'
 #
 
-checker:
+checker: null
   # disable checker when in debug mode
   off_when_debug: true
 
@@ -294,49 +294,49 @@ checker:
 
   # additional tests: only for the YAML anchors (see the engines section)
   #
-  additional_tests:
+  additional_tests: null
     rosebud: &test_rosebud
-      matrix:
+      matrix: null
         query: rosebud
         lang: en
-      result_container:
+      result_container: null
         - not_empty
         - ['one_title_contains', 'citizen kane']
-      test:
+      test: null
         - unique_results
 
     android: &test_android
-      matrix:
+      matrix: null
         query: ['android']
         lang: ['en', 'de', 'fr', 'zh-CN']
-      result_container:
+      result_container: null
         - not_empty
         - ['one_title_contains', 'google']
-      test:
+      test: null
         - unique_results
 
   # tests: only for the YAML anchors (see the engines section)
-  tests:
+  tests: null
     infobox: &tests_infobox
-      infobox:
-        matrix:
+      infobox: null
+        matrix: null
           query: ['linux', 'new york', 'bbc']
-        result_container:
+        result_container: null
           - has_infobox
 
-categories_as_tabs:
-  general:
-  images:
-  videos:
-  news:
-  map:
-  music:
-  it:
-  science:
-  files:
-  social media:
+categories_as_tabs: null
+  general: null
+  images: null
+  videos: null
+  news: null
+  map: null
+  music: null
+  it: null
+  science: null
+  files: null
+  social media: null
 
-engines:
+engines: null
   - name: 9gag
     engine: 9gag
     shortcut: 9g
@@ -384,7 +384,7 @@ engines:
     content_query: snippet
     timeout: 1.5
     disabled: true
-    about:
+    about: null
       website: https://alexandria.org/
       official_api_documentation: https://github.com/alexandria-org/alexandria-api/raw/master/README.md
       use_official_api: true
@@ -526,7 +526,7 @@ engines:
     timeout: 4.0
     disabled: true
     shortcut: bb
-    about:
+    about: null
       website: https://bitbucket.org/
       wikidata_id: Q2493781
       official_api_documentation: https://developer.atlassian.com/bitbucket
@@ -612,7 +612,7 @@ engines:
     title_html_to_text: true
     content_html_to_text: true
     disabled: true
-    about:
+    about: null
       website: https://crowdview.ai/
 
   - name: yep
@@ -650,7 +650,7 @@ engines:
     url_xpath: ./div[@class="title-and-desc"]/a/@href
     title_xpath: ./div[@class="title-and-desc"]/a/div
     content_xpath: ./div[@class="title-and-desc"]/div[@class="site-descr"]
-    about:
+    about: null
       website: https://curlie.org/
       wikidata_id: Q60715723
       use_official_api: false
@@ -707,7 +707,7 @@ engines:
     title_query: Title
     content_query: Description
     disabled: true
-    about:
+    about: null
       website: https://encyclosearch.org
       official_api_documentation: https://encyclosearch.org/docs/#/rest-api
       use_official_api: true
@@ -726,10 +726,10 @@ engines:
     categories: []
     shortcut: ew
     disabled: true
-    about:
+    about: null
       website: https://www.erowid.org/
       wikidata_id: Q1430691
-      official_api_documentation:
+      official_api_documentation: null
       use_official_api: false
       require_api_key: false
       results: HTML
@@ -816,10 +816,10 @@ engines:
     first_page_num: 1
     shortcut: et
     categories: [dictionaries]
-    about:
+    about: null
       website: https://www.etymonline.com/
       wikidata_id: Q1188617
-      official_api_documentation:
+      official_api_documentation: null
       use_official_api: false
       require_api_key: false
       results: HTML
@@ -865,7 +865,7 @@ engines:
     search_type: title
     timeout: 5.0
     disabled: true
-    about:
+    about: null
       website: https://directory.fsf.org/
       wikidata_id: Q2470288
 
@@ -911,7 +911,7 @@ engines:
     base_url: https://gitlab.com
     shortcut: gl
     disabled: true
-    about:
+    about: null
       website: https://gitlab.com/
       wikidata_id: Q16639197
 
@@ -1012,7 +1012,7 @@ engines:
     timeout: 4.0
     disabled: true
     shortcut: habr
-    about:
+    about: null
       website: https://habr.com/
       wikidata_id: Q4494434
       official_api_documentation: https://habr.com/en/docs/help/api/
@@ -1049,7 +1049,7 @@ engines:
     page_size: 20
     categories: [it, packages]
     shortcut: ho
-    about:
+    about: null
       website: https://hoogle.haskell.org/
       wikidata_id: Q34010
       official_api_documentation: https://hackage.haskell.org/api
@@ -1078,7 +1078,7 @@ engines:
     engine: invidious
     # Instanes will be selected randomly, see https://api.invidious.io/ for
     # instances that are stable (good uptime) and close to you.
-    base_url:
+    base_url: null
       - https://invidious.adminforge.de
       - https://inv.nadeko.net
     shortcut: iv
@@ -1098,7 +1098,7 @@ engines:
 
   - name: kickass
     engine: kickass
-    base_url:
+    base_url: null
       - https://kickasstorrents.to
       - https://kickasstorrents.cr
       - https://kickasstorrent.cr
@@ -1141,10 +1141,10 @@ engines:
     timeout: 7.0
     disabled: true
     shortcut: lg
-    about:
+    about: null
       website: https://libgen.fun/
       wikidata_id: Q22017206
-      official_api_documentation:
+      official_api_documentation: null
       use_official_api: false
       require_api_key: false
       results: HTML
@@ -1163,7 +1163,7 @@ engines:
   - name: libretranslate
     engine: libretranslate
     # https://github.com/LibreTranslate/LibreTranslate?tab=readme-ov-file#mirrors
-    base_url:
+    base_url: null
       - https://libretranslate.com/translate
     # api_key: abc123
     shortcut: lt
@@ -1186,10 +1186,10 @@ engines:
     shortcut: lo
     timeout: 5.0
     disabled: true
-    about:
+    about: null
       website: https://lobste.rs/
       wikidata_id: Q60762874
-      official_api_documentation:
+      official_api_documentation: null
       use_official_api: false
       require_api_key: false
       results: HTML
@@ -1224,7 +1224,7 @@ engines:
     url_prefix: https://developer.mozilla.org
     title_query: title
     content_query: summary
-    about:
+    about: null
       website: https://developer.mozilla.org
       wikidata_id: Q3273508
       official_api_documentation: null
@@ -1265,7 +1265,7 @@ engines:
 
   - name: mozhi
     engine: mozhi
-    base_url:
+    base_url: null
       - https://mozhi.aryak.me
       - https://translate.bus-hit.me
       - https://nyc1.mz.ggtyler.dev
@@ -1300,7 +1300,7 @@ engines:
     content_query: description
     categories: it
     shortcut: man
-    about:
+    about: null
       website: https://www.mankier.com/
       official_api_documentation: https://www.mankier.com/api
       use_official_api: true
@@ -1333,7 +1333,7 @@ engines:
     categories: 'science'
     shortcut: oad
     timeout: 5.0
-    about:
+    about: null
       website: https://www.openaire.eu/
       wikidata_id: Q25106053
       official_api_documentation: https://api.openaire.eu/
@@ -1353,7 +1353,7 @@ engines:
     categories: science
     shortcut: oap
     timeout: 5.0
-    about:
+    about: null
       website: https://www.openaire.eu/
       wikidata_id: Q25106053
       official_api_documentation: https://api.openaire.eu/
@@ -1392,10 +1392,10 @@ engines:
     timeout: 4.0
     disabled: true
     shortcut: or
-    about:
+    about: null
       website: https://openrepos.net/
-      wikidata_id:
-      official_api_documentation:
+      wikidata_id: null
+      official_api_documentation: null
       use_official_api: false
       require_api_key: false
       results: HTML
@@ -1412,7 +1412,7 @@ engines:
     disabled: true
     timeout: 5.0
     shortcut: pack
-    about:
+    about: null
       website: https://packagist.org
       wikidata_id: Q108311377
       official_api_documentation: https://packagist.org/apidoc
@@ -1444,7 +1444,7 @@ engines:
     # URL to use as link and for embeds
     frontend_url: https://srv.piped.video
     # Instance will be selected randomly, for more see https://piped-instances.kavin.rocks/
-    backend_url:
+    backend_url: null
       - https://pipedapi.adminforge.de
       - https://pipedapi.nosebs.ru
       - https://pipedapi.ducks.party
@@ -1473,7 +1473,7 @@ engines:
     engine: pixiv
     disabled: true
     inactive: true
-    pixiv_image_proxies:
+    pixiv_image_proxies: null
       - https://pximg.example.org
       # A proxy is required to load the images. Hosting an image proxy server
       # for Pixiv:
@@ -1555,7 +1555,7 @@ engines:
     timeout: 3.0
     disabled: true
     first_page_num: 1
-    about:
+    about: null
       website: https://pub.dev/
       official_api_documentation: https://pub.dev/help/api
       use_official_api: false
@@ -1580,7 +1580,7 @@ engines:
     engine: qwant
     shortcut: qw
     categories: [general, web]
-    additional_tests:
+    additional_tests: null
       rosebud: *test_rosebud
 
   - name: qwant news
@@ -1648,7 +1648,7 @@ engines:
     categories: general
     shortcut: rd
     disabled: true
-    about:
+    about: null
       website: https://rightdao.com/
       use_official_api: false
       require_api_key: false
@@ -1687,7 +1687,7 @@ engines:
     title_xpath: .//span[contains(@class,'result-title-txt')]/text()
     content_xpath: ./p[@id='result-hightlight']
     disabled: true
-    about:
+    about: null
       website: https://searchmysite.net
 
   - name: sepiasearch
@@ -1786,7 +1786,7 @@ engines:
     shortcut: sp
     startpage_categ: web
     categories: [general, web]
-    additional_tests:
+    additional_tests: null
       rosebud: *test_rosebud
 
   - name: startpage news
@@ -1811,7 +1811,7 @@ engines:
     engine: solidtorrents
     shortcut: solid
     timeout: 4.0
-    base_url:
+    base_url: null
       - https://solidtorrents.to
       - https://bitsearch.to
 
@@ -1960,7 +1960,7 @@ engines:
     categories: [general, web]
     shortcut: wib
     disabled: true
-    about:
+    about: null
       website: https://wiby.me/
 
   - name: wikibooks
@@ -1971,7 +1971,7 @@ engines:
     base_url: 'https://{language}.wikibooks.org/'
     search_type: text
     disabled: true
-    about:
+    about: null
       website: https://www.wikibooks.org/
       wikidata_id: Q367
 
@@ -1982,7 +1982,7 @@ engines:
     base_url: 'https://{language}.wikinews.org/'
     search_type: text
     srsort: create_timestamp_desc
-    about:
+    about: null
       website: https://www.wikinews.org/
       wikidata_id: Q964
 
@@ -1994,9 +1994,9 @@ engines:
     base_url: 'https://{language}.wikiquote.org/'
     search_type: text
     disabled: true
-    additional_tests:
+    additional_tests: null
       rosebud: *test_rosebud
-    about:
+    about: null
       website: https://www.wikiquote.org/
       wikidata_id: Q369
 
@@ -2008,7 +2008,7 @@ engines:
     base_url: 'https://{language}.wikisource.org/'
     search_type: text
     disabled: true
-    about:
+    about: null
       website: https://www.wikisource.org/
       wikidata_id: Q263
 
@@ -2019,18 +2019,18 @@ engines:
     base_url: 'https://species.wikimedia.org/'
     search_type: text
     disabled: true
-    about:
+    about: null
       website: https://species.wikimedia.org/
       wikidata_id: Q13679
-    tests:
-      wikispecies:
-        matrix:
+    tests: null
+      wikispecies: null
+        matrix: null
           query: 'Campbell, L.I. et al. 2011: MicroRNAs'
           lang: en
-        result_container:
+        result_container: null
           - not_empty
           - ['one_title_contains', 'Tardigrada']
-        test:
+        test: null
           - unique_results
 
   - name: wiktionary
@@ -2039,7 +2039,7 @@ engines:
     categories: [dictionaries, wikimedia]
     base_url: 'https://{language}.wiktionary.org/'
     search_type: text
-    about:
+    about: null
       website: https://www.wiktionary.org/
       wikidata_id: Q151
 
@@ -2051,7 +2051,7 @@ engines:
     base_url: 'https://{language}.wikiversity.org/'
     search_type: text
     disabled: true
-    about:
+    about: null
       website: https://www.wikiversity.org/
       wikidata_id: Q370
 
@@ -2063,7 +2063,7 @@ engines:
     base_url: 'https://{language}.wikivoyage.org/'
     search_type: text
     disabled: true
-    about:
+    about: null
       website: https://www.wikivoyage.org/
       wikidata_id: Q373
 
@@ -2204,7 +2204,7 @@ engines:
     first_page_num: 1
     page_size: 10
     disabled: true
-    about:
+    about: null
       website: https://www.naver.com/
       wikidata_id: Q485639
       official_api_documentation: https://developers.naver.com/docs/nmt/examples/
@@ -2226,7 +2226,7 @@ engines:
     first_page_num: 1
     categories: [it, packages]
     disabled: true
-    about:
+    about: null
       website: https://rubygems.org/
       wikidata_id: Q1853420
       official_api_documentation: https://guides.rubygems.org/rubygems-org-api/
@@ -2254,7 +2254,7 @@ engines:
     engine: yacy
     categories: general
     search_type: text
-    base_url:
+    base_url: null
       - https://yacy.searchlab.eu
       # see https://github.com/searxng/searxng/pull/3631#issuecomment-2240903027
       # - https://search.kyun.li
@@ -2312,7 +2312,7 @@ engines:
     content_xpath: //div[@class="synonyms-list-group"]
     title_xpath: //div[@class="upper-synonyms"]/a
     no_result_for_http_status: [404]
-    about:
+    about: null
       website: https://www.woxikon.de/
       wikidata_id: # No Wikidata ID
       use_official_api: false
@@ -2380,7 +2380,7 @@ engines:
     content_xpath: //li/div[@class="searchresult"]
     categories: general
     disabled: true
-    about:
+    about: null
       website: https://wikimini.org/
       wikidata_id: Q3568032
       use_official_api: false
@@ -2455,7 +2455,7 @@ engines:
     first_page_num: 1
     categories: [it, repos]
     disabled: true
-    about:
+    about: null
       website: https://sr.ht
       wikidata_id: Q78514485
       official_api_documentation: https://man.sr.ht/
@@ -2475,7 +2475,7 @@ engines:
     categories: [general, web]
     disabled: true
     timeout: 4.0
-    about:
+    about: null
       website: https://search.goo.ne.jp
       wikidata_id: Q249044
       use_official_api: false
@@ -2570,7 +2570,7 @@ engines:
 #        chars: ' '
 #        keys: ['line']
 
-doi_resolvers:
+doi_resolvers: null
   oadoi.org: 'https://oadoi.org/'
   doi.org: 'https://doi.org/'
   doai.io: 'https://dissem.in/'

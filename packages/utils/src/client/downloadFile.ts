@@ -35,7 +35,7 @@ export const downloadFile = async (
     link.remove();
     window.URL.revokeObjectURL(blobUrl);
   } catch (error) {
-    console.log('Download failed:', error);
+    console.error('Download failed:', error);
 
     // Fallback: open in new tab if enabled
     if (fallbackToOpen) {
