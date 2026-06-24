@@ -1,6 +1,6 @@
 import { fileManagerSelectors, useFileStore } from '@/store/file';
-import { type FileListItem } from '@/types/files';
 import { SortType } from '@/types/files';
+import { type ResourceItem } from '@/types/resource';
 
 import { type SelectAllState, type State } from './initialState';
 
@@ -9,10 +9,10 @@ import { type SelectAllState, type State } from './initialState';
  * This is a pure function that can be used with any file list
  */
 export const sortFileList = (
-  fileList: FileListItem[] | undefined,
+  fileList: ResourceItem[] | undefined,
   sorter: 'name' | 'createdAt' | 'size',
   sortType: SortType,
-): FileListItem[] | undefined => {
+): ResourceItem[] | undefined => {
   if (!fileList || fileList.length === 0) return fileList;
 
   const sorted = [...fileList];
@@ -53,8 +53,8 @@ export const sortFileList = (
  * Reads from FileStore and applies sorting from ResourceManagerStore
  * @deprecated Use sortFileList with data from SWR hook instead
  */
-const getSortedFileList = (s: State): FileListItem[] | undefined => {
-  const fileList = useFileStore.getState().fileList;
+const getSortedFileList = (s: State): ResourceItem[] | undefined => {
+  const fileList = useFileStore.getState().fileList as any;
   return sortFileList(fileList, s.sorter, s.sortType);
 };
 
@@ -62,9 +62,9 @@ const getSortedFileList = (s: State): FileListItem[] | undefined => {
  * Get current file by ID from FileStore
  * Returns undefined if no currentViewItemId or file not found
  */
-const getCurrentFile = (s: State): FileListItem | undefined => {
+const getCurrentFile = (s: State): ResourceItem | undefined => {
   if (!s.currentViewItemId) return undefined;
-  return fileManagerSelectors.getFileById(s.currentViewItemId)(useFileStore.getState());
+  return fileManagerSelectors.getFileById(s.currentViewItemId)(useFileStore.getState()) as unknown as ResourceItem;
 };
 
 const isFilePreviewMode = (s: State) => s.mode === 'editor' && !!s.currentViewItemId;

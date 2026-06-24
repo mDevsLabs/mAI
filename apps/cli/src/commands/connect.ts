@@ -59,7 +59,7 @@ interface ConnectOptions {
 export function registerConnectCommand(program: Command) {
   const connectCmd = program
     .command('connect')
-    .description('Connect to the device gateway and listen for tool calls')
+    .description('Establish an active tunnel to the device gateway to listen and execute remote tool calls')
     .option('--token <jwt>', 'JWT access token')
     .option('--gateway <url>', 'Device gateway URL')
     .option('--device-id <id>', 'Device ID (auto-generated if not provided)')
@@ -152,7 +152,7 @@ export function registerConnectCommand(program: Command) {
   // discoverable enough on its own.
   program
     .command('disconnect')
-    .description('Disconnect from the device gateway (alias for `connect stop`)')
+    .description('Terminate the connection to the device gateway and stop the background daemon')
     .action(handleStop);
 }
 
@@ -387,6 +387,7 @@ async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
       const ack = await spawnHeteroAgentRun(
         {
           agentType: request.agentType,
+          args: request.args,
           cwd: request.cwd,
           imageList: request.imageList,
           jwt: request.jwt,

@@ -23,6 +23,9 @@ interface FeedbackContentProps {
 interface FormValues {
   message: string;
   title: string;
+  name: string;
+  email?: string;
+  phone?: string;
 }
 
 const FeedbackContent = memo<FeedbackContentProps>(({ initialValues }) => {
@@ -72,6 +75,8 @@ const FeedbackContent = memo<FeedbackContentProps>(({ initialValues }) => {
       const values = await form.validateFields();
       setLoading(true);
 
+      const finalMessage = `Nom: ${values.name}\nEmail: ${values.email || userEmail || 'Non renseigné'}\nTéléphone: ${values.phone || 'Non renseigné'}\n\n---\n\n${values.message}`;
+
       await lambdaClient.market.submitFeedback.mutate({
         clientInfo: {
           language: navigator.language,
@@ -79,8 +84,8 @@ const FeedbackContent = memo<FeedbackContentProps>(({ initialValues }) => {
           url: window.location.href,
           userAgent: navigator.userAgent,
         },
-        email: userEmail || undefined,
-        message: values.message,
+        email: values.email || userEmail || undefined,
+        message: finalMessage,
         screenshotUrl: screenshotUrl || undefined,
         title: values.title,
       });
@@ -133,6 +138,29 @@ const FeedbackContent = memo<FeedbackContentProps>(({ initialValues }) => {
           ]}
         >
           <Input showCount maxLength={200} placeholder={t('feedback.fields.title.placeholder')} />
+        </Form.Item>
+
+        <Form.Item
+          label="Nom"
+          name="name"
+          rules={[{ message: 'Veuillez renseigner votre nom', required: true }]}
+        >
+          <Input placeholder="Votre nom" />
+        </Form.Item>
+
+        <Form.Item
+          label="Adresse mail (facultatif)"
+          name="email"
+          rules={[{ type: 'email', message: 'Adresse email invalide' }]}
+        >
+          <Input placeholder="Votre adresse email" />
+        </Form.Item>
+
+        <Form.Item
+          label="Numéro de téléphone (facultatif)"
+          name="phone"
+        >
+          <Input placeholder="Votre numéro de téléphone" />
         </Form.Item>
 
         <Form.Item

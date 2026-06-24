@@ -1,9 +1,6 @@
 import type { ChatModelCard } from '@lobechat/types';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
 import debug from 'debug';
 import type { AiFullModelCard, AiModelType } from 'model-bank';
-import { LOBE_DEFAULT_MODEL_LIST } from 'model-bank';
 import type { ClientOptions } from 'openai';
 import OpenAI from 'openai';
 import type { Stream } from 'openai/streaming';
@@ -33,7 +30,11 @@ import type {
 } from '../../types';
 import type { ILobeAgentRuntimeErrorType } from '../../types/error';
 import { AgentRuntimeErrorType } from '../../types/error';
-import type { CreateImagePayload, CreateImageResponse } from '../../types/image';
+import type {
+  CreateImageMethodOptions,
+  CreateImagePayload,
+  CreateImageResponse,
+} from '../../types/image';
 import type {
   CreateVideoPayload,
   CreateVideoResponse,
@@ -49,7 +50,12 @@ import { getModelPricing } from '../../utils/getModelPricing';
 import { handleOpenAIError } from '../../utils/handleOpenAIError';
 import type { ModelIdMappingOptions } from '../../utils/modelIdMapping';
 import { resolveMappedModelId, withMappedModelId } from '../../utils/modelIdMapping';
-import { detectModelProvider } from '../../utils/modelParse';
+import {
+  detectModelProvider,
+  MODEL_LIST_CONFIGS,
+  processModelList,
+  processMultiProviderModelList,
+} from '../../utils/modelParse';
 import { postProcessModelList } from '../../utils/postProcessModelList';
 import {
   assertContextWithinWindow,
@@ -629,7 +635,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
             apiMode: 'chat_completions',
             includeUsageRequested,
             model: payload.model,
-            pricing: await getModelPricing(payload.model, this.id),
+            pricing: await getModelPricing(payload.model, this.id, options?.pricingContext),
             provider: this.id,
           },
         };
@@ -751,7 +757,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       }
     }
 
-    async createImage(payload: CreateImagePayload) {
+    async createImage(payload: CreateImagePayload, options?: CreateImageMethodOptions) {
       const log = debug(`${this.logPrefix}:createImage`);
 
       // If custom createImage implementation is provided, use it
@@ -768,6 +774,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       log('using default createOpenAICompatibleImage');
       // Use the new createOpenAICompatibleImage function
       return createOpenAICompatibleImage(this.client, payload, this.id, {
+        pricingContext: options?.pricingContext,
         pricingModel: payload.model,
         requestModel: resolveMappedModelId(payload.model, this.modelIdMappingOptions),
         routingModel: payload.model,
@@ -840,50 +847,24 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       } else {
         log('fetching models from client API');
         const list = await this.client.models.list();
-        resultModels = list.data
-          .filter((model) => {
-            return CHAT_MODELS_BLOCK_LIST.every(
-              (keyword) => !model.id.toLowerCase().includes(keyword),
-            );
-          })
-          .map((item) => {
-            if (models?.transformModel) {
-              return models.transformModel(item);
-            }
+        const filteredList = list.data.filter((model) => {
+          return CHAT_MODELS_BLOCK_LIST.every(
+            (keyword) => !model.id.toLowerCase().includes(keyword),
+          );
+        });
 
-            const toReleasedAt = () => {
-              if (!item.created) return;
-              dayjs.extend(utc);
-
-              // guarantee item.created in Date String format
-              if (
-                typeof (item.created as any) === 'string' ||
-                // or in milliseconds
-                item.created.toFixed(0).length === 13
-              ) {
-                return dayjs.utc(item.created).format('YYYY-MM-DD');
-              }
-
-              // by default, the created time is in seconds
-              return dayjs.utc(item.created * 1000).format('YYYY-MM-DD');
-            };
-
-            // TODO: should refactor after remove v1 user/modelList code
-            const knownModel = LOBE_DEFAULT_MODEL_LIST.find((model) => model.id === item.id);
-
-            if (knownModel) {
-              const releasedAt = knownModel.releasedAt ?? toReleasedAt();
-
-              return { ...knownModel, releasedAt };
-            }
-
-            return {
-              id: item.id,
-              releasedAt: toReleasedAt(),
-            };
-          })
-
-          .filter(Boolean) as ChatModelCard[];
+        if (models?.transformModel) {
+          resultModels = filteredList
+            .map((item) => models.transformModel!(item))
+            .filter(Boolean) as ChatModelCard[];
+        } else {
+          const providerConfig = MODEL_LIST_CONFIGS[provider as keyof typeof MODEL_LIST_CONFIGS];
+          if (providerConfig) {
+            resultModels = await processModelList(filteredList, providerConfig, provider as any);
+          } else {
+            resultModels = await processMultiProviderModelList(filteredList, provider as any);
+          }
+        }
       }
 
       log('fetched %d models', resultModels.length);
@@ -976,7 +957,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
           !!schema,
         );
 
-        const pricing = await getModelPricing(model, this.id);
+        const pricing = await getModelPricing(model, this.id, options?.pricingContext);
         const usagePayload = { model, pricing, provider: this.id };
 
         if (tools) {
@@ -1133,7 +1114,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         );
 
         if (res.usage && options?.onUsage) {
-          const pricing = await getModelPricing(payload.model, this.id);
+          const pricing = await getModelPricing(payload.model, this.id, options?.pricingContext);
           await options.onUsage(
             convertOpenAIUsage(res.usage as any, {
               model: payload.model,
@@ -1445,7 +1426,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         payload: {
           apiMode: 'responses',
           model: usageModel,
-          pricing: await getModelPricing(usageModel, this.id),
+          pricing: await getModelPricing(usageModel, this.id, options?.pricingContext),
           provider: this.id,
         },
       };

@@ -59,22 +59,8 @@ const ResourceExplorer = memo(() => {
   // Get resource data from store (updated by SWR hook)
   const { resourceList } = useResourceStore();
 
-  // Map ResourceItem[] to FileListItem[] for compatibility
-  // TODO: Eventually update all consumers to use ResourceItem directly
-  const rawData = resourceList?.map((item) => ({
-    ...item,
-    // Ensure all FileListItem fields are present with proper types
-    chunkCount: item.chunkCount ?? null,
-    chunkingError: item.chunkingError ?? null,
-    chunkingStatus: (item.chunkingStatus ?? null) as any,
-    embeddingError: item.embeddingError ?? null,
-    embeddingStatus: (item.embeddingStatus ?? null) as any,
-    finishEmbedding: item.finishEmbedding ?? false,
-    url: item.url ?? '',
-  }));
-
   // Sort data using current sort settings
-  const data = sortFileList(rawData, sorter, sortType);
+  const data = sortFileList(resourceList, sorter, sortType);
 
   // Check task status
   useCheckTaskStatus(data);

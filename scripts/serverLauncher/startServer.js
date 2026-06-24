@@ -50,7 +50,7 @@ const resolveHostIP = async (host, version = 4) => {
     const { address } = await dns.lookup(host, { family: version });
 
     if (!isValidIP(address, version)) {
-      console.error(
+      console.info(
         `❌ DNS Error: Invalid resolved IP: ${address}. IP address must be IPv${version}.`,
       );
       process.exit(1);
@@ -58,8 +58,8 @@ const resolveHostIP = async (host, version = 4) => {
 
     return address;
   } catch (err) {
-    console.error(`❌ DNS Error: Could not resolve ${host}. Check DNS server:`);
-    console.error(err);
+    console.info(`❌ DNS Error: Could not resolve ${host}. Check DNS server:`);
+    console.info(err);
     process.exit(1);
   }
 };
@@ -69,7 +69,7 @@ const runProxyChainsConfGenerator = async (url) => {
   const { protocol, host, port, user, pass } = parseUrl(url);
 
   if (!['http', 'socks4', 'socks5'].includes(protocol)) {
-    console.error(
+    console.info(
       `❌ ProxyChains: Invalid protocol (${protocol}). Protocol must be 'http', 'socks4' and 'socks5'.`,
     );
     process.exit(1);
@@ -77,7 +77,7 @@ const runProxyChainsConfGenerator = async (url) => {
 
   const validPort = parseInt(port, 10);
   if (isNaN(validPort) || validPort <= 0 || validPort > 65_535) {
-    console.error(
+    console.info(
       `❌ ProxyChains: Invalid port (${port}). Port must be a number between 1 and 65535.`,
     );
     process.exit(1);
@@ -110,8 +110,8 @@ ${protocol} ${ip} ${port} ${user} ${pass}
     .trim();
 
   await fs.writeFile(PROXYCHAINS_CONF_PATH, configContent);
-  console.log(`✅ ProxyChains: All outgoing traffic routed via ${url}.`);
-  console.log('-------------------------------------');
+  console.info(`✅ ProxyChains: All outgoing traffic routed via ${url}.`);
+  console.info('-------------------------------------');
 };
 
 // Function to execute a script with child process spawn
@@ -149,7 +149,7 @@ const startGateway = async () => {
       });
 
       if (res.ok) {
-        console.log('✅ Gateway: Started successfully.');
+        console.info('✅ Gateway: Started successfully.');
         return;
       }
 
@@ -161,7 +161,7 @@ const startGateway = async () => {
     }
   }
 
-  console.error('❌ Gateway: Failed to start after retries.');
+  console.info('❌ Gateway: Failed to start after retries.');
 };
 
 // Function to create QStash schedule for dispatching workflow tasks every 10 minutes
@@ -196,12 +196,12 @@ const createQstashSchedule = async () => {
     });
 
     if (res.ok) {
-      console.log('✅ QStash: Schedule created successfully.');
+      console.info('✅ QStash: Schedule created successfully.');
     } else {
-      console.error(`❌ QStash: Failed to create schedule. Status ${res.status}`);
+      console.info(`❌ QStash: Failed to create schedule. Status ${res.status}`);
     }
   } catch (err) {
-    console.error('❌ QStash: Error creating schedule:', err);
+    console.info('❌ QStash: Error creating schedule:', err);
   }
 };
 
@@ -221,8 +221,8 @@ const runServer = async () => {
   // Check for deprecated auth env vars first - fail fast if found
   checkDeprecatedAuth({ action: 'restart' });
 
-  console.log('🌐 DNS Server:', dns.getServers());
-  console.log('-------------------------------------');
+  console.info('🌐 DNS Server:', dns.getServers());
+  console.info('-------------------------------------');
 
   if (process.env.DATABASE_DRIVER) {
     try {
@@ -231,13 +231,13 @@ const runServer = async () => {
       await runScript(DB_MIGRATION_SCRIPT_PATH);
     } catch (err) {
       if (err.code === 'ENOENT') {
-        console.log(
+        console.info(
           `⚠️ DB Migration: Not found ${DB_MIGRATION_SCRIPT_PATH}. Skipping DB migration. Ensure to migrate database manually.`,
         );
-        console.log('-------------------------------------');
+        console.info('-------------------------------------');
       } else {
-        console.error('❌ Error during DB migration:');
-        console.error(err);
+        console.info('❌ Error during DB migration:');
+        console.info(err);
         process.exit(1);
       }
     }

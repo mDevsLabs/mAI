@@ -16,6 +16,7 @@ import { MoreVerticalIcon, Plus, Trash2 } from 'lucide-react';
 import React, { memo, Suspense, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import Highlight from '@/components/Highlight';
 import MCPTag from '@/components/Plugins/MCPTag';
 import PluginAvatar from '@/components/Plugins/PluginAvatar';
 import McpDetail from '@/features/MCP/MCPDetail';
@@ -31,7 +32,7 @@ import { type DiscoverMcpItem } from '@/types/discover';
 
 import { itemStyles } from '../style';
 
-const Item = memo<DiscoverMcpItem>(({ name, description, icon, identifier }) => {
+const Item = memo<DiscoverMcpItem & { keyword?: string }>(({ name, description, icon, identifier, keyword }) => {
   const styles = itemStyles;
   const { t } = useTranslation('plugin');
   const [detailOpen, setDetailOpen] = useState(false);
@@ -151,10 +152,16 @@ const Item = memo<DiscoverMcpItem>(({ name, description, icon, identifier }) => 
           <PluginAvatar avatar={icon} size={40} />
           <Flexbox flex={1} gap={4} style={{ minWidth: 0, overflow: 'hidden' }}>
             <Flexbox horizontal align="center" gap={8}>
-              <span className={styles.title}>{name}</span>
+              <span className={styles.title}>
+                <Highlight keyword={keyword} text={name} />
+              </span>
               <MCPTag showText={false} />
             </Flexbox>
-            {description && <span className={styles.description}>{description}</span>}
+            {description && (
+              <span className={styles.description}>
+                <Highlight keyword={keyword} text={description} />
+              </span>
+            )}
           </Flexbox>
           <div onClick={stopPropagation}>{renderAction()}</div>
         </Block>

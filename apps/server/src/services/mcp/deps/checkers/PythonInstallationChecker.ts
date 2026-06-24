@@ -1,9 +1,9 @@
-import { exec } from 'node:child_process';
+import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 
 import { type InstallationChecker, type PackageInstallCheckResult } from '../types';
 
-const execPromise = promisify(exec);
+const execFilePromise = promisify(execFile);
 
 /**
  * Python Installation Checker
@@ -29,11 +29,19 @@ export class PythonInstallationChecker implements InstallationChecker {
       const pythonCommand = details.pythonCommand || 'python';
 
       // Use pip list to check if package is installed
-      const command = `${pythonCommand} -m pip list | grep -i "${packageName}"`;
-      const { stdout } = await execPromise(command);
+      const { stdout } = await execFilePromise(pythonCommand, ['-m', 'pip', 'list']);
 
       // If there's output and it contains the package name, consider it installed
-      if (stdout.trim() && stdout.toLowerCase().includes(packageName.toLowerCase())) {
+      // Split by line and check if any line starts with the package name (case-insensitive)
+      // to avoid matching partial names in the middle of other packages.
+      // E.g. pip list format: packageName 1.0.0
+      const lines = stdout.split('\n');
+      const isInstalled = lines.some((line) => {
+        const parts = line.trim().split(/\s+/);
+        return parts.length >= 1 && parts[0].toLowerCase() === packageName.toLowerCase();
+      });
+
+      if (isInstalled) {
         return {
           installed: true,
           packageName,
@@ -41,9 +49,24 @@ export class PythonInstallationChecker implements InstallationChecker {
       }
 
       // Try to directly import the package to verify
-      const importCommand = `${pythonCommand} -c "import ${packageName.replace('-', '_')}; print('Package installed')"`;
       try {
-        const { stdout: importStdout } = await execPromise(importCommand);
+        // Pass the package name safely as an argument to the python script
+        const importScript = `
+import importlib
+import sys
+
+try:
+    pkg = sys.argv[1].replace('-', '_')
+    importlib.import_module(pkg)
+    print('Package installed')
+except ImportError:
+    pass
+        `;
+        const { stdout: importStdout } = await execFilePromise(pythonCommand, [
+          '-c',
+          importScript,
+          packageName,
+        ]);
         if (importStdout.includes('Package installed')) {
           return {
             installed: true,

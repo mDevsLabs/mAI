@@ -9,6 +9,8 @@ import { useTranslation } from 'react-i18next';
 
 import { usePermission } from '@/hooks/usePermission';
 
+import Highlight from '@/components/Highlight';
+
 import { itemStyles } from '../style';
 import { useSkillConnect } from './useSkillConnect';
 
@@ -17,6 +19,7 @@ interface ItemProps {
   icon: string | React.ComponentType;
   identifier: string;
   isConnected: boolean;
+  keyword?: string;
   label: string;
   onOpenDetail?: () => void;
   serverName?: string;
@@ -24,7 +27,7 @@ interface ItemProps {
 }
 
 const Item = memo<ItemProps>(
-  ({ description, icon, identifier, label, onOpenDetail, serverName, type }) => {
+  ({ description, icon, identifier, keyword, label, onOpenDetail, serverName, type }) => {
     const { t } = useTranslation('setting');
     const styles = itemStyles;
     const { allowed: canCreate } = usePermission('create_content');
@@ -116,9 +119,13 @@ const Item = memo<ItemProps>(
       >
         {renderIcon()}
         <Flexbox flex={1} gap={4} style={{ minWidth: 0, overflow: 'hidden' }}>
-          <span className={styles.title}>{label}</span>
+          <span className={styles.title}>
+            <Highlight keyword={keyword} text={label} />
+          </span>
           {localizedDescription && (
-            <span className={styles.description}>{localizedDescription}</span>
+            <span className={styles.description}>
+              <Highlight keyword={keyword} text={localizedDescription} />
+            </span>
           )}
         </Flexbox>
         <div onClick={stopPropagation}>{renderAction()}</div>

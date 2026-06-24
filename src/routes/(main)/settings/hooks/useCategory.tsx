@@ -11,6 +11,7 @@ import {
   Database,
   EllipsisIcon,
   EthernetPort,
+  FileClockIcon,
   Gift,
   Info,
   KeyboardIcon,
@@ -20,7 +21,7 @@ import {
   MessageCircleIcon,
   MonitorSmartphoneIcon,
   PaletteIcon,
-  PawPrint,
+  PawPrintIcon,
   Sparkles,
   TerminalSquare,
 } from 'lucide-react';
@@ -62,6 +63,7 @@ export interface CategoryGroup {
 
 export const useCategory = () => {
   const { t } = useTranslation('setting');
+  const { t: tCommon } = useTranslation('common');
   const { t: tAuth } = useTranslation('auth');
   const { t: tSubscription } = useTranslation('subscription');
   const mobile = useServerConfigStore((s) => s.isMobile);
@@ -102,14 +104,9 @@ export const useCategory = () => {
         label: t('tab.appearance'),
       },
       {
-        icon: PawPrint,
+        icon: PawPrintIcon,
         key: SettingsTabs.Pets,
         label: t('tab.pets'),
-      },
-      {
-        icon: MonitorSmartphoneIcon,
-        key: SettingsTabs.Devices,
-        label: t('tab.devices'),
       },
       !mobile && {
         icon: KeyboardIcon,
@@ -132,7 +129,7 @@ export const useCategory = () => {
     // Personal subscription / billing items. Always shown when business
     // features are enabled — workspace settings live under a separate
     // `/:workspaceSlug/settings/*` surface and never share this sidebar.
-    if (enableBusinessFeatures && !isDesktop) {
+    if (enableBusinessFeatures) {
       const subscriptionItems: CategoryItem[] = [
         { icon: Map, key: SettingsTabs.Plans, label: tSubscription('tab.plans') },
         { icon: ChartColumnBigIcon, key: SettingsTabs.Usage, label: t('tab.usage') },
@@ -163,6 +160,11 @@ export const useCategory = () => {
         label: t('tab.serviceModel'),
       },
       {
+        icon: MonitorSmartphoneIcon,
+        key: SettingsTabs.Devices,
+        label: t('tab.devices'),
+      },
+      {
         icon: SkillsIcon,
         key: SettingsTabs.Skill,
         label: t('tab.skill'),
@@ -181,6 +183,11 @@ export const useCategory = () => {
         icon: KeyIcon,
         key: SettingsTabs.APIKey,
         label: tAuth('tab.apikey'),
+      },
+      {
+        icon: MessageCircleIcon,
+        key: SettingsTabs.Messenger,
+        label: t('tab.messenger'),
       },
     ].filter(Boolean) as CategoryItem[];
 
@@ -206,6 +213,11 @@ export const useCategory = () => {
         icon: Database,
         key: SettingsTabs.Storage,
         label: t('tab.storage'),
+      },
+      {
+        icon: FileClockIcon,
+        key: SettingsTabs.Changelog,
+        label: tCommon('changelog'),
       },
       isDevMode && {
         icon: KeyIcon,

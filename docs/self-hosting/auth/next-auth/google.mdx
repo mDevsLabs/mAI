@@ -1,13 +1,13 @@
 ---
-title: Configuration of Google SSO Authentication Service for LobeHub
+title: Configuration of Google SSO Authentication Service for mAI
 description: >-
-  Learn how to configure Google SSO Authentication Service for LobeHub, create
+  Learn how to configure Google SSO Authentication Service for mAI, create
   OAuth applications, add users, and set up environment variables for seamless
   integration.
 tags:
   - Google SSO
   - OAuth 2.0
-  - LobeHub
+  - mAI
   - Authentication
   - Google Cloud
 ---
@@ -32,7 +32,7 @@ tags:
   ```
 
   <Callout type={'info'}>
-    - You can add or modify redirect URIs after registration, but make sure the URL matches your deployed LobeHub instance.
+    - You can add or modify redirect URIs after registration, but make sure the URL matches your deployed mAI instance.
     - Replace "your-domain" with your actual domain.
   </Callout>
 
@@ -49,12 +49,12 @@ tags:
 
   ### Configure Environment Variables
 
-  When deploying LobeHub, configure the following environment variables:
+  When deploying mAI, configure the following environment variables:
 
   | Environment Variable      | Type     | Description                                                                                                          |
   | ------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------- |
   | `NEXT_AUTH_SECRET`        | Required | Key to encrypt Auth.js session tokens. Generate using: `openssl rand -base64 32`                                     |
-  | `NEXT_AUTH_SSO_PROVIDERS` | Required | Select the single sign-on provider for LobeHub. Use `google` for Google SSO.                                         |
+  | `NEXT_AUTH_SSO_PROVIDERS` | Required | Select the single sign-on provider for mAI. Use `google` for Google SSO.                                         |
   | `AUTH_GOOGLE_ID`          | Required | Client ID from Google Cloud OAuth.                                                                                   |
   | `AUTH_GOOGLE_SECRET`      | Required | Client Secret from Google Cloud OAuth.                                                                               |
   | `AUTH_URL`                | Required | Specifies the callback address for Auth.js when performing OAuth authentication. E.g. `https://your-domain/api/auth` |
@@ -65,7 +65,7 @@ tags:
 </Steps>
 
 <Callout>
-  After successful deployment, users can sign in to LobeHub using their Google accounts (those added as Test Users, if not in production).
+  After successful deployment, users can sign in to mAI using their Google accounts (those added as Test Users, if not in production).
 </Callout>
 
 ## Advanced Configuration

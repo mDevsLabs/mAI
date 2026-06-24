@@ -1,7 +1,7 @@
 ---
 title: 'Observability with Grafana, Prometheus, and Tempo'
 description: >-
-  Monitor and analyze your LobeHub instance using Grafana dashboards, Prometheus
+  Monitor and analyze your mAI instance using Grafana dashboards, Prometheus
   metrics, and Tempo traces. This guide covers setup, configuration for
   self-hosted deployments.
 tags:
@@ -13,7 +13,7 @@ tags:
 
 # Observability with [Grafana](https://grafana.com/), [Prometheus](https://prometheus.io/), and [Tempo](https://grafana.com/docs/tempo/latest/)
 
-LobeHub supports advanced observability for self-hosted deployments using open-source tools:
+mAI supports advanced observability for self-hosted deployments using open-source tools:
 
 - **Grafana** for dashboards and visualization
 - **Prometheus** for metrics collection
@@ -21,7 +21,7 @@ LobeHub supports advanced observability for self-hosted deployments using open-s
 - **otel-collector** ingesting other OpenTelemetry supported data
 
 We provided Docker Compose (`docker-compose`) file presets to bootstrap the observability stack with advanced self-hosting features.
-This guide will help you set up and use these tools to monitor your LobeHub instance.
+This guide will help you set up and use these tools to monitor your mAI instance.
 
 ## Prerequisites
 
@@ -44,7 +44,7 @@ mv .env.example .env
    docker compose up -d
    ```
 
-   This will launch Grafana, Prometheus, Tempo, and the otel-collector alongside LobeHub with Casdoor, Minio, and other advanced services.
+   This will launch Grafana, Prometheus, Tempo, and the otel-collector alongside mAI with Casdoor, Minio, and other advanced services.
 
 ## 2. Access Grafana Dashboards
 
@@ -61,7 +61,7 @@ Click on "Explore" in the left sidebar to access the query editor to run ad-hoc 
 
 - Ensure all containers are running: `docker compose ps`
 - Check logs for any service: `docker compose logs <service-name>`
-- Verify Prometheus and Tempo are scraping and receiving data from LobeHub and otel-collector.
+- Verify Prometheus and Tempo are scraping and receiving data from mAI and otel-collector.
 
 ## See Also
 

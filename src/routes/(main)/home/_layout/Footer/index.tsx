@@ -336,15 +336,7 @@ const Footer = memo(() => {
             },
           ]
         : []),
-      {
-        icon: <Icon icon={Book} />,
-        key: 'docs',
-        label: (
-          <a href={DOCUMENTS_REFER_URL} rel="noopener noreferrer" target="_blank">
-            {t('userPanel.docs')}
-          </a>
-        ),
-      },
+
       {
         icon: <Icon icon={Feather} />,
         key: 'feedback',
@@ -366,8 +358,7 @@ const Footer = memo(() => {
       {
         icon: <Icon icon={FileClockIcon} />,
         key: 'changelog',
-        label: t('changelog'),
-        onClick: handleOpenChangelogModal,
+        label: <WorkspaceLink to="/settings/changelog">{t('changelog')}</WorkspaceLink>,
       },
       ...(footer.layout === 'compact' && !footer.hideGitHub
         ? [

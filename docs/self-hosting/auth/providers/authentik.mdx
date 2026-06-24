@@ -1,12 +1,12 @@
 ---
-title: Configuring Authentik Authentication for LobeHub
+title: Configuring Authentik Authentication for mAI
 description: >-
-  Learn how to configure Authentik SSO for LobeHub, including creating an OAuth2
+  Learn how to configure Authentik SSO for mAI, including creating an OAuth2
   provider and application.
 tags:
   - Authentik
   - Authentication
-  - LobeHub
+  - mAI
   - Single Sign-On
   - OIDC
 ---
@@ -21,7 +21,7 @@ tags:
   1. In Authentik admin interface, go to **Applications** > **Providers**
   2. Click **Create** and select **OAuth2/OpenID Provider**
   3. Configure the provider:
-     - Name: `LobeHub`
+     - Name: `mAI`
      - Authorization flow: Select your authorization flow
      - Client type: `Confidential`
      - Redirect URIs: Add your callback URL
@@ -42,12 +42,12 @@ tags:
 
   ### Configure Environment Variables
 
-  When deploying LobeHub, you need to configure the following environment variables:
+  When deploying mAI, you need to configure the following environment variables:
 
   | Environment Variable    | Type     | Description                                                                   |
   | ----------------------- | -------- | ----------------------------------------------------------------------------- |
   | `AUTH_SECRET`           | Required | Key used to encrypt session tokens. Generate using: `openssl rand -base64 32` |
-  | `AUTH_SSO_PROVIDERS`    | Required | SSO provider for LobeHub. Use `authentik` for Authentik                       |
+  | `AUTH_SSO_PROVIDERS`    | Required | SSO provider for mAI. Use `authentik` for Authentik                       |
   | `AUTH_AUTHENTIK_ID`     | Required | Client ID from Authentik provider                                             |
   | `AUTH_AUTHENTIK_SECRET` | Required | Client Secret from Authentik provider                                         |
   | `AUTH_AUTHENTIK_ISSUER` | Required | Authentik issuer URL                                                          |
@@ -58,7 +58,7 @@ tags:
 </Steps>
 
 <Callout type={'info'}>
-  After successful deployment, users will be able to authenticate with Authentik and use LobeHub.
+  After successful deployment, users will be able to authenticate with Authentik and use mAI.
 </Callout>
 
 ## Related Resources

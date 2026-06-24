@@ -16,7 +16,7 @@ export function registerConfigCommand(program: Command) {
 
   program
     .command('whoami')
-    .description('Display current user information')
+    .description('Display information about the currently authenticated user')
     .option('--json [fields]', 'Output JSON, optionally specify fields (comma-separated)')
     .action(async (options: { json?: string | boolean }) => {
       const client = await getTrpcClient();
@@ -41,7 +41,7 @@ export function registerConfigCommand(program: Command) {
 
   program
     .command('usage')
-    .description('View usage statistics')
+    .description('View detailed token and API usage statistics for the current month')
     .option('--month <YYYY-MM>', 'Month to query (default: current)')
     .option('--daily', 'Group by day')
     .option('--json [fields]', 'Output JSON, optionally specify fields (comma-separated)')

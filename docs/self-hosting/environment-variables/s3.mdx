@@ -12,7 +12,7 @@ tags:
 
 # Configuring S3 Storage Service
 
-LobeHub supports multimodal AI sessions, including the ability to upload unstructured data such as images and files to large language models. To optimize storage and performance, we use S3-compatible file storage services to store image files and support file upload/knowledge base functionality.
+mAI supports multimodal AI sessions, including the ability to upload unstructured data such as images and files to large language models. To optimize storage and performance, we use S3-compatible file storage services to store image files and support file upload/knowledge base functionality.
 
 ## Core Environment Variables
 
@@ -81,7 +81,7 @@ LobeHub supports multimodal AI sessions, including the ability to upload unstruc
 - Default: undefined
 - Example: `1`
 
-When set to `1`, LobeHub will convert images to base64 encoding before uploading them to the LLM model. When encountering the following error, please consider configuring this environment variable to `1`:
+When set to `1`, mAI will convert images to base64 encoding before uploading them to the LLM model. When encountering the following error, please consider configuring this environment variable to `1`:
 
 ```log
 Route: [xai] ProviderBizError: Fetching images over plain http:// is not supported.

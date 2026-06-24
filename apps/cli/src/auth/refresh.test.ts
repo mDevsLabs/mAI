@@ -9,9 +9,13 @@ vi.mock('./credentials', () => ({
   loadCredentials: vi.fn(),
   saveCredentials: vi.fn(),
 }));
-vi.mock('../settings', () => ({
-  loadSettings: vi.fn().mockReturnValue({ serverUrl: 'https://app.lobehub.com' }),
-}));
+vi.mock('../settings', () => {
+  const loadSettingsFn = vi.fn().mockReturnValue({ serverUrl: 'https://app.lobehub.com' });
+  return {
+    loadSettings: loadSettingsFn,
+    resolveServerUrl: vi.fn(() => loadSettingsFn()?.serverUrl || 'https://app.lobehub.com'),
+  };
+});
 
 describe('getValidToken', () => {
   beforeEach(() => {
@@ -219,6 +223,6 @@ describe('getValidToken', () => {
     const body = vi.mocked(fetch).mock.calls[0][1]?.body as URLSearchParams;
     expect(body.get('grant_type')).toBe('refresh_token');
     expect(body.get('refresh_token')).toBe('my-refresh-token');
-    expect(body.get('client_id')).toBe('lobehub-cli');
+    expect(body.get('client_id')).toBe('mai-cli');
   });
 });

@@ -14,7 +14,7 @@ import {
 } from '@/routes/(main)/resource/features/DndContextWrapper';
 import { documentService } from '@/services/document';
 import { useFileStore } from '@/store/file';
-import { type FileListItem } from '@/types/files';
+import { type ResourceItem } from '@/types/resource';
 
 import { useFileItemClick } from '../../hooks/useFileItemClick';
 import DropdownMenu from '../../ItemDropdown/DropdownMenu';
@@ -177,7 +177,7 @@ const styles = createStaticStyles(({ css }) => ({
   `,
 }));
 
-interface MasonryFileItemProps extends FileListItem {
+interface MasonryFileItemProps extends ResourceItem {
   knowledgeBaseId?: string;
   onOpen?: (id: string) => void;
   onSelectedChange: (id: string, selected: boolean) => void;

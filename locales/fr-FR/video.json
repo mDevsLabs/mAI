@@ -29,5 +29,6 @@
   "topic.deleteConfirm": "Supprimer le sujet vidéo",
   "topic.deleteConfirmDesc": "Vous êtes sur le point de supprimer ce sujet vidéo. Cette action est irréversible.",
   "topic.title": "Sujets vidéo",
-  "topic.untitled": "Sujet par défaut"
+  "topic.untitled": "Sujet par défaut",
+  "config.imageUpload.maxCountReached": "Vous pouvez ajouter jusqu'à {{count}} images de référence"
 }

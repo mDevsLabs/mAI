@@ -74,7 +74,7 @@ export const BASE_PROVIDER_DOC_URL = 'https://mprojects.odoo.com';
 export const CHANGELOG_URL = 'https://mprojects.odoo.com';
 
 export const DOWNLOAD_URL = {
-  android: 'https://play.google.com/store/apps/details?id=com.lobehub.app',
-  default: urlJoin(OFFICIAL_SITE, '/downloads'),
-  ios: 'https://testflight.apple.com/join/2ZbjX4Qp',
+  android: 'https://mprojects.odoo.com/download',
+  default: 'https://mprojects.odoo.com/download',
+  ios: 'https://mprojects.odoo.com/download',
 } as const;

@@ -85,7 +85,7 @@ export const MCPList = memo(() => {
       endReached={loadMoreMCPPlugins}
       increaseViewportBy={typeof window !== 'undefined' ? window.innerHeight : 0}
       itemClassName={virtuosoGridStyles.item}
-      itemContent={(_, item) => <Item {...item} />}
+      itemContent={(_, item) => <Item keyword={keywords} {...item} />}
       listClassName={virtuosoGridStyles.list}
       overscan={24}
       style={{ height: '60vh', width: '100%' }}

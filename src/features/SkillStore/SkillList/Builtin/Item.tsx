@@ -18,17 +18,20 @@ import { usePermission } from '@/hooks/usePermission';
 import { useToolStore } from '@/store/tool';
 import { builtinToolSelectors } from '@/store/tool/selectors';
 
+import Highlight from '@/components/Highlight';
+
 import { itemStyles } from '../style';
 
 interface ItemProps {
   avatar?: string;
   description?: string;
   identifier: string;
+  keyword?: string;
   onOpenDetail?: () => void;
   title?: string;
 }
 
-const Item = memo<ItemProps>(({ avatar, description, identifier, onOpenDetail, title }) => {
+const Item = memo<ItemProps>(({ avatar, description, identifier, keyword, onOpenDetail, title }) => {
   const { t } = useTranslation(['setting', 'plugin', 'common']);
   const styles = itemStyles;
   const { allowed: canCreate } = usePermission('create_content');
@@ -105,8 +108,14 @@ const Item = memo<ItemProps>(({ avatar, description, identifier, onOpenDetail, t
     >
       <Avatar avatar={avatar} size={40} style={{ marginInlineEnd: 0 }} />
       <Flexbox flex={1} gap={4} style={{ minWidth: 0, overflow: 'hidden' }}>
-        <span className={styles.title}>{title || identifier}</span>
-        {description && <span className={styles.description}>{description}</span>}
+        <span className={styles.title}>
+          <Highlight keyword={keyword} text={title || identifier} />
+        </span>
+        {description && (
+          <span className={styles.description}>
+            <Highlight keyword={keyword} text={description} />
+          </span>
+        )}
       </Flexbox>
       <div onClick={stopPropagation}>{renderAction()}</div>
     </Block>
