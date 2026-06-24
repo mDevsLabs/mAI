@@ -1,6 +1,6 @@
 <a name="readme-top"></a>
 
-# Changelog
+# Jouranl des modifications
 
 ## [Version 1.0.0](https://github.com/mDevsLabs/mAI/compare/v0.9.0...v0.10.0)
 
