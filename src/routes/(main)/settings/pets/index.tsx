@@ -15,6 +15,185 @@ import { settingsSelectors } from '@/store/user/slices/settings/selectors';
 
 import PetsStoreModal from './PetsStoreModal';
 
+interface AuraControlProps {
+  checked?: boolean;
+  onChange?: (checked: boolean) => void;
+  disabled?: boolean;
+  auraEnabled?: boolean;
+  colorValue?: string;
+  onColorChange?: (color: string) => void;
+}
+
+const AuraControl = ({
+  checked,
+  onChange,
+  disabled,
+  auraEnabled,
+  colorValue,
+  onColorChange,
+}: AuraControlProps) => {
+  return (
+    <Flexbox horizontal align={'center'} gap={12}>
+      <Switch checked={checked} onChange={onChange} disabled={disabled} />
+      <Flexbox
+        style={{
+          opacity: auraEnabled ? 1 : 0.45,
+          pointerEvents: auraEnabled ? 'auto' : 'none',
+          transition: 'opacity 0.2s ease',
+        }}
+      >
+        <ColorPicker
+          disabled={!auraEnabled}
+          showText
+          format="hex"
+          onChange={(color) => {
+            onColorChange?.(color.toHexString());
+          }}
+          value={colorValue || '#1677ff'}
+        />
+      </Flexbox>
+    </Flexbox>
+  );
+};
+
+interface AuraOpacityControlProps {
+  value?: number;
+  onChange?: (value: number) => void;
+  auraEnabled?: boolean;
+}
+
+const AuraOpacityControl = ({ value, onChange, auraEnabled }: AuraOpacityControlProps) => {
+  return (
+    <Flexbox
+      horizontal
+      align={'center'}
+      gap={12}
+      width={'100%'}
+      style={{
+        opacity: auraEnabled ? 1 : 0.45,
+        pointerEvents: auraEnabled ? 'auto' : 'none',
+        transition: 'opacity 0.2s ease',
+      }}
+    >
+      <SliderWithInput
+        disabled={!auraEnabled}
+        marks={{ 0.1: <span style={{ whiteSpace: 'nowrap' }}>Min</span>, 1: <span style={{ whiteSpace: 'nowrap' }}>Max</span> }}
+        max={1}
+        min={0.1}
+        step={0.1}
+        style={{ width: 350 }}
+        value={value}
+        onChange={onChange}
+      />
+    </Flexbox>
+  );
+};
+
+interface DynamicTrailsControlProps {
+  checked?: boolean;
+  onChange?: (checked: boolean) => void;
+  auraEnabled?: boolean;
+  trailsEnabled?: boolean;
+  trailStyleValue?: string;
+  onTrailStyleChange?: (value: string) => void;
+}
+
+const DynamicTrailsControl = ({
+  checked,
+  onChange,
+  auraEnabled,
+  trailsEnabled,
+  trailStyleValue,
+  onTrailStyleChange,
+}: DynamicTrailsControlProps) => {
+  return (
+    <Flexbox horizontal align={'center'} gap={12}>
+      <Flexbox
+        style={{
+          opacity: auraEnabled ? 1 : 0.45,
+          pointerEvents: auraEnabled ? 'auto' : 'none',
+          transition: 'opacity 0.2s ease',
+        }}
+      >
+        <Switch checked={checked} onChange={onChange} disabled={!auraEnabled} />
+      </Flexbox>
+      <Flexbox
+        style={{
+          opacity: trailsEnabled ? 1 : 0.45,
+          pointerEvents: trailsEnabled ? 'auto' : 'none',
+          transition: 'opacity 0.2s ease',
+        }}
+      >
+        <Select
+          disabled={!trailsEnabled}
+          options={[
+            { label: 'Étoiles', value: 'stars' },
+            { label: 'Confettis', value: 'confetti' },
+            { label: 'Pixels Rétro', value: 'retro-pixels' },
+            { label: 'Bulles', value: 'bubbles' },
+          ]}
+          onChange={onTrailStyleChange}
+          value={trailStyleValue || 'stars'}
+          style={{ width: 140 }}
+        />
+      </Flexbox>
+    </Flexbox>
+  );
+};
+
+interface AuraMoodControlProps {
+  checked?: boolean;
+  onChange?: (checked: boolean) => void;
+  auraEnabled?: boolean;
+}
+
+const AuraMoodControl = ({ checked, onChange, auraEnabled }: AuraMoodControlProps) => {
+  return (
+    <Flexbox
+      style={{
+        opacity: auraEnabled ? 1 : 0.45,
+        pointerEvents: auraEnabled ? 'auto' : 'none',
+        transition: 'opacity 0.2s ease',
+      }}
+    >
+      <Switch checked={checked} onChange={onChange} disabled={!auraEnabled} />
+    </Flexbox>
+  );
+};
+
+interface PetsVolumeControlProps {
+  value?: number;
+  onChange?: (value: number) => void;
+  soundEnabled?: boolean;
+}
+
+const PetsVolumeControl = ({ value, onChange, soundEnabled }: PetsVolumeControlProps) => {
+  return (
+    <Flexbox
+      horizontal
+      align={'center'}
+      gap={12}
+      width={'100%'}
+      style={{
+        opacity: soundEnabled ? 1 : 0.45,
+        pointerEvents: soundEnabled ? 'auto' : 'none',
+        transition: 'opacity 0.2s ease',
+      }}
+    >
+      <SliderWithInput
+        disabled={!soundEnabled}
+        marks={{ 0: <span style={{ whiteSpace: 'nowrap' }}>Min</span>, 1: <span style={{ whiteSpace: 'nowrap' }}>Max</span> }}
+        max={1}
+        min={0}
+        step={0.1}
+        style={{ width: 350 }}
+        value={value}
+        onChange={onChange}
+      />
+    </Flexbox>
+  );
+};
+
 const Page = memo(() => {
   const { t } = useTranslation('setting');
   const { general } = useUserStore(settingsSelectors.currentSettings, isEqual);
@@ -125,28 +304,7 @@ const Page = memo(() => {
   const soundEnabled = enablePets && !!general?.petsSound;
 
   const petsVolumeItem = {
-    children: (
-      <Flexbox
-        horizontal
-        align={'center'}
-        gap={12}
-        width={'100%'}
-        style={{
-          opacity: soundEnabled ? 1 : 0.45,
-          pointerEvents: soundEnabled ? 'auto' : 'none',
-          transition: 'opacity 0.2s ease',
-        }}
-      >
-        <SliderWithInput
-          disabled={!soundEnabled}
-          marks={{ 0: <span style={{ whiteSpace: 'nowrap' }}>Min</span>, 1: <span style={{ whiteSpace: 'nowrap' }}>Max</span> }}
-          max={1}
-          min={0}
-          step={0.1}
-          style={{ width: 350 }}
-        />
-      </Flexbox>
-    ),
+    children: <PetsVolumeControl soundEnabled={soundEnabled} />,
     desc: soundEnabled ? 'Réglez le volume des pets' : 'Activez Son du pet pour régler le volume',
     label: 'Volume du son',
     minWidth: undefined,
@@ -167,120 +325,55 @@ const Page = memo(() => {
 
   const petsAuraItem = {
     children: (
-      <Flexbox horizontal align={'center'} gap={12}>
-        <Switch disabled={!enablePets} defaultChecked={false} />
-        <Flexbox
-          style={{
-            opacity: auraEnabled ? 1 : 0.45,
-            pointerEvents: auraEnabled ? 'auto' : 'none',
-            transition: 'opacity 0.2s ease',
-          }}
-        >
-          <ColorPicker
-            disabled={!auraEnabled}
-            showText
-            format="hex"
-            onChange={(color) => {
-              setSettings({ general: { ...general, petsAuraColor: color.toHexString() } });
-            }}
-            value={general?.petsAuraColor || '#1677ff'}
-          />
-        </Flexbox>
-      </Flexbox>
+      <AuraControl
+        disabled={!enablePets}
+        auraEnabled={auraEnabled}
+        colorValue={general?.petsAuraColor}
+        onColorChange={(color) => {
+          setSettings({ general: { ...general, petsAuraColor: color } });
+        }}
+      />
     ),
     desc: 'Activer une traînée lumineuse suivant le pet au déplacement.',
     label: 'Aura',
     minWidth: undefined,
     name: 'petsAura',
     valuePropName: 'checked',
+    divider: false,
   };
 
   const petsAuraOpacityItem = {
-    children: (
-      <Flexbox
-        horizontal
-        align={'center'}
-        gap={12}
-        width={'100%'}
-        style={{
-          opacity: auraEnabled ? 1 : 0.45,
-          pointerEvents: auraEnabled ? 'auto' : 'none',
-          transition: 'opacity 0.2s ease',
-        }}
-      >
-        <SliderWithInput
-          disabled={!auraEnabled}
-          marks={{ 0.1: <span style={{ whiteSpace: 'nowrap' }}>Min</span>, 1: <span style={{ whiteSpace: 'nowrap' }}>Max</span> }}
-          max={1}
-          min={0.1}
-          step={0.1}
-          style={{ width: 350 }}
-        />
-      </Flexbox>
-    ),
+    children: <AuraOpacityControl auraEnabled={auraEnabled} />,
     desc: auraEnabled ? 'Réglez l\'opacité globale de la traînée d\'Aura' : 'Activez Aura pour régler l\'opacité',
     label: 'Opacité de l\'Aura',
     minWidth: undefined,
     name: 'petsAuraOpacity',
+    divider: false,
   };
 
   const trailsEnabled = auraEnabled && !!general?.petsAuraDynamicTrails;
 
   const petsAuraDynamicTrailsItem = {
     children: (
-      <Flexbox horizontal align={'center'} gap={12}>
-        <Flexbox
-          style={{
-            opacity: auraEnabled ? 1 : 0.45,
-            pointerEvents: auraEnabled ? 'auto' : 'none',
-            transition: 'opacity 0.2s ease',
-          }}
-        >
-          <Switch disabled={!auraEnabled} defaultChecked={false} />
-        </Flexbox>
-        <Flexbox
-          style={{
-            opacity: trailsEnabled ? 1 : 0.45,
-            pointerEvents: trailsEnabled ? 'auto' : 'none',
-            transition: 'opacity 0.2s ease',
-          }}
-        >
-          <Select
-            disabled={!trailsEnabled}
-            options={[
-              { label: 'Étoiles', value: 'stars' },
-              { label: 'Confettis', value: 'confetti' },
-              { label: 'Pixels Rétro', value: 'retro-pixels' },
-              { label: 'Bulles', value: 'bubbles' },
-            ]}
-            onChange={(value) => {
-              setSettings({ general: { ...general, petsAuraTrailStyle: value } });
-            }}
-            value={general?.petsAuraTrailStyle || 'stars'}
-            style={{ width: 140 }}
-          />
-        </Flexbox>
-      </Flexbox>
+      <DynamicTrailsControl
+        auraEnabled={auraEnabled}
+        trailsEnabled={trailsEnabled}
+        trailStyleValue={general?.petsAuraTrailStyle}
+        onTrailStyleChange={(value) => {
+          setSettings({ general: { ...general, petsAuraTrailStyle: value } });
+        }}
+      />
     ),
     desc: auraEnabled ? 'Permet de choisir différents styles de traînées au lieu d\'une simple traînée lumineuse.' : 'Activez Aura pour choisir les traînées',
     label: 'Traînées dynamiques',
     minWidth: undefined,
     name: 'petsAuraDynamicTrails',
     valuePropName: 'checked',
+    divider: false,
   };
 
   const petsAuraMoodItem = {
-    children: (
-      <Flexbox
-        style={{
-          opacity: auraEnabled ? 1 : 0.45,
-          pointerEvents: auraEnabled ? 'auto' : 'none',
-          transition: 'opacity 0.2s ease',
-        }}
-      >
-        <Switch disabled={!auraEnabled} defaultChecked={false} />
-      </Flexbox>
-    ),
+    children: <AuraMoodControl auraEnabled={auraEnabled} />,
     desc: auraEnabled ? 'Modifie automatiquement la couleur et l\'intensité de l\'Aura selon l\'activité de l\'agent mAI.' : 'Activez Aura pour utiliser cet effet',
     label: 'Effet selon l\'humeur',
     minWidth: undefined,
