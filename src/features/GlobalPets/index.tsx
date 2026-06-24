@@ -186,11 +186,9 @@ const Pet = memo(
       }
     }, [isGenerating, mounted, petId, config]);
 
-    if (!mounted) return null;
-
     const size = 80 * zoom;
-    const startX = window.innerWidth - (size + 40) - index * (size + 20);
-    const startY = window.innerHeight - (size + 70);
+    const startX = typeof window !== 'undefined' ? window.innerWidth - (size + 40) - index * (size + 20) : 0;
+    const startY = typeof window !== 'undefined' ? window.innerHeight - (size + 70) : 0;
 
     const x = useMotionValue(startX);
     const y = useMotionValue(startY);
@@ -203,6 +201,8 @@ const Pet = memo(
 
     const ghost3X = useSpring(x, { stiffness: 100, damping: 30 });
     const ghost3Y = useSpring(y, { stiffness: 100, damping: 30 });
+
+    if (!mounted) return null;
 
     const getAuraColor = () => {
       if (config?.petsAuraMood) {

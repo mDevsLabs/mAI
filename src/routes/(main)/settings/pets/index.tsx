@@ -208,7 +208,7 @@ const Page = memo(() => {
       </Flexbox>
     ),
     desc: 'Permet de choisir différents styles de traînées au lieu d\'une simple traînée lumineuse.',
-    label: 'Traînées dynamiques 🌈',
+    label: 'Traînées dynamiques',
     minWidth: undefined,
     name: 'petsAuraDynamicTrails',
     valuePropName: 'checked',
@@ -217,7 +217,7 @@ const Page = memo(() => {
   const petsAuraMoodItem = {
     children: <Switch disabled={!enablePets} defaultChecked={false} />,
     desc: 'Modifie automatiquement la couleur et l\'intensité de l\'Aura selon l\'activité de l\'agent mAI.',
-    label: 'Effet selon l\'humeur 😠🥰',
+    label: 'Effet selon l\'humeur',
     minWidth: undefined,
     name: 'petsAuraMood',
     valuePropName: 'checked',
@@ -235,7 +235,7 @@ const Page = memo(() => {
   const petsCustomAnimItem = {
     children: <Switch disabled={!enablePets} defaultChecked={false} />,
     desc: 'Déclenche des animations et particules en cliquant deux fois ou en caressant le pet.',
-    label: 'Animations personnalisées 🪄',
+    label: 'Animations personnalisées',
     minWidth: undefined,
     name: 'petsCustomAnim',
     valuePropName: 'checked',

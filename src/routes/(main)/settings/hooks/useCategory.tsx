@@ -210,11 +210,6 @@ export const useCategory = () => {
         key: SettingsTabs.Storage,
         label: t('tab.storage'),
       },
-      {
-        icon: FileClockIcon,
-        key: SettingsTabs.Changelog,
-        label: tCommon('changelog'),
-      },
       isDevMode && {
         icon: KeyIcon,
         key: SettingsTabs.APIKey,
