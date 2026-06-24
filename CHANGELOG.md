@@ -11,6 +11,7 @@
 - **Pets**: Intégration de **dix nouveaux pets** pour vous accompagner et ajouts de leurs effets sonores.
 - **CLI**: Lancement amélioré avec mai et pas lh ou lobehub. Installation via **npm install -g @mdevs/mai-cli**.
 - **Fix**: Corrections de divers bugs et problèmes
+- **Workflows**: Améliorations des workflows GitHub
 - **Improve**: Améliorations importantes de l'interface et divers autres
 - **Version**: Mise à jour de la version du projet vers la version supérieure `0.9.0` sous l'auteur `mDevlopers`.
 
