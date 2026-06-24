@@ -1,8 +1,8 @@
 import urlJoin from 'url-join';
 
-export const OFFICIAL_URL = 'https://app.lobehub.com';
-export const OFFICIAL_SITE = 'https://lobehub.com';
-export const OFFICIAL_DOMAIN = 'lobehub.com';
+export const OFFICIAL_URL = 'https://mai-officiel.vercel.app';
+export const OFFICIAL_SITE = 'https://mprojects.odoo.com';
+export const OFFICIAL_DOMAIN = 'mai.com';
 
 export const OG_URL = '/og/og.webp?v=1';
 

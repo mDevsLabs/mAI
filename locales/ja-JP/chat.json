@@ -1205,5 +1205,17 @@
   "workingPanel.skills.title": "スキル",
   "workingPanel.space": "スペース",
   "workingPanel.title": "Working Panel",
+  "heteroAgent.modelSelector.ariaLabel": "モデル: {{model}}. 推論: {{reasoning}}",
+  "heteroAgent.modelSelector.default": "デフォルト",
+  "heteroAgent.modelSelector.defaultConfig": "デフォルト設定",
+  "heteroAgent.modelSelector.defaultModel": "デフォルトモデル",
+  "heteroAgent.modelSelector.defaultReasoning": "デフォルトの推論",
+  "heteroAgent.modelSelector.model": "モデル",
+  "heteroAgent.modelSelector.reasoning": "推論",
+  "heteroAgent.modelSelector.reasoning.high": "高",
+  "heteroAgent.modelSelector.reasoning.low": "低",
+  "heteroAgent.modelSelector.reasoning.max": "最大",
+  "heteroAgent.modelSelector.reasoning.medium": "中",
+  "heteroAgent.modelSelector.reasoning.xhigh": "非常に高",
   "you": "あなた"
 }

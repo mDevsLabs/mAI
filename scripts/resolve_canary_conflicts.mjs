@@ -69,7 +69,7 @@ const UPSTREAM_URL = 'https://github.com/lobehub/lobe-chat.git';
 function runCmd(cmd) {
   try {
     return execSync(cmd, { encoding: 'utf-8', stdio: ['pipe', 'pipe', 'ignore'] }).trim();
-  } catch (e) {
+  } catch (_e) {
     return '';
   }
 }
@@ -77,7 +77,7 @@ function runCmd(cmd) {
 function runCmdInteractive(cmd) {
   try {
     execSync(cmd, { stdio: 'inherit' });
-  } catch (e) {
+  } catch (_e) {
     // Ignore error
   }
 }
@@ -132,7 +132,7 @@ function getConflictCount(file) {
     const content = fs.readFileSync(file, 'utf-8');
     const matches = content.match(/^<<<<<<< /gm);
     return matches ? matches.length : 0;
-  } catch (e) {
+  } catch (_e) {
     return 0;
   }
 }
@@ -151,7 +151,7 @@ function detectsBrandingOverwrite(file) {
       }
     }
     return lostKeywords;
-  } catch (e) {
+  } catch (_e) {
     return [];
   }
 }
@@ -215,8 +215,8 @@ async function handleNoConflicts() {
         const confirm = await askKey('\n⚠️ Voulez-vous supprimer "node_modules", ".next" et nettoyer le cache pnpm ? (y/n) : ', ['y', 'n']);
         if (confirm === 'y') {
           console.info('\n🧹 Nettoyage en cours...');
-          try { fs.rmSync('node_modules', { recursive: true, force: true }); } catch (e) {}
-          try { fs.rmSync('.next', { recursive: true, force: true }); } catch (e) {}
+          try { fs.rmSync('node_modules', { recursive: true, force: true }); } catch (_e) {}
+          try { fs.rmSync('.next', { recursive: true, force: true }); } catch (_e) {}
           runCmdInteractive('pnpm store prune');
           console.info('✅ Nettoyage terminé.');
         }
@@ -283,7 +283,7 @@ async function main() {
       } else {
         console.info('🗑️  Nouvelle session démarrée.');
       }
-    } catch (e) {
+    } catch (_e) {
       console.info('⚠️ Impossible de charger l\'état précédent.');
     }
   }
@@ -352,7 +352,7 @@ async function main() {
           i++;
           continue;
         }
-      } catch (e) {
+      } catch (_e) {
         console.info('❌ Erreur de fusion auto de package.json, passage manuel.');
       }
     }

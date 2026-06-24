@@ -26,5 +26,9 @@ export const DEFAULT_COMMON_SETTINGS: UserGeneralConfig = {
   petsColor: false,
   petsWeather: false,
   petsAura: false,
+  petsAuraDynamicTrails: false,
+  petsAuraTrailStyle: 'stars',
+  petsAuraMood: false,
+  petsCustomAnim: false,
 };
 

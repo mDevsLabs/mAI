@@ -1,7 +1,7 @@
 'use client';
 
 import { Avatar, Flexbox, Form, Icon, SliderWithInput } from '@lobehub/ui';
-import { Button, Switch } from 'antd';
+import { Button, Switch, ColorPicker, Select } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { PawPrint, Sliders, Store } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -163,12 +163,81 @@ const Page = memo(() => {
     valuePropName: 'checked',
   };
 
+  const auraEnabled = enablePets && !!general?.petsAura;
+
+  const petsAuraItem = {
+    children: (
+      <Flexbox horizontal align={'center'} gap={12}>
+        <Switch disabled={!enablePets} defaultChecked={false} />
+        <ColorPicker
+          disabled={!auraEnabled}
+          showText
+          format="hex"
+          onChange={(color) => {
+            setSettings({ general: { ...general, petsAuraColor: color.toHexString() } });
+          }}
+          value={general?.petsAuraColor || '#1677ff'}
+        />
+      </Flexbox>
+    ),
+    desc: 'Activer une traînée lumineuse suivant le pet au déplacement.',
+    label: 'Aura',
+    minWidth: undefined,
+    name: 'petsAura',
+    valuePropName: 'checked',
+  };
+
+  const petsAuraDynamicTrailsItem = {
+    children: (
+      <Flexbox horizontal align={'center'} gap={12}>
+        <Switch disabled={!enablePets} defaultChecked={false} />
+        <Select
+          disabled={!enablePets || !general?.petsAuraDynamicTrails}
+          options={[
+            { label: 'Étoiles', value: 'stars' },
+            { label: 'Confettis', value: 'confetti' },
+            { label: 'Pixels Rétro', value: 'retro-pixels' },
+            { label: 'Bulles', value: 'bubbles' },
+          ]}
+          onChange={(value) => {
+            setSettings({ general: { ...general, petsAuraTrailStyle: value } });
+          }}
+          value={general?.petsAuraTrailStyle || 'stars'}
+          style={{ width: 140 }}
+        />
+      </Flexbox>
+    ),
+    desc: 'Permet de choisir différents styles de traînées au lieu d\'une simple traînée lumineuse.',
+    label: 'Traînées dynamiques 🌈',
+    minWidth: undefined,
+    name: 'petsAuraDynamicTrails',
+    valuePropName: 'checked',
+  };
+
+  const petsAuraMoodItem = {
+    children: <Switch disabled={!enablePets} defaultChecked={false} />,
+    desc: 'Modifie automatiquement la couleur et l\'intensité de l\'Aura selon l\'activité de l\'agent mAI.',
+    label: 'Effet selon l\'humeur 😠🥰',
+    minWidth: undefined,
+    name: 'petsAuraMood',
+    valuePropName: 'checked',
+  };
+
   const petsEncouragementsItem = {
     children: <Switch disabled={!enablePets} defaultChecked={false} />,
     desc: 'Activer les encouragements et félicitations du pet.',
     label: 'Encouragements et félicitations',
     minWidth: undefined,
     name: 'petsEncouragements',
+    valuePropName: 'checked',
+  };
+
+  const petsCustomAnimItem = {
+    children: <Switch disabled={!enablePets} defaultChecked={false} />,
+    desc: 'Déclenche des animations et particules en cliquant deux fois ou en caressant le pet.',
+    label: 'Animations personnalisées 🪄',
+    minWidth: undefined,
+    name: 'petsCustomAnim',
     valuePropName: 'checked',
   };
 
@@ -195,7 +264,11 @@ const Page = memo(() => {
               petsSoundItem,
               petsVolumeItem,
               petsCitationsItem,
+              petsAuraItem,
+              petsAuraDynamicTrailsItem,
+              petsAuraMoodItem,
               petsEncouragementsItem,
+              petsCustomAnimItem,
             ],
             title: t('settingPets.section.options'),
             icon: Sliders,

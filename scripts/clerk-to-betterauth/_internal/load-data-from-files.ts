@@ -69,6 +69,6 @@ export async function loadClerkUsersFromFile(
 Failed to read Clerk users from ${path}.
 请先运行: tsx scripts/clerk-to-betterauth/export-clerk-users-with-api.ts ${path}
     `.trim();
-    throw new Error(`${(error as Error).message}\n${hint}`);
+    throw new Error(`${(error as Error).message}\n${hint}`, { cause: error });
   }
 }
