@@ -71,6 +71,7 @@ import {
 } from '@/helpers/executionTarget';
 import { shouldEnableBuiltinSkill } from '@/helpers/skillFilters';
 import { buildConnectorManifests } from '@/libs/mcp/buildConnectorManifests';
+import { patchManifestWithPermissions } from '@/libs/mcp/connectorPermissionCheck';
 import { signOperationJwt, signUserJWT } from '@/libs/trpc/utils/internalJwt';
 import { createStreamEventManager } from '@/server/modules/AgentRuntime/factory';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
@@ -113,6 +114,8 @@ import { FileService } from '@/server/services/file';
 import { resolveAttachmentsByFileIds } from '@/server/services/file/resolveAttachments';
 import { HeterogeneousAgentService } from '@/server/services/heterogeneousAgent';
 import type { ConversationHistoryEntry } from '@/server/services/heterogeneousAgent/cloudHeteroContext';
+import { buildCloudHeteroContext } from '@/server/services/heterogeneousAgent/cloudHeteroContext';
+import { buildRemoteDeviceHeteroContext } from '@/server/services/heterogeneousAgent/remoteDeviceHeteroContext';
 import { MarketService } from '@/server/services/market';
 import { markdownToTxt } from '@/utils/markdownToTxt';
 
@@ -309,6 +312,7 @@ export class AiAgentService {
   private readonly db: LobeChatDatabase;
   private readonly agentDocumentsService: AgentDocumentsService;
   private readonly agentModel: AgentModel;
+  private readonly agentOperationModel: AgentOperationModel;
   private readonly agentService: AgentService;
   private readonly messageModel: MessageModel;
   private readonly connectorModel: ConnectorModel;
@@ -334,6 +338,7 @@ export class AiAgentService {
     const wsId = this.workspaceId;
     this.agentDocumentsService = new AgentDocumentsService(db, userId, wsId);
     this.agentModel = new AgentModel(db, userId, wsId);
+    this.agentOperationModel = new AgentOperationModel(db, userId, wsId);
     this.agentService = new AgentService(db, userId, wsId);
     this.messageModel = new MessageModel(db, userId, wsId);
     this.connectorModel = new ConnectorModel(db, userId, wsId);
@@ -426,6 +431,21 @@ export class AiAgentService {
       content: '',
       error: { body: { detail }, message, type: 'ServerAgentRuntimeError' },
     });
+
+    // 1b. Mark the agent_operations row terminal. The row was inserted at
+    //     recordStart, but a dispatch failure goes through THIS path, not
+    //     heteroFinish — so without this the row stays status='running' forever
+    //     and pollutes operation-lifecycle / verify views for failed starts.
+    try {
+      await this.agentOperationModel.recordCompletion(operationId, {
+        completedAt: new Date(),
+        completionReason: 'error',
+        error: { message, type: 'ServerAgentRuntimeError' },
+        status: 'error',
+      });
+    } catch (err) {
+      log('finalizeHeteroDispatchError: recordCompletion failed (non-fatal): %O', err);
+    }
 
     // 2. Close the UI stream.
     try {
@@ -1331,6 +1351,31 @@ export class AiAgentService {
       const isRemoteHetero = isRemoteHeterogeneousType(heteroType);
       const operationId = nanoid();
 
+      // Persist a first-class agent_operations row for the hetero run. The id is
+      // generated here (authoritative) and flows through to heteroIngest /
+      // heteroFinish unchanged. Without this row the run is invisible to the
+      // operation lifecycle: verify (ensureForOperation), repair (parent chain),
+      // judge (op.model/provider) and tracing all key off it. Terminal state +
+      // the trace snapshot are written back in heteroFinish. Non-fatal: a
+      // tracing/op-row insert hiccup must never fail the user's run (verify just
+      // degrades to off for this run).
+      try {
+        await this.agentOperationModel.recordStart({
+          agentId: persistAgentId,
+          chatGroupId: appContext?.groupId ?? null,
+          maxSteps,
+          model,
+          operationId,
+          provider,
+          taskId: operationTaskId ?? null,
+          threadId: appContext?.threadId ?? null,
+          topicId,
+          trigger,
+        });
+      } catch (err) {
+        log('execAgent: hetero recordStart failed (non-fatal): %O', err);
+      }
+
       // Read resume session id for next-turn continuity.
       const heteroService = new HeterogeneousAgentService(this.db, this.userId, {
         workspaceId: this.workspaceId,
@@ -1398,8 +1443,6 @@ export class AiAgentService {
       }
 
       // Build cloud-specific system context (repo list + workspace info + optional agent-level static context).
-      const { buildCloudHeteroContext } =
-        await import('@/server/services/heterogeneousAgent/cloudHeteroContext');
       const systemContext = buildCloudHeteroContext({
         agentSystemContext: agentConfig.agencyConfig?.heterogeneousProvider?.systemContext,
         conversationHistory,
@@ -1681,8 +1724,6 @@ export class AiAgentService {
           // device-specific context instead of reusing the cloud-sandbox one
           // (which describes an ephemeral /workspace + pre-cloned repos and
           // would mislead the agent).
-          const { buildRemoteDeviceHeteroContext } =
-            await import('@/server/services/heterogeneousAgent/remoteDeviceHeteroContext');
           const deviceSystemContext = buildRemoteDeviceHeteroContext({
             agentSystemContext: agentConfig.agencyConfig?.heterogeneousProvider?.systemContext,
             conversationHistory,
@@ -1726,6 +1767,10 @@ export class AiAgentService {
         } else {
           // Cloud sandbox path — only for local CLI agents (claude-code / codex).
           // Remote agents (openclaw / hermes) always require a bound device.
+          // Lazy-loaded on purpose: `sandboxRunner` pulls the sandbox-service graph
+          // (which eagerly touches server-only ModelRuntime env at module init), so
+          // importing it statically would couple that whole subsystem into every
+          // `aiAgent` import. Only this cloud-CLI branch needs it.
           const { spawnHeteroSandbox } =
             await import('@/server/services/heterogeneousAgent/sandboxRunner');
           spawnHeteroSandbox({
@@ -1957,9 +2002,6 @@ export class AiAgentService {
         pluginsWithoutConnectors.length > 0
       ) {
         try {
-          const { patchManifestWithPermissions } =
-            await import('@/libs/mcp/connectorPermissionCheck');
-          const { ConnectorToolModel } = await import('@/database/models/connectorTool');
           const allIdentifiers = [
             ...lobehubSkillManifests.map((m) => m.identifier),
             ...composioManifests.map((m) => m.identifier),
@@ -3292,11 +3334,7 @@ export class AiAgentService {
     // Inherit the supervisor op's trigger so member rows stay attributable.
     let inheritedTrigger: string | undefined;
     try {
-      const parentOp = await new AgentOperationModel(
-        this.db,
-        this.userId,
-        this.workspaceId,
-      ).findById(parentOperationId);
+      const parentOp = await this.agentOperationModel.findById(parentOperationId);
       inheritedTrigger = parentOp?.trigger ?? undefined;
     } catch (error) {
       log('execAgentMember: failed to read parent operation trigger: %O', error);
@@ -3448,11 +3486,7 @@ export class AiAgentService {
     let inheritedTrigger: string | undefined;
     if (parentOperationId) {
       try {
-        const parentOp = await new AgentOperationModel(
-          this.db,
-          this.userId,
-          this.workspaceId,
-        ).findById(parentOperationId);
+        const parentOp = await this.agentOperationModel.findById(parentOperationId);
         inheritedTrigger = parentOp?.trigger ?? undefined;
       } catch (error) {
         log('%s: failed to read parent operation trigger: %O', options.logScope, error);

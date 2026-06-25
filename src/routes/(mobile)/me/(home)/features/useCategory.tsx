@@ -88,12 +88,6 @@ export const useCategory = () => {
       label: t('feedback'),
       onClick: () => window.open(FEEDBACK, '__blank'),
     },
-    {
-      icon: FileClockIcon,
-      key: 'changelog',
-      label: t('changelog'),
-      onClick: () => openChangelogModal(),
-    },
   ].filter(Boolean) as CellProps[];
 
   const mainItems = [

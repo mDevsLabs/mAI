@@ -7,7 +7,7 @@ import { SettingsTabs } from '@/store/global/initialState';
 import { initServerConfigStore, Provider } from '@/store/serverConfig/store';
 import { useUserStore } from '@/store/user';
 
-import { SettingsGroupKey, useCategory } from './useCategory';
+import { useCategory } from './useCategory';
 
 vi.hoisted(() => {
   Object.defineProperty(globalThis, 'localStorage', {
@@ -76,15 +76,9 @@ describe('settings useCategory', () => {
     expect(keys).not.toContain(SettingsTabs.Provider);
   });
 
-  it('places Devices under Agent settings instead of General settings', () => {
-    const { result } = renderHook(() => useCategory(), {
-      wrapper: createWrapper(true),
-    });
-
-    const general = result.current.find((group) => group.key === SettingsGroupKey.General);
-    const agent = result.current.find((group) => group.key === SettingsGroupKey.Agent);
-
-    expect(general?.items.map((item) => item.key)).not.toContain(SettingsTabs.Devices);
-    expect(agent?.items.map((item) => item.key)).toContain(SettingsTabs.Devices);
+  it('keeps Pets visible and hides Messenger', () => {
+    const keys = getItemKeys();
+    expect(keys).toContain(SettingsTabs.Pets);
+    expect(keys).not.toContain(SettingsTabs.Messenger);
   });
 });

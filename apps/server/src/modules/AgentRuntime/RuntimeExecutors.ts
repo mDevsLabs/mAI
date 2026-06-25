@@ -42,6 +42,7 @@ import {
   applyModelExtendParams,
   type ChatStreamPayload,
   consumeStreamUntilDone,
+  isKimiAlwaysPreserveThinkingModel,
   type ModelExtendParams,
 } from '@lobechat/model-runtime';
 import {
@@ -75,9 +76,12 @@ import debug from 'debug';
 import { type ExtendParamsType, ModelProvider } from 'model-bank';
 
 import { composioEnv } from '@/config/composio';
+import { FileModel } from '@/database/models/file';
 import { type MessageModel, MessageModel as MessageModelClass } from '@/database/models/message';
+import { PluginModel } from '@/database/models/plugin';
 import { TopicModel } from '@/database/models/topic';
 import { UserModel } from '@/database/models/user';
+import { UserPersonaModel } from '@/database/models/userMemory/persona';
 import { type LobeChatDatabase } from '@/database/type';
 import { fileEnv } from '@/envs/file';
 import { type ExecutionPlan, isDeviceCapablePlan } from '@/helpers/executionTarget';
@@ -96,6 +100,7 @@ import {
   logDeviceToolAudit,
 } from '@/server/services/aiAgent/deviceToolAudit';
 import { FileService } from '@/server/services/file';
+import { MarketService } from '@/server/services/market';
 import { MessageService } from '@/server/services/message';
 import { OnboardingService } from '@/server/services/onboarding';
 import {
@@ -935,15 +940,23 @@ export const createRuntimeExecutors = (
 
         const modelSupportsPreserveThinkingFromCard =
           Array.isArray(modelExtendParams) && modelExtendParams.includes('preserveThinking');
+        // Kimi K2.7+ Code has preserved thinking always active and cannot opt out.
+        const modelForcesPreserveThinking =
+          (provider === 'moonshot' || provider === BRANDING_PROVIDER) &&
+          isKimiAlwaysPreserveThinkingModel(model);
         const providerSupportsPreserveThinkingFallback =
-          provider === 'qwen' || provider === 'zhipu';
+          provider === 'qwen' || provider === 'zhipu' || provider === 'moonshot';
         const modelSupportsPreserveThinking =
+          modelForcesPreserveThinking ||
           modelSupportsPreserveThinkingFromCard ||
           (!modelCard && providerSupportsPreserveThinkingFallback);
 
-        shouldReplayAssistantReasoning = preserveThinkingRequested && modelSupportsPreserveThinking;
-        preserveThinkingForPayload =
-          modelSupportsPreserveThinking && typeof preserveThinkingConfigured === 'boolean'
+        shouldReplayAssistantReasoning =
+          (modelForcesPreserveThinking || preserveThinkingRequested) &&
+          modelSupportsPreserveThinking;
+        preserveThinkingForPayload = modelForcesPreserveThinking
+          ? true
+          : modelSupportsPreserveThinking && typeof preserveThinkingConfigured === 'boolean'
             ? preserveThinkingConfigured
             : undefined;
 
@@ -1034,7 +1047,6 @@ export const createRuntimeExecutors = (
           try {
             const { formatWebOnboardingStateMessage } =
               await import('@lobechat/builtin-tool-web-onboarding/utils');
-            const { UserPersonaModel } = await import('@/database/models/userMemory/persona');
             const onboardingService = new OnboardingService(ctx.serverDB, ctx.userId);
             const docService = new AgentDocumentsService(
               ctx.serverDB,
@@ -1144,7 +1156,6 @@ export const createRuntimeExecutors = (
         let sandboxUploadedFiles = '';
         if (sandboxEnabled === 'true' && ctx.serverDB && ctx.userId && lobehubSkillTopicId) {
           try {
-            const { FileModel } = await import('@/database/models/file');
             const { formatUploadedFilesPrompt } =
               await import('@lobechat/builtin-tool-cloud-sandbox');
             const fileModel = new FileModel(ctx.serverDB, ctx.userId);
@@ -1175,7 +1186,6 @@ export const createRuntimeExecutors = (
         let credsListStr = '';
         if (ctx.userId) {
           try {
-            const { MarketService } = await import('@/server/services/market');
             const marketService = new MarketService({ userInfo: { userId: ctx.userId } });
             const credsResult = await marketService.market.creds.list();
             const userCreds = (credsResult as any)?.data ?? [];
@@ -1199,7 +1209,6 @@ export const createRuntimeExecutors = (
         let composioServicesListStr = '';
         if (ctx.serverDB && ctx.userId && !!composioEnv.COMPOSIO_API_KEY) {
           try {
-            const { PluginModel } = await import('@/database/models/plugin');
             const pluginModel = new PluginModel(ctx.serverDB, ctx.userId, ctx.workspaceId);
             const allPlugins = await pluginModel.query();
             const validComposioIds = new Set(COMPOSIO_APP_TYPES.map((t) => t.identifier));

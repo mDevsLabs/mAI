@@ -19,7 +19,7 @@ const PetsStoreModal = memo<PetsStoreModalProps>(({ onOpenChange, open }) => {
   const { t } = useTranslation('setting');
   const { general } = useUserStore(settingsSelectors.currentSettings);
   const setSettings = useUserStore((s) => s.setSettings);
-  const selectedPets = general?.pets || ['claude-pixel'];
+  const selectedPets = general?.pets || [];
   const maxPets = 1;
 
   const [search, setSearch] = useState('');

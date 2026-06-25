@@ -4,7 +4,6 @@ Ce document définit les règles et directives que chaque agent de codage interv
 
 ## 1. Gestion des Versions & Changelogs 📈
 - **`e2e/package.json` et `CHANGELOG.md`** : À la fin de vos modifications, vous devez *suggérer* à l'utilisateur s'il souhaite incrémenter la version dans `e2e/package.json` et mettre à jour le `CHANGELOG.md`. Ne le faites pas obligatoirement de vous-même.
-- **Documentation (`docs/`)** : Si l'utilisateur accepte, créez un nouveau fichier de notes de version au format MD dans les répertoires `docs/en-US/changelog/` et `docs/fr-FR/changelog/` (par exemple : `010-30-05-2026.md` pour la version `0.1.0`).
 
 ## 2. Style de Communication 💬🇫🇷
 - **Langue** : Les agents doivent obligatoirement communiquer et s'adresser à l'utilisateur en français.

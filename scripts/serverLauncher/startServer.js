@@ -1,3 +1,4 @@
+/* eslint-disable regexp/no-unused-capturing-group */
 /* eslint-disable @typescript-eslint/no-require-imports */
 const dns = require('node:dns').promises;
 const fs = require('node:fs').promises;
