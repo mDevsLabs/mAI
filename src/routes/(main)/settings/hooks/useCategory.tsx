@@ -17,9 +17,9 @@ import {
   KeyIcon,
   KeyRound,
   Map,
-  MessageCircleIcon,
   MonitorSmartphoneIcon,
   PaletteIcon,
+  PawPrint,
   Sparkles,
   TerminalSquare,
 } from 'lucide-react';
@@ -177,9 +177,9 @@ export const useCategory = () => {
         label: tAuth('tab.apikey'),
       },
       {
-        icon: MessageCircleIcon,
-        key: SettingsTabs.Messenger,
-        label: t('tab.messenger'),
+        icon: PawPrint,
+        key: SettingsTabs.Pets,
+        label: t('tab.pets'),
       },
     ].filter(Boolean) as CategoryItem[];
 
