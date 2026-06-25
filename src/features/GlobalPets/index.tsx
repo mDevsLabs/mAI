@@ -103,16 +103,6 @@ const styles = createStaticStyles(({ css }) => ({
   `,
 }));
 
-const getTrailContent = (style?: string) => {
-  switch (style) {
-    case 'confetti': return ['🎊', '🎉', '🎈'];
-    case 'retro-pixels': return ['👾', '🕹️', '🟦'];
-    case 'bubbles': return ['🫧', '🔵', '💧'];
-    case 'stars':
-    default:
-      return ['⭐', '✨', '🌟'];
-  }
-};
 
 const Pet = memo(
   ({
@@ -337,49 +327,7 @@ const Pet = memo(
             />
           </>
         )}
-        {config?.petsAura && config?.petsAuraDynamicTrails && (
-          <>
-            <m.div
-              style={{
-                position: 'fixed', left: 0, top: 0, width: size, height: size,
-                x: ghost3X, y: ghost3Y,
-                pointerEvents: 'none', opacity: 0.3 * (config?.petsAuraOpacity ?? 1),
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: size * 0.4,
-                filter: `drop-shadow(0 0 ${getAuraIntensity(10)}px ${getAuraColor()})`,
-                zIndex: 999996,
-              }}
-            >
-              {getTrailContent(config?.petsAuraTrailStyle)[2]}
-            </m.div>
-            <m.div
-              style={{
-                position: 'fixed', left: 0, top: 0, width: size, height: size,
-                x: ghost2X, y: ghost2Y,
-                pointerEvents: 'none', opacity: 0.6 * (config?.petsAuraOpacity ?? 1),
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: size * 0.5,
-                filter: `drop-shadow(0 0 ${getAuraIntensity(10)}px ${getAuraColor()})`,
-                zIndex: 999997,
-              }}
-            >
-              {getTrailContent(config?.petsAuraTrailStyle)[1]}
-            </m.div>
-            <m.div
-              style={{
-                position: 'fixed', left: 0, top: 0, width: size, height: size,
-                x: ghost1X, y: ghost1Y,
-                pointerEvents: 'none', opacity: 0.9 * (config?.petsAuraOpacity ?? 1),
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: size * 0.6,
-                filter: `drop-shadow(0 0 ${getAuraIntensity(10)}px ${getAuraColor()})`,
-                zIndex: 999998,
-              }}
-            >
-              {getTrailContent(config?.petsAuraTrailStyle)[0]}
-            </m.div>
-          </>
-        )}
+
         {particles.map(p => (
           <m.div
             key={p.id}

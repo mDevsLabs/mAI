@@ -11,7 +11,6 @@ import {
   Database,
   EllipsisIcon,
   EthernetPort,
-  FileClockIcon,
   Gift,
   Info,
   KeyboardIcon,
@@ -21,7 +20,6 @@ import {
   MessageCircleIcon,
   MonitorSmartphoneIcon,
   PaletteIcon,
-  PawPrintIcon,
   Sparkles,
   TerminalSquare,
 } from 'lucide-react';
@@ -63,7 +61,6 @@ export interface CategoryGroup {
 
 export const useCategory = () => {
   const { t } = useTranslation('setting');
-  const { t: tCommon } = useTranslation('common');
   const { t: tAuth } = useTranslation('auth');
   const { t: tSubscription } = useTranslation('subscription');
   const mobile = useServerConfigStore((s) => s.isMobile);
@@ -104,9 +101,9 @@ export const useCategory = () => {
         label: t('tab.appearance'),
       },
       {
-        icon: PawPrintIcon,
-        key: SettingsTabs.Pets,
-        label: t('tab.pets'),
+        icon: MonitorSmartphoneIcon,
+        key: SettingsTabs.Devices,
+        label: t('tab.devices'),
       },
       !mobile && {
         icon: KeyboardIcon,
@@ -160,11 +157,6 @@ export const useCategory = () => {
         label: t('tab.serviceModel'),
       },
       {
-        icon: MonitorSmartphoneIcon,
-        key: SettingsTabs.Devices,
-        label: t('tab.devices'),
-      },
-      {
         icon: SkillsIcon,
         key: SettingsTabs.Skill,
         label: t('tab.skill'),
@@ -184,7 +176,11 @@ export const useCategory = () => {
         key: SettingsTabs.APIKey,
         label: tAuth('tab.apikey'),
       },
-
+      {
+        icon: MessageCircleIcon,
+        key: SettingsTabs.Messenger,
+        label: t('tab.messenger'),
+      },
     ].filter(Boolean) as CategoryItem[];
 
     groups.push({

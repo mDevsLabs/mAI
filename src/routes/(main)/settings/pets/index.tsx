@@ -89,57 +89,6 @@ const AuraOpacityControl = ({ value, onChange, auraEnabled }: AuraOpacityControl
   );
 };
 
-interface DynamicTrailsControlProps {
-  checked?: boolean;
-  onChange?: (checked: boolean) => void;
-  auraEnabled?: boolean;
-  trailsEnabled?: boolean;
-  trailStyleValue?: string;
-  onTrailStyleChange?: (value: string) => void;
-}
-
-const DynamicTrailsControl = ({
-  checked,
-  onChange,
-  auraEnabled,
-  trailsEnabled,
-  trailStyleValue,
-  onTrailStyleChange,
-}: DynamicTrailsControlProps) => {
-  return (
-    <Flexbox horizontal align={'center'} gap={12}>
-      <Flexbox
-        style={{
-          opacity: auraEnabled ? 1 : 0.45,
-          pointerEvents: auraEnabled ? 'auto' : 'none',
-          transition: 'opacity 0.2s ease',
-        }}
-      >
-        <Switch checked={checked} onChange={onChange} disabled={!auraEnabled} />
-      </Flexbox>
-      <Flexbox
-        style={{
-          opacity: trailsEnabled ? 1 : 0.45,
-          pointerEvents: trailsEnabled ? 'auto' : 'none',
-          transition: 'opacity 0.2s ease',
-        }}
-      >
-        <Select
-          disabled={!trailsEnabled}
-          options={[
-            { label: 'Étoiles', value: 'stars' },
-            { label: 'Confettis', value: 'confetti' },
-            { label: 'Pixels Rétro', value: 'retro-pixels' },
-            { label: 'Bulles', value: 'bubbles' },
-          ]}
-          onChange={onTrailStyleChange}
-          value={trailStyleValue || 'stars'}
-          style={{ width: 140 }}
-        />
-      </Flexbox>
-    </Flexbox>
-  );
-};
 
 interface AuraMoodControlProps {
   checked?: boolean;
@@ -339,7 +288,6 @@ const Page = memo(() => {
     minWidth: undefined,
     name: 'petsAura',
     valuePropName: 'checked',
-    divider: false,
   };
 
   const petsAuraOpacityItem = {
@@ -351,27 +299,6 @@ const Page = memo(() => {
     divider: false,
   };
 
-  const trailsEnabled = auraEnabled && !!general?.petsAuraDynamicTrails;
-
-  const petsAuraDynamicTrailsItem = {
-    children: (
-      <DynamicTrailsControl
-        auraEnabled={auraEnabled}
-        trailsEnabled={trailsEnabled}
-        trailStyleValue={general?.petsAuraTrailStyle}
-        onTrailStyleChange={(value) => {
-          setSettings({ general: { ...general, petsAuraTrailStyle: value } });
-        }}
-      />
-    ),
-    desc: auraEnabled ? 'Permet de choisir différents styles de traînées au lieu d\'une simple traînée lumineuse.' : 'Activez Aura pour choisir les traînées',
-    label: 'Traînées dynamiques',
-    minWidth: undefined,
-    name: 'petsAuraDynamicTrails',
-    valuePropName: 'checked',
-    divider: false,
-  };
-
   const petsAuraMoodItem = {
     children: <AuraMoodControl auraEnabled={auraEnabled} />,
     desc: auraEnabled ? 'Modifie automatiquement la couleur et l\'intensité de l\'Aura selon l\'activité de l\'agent mAI.' : 'Activez Aura pour utiliser cet effet',
@@ -379,6 +306,7 @@ const Page = memo(() => {
     minWidth: undefined,
     name: 'petsAuraMood',
     valuePropName: 'checked',
+    divider: false,
   };
 
   const petsEncouragementsItem = {
@@ -424,7 +352,6 @@ const Page = memo(() => {
               petsCitationsItem,
               petsAuraItem,
               petsAuraOpacityItem,
-              petsAuraDynamicTrailsItem,
               petsAuraMoodItem,
               petsEncouragementsItem,
               petsCustomAnimItem,

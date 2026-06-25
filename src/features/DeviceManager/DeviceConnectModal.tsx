@@ -2,7 +2,8 @@
 
 import { DOWNLOAD_URL } from '@lobechat/const';
 import type { DeviceScope } from '@lobechat/types';
-import { Button, CopyButton, Flexbox, Icon, Modal, Segmented, Text } from '@lobehub/ui';
+import { Button, CopyButton, Flexbox, Icon, Modal, Text } from '@lobehub/ui';
+import { Tabs } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar } from 'antd-style';
 import { DownloadIcon, MonitorDownIcon, ShieldCheckIcon, TerminalIcon } from 'lucide-react';
 import { memo, useEffect, useState } from 'react';
@@ -171,27 +172,30 @@ const DeviceConnectModal = memo<DeviceConnectModalProps>(({ onClose, open, initi
       onCancel={onClose}
     >
       <Flexbox gap={20}>
-        {isWorkspace && (
-          <Text className={styles.subtitle}>{t('workspaceSetting.devices.desc')}</Text>
-        )}
+        <Text className={styles.subtitle}>
+          {isWorkspace ? t('workspaceSetting.devices.desc') : t('devices.connectWizard.subtitle')}
+        </Text>
 
         {isWorkspace ? null : (
-          <Segmented
-            block
-            value={active}
-            options={[
+          <Tabs
+            activeKey={active}
+            items={[
               {
                 icon: <Icon icon={MonitorDownIcon} />,
+                key: 'desktop',
                 label: t('devices.connectWizard.method.desktop'),
-                value: 'desktop',
               },
               {
                 icon: <Icon icon={TerminalIcon} />,
+                key: 'cli',
                 label: t('devices.connectWizard.method.cli'),
-                value: 'cli',
               },
             ]}
-            onChange={(value) => setActive(value as 'cli' | 'desktop')}
+            styles={{
+              list: { display: 'flex', width: '100%' },
+              tab: { flex: 1 },
+            }}
+            onChange={(key) => setActive(key as 'cli' | 'desktop')}
           />
         )}
 
