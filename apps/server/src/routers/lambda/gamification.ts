@@ -1,7 +1,8 @@
 import { z } from 'zod';
+
 import { authedProcedure, router } from '@/libs/trpc/lambda';
-import { QuestService } from '@/services/gamification/QuestService';
-import { GamificationService } from '@/services/gamification/GamificationService';
+import { GamificationService } from '@/server/services/gamification/GamificationService';
+import { QuestService } from '@/server/services/gamification/QuestService';
 
 export const gamificationRouter = router({
   getProgression: authedProcedure.query(async ({ ctx }) => {
@@ -19,9 +20,9 @@ export const gamificationRouter = router({
     // This could just return the data, but first make sure they have quests assigned
     const questService = new QuestService(ctx.db, ctx.userId);
     await questService.assignQuests(); // Idempotent assignment
-    
+
     // We can just query `userQuests` for the active periods
-    const { getDateKeyCET, getWeeklyKeyCET } = await import('@/services/gamification/utils');
+    const { getDateKeyCET, getWeeklyKeyCET } = await import('@/server/services/gamification/utils');
     const dailyKey = getDateKeyCET();
     const weeklyKey = getWeeklyKeyCET();
 
@@ -48,10 +49,10 @@ export const gamificationRouter = router({
     const userBadgesList = await ctx.db.query.userBadges.findMany({
       where: (userBadges, { eq }) => eq(userBadges.userId, ctx.userId)
     });
-    
+
     // Asynchronously trigger checkAndUnlockBadges in background so they are updated
     // without blocking the GET request.
-    const { BadgeService } = await import('@/services/gamification/BadgeService');
+    const { BadgeService } = await import('@/server/services/gamification/BadgeService');
     const badgeService = new BadgeService(ctx.db, ctx.userId);
     badgeService.checkAndUnlockBadges().catch(console.error);
 
@@ -62,7 +63,7 @@ export const gamificationRouter = router({
 
   // Optional: an endpoint to explicitly trigger checks
   checkBadges: authedProcedure.mutation(async ({ ctx }) => {
-    const { BadgeService } = await import('@/services/gamification/BadgeService');
+    const { BadgeService } = await import('@/server/services/gamification/BadgeService');
     const badgeService = new BadgeService(ctx.db, ctx.userId);
     return badgeService.checkAndUnlockBadges();
   }),
