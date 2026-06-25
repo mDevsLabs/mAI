@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { message, notification, Modal, Typography } from 'antd';
 import Confetti from 'react-confetti';
 import { lambdaClient } from '@/libs/trpc/client';
-import { BADGES_CATALOG } from '@lobechat/const/src/gamification';
+import { BADGES_CATALOG } from '@lobechat/const';
 
 export const GamificationNotifier = () => {
   const { data: progression } = lambdaClient.gamification.getProgression.useQuery(undefined, {

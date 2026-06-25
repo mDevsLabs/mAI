@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import Confetti from 'react-confetti';
 import { Flexbox } from 'react-layout-kit';
 
-import { BADGES_CATALOG, QUESTS_CATALOG } from '@lobechat/const/src/gamification';
+import { BADGES_CATALOG, QUESTS_CATALOG } from '@lobechat/const';
 import { useGamificationStore } from '@/store/gamification';
 
 const { Title, Text } = Typography;
