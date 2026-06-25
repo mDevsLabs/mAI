@@ -1,6 +1,6 @@
 import { and, eq, inArray } from 'drizzle-orm';
 import { type LobeChatDatabase } from '@lobechat/database';
-import { userQuests, xpTransactions } from '@lobechat/database/src/schemas/gamification';
+import { userQuests, xpTransactions } from '@lobechat/database/schemas';
 import { QUESTS_CATALOG } from '@lobechat/const';
 
 import { GamificationService, GamificationEventType } from './GamificationService';
@@ -38,9 +38,9 @@ export class QuestService {
 
       const questsToAssign: any[] = [];
 
-      // 2. Assign Daily Quests (3 quests)
+      // 2. Assign Daily Quests (3 visible quests + all hidden quests)
       if (!hasDaily) {
-        const dailyCatalog = QUESTS_CATALOG.filter(q => q.type === 'daily');
+        const dailyCatalog = QUESTS_CATALOG.filter(q => q.type === 'daily' && !q.isHidden);
         const selectedDaily = this.pickRandomQuests(dailyCatalog, 3);
         selectedDaily.forEach(q => {
           questsToAssign.push({
@@ -49,13 +49,33 @@ export class QuestService {
             periodKey: dailyKey,
           });
         });
+
+        // Add hidden daily quests silently
+        const hiddenDaily = QUESTS_CATALOG.filter(q => q.type === 'daily' && q.isHidden);
+        hiddenDaily.forEach(q => {
+          questsToAssign.push({
+            userId: this.userId,
+            questId: q.id,
+            periodKey: dailyKey,
+          });
+        });
       }
 
-      // 3. Assign Weekly Quests (5 quests)
+      // 3. Assign Weekly Quests (5 visible quests + all hidden quests)
       if (!hasWeekly) {
-        const weeklyCatalog = QUESTS_CATALOG.filter(q => q.type === 'weekly');
+        const weeklyCatalog = QUESTS_CATALOG.filter(q => q.type === 'weekly' && !q.isHidden);
         const selectedWeekly = this.pickRandomQuests(weeklyCatalog, 5);
         selectedWeekly.forEach(q => {
+          questsToAssign.push({
+            userId: this.userId,
+            questId: q.id,
+            periodKey: weeklyKey,
+          });
+        });
+
+        // Add hidden weekly quests silently
+        const hiddenWeekly = QUESTS_CATALOG.filter(q => q.type === 'weekly' && q.isHidden);
+        hiddenWeekly.forEach(q => {
           questsToAssign.push({
             userId: this.userId,
             questId: q.id,
@@ -179,8 +199,8 @@ export class QuestService {
         `Quête complétée: ${catalogQuest.title}`
       );
 
-      // Check daily bonus
-      if (catalogQuest.type === 'daily') {
+      // Check daily bonus (only consider visible quests)
+      if (catalogQuest.type === 'daily' && !catalogQuest.isHidden) {
         const allDailyQuests = await tx.query.userQuests.findMany({
           where: and(
             eq(userQuests.userId, this.userId),
@@ -188,7 +208,13 @@ export class QuestService {
           ),
         });
 
-        const allCompleted = allDailyQuests.every(dq => dq.status === 'claimed' || dq.status === 'completed');
+        // Filter out hidden quests from the completion check
+        const visibleDailyQuests = allDailyQuests.filter(dq => {
+          const catQ = QUESTS_CATALOG.find(cat => cat.id === dq.questId);
+          return catQ && !catQ.isHidden;
+        });
+
+        const allCompleted = visibleDailyQuests.every(dq => dq.status === 'claimed' || dq.status === 'completed');
         // Let's assume we can give bonus immediately if all are at least completed
         // Wait, to prevent double bonus, we should check if we already gave it.
         // For simplicity, we can do this in addXp if source is 'bonus'. We can check `xpTransactions`.

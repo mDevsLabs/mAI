@@ -1,10 +1,6 @@
 import { and, eq } from 'drizzle-orm';
 import { type LobeChatDatabase } from '@lobechat/database';
-import {
-  dailyCounters,
-  userGamification,
-  xpTransactions,
-} from '@lobechat/database/src/schemas/gamification';
+import { dailyCounters, userGamification, xpTransactions } from '@lobechat/database/schemas';
 
 import { calculateLevelInfo, getDateKeyCET, hasLeveledUp } from './utils';
 

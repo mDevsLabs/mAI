@@ -1,9 +1,6 @@
 import { and, count, eq, isNull } from 'drizzle-orm';
 import { type LobeChatDatabase } from '@lobechat/database';
-import { agents } from '@lobechat/database/src/schemas/agent';
-import { messages } from '@lobechat/database/src/schemas/message';
-import { tasks } from '@lobechat/database/src/schemas/task';
-import { userBadges, userGamification } from '@lobechat/database/src/schemas/gamification';
+import { agents, messages, tasks, userBadges, userGamification } from '@lobechat/database/schemas';
 import { BADGES_CATALOG } from '@lobechat/const';
 
 import { GamificationService } from './GamificationService';

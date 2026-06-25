@@ -4,7 +4,7 @@ import { Trophy, Star, Target, CheckCircle2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Confetti from 'react-confetti';
-import { Flexbox } from 'react-layout-kit';
+import { Flexbox } from '@lobehub/ui';
 
 import { BADGES_CATALOG, QUESTS_CATALOG } from '@lobechat/const';
 import { useGamificationStore } from '@/store/gamification';
