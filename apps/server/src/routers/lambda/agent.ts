@@ -80,6 +80,16 @@ export const agentRouter = router({
         sessionGroupId: input.groupId,
       });
 
+      // [Gamification] Track agent_created
+      import('@/server/services/gamification/GamificationService').then(({ GamificationService }) => {
+        const gamificationService = new GamificationService(ctx.serverDB, ctx.userId);
+        gamificationService.trackEvent('agent_created').catch(console.error);
+      });
+      import('@/server/services/gamification/QuestService').then(({ QuestService }) => {
+        const questService = new QuestService(ctx.serverDB, ctx.userId);
+        questService.processEventForQuests('agent_created').catch(console.error);
+      });
+
       return { agentId: agent.id };
     }),
 
@@ -132,6 +142,16 @@ export const agentRouter = router({
 
       // Add the agent to the group
       await ctx.chatGroupModel.addAgentToGroup(input.groupId, agent.id);
+
+      // [Gamification] Track agent_created
+      import('@/server/services/gamification/GamificationService').then(({ GamificationService }) => {
+        const gamificationService = new GamificationService(ctx.serverDB, ctx.userId);
+        gamificationService.trackEvent('agent_created').catch(console.error);
+      });
+      import('@/server/services/gamification/QuestService').then(({ QuestService }) => {
+        const questService = new QuestService(ctx.serverDB, ctx.userId);
+        questService.processEventForQuests('agent_created').catch(console.error);
+      });
 
       return { agentId: agent.id };
     }),
@@ -455,6 +475,16 @@ export const agentRouter = router({
           });
         }
       }
+
+      // [Gamification] Track companion_action (Agent/Companion modified)
+      import('@/server/services/gamification/GamificationService').then(({ GamificationService }) => {
+        const gamificationService = new GamificationService(ctx.serverDB, ctx.userId);
+        gamificationService.trackEvent('companion_action').catch(console.error);
+      });
+      import('@/server/services/gamification/QuestService').then(({ QuestService }) => {
+        const questService = new QuestService(ctx.serverDB, ctx.userId);
+        questService.processEventForQuests('companion_action').catch(console.error);
+      });
 
       // Use AgentService to update and return the updated agent data
       return ctx.agentService.updateAgentConfig(input.agentId, input.value);

@@ -17,6 +17,14 @@
 #### 🎨 Branding & Expérience
 - **Logo de Chargement** : Correction du bug affichant le logo LobeHub lors du chargement initial de l'application, désormais correctement remplacé par le logo mAI.
 
+#### 🎮 Gamification & Engagement
+- **Système d'XP et Niveaux** : Gagnez de l'expérience à chaque interaction et débloquez de nouveaux paliers.
+- **Quêtes Quotidiennes & Hebdomadaires** : Des objectifs amusants pour vous encourager à découvrir les capacités de l'agent.
+- **Badges Débloquables** : Des récompenses pour saluer votre engagement à long terme.
+- **Quêtes Cachées** : Résolvez des mystères ("Oiseau de nuit", "Fidèle au poste") pour obtenir des récompenses uniques !
+- **Notifications en Temps Réel** : Célébrez vos accomplissements avec de magnifiques animations (modale spectaculaire) et toasts.
+- **Export / Import** : Sauvegardez et restaurez toute votre progression sans accroc.
+
 #### 🚀 Improvements
 - **CLI**: Améliorations légères et diverses
 - **Desktop**: Corrections de bugs divers

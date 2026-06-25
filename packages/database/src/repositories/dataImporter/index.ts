@@ -253,6 +253,36 @@ const IMPORT_TABLE_CONFIG: TableImportConfig[] = [
   //   ],
   //   table: 'messageTTS',
   // },
+  {
+    conflictStrategy: 'merge',
+    preserveId: true,
+    table: 'userGamification',
+    uniqueConstraints: ['userId'],
+  },
+  {
+    conflictStrategy: 'skip',
+    preserveId: true,
+    table: 'xpTransactions',
+    uniqueConstraints: ['id'],
+  },
+  {
+    conflictStrategy: 'merge',
+    preserveId: true,
+    table: 'userQuests',
+    uniqueConstraints: ['id'],
+  },
+  {
+    conflictStrategy: 'skip',
+    preserveId: true,
+    table: 'userBadges',
+    uniqueConstraints: ['userId', 'badgeId'],
+  },
+  {
+    conflictStrategy: 'merge',
+    preserveId: true,
+    table: 'dailyCounters',
+    uniqueConstraints: ['id'],
+  },
 ];
 
 export class DataImporterRepos {

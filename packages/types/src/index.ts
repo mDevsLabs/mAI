@@ -53,3 +53,4 @@ export * from './trace';
 export * from './userMemory';
 export * from './util';
 export * from './zustand';
+export * from './gamification';

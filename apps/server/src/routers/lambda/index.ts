@@ -81,6 +81,7 @@ import { userMemoryRouter } from './userMemory';
 import { verifyRouter } from './verify';
 import { videoRouter } from './video';
 import { webBrowsingRouter } from './webBrowsing';
+import { gamificationRouter } from './gamification';
 
 export const lambdaRouter = router({
   agent: agentRouter,
@@ -163,6 +164,7 @@ export const lambdaRouter = router({
   subscription: subscriptionRouter,
   taskTemplate: taskTemplateRouter,
   topUp: topUpRouter,
+  gamification: gamificationRouter,
 });
 
 export type LambdaRouter = typeof lambdaRouter;

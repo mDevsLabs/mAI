@@ -60,6 +60,12 @@ export const DATA_EXPORT_CONFIG = {
     { table: 'sessions' },
     { table: 'threads' },
     { table: 'topics' },
+    // gamification
+    { table: 'userGamification', userField: 'userId' },
+    { table: 'xpTransactions', userField: 'userId' },
+    { table: 'userQuests', userField: 'userId' },
+    { table: 'userBadges', userField: 'userId' },
+    { table: 'dailyCounters', userField: 'userId' },
   ] as BaseTableConfig[],
   relationTables: [
     // {

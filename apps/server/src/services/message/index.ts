@@ -52,8 +52,12 @@ export class MessageService {
   private messageModel: MessageModel;
   private fileService: FileService;
   private compressionRepository: CompressionRepository;
+  private db: LobeChatDatabase;
+  private userId: string;
 
   constructor(db: LobeChatDatabase, userId: string, workspaceId?: string) {
+    this.db = db;
+    this.userId = userId;
     this.messageModel = new MessageModel(db, userId, workspaceId);
     this.fileService = new FileService(db, userId, workspaceId);
     this.compressionRepository = new CompressionRepository(db, userId, workspaceId);
@@ -154,6 +158,21 @@ export class MessageService {
         postProcessUrl: this.postProcessUrl,
       },
     );
+
+    // [Gamification] Track message sent event asynchronously
+    if (params.role === 'user') {
+      import('../gamification/GamificationService').then(({ GamificationService }) => {
+        const gamificationService = new GamificationService(this.db, this.userId);
+        gamificationService.trackEvent('message_sent').catch(console.error);
+      });
+      import('../gamification/QuestService').then(({ QuestService }) => {
+        const questService = new QuestService(this.db, this.userId);
+        questService.processEventForQuests('message_sent', {
+          hour: new Date().getHours(),
+          model: params.model,
+        }).catch(console.error);
+      });
+    }
 
     // 3. Return the result
     return {

@@ -371,6 +371,17 @@ export const taskRouter = router({
   create: taskProcedureWrite.input(createSchema).mutation(async ({ input, ctx }) => {
     try {
       const task = await ctx.taskService.createTask(input);
+      
+      // [Gamification] Track task_created
+      import('@/server/services/gamification/GamificationService').then(({ GamificationService }) => {
+        const gamificationService = new GamificationService(ctx.serverDB, ctx.userId);
+        gamificationService.trackEvent('task_created').catch(console.error);
+      });
+      import('@/server/services/gamification/QuestService').then(({ QuestService }) => {
+        const questService = new QuestService(ctx.serverDB, ctx.userId);
+        questService.processEventForQuests('task_created').catch(console.error);
+      });
+
       return { data: task, message: 'Task created', success: true };
     } catch (error) {
       if (error instanceof TRPCError) throw error;
