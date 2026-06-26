@@ -364,6 +364,7 @@ export function defineConfig(config: CustomNextConfig) {
       'pdfjs-dist',
       'ajv',
       'oidc-provider',
+      'sharp',
     ],
 
     transpilePackages: ['mermaid'],
