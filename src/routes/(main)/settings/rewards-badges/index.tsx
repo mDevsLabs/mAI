@@ -156,6 +156,7 @@ const BadgesPage = () => {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [filterMode, setFilterMode] = useState<'all' | 'unlocked' | 'locked' | 'recent' | 'pinned'>('all');
+  const [sortBy, setSortBy] = useState<'default' | 'rarityAsc' | 'rarityDesc' | 'xpAsc' | 'xpDesc'>('default');
   const [columnsCount, setColumnsCount] = useState<3 | 4 | 6>(4);
   const [selectedBadge, setSelectedBadge] = useState<any>(null);
 
@@ -219,6 +220,17 @@ const BadgesPage = () => {
     }
   };
 
+  const getRarityValue = (rarity: string) => {
+    switch (rarity) {
+      case 'rare': return 2;
+      case 'epic': return 3;
+      case 'legendary': return 4;
+      case 'mythic': return 5;
+      case 'ultra': return 6;
+      default: return 1;
+    }
+  };
+
   const handleTogglePin = (badgeId: string, e: React.MouseEvent) => {
     e.stopPropagation();
     const current = settings.pinnedBadgeIds ?? [];
@@ -259,6 +271,15 @@ const BadgesPage = () => {
         return indexB - indexA;
       });
   } else {
+    // Appliquer le tri selon sortBy
+    displayBadges.sort((a, b) => {
+      if (sortBy === 'rarityAsc') return getRarityValue(a.rarity) - getRarityValue(b.rarity);
+      if (sortBy === 'rarityDesc') return getRarityValue(b.rarity) - getRarityValue(a.rarity);
+      if (sortBy === 'xpAsc') return a.xpReward - b.xpReward;
+      if (sortBy === 'xpDesc') return b.xpReward - a.xpReward;
+      return 0;
+    });
+
     // Par défaut, mettre les badges épinglés au tout début du catalogue
     displayBadges.sort((a, b) => {
       const pinA = settings.pinnedBadgeIds?.includes(a.id) ? 1 : 0;
@@ -302,18 +323,30 @@ const BadgesPage = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 allowClear
-                style={{ maxWidth: 300 }}
+                style={{ maxWidth: 220 }}
               />
               <Select
                 value={filterMode}
                 onChange={(val) => setFilterMode(val)}
-                style={{ width: 160 }}
+                style={{ width: 140 }}
                 options={[
                   { value: 'all', label: 'Tous les badges' },
                   { value: 'unlocked', label: 'Débloqués' },
                   { value: 'locked', label: 'Verrouillés' },
                   { value: 'recent', label: 'Derniers débloqués' },
                   { value: 'pinned', label: 'Épinglés' },
+                ]}
+              />
+              <Select
+                value={sortBy}
+                onChange={(val) => setSortBy(val)}
+                style={{ width: 160 }}
+                options={[
+                  { value: 'default', label: 'Tri par défaut' },
+                  { value: 'rarityAsc', label: 'Rareté (croissante)' },
+                  { value: 'rarityDesc', label: 'Rareté (décroissante)' },
+                  { value: 'xpAsc', label: 'XP (croissant)' },
+                  { value: 'xpDesc', label: 'XP (décroissant)' },
                 ]}
               />
             </Flexbox>
@@ -359,11 +392,11 @@ const BadgesPage = () => {
                   <Col {...getColSpan()} key={badge.id}>
                     <Tooltip title={
                       <Flexbox gap={4} style={{ padding: 4 }}>
-                        <Text strong style={{ color: '#fff' }}>{badge.title}</Text>
-                        <Text style={{ color: 'rgba(255,255,255,0.85)', fontSize: 12 }}>{badge.description}</Text>
+                        <span style={{ fontWeight: 'bold' }}>{badge.title}</span>
+                        <span style={{ fontSize: 12, opacity: 0.85 }}>{badge.description}</span>
                         <Flexbox horizontal gap={6} align="center" style={{ marginTop: 4 }}>
                           <Tag color={rarityColor} style={{ border: 'none', margin: 0, fontWeight: 'bold' }}>{rarityLabel}</Tag>
-                          <Text style={{ color: '#ffb300', fontSize: 11, fontWeight: 'bold' }}>+{badge.xpReward} XP</Text>
+                          <span style={{ color: '#ffb300', fontSize: 11, fontWeight: 'bold' }}>+{badge.xpReward} XP</span>
                         </Flexbox>
                       </Flexbox>
                     }>
@@ -389,22 +422,20 @@ const BadgesPage = () => {
                           position: 'relative',
                         }}
                       >
-                        {/* Bouton d'épinglage pour les badges débloqués */}
-                        {isUnlocked && (
-                          <button
-                            className={`${styles.pinButton} ${isPinned ? '' : 'pin-btn-hover'}`}
-                            onClick={(e) => handleTogglePin(badge.id, e)}
-                            style={{
-                              opacity: isPinned ? 0.9 : undefined,
-                            }}
-                          >
-                            {isPinned ? (
-                              <Pin size={14} fill={theme.colorPrimary} color={theme.colorPrimary} />
-                            ) : (
-                              <PinOff size={14} color={theme.colorTextPlaceholder} />
-                            )}
-                          </button>
-                        )}
+                        {/* Bouton d'épinglage pour tous les badges */}
+                        <button
+                          className={`${styles.pinButton} ${isPinned ? '' : 'pin-btn-hover'}`}
+                          onClick={(e) => handleTogglePin(badge.id, e)}
+                          style={{
+                            opacity: isPinned ? 0.9 : undefined,
+                          }}
+                        >
+                          {isPinned ? (
+                            <Pin size={14} fill={theme.colorPrimary} color={theme.colorPrimary} />
+                          ) : (
+                            <PinOff size={14} color={theme.colorTextPlaceholder} />
+                          )}
+                        </button>
 
                         {/* Particules pour Mythic et Ultra */}
                         {isUnlocked && (badge.rarity === 'mythic' || badge.rarity === 'ultra') && (settings.showBadgeAnimations ?? true) && (
@@ -441,8 +472,9 @@ const BadgesPage = () => {
                           <div style={{
                             position: 'absolute',
                             top: 8,
-                            right: 8,
-                            opacity: 0.7
+                            right: isPinned ? 28 : 8,
+                            opacity: 0.7,
+                            transition: 'right 0.2s ease',
                           }}>
                             <Lock size={12} color={theme.colorTextPlaceholder} />
                           </div>
