@@ -1,3 +1,5 @@
+import { arrayBufferToBase64 } from './base64';
+
 /**
  * Convert video URL to base64 data URL with SSRF protection
  * Uses SSRF-safe fetch to prevent SSRF attacks
@@ -29,9 +31,7 @@ export const videoUrlToBase64 = async (
     const arrayBuffer = await response.arrayBuffer();
     const base64 = isServer
       ? Buffer.from(arrayBuffer).toString('base64')
-      : btoa(
-          new Uint8Array(arrayBuffer).reduce((data, byte) => data + String.fromCharCode(byte), ''),
-        );
+      : arrayBufferToBase64(arrayBuffer);
 
     return {
       base64,

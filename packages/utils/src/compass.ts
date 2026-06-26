@@ -1,5 +1,7 @@
 import brotliPromise from 'brotli-wasm';
 
+import { arrayBufferToBase64, base64ToUint8Array } from './base64';
+
 /**
  * @title String Compressor
  */
@@ -73,7 +75,7 @@ export class StrCompressor {
   }
 
   private urlSafeBase64Encode = (data: Uint8Array): string => {
-    const base64Str = btoa(String.fromCharCode(...data));
+    const base64Str = arrayBufferToBase64(data);
     return base64Str.replaceAll('+', '_0_').replaceAll('/', '_').replace(/=+$/, '');
   };
 
@@ -83,7 +85,7 @@ export class StrCompressor {
       after += '=';
     }
 
-    return new Uint8Array([...atob(after)].map((c) => c.charCodeAt(0)));
+    return base64ToUint8Array(after);
   };
 }
 
