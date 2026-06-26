@@ -70,6 +70,7 @@ const Body = memo(() => {
         defaultExpandedKeys={[
           SettingsGroupKey.General,
           SettingsGroupKey.Subscription,
+          SettingsGroupKey.Rewards,
           SettingsGroupKey.Agent,
           SettingsGroupKey.System,
         ]}

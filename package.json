@@ -559,6 +559,17 @@
     "registry": "https://registry.npmjs.org"
   },
   "pnpm": {
+    "supportedArchitectures": {
+      "os": [
+        "linux",
+        "darwin",
+        "win32"
+      ],
+      "cpu": [
+        "x64",
+        "arm64"
+      ]
+    },
     "onlyBuiltDependencies": [
       "@lobehub/editor",
       "ffmpeg-static",
