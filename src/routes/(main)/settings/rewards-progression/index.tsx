@@ -4,7 +4,7 @@ import { Card, Progress, Timeline, Typography, Skeleton, Empty, Tag } from 'antd
 import { useTheme } from 'antd-style';
 import { Trophy, Star, Target, MessageSquare, Cpu, Calendar, Sparkles, Footprints } from 'lucide-react';
 import { useEffect } from 'react';
-import { Flexbox } from 'react-layout-kit';
+import { Flexbox } from '@lobehub/ui';
 import { useTranslation } from 'react-i18next';
 
 import SettingHeader from '@/routes/(main)/settings/features/SettingHeader';

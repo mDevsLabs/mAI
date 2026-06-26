@@ -4,7 +4,7 @@ import { Card, Col, Row, Typography, Tooltip, Skeleton, Empty, Tag } from 'antd'
 import { useTheme } from 'antd-style';
 import { Star, Lock } from 'lucide-react';
 import { useEffect } from 'react';
-import { Flexbox } from 'react-layout-kit';
+import { Flexbox } from '@lobehub/ui';
 
 import SettingHeader from '@/routes/(main)/settings/features/SettingHeader';
 import { BADGES_CATALOG } from '@lobechat/const';

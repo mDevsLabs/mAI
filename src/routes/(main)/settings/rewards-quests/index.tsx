@@ -5,7 +5,7 @@ import { useTheme } from 'antd-style';
 import { Trophy, Star, Target, CheckCircle2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import Confetti from 'react-confetti';
-import { Flexbox } from 'react-layout-kit';
+import { Flexbox } from '@lobehub/ui';
 
 import SettingHeader from '@/routes/(main)/settings/features/SettingHeader';
 import { QUESTS_CATALOG } from '@lobechat/const';

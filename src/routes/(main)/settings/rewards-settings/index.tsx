@@ -4,7 +4,7 @@ import { Card, Switch, Typography, Button, Modal, message, Divider, Collapse, Ta
 import { useTheme } from 'antd-style';
 import { Settings, RefreshCw, HelpCircle, Bell, Sparkles, Power, ShieldAlert } from 'lucide-react';
 import { useState } from 'react';
-import { Flexbox } from 'react-layout-kit';
+import { Flexbox } from '@lobehub/ui';
 
 import SettingHeader from '@/routes/(main)/settings/features/SettingHeader';
 import { useGamificationStore } from '@/store/gamification';
