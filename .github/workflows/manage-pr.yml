@@ -25,9 +25,10 @@ jobs:
       - name: 🚀 Création ou Mise à jour de la PR
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HEAD_COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
         run: |
           TEMPLATE_PATH=".github/PULL_REQUEST_TEMPLATE.md"
-          
+
           # Vérifier si le template existe, sinon utiliser un texte par défaut
           if [ -f "$TEMPLATE_PATH" ]; then
             BODY_ARG="--body-file $TEMPLATE_PATH"
@@ -35,12 +36,12 @@ jobs:
             BODY_ARG="--body \"PR générée automatiquement pour la branche ${GITHUB_REF_NAME}\""
           fi
 
-          COMMIT_MSG="${{ github.event.head_commit.message }}"
+          COMMIT_MSG="$HEAD_COMMIT_MESSAGE"
           # Fallback si le message de commit est vide ou indisponible
           if [ -z "$COMMIT_MSG" ]; then
             COMMIT_MSG="Mise à jour automatique de la branche ${GITHUB_REF_NAME}"
           fi
-          
+
           # Ne garder que la première ligne du commit pour le titre
           PR_TITLE=$(echo "$COMMIT_MSG" | head -n 1)
 
@@ -69,10 +70,10 @@ jobs:
         run: |
           # Lister les PRs ouvertes depuis plus de 15 jours
           DATE_LIMIT=$(date -d "15 days ago" --iso-8601=seconds)
-          
+
           # On boucle sur les vieilles PRs pour les fermer
           PR_LIST=$(gh pr list --state open --json number,updatedAt -q ".[] | select(.updatedAt < \"$DATE_LIMIT\") | .number")
-          
+
           for pr in $PR_LIST; do
             echo "Fermeture de la PR #$pr pour inactivité de plus de 15 jours..."
             gh pr comment $pr --body "🛑 Fermeture automatique car cette PR est inactive depuis plus de 15 jours."
@@ -85,7 +86,7 @@ jobs:
         run: |
           # Lister toutes les PRs ouvertes qui sont en conflit (DIRTY)
           PR_LIST=$(gh pr list --state open --json number,mergeStateStatus -q ".[] | select(.mergeStateStatus == \"DIRTY\") | .number")
-          
+
           for pr in $PR_LIST; do
             echo "⚠️ Conflit détecté sur la PR #$pr."
             # Vérifier si OpenCode a déjà commenté récemment pour éviter le spam

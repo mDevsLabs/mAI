@@ -18,6 +18,13 @@ const vercelConfig = {
       'packages/database/migrations/**',
     ],
   },
+  // Ensure native bindings for sharp are included in serverless deployment
+  outputFileTracingIncludes: {
+    '*': [
+      'node_modules/.pnpm/@img+sharp-linux-x64*/**/*',
+      'node_modules/.pnpm/@img+sharp-libvips-linux-x64*/**/*',
+    ],
+  },
 };
 const nextConfig = defineConfig({
   ...(isVercel ? vercelConfig : {}),
