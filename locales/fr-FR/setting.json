@@ -2199,5 +2199,15 @@
   "workspaceSetting.storage.telemetry.title": "Envoyer des données d'utilisation anonymes de l'espace de travail",
   "workspaceSetting.tab.general": "Général",
   "workspaceSetting.tab.members": "Membres",
-  "workspaceSetting.tab.skill": "Compétences"
+  "workspaceSetting.tab.skill": "Compétences",
+  "tab.pets": "Compagnons",
+  "settingPets.section.choice": "Choisir un compagnon",
+  "settingPets.enable.title": "Activer les compagnons",
+  "settingPets.enable.desc": "Affiche un compagnon animé dans l'interface",
+  "settingPets.list.title": "Compagnons disponibles",
+  "settingPets.list.desc": "Choisissez votre compagnon favori",
+  "settingPets.list.openStore": "Ouvrir le magasin",
+  "settingPets.section.options": "Options du compagnon",
+  "settingPets.zoom.title": "Taille du compagnon",
+  "settingPets.zoom.desc": "Ajustez la taille d'affichage du compagnon"
 }

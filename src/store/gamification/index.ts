@@ -7,6 +7,9 @@ export interface GamificationSettings {
   enableConfetti: boolean;
   enableGamification: boolean;
   enableSoundEffects: boolean;
+  soundVolume: number; // 0 to 1
+  showBadgeAnimations: boolean;
+  pinnedBadgeIds: string[];
 }
 
 export interface GamificationState {
@@ -42,6 +45,9 @@ export const useGamificationStore = create<GamificationState>()(
           enableConfetti: true,
           enableGamification: true,
           enableSoundEffects: true,
+          soundVolume: 0.7,
+          showBadgeAnimations: true,
+          pinnedBadgeIds: [],
         },
 
         refreshProgression: async () => {

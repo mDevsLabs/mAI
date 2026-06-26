@@ -1,4 +1,4 @@
-import { and, eq, inArray } from 'drizzle-orm';
+import { and, eq, inArray, gte } from 'drizzle-orm';
 import { type LobeChatDatabase } from '@lobechat/database';
 import { userQuests, xpTransactions } from '@lobechat/database/schemas';
 import { QUESTS_CATALOG } from '@lobechat/const';
@@ -38,10 +38,40 @@ export class QuestService {
 
       const questsToAssign: any[] = [];
 
+      // 1.5. Récupérer les quêtes récemment assignées pour éviter les doublons/répétitions
+      const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+      const eightWeeksAgo = new Date(Date.now() - 8 * 7 * 24 * 60 * 60 * 1000);
+
+      // On récupère l'historique d'attribution des 8 dernières semaines
+      const recentQuests = await tx.query.userQuests.findMany({
+        where: and(
+          eq(userQuests.userId, this.userId),
+          gte(userQuests.createdAt, eightWeeksAgo)
+        ),
+      });
+
+      const recentDailyQuestIds = new Set(
+        recentQuests
+          .filter(q => q.createdAt >= thirtyDaysAgo)
+          .map(q => q.questId)
+      );
+
+      const recentWeeklyQuestIds = new Set(
+        recentQuests
+          .map(q => q.questId)
+      );
+
       // 2. Assign Daily Quests (3 visible quests + all hidden quests)
       if (!hasDaily) {
         const dailyCatalog = QUESTS_CATALOG.filter(q => q.type === 'daily' && !q.isHidden);
-        const selectedDaily = this.pickRandomQuests(dailyCatalog, 3);
+        let availableDaily = dailyCatalog.filter(q => !recentDailyQuestIds.has(q.id));
+        
+        // Comportement de repli (fallback) si pas assez de quêtes quotidiennes disponibles
+        if (availableDaily.length < 3) {
+          availableDaily = dailyCatalog;
+        }
+
+        const selectedDaily = this.pickRandomQuests(availableDaily, 3);
         selectedDaily.forEach(q => {
           questsToAssign.push({
             userId: this.userId,
@@ -64,7 +94,14 @@ export class QuestService {
       // 3. Assign Weekly Quests (5 visible quests + all hidden quests)
       if (!hasWeekly) {
         const weeklyCatalog = QUESTS_CATALOG.filter(q => q.type === 'weekly' && !q.isHidden);
-        const selectedWeekly = this.pickRandomQuests(weeklyCatalog, 5);
+        let availableWeekly = weeklyCatalog.filter(q => !recentWeeklyQuestIds.has(q.id));
+
+        // Comportement de repli (fallback) si pas assez de quêtes hebdomadaires disponibles
+        if (availableWeekly.length < 5) {
+          availableWeekly = weeklyCatalog;
+        }
+
+        const selectedWeekly = this.pickRandomQuests(availableWeekly, 5);
         selectedWeekly.forEach(q => {
           questsToAssign.push({
             userId: this.userId,

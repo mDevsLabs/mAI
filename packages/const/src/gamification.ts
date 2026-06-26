@@ -1,91 +1,11 @@
 import { Badge, Quest } from '@lobechat/types';
 
+import dailyQuests from './dailyQuests.json';
+import weeklyQuests from './weeklyQuests.json';
+
 export const QUESTS_CATALOG: Quest[] = [
-  {
-    id: 'daily_message_1',
-    title: 'Discuter avec une IA',
-    description: 'Envoyer 5 messages à n\'importe quel agent.',
-    type: 'daily',
-    category: 'message',
-    objectiveCount: 5,
-    xpReward: 25,
-  },
-  {
-    id: 'daily_agent_1',
-    title: 'Créateur en herbe',
-    description: 'Créer un nouvel agent personnalisé.',
-    type: 'daily',
-    category: 'agent',
-    objectiveCount: 1,
-    xpReward: 25,
-  },
-  {
-    id: 'daily_task_1',
-    title: 'Planificateur',
-    description: 'Créer 2 nouvelles tâches.',
-    type: 'daily',
-    category: 'task',
-    objectiveCount: 2,
-    xpReward: 25,
-  },
-  {
-    id: 'daily_legendary_1',
-    title: 'Grand orateur',
-    description: 'Envoyer 50 messages en une journée.',
-    type: 'daily',
-    category: 'message',
-    objectiveCount: 50,
-    xpReward: 150,
-    isLegendary: true,
-  },
-  {
-    id: 'weekly_message_1',
-    title: 'Conversations intenses',
-    description: 'Envoyer 100 messages dans la semaine.',
-    type: 'weekly',
-    category: 'message',
-    objectiveCount: 100,
-    xpReward: 25,
-  },
-  {
-    id: 'weekly_agent_1',
-    title: 'Assemblage',
-    description: 'Créer 3 agents personnalisés.',
-    type: 'weekly',
-    category: 'agent',
-    objectiveCount: 3,
-    xpReward: 25,
-  },
-  {
-    id: 'weekly_legendary_1',
-    title: 'Dévouement hebdomadaire',
-    description: 'Compléter 15 quêtes quotidiennes.',
-    type: 'weekly',
-    category: 'mixed',
-    objectiveCount: 15,
-    xpReward: 150,
-    isLegendary: true,
-  },
-  {
-    id: 'daily_message_night',
-    title: 'Oiseau de nuit 🦉',
-    description: 'Envoyez un message entre minuit et 4h du matin',
-    type: 'daily',
-    category: 'message',
-    objectiveCount: 1,
-    xpReward: 50,
-    isHidden: true,
-  },
-  {
-    id: 'daily_message_gpt4',
-    title: 'Fidèle au poste 🤖',
-    description: 'Utilisez un modèle de la famille GPT-4 aujourd\'hui',
-    type: 'daily',
-    category: 'message',
-    objectiveCount: 1,
-    xpReward: 40,
-    isHidden: true,
-  }
+  ...(dailyQuests as Omit<Quest, 'type'>[]).map((q) => ({ ...q, type: 'daily' as const })),
+  ...(weeklyQuests as Omit<Quest, 'type'>[]).map((q) => ({ ...q, type: 'weekly' as const })),
 ];
 
 export const BADGES_CATALOG: Badge[] = [
@@ -98,6 +18,8 @@ export const BADGES_CATALOG: Badge[] = [
     xpReward: 50,
     conditionType: 'messages_sent',
     conditionValue: 10,
+    lore: "Vos premiers mots résonnent dans le vide numérique. Une IA vous a répondu, marquant le début d'une longue série d'échanges.",
+    conditionDescription: "Envoyer vos 10 premiers messages à n'importe quel agent.",
   },
   {
     id: 'badge_messages_100',
@@ -108,6 +30,8 @@ export const BADGES_CATALOG: Badge[] = [
     xpReward: 100,
     conditionType: 'messages_sent',
     conditionValue: 100,
+    lore: "Vous commencez à parler couramment la langue des machines. Vos conversations s'approfondissent et votre curiosité grandit.",
+    conditionDescription: "Envoyer un total de 100 messages à travers vos discussions.",
   },
   {
     id: 'badge_messages_1000',
@@ -118,6 +42,8 @@ export const BADGES_CATALOG: Badge[] = [
     xpReward: 1000,
     conditionType: 'messages_sent',
     conditionValue: 1000,
+    lore: "Vous avez partagé tant de pensées avec les esprits numériques qu'ils semblent lire dans vos pensées. Vous êtes devenu un initié du silicium.",
+    conditionDescription: "Atteindre le cap impressionnant de 1000 messages envoyés.",
   },
   {
     id: 'badge_agents_1',
@@ -128,6 +54,8 @@ export const BADGES_CATALOG: Badge[] = [
     xpReward: 50,
     conditionType: 'agents_created',
     conditionValue: 1,
+    lore: "Vous avez insufflé la vie à votre première entité artificielle. Elle attend vos instructions dans le creux de votre interface.",
+    conditionDescription: "Créer votre tout premier agent personnalisé.",
   },
   {
     id: 'badge_agents_10',
@@ -138,6 +66,8 @@ export const BADGES_CATALOG: Badge[] = [
     xpReward: 100,
     conditionType: 'agents_created',
     conditionValue: 10,
+    lore: "Vous n'êtes plus un simple utilisateur, mais un véritable architecte d'esprits. Votre panthéon d'agents commence à prendre forme.",
+    conditionDescription: "Concevoir et configurer 10 agents personnalisés.",
   },
   {
     id: 'badge_agents_50',
@@ -148,6 +78,8 @@ export const BADGES_CATALOG: Badge[] = [
     xpReward: 1000,
     conditionType: 'agents_created',
     conditionValue: 50,
+    lore: "Les flux d'énergie de la création n'ont plus de secrets pour vous. Vos créations peuplent ce monde virtuel de leur sagesse infinie.",
+    conditionDescription: "Donner naissance à 50 agents uniques.",
   },
   {
     id: 'badge_level_10',
@@ -158,6 +90,8 @@ export const BADGES_CATALOG: Badge[] = [
     xpReward: 150,
     conditionType: 'level_reached',
     conditionValue: 10,
+    lore: "Votre parcours au sein de l'écosystème mAI porte ses premiers fruits. Vous brillez d'une lueur nouvelle parmi les utilisateurs.",
+    conditionDescription: "Atteindre le niveau 10 en accumulant de l'XP via les quêtes.",
   },
   {
     id: 'badge_level_50',
@@ -168,5 +102,7 @@ export const BADGES_CATALOG: Badge[] = [
     xpReward: 250,
     conditionType: 'level_reached',
     conditionValue: 50,
+    lore: "Couronné de succès et de persévérance, vous siégez désormais au sommet du savoir. Le maître du jeu, c'est vous.",
+    conditionDescription: "Atteindre le niveau suprême de 50.",
   }
 ];

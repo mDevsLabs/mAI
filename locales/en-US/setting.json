@@ -2204,5 +2204,15 @@
   "workspaceSetting.storage.telemetry.title": "Send Anonymous Workspace Usage Data",
   "workspaceSetting.tab.general": "General",
   "workspaceSetting.tab.members": "Members",
-  "workspaceSetting.tab.skill": "Skills"
+  "workspaceSetting.tab.skill": "Skills",
+  "tab.pets": "Companions",
+  "settingPets.section.choice": "Choose a Companion",
+  "settingPets.enable.title": "Enable Companions",
+  "settingPets.enable.desc": "Show an animated companion in the interface",
+  "settingPets.list.title": "Available Companions",
+  "settingPets.list.desc": "Choose your favorite companion",
+  "settingPets.list.openStore": "Open Store",
+  "settingPets.section.options": "Companion Options",
+  "settingPets.zoom.title": "Companion Size",
+  "settingPets.zoom.desc": "Adjust the display size of the companion"
 }

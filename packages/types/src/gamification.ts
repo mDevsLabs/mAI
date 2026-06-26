@@ -1,6 +1,6 @@
 export type QuestType = 'daily' | 'weekly';
 
-export type QuestCategory = 'agent' | 'task' | 'companion' | 'message' | 'mixed';
+export type QuestCategory = 'agent' | 'task' | 'companion' | 'message' | 'mixed' | 'creative' | 'explore' | 'productivity' | string;
 
 export interface Quest {
   id: string;
@@ -27,4 +27,6 @@ export interface Badge {
   xpReward: number;
   conditionType: BadgeConditionType;
   conditionValue: number;
+  lore?: string;
+  conditionDescription?: string;
 }

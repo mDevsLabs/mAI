@@ -561,7 +561,8 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "@lobehub/editor",
-      "ffmpeg-static"
+      "ffmpeg-static",
+      "sharp"
     ],
     "overrides": {
       "@react-pdf/image": "3.0.4",

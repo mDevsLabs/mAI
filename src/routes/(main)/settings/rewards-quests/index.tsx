@@ -203,7 +203,10 @@ const QuestsPage = () => {
               style={{ flex: 1, margin: 0 }}
               strokeColor={isCompleted ? theme.colorSuccess : theme.colorPrimary}
             />
-            {isCompleted ? (
+            <Text type="secondary" style={{ fontSize: 11, whiteSpace: 'nowrap', marginRight: isCompleted ? 8 : 0 }}>
+              {q.progress} / {catalogQuest.objectiveCount}
+            </Text>
+            {isCompleted && (
               <div className={styles.buttonWrapper}>
                 {questParticles[q.id]?.map(p => (
                   <Star
@@ -235,16 +238,17 @@ const QuestsPage = () => {
                   Réclamer
                 </Button>
               </div>
-            ) : (
-              <Text type="secondary" style={{ fontSize: 11, whiteSpace: 'nowrap' }}>
-                {q.progress} / {catalogQuest.objectiveCount}
-              </Text>
             )}
           </Flexbox>
         ) : (
-          <Flexbox horizontal align="center" gap={4}>
-            <CheckCircle2 size={16} color={theme.colorSuccess} />
-            <Text type="success" style={{ fontSize: 12, fontWeight: 500 }}>Quête complétée</Text>
+          <Flexbox horizontal align="center" justify="space-between" style={{ width: '100%' }}>
+            <Flexbox horizontal align="center" gap={4}>
+              <CheckCircle2 size={16} color={theme.colorSuccess} />
+              <Text type="success" style={{ fontSize: 12, fontWeight: 500 }}>Quête complétée</Text>
+            </Flexbox>
+            <Text type="secondary" style={{ fontSize: 11 }}>
+              {catalogQuest.objectiveCount} / {catalogQuest.objectiveCount}
+            </Text>
           </Flexbox>
         )}
       </Flexbox>
@@ -275,31 +279,27 @@ const QuestsPage = () => {
             <Empty description="Aucune quête active." image={Empty.PRESENTED_IMAGE_SIMPLE} />
           </Card>
         ) : (
-          <Row gutter={[24, 24]}>
-            {/* Quêtes Quotidiennes */}
-            <Col span={24} lg={12}>
-              <Card title={<><Target size={18} style={{ marginRight: 8, verticalAlign: 'middle' }} /> Quêtes Quotidiennes</>} bordered={false} style={{ borderRadius: 12, height: '100%' }}>
-                <Flexbox gap={12}>
-                  {dailyQuests.map(q => renderQuestCard(q))}
-                  {dailyQuests.length === 0 && (
-                    <Text type="secondary">Aucune quête quotidienne.</Text>
-                  )}
-                </Flexbox>
-              </Card>
-            </Col>
+          <Flexbox gap={24} style={{ width: '100%' }}>
+            {/* Quêtes Journalières */}
+            <Card title={<><Target size={18} style={{ marginRight: 8, verticalAlign: 'middle' }} /> Quêtes journalières</>} bordered={false} style={{ borderRadius: 12 }}>
+              <Flexbox gap={12}>
+                {dailyQuests.map(q => renderQuestCard(q))}
+                {dailyQuests.length === 0 && (
+                  <Text type="secondary">Aucune quête quotidienne active.</Text>
+                )}
+              </Flexbox>
+            </Card>
 
             {/* Quêtes Hebdomadaires */}
-            <Col span={24} lg={12}>
-              <Card title={<><Trophy size={18} style={{ marginRight: 8, verticalAlign: 'middle' }} /> Quêtes Hebdomadaires</>} bordered={false} style={{ borderRadius: 12, height: '100%' }}>
-                <Flexbox gap={12}>
-                  {weeklyQuests.map(q => renderQuestCard(q))}
-                  {weeklyQuests.length === 0 && (
-                    <Text type="secondary">Aucune quête hebdomadaire.</Text>
-                  )}
-                </Flexbox>
-              </Card>
-            </Col>
-          </Row>
+            <Card title={<><Trophy size={18} style={{ marginRight: 8, verticalAlign: 'middle' }} /> Quêtes hebdomadaires</>} bordered={false} style={{ borderRadius: 12 }}>
+              <Flexbox gap={12}>
+                {weeklyQuests.map(q => renderQuestCard(q))}
+                {weeklyQuests.length === 0 && (
+                  <Text type="secondary">Aucune quête hebdomadaire active.</Text>
+                )}
+              </Flexbox>
+            </Card>
+          </Flexbox>
         )}
       </Flexbox>
     </>

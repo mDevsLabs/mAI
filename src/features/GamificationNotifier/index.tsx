@@ -31,14 +31,14 @@ export const GamificationNotifier = () => {
       const newLevel = progression.currentLevel;
       if (newLevel % 10 === 0) {
         if (settings.enableSoundEffects) {
-          playGamificationSound('levelUp');
+          playGamificationSound('levelUp', settings.soundVolume);
         }
         if (settings.enableConfetti || settings.enableToasts) {
           setSpectacularLevel(newLevel);
         }
       } else {
         if (settings.enableSoundEffects) {
-          playGamificationSound('levelUp');
+          playGamificationSound('levelUp', settings.soundVolume);
         }
         if (settings.enableToasts) {
           message.success(`🎉 Félicitations ! Vous avez atteint le niveau ${newLevel} !`);
@@ -62,7 +62,7 @@ export const GamificationNotifier = () => {
             const soundType = (catalogBadge.rarity === 'mythic' || catalogBadge.rarity === 'ultra')
               ? 'arpeggio'
               : 'chime';
-            playGamificationSound(soundType);
+            playGamificationSound(soundType, settings.soundVolume);
           }
           if (settings.enableToasts) {
             notification.success({

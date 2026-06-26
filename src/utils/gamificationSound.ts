@@ -5,8 +5,12 @@
 
 export type GamificationSoundType = 'chime' | 'arpeggio' | 'levelUp';
 
-export const playGamificationSound = (type: GamificationSoundType) => {
+export const playGamificationSound = (type: GamificationSoundType, volume: number = 0.7) => {
   if (typeof window === 'undefined') return;
+
+  // Clamp volume between 0 and 1
+  const vol = Math.max(0, Math.min(1, volume));
+  if (vol === 0) return;
 
   try {
     const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
@@ -32,11 +36,11 @@ export const playGamificationSound = (type: GamificationSoundType) => {
         triOsc.frequency.setValueAtTime(freq * 2, now + delay);
 
         gain.gain.setValueAtTime(0, now + delay);
-        gain.gain.linearRampToValueAtTime(0.12, now + delay + 0.02);
+        gain.gain.linearRampToValueAtTime(0.12 * vol, now + delay + 0.02);
         gain.gain.exponentialRampToValueAtTime(0.0001, now + delay + duration);
 
         triGain.gain.setValueAtTime(0, now + delay);
-        triGain.gain.linearRampToValueAtTime(0.04, now + delay + 0.01);
+        triGain.gain.linearRampToValueAtTime(0.04 * vol, now + delay + 0.01);
         triGain.gain.exponentialRampToValueAtTime(0.0001, now + delay + duration * 0.5);
 
         osc.connect(gain);
@@ -69,7 +73,7 @@ export const playGamificationSound = (type: GamificationSoundType) => {
         osc.frequency.setValueAtTime(freq, now + index * 0.05);
 
         gain.gain.setValueAtTime(0, now + index * 0.05);
-        gain.gain.linearRampToValueAtTime(0.1, now + index * 0.05 + 0.02);
+        gain.gain.linearRampToValueAtTime(0.1 * vol, now + index * 0.05 + 0.02);
         gain.gain.exponentialRampToValueAtTime(0.0001, now + index * 0.05 + 0.8);
 
         const filter = ctx.createBiquadFilter();
@@ -103,7 +107,7 @@ export const playGamificationSound = (type: GamificationSoundType) => {
         osc.frequency.setValueAtTime(note.freq, now + note.time);
 
         gain.gain.setValueAtTime(0, now + note.time);
-        gain.gain.linearRampToValueAtTime(0.15, now + note.time + 0.01);
+        gain.gain.linearRampToValueAtTime(0.15 * vol, now + note.time + 0.01);
         gain.gain.exponentialRampToValueAtTime(0.0001, now + note.time + note.dur);
 
         osc.connect(gain);

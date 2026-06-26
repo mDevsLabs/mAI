@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, Switch, Typography, Button, Modal, message, Divider, Collapse, Table, Tag } from 'antd';
+import { Card, Switch, Typography, Button, Modal, message, Divider, Collapse, Table, Tag, Slider } from 'antd';
 import { useTheme } from 'antd-style';
 import { Settings, RefreshCw, HelpCircle, Bell, Sparkles, Power, ShieldAlert, Volume2 } from 'lucide-react';
 import { useState } from 'react';
@@ -170,6 +170,51 @@ const SettingsPage = () => {
                 onChange={(checked) => updateSettings({ enableSoundEffects: checked })}
               />
             </Flexbox>
+
+            {settings.enableSoundEffects && (
+              <>
+                <Divider style={{ margin: '8px 0' }} />
+                <Flexbox horizontal justify="space-between" align="center">
+                  <Flexbox gap={4} style={{ flex: 1 }}>
+                    <Text strong style={{ fontSize: 15, opacity: settings.enableGamification ? 1 : 0.5 }}>
+                      Volume des effets sonores
+                    </Text>
+                    <Text type="secondary" style={{ fontSize: 12, opacity: settings.enableGamification ? 1 : 0.5 }}>
+                      Ajustez la puissance sonore des récompenses.
+                    </Text>
+                  </Flexbox>
+                  <div style={{ width: 120 }}>
+                    <Slider
+                      disabled={!settings.enableGamification || !settings.enableSoundEffects}
+                      min={0}
+                      max={100}
+                      value={Math.round((settings.soundVolume ?? 0.7) * 100)}
+                      onChange={(val) => updateSettings({ soundVolume: val / 100 })}
+                      tooltip={{ formatter: (v) => `${v}%` }}
+                    />
+                  </div>
+                </Flexbox>
+              </>
+            )}
+
+            <Divider style={{ margin: '8px 0' }} />
+
+            {/* Activer les animations de badges */}
+            <Flexbox horizontal justify="space-between" align="center">
+              <Flexbox gap={4} style={{ flex: 1 }}>
+                <Text strong style={{ fontSize: 15, opacity: settings.enableGamification ? 1 : 0.5 }}>
+                  <Sparkles size={14} style={{ marginRight: 6, verticalAlign: 'middle' }} /> Animations des badges
+                </Text>
+                <Text type="secondary" style={{ fontSize: 12, opacity: settings.enableGamification ? 1 : 0.5 }}>
+                  Active les reflets brillants, paillettes et effets animés premium sur les badges de rareté exceptionnelle.
+                </Text>
+              </Flexbox>
+              <Switch
+                disabled={!settings.enableGamification}
+                checked={settings.showBadgeAnimations ?? true}
+                onChange={(checked) => updateSettings({ showBadgeAnimations: checked })}
+              />
+            </Flexbox>
           </Flexbox>
         </Card>
 
@@ -190,6 +235,82 @@ const SettingsPage = () => {
               <Text type="secondary" style={{ fontSize: 13 }}>
                 Chaque niveau requiert exactement 100 XP multiplié par votre niveau actuel (par exemple, le passage du niveau 1 au niveau 2 requiert 100 XP, du niveau 2 au 3 requiert 200 XP). Atteindre les niveaux 10, 20 et 30 débloque des célébrations exclusives !
               </Text>
+            </Panel>
+          </Collapse>
+        </Card>
+
+        {/* Guide des Quêtes */}
+        <Card title={<><HelpCircle size={18} style={{ marginRight: 8, verticalAlign: 'middle' }} /> Guide des Quêtes</>} bordered={false} style={{ borderRadius: 12 }}>
+          <Paragraph type="secondary" style={{ marginBottom: 16 }}>
+            Découvrez comment fonctionnent les quêtes au sein de l'application mAI et optimisez vos gains d'expérience !
+          </Paragraph>
+          
+          <Collapse ghost defaultActiveKey={['quests-info']}>
+            <Panel header="Fonctionnement et Rotation des Quêtes" key="quests-info">
+              <Flexbox gap={12}>
+                <div>
+                  <Tag color="cyan">Quêtes Journalières</Tag>
+                  <div style={{ marginTop: 4 }}>
+                    <Text type="secondary" style={{ fontSize: 13 }}>
+                      Chaque jour à <strong>minuit CET</strong>, vous recevez <strong>3 nouvelles quêtes quotidiennes</strong>. Chaque quête quotidienne complétée vous rapporte un montant fixe de <strong>20 XP</strong>.
+                    </Text>
+                  </div>
+                </div>
+                <div style={{ marginTop: 8 }}>
+                  <Tag color="purple">Quêtes Hebdomadaires</Tag>
+                  <div style={{ marginTop: 4 }}>
+                    <Text type="secondary" style={{ fontSize: 13 }}>
+                      Chaque lundi à <strong>minuit CET</strong>, vous obtenez <strong>5 quêtes hebdomadaires</strong> plus complexes qui récompensent votre assiduité. L'XP gagnée dépend de leur difficulté :
+                    </Text>
+                  </div>
+                  <div style={{ marginTop: 6, paddingLeft: 12 }}>
+                    <ul>
+                      <li><Text type="secondary" style={{ fontSize: 13 }}><strong>Facile</strong> : 50 XP</Text></li>
+                      <li><Text type="secondary" style={{ fontSize: 13 }}><strong>Normal</strong> : 75 XP</Text></li>
+                      <li><Text type="secondary" style={{ fontSize: 13 }}><strong>Difficile</strong> : 100 XP</Text></li>
+                      <li><Text type="secondary" style={{ fontSize: 13 }}><strong>Élite</strong> : 150 XP</Text></li>
+                      <li><Text type="secondary" style={{ fontSize: 13 }}><strong>Légendaire</strong> : 250 XP</Text></li>
+                    </ul>
+                  </div>
+                </div>
+                <div style={{ marginTop: 8 }}>
+                  <Tag color="orange">Système Anti-Répétition</Tag>
+                  <div style={{ marginTop: 4 }}>
+                    <Text type="secondary" style={{ fontSize: 13 }}>
+                      Pour garder le jeu dynamique, notre algorithme intelligent s'assure qu'une quête quotidienne ne peut pas vous être réattribuée pendant <strong>30 jours</strong>, et qu'une quête hebdomadaire ne peut pas revenir avant <strong>8 semaines</strong> !
+                    </Text>
+                  </div>
+                </div>
+              </Flexbox>
+            </Panel>
+            
+            <Panel header="Guide des Raretés et Catégories" key="quests-rarity">
+              <Flexbox gap={12}>
+                <div>
+                  <Text strong>Tags & Raretés :</Text>
+                  <div style={{ marginTop: 6 }}>
+                    <Tag color="red">Légendaire</Tag> <Text type="secondary" style={{ fontSize: 12 }}>Quête à haut rendement extrêmement difficile ou longue.</Text>
+                  </div>
+                  <div style={{ marginTop: 6 }}>
+                    <Tag color="gold">Secret</Tag> <Text type="secondary" style={{ fontSize: 12 }}>Quête masquée dont l'objectif se débloque en effectuant des actions mystères.</Text>
+                  </div>
+                </div>
+                <div style={{ marginTop: 8 }}>
+                  <Text strong>Catégories d'activités :</Text>
+                  <div style={{ marginTop: 6 }}>
+                    <Tag>Message</Tag> <Text type="secondary" style={{ fontSize: 12 }}>Discussions avec l'IA et interactions linguistiques.</Text>
+                  </div>
+                  <div style={{ marginTop: 4 }}>
+                    <Tag>Agent</Tag> <Text type="secondary" style={{ fontSize: 12 }}>Conception et gestion d'agents personnalisés.</Text>
+                  </div>
+                  <div style={{ marginTop: 4 }}>
+                    <Tag>Tâche</Tag> <Text type="secondary" style={{ fontSize: 12 }}>Planification et productivité.</Text>
+                  </div>
+                  <div style={{ marginTop: 4 }}>
+                    <Tag>Exploration</Tag> <Text type="secondary" style={{ fontSize: 12 }}>Découverte des fonctionnalités et plugins.</Text>
+                  </div>
+                </div>
+              </Flexbox>
             </Panel>
           </Collapse>
         </Card>

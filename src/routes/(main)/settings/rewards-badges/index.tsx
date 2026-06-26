@@ -1,16 +1,16 @@
 'use client';
 
-import { Card, Col, Row, Typography, Tooltip, Skeleton, Empty, Tag } from 'antd';
+import { Card, Col, Row, Typography, Tooltip, Skeleton, Empty, Tag, Input, Select, Segmented, Button, Modal } from 'antd';
 import { useTheme, createStyles, keyframes } from 'antd-style';
-import { Star, Lock, Trophy, MessageSquare, Cpu, Award, Sparkles } from 'lucide-react';
-import { useEffect } from 'react';
+import { Star, Lock, Sparkles, Pin, PinOff, Search, Trash2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { Flexbox } from '@lobehub/ui';
 
 import SettingHeader from '@/routes/(main)/settings/features/SettingHeader';
 import { BADGES_CATALOG } from '@lobechat/const';
 import { useGamificationStore } from '@/store/gamification';
 
-const { Text } = Typography;
+const { Text, Title, Paragraph } = Typography;
 
 const shimmer = keyframes`
   0% {
@@ -27,7 +27,7 @@ const pulseMythic = keyframes`
     border-color: rgba(233, 30, 99, 0.6);
   }
   50% {
-    box-shadow: 0 0 24px rgba(233, 30, 99, 0.9);
+    box-shadow: 0 0 20px rgba(233, 30, 99, 0.8), 0 0 30px rgba(233, 30, 99, 0.4);
     border-color: rgba(233, 30, 99, 1);
   }
   100% {
@@ -38,15 +38,15 @@ const pulseMythic = keyframes`
 
 const pulseUltra = keyframes`
   0% {
-    box-shadow: 0 0 8px rgba(0, 230, 118, 0.4);
+    box-shadow: 0 0 8px rgba(0, 230, 118, 0.3), 0 0 12px rgba(0, 229, 255, 0.2);
     border-color: rgba(0, 230, 118, 0.6);
   }
   50% {
-    box-shadow: 0 0 24px rgba(0, 230, 118, 0.9);
-    border-color: rgba(0, 230, 118, 1);
+    box-shadow: 0 0 20px rgba(0, 230, 118, 0.6), 0 0 30px rgba(0, 229, 255, 0.6), 0 0 40px rgba(255, 0, 128, 0.4);
+    border-color: rgba(0, 229, 255, 1);
   }
   100% {
-    box-shadow: 0 0 8px rgba(0, 230, 118, 0.4);
+    box-shadow: 0 0 8px rgba(0, 230, 118, 0.3), 0 0 12px rgba(0, 229, 255, 0.2);
     border-color: rgba(0, 230, 118, 0.6);
   }
 `;
@@ -57,8 +57,8 @@ const sparkleAnimation = keyframes`
     opacity: 0;
   }
   50% {
-    transform: scale(1) rotate(180deg);
-    opacity: 0.8;
+    transform: scale(1.2) rotate(180deg);
+    opacity: 0.9;
   }
 `;
 
@@ -98,9 +98,11 @@ const useStyles = createStyles(({ css }) => ({
       height: 100%;
       background: linear-gradient(
         90deg,
-        rgba(255, 255, 255, 0) 0%,
-        rgba(255, 255, 255, 0.25) 50%,
-        rgba(255, 255, 255, 0) 100%
+        rgba(255, 0, 128, 0) 0%,
+        rgba(0, 229, 255, 0.25) 30%,
+        rgba(0, 230, 118, 0.25) 50%,
+        rgba(255, 235, 59, 0.25) 70%,
+        rgba(255, 0, 128, 0) 100%
       );
       background-size: 200% 100%;
       animation: ${shimmer} 2.5s infinite linear;
@@ -110,8 +112,35 @@ const useStyles = createStyles(({ css }) => ({
   sparkle: css`
     position: absolute;
     pointer-events: none;
-    animation: ${sparkleAnimation} 2s infinite ease-in-out;
+    animation: ${sparkleAnimation} 2.5s infinite ease-in-out;
   `,
+  pinButton: css`
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 5;
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    &:hover {
+      transform: scale(1.2);
+    }
+  `,
+  badgeCard: css`
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    height: 100%;
+    &:hover {
+      transform: translateY(-4px);
+      .pin-btn-hover {
+        opacity: 0.8;
+      }
+    }
+  `
 }));
 
 const BadgesPage = () => {
@@ -122,7 +151,13 @@ const BadgesPage = () => {
     loading,
     refreshBadges,
     settings,
+    updateSettings,
   } = useGamificationStore();
+
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterMode, setFilterMode] = useState<'all' | 'unlocked' | 'locked' | 'recent' | 'pinned'>('all');
+  const [columnsCount, setColumnsCount] = useState<3 | 4 | 6>(4);
+  const [selectedBadge, setSelectedBadge] = useState<any>(null);
 
   useEffect(() => {
     refreshBadges();
@@ -184,19 +219,68 @@ const BadgesPage = () => {
     }
   };
 
-  const getBadgeIcon = (badgeId: string, color: string) => {
-    const size = 36;
-    if (badgeId.startsWith('badge_messages_')) {
-      return <MessageSquare size={size} color={color} />;
-    }
-    if (badgeId.startsWith('badge_agents_')) {
-      return <Cpu size={size} color={color} />;
-    }
-    if (badgeId.startsWith('badge_level_')) {
-      return <Trophy size={size} color={color} />;
-    }
-    return <Award size={size} color={color} />;
+  const handleTogglePin = (badgeId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const current = settings.pinnedBadgeIds ?? [];
+    const next = current.includes(badgeId)
+      ? current.filter(id => id !== badgeId)
+      : [...current, badgeId];
+    updateSettings({ pinnedBadgeIds: next });
   };
+
+  const handleClearAllPins = () => {
+    updateSettings({ pinnedBadgeIds: [] });
+  };
+
+  // Filtrage et tri
+  const filteredBadges = BADGES_CATALOG.filter(badge => {
+    const matchesSearch = badge.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                          badge.description.toLowerCase().includes(searchQuery.toLowerCase());
+    if (!matchesSearch) return false;
+
+    const isUnlocked = unlockedBadgeIds.includes(badge.id);
+    const isPinned = settings.pinnedBadgeIds?.includes(badge.id);
+
+    if (filterMode === 'unlocked') return isUnlocked;
+    if (filterMode === 'locked') return !isUnlocked;
+    if (filterMode === 'pinned') return isPinned;
+
+    return true;
+  });
+
+  let displayBadges = [...filteredBadges];
+
+  if (filterMode === 'recent') {
+    displayBadges = displayBadges
+      .filter(badge => unlockedBadgeIds.includes(badge.id))
+      .sort((a, b) => {
+        const indexA = unlockedBadgeIds.indexOf(a.id);
+        const indexB = unlockedBadgeIds.indexOf(b.id);
+        return indexB - indexA;
+      });
+  } else {
+    // Par défaut, mettre les badges épinglés au tout début du catalogue
+    displayBadges.sort((a, b) => {
+      const pinA = settings.pinnedBadgeIds?.includes(a.id) ? 1 : 0;
+      const pinB = settings.pinnedBadgeIds?.includes(b.id) ? 1 : 0;
+      return pinB - pinA;
+    });
+  }
+
+  // Calcul du span de la grille Ant Design en fonction du nombre de colonnes choisi
+  const getColSpan = () => {
+    switch (columnsCount) {
+      case 3:
+        return { span: 24, sm: 12, md: 8 };
+      case 6:
+        return { span: 12, sm: 8, md: 6, lg: 4 };
+      case 4:
+      default:
+        return { span: 12, sm: 8, md: 6 };
+    }
+  };
+
+  const hasPins = (settings.pinnedBadgeIds ?? []).length > 0;
 
   return (
     <>
@@ -206,19 +290,73 @@ const BadgesPage = () => {
           <span>Badges</span>
         </Flexbox>
       } />
-      <Flexbox gap={24} style={{ width: '100%' }}>
+      
+      <Flexbox gap={20} style={{ width: '100%' }}>
+        {/* Barre de contrôle */}
+        <Card bordered={false} style={{ borderRadius: 12 }} styles={{ body: { padding: 16 } }}>
+          <Flexbox horizontal gap={16} align="center" justify="space-between" wrap="wrap">
+            <Flexbox horizontal gap={12} align="center" style={{ flex: 1, minWidth: 280 }}>
+              <Input
+                placeholder="Rechercher un badge..."
+                prefix={<Search size={16} color={theme.colorTextPlaceholder} />}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                allowClear
+                style={{ maxWidth: 300 }}
+              />
+              <Select
+                value={filterMode}
+                onChange={(val) => setFilterMode(val)}
+                style={{ width: 160 }}
+                options={[
+                  { value: 'all', label: 'Tous les badges' },
+                  { value: 'unlocked', label: 'Débloqués' },
+                  { value: 'locked', label: 'Verrouillés' },
+                  { value: 'recent', label: 'Derniers débloqués' },
+                  { value: 'pinned', label: 'Épinglés' },
+                ]}
+              />
+            </Flexbox>
+            <Flexbox horizontal gap={12} align="center">
+              <Segmented
+                value={columnsCount}
+                onChange={(val) => setColumnsCount(val as 3 | 4 | 6)}
+                options={[
+                  { label: '3 Col', value: 3 },
+                  { label: '4 Col', value: 4 },
+                  { label: '6 Col', value: 6 },
+                ]}
+              />
+              {hasPins && (
+                <Button
+                  danger
+                  type="text"
+                  icon={<Trash2 size={14} />}
+                  onClick={handleClearAllPins}
+                >
+                  Tout désépingler
+                </Button>
+              )}
+            </Flexbox>
+          </Flexbox>
+        </Card>
+
+        {/* Grille des badges */}
         <Card bordered={false} style={{ borderRadius: 12 }}>
           {loading && unlockedBadgeIds.length === 0 ? (
             <Skeleton active paragraph={{ rows: 6 }} />
+          ) : displayBadges.length === 0 ? (
+            <Empty description="Aucun badge ne correspond aux critères." image={Empty.PRESENTED_IMAGE_SIMPLE} />
           ) : (
             <Row gutter={[16, 16]}>
-              {BADGES_CATALOG.map(badge => {
+              {displayBadges.map(badge => {
                 const isUnlocked = unlockedBadgeIds.includes(badge.id);
+                const isPinned = settings.pinnedBadgeIds?.includes(badge.id);
                 const rarityColor = getRarityColor(badge.rarity);
                 const rarityLabel = getRarityLabel(badge.rarity);
 
                 return (
-                  <Col span={12} sm={8} md={6} lg={4} key={badge.id}>
+                  <Col {...getColSpan()} key={badge.id}>
                     <Tooltip title={
                       <Flexbox gap={4} style={{ padding: 4 }}>
                         <Text strong style={{ color: '#fff' }}>{badge.title}</Text>
@@ -232,13 +370,14 @@ const BadgesPage = () => {
                       <Flexbox
                         align="center"
                         justify="center"
-                        className={
-                          badge.rarity === 'mythic' && isUnlocked
+                        onClick={() => setSelectedBadge(badge)}
+                        className={`${styles.badgeCard} ${
+                          badge.rarity === 'mythic' && isUnlocked && (settings.showBadgeAnimations ?? true)
                             ? styles.mythicBadge
-                            : badge.rarity === 'ultra' && isUnlocked
+                            : badge.rarity === 'ultra' && isUnlocked && (settings.showBadgeAnimations ?? true)
                             ? styles.ultraBadge
-                            : undefined
-                        }
+                            : ''
+                        }`}
                         style={{
                           padding: '24px 12px',
                           borderRadius: 12,
@@ -247,12 +386,28 @@ const BadgesPage = () => {
                           boxShadow: isUnlocked && badge.rarity !== 'mythic' && badge.rarity !== 'ultra' ? `0 0 12px ${rarityColor}33` : 'none',
                           transition: 'all 0.3s ease',
                           textAlign: 'center',
-                          height: '100%',
                           position: 'relative',
-                          cursor: 'pointer'
                         }}
                       >
-                        {isUnlocked && (badge.rarity === 'mythic' || badge.rarity === 'ultra') && (
+                        {/* Bouton d'épinglage pour les badges débloqués */}
+                        {isUnlocked && (
+                          <button
+                            className={`${styles.pinButton} ${isPinned ? '' : 'pin-btn-hover'}`}
+                            onClick={(e) => handleTogglePin(badge.id, e)}
+                            style={{
+                              opacity: isPinned ? 0.9 : undefined,
+                            }}
+                          >
+                            {isPinned ? (
+                              <Pin size={14} fill={theme.colorPrimary} color={theme.colorPrimary} />
+                            ) : (
+                              <PinOff size={14} color={theme.colorTextPlaceholder} />
+                            )}
+                          </button>
+                        )}
+
+                        {/* Particules pour Mythic et Ultra */}
+                        {isUnlocked && (badge.rarity === 'mythic' || badge.rarity === 'ultra') && (settings.showBadgeAnimations ?? true) && (
                           <>
                             <Sparkles
                               className={styles.sparkle}
@@ -280,6 +435,8 @@ const BadgesPage = () => {
                             />
                           </>
                         )}
+
+                        {/* Indicateur verrouillé */}
                         {!isUnlocked && (
                           <div style={{
                             position: 'absolute',
@@ -290,15 +447,18 @@ const BadgesPage = () => {
                             <Lock size={12} color={theme.colorTextPlaceholder} />
                           </div>
                         )}
+
+                        {/* Emoji du badge */}
                         <div style={{
                           fontSize: 36,
                           marginBottom: 8,
                           filter: isUnlocked ? 'none' : 'grayscale(1) contrast(0.5)',
                           opacity: isUnlocked ? 1 : 0.4,
                           transform: isUnlocked ? 'scale(1)' : 'scale(0.95)',
-                          transition: 'all 0.3s ease'
+                          transition: 'all 0.3s ease',
+                          lineHeight: 1,
                         }}>
-                          {getBadgeIcon(badge.id, isUnlocked ? rarityColor : theme.colorTextPlaceholder)}
+                          {badge.icon}
                         </div>
                         <Text strong style={{
                           fontSize: 13,
@@ -317,14 +477,125 @@ const BadgesPage = () => {
                           </Text>
                         )}
                       </Flexbox>
-                    </Tooltip>
-                  </Col>
-                );
-              })}
+                    </Col>
+                  );
+                })}
             </Row>
           )}
         </Card>
       </Flexbox>
+
+      {/* Modal de Détails du Badge */}
+      <Modal
+        open={selectedBadge !== null}
+        onCancel={() => setSelectedBadge(null)}
+        footer={null}
+        centered
+        width={400}
+        styles={{
+          body: { textAlign: 'center', padding: '32px 24px' },
+          content: { borderRadius: 16 }
+        }}
+      >
+        {selectedBadge && (() => {
+          const isUnlocked = unlockedBadgeIds.includes(selectedBadge.id);
+          const rarityColor = getRarityColor(selectedBadge.rarity);
+          const rarityLabel = getRarityLabel(selectedBadge.rarity);
+
+          return (
+            <Flexbox align="center" gap={16}>
+              {/* Grand Emoji Animé si débloqué et premium */}
+              <div style={{
+                position: 'relative',
+                display: 'inline-block',
+                fontSize: 64,
+                lineHeight: 1,
+                marginBottom: 8,
+                filter: isUnlocked ? 'none' : 'grayscale(1) contrast(0.5)',
+                opacity: isUnlocked ? 1 : 0.5,
+              }}>
+                {selectedBadge.icon}
+                {isUnlocked && (selectedBadge.rarity === 'mythic' || selectedBadge.rarity === 'ultra') && (settings.showBadgeAnimations ?? true) && (
+                  <>
+                    <Sparkles
+                      className={styles.sparkle}
+                      size={16}
+                      color={rarityColor}
+                      style={{ top: '-10%', left: '-10%', animationDelay: '0.2s' }}
+                    />
+                    <Sparkles
+                      className={styles.sparkle}
+                      size={12}
+                      color={rarityColor}
+                      style={{ bottom: '-10%', right: '-10%', animationDelay: '0.7s' }}
+                    />
+                  </>
+                )}
+              </div>
+
+              <Title level={3} style={{ margin: 0 }}>
+                {selectedBadge.title}
+              </Title>
+
+              <Tag color={rarityColor} style={{ border: 'none', fontWeight: 'bold', fontSize: 12, padding: '2px 8px' }}>
+                {rarityLabel}
+              </Tag>
+
+              <Flexbox gap={12} style={{ width: '100%', textAlign: 'left', marginTop: 12 }}>
+                {/* Lore / Histoire */}
+                {selectedBadge.lore && (
+                  <div>
+                    <Text strong style={{ fontSize: 13 }}>Histoire :</Text>
+                    <Paragraph type="secondary" style={{ fontSize: 13, margin: '4px 0 0 0', fontStyle: 'italic' }}>
+                      "{selectedBadge.lore}"
+                    </Paragraph>
+                  </div>
+                )}
+
+                {/* Objectif */}
+                <div>
+                  <Text strong style={{ fontSize: 13 }}>Objectif :</Text>
+                  <Paragraph type="secondary" style={{ fontSize: 13, margin: '4px 0 0 0' }}>
+                    {selectedBadge.conditionDescription || selectedBadge.description}
+                  </Paragraph>
+                </div>
+
+                {/* Récompense */}
+                <div>
+                  <Text strong style={{ fontSize: 13 }}>Récompense :</Text>
+                  <div style={{ marginTop: 4 }}>
+                    <Tag color="gold" style={{ margin: 0, fontWeight: 'bold' }}>
+                      +{selectedBadge.xpReward} XP
+                    </Tag>
+                  </div>
+                </div>
+
+                {/* Statut */}
+                <div>
+                  <Text strong style={{ fontSize: 13 }}>Statut :</Text>
+                  <div style={{ marginTop: 4 }}>
+                    {isUnlocked ? (
+                      <Tag color="success" style={{ margin: 0, fontWeight: 'bold' }}>Débloqué</Tag>
+                    ) : (
+                      <Tag color="default" style={{ margin: 0 }} icon={<Lock size={10} style={{ marginRight: 4, verticalAlign: 'middle' }} />}>
+                        Verrouillé
+                      </Tag>
+                    )}
+                  </div>
+                </div>
+              </Flexbox>
+
+              <Button
+                type="primary"
+                onClick={() => setSelectedBadge(null)}
+                style={{ width: '100%', marginTop: 16, borderRadius: 8 }}
+              >
+                Fermer
+              </Button>
+            </Flexbox>
+          );
+        })()}
+      </Modal>
     </>
   );
 };
