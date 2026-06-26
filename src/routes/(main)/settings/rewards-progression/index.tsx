@@ -33,7 +33,12 @@ const ProgressionPage = () => {
   if (!settings.enableGamification) {
     return (
       <>
-        <SettingHeader title="Progression ✨" />
+        <SettingHeader title={
+          <Flexbox horizontal align="center" gap={8}>
+            <Trophy size={24} color={theme.colorPrimary} />
+            <span>Progression</span>
+          </Flexbox>
+        } />
         <Card bordered={false} style={{ borderRadius: 12, textAlign: 'center', padding: 40 }}>
           <Empty
             description="Le système de gamification est actuellement désactivé."
@@ -93,7 +98,12 @@ const ProgressionPage = () => {
 
   return (
     <>
-      <SettingHeader title="Progression ✨" />
+      <SettingHeader title={
+        <Flexbox horizontal align="center" gap={8}>
+          <Trophy size={24} color={theme.colorPrimary} />
+          <span>Progression</span>
+        </Flexbox>
+      } />
       <Flexbox gap={24} style={{ width: '100%' }}>
         {/* Résumé de progression */}
         <Card bordered={false} style={{ background: theme.colorFillQuaternary, borderRadius: 12 }}>
@@ -108,8 +118,8 @@ const ProgressionPage = () => {
                 <Trophy size={36} color={theme.colorPrimary} />
               </div>
               <Flexbox>
-                <Title level={3} style={{ margin: 0 }}>Niveau {currentLevel} 🚀</Title>
-                <Text type="secondary" style={{ fontSize: 14 }}>{totalXp} XP cumulés au total ✨</Text>
+                <Title level={3} style={{ margin: 0 }}>Niveau {currentLevel}</Title>
+                <Text type="secondary" style={{ fontSize: 14 }}>{totalXp} XP cumulés au total</Text>
               </Flexbox>
             </Flexbox>
 
@@ -132,7 +142,12 @@ const ProgressionPage = () => {
         </Card>
 
         {/* Historique d'XP */}
-        <Card title="Historique d'XP 📜" bordered={false} style={{ borderRadius: 12 }}>
+        <Card title={
+          <Flexbox horizontal align="center" gap={8}>
+            <Calendar size={18} color={theme.colorPrimary} />
+            <span>Historique d'XP</span>
+          </Flexbox>
+        } bordered={false} style={{ borderRadius: 12 }}>
           {loading && xpHistory.length === 0 ? (
             <Skeleton active paragraph={{ rows: 6 }} />
           ) : xpHistory.length === 0 ? (

@@ -1,8 +1,8 @@
 'use client';
 
-import { Card, Switch, Typography, Button, Modal, message, Divider, Collapse, Table } from 'antd';
+import { Card, Switch, Typography, Button, Modal, message, Divider, Collapse, Table, Tag } from 'antd';
 import { useTheme } from 'antd-style';
-import { Settings, RefreshCw, HelpCircle, Bell, Sparkles, Power, ShieldAlert } from 'lucide-react';
+import { Settings, RefreshCw, HelpCircle, Bell, Sparkles, Power, ShieldAlert, Volume2 } from 'lucide-react';
 import { useState } from 'react';
 import { Flexbox } from '@lobehub/ui';
 
@@ -26,7 +26,7 @@ const SettingsPage = () => {
   const handleReset = async () => {
     try {
       await resetProgression();
-      message.success('Progression réinitialisée avec succès ! ✨');
+      message.success('Progression réinitialisée avec succès !');
       setIsResetModalOpen(false);
     } catch (error) {
       message.error('Erreur lors de la réinitialisation de la progression.');
@@ -88,7 +88,12 @@ const SettingsPage = () => {
 
   return (
     <>
-      <SettingHeader title="Configuration ⚙️" />
+      <SettingHeader title={
+        <Flexbox horizontal align="center" gap={8}>
+          <Settings size={24} color={theme.colorPrimary} />
+          <span>Configuration</span>
+        </Flexbox>
+      } />
       <Flexbox gap={24} style={{ width: '100%' }}>
         {/* Paramètres d'activation */}
         <Card title={<><Settings size={18} style={{ marginRight: 8, verticalAlign: 'middle' }} /> Préférences</>} bordered={false} style={{ borderRadius: 12 }}>
@@ -144,6 +149,25 @@ const SettingsPage = () => {
                 disabled={!settings.enableGamification}
                 checked={settings.enableConfetti}
                 onChange={(checked) => updateSettings({ enableConfetti: checked })}
+              />
+            </Flexbox>
+
+            <Divider style={{ margin: '8px 0' }} />
+
+            {/* Activer les effets sonores */}
+            <Flexbox horizontal justify="space-between" align="center">
+              <Flexbox gap={4} style={{ flex: 1 }}>
+                <Text strong style={{ fontSize: 15, opacity: settings.enableGamification ? 1 : 0.5 }}>
+                  <Volume2 size={14} style={{ marginRight: 6, verticalAlign: 'middle' }} /> Effets sonores
+                </Text>
+                <Text type="secondary" style={{ fontSize: 12, opacity: settings.enableGamification ? 1 : 0.5 }}>
+                  Joue de subtils effets sonores rétro et cristallins (carillons, harpe) lors des accomplissements.
+                </Text>
+              </Flexbox>
+              <Switch
+                disabled={!settings.enableGamification}
+                checked={settings.enableSoundEffects}
+                onChange={(checked) => updateSettings({ enableSoundEffects: checked })}
               />
             </Flexbox>
           </Flexbox>
@@ -204,7 +228,12 @@ const SettingsPage = () => {
 
       {/* Modale de confirmation de réinitialisation */}
       <Modal
-        title="⚠️ Confirmer la réinitialisation"
+        title={
+          <Flexbox horizontal align="center" gap={8}>
+            <ShieldAlert size={20} color={theme.colorError} />
+            <span>Confirmer la réinitialisation</span>
+          </Flexbox>
+        }
         open={isResetModalOpen}
         onOk={handleReset}
         onCancel={() => setIsResetModalOpen(false)}

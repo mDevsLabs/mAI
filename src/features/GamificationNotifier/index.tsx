@@ -4,6 +4,7 @@ import Confetti from 'react-confetti';
 import { lambdaClient } from '@/libs/trpc/client';
 import { BADGES_CATALOG } from '@lobechat/const';
 import { useGamificationStore } from '@/store/gamification';
+import { playGamificationSound } from '@/utils/gamificationSound';
 
 export const GamificationNotifier = () => {
   const { settings } = useGamificationStore();
@@ -29,11 +30,19 @@ export const GamificationNotifier = () => {
       // Level Up!
       const newLevel = progression.currentLevel;
       if (newLevel % 10 === 0) {
+        if (settings.enableSoundEffects) {
+          playGamificationSound('levelUp');
+        }
         if (settings.enableConfetti || settings.enableToasts) {
           setSpectacularLevel(newLevel);
         }
-      } else if (settings.enableToasts) {
-        message.success(`🎉 Félicitations ! Vous avez atteint le niveau ${newLevel} !`);
+      } else {
+        if (settings.enableSoundEffects) {
+          playGamificationSound('levelUp');
+        }
+        if (settings.enableToasts) {
+          message.success(`🎉 Félicitations ! Vous avez atteint le niveau ${newLevel} !`);
+        }
       }
     }
 
@@ -48,12 +57,20 @@ export const GamificationNotifier = () => {
       
       newBadges.forEach(badgeId => {
         const catalogBadge = BADGES_CATALOG.find(b => b.id === badgeId);
-        if (catalogBadge && settings.enableToasts) {
-          notification.success({
-            message: 'Nouveau Badge Débloqué ! 🏆',
-            description: `Vous avez obtenu le badge : ${catalogBadge.title} ${catalogBadge.icon}`,
-            placement: 'topRight',
-          });
+        if (catalogBadge) {
+          if (settings.enableSoundEffects) {
+            const soundType = (catalogBadge.rarity === 'mythic' || catalogBadge.rarity === 'ultra')
+              ? 'arpeggio'
+              : 'chime';
+            playGamificationSound(soundType);
+          }
+          if (settings.enableToasts) {
+            notification.success({
+              message: 'Nouveau Badge Débloqué ! 🏆',
+              description: `Vous avez obtenu le badge : ${catalogBadge.title} ${catalogBadge.icon}`,
+              placement: 'topRight',
+            });
+          }
         }
       });
     }

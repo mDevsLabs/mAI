@@ -6,6 +6,7 @@ export interface GamificationSettings {
   enableToasts: boolean;
   enableConfetti: boolean;
   enableGamification: boolean;
+  enableSoundEffects: boolean;
 }
 
 export interface GamificationState {
@@ -40,6 +41,7 @@ export const useGamificationStore = create<GamificationState>()(
           enableToasts: true,
           enableConfetti: true,
           enableGamification: true,
+          enableSoundEffects: true,
         },
 
         refreshProgression: async () => {
