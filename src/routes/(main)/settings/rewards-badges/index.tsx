@@ -477,7 +477,8 @@ const BadgesPage = () => {
                           </Text>
                         )}
                       </Flexbox>
-                    </Col>
+                    </Tooltip>
+                  </Col>
                   );
                 })}
             </Row>
