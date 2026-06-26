@@ -8,12 +8,20 @@ ARG USE_CN_MIRROR
 
 ENV DEBIAN_FRONTEND="noninteractive"
 
+# Install libvips and other dependencies for sharp
 RUN set -e && \
     if [ "${USE_CN_MIRROR:-false}" = "true" ]; then \
         sed -i "s/deb.debian.org/mirrors.ustc.edu.cn/g" "/etc/apt/sources.list.d/debian.sources"; \
     fi && \
     apt update && \
-    apt install ca-certificates proxychains-ng -qy && \
+    apt install -y --no-install-recommends \
+        ca-certificates \
+        proxychains-ng \
+        libvips-dev \
+        libvips42 \
+        libglib2.0-0 \
+        libgomp1 \
+        && rm -rf /var/lib/apt/lists/* && \
     mkdir -p /distroless/bin /distroless/etc /distroless/etc/ssl/certs /distroless/lib && \
     cp /usr/lib/$(arch)-linux-gnu/libproxychains.so.4 /distroless/lib/libproxychains.so.4 && \
     cp /usr/lib/$(arch)-linux-gnu/libdl.so.2 /distroless/lib/libdl.so.2 && \
@@ -22,9 +30,12 @@ RUN set -e && \
     cp /usr/lib/$(arch)-linux-gnu/libstdc++.so.6 /distroless/lib/libstdc++.so.6 && \
     cp /usr/lib/$(arch)-linux-gnu/libgcc_s.so.1 /distroless/lib/libgcc_s.so.1 && \
     cp /usr/lib/$(arch)-linux-gnu/librt.so.1 /distroless/lib/librt.so.1 && \
+    # Copy libvips shared libraries for sharp to work in production
+    cp /usr/lib/$(arch)-linux-gnu/libvips.so* /distroless/lib/ && \
+    cp /usr/lib/$(arch)-linux-gnu/libvips-cpp.so* /distroless/lib/ && \
     cp /usr/local/bin/node /distroless/bin/node && \
     cp /etc/ssl/certs/ca-certificates.crt /distroless/etc/ssl/certs/ca-certificates.crt && \
-    rm -rf /tmp/* /var/lib/apt/lists/* /var/tmp/*
+    rm -rf /tmp/* /var/tmp/*
 
 ## Builder image, install all the dependencies and build the app
 FROM base AS builder
