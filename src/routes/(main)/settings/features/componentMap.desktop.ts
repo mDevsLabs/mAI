@@ -25,6 +25,10 @@ import Skill from '../skill';
 import Stats from '../stats';
 import Storage from '../storage';
 import SystemTools from '../system-tools';
+import RewardsProgression from '../rewards-progression';
+import RewardsQuests from '../rewards-quests';
+import RewardsBadges from '../rewards-badges';
+import RewardsSettings from '../rewards-settings';
 
 export const componentMap = {
   [SettingsTabs.Advanced]: Advanced,
@@ -36,6 +40,10 @@ export const componentMap = {
   [SettingsTabs.Messenger]: Messenger,
   [SettingsTabs.Notification]: Notification,
   [SettingsTabs.About]: About,
+  [SettingsTabs.RewardsProgression]: RewardsProgression,
+  [SettingsTabs.RewardsQuests]: RewardsQuests,
+  [SettingsTabs.RewardsBadges]: RewardsBadges,
+  [SettingsTabs.RewardsSettings]: RewardsSettings,
   [SettingsTabs.Hotkey]: Hotkey,
   [SettingsTabs.Proxy]: Proxy,
   [SettingsTabs.SystemTools]: SystemTools,

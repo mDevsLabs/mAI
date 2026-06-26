@@ -15,6 +15,10 @@ import {
   PaletteIcon,
   Sparkles,
   UserCircle,
+  Trophy,
+  Target,
+  Star,
+  Settings as LucideSettings,
 } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -35,6 +39,7 @@ export enum SettingsGroupKey {
   General = 'general',
   Subscription = 'subscription',
   System = 'system',
+  Rewards = 'rewards',
 }
 
 export interface CategoryItem extends Omit<CellProps, 'type'> {
@@ -116,6 +121,13 @@ export const useCategory = (): CategoryGroup[] => {
         makeItem({ icon: KeyIcon, key: SettingsTabs.APIKey, label: t('auth:tab.apikey') }),
     ].filter((item): item is CategoryItem => Boolean(item));
 
+    const rewards: CategoryItem[] = [
+      makeItem({ icon: Trophy, key: SettingsTabs.RewardsProgression, label: t('setting:tab.rewards-progression') }),
+      makeItem({ icon: Target, key: SettingsTabs.RewardsQuests, label: t('setting:tab.rewards-quests') }),
+      makeItem({ icon: Star, key: SettingsTabs.RewardsBadges, label: t('setting:tab.rewards-badges') }),
+      makeItem({ icon: LucideSettings, key: SettingsTabs.RewardsSettings, label: t('setting:tab.rewards-settings') }),
+    ];
+
     const system: CategoryItem[] = [
       makeItem({ icon: Database, key: SettingsTabs.Storage, label: t('setting:tab.storage') }),
       isDevMode &&
@@ -135,6 +147,7 @@ export const useCategory = (): CategoryGroup[] => {
         key: SettingsGroupKey.Subscription,
         title: t('setting:group.subscription'),
       },
+      { items: rewards, key: SettingsGroupKey.Rewards, title: t('setting:group.rewards') },
       { items: agent, key: SettingsGroupKey.Agent, title: t('setting:group.aiConfig') },
       { items: system, key: SettingsGroupKey.System, title: t('setting:group.system') },
     ].filter((group) => group.items.length > 0);

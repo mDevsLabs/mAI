@@ -1,6 +1,6 @@
 import { and, eq } from 'drizzle-orm';
 import { type LobeChatDatabase } from '@lobechat/database';
-import { dailyCounters, userGamification, xpTransactions } from '@lobechat/database/schemas';
+import { dailyCounters, userGamification, xpTransactions, userQuests, userBadges } from '@lobechat/database/schemas';
 
 import { calculateLevelInfo, getDateKeyCET, hasLeveledUp } from './utils';
 
@@ -174,4 +174,19 @@ export class GamificationService {
 
     return progression;
   }
+
+  /**
+   * Reset all gamification data for the user
+   */
+  async resetProgression() {
+    return this.db.transaction(async (tx) => {
+      await tx.delete(xpTransactions).where(eq(xpTransactions.userId, this.userId));
+      await tx.delete(userBadges).where(eq(userBadges.userId, this.userId));
+      await tx.delete(userQuests).where(eq(userQuests.userId, this.userId));
+      await tx.delete(dailyCounters).where(eq(dailyCounters.userId, this.userId));
+      await tx.delete(userGamification).where(eq(userGamification.userId, this.userId));
+      return { success: true };
+    });
+  }
 }
+

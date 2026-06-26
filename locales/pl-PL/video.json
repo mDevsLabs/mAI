@@ -5,6 +5,7 @@
   "config.endImageUrl.label": "Klatka końcowa",
   "config.generateAudio.label": "Generuj dźwięk",
   "config.header.title": "Wideo",
+  "config.imageUpload.maxCountReached": "Możesz dodać maksymalnie {{count}} obrazów referencyjnych",
   "config.imageUrl.label": "Klatka początkowa",
   "config.imageUpload.maxCountReached": "Możesz dodać maksymalnie {{count}} obrazy referencyjne",
   "config.prompt.placeholder": "Opisz wideo, które chcesz wygenerować",

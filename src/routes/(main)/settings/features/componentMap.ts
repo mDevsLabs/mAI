@@ -37,6 +37,18 @@ export const componentMap = {
   [SettingsTabs.About]: dynamic(() => import('../about'), {
     loading: loading('Settings > About'),
   }),
+  [SettingsTabs.RewardsProgression]: dynamic(() => import('../rewards-progression'), {
+    loading: loading('Settings > RewardsProgression'),
+  }),
+  [SettingsTabs.RewardsQuests]: dynamic(() => import('../rewards-quests'), {
+    loading: loading('Settings > RewardsQuests'),
+  }),
+  [SettingsTabs.RewardsBadges]: dynamic(() => import('../rewards-badges'), {
+    loading: loading('Settings > RewardsBadges'),
+  }),
+  [SettingsTabs.RewardsSettings]: dynamic(() => import('../rewards-settings'), {
+    loading: loading('Settings > RewardsSettings'),
+  }),
   [SettingsTabs.Hotkey]: dynamic(() => import('../hotkey'), {
     loading: loading('Settings > Hotkey'),
   }),

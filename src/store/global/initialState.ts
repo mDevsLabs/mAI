@@ -72,6 +72,11 @@ export enum SettingsTabs {
   ServiceModel = 'service-model',
   Skill = 'skill',
 
+  RewardsProgression = 'rewards-progression',
+  RewardsQuests = 'rewards-quests',
+  RewardsBadges = 'rewards-badges',
+  RewardsSettings = 'rewards-settings',
+
   Stats = 'stats',
   Storage = 'storage',
   SystemTools = 'system-tools',

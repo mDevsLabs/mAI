@@ -1189,7 +1189,7 @@ export class AiAgentService {
         // `topics.groupId`), so the conversation silently "disappears" from the
         // group. execGroupAgent normally pre-creates the topic, but any path
         // that reaches execAgent without a topicId (e.g. the async/queue run)
-        // must carry the groupId through too. (LOBE-10604 / LOBE-10627)
+        // must carry the groupId through too (group topic sidebar + ownership fix).
         groupId: appContext?.groupId,
         metadata,
         title:
@@ -1283,7 +1283,7 @@ export class AiAgentService {
           files: runAttachments.fileIds,
           // Group reads filter on messages.groupId (MessageModel.query group
           // branch), so a group turn must stamp groupId or the message never
-          // shows when the topic is reopened. (LOBE-10604 / LOBE-10627)
+          // shows when the topic is reopened (group topic sidebar + ownership fix).
           groupId: appContext?.groupId ?? undefined,
           metadata: requestTriggerMetadata,
           role: 'user',

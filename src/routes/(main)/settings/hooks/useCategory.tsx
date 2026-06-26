@@ -22,6 +22,10 @@ import {
   PawPrint,
   Sparkles,
   TerminalSquare,
+  Trophy,
+  Target,
+  Star,
+  Settings,
 } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -43,6 +47,7 @@ export enum SettingsGroupKey {
   General = 'general',
   Subscription = 'subscription',
   System = 'system',
+  Rewards = 'rewards',
 }
 
 export interface CategoryItem {
@@ -141,6 +146,36 @@ export const useCategory = () => {
         title: t('group.subscription'),
       });
     }
+
+    // Rewards group
+    const rewardsItems: CategoryItem[] = [
+      {
+        icon: Trophy,
+        key: SettingsTabs.RewardsProgression,
+        label: t('tab.rewards-progression'),
+      },
+      {
+        icon: Target,
+        key: SettingsTabs.RewardsQuests,
+        label: t('tab.rewards-quests'),
+      },
+      {
+        icon: Star,
+        key: SettingsTabs.RewardsBadges,
+        label: t('tab.rewards-badges'),
+      },
+      {
+        icon: Settings,
+        key: SettingsTabs.RewardsSettings,
+        label: t('tab.rewards-settings'),
+      },
+    ];
+
+    groups.push({
+      items: rewardsItems,
+      key: SettingsGroupKey.Rewards,
+      title: t('group.rewards'),
+    });
 
     // Agent group
     const agentItems: CategoryItem[] = [

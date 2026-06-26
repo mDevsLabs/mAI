@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { authedProcedure, router } from '@/libs/trpc/lambda';
+import { xpTransactions } from '@lobechat/database/schemas';
 import { GamificationService } from '@/server/services/gamification/GamificationService';
 import { QuestService } from '@/server/services/gamification/QuestService';
 
@@ -66,6 +67,19 @@ export const gamificationRouter = router({
     const { BadgeService } = await import('@/server/services/gamification/BadgeService');
     const badgeService = new BadgeService(ctx.db, ctx.userId);
     return badgeService.checkAndUnlockBadges();
+  }),
+
+  getXpHistory: authedProcedure.query(async ({ ctx }) => {
+    return ctx.db.query.xpTransactions.findMany({
+      where: (xpTransactions, { eq }) => eq(xpTransactions.userId, ctx.userId),
+      orderBy: (xpTransactions, { desc }) => [desc(xpTransactions.createdAt)],
+      limit: 50,
+    });
+  }),
+
+  resetProgression: authedProcedure.mutation(async ({ ctx }) => {
+    const gamificationService = new GamificationService(ctx.db, ctx.userId);
+    return gamificationService.resetProgression();
   }),
 
   cronReset: authedProcedure.mutation(async ({ ctx }) => {
