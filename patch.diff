@@ -1,0 +1,26 @@
+--- .github/workflows/deploy-vercel.yml
++++ .github/workflows/deploy-vercel.yml
+@@ -82,6 +82,11 @@
+             echo "⚠️ Fichier .vercel/.env.production.local non trouvé, fallback GitHub Secrets uniquement"
+           fi
+
++          if [ -z "${{ env.KEY_VAULTS_SECRET }}" ]; then
++            echo "::error::Le secret GitHub KEY_VAULTS_SECRET est vide ou introuvable"
++            exit 1
++          fi
++
+           if grep -q '^KEY_VAULTS_SECRET=' .env.production.local; then
+             sed -i "s|^KEY_VAULTS_SECRET=.*$|KEY_VAULTS_SECRET=${{ env.KEY_VAULTS_SECRET }}|" .env.production.local
+           else
+@@ -166,6 +171,11 @@
+             echo "⚠️ Fichier .vercel/.env.preview.local non trouvé, fallback GitHub Secrets uniquement"
+           fi
+
++          if [ -z "${{ env.KEY_VAULTS_SECRET }}" ]; then
++            echo "::error::Le secret GitHub KEY_VAULTS_SECRET est vide ou introuvable"
++            exit 1
++          fi
++
+           if grep -q '^KEY_VAULTS_SECRET=' .env.preview.local; then
+             sed -i "s|^KEY_VAULTS_SECRET=.*$|KEY_VAULTS_SECRET=${{ env.KEY_VAULTS_SECRET }}|" .env.preview.local
+           else

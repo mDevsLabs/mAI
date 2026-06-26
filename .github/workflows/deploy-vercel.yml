@@ -92,10 +92,30 @@ jobs:
           else
             echo "KEY_VAULTS_SECRET=${{ env.KEY_VAULTS_SECRET }}" >> .env.production.local
           fi
+          if grep -q '^AUTH_SECRET=' .env.production.local; then
+            sed -i "s|^AUTH_SECRET=.*$|AUTH_SECRET=${{ env.AUTH_SECRET }}|" .env.production.local
+          else
+            echo "AUTH_SECRET=${{ env.AUTH_SECRET }}" >> .env.production.local
+          fi
+          if grep -q '^QSTASH_TOKEN=' .env.production.local; then
+            sed -i "s|^QSTASH_TOKEN=.*$|QSTASH_TOKEN=${{ env.QSTASH_TOKEN }}|" .env.production.local
+          else
+            echo "QSTASH_TOKEN=${{ env.QSTASH_TOKEN }}" >> .env.production.local
+          fi
+          if grep -q '^DATABASE_URL=' .env.production.local; then
+            sed -i "s|^DATABASE_URL=.*$|DATABASE_URL=${{ env.DATABASE_URL }}|" .env.production.local
+          else
+            echo "DATABASE_URL=${{ env.DATABASE_URL }}" >> .env.production.local
+          fi
 
       - name: 🏗️ Build Project Artifacts
         env:
           KEY_VAULTS_SECRET: ${{ env.KEY_VAULTS_SECRET }}
+          AUTH_SECRET: ${{ env.AUTH_SECRET }}
+          DATABASE_URL: ${{ env.DATABASE_URL }}
+          QSTASH_TOKEN: ${{ env.QSTASH_TOKEN }}
+          NEXT_PUBLIC_VERCEL_ENV: production
+          VERCEL_ENV: production
         run: vercel build --prod --token=${{ env.VERCEL_TOKEN }}
 
       - name: 🌐 Deploy Project Artifacts to Vercel
@@ -161,10 +181,30 @@ jobs:
           else
             echo "KEY_VAULTS_SECRET=${{ env.KEY_VAULTS_SECRET }}" >> .env.preview.local
           fi
+          if grep -q '^AUTH_SECRET=' .env.preview.local; then
+            sed -i "s|^AUTH_SECRET=.*$|AUTH_SECRET=${{ env.AUTH_SECRET }}|" .env.preview.local
+          else
+            echo "AUTH_SECRET=${{ env.AUTH_SECRET }}" >> .env.preview.local
+          fi
+          if grep -q '^QSTASH_TOKEN=' .env.preview.local; then
+            sed -i "s|^QSTASH_TOKEN=.*$|QSTASH_TOKEN=${{ env.QSTASH_TOKEN }}|" .env.preview.local
+          else
+            echo "QSTASH_TOKEN=${{ env.QSTASH_TOKEN }}" >> .env.preview.local
+          fi
+          if grep -q '^DATABASE_URL=' .env.preview.local; then
+            sed -i "s|^DATABASE_URL=.*$|DATABASE_URL=${{ env.DATABASE_URL }}|" .env.preview.local
+          else
+            echo "DATABASE_URL=${{ env.DATABASE_URL }}" >> .env.preview.local
+          fi
 
       - name: 🏗️ Build Project Artifacts
         env:
           KEY_VAULTS_SECRET: ${{ env.KEY_VAULTS_SECRET }}
+          AUTH_SECRET: ${{ env.AUTH_SECRET }}
+          DATABASE_URL: ${{ env.DATABASE_URL }}
+          QSTASH_TOKEN: ${{ env.QSTASH_TOKEN }}
+          NEXT_PUBLIC_VERCEL_ENV: preview
+          VERCEL_ENV: preview
         run: vercel build --token=${{ env.VERCEL_TOKEN }}
 
       - name: 🌐 Deploy Project Artifacts to Vercel
