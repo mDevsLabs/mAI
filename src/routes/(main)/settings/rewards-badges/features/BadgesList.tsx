@@ -78,7 +78,7 @@ export const BadgesList = () => {
         />
       </div>
 
-      <div className={styles.grid} style={{ gridTemplateColumns: \`repeat(\${columns}, 1fr)\` }}>
+      <div className={styles.grid} style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}>
         {filteredBadges.map((badge) => {
           const isUnlocked = unlockedBadges.includes(badge.id);
           const isPinned = pinnedBadges.includes(badge.id);
