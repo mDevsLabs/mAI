@@ -1,0 +1,2750 @@
+[
+  {
+    "id": "wq_91f3c221",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Envoyer 60 messages avec Llama 3 70B cette semaine",
+    "xpReward": 100,
+    "objectiveCount": 60,
+    "category": "Exploration",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "llama-3-70b-instruct"
+      }
+    }
+  },
+  {
+    "id": "wq_4d70931a",
+    "title": "Défi Hebdomadaire Elite",
+    "description": "Utiliser des plugins 96 fois",
+    "xpReward": 150,
+    "objectiveCount": 96,
+    "category": "Exploration",
+    "difficulty": "Elite",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_46ea3af1",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Utiliser des plugins 40 fois",
+    "xpReward": 50,
+    "objectiveCount": 40,
+    "category": "Social",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_40b71271",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Envoyer 125 messages avec Claude 3 Opus cette semaine",
+    "xpReward": 250,
+    "objectiveCount": 125,
+    "category": "Exploration",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-opus-20240229"
+      }
+    }
+  },
+  {
+    "id": "wq_9c6a7219",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Envoyer 45 messages avec Claude 3 Opus cette semaine",
+    "xpReward": 100,
+    "objectiveCount": 45,
+    "category": "Exploration",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-opus-20240229"
+      }
+    }
+  },
+  {
+    "id": "wq_ad240702",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Créer et configurer 42 nouveaux agents",
+    "xpReward": 100,
+    "objectiveCount": 42,
+    "category": "Exploration",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_dadfca4c",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Créer et configurer 60 nouveaux agents",
+    "xpReward": 100,
+    "objectiveCount": 60,
+    "category": "Productivité",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_24a1e661",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Créer et configurer 20 nouveaux agents",
+    "xpReward": 50,
+    "objectiveCount": 20,
+    "category": "Productivité",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_b2c2ecbf",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Créer et configurer 6 nouveaux agents",
+    "xpReward": 50,
+    "objectiveCount": 6,
+    "category": "Créativité",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_4d8ab7e5",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Utiliser des plugins 48 fois",
+    "xpReward": 100,
+    "objectiveCount": 48,
+    "category": "Créativité",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_96d2fb03",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Créer et configurer 10 nouveaux agents",
+    "xpReward": 50,
+    "objectiveCount": 10,
+    "category": "Exploration",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_86b2ea7d",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Envoyer 75 messages avec Claude 3 Opus cette semaine",
+    "xpReward": 250,
+    "objectiveCount": 75,
+    "category": "Exploration",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-opus-20240229"
+      }
+    }
+  },
+  {
+    "id": "wq_c1fea41d",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Utiliser des plugins 36 fois",
+    "xpReward": 100,
+    "objectiveCount": 36,
+    "category": "Créativité",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_1f4f7f9e",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Envoyer 30 messages avec Claude 3 Opus cette semaine",
+    "xpReward": 75,
+    "objectiveCount": 30,
+    "category": "Productivité",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-opus-20240229"
+      }
+    }
+  },
+  {
+    "id": "wq_5baed12a",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Utiliser des plugins 108 fois",
+    "xpReward": 100,
+    "objectiveCount": 108,
+    "category": "Créativité",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_4e4935e5",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Envoyer 125 messages avec Gemini 1.5 Pro cette semaine",
+    "xpReward": 250,
+    "objectiveCount": 125,
+    "category": "Technique",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-pro"
+      }
+    }
+  },
+  {
+    "id": "wq_693be532",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Créer et configurer 50 nouveaux agents",
+    "xpReward": 250,
+    "objectiveCount": 50,
+    "category": "Social",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_7f7784fe",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Créer et configurer 24 nouveaux agents",
+    "xpReward": 100,
+    "objectiveCount": 24,
+    "category": "Exploration",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_3ccea907",
+    "title": "Défi Hebdomadaire Elite",
+    "description": "Créer et configurer 24 nouveaux agents",
+    "xpReward": 150,
+    "objectiveCount": 24,
+    "category": "Exploration",
+    "difficulty": "Elite",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_0113d313",
+    "title": "Défi Hebdomadaire Elite",
+    "description": "Envoyer 160 messages avec Gemini 1.5 Flash cette semaine",
+    "xpReward": 150,
+    "objectiveCount": 160,
+    "category": "Technique",
+    "difficulty": "Elite",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-flash"
+      }
+    }
+  },
+  {
+    "id": "wq_58fc8589",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Utiliser des plugins 60 fois",
+    "xpReward": 250,
+    "objectiveCount": 60,
+    "category": "Technique",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_a610d64f",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Utiliser des plugins 80 fois",
+    "xpReward": 75,
+    "objectiveCount": 80,
+    "category": "Social",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_824897c0",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Utiliser des plugins 120 fois",
+    "xpReward": 250,
+    "objectiveCount": 120,
+    "category": "Technique",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_6878921f",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Créer et configurer 70 nouveaux agents",
+    "xpReward": 250,
+    "objectiveCount": 70,
+    "category": "Créativité",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_112b1584",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Utiliser des plugins 200 fois",
+    "xpReward": 250,
+    "objectiveCount": 200,
+    "category": "Technique",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_fe026eab",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Envoyer 35 messages avec Gemini 1.5 Flash cette semaine",
+    "xpReward": 50,
+    "objectiveCount": 35,
+    "category": "Créativité",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-flash"
+      }
+    }
+  },
+  {
+    "id": "wq_50871bb0",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Créer et configurer 90 nouveaux agents",
+    "xpReward": 250,
+    "objectiveCount": 90,
+    "category": "Productivité",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_99e52e7d",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Envoyer 40 messages avec Claude 3 Opus cette semaine",
+    "xpReward": 75,
+    "objectiveCount": 40,
+    "category": "Technique",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-opus-20240229"
+      }
+    }
+  },
+  {
+    "id": "wq_b28fd07e",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Envoyer 75 messages avec Gemini 1.5 Flash cette semaine",
+    "xpReward": 100,
+    "objectiveCount": 75,
+    "category": "Technique",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-flash"
+      }
+    }
+  },
+  {
+    "id": "wq_e1b61939",
+    "title": "Défi Hebdomadaire Elite",
+    "description": "Créer et configurer 80 nouveaux agents",
+    "xpReward": 150,
+    "objectiveCount": 80,
+    "category": "Technique",
+    "difficulty": "Elite",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_7583e03f",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Créer et configurer 80 nouveaux agents",
+    "xpReward": 250,
+    "objectiveCount": 80,
+    "category": "Technique",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_9e8439d3",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Créer et configurer 12 nouveaux agents",
+    "xpReward": 50,
+    "objectiveCount": 12,
+    "category": "Social",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_d786ab11",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Envoyer 70 messages avec Claude 3.5 Sonnet cette semaine",
+    "xpReward": 75,
+    "objectiveCount": 70,
+    "category": "Productivité",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-5-sonnet-20240620"
+      }
+    }
+  },
+  {
+    "id": "wq_1649e159",
+    "title": "Défi Hebdomadaire Elite",
+    "description": "Envoyer 100 messages avec Claude 3 Opus cette semaine",
+    "xpReward": 150,
+    "objectiveCount": 100,
+    "category": "Exploration",
+    "difficulty": "Elite",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-opus-20240229"
+      }
+    }
+  },
+  {
+    "id": "wq_4eb1bad5",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Créer et configurer 28 nouveaux agents",
+    "xpReward": 75,
+    "objectiveCount": 28,
+    "category": "Productivité",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_226d85db",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Créer et configurer 30 nouveaux agents",
+    "xpReward": 250,
+    "objectiveCount": 30,
+    "category": "Productivité",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_67657ea4",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Créer et configurer 12 nouveaux agents",
+    "xpReward": 50,
+    "objectiveCount": 12,
+    "category": "Technique",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_bc18c648",
+    "title": "Défi Hebdomadaire Elite",
+    "description": "Créer et configurer 32 nouveaux agents",
+    "xpReward": 150,
+    "objectiveCount": 32,
+    "category": "Exploration",
+    "difficulty": "Elite",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_7fb1c62b",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Utiliser des plugins 40 fois",
+    "xpReward": 75,
+    "objectiveCount": 40,
+    "category": "Social",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_2e284927",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Utiliser des plugins 72 fois",
+    "xpReward": 75,
+    "objectiveCount": 72,
+    "category": "Créativité",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_9c226ae3",
+    "title": "Défi Hebdomadaire Elite",
+    "description": "Envoyer 200 messages avec Llama 3 70B cette semaine",
+    "xpReward": 150,
+    "objectiveCount": 200,
+    "category": "Créativité",
+    "difficulty": "Elite",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "llama-3-70b-instruct"
+      }
+    }
+  },
+  {
+    "id": "wq_3d269467",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Utiliser des plugins 96 fois",
+    "xpReward": 100,
+    "objectiveCount": 96,
+    "category": "Technique",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_ecaae956",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Créer et configurer 18 nouveaux agents",
+    "xpReward": 100,
+    "objectiveCount": 18,
+    "category": "Social",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_2f7cca63",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Créer et configurer 28 nouveaux agents",
+    "xpReward": 75,
+    "objectiveCount": 28,
+    "category": "Productivité",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_daa24090",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Utiliser des plugins 96 fois",
+    "xpReward": 100,
+    "objectiveCount": 96,
+    "category": "Technique",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_a622d319",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Envoyer 80 messages avec GPT-4o Mini cette semaine",
+    "xpReward": 75,
+    "objectiveCount": 80,
+    "category": "Créativité",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4o-mini"
+      }
+    }
+  },
+  {
+    "id": "wq_f21ecd3c",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Utiliser des plugins 72 fois",
+    "xpReward": 100,
+    "objectiveCount": 72,
+    "category": "Exploration",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_14592dd6",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Utiliser des plugins 36 fois",
+    "xpReward": 100,
+    "objectiveCount": 36,
+    "category": "Social",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_21ebb433",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Utiliser des plugins 120 fois",
+    "xpReward": 100,
+    "objectiveCount": 120,
+    "category": "Exploration",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_ed7e5899",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Créer et configurer 30 nouveaux agents",
+    "xpReward": 100,
+    "objectiveCount": 30,
+    "category": "Productivité",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_aa41d9a0",
+    "title": "Défi Hebdomadaire Elite",
+    "description": "Envoyer 140 messages avec Gemini 1.5 Pro cette semaine",
+    "xpReward": 150,
+    "objectiveCount": 140,
+    "category": "Technique",
+    "difficulty": "Elite",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-pro"
+      }
+    }
+  },
+  {
+    "id": "wq_1c55a893",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Utiliser des plugins 84 fois",
+    "xpReward": 100,
+    "objectiveCount": 84,
+    "category": "Productivité",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_25ae562a",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Envoyer 40 messages avec GPT-4o cette semaine",
+    "xpReward": 50,
+    "objectiveCount": 40,
+    "category": "Technique",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4o"
+      }
+    }
+  },
+  {
+    "id": "wq_896920f3",
+    "title": "Défi Hebdomadaire Elite",
+    "description": "Utiliser des plugins 64 fois",
+    "xpReward": 150,
+    "objectiveCount": 64,
+    "category": "Social",
+    "difficulty": "Elite",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_7b5f059b",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Utiliser des plugins 36 fois",
+    "xpReward": 50,
+    "objectiveCount": 36,
+    "category": "Technique",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_abe155c7",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Utiliser des plugins 32 fois",
+    "xpReward": 50,
+    "objectiveCount": 32,
+    "category": "Créativité",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_32c0317e",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Utiliser des plugins 120 fois",
+    "xpReward": 100,
+    "objectiveCount": 120,
+    "category": "Exploration",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_abc53a73",
+    "title": "Défi Hebdomadaire Elite",
+    "description": "Créer et configurer 48 nouveaux agents",
+    "xpReward": 150,
+    "objectiveCount": 48,
+    "category": "Créativité",
+    "difficulty": "Elite",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_658834d8",
+    "title": "Défi Hebdomadaire Elite",
+    "description": "Utiliser des plugins 64 fois",
+    "xpReward": 150,
+    "objectiveCount": 64,
+    "category": "Productivité",
+    "difficulty": "Elite",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_3361d0ec",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Envoyer 100 messages avec Gemini 1.5 Pro cette semaine",
+    "xpReward": 250,
+    "objectiveCount": 100,
+    "category": "Social",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-pro"
+      }
+    }
+  },
+  {
+    "id": "wq_34e30707",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Utiliser des plugins 32 fois",
+    "xpReward": 50,
+    "objectiveCount": 32,
+    "category": "Productivité",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_dd1288d9",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Envoyer 105 messages avec Gemini 1.5 Flash cette semaine",
+    "xpReward": 100,
+    "objectiveCount": 105,
+    "category": "Productivité",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-flash"
+      }
+    }
+  },
+  {
+    "id": "wq_bfee2321",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Utiliser des plugins 24 fois",
+    "xpReward": 50,
+    "objectiveCount": 24,
+    "category": "Créativité",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_aeb688c1",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Envoyer 100 messages avec Gemini 1.5 Flash cette semaine",
+    "xpReward": 75,
+    "objectiveCount": 100,
+    "category": "Exploration",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-flash"
+      }
+    }
+  },
+  {
+    "id": "wq_1f39e7c2",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Utiliser des plugins 36 fois",
+    "xpReward": 50,
+    "objectiveCount": 36,
+    "category": "Exploration",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_1ea630dd",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Utiliser des plugins 120 fois",
+    "xpReward": 250,
+    "objectiveCount": 120,
+    "category": "Créativité",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_b5f43aa7",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Envoyer 75 messages avec GPT-4o cette semaine",
+    "xpReward": 250,
+    "objectiveCount": 75,
+    "category": "Productivité",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4o"
+      }
+    }
+  },
+  {
+    "id": "wq_f1b4d2ac",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Créer et configurer 60 nouveaux agents",
+    "xpReward": 250,
+    "objectiveCount": 60,
+    "category": "Productivité",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_7ded73a0",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Utiliser des plugins 120 fois",
+    "xpReward": 100,
+    "objectiveCount": 120,
+    "category": "Exploration",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_c3f2fa40",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Utiliser des plugins 40 fois",
+    "xpReward": 50,
+    "objectiveCount": 40,
+    "category": "Exploration",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_58eaa64a",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Envoyer 100 messages avec Claude 3 Opus cette semaine",
+    "xpReward": 75,
+    "objectiveCount": 100,
+    "category": "Créativité",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-opus-20240229"
+      }
+    }
+  },
+  {
+    "id": "wq_bc29d64c",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Envoyer 15 messages avec Gemini 1.5 Flash cette semaine",
+    "xpReward": 50,
+    "objectiveCount": 15,
+    "category": "Créativité",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-flash"
+      }
+    }
+  },
+  {
+    "id": "wq_1084ff86",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Envoyer 80 messages avec Claude 3 Opus cette semaine",
+    "xpReward": 75,
+    "objectiveCount": 80,
+    "category": "Productivité",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-opus-20240229"
+      }
+    }
+  },
+  {
+    "id": "wq_b1c1d085",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Utiliser des plugins 80 fois",
+    "xpReward": 250,
+    "objectiveCount": 80,
+    "category": "Social",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_2da25a85",
+    "title": "Défi Hebdomadaire Elite",
+    "description": "Utiliser des plugins 160 fois",
+    "xpReward": 150,
+    "objectiveCount": 160,
+    "category": "Productivité",
+    "difficulty": "Elite",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_92dfe99c",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Envoyer 90 messages avec GPT-4o Mini cette semaine",
+    "xpReward": 75,
+    "objectiveCount": 90,
+    "category": "Exploration",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4o-mini"
+      }
+    }
+  },
+  {
+    "id": "wq_f69f9237",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Envoyer 20 messages avec Gemini 1.5 Pro cette semaine",
+    "xpReward": 50,
+    "objectiveCount": 20,
+    "category": "Créativité",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-pro"
+      }
+    }
+  },
+  {
+    "id": "wq_a0ac13f9",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Créer et configurer 32 nouveaux agents",
+    "xpReward": 75,
+    "objectiveCount": 32,
+    "category": "Exploration",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_cc0731eb",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Créer et configurer 36 nouveaux agents",
+    "xpReward": 100,
+    "objectiveCount": 36,
+    "category": "Productivité",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_66920a19",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Utiliser des plugins 80 fois",
+    "xpReward": 250,
+    "objectiveCount": 80,
+    "category": "Créativité",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_ea60d047",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Envoyer 135 messages avec Claude 3 Opus cette semaine",
+    "xpReward": 100,
+    "objectiveCount": 135,
+    "category": "Exploration",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-opus-20240229"
+      }
+    }
+  },
+  {
+    "id": "wq_69976336",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Envoyer 100 messages avec GPT-4o Mini cette semaine",
+    "xpReward": 75,
+    "objectiveCount": 100,
+    "category": "Social",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4o-mini"
+      }
+    }
+  },
+  {
+    "id": "wq_919b3d3f",
+    "title": "Défi Hebdomadaire Elite",
+    "description": "Envoyer 60 messages avec GPT-4o Mini cette semaine",
+    "xpReward": 150,
+    "objectiveCount": 60,
+    "category": "Créativité",
+    "difficulty": "Elite",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4o-mini"
+      }
+    }
+  },
+  {
+    "id": "wq_c0411ef0",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Créer et configurer 12 nouveaux agents",
+    "xpReward": 75,
+    "objectiveCount": 12,
+    "category": "Social",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_0445beaa",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Créer et configurer 30 nouveaux agents",
+    "xpReward": 100,
+    "objectiveCount": 30,
+    "category": "Exploration",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_805d19df",
+    "title": "Défi Hebdomadaire Elite",
+    "description": "Créer et configurer 64 nouveaux agents",
+    "xpReward": 150,
+    "objectiveCount": 64,
+    "category": "Social",
+    "difficulty": "Elite",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_09317b8e",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Envoyer 70 messages avec Gemini 1.5 Pro cette semaine",
+    "xpReward": 75,
+    "objectiveCount": 70,
+    "category": "Social",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-pro"
+      }
+    }
+  },
+  {
+    "id": "wq_6735058a",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Envoyer 250 messages avec GPT-4o cette semaine",
+    "xpReward": 250,
+    "objectiveCount": 250,
+    "category": "Productivité",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4o"
+      }
+    }
+  },
+  {
+    "id": "wq_1b3ac2d1",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Utiliser des plugins 72 fois",
+    "xpReward": 75,
+    "objectiveCount": 72,
+    "category": "Productivité",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_d38fc495",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Créer et configurer 20 nouveaux agents",
+    "xpReward": 75,
+    "objectiveCount": 20,
+    "category": "Créativité",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_cb6f405c",
+    "title": "Défi Hebdomadaire Elite",
+    "description": "Créer et configurer 80 nouveaux agents",
+    "xpReward": 150,
+    "objectiveCount": 80,
+    "category": "Créativité",
+    "difficulty": "Elite",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_9b03ba02",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Utiliser des plugins 64 fois",
+    "xpReward": 75,
+    "objectiveCount": 64,
+    "category": "Technique",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_38b25625",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Utiliser des plugins 200 fois",
+    "xpReward": 250,
+    "objectiveCount": 200,
+    "category": "Créativité",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_1ff442ee",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Envoyer 125 messages avec GPT-4o cette semaine",
+    "xpReward": 250,
+    "objectiveCount": 125,
+    "category": "Exploration",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4o"
+      }
+    }
+  },
+  {
+    "id": "wq_046c6e75",
+    "title": "Défi Hebdomadaire Elite",
+    "description": "Créer et configurer 56 nouveaux agents",
+    "xpReward": 150,
+    "objectiveCount": 56,
+    "category": "Social",
+    "difficulty": "Elite",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_45af8490",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Utiliser des plugins 60 fois",
+    "xpReward": 100,
+    "objectiveCount": 60,
+    "category": "Social",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_909d6744",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Créer et configurer 90 nouveaux agents",
+    "xpReward": 250,
+    "objectiveCount": 90,
+    "category": "Exploration",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_28e29963",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Envoyer 45 messages avec GPT-4o cette semaine",
+    "xpReward": 50,
+    "objectiveCount": 45,
+    "category": "Créativité",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4o"
+      }
+    }
+  },
+  {
+    "id": "wq_d7987a78",
+    "title": "Défi Hebdomadaire Elite",
+    "description": "Envoyer 180 messages avec Gemini 1.5 Flash cette semaine",
+    "xpReward": 150,
+    "objectiveCount": 180,
+    "category": "Technique",
+    "difficulty": "Elite",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-flash"
+      }
+    }
+  },
+  {
+    "id": "wq_ec01ee2e",
+    "title": "Défi Hebdomadaire Elite",
+    "description": "Créer et configurer 40 nouveaux agents",
+    "xpReward": 150,
+    "objectiveCount": 40,
+    "category": "Créativité",
+    "difficulty": "Elite",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_e44f7f82",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Utiliser des plugins 16 fois",
+    "xpReward": 50,
+    "objectiveCount": 16,
+    "category": "Créativité",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_e45b88f8",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Envoyer 150 messages avec Gemini 1.5 Flash cette semaine",
+    "xpReward": 250,
+    "objectiveCount": 150,
+    "category": "Productivité",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-flash"
+      }
+    }
+  },
+  {
+    "id": "wq_c1c8dd8e",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Utiliser des plugins 24 fois",
+    "xpReward": 75,
+    "objectiveCount": 24,
+    "category": "Productivité",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_a4700cac",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Envoyer 30 messages avec Claude 3.5 Sonnet cette semaine",
+    "xpReward": 75,
+    "objectiveCount": 30,
+    "category": "Exploration",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-5-sonnet-20240620"
+      }
+    }
+  },
+  {
+    "id": "wq_28a1b27d",
+    "title": "Défi Hebdomadaire Elite",
+    "description": "Créer et configurer 24 nouveaux agents",
+    "xpReward": 150,
+    "objectiveCount": 24,
+    "category": "Créativité",
+    "difficulty": "Elite",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_a396b390",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Utiliser des plugins 32 fois",
+    "xpReward": 50,
+    "objectiveCount": 32,
+    "category": "Social",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_0e16a126",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Envoyer 60 messages avec Gemini 1.5 Flash cette semaine",
+    "xpReward": 75,
+    "objectiveCount": 60,
+    "category": "Exploration",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-flash"
+      }
+    }
+  },
+  {
+    "id": "wq_cb976dac",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Créer et configurer 8 nouveaux agents",
+    "xpReward": 50,
+    "objectiveCount": 8,
+    "category": "Technique",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_7b1e15dd",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Utiliser des plugins 96 fois",
+    "xpReward": 100,
+    "objectiveCount": 96,
+    "category": "Technique",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_d87de6b0",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Utiliser des plugins 24 fois",
+    "xpReward": 75,
+    "objectiveCount": 24,
+    "category": "Exploration",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_b09ffe6f",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Créer et configurer 48 nouveaux agents",
+    "xpReward": 100,
+    "objectiveCount": 48,
+    "category": "Productivité",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_e015d35a",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Utiliser des plugins 36 fois",
+    "xpReward": 50,
+    "objectiveCount": 36,
+    "category": "Social",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_e20b006a",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Créer et configurer 18 nouveaux agents",
+    "xpReward": 50,
+    "objectiveCount": 18,
+    "category": "Exploration",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_32057089",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Envoyer 60 messages avec GPT-4 Turbo cette semaine",
+    "xpReward": 100,
+    "objectiveCount": 60,
+    "category": "Technique",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4-turbo"
+      }
+    }
+  },
+  {
+    "id": "wq_bbe5ebe2",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Créer et configurer 12 nouveaux agents",
+    "xpReward": 50,
+    "objectiveCount": 12,
+    "category": "Technique",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_6c711dda",
+    "title": "Défi Hebdomadaire Elite",
+    "description": "Créer et configurer 48 nouveaux agents",
+    "xpReward": 150,
+    "objectiveCount": 48,
+    "category": "Technique",
+    "difficulty": "Elite",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_c5a1b49b",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Envoyer 100 messages avec Gemini 1.5 Flash cette semaine",
+    "xpReward": 75,
+    "objectiveCount": 100,
+    "category": "Exploration",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-flash"
+      }
+    }
+  },
+  {
+    "id": "wq_38681b38",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Utiliser des plugins 84 fois",
+    "xpReward": 100,
+    "objectiveCount": 84,
+    "category": "Exploration",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_281ff10b",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Utiliser des plugins 28 fois",
+    "xpReward": 50,
+    "objectiveCount": 28,
+    "category": "Social",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_b38dbb24",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Utiliser des plugins 56 fois",
+    "xpReward": 75,
+    "objectiveCount": 56,
+    "category": "Créativité",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_d32839aa",
+    "title": "Défi Hebdomadaire Elite",
+    "description": "Envoyer 120 messages avec GPT-4o cette semaine",
+    "xpReward": 150,
+    "objectiveCount": 120,
+    "category": "Technique",
+    "difficulty": "Elite",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4o"
+      }
+    }
+  },
+  {
+    "id": "wq_5c6ddc3a",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Envoyer 45 messages avec Gemini 1.5 Pro cette semaine",
+    "xpReward": 50,
+    "objectiveCount": 45,
+    "category": "Créativité",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-pro"
+      }
+    }
+  },
+  {
+    "id": "wq_b85d5f19",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Envoyer 80 messages avec Gemini 1.5 Flash cette semaine",
+    "xpReward": 75,
+    "objectiveCount": 80,
+    "category": "Productivité",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-flash"
+      }
+    }
+  },
+  {
+    "id": "wq_63ec6423",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Créer et configurer 12 nouveaux agents",
+    "xpReward": 75,
+    "objectiveCount": 12,
+    "category": "Productivité",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_bdec1294",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Créer et configurer 12 nouveaux agents",
+    "xpReward": 75,
+    "objectiveCount": 12,
+    "category": "Productivité",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_47b77a13",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Envoyer 80 messages avec Claude 3 Opus cette semaine",
+    "xpReward": 75,
+    "objectiveCount": 80,
+    "category": "Productivité",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-opus-20240229"
+      }
+    }
+  },
+  {
+    "id": "wq_b181f0c9",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Utiliser des plugins 84 fois",
+    "xpReward": 100,
+    "objectiveCount": 84,
+    "category": "Productivité",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_a04c64e6",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Créer et configurer 80 nouveaux agents",
+    "xpReward": 250,
+    "objectiveCount": 80,
+    "category": "Exploration",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_1c39d269",
+    "title": "Défi Hebdomadaire Elite",
+    "description": "Utiliser des plugins 160 fois",
+    "xpReward": 150,
+    "objectiveCount": 160,
+    "category": "Exploration",
+    "difficulty": "Elite",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_ecd2dbe5",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Créer et configurer 40 nouveaux agents",
+    "xpReward": 75,
+    "objectiveCount": 40,
+    "category": "Social",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_966aa704",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Envoyer 90 messages avec Gemini 1.5 Pro cette semaine",
+    "xpReward": 100,
+    "objectiveCount": 90,
+    "category": "Créativité",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-pro"
+      }
+    }
+  },
+  {
+    "id": "wq_eba2e8c1",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Envoyer 175 messages avec Claude 3.5 Sonnet cette semaine",
+    "xpReward": 250,
+    "objectiveCount": 175,
+    "category": "Social",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-5-sonnet-20240620"
+      }
+    }
+  },
+  {
+    "id": "wq_27cfe32f",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Envoyer 35 messages avec Gemini 1.5 Pro cette semaine",
+    "xpReward": 50,
+    "objectiveCount": 35,
+    "category": "Social",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-pro"
+      }
+    }
+  },
+  {
+    "id": "wq_215a0c44",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Envoyer 45 messages avec Claude 3 Opus cette semaine",
+    "xpReward": 100,
+    "objectiveCount": 45,
+    "category": "Productivité",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-opus-20240229"
+      }
+    }
+  },
+  {
+    "id": "wq_1d391248",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Utiliser des plugins 32 fois",
+    "xpReward": 75,
+    "objectiveCount": 32,
+    "category": "Social",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_aaa777f4",
+    "title": "Défi Hebdomadaire Elite",
+    "description": "Envoyer 120 messages avec GPT-4o cette semaine",
+    "xpReward": 150,
+    "objectiveCount": 120,
+    "category": "Créativité",
+    "difficulty": "Elite",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4o"
+      }
+    }
+  },
+  {
+    "id": "wq_11d0fc03",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Envoyer 70 messages avec Gemini 1.5 Pro cette semaine",
+    "xpReward": 75,
+    "objectiveCount": 70,
+    "category": "Productivité",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-pro"
+      }
+    }
+  },
+  {
+    "id": "wq_b9d46b69",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Créer et configurer 60 nouveaux agents",
+    "xpReward": 100,
+    "objectiveCount": 60,
+    "category": "Exploration",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_75230d69",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Envoyer 75 messages avec GPT-4 Turbo cette semaine",
+    "xpReward": 250,
+    "objectiveCount": 75,
+    "category": "Productivité",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4-turbo"
+      }
+    }
+  },
+  {
+    "id": "wq_7eef100a",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Créer et configurer 36 nouveaux agents",
+    "xpReward": 75,
+    "objectiveCount": 36,
+    "category": "Social",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_00640c6e",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Envoyer 250 messages avec Claude 3 Opus cette semaine",
+    "xpReward": 250,
+    "objectiveCount": 250,
+    "category": "Technique",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-opus-20240229"
+      }
+    }
+  },
+  {
+    "id": "wq_4f13aab5",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Créer et configurer 28 nouveaux agents",
+    "xpReward": 75,
+    "objectiveCount": 28,
+    "category": "Créativité",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_3eb9fb1d",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Créer et configurer 32 nouveaux agents",
+    "xpReward": 75,
+    "objectiveCount": 32,
+    "category": "Social",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_aad76b9f",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Envoyer 120 messages avec Claude 3 Opus cette semaine",
+    "xpReward": 100,
+    "objectiveCount": 120,
+    "category": "Exploration",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-opus-20240229"
+      }
+    }
+  },
+  {
+    "id": "wq_786a4fb4",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Utiliser des plugins 72 fois",
+    "xpReward": 75,
+    "objectiveCount": 72,
+    "category": "Exploration",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_9ba59924",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Utiliser des plugins 20 fois",
+    "xpReward": 50,
+    "objectiveCount": 20,
+    "category": "Exploration",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_dd977fc1",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Créer et configurer 18 nouveaux agents",
+    "xpReward": 50,
+    "objectiveCount": 18,
+    "category": "Créativité",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_48b202c2",
+    "title": "Défi Hebdomadaire Elite",
+    "description": "Envoyer 180 messages avec Claude 3.5 Sonnet cette semaine",
+    "xpReward": 150,
+    "objectiveCount": 180,
+    "category": "Créativité",
+    "difficulty": "Elite",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-5-sonnet-20240620"
+      }
+    }
+  },
+  {
+    "id": "wq_c07b85b2",
+    "title": "Défi Hebdomadaire Elite",
+    "description": "Envoyer 180 messages avec Gemini 1.5 Pro cette semaine",
+    "xpReward": 150,
+    "objectiveCount": 180,
+    "category": "Productivité",
+    "difficulty": "Elite",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-pro"
+      }
+    }
+  },
+  {
+    "id": "wq_eaae372d",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Créer et configurer 70 nouveaux agents",
+    "xpReward": 250,
+    "objectiveCount": 70,
+    "category": "Exploration",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_84528edc",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Envoyer 135 messages avec GPT-4o Mini cette semaine",
+    "xpReward": 100,
+    "objectiveCount": 135,
+    "category": "Productivité",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4o-mini"
+      }
+    }
+  },
+  {
+    "id": "wq_cbcf8de3",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Envoyer 15 messages avec Gemini 1.5 Pro cette semaine",
+    "xpReward": 50,
+    "objectiveCount": 15,
+    "category": "Technique",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-pro"
+      }
+    }
+  },
+  {
+    "id": "wq_268bc0a6",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Créer et configurer 16 nouveaux agents",
+    "xpReward": 50,
+    "objectiveCount": 16,
+    "category": "Technique",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_d06e6190",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Créer et configurer 70 nouveaux agents",
+    "xpReward": 250,
+    "objectiveCount": 70,
+    "category": "Productivité",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_1155562e",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Utiliser des plugins 100 fois",
+    "xpReward": 250,
+    "objectiveCount": 100,
+    "category": "Technique",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_a6680626",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Envoyer 45 messages avec Claude 3 Opus cette semaine",
+    "xpReward": 50,
+    "objectiveCount": 45,
+    "category": "Créativité",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-opus-20240229"
+      }
+    }
+  },
+  {
+    "id": "wq_d8aa9e32",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Envoyer 90 messages avec Gemini 1.5 Pro cette semaine",
+    "xpReward": 100,
+    "objectiveCount": 90,
+    "category": "Exploration",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-pro"
+      }
+    }
+  },
+  {
+    "id": "wq_a6aa7344",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Envoyer 90 messages avec GPT-4o Mini cette semaine",
+    "xpReward": 100,
+    "objectiveCount": 90,
+    "category": "Créativité",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4o-mini"
+      }
+    }
+  },
+  {
+    "id": "wq_d4b9bdaa",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Utiliser des plugins 140 fois",
+    "xpReward": 250,
+    "objectiveCount": 140,
+    "category": "Créativité",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_8f7576ca",
+    "title": "Défi Hebdomadaire Elite",
+    "description": "Envoyer 200 messages avec Claude 3 Opus cette semaine",
+    "xpReward": 150,
+    "objectiveCount": 200,
+    "category": "Technique",
+    "difficulty": "Elite",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-opus-20240229"
+      }
+    }
+  },
+  {
+    "id": "wq_39496594",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Créer et configurer 70 nouveaux agents",
+    "xpReward": 250,
+    "objectiveCount": 70,
+    "category": "Productivité",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_0979c607",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Envoyer 150 messages avec GPT-4o Mini cette semaine",
+    "xpReward": 250,
+    "objectiveCount": 150,
+    "category": "Créativité",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4o-mini"
+      }
+    }
+  },
+  {
+    "id": "wq_e503161b",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Créer et configurer 60 nouveaux agents",
+    "xpReward": 100,
+    "objectiveCount": 60,
+    "category": "Exploration",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_87b812b8",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Utiliser des plugins 72 fois",
+    "xpReward": 100,
+    "objectiveCount": 72,
+    "category": "Créativité",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_b55999b7",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Utiliser des plugins 24 fois",
+    "xpReward": 75,
+    "objectiveCount": 24,
+    "category": "Social",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_8ca18f11",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Utiliser des plugins 36 fois",
+    "xpReward": 50,
+    "objectiveCount": 36,
+    "category": "Exploration",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_2f231018",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Utiliser des plugins 48 fois",
+    "xpReward": 100,
+    "objectiveCount": 48,
+    "category": "Créativité",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_732814b0",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Envoyer 70 messages avec GPT-4o Mini cette semaine",
+    "xpReward": 75,
+    "objectiveCount": 70,
+    "category": "Créativité",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4o-mini"
+      }
+    }
+  },
+  {
+    "id": "wq_0a298e53",
+    "title": "Défi Hebdomadaire Elite",
+    "description": "Créer et configurer 40 nouveaux agents",
+    "xpReward": 150,
+    "objectiveCount": 40,
+    "category": "Créativité",
+    "difficulty": "Elite",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_610b28ef",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Envoyer 20 messages avec Claude 3.5 Sonnet cette semaine",
+    "xpReward": 50,
+    "objectiveCount": 20,
+    "category": "Social",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-5-sonnet-20240620"
+      }
+    }
+  },
+  {
+    "id": "wq_711bde50",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Créer et configurer 20 nouveaux agents",
+    "xpReward": 50,
+    "objectiveCount": 20,
+    "category": "Créativité",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_01cef5ec",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Utiliser des plugins 56 fois",
+    "xpReward": 75,
+    "objectiveCount": 56,
+    "category": "Technique",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_d12e5d61",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Envoyer 80 messages avec GPT-4o Mini cette semaine",
+    "xpReward": 75,
+    "objectiveCount": 80,
+    "category": "Créativité",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4o-mini"
+      }
+    }
+  },
+  {
+    "id": "wq_352975b7",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Créer et configurer 16 nouveaux agents",
+    "xpReward": 50,
+    "objectiveCount": 16,
+    "category": "Productivité",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_4804a317",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Envoyer 90 messages avec GPT-4o Mini cette semaine",
+    "xpReward": 100,
+    "objectiveCount": 90,
+    "category": "Créativité",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4o-mini"
+      }
+    }
+  },
+  {
+    "id": "wq_c942c5eb",
+    "title": "Défi Hebdomadaire Elite",
+    "description": "Envoyer 140 messages avec Llama 3 70B cette semaine",
+    "xpReward": 150,
+    "objectiveCount": 140,
+    "category": "Social",
+    "difficulty": "Elite",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "llama-3-70b-instruct"
+      }
+    }
+  },
+  {
+    "id": "wq_d6d4f9c1",
+    "title": "Défi Hebdomadaire Elite",
+    "description": "Envoyer 60 messages avec Claude 3 Opus cette semaine",
+    "xpReward": 150,
+    "objectiveCount": 60,
+    "category": "Créativité",
+    "difficulty": "Elite",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-opus-20240229"
+      }
+    }
+  },
+  {
+    "id": "wq_aaa0b3d2",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Créer et configurer 14 nouveaux agents",
+    "xpReward": 50,
+    "objectiveCount": 14,
+    "category": "Technique",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_3fd74110",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Créer et configurer 18 nouveaux agents",
+    "xpReward": 100,
+    "objectiveCount": 18,
+    "category": "Productivité",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_c395a8fb",
+    "title": "Défi Hebdomadaire Elite",
+    "description": "Envoyer 200 messages avec GPT-4o Mini cette semaine",
+    "xpReward": 150,
+    "objectiveCount": 200,
+    "category": "Exploration",
+    "difficulty": "Elite",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4o-mini"
+      }
+    }
+  },
+  {
+    "id": "wq_f33e5bc5",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Envoyer 30 messages avec GPT-4o cette semaine",
+    "xpReward": 50,
+    "objectiveCount": 30,
+    "category": "Technique",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4o"
+      }
+    }
+  },
+  {
+    "id": "wq_6d20fa89",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Utiliser des plugins 120 fois",
+    "xpReward": 250,
+    "objectiveCount": 120,
+    "category": "Social",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_fde4116b",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Envoyer 60 messages avec Gemini 1.5 Flash cette semaine",
+    "xpReward": 75,
+    "objectiveCount": 60,
+    "category": "Exploration",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-flash"
+      }
+    }
+  },
+  {
+    "id": "wq_e748ed93",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Créer et configurer 60 nouveaux agents",
+    "xpReward": 250,
+    "objectiveCount": 60,
+    "category": "Productivité",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_b53dddb6",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Créer et configurer 16 nouveaux agents",
+    "xpReward": 50,
+    "objectiveCount": 16,
+    "category": "Exploration",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_64054cec",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Envoyer 40 messages avec Gemini 1.5 Pro cette semaine",
+    "xpReward": 75,
+    "objectiveCount": 40,
+    "category": "Technique",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-pro"
+      }
+    }
+  },
+  {
+    "id": "wq_11f9a192",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Envoyer 175 messages avec Claude 3.5 Sonnet cette semaine",
+    "xpReward": 250,
+    "objectiveCount": 175,
+    "category": "Exploration",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-5-sonnet-20240620"
+      }
+    }
+  },
+  {
+    "id": "wq_76813b1f",
+    "title": "Défi Hebdomadaire Elite",
+    "description": "Envoyer 180 messages avec Gemini 1.5 Flash cette semaine",
+    "xpReward": 150,
+    "objectiveCount": 180,
+    "category": "Créativité",
+    "difficulty": "Elite",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-flash"
+      }
+    }
+  },
+  {
+    "id": "wq_04b94e2b",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Créer et configurer 50 nouveaux agents",
+    "xpReward": 250,
+    "objectiveCount": 50,
+    "category": "Social",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_1c7ad534",
+    "title": "Défi Hebdomadaire Elite",
+    "description": "Utiliser des plugins 160 fois",
+    "xpReward": 150,
+    "objectiveCount": 160,
+    "category": "Social",
+    "difficulty": "Elite",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_f8c8a2ad",
+    "title": "Défi Hebdomadaire Easy",
+    "description": "Créer et configurer 16 nouveaux agents",
+    "xpReward": 50,
+    "objectiveCount": 16,
+    "category": "Productivité",
+    "difficulty": "Easy",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_69120829",
+    "title": "Défi Hebdomadaire Elite",
+    "description": "Créer et configurer 32 nouveaux agents",
+    "xpReward": 150,
+    "objectiveCount": 32,
+    "category": "Productivité",
+    "difficulty": "Elite",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_08ac8f6e",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Envoyer 135 messages avec Llama 3 70B cette semaine",
+    "xpReward": 100,
+    "objectiveCount": 135,
+    "category": "Créativité",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "llama-3-70b-instruct"
+      }
+    }
+  },
+  {
+    "id": "wq_6ecfdce3",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Créer et configurer 60 nouveaux agents",
+    "xpReward": 100,
+    "objectiveCount": 60,
+    "category": "Productivité",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_046ebb65",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Créer et configurer 60 nouveaux agents",
+    "xpReward": 100,
+    "objectiveCount": 60,
+    "category": "Technique",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_a9d6b498",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Créer et configurer 12 nouveaux agents",
+    "xpReward": 75,
+    "objectiveCount": 12,
+    "category": "Productivité",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_16196600",
+    "title": "Défi Hebdomadaire Hard",
+    "description": "Utiliser des plugins 120 fois",
+    "xpReward": 100,
+    "objectiveCount": 120,
+    "category": "Technique",
+    "difficulty": "Hard",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_ab6a5e5e",
+    "title": "Défi Hebdomadaire Legendary",
+    "description": "Créer et configurer 40 nouveaux agents",
+    "xpReward": 250,
+    "objectiveCount": 40,
+    "category": "Exploration",
+    "difficulty": "Legendary",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_dac5dd8e",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Utiliser des plugins 40 fois",
+    "xpReward": 75,
+    "objectiveCount": 40,
+    "category": "Créativité",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "wq_38e1f566",
+    "title": "Défi Hebdomadaire Normal",
+    "description": "Envoyer 30 messages avec Gemini 1.5 Flash cette semaine",
+    "xpReward": 75,
+    "objectiveCount": 30,
+    "category": "Exploration",
+    "difficulty": "Normal",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-flash"
+      }
+    }
+  }
+]

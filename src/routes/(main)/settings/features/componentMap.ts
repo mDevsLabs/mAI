@@ -90,4 +90,13 @@ export const componentMap = {
       loading: loading('Settings > Referral'),
     },
   ),
+  [SettingsTabs.RewardsSettings]: dynamic(() => import('../rewards-settings'), {
+    loading: loading('Settings > Rewards Settings'),
+  }),
+  [SettingsTabs.RewardsQuests]: dynamic(() => import('../rewards-quests'), {
+    loading: loading('Settings > Rewards Quests'),
+  }),
+  [SettingsTabs.RewardsBadges]: dynamic(() => import('../rewards-badges'), {
+    loading: loading('Settings > Rewards Badges'),
+  }),
 };

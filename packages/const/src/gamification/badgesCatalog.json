@@ -1,0 +1,52 @@
+[
+  {
+    "id": "badge_newcomer",
+    "name": "Nouveau Venu",
+    "icon": "🐣",
+    "description": "Votre premier pas dans l'univers de l'IA.",
+    "lore": "Un œuf éclos, symbolisant le début d'une longue aventure d'apprentissage et de découverte dans le domaine de l'intelligence artificielle.",
+    "conditionDescription": "Compléter votre première quête.",
+    "xpReward": 50,
+    "rarity": "Common"
+  },
+  {
+    "id": "badge_explorer",
+    "name": "Explorateur Curieux",
+    "icon": "🧭",
+    "description": "A découvert les fonctionnalités de base.",
+    "lore": "La boussole indique toujours le nord, mais votre curiosité vous emmène explorer toutes les arcanes des modèles linguistiques.",
+    "conditionDescription": "Utiliser 3 modèles d'IA différents.",
+    "xpReward": 100,
+    "rarity": "Uncommon"
+  },
+  {
+    "id": "badge_artisan",
+    "name": "Artisan Prompt",
+    "icon": "🔨",
+    "description": "A créé un agent personnalisé performant.",
+    "lore": "Le marteau et l'enclume du créateur de requêtes. Chaque mot est forgé avec précision pour tirer le meilleur des modèles.",
+    "conditionDescription": "Créer et personnaliser 5 agents IA.",
+    "xpReward": 250,
+    "rarity": "Rare"
+  },
+  {
+    "id": "badge_master",
+    "name": "Maître de l'IA",
+    "icon": "👑",
+    "description": "A atteint un niveau d'expertise exceptionnel.",
+    "lore": "La couronne réservée à ceux qui dominent la technologie et l'utilisent à son plein potentiel.",
+    "conditionDescription": "Atteindre le niveau 50 de profil.",
+    "xpReward": 1000,
+    "rarity": "Mythic"
+  },
+  {
+    "id": "badge_legend",
+    "name": "Légende Vivante",
+    "icon": "🌌",
+    "description": "Une présence quasi-divine dans le système.",
+    "lore": "Au-delà des étoiles, votre code et vos prompts résonnent pour l'éternité.",
+    "conditionDescription": "Compléter 100 quêtes hebdomadaires.",
+    "xpReward": 5000,
+    "rarity": "Ultra"
+  }
+]

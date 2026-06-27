@@ -1,0 +1,2576 @@
+[
+  {
+    "id": "dq_05281995",
+    "title": "Quête quotidienne",
+    "description": "Utiliser 3 fois un plugin lors d'une conversation",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_095fa97d",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 4 fois",
+    "xpReward": 20,
+    "objectiveCount": 4,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_e359e06b",
+    "title": "Quête quotidienne",
+    "description": "Générer 7 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 7,
+    "category": "Social",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_6ddb67fd",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 4 messages avec GPT-4o",
+    "xpReward": 20,
+    "objectiveCount": 4,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4o"
+      }
+    }
+  },
+  {
+    "id": "dq_b34329d2",
+    "title": "Quête quotidienne",
+    "description": "Générer 12 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 12,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_cf1ce4be",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 2 fois",
+    "xpReward": 20,
+    "objectiveCount": 2,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_96ef8e6f",
+    "title": "Quête quotidienne",
+    "description": "Utiliser 1 fois un plugin lors d'une conversation",
+    "xpReward": 20,
+    "objectiveCount": 1,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_fb1581e1",
+    "title": "Quête quotidienne",
+    "description": "Générer 5 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 5,
+    "category": "Social",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_90353b2f",
+    "title": "Quête quotidienne",
+    "description": "Utiliser 2 fois un plugin lors d'une conversation",
+    "xpReward": 20,
+    "objectiveCount": 2,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_5823cf8b",
+    "title": "Quête quotidienne",
+    "description": "Utiliser 5 fois un plugin lors d'une conversation",
+    "xpReward": 20,
+    "objectiveCount": 5,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_308ef52a",
+    "title": "Quête quotidienne",
+    "description": "Générer 6 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 6,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_7ed793f5",
+    "title": "Quête quotidienne",
+    "description": "Générer 10 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 10,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_5f1e70b7",
+    "title": "Quête quotidienne",
+    "description": "Générer 10 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 10,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_00ad5bee",
+    "title": "Quête quotidienne",
+    "description": "Créer 1 nouveaux agents",
+    "xpReward": 20,
+    "objectiveCount": 1,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_983da6e9",
+    "title": "Quête quotidienne",
+    "description": "Utiliser 4 fois un plugin lors d'une conversation",
+    "xpReward": 20,
+    "objectiveCount": 4,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_e059ff63",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 4 messages avec GPT-4 Turbo",
+    "xpReward": 20,
+    "objectiveCount": 4,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4-turbo"
+      }
+    }
+  },
+  {
+    "id": "dq_d6dc5cc8",
+    "title": "Quête quotidienne",
+    "description": "Créer 1 nouveaux agents",
+    "xpReward": 20,
+    "objectiveCount": 1,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_58e90eaa",
+    "title": "Quête quotidienne",
+    "description": "Générer 7 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 7,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_92f7075f",
+    "title": "Quête quotidienne",
+    "description": "Créer 1 nouveaux agents",
+    "xpReward": 20,
+    "objectiveCount": 1,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_aae05441",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 4 fois",
+    "xpReward": 20,
+    "objectiveCount": 4,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_0e119029",
+    "title": "Quête quotidienne",
+    "description": "Générer 11 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 11,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_9bada4dc",
+    "title": "Quête quotidienne",
+    "description": "Créer 2 nouveaux agents",
+    "xpReward": 20,
+    "objectiveCount": 2,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_f7e202c5",
+    "title": "Quête quotidienne",
+    "description": "Utiliser 2 fois un plugin lors d'une conversation",
+    "xpReward": 20,
+    "objectiveCount": 2,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_c68e3d07",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 4 fois",
+    "xpReward": 20,
+    "objectiveCount": 4,
+    "category": "Social",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_6e6dea48",
+    "title": "Quête quotidienne",
+    "description": "Générer 5 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 5,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_24196484",
+    "title": "Quête quotidienne",
+    "description": "Utiliser 1 fois un plugin lors d'une conversation",
+    "xpReward": 20,
+    "objectiveCount": 1,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_2990a470",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 5 fois",
+    "xpReward": 20,
+    "objectiveCount": 5,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_9405d7fd",
+    "title": "Quête quotidienne",
+    "description": "Générer 10 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 10,
+    "category": "Social",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_fe399dcd",
+    "title": "Quête quotidienne",
+    "description": "Utiliser 1 fois un plugin lors d'une conversation",
+    "xpReward": 20,
+    "objectiveCount": 1,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_3c59f065",
+    "title": "Quête quotidienne",
+    "description": "Générer 6 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 6,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_09732afc",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 3 fois",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_f68e0118",
+    "title": "Quête quotidienne",
+    "description": "Utiliser 3 fois un plugin lors d'une conversation",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_8835542e",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 9 messages avec Claude 3.5 Sonnet",
+    "xpReward": 20,
+    "objectiveCount": 9,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-5-sonnet-20240620"
+      }
+    }
+  },
+  {
+    "id": "dq_c758dd7b",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 5 messages avec Gemini 1.5 Flash",
+    "xpReward": 20,
+    "objectiveCount": 5,
+    "category": "Social",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-flash"
+      }
+    }
+  },
+  {
+    "id": "dq_7ff77911",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 5 fois",
+    "xpReward": 20,
+    "objectiveCount": 5,
+    "category": "Social",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_8f9d0793",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 3 messages avec Claude 3.5 Sonnet",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-5-sonnet-20240620"
+      }
+    }
+  },
+  {
+    "id": "dq_f88eb760",
+    "title": "Quête quotidienne",
+    "description": "Créer 3 nouveaux agents",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_6c9f9678",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 10 messages avec Gemini 1.5 Pro",
+    "xpReward": 20,
+    "objectiveCount": 10,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-pro"
+      }
+    }
+  },
+  {
+    "id": "dq_91810602",
+    "title": "Quête quotidienne",
+    "description": "Générer 14 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 14,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_1fca8679",
+    "title": "Quête quotidienne",
+    "description": "Générer 15 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 15,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_3342e9b4",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 2 fois",
+    "xpReward": 20,
+    "objectiveCount": 2,
+    "category": "Social",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_e428fba1",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 3 fois",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_d60d6822",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 5 fois",
+    "xpReward": 20,
+    "objectiveCount": 5,
+    "category": "Social",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_6dc4113c",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 3 fois",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_f6fa0170",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 4 fois",
+    "xpReward": 20,
+    "objectiveCount": 4,
+    "category": "Social",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_9ce1c213",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 5 fois",
+    "xpReward": 20,
+    "objectiveCount": 5,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_fa73926c",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 8 messages avec GPT-4 Turbo",
+    "xpReward": 20,
+    "objectiveCount": 8,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4-turbo"
+      }
+    }
+  },
+  {
+    "id": "dq_8d678a6b",
+    "title": "Quête quotidienne",
+    "description": "Utiliser 2 fois un plugin lors d'une conversation",
+    "xpReward": 20,
+    "objectiveCount": 2,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_183bb12f",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 10 messages avec Claude 3 Opus",
+    "xpReward": 20,
+    "objectiveCount": 10,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-opus-20240229"
+      }
+    }
+  },
+  {
+    "id": "dq_6ba0790a",
+    "title": "Quête quotidienne",
+    "description": "Utiliser 5 fois un plugin lors d'une conversation",
+    "xpReward": 20,
+    "objectiveCount": 5,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_7b7a499b",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 9 messages avec Llama 3 70B",
+    "xpReward": 20,
+    "objectiveCount": 9,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "llama-3-70b-instruct"
+      }
+    }
+  },
+  {
+    "id": "dq_36bf01ff",
+    "title": "Quête quotidienne",
+    "description": "Générer 15 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 15,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_bfbd6a11",
+    "title": "Quête quotidienne",
+    "description": "Générer 6 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 6,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_30d59b58",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 5 fois",
+    "xpReward": 20,
+    "objectiveCount": 5,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_b4a3eefd",
+    "title": "Quête quotidienne",
+    "description": "Utiliser 3 fois un plugin lors d'une conversation",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Social",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_994d4b24",
+    "title": "Quête quotidienne",
+    "description": "Utiliser 4 fois un plugin lors d'une conversation",
+    "xpReward": 20,
+    "objectiveCount": 4,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_c91c73a4",
+    "title": "Quête quotidienne",
+    "description": "Créer 3 nouveaux agents",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_1d5faa8c",
+    "title": "Quête quotidienne",
+    "description": "Créer 3 nouveaux agents",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_275dd874",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 3 fois",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_ea7aa674",
+    "title": "Quête quotidienne",
+    "description": "Générer 7 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 7,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_5a71887c",
+    "title": "Quête quotidienne",
+    "description": "Créer 2 nouveaux agents",
+    "xpReward": 20,
+    "objectiveCount": 2,
+    "category": "Social",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_b2530e94",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 6 messages avec Gemini 1.5 Pro",
+    "xpReward": 20,
+    "objectiveCount": 6,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-pro"
+      }
+    }
+  },
+  {
+    "id": "dq_a396e4fb",
+    "title": "Quête quotidienne",
+    "description": "Générer 14 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 14,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_c6a1f580",
+    "title": "Quête quotidienne",
+    "description": "Créer 3 nouveaux agents",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_e14fb17e",
+    "title": "Quête quotidienne",
+    "description": "Générer 12 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 12,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_fc20908e",
+    "title": "Quête quotidienne",
+    "description": "Générer 6 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 6,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_e1d73ea1",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 6 messages avec Gemini 1.5 Flash",
+    "xpReward": 20,
+    "objectiveCount": 6,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-flash"
+      }
+    }
+  },
+  {
+    "id": "dq_c6b8ca67",
+    "title": "Quête quotidienne",
+    "description": "Utiliser 1 fois un plugin lors d'une conversation",
+    "xpReward": 20,
+    "objectiveCount": 1,
+    "category": "Social",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_86d1513f",
+    "title": "Quête quotidienne",
+    "description": "Générer 8 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 8,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_1c872a0a",
+    "title": "Quête quotidienne",
+    "description": "Utiliser 2 fois un plugin lors d'une conversation",
+    "xpReward": 20,
+    "objectiveCount": 2,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_b6a03af9",
+    "title": "Quête quotidienne",
+    "description": "Créer 3 nouveaux agents",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_cd0fd175",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 5 fois",
+    "xpReward": 20,
+    "objectiveCount": 5,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_413747b9",
+    "title": "Quête quotidienne",
+    "description": "Créer 3 nouveaux agents",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Social",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_8a9507b3",
+    "title": "Quête quotidienne",
+    "description": "Utiliser 2 fois un plugin lors d'une conversation",
+    "xpReward": 20,
+    "objectiveCount": 2,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_2e2791b9",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 3 fois",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_0247f842",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 3 fois",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_494b4bc0",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 4 fois",
+    "xpReward": 20,
+    "objectiveCount": 4,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_0a798ca5",
+    "title": "Quête quotidienne",
+    "description": "Générer 8 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 8,
+    "category": "Social",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_d70bfbf8",
+    "title": "Quête quotidienne",
+    "description": "Générer 8 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 8,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_f13b9e28",
+    "title": "Quête quotidienne",
+    "description": "Créer 1 nouveaux agents",
+    "xpReward": 20,
+    "objectiveCount": 1,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_26557a6e",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 2 fois",
+    "xpReward": 20,
+    "objectiveCount": 2,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_53314c53",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 3 fois",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_da6d53cc",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 2 fois",
+    "xpReward": 20,
+    "objectiveCount": 2,
+    "category": "Social",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_8854864a",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 9 messages avec Gemini 1.5 Pro",
+    "xpReward": 20,
+    "objectiveCount": 9,
+    "category": "Social",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-pro"
+      }
+    }
+  },
+  {
+    "id": "dq_f157b41a",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 4 fois",
+    "xpReward": 20,
+    "objectiveCount": 4,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_c327794a",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 3 fois",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Social",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_952c11e6",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 3 messages avec Claude 3.5 Sonnet",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Social",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-5-sonnet-20240620"
+      }
+    }
+  },
+  {
+    "id": "dq_f634d8f1",
+    "title": "Quête quotidienne",
+    "description": "Générer 7 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 7,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_4fcf7287",
+    "title": "Quête quotidienne",
+    "description": "Utiliser 2 fois un plugin lors d'une conversation",
+    "xpReward": 20,
+    "objectiveCount": 2,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_2de54403",
+    "title": "Quête quotidienne",
+    "description": "Créer 1 nouveaux agents",
+    "xpReward": 20,
+    "objectiveCount": 1,
+    "category": "Social",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_3e8e7c3e",
+    "title": "Quête quotidienne",
+    "description": "Générer 11 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 11,
+    "category": "Social",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_3eeeb546",
+    "title": "Quête quotidienne",
+    "description": "Créer 3 nouveaux agents",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_e48fa340",
+    "title": "Quête quotidienne",
+    "description": "Utiliser 2 fois un plugin lors d'une conversation",
+    "xpReward": 20,
+    "objectiveCount": 2,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_26247fe2",
+    "title": "Quête quotidienne",
+    "description": "Générer 10 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 10,
+    "category": "Social",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_a0f66942",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 5 fois",
+    "xpReward": 20,
+    "objectiveCount": 5,
+    "category": "Social",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_06dfbb74",
+    "title": "Quête quotidienne",
+    "description": "Créer 2 nouveaux agents",
+    "xpReward": 20,
+    "objectiveCount": 2,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_674032b5",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 5 messages avec Gemini 1.5 Pro",
+    "xpReward": 20,
+    "objectiveCount": 5,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-pro"
+      }
+    }
+  },
+  {
+    "id": "dq_093953d4",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 5 fois",
+    "xpReward": 20,
+    "objectiveCount": 5,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_1e90f14e",
+    "title": "Quête quotidienne",
+    "description": "Créer 1 nouveaux agents",
+    "xpReward": 20,
+    "objectiveCount": 1,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_738c8a93",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 7 messages avec GPT-4 Turbo",
+    "xpReward": 20,
+    "objectiveCount": 7,
+    "category": "Social",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4-turbo"
+      }
+    }
+  },
+  {
+    "id": "dq_68dcb2b0",
+    "title": "Quête quotidienne",
+    "description": "Utiliser 2 fois un plugin lors d'une conversation",
+    "xpReward": 20,
+    "objectiveCount": 2,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_7db524ed",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 8 messages avec Claude 3.5 Sonnet",
+    "xpReward": 20,
+    "objectiveCount": 8,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-5-sonnet-20240620"
+      }
+    }
+  },
+  {
+    "id": "dq_0be2b719",
+    "title": "Quête quotidienne",
+    "description": "Créer 3 nouveaux agents",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_448d12b3",
+    "title": "Quête quotidienne",
+    "description": "Générer 14 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 14,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_cf7a111b",
+    "title": "Quête quotidienne",
+    "description": "Utiliser 2 fois un plugin lors d'une conversation",
+    "xpReward": 20,
+    "objectiveCount": 2,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_fe068441",
+    "title": "Quête quotidienne",
+    "description": "Utiliser 5 fois un plugin lors d'une conversation",
+    "xpReward": 20,
+    "objectiveCount": 5,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_3fcc85fd",
+    "title": "Quête quotidienne",
+    "description": "Générer 8 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 8,
+    "category": "Social",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_015f4e5c",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 3 fois",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Social",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_2665cc28",
+    "title": "Quête quotidienne",
+    "description": "Créer 1 nouveaux agents",
+    "xpReward": 20,
+    "objectiveCount": 1,
+    "category": "Social",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_dcf2b5de",
+    "title": "Quête quotidienne",
+    "description": "Créer 2 nouveaux agents",
+    "xpReward": 20,
+    "objectiveCount": 2,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_668aec6b",
+    "title": "Quête quotidienne",
+    "description": "Créer 1 nouveaux agents",
+    "xpReward": 20,
+    "objectiveCount": 1,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_2d219c1c",
+    "title": "Quête quotidienne",
+    "description": "Créer 1 nouveaux agents",
+    "xpReward": 20,
+    "objectiveCount": 1,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_a0691ac4",
+    "title": "Quête quotidienne",
+    "description": "Générer 9 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 9,
+    "category": "Social",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_d3e13b3f",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 7 messages avec Claude 3 Opus",
+    "xpReward": 20,
+    "objectiveCount": 7,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-opus-20240229"
+      }
+    }
+  },
+  {
+    "id": "dq_a1ee0d76",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 2 fois",
+    "xpReward": 20,
+    "objectiveCount": 2,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_c8784f76",
+    "title": "Quête quotidienne",
+    "description": "Utiliser 3 fois un plugin lors d'une conversation",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_b274919f",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 7 messages avec Llama 3 70B",
+    "xpReward": 20,
+    "objectiveCount": 7,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "llama-3-70b-instruct"
+      }
+    }
+  },
+  {
+    "id": "dq_3689eb1c",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 8 messages avec GPT-4o",
+    "xpReward": 20,
+    "objectiveCount": 8,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4o"
+      }
+    }
+  },
+  {
+    "id": "dq_1a2a73f3",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 4 messages avec GPT-4 Turbo",
+    "xpReward": 20,
+    "objectiveCount": 4,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4-turbo"
+      }
+    }
+  },
+  {
+    "id": "dq_7587c0c0",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 4 fois",
+    "xpReward": 20,
+    "objectiveCount": 4,
+    "category": "Social",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_7e5aed79",
+    "title": "Quête quotidienne",
+    "description": "Créer 1 nouveaux agents",
+    "xpReward": 20,
+    "objectiveCount": 1,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_cde935e4",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 2 fois",
+    "xpReward": 20,
+    "objectiveCount": 2,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_71c2437e",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 5 messages avec Gemini 1.5 Flash",
+    "xpReward": 20,
+    "objectiveCount": 5,
+    "category": "Social",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-flash"
+      }
+    }
+  },
+  {
+    "id": "dq_95c7e745",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 8 messages avec GPT-4o",
+    "xpReward": 20,
+    "objectiveCount": 8,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4o"
+      }
+    }
+  },
+  {
+    "id": "dq_e40d6df9",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 3 fois",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_82e72a44",
+    "title": "Quête quotidienne",
+    "description": "Créer 1 nouveaux agents",
+    "xpReward": 20,
+    "objectiveCount": 1,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_a3b7802b",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 8 messages avec GPT-4 Turbo",
+    "xpReward": 20,
+    "objectiveCount": 8,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4-turbo"
+      }
+    }
+  },
+  {
+    "id": "dq_93ec9c84",
+    "title": "Quête quotidienne",
+    "description": "Créer 2 nouveaux agents",
+    "xpReward": 20,
+    "objectiveCount": 2,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_d260fe94",
+    "title": "Quête quotidienne",
+    "description": "Utiliser 1 fois un plugin lors d'une conversation",
+    "xpReward": 20,
+    "objectiveCount": 1,
+    "category": "Social",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_d3565102",
+    "title": "Quête quotidienne",
+    "description": "Générer 10 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 10,
+    "category": "Social",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_11437512",
+    "title": "Quête quotidienne",
+    "description": "Générer 12 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 12,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_b39c3069",
+    "title": "Quête quotidienne",
+    "description": "Générer 6 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 6,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_11dc448d",
+    "title": "Quête quotidienne",
+    "description": "Générer 14 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 14,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_46bd5c3b",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 2 fois",
+    "xpReward": 20,
+    "objectiveCount": 2,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_76473c5c",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 4 fois",
+    "xpReward": 20,
+    "objectiveCount": 4,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_eeae7da9",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 2 fois",
+    "xpReward": 20,
+    "objectiveCount": 2,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_d2e89d1e",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 3 messages avec GPT-4o",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4o"
+      }
+    }
+  },
+  {
+    "id": "dq_49541bbe",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 8 messages avec Gemini 1.5 Flash",
+    "xpReward": 20,
+    "objectiveCount": 8,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-flash"
+      }
+    }
+  },
+  {
+    "id": "dq_096bbe30",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 4 fois",
+    "xpReward": 20,
+    "objectiveCount": 4,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_9a91c217",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 4 fois",
+    "xpReward": 20,
+    "objectiveCount": 4,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_1d0835fd",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 4 fois",
+    "xpReward": 20,
+    "objectiveCount": 4,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_1abd27f5",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 6 messages avec GPT-4 Turbo",
+    "xpReward": 20,
+    "objectiveCount": 6,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4-turbo"
+      }
+    }
+  },
+  {
+    "id": "dq_7cbf4e95",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 2 fois",
+    "xpReward": 20,
+    "objectiveCount": 2,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_50589f24",
+    "title": "Quête quotidienne",
+    "description": "Générer 9 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 9,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_092ac3b2",
+    "title": "Quête quotidienne",
+    "description": "Créer 2 nouveaux agents",
+    "xpReward": 20,
+    "objectiveCount": 2,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_bf2bdc0f",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 5 fois",
+    "xpReward": 20,
+    "objectiveCount": 5,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_ad8867a2",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 5 fois",
+    "xpReward": 20,
+    "objectiveCount": 5,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_2604cbf4",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 4 messages avec Llama 3 70B",
+    "xpReward": 20,
+    "objectiveCount": 4,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "llama-3-70b-instruct"
+      }
+    }
+  },
+  {
+    "id": "dq_89f68d56",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 8 messages avec Claude 3.5 Sonnet",
+    "xpReward": 20,
+    "objectiveCount": 8,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-5-sonnet-20240620"
+      }
+    }
+  },
+  {
+    "id": "dq_4523fe95",
+    "title": "Quête quotidienne",
+    "description": "Générer 14 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 14,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_fc9f42e4",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 4 fois",
+    "xpReward": 20,
+    "objectiveCount": 4,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_ade4d1fa",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 8 messages avec Claude 3 Opus",
+    "xpReward": 20,
+    "objectiveCount": 8,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-opus-20240229"
+      }
+    }
+  },
+  {
+    "id": "dq_bd14e343",
+    "title": "Quête quotidienne",
+    "description": "Créer 3 nouveaux agents",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_ec2690e5",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 5 messages avec Llama 3 70B",
+    "xpReward": 20,
+    "objectiveCount": 5,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "llama-3-70b-instruct"
+      }
+    }
+  },
+  {
+    "id": "dq_6a28e574",
+    "title": "Quête quotidienne",
+    "description": "Générer 8 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 8,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_34f473c4",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 4 fois",
+    "xpReward": 20,
+    "objectiveCount": 4,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_4b93eaad",
+    "title": "Quête quotidienne",
+    "description": "Générer 15 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 15,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_be0df77e",
+    "title": "Quête quotidienne",
+    "description": "Générer 7 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 7,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_620767d0",
+    "title": "Quête quotidienne",
+    "description": "Utiliser 3 fois un plugin lors d'une conversation",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_078d4579",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 3 messages avec GPT-4o Mini",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4o-mini"
+      }
+    }
+  },
+  {
+    "id": "dq_03aefd16",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 9 messages avec Claude 3 Opus",
+    "xpReward": 20,
+    "objectiveCount": 9,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-opus-20240229"
+      }
+    }
+  },
+  {
+    "id": "dq_0d5ead1c",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 5 messages avec Gemini 1.5 Pro",
+    "xpReward": 20,
+    "objectiveCount": 5,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-pro"
+      }
+    }
+  },
+  {
+    "id": "dq_30d53fb3",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 3 fois",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_0e7c44b2",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 4 fois",
+    "xpReward": 20,
+    "objectiveCount": 4,
+    "category": "Social",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_33262d8c",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 4 messages avec GPT-4o",
+    "xpReward": 20,
+    "objectiveCount": 4,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4o"
+      }
+    }
+  },
+  {
+    "id": "dq_71fce4b8",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 4 fois",
+    "xpReward": 20,
+    "objectiveCount": 4,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_f82647d4",
+    "title": "Quête quotidienne",
+    "description": "Créer 1 nouveaux agents",
+    "xpReward": 20,
+    "objectiveCount": 1,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_46a14755",
+    "title": "Quête quotidienne",
+    "description": "Générer 6 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 6,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_e1b675f8",
+    "title": "Quête quotidienne",
+    "description": "Utiliser 5 fois un plugin lors d'une conversation",
+    "xpReward": 20,
+    "objectiveCount": 5,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_723570ae",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 3 messages avec GPT-4o Mini",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Social",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4o-mini"
+      }
+    }
+  },
+  {
+    "id": "dq_acc4ff1a",
+    "title": "Quête quotidienne",
+    "description": "Utiliser 1 fois un plugin lors d'une conversation",
+    "xpReward": 20,
+    "objectiveCount": 1,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_8ae865b1",
+    "title": "Quête quotidienne",
+    "description": "Créer 1 nouveaux agents",
+    "xpReward": 20,
+    "objectiveCount": 1,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_3773e8ba",
+    "title": "Quête quotidienne",
+    "description": "Générer 14 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 14,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_b6ed69c8",
+    "title": "Quête quotidienne",
+    "description": "Créer 1 nouveaux agents",
+    "xpReward": 20,
+    "objectiveCount": 1,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_16d5c919",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 7 messages avec GPT-4 Turbo",
+    "xpReward": 20,
+    "objectiveCount": 7,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4-turbo"
+      }
+    }
+  },
+  {
+    "id": "dq_673d1fc9",
+    "title": "Quête quotidienne",
+    "description": "Utiliser 3 fois un plugin lors d'une conversation",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_44d569a1",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 4 messages avec Claude 3.5 Sonnet",
+    "xpReward": 20,
+    "objectiveCount": 4,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-5-sonnet-20240620"
+      }
+    }
+  },
+  {
+    "id": "dq_273f8d6c",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 5 messages avec Gemini 1.5 Flash",
+    "xpReward": 20,
+    "objectiveCount": 5,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-flash"
+      }
+    }
+  },
+  {
+    "id": "dq_6897be56",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 4 fois",
+    "xpReward": 20,
+    "objectiveCount": 4,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_8b61a3aa",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 3 messages avec Claude 3.5 Sonnet",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-5-sonnet-20240620"
+      }
+    }
+  },
+  {
+    "id": "dq_d962f01d",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 3 fois",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Social",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_f5368a10",
+    "title": "Quête quotidienne",
+    "description": "Créer 2 nouveaux agents",
+    "xpReward": 20,
+    "objectiveCount": 2,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_4bb3ebae",
+    "title": "Quête quotidienne",
+    "description": "Générer 6 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 6,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_f791df1d",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 2 fois",
+    "xpReward": 20,
+    "objectiveCount": 2,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_2551c410",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 5 messages avec Claude 3.5 Sonnet",
+    "xpReward": 20,
+    "objectiveCount": 5,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-5-sonnet-20240620"
+      }
+    }
+  },
+  {
+    "id": "dq_33f0ce36",
+    "title": "Quête quotidienne",
+    "description": "Utiliser 2 fois un plugin lors d'une conversation",
+    "xpReward": 20,
+    "objectiveCount": 2,
+    "category": "Productivité",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_e68b6136",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 5 messages avec GPT-4 Turbo",
+    "xpReward": 20,
+    "objectiveCount": 5,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gpt-4-turbo"
+      }
+    }
+  },
+  {
+    "id": "dq_7e14549c",
+    "title": "Quête quotidienne",
+    "description": "Générer 14 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 14,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_b5455e21",
+    "title": "Quête quotidienne",
+    "description": "Utiliser 5 fois un plugin lors d'une conversation",
+    "xpReward": 20,
+    "objectiveCount": 5,
+    "category": "Social",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_456054e6",
+    "title": "Quête quotidienne",
+    "description": "Créer 1 nouveaux agents",
+    "xpReward": 20,
+    "objectiveCount": 1,
+    "category": "Social",
+    "tracking": {
+      "eventType": "agent_created",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_2e506e80",
+    "title": "Quête quotidienne",
+    "description": "Générer 7 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 7,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_112c723b",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 7 messages avec Claude 3.5 Sonnet",
+    "xpReward": 20,
+    "objectiveCount": 7,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "claude-3-5-sonnet-20240620"
+      }
+    }
+  },
+  {
+    "id": "dq_47161b70",
+    "title": "Quête quotidienne",
+    "description": "Utiliser 2 fois un plugin lors d'une conversation",
+    "xpReward": 20,
+    "objectiveCount": 2,
+    "category": "Social",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_4d3dac5d",
+    "title": "Quête quotidienne",
+    "description": "Utiliser 1 fois un plugin lors d'une conversation",
+    "xpReward": 20,
+    "objectiveCount": 1,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "plugin_used",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_5f93da18",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 3 fois",
+    "xpReward": 20,
+    "objectiveCount": 3,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_7a27b5f9",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 8 messages avec Gemini 1.5 Pro",
+    "xpReward": 20,
+    "objectiveCount": 8,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-pro"
+      }
+    }
+  },
+  {
+    "id": "dq_3e383c03",
+    "title": "Quête quotidienne",
+    "description": "Générer 12 messages avec n'importe quel modèle Claude",
+    "xpReward": 20,
+    "objectiveCount": 12,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "provider": "anthropic"
+      }
+    }
+  },
+  {
+    "id": "dq_87868127",
+    "title": "Quête quotidienne",
+    "description": "Envoyer 10 messages avec Gemini 1.5 Pro",
+    "xpReward": 20,
+    "objectiveCount": 10,
+    "category": "Exploration",
+    "tracking": {
+      "eventType": "message_sent",
+      "condition": {
+        "model": "gemini-1.5-pro"
+      }
+    }
+  },
+  {
+    "id": "dq_32c46c57",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 5 fois",
+    "xpReward": 20,
+    "objectiveCount": 5,
+    "category": "Technique",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  },
+  {
+    "id": "dq_54f8244a",
+    "title": "Quête quotidienne",
+    "description": "Changer le modèle d'un agent 4 fois",
+    "xpReward": 20,
+    "objectiveCount": 4,
+    "category": "Créativité",
+    "tracking": {
+      "eventType": "model_switched",
+      "condition": {}
+    }
+  }
+]

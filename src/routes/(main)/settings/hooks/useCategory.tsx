@@ -23,6 +23,10 @@ import {
   PawPrint,
   Sparkles,
   TerminalSquare,
+  Gamepad2,
+  ListTodo,
+  Medal,
+  Settings2,
 } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -41,6 +45,7 @@ import { userGeneralSettingsSelectors } from '@/store/user/slices/settings/selec
 
 export enum SettingsGroupKey {
   Agent = 'agent',
+  Gamification = 'gamification',
   General = 'general',
   Subscription = 'subscription',
   System = 'system',
@@ -127,6 +132,31 @@ export const useCategory = () => {
       items: generalItems,
       key: SettingsGroupKey.General,
       title: t('group.common'),
+    });
+
+    // Gamification group
+    const gamificationItems: CategoryItem[] = [
+      {
+        icon: Settings2,
+        key: SettingsTabs.RewardsSettings,
+        label: t('tab.rewardsSettings', { defaultValue: 'Configuration Récompenses' }),
+      },
+      {
+        icon: ListTodo,
+        key: SettingsTabs.RewardsQuests,
+        label: t('tab.rewardsQuests', { defaultValue: 'Quêtes & Défis' }),
+      },
+      {
+        icon: Medal,
+        key: SettingsTabs.RewardsBadges,
+        label: t('tab.rewardsBadges', { defaultValue: 'Badges & Titres' }),
+      },
+    ];
+
+    groups.push({
+      items: gamificationItems,
+      key: SettingsGroupKey.Gamification,
+      title: t('group.gamification', { defaultValue: 'Gamification' }),
     });
 
     // Personal subscription / billing items. Always shown when business
