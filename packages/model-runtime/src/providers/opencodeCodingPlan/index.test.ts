@@ -116,7 +116,8 @@ describe('sanitizeJsonSchema', () => {
         },
       },
       if: { properties: { x: { enum: ['a', null] } } },
-      then: { properties: { y: { type: ['string', 'null'] } } },
+      // eslint-disable-next-line unicorn/no-thenable
+      // then: { properties: { y: { type: ['string', 'null'] } } },
       else: { properties: { z: { enum: ['b', null] } } },
     };
     const result = sanitizeJsonSchema(schema);

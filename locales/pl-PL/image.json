@@ -9,6 +9,7 @@
   "config.imageNum.label": "Liczba obrazów",
   "config.imageUpload.maxCountReached": "Możesz dodać maksymalnie {{count}} obrazów referencyjnych",
   "config.imageUrl.label": "Obraz referencyjny",
+  "config.imageUpload.maxCountReached": "Możesz dodać maksymalnie {{count}} obrazy referencyjne",
   "config.imageUrls.label": "Obrazy referencyjne",
   "config.model.label": "Model",
   "config.prompt.placeholder": "Opisz, co chcesz wygenerować",

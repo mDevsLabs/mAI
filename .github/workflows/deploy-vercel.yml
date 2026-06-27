@@ -33,7 +33,7 @@ on:
 
 jobs:
   Deploy-Production:
-    if: (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/canary')) || (github.event_name == 'workflow_dispatch' && github.event.inputs.channel == 'production')
+    if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && github.event.inputs.channel == 'production')
     runs-on: ubuntu-latest
     steps:
       - name: 📦 Checkout du code
@@ -102,7 +102,7 @@ jobs:
         run: vercel deploy --prebuilt --archive=tgz --prod --token=${{ env.VERCEL_TOKEN }}
 
   Deploy-Preview:
-    if: github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.channel == 'preview')
+    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/canary') || (github.event_name == 'workflow_dispatch' && github.event.inputs.channel == 'preview')
     runs-on: ubuntu-latest
     steps:
       - name: 📦 Checkout du code

@@ -34,6 +34,20 @@ describe('getDeviceFingerprint', () => {
     });
   });
 
+  it('should fallback to djb2 when crypto.subtle.digest throws an error', async () => {
+    if (!globalThis.crypto?.subtle) return;
+
+    const spy = vi.spyOn(globalThis.crypto.subtle, 'digest').mockRejectedValue(new Error('Digest failed'));
+
+    const fp = await getDeviceFingerprint();
+    expect(fp).toBeTruthy();
+    expect(fp).toMatch(/^[\da-f]+$/);
+    // djb2 produces 8-char hex
+    expect(fp).toHaveLength(8);
+
+    spy.mockRestore();
+  });
+
   it('should produce SHA-256 length (64 hex chars) when crypto.subtle is available', async () => {
     // happy-dom should have crypto.subtle
     if (!globalThis.crypto?.subtle) return;

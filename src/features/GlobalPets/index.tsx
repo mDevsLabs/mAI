@@ -2,11 +2,12 @@
 
 import { createStaticStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { m } from 'motion/react';
+import { m, useMotionValue, useSpring } from 'motion/react';
 import { memo, useEffect, useRef, useState } from 'react';
 
 import { useChatStore } from '@/store/chat';
 import { operationSelectors } from '@/store/chat/slices/operation/selectors';
+import { PETS_LIST } from '@/const/pets';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/slices/settings/selectors';
 
@@ -102,6 +103,7 @@ const styles = createStaticStyles(({ css }) => ({
   `,
 }));
 
+
 const Pet = memo(
   ({
     petId,
@@ -121,6 +123,10 @@ const Pet = memo(
     const [currentQuote, setCurrentQuote] = useState<{ text: string; author: string } | null>(null);
     const [showQuote, setShowQuote] = useState(false);
     const quoteTimerRef = useRef<any>(null);
+    const [particles, setParticles] = useState<{ id: number; x: number; y: number }[]>([]);
+
+    const petConfig = PETS_LIST.find((p) => p.id === petId);
+    const imagePrefix = petConfig?.imagePrefix || petId;
 
     // Store previous isGenerating value to detect changes
     const prevIsGenerating = useRef(isGenerating);
@@ -170,11 +176,55 @@ const Pet = memo(
       }
     }, [isGenerating, mounted, petId, config]);
 
+    const size = 80 * zoom;
+    const startX = typeof window !== 'undefined' ? window.innerWidth - (size + 40) - index * (size + 20) : 0;
+    const startY = typeof window !== 'undefined' ? window.innerHeight - (size + 70) : 0;
+
+    const x = useMotionValue(startX);
+    const y = useMotionValue(startY);
+    
+    const ghost1X = useSpring(x, { stiffness: 200, damping: 20 });
+    const ghost1Y = useSpring(y, { stiffness: 200, damping: 20 });
+    
+    const ghost2X = useSpring(x, { stiffness: 150, damping: 25 });
+    const ghost2Y = useSpring(y, { stiffness: 150, damping: 25 });
+
+    const ghost3X = useSpring(x, { stiffness: 100, damping: 30 });
+    const ghost3Y = useSpring(y, { stiffness: 100, damping: 30 });
+
     if (!mounted) return null;
 
-    const size = 80 * zoom;
-    const startX = window.innerWidth - (size + 40) - index * (size + 20);
-    const startY = window.innerHeight - (size + 70);
+    const getAuraColor = () => {
+      if (config?.petsAuraMood) {
+        return isGenerating ? '#ff4d4f' : '#52c41a';
+      }
+      return config?.petsAuraColor || 'var(--color-primary)';
+    };
+
+    const getAuraIntensity = (baseSize: number) => {
+      if (config?.petsAuraMood && isGenerating) {
+        return baseSize * 1.5;
+      }
+      return baseSize;
+    };
+
+    const handleDoubleClick = (e: React.MouseEvent) => {
+      if (config?.petsCustomAnim) {
+        const newId = Date.now();
+        setParticles((prev) => [...prev, { id: newId, x: e.clientX, y: e.clientY }]);
+        
+        // Play a special animation
+        setAnimation('jumping');
+        if (quoteTimerRef.current) clearTimeout(quoteTimerRef.current);
+        quoteTimerRef.current = setTimeout(() => {
+          setAnimation(isGenerating ? 'running' : 'idle');
+        }, 2000);
+
+        setTimeout(() => {
+          setParticles((prev) => prev.filter(p => p.id !== newId));
+        }, 1500);
+      }
+    };
 
     const handleInteraction = () => {
       // Play sound
@@ -223,7 +273,9 @@ const Pet = memo(
 
       // Aura
       if (config?.petsAura) {
-        style.filter = 'drop-shadow(0 0 15px var(--color-primary)) drop-shadow(0 0 5px var(--color-primary))';
+        const color = getAuraColor();
+        const glow = getAuraIntensity(15);
+        style.filter = `drop-shadow(0 0 ${glow}px ${color}) drop-shadow(0 0 ${glow / 3}px ${color})`;
       } else {
         style.filter = 'drop-shadow(0 4px 6px rgba(0,0,0,0.1))';
       }
@@ -237,16 +289,82 @@ const Pet = memo(
     };
 
     return (
-      <m.div
-        drag
-        dragElastic={0.1}
-        dragMomentum={false}
-        initial={{ x: startX, y: startY }}
-        onDrag={(_e, info) => {
+      <>
+        {config?.petsAura && !config?.petsAuraDynamicTrails && (
+          <>
+            <m.img
+              src={`/pets/${petId}/${imagePrefix}-${animation}.gif`}
+              style={{
+                position: 'fixed', left: 0, top: 0, width: size, height: size,
+                x: ghost3X, y: ghost3Y,
+                pointerEvents: 'none', opacity: 0.2 * (config?.petsAuraOpacity ?? 1),
+                filter: `drop-shadow(0 0 ${getAuraIntensity(20)}px ${getAuraColor()}) drop-shadow(0 0 ${getAuraIntensity(20)}px ${getAuraColor()}) brightness(1.5)`,
+                zIndex: 999996,
+                transform: animation === 'waving' || animation === 'jumping' ? 'scale(1.1)' : 'scale(1)',
+              }}
+            />
+            <m.img
+              src={`/pets/${petId}/${imagePrefix}-${animation}.gif`}
+              style={{
+                position: 'fixed', left: 0, top: 0, width: size, height: size,
+                x: ghost2X, y: ghost2Y,
+                pointerEvents: 'none', opacity: 0.4 * (config?.petsAuraOpacity ?? 1),
+                filter: `drop-shadow(0 0 ${getAuraIntensity(15)}px ${getAuraColor()}) drop-shadow(0 0 ${getAuraIntensity(15)}px ${getAuraColor()}) brightness(1.5)`,
+                zIndex: 999997,
+                transform: animation === 'waving' || animation === 'jumping' ? 'scale(1.1)' : 'scale(1)',
+              }}
+            />
+            <m.img
+              src={`/pets/${petId}/${imagePrefix}-${animation}.gif`}
+              style={{
+                position: 'fixed', left: 0, top: 0, width: size, height: size,
+                x: ghost1X, y: ghost1Y,
+                pointerEvents: 'none', opacity: 0.6 * (config?.petsAuraOpacity ?? 1),
+                filter: `drop-shadow(0 0 ${getAuraIntensity(10)}px ${getAuraColor()}) drop-shadow(0 0 ${getAuraIntensity(10)}px ${getAuraColor()}) brightness(1.5)`,
+                zIndex: 999998,
+                transform: animation === 'waving' || animation === 'jumping' ? 'scale(1.1)' : 'scale(1)',
+              }}
+            />
+          </>
+        )}
+
+        {particles.map(p => (
+          <m.div
+            key={p.id}
+            initial={{ opacity: 1, scale: 0.5, y: p.y - size/2, x: p.x - size/2 }}
+            animate={{ opacity: 0, scale: 2, y: p.y - size - 100, x: p.x - size/2 + (Math.random() * 60 - 30) }}
+            transition={{ duration: 1.5, ease: 'easeOut' }}
+            style={{
+              position: 'fixed',
+              zIndex: 1000000,
+              pointerEvents: 'none',
+              width: 24,
+              height: 24,
+              borderRadius: '50%',
+              background: getAuraColor(),
+              boxShadow: `0 0 15px ${getAuraColor()}, 0 0 30px ${getAuraColor()}`,
+            }}
+          />
+        ))}
+        <m.div
+          drag
+          dragElastic={0.1}
+          dragMomentum={false}
+          style={{
+            x, y,
+            cursor: 'grab',
+            height: size,
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: size,
+            zIndex: 999999,
+          }}
+          onDrag={(_e, info) => {
           if (info.delta.x < 0) {
-            setAnimation('running-right');
-          } else if (info.delta.x > 0) {
             setAnimation('running-left');
+          } else if (info.delta.x > 0) {
+            setAnimation('running-right');
           }
         }}
         onDragEnd={() => {
@@ -274,7 +392,9 @@ const Pet = memo(
                 left: '50%',
                 transform: 'translateX(-50%)',
                 width: 260,
-                backgroundColor: 'var(--color-bg-container)',
+                background: 'var(--color-bg-elevated)',
+                backdropFilter: 'blur(12px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(12px) saturate(180%)',
                 border: '1px solid var(--color-border)',
                 borderRadius: '16px',
                 padding: '12px 16px',
@@ -318,7 +438,9 @@ const Pet = memo(
                   transform: 'translateX(-50%) rotate(45deg)',
                   width: 12,
                   height: 12,
-                  backgroundColor: 'var(--color-bg-container)',
+                  backgroundColor: 'var(--color-bg-elevated)',
+                  backdropFilter: 'blur(12px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(12px) saturate(180%)',
                   borderRight: '1px solid var(--color-border)',
                   borderBottom: '1px solid var(--color-border)',
                 }}
@@ -326,7 +448,7 @@ const Pet = memo(
             </div>
           )}
 
-          <div style={getContainerStyle()} title={petId} onClick={handleInteraction}>
+          <div style={getContainerStyle()} title={petId} onClick={handleInteraction} onDoubleClick={handleDoubleClick}>
             {config?.petsBg && (
               <div
                 style={{
@@ -346,7 +468,7 @@ const Pet = memo(
             )}
             <img
               alt={petId}
-              src={`/pets/${petId}/${petId}-${animation}.gif`}
+              src={`/pets/${petId}/${imagePrefix}-${animation}.gif`}
               style={{
                 width: '100%',
                 height: '100%',
@@ -393,7 +515,8 @@ const Pet = memo(
             )}
           </div>
         </div>
-      </m.div>
+        </m.div>
+      </>
     );
   },
 );

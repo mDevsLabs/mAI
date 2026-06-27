@@ -398,6 +398,7 @@
   "retry": "Opnieuw proberen",
   "run": "Uitvoeren",
   "save": "Opslaan",
+  "search": "Zoeken",
   "send": "Verzenden",
   "serverVersionOutdated.desc": "Je clientversie (v{{version}}) vereist een nieuwere serverversie.",
   "serverVersionOutdated.dismiss": "Toch doorgaan",

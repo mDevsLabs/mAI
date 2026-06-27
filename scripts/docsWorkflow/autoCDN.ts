@@ -124,7 +124,9 @@ class ImageCDNUploader {
 
     for (const post of posts) {
       const mdx = readFileSync(post, 'utf8');
-      let { content, data } = matter(mdx);
+      const parsed = matter(mdx);
+      let content = parsed.content;
+      const data = parsed.data;
       const inlineLinks = extractHttpsLinks(content);
 
       for (const link of inlineLinks) {

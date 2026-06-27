@@ -1230,5 +1230,17 @@
   "workingPanel.skills.title": "스킬",
   "workingPanel.space": "공간",
   "workingPanel.title": "Working Panel",
+  "heteroAgent.modelSelector.ariaLabel": "모델: {{model}}. 추론: {{reasoning}}",
+  "heteroAgent.modelSelector.default": "기본",
+  "heteroAgent.modelSelector.defaultConfig": "기본 설정",
+  "heteroAgent.modelSelector.defaultModel": "기본 모델",
+  "heteroAgent.modelSelector.defaultReasoning": "기본 추론",
+  "heteroAgent.modelSelector.model": "모델",
+  "heteroAgent.modelSelector.reasoning": "추론",
+  "heteroAgent.modelSelector.reasoning.high": "높음",
+  "heteroAgent.modelSelector.reasoning.low": "낮음",
+  "heteroAgent.modelSelector.reasoning.max": "최대",
+  "heteroAgent.modelSelector.reasoning.medium": "중간",
+  "heteroAgent.modelSelector.reasoning.xhigh": "매우 높음",
   "you": "당신"
 }

@@ -1230,5 +1230,17 @@
   "workingPanel.skills.title": "Vaardigheden",
   "workingPanel.space": "Ruimte",
   "workingPanel.title": "Working Panel",
+  "heteroAgent.modelSelector.ariaLabel": "Model: {{model}}. Redeneren: {{reasoning}}",
+  "heteroAgent.modelSelector.default": "Standaard",
+  "heteroAgent.modelSelector.defaultConfig": "Standaardconfiguratie",
+  "heteroAgent.modelSelector.defaultModel": "Standaardmodel",
+  "heteroAgent.modelSelector.defaultReasoning": "Standaard inspanning",
+  "heteroAgent.modelSelector.model": "Model",
+  "heteroAgent.modelSelector.reasoning": "Redeneren",
+  "heteroAgent.modelSelector.reasoning.high": "Hoog",
+  "heteroAgent.modelSelector.reasoning.low": "Laag",
+  "heteroAgent.modelSelector.reasoning.max": "Maximaal",
+  "heteroAgent.modelSelector.reasoning.medium": "Gemiddeld",
+  "heteroAgent.modelSelector.reasoning.xhigh": "Zeer hoog",
   "you": "Jij"
 }

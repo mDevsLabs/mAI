@@ -7,6 +7,7 @@
   "config.header.title": "Wideo",
   "config.imageUpload.maxCountReached": "Możesz dodać maksymalnie {{count}} obrazów referencyjnych",
   "config.imageUrl.label": "Klatka początkowa",
+  "config.imageUpload.maxCountReached": "Możesz dodać maksymalnie {{count}} obrazy referencyjne",
   "config.prompt.placeholder": "Opisz wideo, które chcesz wygenerować",
   "config.prompt.placeholderWithRef": "Opisz scenę, którą chcesz wygenerować na obrazie",
   "config.promptExtend.label": "Rozszerzenie promptu",

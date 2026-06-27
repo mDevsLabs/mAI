@@ -383,6 +383,14 @@ export function defineConfig(config: CustomNextConfig) {
       ...config.turbopack,
     },
 
+    webpack(webpackConfig) {
+      webpackConfig.module.rules.push({
+        resourceQuery: /raw/,
+        type: 'asset/source',
+      });
+      return webpackConfig;
+    },
+
     typescript: {
       ignoreBuildErrors: true,
     },

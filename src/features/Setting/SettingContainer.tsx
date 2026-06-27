@@ -3,6 +3,7 @@
 import { type FlexboxProps } from '@lobehub/ui';
 import { Flexbox } from '@lobehub/ui';
 import { cssVar, useTheme } from 'antd-style';
+import { FloatButton } from 'antd';
 import { type PropsWithChildren, type ReactNode } from 'react';
 import { memo } from 'react';
 
@@ -19,6 +20,7 @@ const SettingContainer = memo<PropsWithChildren<SettingContainerProps>>(
       <Flexbox
         align={'center'}
         height={'100%'}
+        id={'lobe-setting-container'}
         width={'100%'}
         style={{
           background:
@@ -41,6 +43,7 @@ const SettingContainer = memo<PropsWithChildren<SettingContainerProps>>(
           {children}
         </Flexbox>
         {addonAfter}
+        <FloatButton.BackTop target={() => document.getElementById('lobe-setting-container') as HTMLElement} />
       </Flexbox>
     );
   },

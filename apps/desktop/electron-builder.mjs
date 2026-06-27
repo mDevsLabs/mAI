@@ -216,7 +216,7 @@ const config = {
   },
   appId: 'com.mdevs.mai-desktop',
   appImage: {
-    artifactName: '${productName}-${version}.${ext}',
+    artifactName: '${productName}.${ext}',
   },
 
   // Native modules must be unpacked from asar to work correctly
@@ -230,7 +230,7 @@ const config = {
   },
 
   dmg: {
-    artifactName: '${productName}-${version}-${arch}.${ext}',
+    artifactName: '${productName}-${arch}.${ext}',
     background: 'resources/dmg.png',
     contents: [
       { type: 'file', x: 150, y: 240 },
@@ -301,7 +301,7 @@ const config = {
   npmRebuild: true,
   nsis: {
     allowToChangeInstallationDirectory: true,
-    artifactName: '${productName}-${version}-setup.${ext}',
+    artifactName: '${productName}-setup.${ext}',
     createDesktopShortcut: 'always',
     installerHeader: './build/nsis-header.bmp',
     installerSidebar: './build/nsis-sidebar.bmp',

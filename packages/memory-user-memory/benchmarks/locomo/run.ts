@@ -46,7 +46,7 @@ async function main() {
     exit(1);
   }
 
-  console.log(`[@lobechat/memory-user-memory/benchmarks/locomo] loading ${benchmarkLoCoMoFile}`);
+  console.info(`[@lobechat/memory-user-memory/benchmarks/locomo] loading ${benchmarkLoCoMoFile}`);
 
   const payloads = convertLocomoFile(benchmarkLoCoMoFile, {
     includeImageCaptions: true,
@@ -55,7 +55,7 @@ async function main() {
     topicIdPrefix: 'sample',
   });
 
-  console.log(
+  console.info(
     `[@lobechat/memory-user-memory/benchmarks/locomo] ingesting ${payloads.length} samples to ${baseUrl} (one user per sample)`,
   );
 
@@ -72,12 +72,12 @@ async function main() {
       userId,
     };
     try {
-      console.log(
+      console.info(
         `[@lobechat/memory-user-memory/benchmarks/locomo] ingesting sample ${payload.sampleId} (${payload.sessions.length} sessions) for user ${userId}`,
       );
 
       const res = await post('/api/webhooks/memory-extraction/benchmark-locomo', body);
-      console.log(
+      console.info(
         `[@lobechat/memory-user-memory/benchmarks/locomo] ingested sample ${payload.sampleId} -> insertedParts=${res.insertedParts ?? 'n/a'} memories=${res.extraction?.memoryIds?.length ?? 0} traceId=${res.extraction?.traceId ?? 'n/a'}`,
       );
     } catch (err) {
@@ -89,7 +89,7 @@ async function main() {
     }
   }
 
-  console.log(
+  console.info(
     `[@lobechat/memory-user-memory/benchmarks/locomo] users used (${usedUserIds.size}): ${[
       ...usedUserIds,
     ].join(', ')}`,

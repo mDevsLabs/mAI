@@ -1,25 +1,35 @@
 export type PetId =
   | 'apupepe'
+  | 'boba-style'
+  | 'burgy'
   | 'bytepilot'
   | 'chibi-rilakkuma'
   | 'claude-pixel'
   | 'clerkhausen'
   | 'codix'
+  | 'corgi'
   | 'dario'
+  | 'dash'
   | 'doxi'
   | 'dudu-bubu'
   | 'einstein'
   | 'gork'
+  | 'grogu'
   | 'gugu'
   | 'helmet-bunny'
+  | 'jige'
   | 'jiji'
   | 'laughing-gemini'
+  | 'levi'
   | 'mini-elon'
   | 'mini-sama'
   | 'maomao-the-cat'
   | 'mr-poopybutthole'
+  | 'party-codie'
+  | 'patamon'
   | 'pingu'
   | 'plum-tang'
+  | 'po-teletubby'
   | 'problem'
   | 'quillfox'
   | 'red'
@@ -33,6 +43,7 @@ export interface PetConfig {
   description: string;
   id: PetId;
   name: string;
+  imagePrefix?: string;
 }
 
 export const PETS_LIST: PetConfig[] = [
@@ -41,6 +52,12 @@ export const PETS_LIST: PetConfig[] = [
     name: 'Apu Pepe',
     description: 'Le petit Pepe toujours prêt à aider.',
     category: 'Animal',
+  },
+  {
+    id: 'boba-style',
+    name: 'Boba',
+    description: 'Un adorable gobelet de thé aux perles qui adore sautiller.',
+    category: 'Mascot',
   },
   {
     id: 'chibi-rilakkuma',
@@ -60,7 +77,19 @@ export const PETS_LIST: PetConfig[] = [
     description: 'Votre assistant robotique pour le code.',
     category: 'Robot',
   },
+  {
+    id: 'corgi',
+    name: 'Corgi',
+    description: "Un adorable petit Corgi plein d'énergie pour égayer votre journée.",
+    category: 'Animal',
+  },
   { id: 'dario', name: 'Dario', description: 'Dario le développeur dévoué.', category: 'Human' },
+  {
+    id: 'dash',
+    name: 'Dash',
+    description: 'Le colibri bleu et vif pour dynamiser votre espace de travail.',
+    category: 'Mascot',
+  },
   {
     id: 'dudu-bubu',
     name: 'Dudu Bubu',
@@ -75,6 +104,13 @@ export const PETS_LIST: PetConfig[] = [
   },
   { id: 'gork', name: 'Gork', description: 'Un extra-terrestre amical.', category: 'Alien' },
   {
+    id: 'grogu',
+    name: 'Grogu',
+    description: "L'adorable bébé alien qui maîtrise la Force (et adore les grenouilles).",
+    category: 'Alien',
+    imagePrefix: 'grogu-kid',
+  },
+  {
     id: 'jiji',
     name: 'Jiji',
     description: 'Jiji, le petit chat noir magique.',
@@ -85,6 +121,12 @@ export const PETS_LIST: PetConfig[] = [
     name: 'Gemini',
     description: 'Gemini, toujours souriant et intelligent.',
     category: 'Mascot',
+  },
+  {
+    id: 'levi',
+    name: 'Levi',
+    description: 'Un guerrier chibi impassible et redoutable pour veiller sur votre code.',
+    category: 'Human',
   },
   {
     id: 'mini-elon',
@@ -117,6 +159,18 @@ export const PETS_LIST: PetConfig[] = [
     category: 'Alien',
   },
   {
+    id: 'party-codie',
+    name: 'Party Codie',
+    description: 'Codie en mode fête, prêt à célébrer chaque déploiement réussi.',
+    category: 'Mascot',
+  },
+  {
+    id: 'patamon',
+    name: 'Patamon',
+    description: 'Le Digimon ailé toujours optimiste et courageux.',
+    category: 'Mascot',
+  },
+  {
     id: 'pingu',
     name: 'Pingu',
     description: 'Le plus célèbre des petits manchots, noot noot !',
@@ -126,6 +180,12 @@ export const PETS_LIST: PetConfig[] = [
     id: 'plum-tang',
     name: 'Plum Tang',
     description: 'Le compagnon fruité de vos aventures.',
+    category: 'Mascot',
+  },
+  {
+    id: 'po-teletubby',
+    name: 'Po',
+    description: 'Le plus mignon des Teletubbies, toujours joyeux et joueur.',
     category: 'Mascot',
   },
   {
@@ -143,7 +203,7 @@ export const PETS_LIST: PetConfig[] = [
   {
     id: 'bytepilot',
     name: 'Bytepilot',
-    description: 'Un pilote binaire pour vos aventures.',
+    description: 'Un copilote robotique pour naviguer à travers vos algorithmes les plus complexes.',
     category: 'Robot',
   },
   {
@@ -161,7 +221,7 @@ export const PETS_LIST: PetConfig[] = [
   {
     id: 'gugu',
     name: 'Gugu',
-    description: 'Le mystérieux Gugu.',
+    description: "Gugu, une petite créature ronde et mystérieuse dotée d'une grande sagesse.",
     category: 'Mascot',
   },
   {
@@ -173,13 +233,25 @@ export const PETS_LIST: PetConfig[] = [
   {
     id: 'red',
     name: 'Red',
-    description: 'Le petit Red.',
+    description: 'Le petit oiseau rouge colérique mais attachant.',
     category: 'Mascot',
   },
   {
     id: 'tibo',
     name: 'Tibo',
-    description: 'Tibo le compagnon d\'aventures.',
+    description: "Tibo, un aventurier intrépide toujours prêt à explorer de nouvelles lignes de code.",
     category: 'Human',
+  },
+  {
+    id: 'burgy',
+    name: 'Burgy',
+    description: 'Un délicieux burger pour vous tenir compagnie.',
+    category: 'Mascot',
+  },
+  {
+    id: 'jige',
+    name: 'Jige',
+    description: 'Jige, votre nouveau compagnon dynamique.',
+    category: 'Animal',
   },
 ];

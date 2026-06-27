@@ -135,8 +135,7 @@ export const categorizeImageGenerationError = ({
     };
   }
 
-  // FIXME: 401 errors should be handled in agentRuntime for better practice
-  if (error.errorType === AgentRuntimeErrorType.InvalidProviderAPIKey || error?.status === 401) {
+  if (error.errorType === AgentRuntimeErrorType.InvalidProviderAPIKey) {
     return {
       errorMessage:
         error.error?.message || error.message || AgentRuntimeErrorType.InvalidProviderAPIKey,

@@ -7,6 +7,7 @@
   "config.header.title": "Видео",
   "config.imageUpload.maxCountReached": "Вы можете добавить до {{count}} эталонных изображений",
   "config.imageUrl.label": "Начальный кадр",
+  "config.imageUpload.maxCountReached": "Вы можете добавить до {{count}} референсных изображений",
   "config.prompt.placeholder": "Опишите видео, которое хотите создать",
   "config.prompt.placeholderWithRef": "Опишите сцену, которую вы хотите создать с изображением",
   "config.promptExtend.label": "Расширение запроса",

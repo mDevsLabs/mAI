@@ -9,6 +9,7 @@
   "config.imageNum.label": "Количество изображений",
   "config.imageUpload.maxCountReached": "Вы можете добавить до {{count}} эталонных изображений",
   "config.imageUrl.label": "Референсное изображение",
+  "config.imageUpload.maxCountReached": "Вы можете добавить до {{count}} референсных изображений",
   "config.imageUrls.label": "Референсные изображения",
   "config.model.label": "Модель",
   "config.prompt.placeholder": "Опишите, что вы хотите сгенерировать",

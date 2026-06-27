@@ -146,6 +146,7 @@ export const LobeHubList = memo<LobeHubListProps>(({ keywords }) => {
                 description={localizedDescription}
                 identifier={item.skill.identifier}
                 key={item.skill.identifier}
+                keyword={keywords}
                 title={localizedTitle}
                 onOpenDetail={() =>
                   createBuiltinAgentSkillDetailModal({ identifier: item.skill.identifier })
@@ -166,6 +167,7 @@ export const LobeHubList = memo<LobeHubListProps>(({ keywords }) => {
                 description={localizedDescription}
                 identifier={item.tool.identifier}
                 key={item.tool.identifier}
+                keyword={keywords}
                 title={localizedTitle}
                 onOpenDetail={() =>
                   createBuiltinSkillDetailModal({ identifier: item.tool.identifier })
@@ -183,6 +185,7 @@ export const LobeHubList = memo<LobeHubListProps>(({ keywords }) => {
                 identifier={item.provider.id}
                 isConnected={isConnected}
                 key={item.provider.id}
+                keyword={keywords}
                 label={item.provider.label}
                 type="lobehub"
                 onOpenDetail={() => createLobehubSkillDetailModal({ identifier: item.provider.id })}
@@ -198,6 +201,7 @@ export const LobeHubList = memo<LobeHubListProps>(({ keywords }) => {
               identifier={item.serverType.identifier}
               isConnected={isConnected}
               key={item.serverType.identifier}
+              keyword={keywords}
               label={item.serverType.label}
               serverName={item.serverType.appSlug}
               type="composio"

@@ -1,7 +1,7 @@
 'use client';
 
 import { Avatar, Flexbox, Form, Icon, SliderWithInput } from '@lobehub/ui';
-import { Button, Switch } from 'antd';
+import { Button, Switch, ColorPicker, Select } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { PawPrint, Sliders, Store } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -14,6 +14,134 @@ import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/slices/settings/selectors';
 
 import PetsStoreModal from './PetsStoreModal';
+
+interface AuraControlProps {
+  checked?: boolean;
+  onChange?: (checked: boolean) => void;
+  disabled?: boolean;
+  auraEnabled?: boolean;
+  colorValue?: string;
+  onColorChange?: (color: string) => void;
+}
+
+const AuraControl = ({
+  checked,
+  onChange,
+  disabled,
+  auraEnabled,
+  colorValue,
+  onColorChange,
+}: AuraControlProps) => {
+  return (
+    <Flexbox horizontal align={'center'} gap={12}>
+      <Switch checked={checked} onChange={onChange} disabled={disabled} />
+      <Flexbox
+        style={{
+          opacity: auraEnabled ? 1 : 0.45,
+          pointerEvents: auraEnabled ? 'auto' : 'none',
+          transition: 'opacity 0.2s ease',
+        }}
+      >
+        <ColorPicker
+          disabled={!auraEnabled}
+          showText
+          format="hex"
+          onChange={(color) => {
+            onColorChange?.(color.toHexString());
+          }}
+          value={colorValue || '#1677ff'}
+        />
+      </Flexbox>
+    </Flexbox>
+  );
+};
+
+interface AuraOpacityControlProps {
+  value?: number;
+  onChange?: (value: number) => void;
+  auraEnabled?: boolean;
+}
+
+const AuraOpacityControl = ({ value, onChange, auraEnabled }: AuraOpacityControlProps) => {
+  return (
+    <Flexbox
+      horizontal
+      align={'center'}
+      gap={12}
+      width={'100%'}
+      style={{
+        opacity: auraEnabled ? 1 : 0.45,
+        pointerEvents: auraEnabled ? 'auto' : 'none',
+        transition: 'opacity 0.2s ease',
+      }}
+    >
+      <SliderWithInput
+        disabled={!auraEnabled}
+        marks={{ 0.1: <span style={{ whiteSpace: 'nowrap' }}>Min</span>, 1: <span style={{ whiteSpace: 'nowrap' }}>Max</span> }}
+        max={1}
+        min={0.1}
+        step={0.1}
+        style={{ width: 350 }}
+        value={value}
+        onChange={onChange}
+      />
+    </Flexbox>
+  );
+};
+
+
+interface AuraMoodControlProps {
+  checked?: boolean;
+  onChange?: (checked: boolean) => void;
+  auraEnabled?: boolean;
+}
+
+const AuraMoodControl = ({ checked, onChange, auraEnabled }: AuraMoodControlProps) => {
+  return (
+    <Flexbox
+      style={{
+        opacity: auraEnabled ? 1 : 0.45,
+        pointerEvents: auraEnabled ? 'auto' : 'none',
+        transition: 'opacity 0.2s ease',
+      }}
+    >
+      <Switch checked={checked} onChange={onChange} disabled={!auraEnabled} />
+    </Flexbox>
+  );
+};
+
+interface PetsVolumeControlProps {
+  value?: number;
+  onChange?: (value: number) => void;
+  soundEnabled?: boolean;
+}
+
+const PetsVolumeControl = ({ value, onChange, soundEnabled }: PetsVolumeControlProps) => {
+  return (
+    <Flexbox
+      horizontal
+      align={'center'}
+      gap={12}
+      width={'100%'}
+      style={{
+        opacity: soundEnabled ? 1 : 0.45,
+        pointerEvents: soundEnabled ? 'auto' : 'none',
+        transition: 'opacity 0.2s ease',
+      }}
+    >
+      <SliderWithInput
+        disabled={!soundEnabled}
+        marks={{ 0: <span style={{ whiteSpace: 'nowrap' }}>Min</span>, 1: <span style={{ whiteSpace: 'nowrap' }}>Max</span> }}
+        max={1}
+        min={0}
+        step={0.1}
+        style={{ width: 350 }}
+        value={value}
+        onChange={onChange}
+      />
+    </Flexbox>
+  );
+};
 
 const Page = memo(() => {
   const { t } = useTranslation('setting');
@@ -45,6 +173,7 @@ const Page = memo(() => {
           {selectedPets.map((petId) => {
             const petConfig = PETS_LIST.find((p) => p.id === petId);
             if (!petConfig) return null;
+            const imagePrefix = petConfig.imagePrefix || petId;
             return (
               <Flexbox
                 horizontal
@@ -60,7 +189,7 @@ const Page = memo(() => {
                 }}
               >
                 <Avatar
-                  avatar={`/pets/${petId}/${petId}-idle.gif`}
+                  avatar={`/pets/${petId}/${imagePrefix}-idle.gif`}
                   size={48}
                   style={{ background: 'transparent' }}
                 />
@@ -99,9 +228,9 @@ const Page = memo(() => {
     children: (
       <SliderWithInput
         disabled={!enablePets}
-        marks={{ 0.5: <span style={{ whiteSpace: 'nowrap' }}>Min</span>, 3: <span style={{ whiteSpace: 'nowrap' }}>Max</span> }}
-        max={3}
-        min={0.5}
+        marks={{ 0.1: <span style={{ whiteSpace: 'nowrap' }}>Min</span>, 5: <span style={{ whiteSpace: 'nowrap' }}>Max</span> }}
+        max={5}
+        min={0.1}
         step={0.1}
         style={{ width: 350 }}
       />
@@ -124,28 +253,7 @@ const Page = memo(() => {
   const soundEnabled = enablePets && !!general?.petsSound;
 
   const petsVolumeItem = {
-    children: (
-      <Flexbox
-        horizontal
-        align={'center'}
-        gap={12}
-        width={'100%'}
-        style={{
-          opacity: soundEnabled ? 1 : 0.45,
-          pointerEvents: soundEnabled ? 'auto' : 'none',
-          transition: 'opacity 0.2s ease',
-        }}
-      >
-        <SliderWithInput
-          disabled={!soundEnabled}
-          marks={{ 0: <span style={{ whiteSpace: 'nowrap' }}>Min</span>, 1: <span style={{ whiteSpace: 'nowrap' }}>Max</span> }}
-          max={1}
-          min={0}
-          step={0.1}
-          style={{ width: 350 }}
-        />
-      </Flexbox>
-    ),
+    children: <PetsVolumeControl soundEnabled={soundEnabled} />,
     desc: soundEnabled ? 'Réglez le volume des pets' : 'Activez Son du pet pour régler le volume',
     label: 'Volume du son',
     minWidth: undefined,
@@ -162,12 +270,60 @@ const Page = memo(() => {
     valuePropName: 'checked',
   };
 
+  const auraEnabled = enablePets && !!general?.petsAura;
+
+  const petsAuraItem = {
+    children: (
+      <AuraControl
+        disabled={!enablePets}
+        auraEnabled={auraEnabled}
+        colorValue={general?.petsAuraColor}
+        onColorChange={(color) => {
+          setSettings({ general: { ...general, petsAuraColor: color } });
+        }}
+      />
+    ),
+    desc: 'Activer une traînée lumineuse suivant le pet au déplacement.',
+    label: 'Aura',
+    minWidth: undefined,
+    name: 'petsAura',
+    valuePropName: 'checked',
+  };
+
+  const petsAuraOpacityItem = {
+    children: <AuraOpacityControl auraEnabled={auraEnabled} />,
+    desc: auraEnabled ? 'Réglez l\'opacité globale de la traînée d\'Aura' : 'Activez Aura pour régler l\'opacité',
+    label: 'Opacité de l\'Aura',
+    minWidth: undefined,
+    name: 'petsAuraOpacity',
+    divider: false,
+  };
+
+  const petsAuraMoodItem = {
+    children: <AuraMoodControl auraEnabled={auraEnabled} />,
+    desc: auraEnabled ? 'Modifie automatiquement la couleur et l\'intensité de l\'Aura selon l\'activité de l\'agent mAI.' : 'Activez Aura pour utiliser cet effet',
+    label: 'Effet selon l\'humeur',
+    minWidth: undefined,
+    name: 'petsAuraMood',
+    valuePropName: 'checked',
+    divider: false,
+  };
+
   const petsEncouragementsItem = {
     children: <Switch disabled={!enablePets} defaultChecked={false} />,
     desc: 'Activer les encouragements et félicitations du pet.',
     label: 'Encouragements et félicitations',
     minWidth: undefined,
     name: 'petsEncouragements',
+    valuePropName: 'checked',
+  };
+
+  const petsCustomAnimItem = {
+    children: <Switch disabled={!enablePets} defaultChecked={false} />,
+    desc: 'Déclenche des animations et particules en cliquant deux fois ou en caressant le pet.',
+    label: 'Animations personnalisées',
+    minWidth: undefined,
+    name: 'petsCustomAnim',
     valuePropName: 'checked',
   };
 
@@ -194,7 +350,11 @@ const Page = memo(() => {
               petsSoundItem,
               petsVolumeItem,
               petsCitationsItem,
+              petsAuraItem,
+              petsAuraOpacityItem,
+              petsAuraMoodItem,
               petsEncouragementsItem,
+              petsCustomAnimItem,
             ],
             title: t('settingPets.section.options'),
             icon: Sliders,

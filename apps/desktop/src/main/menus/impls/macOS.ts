@@ -67,9 +67,6 @@ export class MacOSMenu extends BaseMenuPlatform implements IMenuPlatform {
     // Create namespaced translation function
     const t = this.app.i18n.ns('menu');
 
-    // Add debug logging
-    // console.log('[MacOSMenu] Menu rendering, i18n instance:', !!this.app.i18n);
-
     const template: MenuItemConstructorOptions[] = [
       {
         label: appName,

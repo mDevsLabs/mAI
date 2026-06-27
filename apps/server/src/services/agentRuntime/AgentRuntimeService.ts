@@ -2039,14 +2039,18 @@ export class AgentRuntimeService {
   private async resolveAsyncToolOnComplete(
     pending: ChatToolPayload[],
   ): Promise<GroupActionOnComplete> {
+    if (!pending.length) return 'resume';
+
     // A batched turn can park multiple deferred/client tools. If ANY of them is
     // a group action requesting finish (skipCallSupervisor / delegate), the
     // orchestration must finish — reading only pending[0] would miss a group
     // finish call that isn't the first pending tool and wrongly resume.
-    for (const tool of pending) {
-      const plugin = await this.serverDB.query.messagePlugins.findFirst({
-        where: (mp, { eq }) => eq(mp.toolCallId, tool.id),
-      });
+    const toolIds = pending.map((tool) => tool.id);
+    const plugins = await this.serverDB.query.messagePlugins.findMany({
+      where: (mp, { inArray }) => inArray(mp.toolCallId, toolIds),
+    });
+
+    for (const plugin of plugins) {
       const pluginState = plugin?.state as { onComplete?: string } | null;
       if (pluginState?.onComplete === 'finish') return 'finish';
     }

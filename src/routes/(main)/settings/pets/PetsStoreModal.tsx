@@ -19,11 +19,12 @@ const PetsStoreModal = memo<PetsStoreModalProps>(({ onOpenChange, open }) => {
   const { t } = useTranslation('setting');
   const { general } = useUserStore(settingsSelectors.currentSettings);
   const setSettings = useUserStore((s) => s.setSettings);
-  const selectedPets = general?.pets || ['claude-pixel'];
+  const selectedPets = general?.pets || [];
   const maxPets = 1;
 
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState<'All' | PetCategory>('All');
+  const [downloadingId, setDownloadingId] = useState<string | null>(null);
 
   const filteredPets = useMemo(() => {
     return PETS_LIST.filter(
@@ -43,33 +44,28 @@ const PetsStoreModal = memo<PetsStoreModalProps>(({ onOpenChange, open }) => {
     { label: t('settingPets.store.category.alien'), value: 'Alien' },
   ];
 
-  const playSound = () => {
+  const playPetSound = (petId: string) => {
     try {
-      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(600, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(900, ctx.currentTime + 0.1);
-      gain.gain.setValueAtTime(0.3, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.1);
+      const audio = new Audio(`/pets/${petId}/${petId}.mp3`);
+      audio.volume = general?.petsVolume ?? 0.5;
+      audio.play();
     } catch (e) {
       // Ignore audio errors
     }
   };
 
   const togglePet = (petId: string) => {
-    playSound();
-    let newPets: string[] = [];
-    if (!selectedPets.includes(petId)) {
-      newPets = [petId];
-      setSettings({ general: { pets: newPets, enablePets: true } });
+    if (selectedPets.includes(petId)) {
+      playPetSound(petId);
+      setSettings({ general: { pets: [], enablePets: false } });
     } else {
-      setSettings({ general: { pets: newPets, enablePets: false } });
+      if (downloadingId) return;
+      setDownloadingId(petId);
+      playPetSound(petId);
+      setTimeout(() => {
+        setSettings({ general: { pets: [petId], enablePets: true } });
+        setDownloadingId(null);
+      }, 1500);
     }
   };
 
@@ -108,6 +104,8 @@ const PetsStoreModal = memo<PetsStoreModalProps>(({ onOpenChange, open }) => {
           >
             {filteredPets.map((pet) => {
               const isSelected = selectedPets.includes(pet.id);
+              const imagePrefix = pet.imagePrefix || pet.id;
+              const isDownloading = downloadingId === pet.id;
               return (
                 <Flexbox
                   key={pet.id}
@@ -136,7 +134,7 @@ const PetsStoreModal = memo<PetsStoreModalProps>(({ onOpenChange, open }) => {
                   }}
                 >
                   <Flexbox horizontal align={'center'} gap={16}>
-                    <Avatar avatar={`/pets/${pet.id}/${pet.id}-idle.gif`} size={56} style={{ background: 'transparent' }} />
+                    <Avatar avatar={`/pets/${pet.id}/${imagePrefix}-idle.gif`} size={56} style={{ background: 'transparent' }} />
                     <Flexbox flex={1} style={{ overflow: 'hidden' }}>
                       <Typography.Text strong ellipsis style={{ fontSize: 16 }}>
                         {pet.name}
@@ -149,9 +147,14 @@ const PetsStoreModal = memo<PetsStoreModalProps>(({ onOpenChange, open }) => {
                   <Flexbox horizontal justify={'flex-end'} width={'100%'}>
                     <Button
                       type={isSelected ? 'default' : 'primary'}
-                      style={{ minWidth: 80, pointerEvents: 'none' }}
+                      loading={isDownloading}
+                      style={{ minWidth: 120, pointerEvents: 'none' }}
                     >
-                      {isSelected ? t('settingPets.store.action.remove') : t('settingPets.store.action.add')}
+                      {isDownloading
+                        ? t('settingPets.store.action.downloading')
+                        : isSelected
+                        ? t('settingPets.store.action.remove')
+                        : t('settingPets.store.action.add')}
                     </Button>
                   </Flexbox>
                 </Flexbox>

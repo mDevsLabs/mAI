@@ -37,7 +37,7 @@ export function sanitizeError(error: any): any {
 
   // Copy safe fields and recursively sanitize nested objects
   for (const key in error) {
-    if (error.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(error, key)) {
       const value = error[key];
       const lowerKey = key.toLowerCase();
 

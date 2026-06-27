@@ -82,8 +82,8 @@ export const UploadFileSchema = z.object({
    * @example 'image/png'
    */
   fileType: z.string(),
-  // TODO: Need be required
-  hash: z.string().optional(),
+
+  hash: z.string(),
 
   knowledgeBaseId: z.string().optional(),
 

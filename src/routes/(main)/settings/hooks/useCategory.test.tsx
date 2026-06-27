@@ -75,4 +75,10 @@ describe('settings useCategory', () => {
 
     expect(keys).not.toContain(SettingsTabs.Provider);
   });
+
+  it('keeps Pets visible and hides Messenger', () => {
+    const keys = getItemKeys();
+    expect(keys).toContain(SettingsTabs.Pets);
+    expect(keys).not.toContain(SettingsTabs.Messenger);
+  });
 });

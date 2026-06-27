@@ -1230,5 +1230,17 @@
   "workingPanel.skills.title": "Competenze",
   "workingPanel.space": "Spazio",
   "workingPanel.title": "Working Panel",
+  "heteroAgent.modelSelector.ariaLabel": "Modello: {{model}}. Ragionamento: {{reasoning}}",
+  "heteroAgent.modelSelector.default": "Predefinito",
+  "heteroAgent.modelSelector.defaultConfig": "Configurazione predefinita",
+  "heteroAgent.modelSelector.defaultModel": "Modello predefinito",
+  "heteroAgent.modelSelector.defaultReasoning": "Ragionamento predefinito",
+  "heteroAgent.modelSelector.model": "Modello",
+  "heteroAgent.modelSelector.reasoning": "Ragionamento",
+  "heteroAgent.modelSelector.reasoning.high": "Alto",
+  "heteroAgent.modelSelector.reasoning.low": "Basso",
+  "heteroAgent.modelSelector.reasoning.max": "Massimo",
+  "heteroAgent.modelSelector.reasoning.medium": "Medio",
+  "heteroAgent.modelSelector.reasoning.xhigh": "Molto alto",
   "you": "Tu"
 }

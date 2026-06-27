@@ -398,6 +398,7 @@
   "retry": "إعادة المحاولة",
   "run": "تشغيل",
   "save": "حفظ",
+  "search": "بحث",
   "send": "إرسال",
   "serverVersionOutdated.desc": "إصدار العميل الخاص بك (v{{version}}) يتطلب إصدار خادم أحدث.",
   "serverVersionOutdated.dismiss": "المتابعة على أي حال",

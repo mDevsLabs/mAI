@@ -1,8 +1,8 @@
 import urlJoin from 'url-join';
 
-export const OFFICIAL_URL = 'https://app.lobehub.com';
-export const OFFICIAL_SITE = 'https://lobehub.com';
-export const OFFICIAL_DOMAIN = 'lobehub.com';
+export const OFFICIAL_URL = 'https://mai-officiel.vercel.app';
+export const OFFICIAL_SITE = 'https://mprojects.odoo.com';
+export const OFFICIAL_DOMAIN = 'mai.com';
 
 export const OG_URL = '/og/og.webp?v=1';
 
@@ -77,7 +77,7 @@ export const BASE_PROVIDER_DOC_URL = 'https://mprojects.odoo.com';
 export const CHANGELOG_URL = 'https://mprojects.odoo.com';
 
 export const DOWNLOAD_URL = {
-  android: 'https://play.google.com/store/apps/details?id=com.lobehub.app',
-  default: urlJoin(OFFICIAL_SITE, '/downloads'),
-  ios: 'https://testflight.apple.com/join/2ZbjX4Qp',
+  android: 'https://mprojects.odoo.com/download',
+  default: 'https://mprojects.odoo.com/download',
+  ios: 'https://mprojects.odoo.com/download',
 } as const;

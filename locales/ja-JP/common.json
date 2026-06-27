@@ -398,6 +398,7 @@
   "retry": "再試行",
   "run": "実行",
   "save": "保存",
+  "search": "検索",
   "send": "送信",
   "serverVersionOutdated.desc": "ご利用のクライアントバージョン（v{{version}}）は、より新しいサーバーバージョンが必要です。",
   "serverVersionOutdated.dismiss": "このまま続行",

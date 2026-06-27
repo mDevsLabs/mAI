@@ -1,5 +1,3 @@
-import { BrandLoading, LobeHubText } from '@lobehub/ui/brand';
-
 import { isCustomBranding } from '@/const/version';
 
 import CircleLoading from '../CircleLoading';
@@ -22,7 +20,8 @@ const BrandTextLoading = ({ debugId }: BrandTextLoadingProps) => {
   return (
     <div className={styles.container}>
       <div aria-label="Loading" className={styles.brand} role="status">
-        <BrandLoading size={40} text={LobeHubText} />
+        <img alt="Logo" className={styles.logo} height={40} src="/icons/icon-192x192.png" width={40} />
+        <span className={styles.animatedText}>mAI</span>
       </div>
       {showDebug && (
         <div className={styles.debug}>

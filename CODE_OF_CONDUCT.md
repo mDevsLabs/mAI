@@ -1,128 +1,104 @@
-# Contributor Covenant Code of Conduct
+# Charte de Conduite de la Communauté mAI 🤝
 
-## Our Pledge
+## Notre Engagement
 
-We as members, contributors, and leaders pledge to participate in our
-community a harassment-free experience for everyone, regardless of age, body
-size, visible or invisible disability, ethnicity, sex characteristics, gender
-identity and expression, level of experience, education, socio-economic status,
-nationality, personal appearance, race, religion, or sexual identity
-and orientation.
+En tant que membres, contributeurs et leaders de **mAI**, nous nous engageons à créer une communauté **accueillante, diverse et inclusive** pour toutes et tous, sans distinction d'âge, de taille corporelle, de handicap visible ou invisible, d'origine ethnique, de caractéristiques sexuelles, d'identité ou d'expression de genre, de niveau d'expérience, d'éducation, de statut socio-économique, de nationalité, d'apparence physique, de race, de religion, ou d'orientation sexuelle.
 
-We pledge to act and interact in ways that contribute to an open, welcoming,
-diverse, inclusive, and healthy community.
+Nous nous engageons à agir et à interagir de manière à contribuer à une communauté **ouverte, chaleureuse, diverse, inclusive et saine**, où chacun se sent respecté et en sécurité.
 
-## Our Standards
+---
 
-Examples of behavior that contributes to a positive environment for our
-community includes:
+## Nos Normes ✨
 
-- Demonstrating empathy and kindness toward other people
-- Being respectful of differing opinions, viewpoints, and experiences
-- Giving and gracefully accepting constructive feedback
-- Accepting responsibility and apologizing to those affected by our mistakes,
-  and learning from the experience
-- Focusing on what is best not just for us as individuals, but for the
-  overall community
+Voici des exemples de comportements qui contribuent à un environnement positif au sein de notre communauté :
 
-## Examples of unacceptable behavior include:
+✅ **Faire preuve d'empathie et de bienveillance** envers autrui
+✅ **Respecter les opinions, points de vue et expériences différents** des nôtres
+✅ **Donner et accepter avec grâce** les retours constructifs
+✅ **Assumer ses responsabilités**, s'excuser auprès des personnes affectées par nos erreurs et en tirer des enseignements
+✅ **Privilégier l'intérêt collectif** plutôt que les intérêts individuels
 
-- The use of sexualized language or imagery, and sexual attention or
-  advances of any kind
-- Trolling, insulting or derogatory comments, and personal or political attacks
-- Public or private harassment
-- Publishing others' private information, such as a physical or email
-  address, without their explicit permission
-- Other conduct that could reasonably be considered inappropriate in a
-  professional setting
+---
 
-## Enforcement Responsibilities
+## Comportements Inacceptables ❌
 
-Community leaders are responsible for clarifying and enforcing our standards of
-acceptable behavior and will take appropriate and fair corrective action in
-response to any behavior that they deem inappropriate, threatening, offensive,
-or harmful.
+Les comportements suivants sont considérés comme inacceptables au sein de notre communauté :
 
-Community leaders have the right and responsibility to remove, edit, or reject
-comments, commits, code, wiki edits, issues, and other contributions that are
-not aligned to this Code of Conduct, and will communicate reasons for moderation
-decisions when appropriate.
+- Utilisation de langage ou d'images à connotation sexuelle, ainsi que toute avancée ou attention sexuelle non désirée
+- Troll, commentaires insultants, dérogatoires, ou attaques personnelles ou politiques
+- Harcèlement public ou privé
+- Divulgation d'informations privées d'autrui (comme une adresse physique ou électronique) sans leur consentement explicite
+- Tout comportement raisonnablement jugé inapproprié dans un cadre professionnel
 
-## Scope
+---
 
-This Code of Conduct applies within all community spaces and also applies when
-an individual is officially representing the community in public spaces.
-Examples of representing our community include using an official e-mail address,
-posting via an official social media account, or acting as an appointed
-representative at an online or offline event.
+## Responsabilités des Modérateurs 🛡️
 
-## Enforcement
+Les leaders et modérateurs de **mAI** sont responsables de :
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to the community leaders responsible for enforcement at
-.
-All complaints will be reviewed and investigated promptly and fairly.
+- **Clarifier et faire respecter** les normes de comportement acceptable
+- **Prendre des mesures correctives** appropriées et équitables en réponse à tout comportement jugé inapproprié, menaçant, offensant ou nuisible
+- **Supprimer, modifier ou rejeter** les commentaires, commits, code, modifications de wiki, issues et autres contributions non conformes à cette charte
+- **Communiquer les raisons** des décisions de modération lorsque cela est approprié
 
-All community leaders are obligated to respect the privacy and security of the
-reporter of any incident.
+---
 
-## Enforcement Guidelines
+## Champ d'Application 🌍
 
-Community leaders will follow these Community Impact Guidelines in determining
-the consequences for any action they deem in violation of this Code of Conduct:
+Cette charte s'applique :
 
-### 1. Correction
+- **Dans tous les espaces communautaires** (GitHub, Discord, forums, etc.)
+- **Lorsqu'un individu représente officiellement** la communauté **mAI** dans des espaces publics
 
-**Community Impact**: Use of inappropriate language or other behavior deemed
-unprofessional or unwelcome in the community.
+Exemples de représentation officielle :
+- Utilisation d'une adresse e-mail officielle (@mDevsLabs)
+- Publication via un compte officiel sur les réseaux sociaux
+- Agir en tant que représentant désigné lors d'un événement en ligne ou hors ligne
 
-**Consequence**: A private, written warning from community leaders, providing
-clarity around the nature of the violation and an explanation of why the
-behavior was inappropriate. A public apology may be requested.
+---
 
-### 2. Warning
+## Signalement et Application ⚖️
 
-**Community Impact**: A violation through a single incident or series
-of actions.
+Les cas de comportement abusif, harcelant ou autrement inacceptable peuvent être signalés :
 
-**Consequence**: A warning with consequences for continued behavior. No
-interaction with the people involved, including unsolicited interaction with
-those enforcing the Code of Conduct, for a specified time. This
-includes avoiding interactions in community spaces as well as external channels
-like social media. Violating these terms may lead to a temporary or
-permanent ban.
+📧 **Par e-mail** : [contact@mdevslabs.com](mailto:contact@mdevslabs.com)
+🐙 **Via GitHub** : Ouvrir une *Issue* dans [mDevsLabs/mAI](https://github.com/mDevsLabs/mAI)
 
-### 3. Temporary Ban
+**Traitement des signalements** :
+- Toutes les plaintes seront **examinées et enquêtées rapidement et équitablement**
+- Les modérateurs sont tenus de **respecter la confidentialité et la sécurité** du signalant
 
-**Community Impact**: A serious violation of community standards, including
-sustained inappropriate behavior.
+---
 
-**Consequence**: A temporary ban from any sort of interaction or public
-communication with the community for a specified time. No public or
-private interaction with the people involved, including unsolicited interaction
-with those enforcing the Code of Conduct, is allowed during this period.
-Violating these terms may lead to a permanent ban.
+## Directives d'Application 📋
 
-### 4. Permanent Ban
+Les modérateurs suivront ces directives pour déterminer les conséquences en cas de violation de la charte :
 
-**Community Impact**: Demonstrating a pattern of violation of community
-standards, including sustained inappropriate behavior, harassment of an
-individual, or aggression toward or disparagement of classes of individuals.
+### 1️⃣ **Correction**
+**Impact Communautaire** : Utilisation de langage inapproprié ou comportement jugé non professionnel ou indésirable.
+**Conséquence** : Avertissement écrit privé des modérateurs, expliquant la nature de la violation et pourquoi le comportement était inapproprié. Une excuse publique peut être demandée.
 
-**Consequence**: A permanent ban from any sort of public interaction within
-the community.
+### 2️⃣ **Avertissement**
+**Impact Communautaire** : Violation unique ou série d'actions inappropriées.
+**Conséquence** : Avertissement avec conséquences pour comportement répété. Aucune interaction avec les personnes concernées (y compris les modérateurs) pendant une période déterminée. Cela inclut l'évitement des interactions dans les espaces communautaires et les canaux externes (réseaux sociaux, etc.). La violation de ces termes peut entraîner un bannissement temporaire ou permanent.
 
-## Attribution
+### 3️⃣ **Bannissement Temporaire**
+**Impact Communautaire** : Violation grave des normes communautaires, incluant un comportement inapproprié prolongé.
+**Conséquence** : Exclusion temporaire de toute interaction ou communication publique avec la communauté pour une durée déterminée. Aucune interaction publique ou privée avec les personnes concernées n'est autorisée durant cette période. La violation de ces termes peut entraîner un bannissement permanent.
 
-This Code of Conduct is adapted from the [Contributor Covenant][homepage],
-version 2.0, available at
-<https://www.contributor-covenant.org/version/2/0/code_of_conduct.html>.
+### 4️⃣ **Bannissement Permanent**
+**Impact Communautaire** : Schéma répété de violations des normes communautaires, incluant harcèlement d'un individu ou agressions envers des groupes de personnes.
+**Conséquence** : Exclusion définitive de toute interaction publique au sein de la communauté.
 
-Community Impact Guidelines were inspired by [Mozilla's code of conduct
-enforcement ladder](https://github.com/mozilla/diversity).
+---
 
-For answers to common questions about this code of conduct, see the FAQ at
-<https://www.contributor-covenant.org/faq>. Translations are available at
-<https://www.contributor-covenant.org/translations>.
+## Mentions Légales et Remerciements 📜
 
-[homepage]: https://www.contributor-covenant.org
+Cette charte est adaptée du **[Contributor Covenant](https://www.contributor-covenant.org/version/2/0/code_of_conduct.html)** (version 2.0).
+
+Les *Directives d'Impact Communautaire* sont inspirées de [l'échelle de modération de Mozilla](https://github.com/mozilla/diversity).
+
+Pour des réponses aux questions fréquentes sur cette charte, consultez la [FAQ du Contributor Covenant](https://www.contributor-covenant.org/faq).
+Des traductions sont disponibles sur [contributor-covenant.org/translations](https://www.contributor-covenant.org/translations).
+
+**Projet** : [mDevsLabs/mAI](https://github.com/mDevsLabs/mAI) — *L'intelligence artificielle pour tous, par tous.* 💜

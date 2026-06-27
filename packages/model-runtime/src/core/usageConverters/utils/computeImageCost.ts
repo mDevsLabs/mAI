@@ -40,7 +40,8 @@ export const computeImageCost = (
     return undefined;
   }
 
-  let pricePerImageInUSD = 0;
+  // eslint-disable-next-line no-useless-assignment
+  let pricePerImageInUSD: number;
   let lookupKey: string | undefined;
 
   switch (imageGenUnit.strategy) {

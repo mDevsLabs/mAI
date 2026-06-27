@@ -1,6 +1,29 @@
 <a name="readme-top"></a>
 
-# Changelog
+# Jouranl des modifications
+
+## [Version 1.0.0](https://github.com/mDevsLabs/mAI/compare/v0.9.0...v0.10.0)
+
+<sup>Released on **2026-06-24**</sup>
+
+#### 🐾 Animaux de Compagnie & Personnalisation
+- **Nouveaux**: Nous introduisons de nouveaux compagnons comme Jige ou encore Party-Codie, ils sont désormais 36 !
+- **Agrandissement Étendu** : Il est désormais possible de régler la taille de vos compagnons avec une plage élargie de 0.1x (très petit) à 5.0x (très grand).
+- **Aura & Traînées Lumineuses** : Ajout d'une option d'Aura colorée avec personnalisation complète de sa couleur et de son opacité globale.
+- **Traînées Dynamiques** : Intégration de styles de traînées personnalisés (Étoiles, Confettis, Pixels Rétro, Bulles).
+- **Effet selon l'Humeur** : Une nouvelle option permet à l'Aura d'adapter automatiquement sa couleur et son intensité selon l'activité de l'agent mAI.
+- **Logique de Cascade** : Les menus d'options de personnalisation se dégrisent de manière fluide et intuitive uniquement lorsque leurs fonctionnalités parentes sont activées.
+
+#### 🎨 Branding & Expérience
+- **Logo de Chargement** : Correction du bug affichant le logo LobeHub lors du chargement initial de l'application, désormais correctement remplacé par le logo mAI.
+
+#### 🚀 Improvements
+- **CLI**: Améliorations légères et diverses
+- **Desktop**: Corrections de bugs divers
+- **Performances**: Nous avons légèrement réduis le temps de chargement des paramètres.
+- **LobeHub**: Introduction des nouveautés de LobeHub (synchronisation du code)
+
+Les limites matérielles conseillées pour l'application que ce soit bureau ou desktop sont 16GB RAM minimum. Si vous avez 8GB ou moins, le temps de chargement pourrais s'avérer plus long ou rendre l'ordinateur indisponible.
 
 ## [Version 0.9.0](https://github.com/mDevsLabs/mAI/compare/v2.2.6...v0.4.0)
 
@@ -11,6 +34,7 @@
 - **Pets**: Intégration de **dix nouveaux pets** pour vous accompagner et ajouts de leurs effets sonores.
 - **CLI**: Lancement amélioré avec mai et pas lh ou lobehub. Installation via **npm install -g @mdevs/mai-cli**.
 - **Fix**: Corrections de divers bugs et problèmes
+- **Workflows**: Améliorations des workflows GitHub
 - **Improve**: Améliorations importantes de l'interface et divers autres
 - **Version**: Mise à jour de la version du projet vers la version supérieure `0.9.0` sous l'auteur `mDevlopers`.
 

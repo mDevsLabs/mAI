@@ -64,5 +64,6 @@
   "topic.deleteConfirmDesc": "Vous êtes sur le point de supprimer ce sujet de génération. Cette action est irréversible, veuillez procéder avec prudence.",
   "topic.empty": "Aucun sujet de génération",
   "topic.title": "Thème de peinture",
-  "topic.untitled": "Sujet par défaut"
+  "topic.untitled": "Sujet par défaut",
+  "config.imageUpload.maxCountReached": "Vous pouvez ajouter jusqu'à {{count}} images de référence"
 }

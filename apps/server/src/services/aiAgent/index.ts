@@ -107,6 +107,8 @@ import {
   resolveAgentSelfIterationCapability,
 } from '@/server/services/agentSignal/featureGate';
 import { shouldSuppressSignal } from '@/server/services/agentSignal/suppressSignal';
+import { DEFAULT_MODEL_PROVIDER_LIST } from 'model-bank/modelProviders';
+
 import { ComposioService } from '@/server/services/composio';
 import { deviceGateway } from '@/server/services/deviceGateway';
 import { getScopedOnlineDevices } from '@/server/services/deviceGateway/scopedDevices';
@@ -2687,10 +2689,11 @@ export class AiAgentService {
         );
 
         if (!providerMap.has(userModel.providerId)) {
+          const providerInfo = DEFAULT_MODEL_PROVIDER_LIST.find((p) => p.id === userModel.providerId);
           providerMap.set(userModel.providerId, {
             id: userModel.providerId,
             models: [],
-            name: userModel.providerId, // TODO: Map to friendly provider name
+            name: providerInfo?.name || userModel.providerId,
           });
         }
 

@@ -5,11 +5,10 @@ import {
   CUSTOM_FOLDER_FILE_TYPE,
   DERIVED_DOCUMENT_SOURCE_TYPE,
 } from '@lobechat/const';
-import { Notion } from '@lobehub/icons';
 import { type DropdownItem } from '@lobehub/ui';
 import { Button, DropdownMenu, Icon, Tooltip } from '@lobehub/ui';
 import { Upload } from 'antd';
-import { FilePenLine, FileUp, FolderIcon, FolderUp, Link, Plus } from 'lucide-react';
+import { FilePenLine, FileUp, FolderIcon, FolderUp, Plus } from 'lucide-react';
 import { type ChangeEvent } from 'react';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -21,7 +20,6 @@ import { useResourceManagerStore } from '@/routes/(main)/resource/features/store
 import { useFileStore } from '@/store/file';
 import { FilesTabs } from '@/types/files';
 
-import useNotionImport from './hooks/useNotionImport';
 import useUploadFolder from './hooks/useUploadFolder';
 
 const getAcceptedFileTypes = (category: FilesTabs): string | undefined => {
@@ -154,13 +152,6 @@ const AddButton = () => {
     t,
   ]);
 
-  const { handleNotionImport, handleOpenNotionGuide, notionInputRef } = useNotionImport({
-    createDocument,
-    currentFolderId,
-    libraryId,
-    t,
-  });
-
   const { handleFolderUpload } = useUploadFolder({
     currentFolderId,
     libraryId,
@@ -222,30 +213,12 @@ const AddButton = () => {
         key: 'upload-folder',
         label: <label htmlFor="folder-upload-input">{t('header.actions.uploadFolder')}</label>,
       },
-      {
-        type: 'divider',
-      },
-      {
-        children: [
-          {
-            icon: <Notion />,
-            key: 'connect-notion',
-            label: 'Notion',
-            onClick: handleOpenNotionGuide,
-          },
-        ],
-        icon: <Icon icon={Link} />,
-        key: 'connect',
-        label: t('header.actions.connect'),
-        type: 'submenu',
-      },
     ],
     [
       category,
       currentFolderId,
       handleCreateFolder,
       handleOpenPageEditor,
-      handleOpenNotionGuide,
       libraryId,
       pushDockFileList,
       t,
@@ -277,13 +250,6 @@ const AddButton = () => {
         // @ts-expect-error - webkitdirectory is not in the React types
         webkitdirectory=""
         onChange={handleFolderUploadWithClose}
-      />
-      <input
-        accept=".zip"
-        ref={notionInputRef}
-        style={{ display: 'none' }}
-        type="file"
-        onChange={handleNotionImport}
       />
     </>
   );

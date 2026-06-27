@@ -150,6 +150,7 @@ export default {
   'settingPets.store.category.robot': 'Robots',
   'settingPets.store.category.alien': 'Aliens',
   'settingPets.store.action.add': 'Add',
+  'settingPets.store.action.downloading': 'Downloading...',
   'settingPets.store.action.remove': 'Remove',
   'settingPets.store.empty': 'No pets found',
   'settingPets.store.comingSoon': 'More pets coming soon! Follow us on ',

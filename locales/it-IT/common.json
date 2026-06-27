@@ -398,6 +398,7 @@
   "retry": "Riprova",
   "run": "Esegui",
   "save": "Salva",
+  "search": "Cerca",
   "send": "Invia",
   "serverVersionOutdated.desc": "La tua versione del client (v{{version}}) richiede una versione del server più recente.",
   "serverVersionOutdated.dismiss": "Continua comunque",

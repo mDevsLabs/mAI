@@ -39,6 +39,10 @@ export interface UserGeneralConfig {
   petsColor?: boolean;
   petsWeather?: boolean;
   petsAura?: boolean;
+  petsAuraDynamicTrails?: boolean;
+  petsAuraTrailStyle?: 'stars' | 'confetti' | 'retro-pixels' | 'bubbles';
+  petsAuraMood?: boolean;
+  petsCustomAnim?: boolean;
   petsCitations?: boolean;
   petsEncouragements?: boolean;
 }

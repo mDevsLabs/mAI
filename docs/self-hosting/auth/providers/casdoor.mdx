@@ -1,12 +1,12 @@
 ---
-title: Configuring Casdoor Authentication for LobeHub
+title: Configuring Casdoor Authentication for mAI
 description: >-
-  Learn how to configure Casdoor SSO for LobeHub, including creating an
+  Learn how to configure Casdoor SSO for mAI, including creating an
   application and setting up environment variables.
 tags:
   - Casdoor
   - Authentication
-  - LobeHub
+  - mAI
   - Single Sign-On
   - OIDC
 ---
@@ -21,7 +21,7 @@ tags:
   1. Log in to your Casdoor admin console
   2. Go to **Applications** and click **Add**
   3. Configure the application:
-     - Name: `LobeHub`
+     - Name: `mAI`
      - Organization: Select your organization
      - Redirect URLs: Add your callback URL
 
@@ -37,12 +37,12 @@ tags:
 
   ### Configure Environment Variables
 
-  When deploying LobeHub, you need to configure the following environment variables:
+  When deploying mAI, you need to configure the following environment variables:
 
   | Environment Variable     | Type     | Description                                                                   |
   | ------------------------ | -------- | ----------------------------------------------------------------------------- |
   | `AUTH_SECRET`            | Required | Key used to encrypt session tokens. Generate using: `openssl rand -base64 32` |
-  | `AUTH_SSO_PROVIDERS`     | Required | SSO provider for LobeHub. Use `casdoor` for Casdoor                           |
+  | `AUTH_SSO_PROVIDERS`     | Required | SSO provider for mAI. Use `casdoor` for Casdoor                           |
   | `AUTH_CASDOOR_ID`        | Required | Client ID from Casdoor application                                            |
   | `AUTH_CASDOOR_SECRET`    | Required | Client Secret from Casdoor application                                        |
   | `AUTH_CASDOOR_ISSUER`    | Required | Casdoor server URL (e.g., `https://your-casdoor-domain`)                      |
@@ -56,7 +56,7 @@ tags:
 
   > Available in Casdoor `>=1.843.0`.
 
-  Configure Casdoor [Webhook](https://www.casdoor.org/docs/webhooks/overview#setting-up-a-webhook) to sync user data updates to LobeHub.
+  Configure Casdoor [Webhook](https://www.casdoor.org/docs/webhooks/overview#setting-up-a-webhook) to sync user data updates to mAI.
 
   **Synced data fields**:
 
@@ -78,12 +78,12 @@ tags:
 </Steps>
 
 <Callout type={'info'}>
-  After successful deployment, users will be able to authenticate with Casdoor and use LobeHub.
+  After successful deployment, users will be able to authenticate with Casdoor and use mAI.
 </Callout>
 
 ## Docker Compose Deployment with Casdoor
 
-If you're deploying LobeHub using Docker Compose, refer to the following configuration to integrate Casdoor as an authentication service.
+If you're deploying mAI using Docker Compose, refer to the following configuration to integrate Casdoor as an authentication service.
 
 ### Reverse Proxy Configuration
 
@@ -114,15 +114,15 @@ In domain mode, you need to configure a reverse proxy to ensure Casdoor is acces
 
 ### Required Configuration
 
-1. LobeHub needs to communicate with Casdoor, so you need to configure Casdoor's Issuer:
+1. mAI needs to communicate with Casdoor, so you need to configure Casdoor's Issuer:
 
 ```env
 AUTH_CASDOOR_ISSUER=https://auth.example.com
 ```
 
-This configuration affects LobeHub's login authentication service. Ensure the Casdoor service URL is correct.
+This configuration affects mAI's login authentication service. Ensure the Casdoor service URL is correct.
 
-2. Allow callback URL in Casdoor to point to LobeHub:
+2. Allow callback URL in Casdoor to point to mAI:
 
 In Casdoor's Web panel under `Authentication -> Applications` -> `<Application ID, default is app-built-in>` -> `Redirect URLs`, add:
 
@@ -168,13 +168,13 @@ Solution:
 lobehub      | [auth][error] TypeError: fetch failed
 ```
 
-Cause: LobeHub cannot access the authentication service.
+Cause: mAI cannot access the authentication service.
 
 Solution:
 
-- Check if your authentication service is running properly and if LobeHub's network can reach it.
+- Check if your authentication service is running properly and if mAI's network can reach it.
 
-- Direct troubleshooting: Use `curl` in the LobeHub container terminal to access `https://auth.example.com/.well-known/openid-configuration`. If JSON data is returned, your authentication service is working correctly.
+- Direct troubleshooting: Use `curl` in the mAI container terminal to access `https://auth.example.com/.well-known/openid-configuration`. If JSON data is returned, your authentication service is working correctly.
 
 #### OAuth Token Exchange Failures with Reverse Proxy
 

@@ -211,8 +211,7 @@ export const agentGroupRouter = router({
           originalGroup: isOwner
             ? null
             : {
-                // TODO: Add author info from group detail
-                author: undefined,
+                author: groupDetail.group.author,
                 avatar: groupDetail.group.avatar,
                 identifier: groupDetail.group.identifier,
                 name: groupDetail.group.name,

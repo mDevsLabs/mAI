@@ -17,7 +17,6 @@ import {
   KeyIcon,
   KeyRound,
   Map,
-  MessageCircleIcon,
   MonitorSmartphoneIcon,
   PaletteIcon,
   PawPrint,
@@ -102,11 +101,6 @@ export const useCategory = () => {
         label: t('tab.appearance'),
       },
       {
-        icon: PawPrint,
-        key: SettingsTabs.Pets,
-        label: t('tab.pets'),
-      },
-      {
         icon: MonitorSmartphoneIcon,
         key: SettingsTabs.Devices,
         label: t('tab.devices'),
@@ -132,7 +126,7 @@ export const useCategory = () => {
     // Personal subscription / billing items. Always shown when business
     // features are enabled — workspace settings live under a separate
     // `/:workspaceSlug/settings/*` surface and never share this sidebar.
-    if (enableBusinessFeatures && !isDesktop) {
+    if (enableBusinessFeatures) {
       const subscriptionItems: CategoryItem[] = [
         { icon: Map, key: SettingsTabs.Plans, label: tSubscription('tab.plans') },
         { icon: ChartColumnBigIcon, key: SettingsTabs.Usage, label: t('tab.usage') },
@@ -181,6 +175,11 @@ export const useCategory = () => {
         icon: KeyIcon,
         key: SettingsTabs.APIKey,
         label: tAuth('tab.apikey'),
+      },
+      {
+        icon: PawPrint,
+        key: SettingsTabs.Pets,
+        label: t('tab.pets'),
       },
     ].filter(Boolean) as CategoryItem[];
 
