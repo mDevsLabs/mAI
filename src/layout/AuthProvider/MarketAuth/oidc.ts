@@ -50,10 +50,7 @@ export class MarketOIDC {
     console.info('[MarketOIDC] Generating PKCE code verifier');
     const array = new Uint8Array(32);
     crypto.getRandomValues(array);
-    return arrayBufferToBase64(array)
-      .replaceAll('+', '-')
-      .replaceAll('/', '_')
-      .replaceAll('=', '');
+    return arrayBufferToBase64(array).replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '');
   }
 
   /**
@@ -77,10 +74,7 @@ export class MarketOIDC {
     console.info('[MarketOIDC] Generating random state');
     const array = new Uint8Array(16);
     crypto.getRandomValues(array);
-    return arrayBufferToBase64(array)
-      .replaceAll('+', '-')
-      .replaceAll('/', '_')
-      .replaceAll('=', '');
+    return arrayBufferToBase64(array).replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '');
   }
 
   /**
