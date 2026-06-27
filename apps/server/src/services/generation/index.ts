@@ -6,7 +6,7 @@ import mime from 'mime';
 import { IMAGE_GENERATION_CONFIG } from 'model-bank';
 import { nanoid } from 'nanoid';
 
-import { withSharp } from '@/libs/sharp';
+import { withSharp } from '../../../libs/sharp';
 import { FileService } from '@/server/services/file';
 import { calculateThumbnailDimensions } from '@/utils/number';
 import { getYYYYmmddHHMMss } from '@/utils/time';
