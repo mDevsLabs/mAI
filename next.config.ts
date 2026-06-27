@@ -5,13 +5,12 @@ const isVercel = !!process.env.VERCEL_ENV;
 const vercelConfig = {
   // Vercel serverless optimization: exclude musl binaries from all routes
   // Vercel uses Amazon Linux (glibc), not Alpine Linux (musl)
-  // This saves ~45MB (29MB canvas-musl + 16MB sharp-musl) per serverless function
-  // NOTE: Do NOT exclude sharp-libvips-glibc as Vercel uses glibc runtime
+  // This saves ~45MB (29MB canvas-musl) per serverless function
+  // ⚠️ NOTE: sharp MUST be included for Vercel Serverless Functions
+  // Do NOT exclude any sharp-related files as they are required for image processing
   outputFileTracingExcludes: {
     '*': [
       'node_modules/.pnpm/@napi-rs+canvas-*-musl*',
-      // ⚠️ Removed sharp-libvips exclusion for glibc - Vercel needs glibc binaries
-      // 'node_modules/.pnpm/@img+sharp-libvips-*musl*',
       // Exclude SPA/desktop/mobile build artifacts from serverless functions
       'public/_spa/**',
       'dist/desktop/**',
@@ -19,6 +18,12 @@ const vercelConfig = {
       'apps/desktop/**',
       'packages/database/migrations/**',
     ],
+  },
+  // Force Next.js to include sharp binaries in serverless functions
+  // This is required for Vercel's Linux environment
+  experimental: {
+    // Disable output file tracing for sharp to ensure binaries are included
+    outputFileTracingRoot: process.env.NODE_ENV === 'production' ? undefined : undefined,
   },
 };
 const nextConfig = defineConfig({

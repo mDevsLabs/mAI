@@ -1,0 +1,45 @@
+# Dependencies that should be included in Vercel deployments
+# Do NOT ignore sharp binaries - they are required for image processing
+# !node_modules/.pnpm/sharp/**
+# !node_modules/.pnpm/@img+sharp-libvips-**
+
+# Ignore development files
+.*
+!.env.local
+!.env.*.local
+
+# Ignore build outputs that should not be deployed
+.next/cache
+.next/BUILD_ID
+
+# Ignore desktop and mobile builds
+apps/desktop/**
+dist/desktop/**
+dist/mobile/**
+
+# Ignore SPA builds (handled separately)
+public/_spa/**
+
+# Ignore test files
+tests/**
+*.test.*
+*.spec.*
+
+# Ignore documentation
+docs/**
+
+# Ignore IDE and editor files
+.vscode/**
+.idea/**
+*.swp
+*.swo
+
+# Ignore Docker files
+Dockerfile
+docker-compose/**
+
+# Ignore scripts
+scripts/**
+
+# Ignore coverage
+coverage/**

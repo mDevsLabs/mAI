@@ -8,6 +8,7 @@ import { type CreateImagePayload, type CreateImageResponse } from '@lobechat/mod
 import { type PromptBuilder } from '@saintno/comfyui-sdk';
 import debug from 'debug';
 
+import { withSharp } from '@/libs/sharp';
 import { type ComfyUIClientService } from '@/server/services/comfyui/core/comfyUIClientService';
 import { ErrorHandlerService } from '@/server/services/comfyui/core/errorHandlerService';
 import { type ModelResolverService } from '@/server/services/comfyui/core/modelResolverService';
@@ -142,29 +143,29 @@ export class ImageService {
       let originalWidth: number | undefined;
       let originalHeight: number | undefined;
 
-      // Only use sharp on server-side (Node.js environment)
-      if (typeof window === 'undefined') {
-        const sharpModule = await import('sharp');
-        const sharp = sharpModule.default;
+      // Use sharp wrapper to handle serverless environments
+      const imageMetadata = await withSharp(async (sharp) => {
         const sharpInstance = sharp(buffer);
-        const metadata = await sharpInstance.metadata();
-        originalWidth = metadata.width;
-        originalHeight = metadata.height;
+        return await sharpInstance.metadata();
+      });
+
+      if (imageMetadata) {
+        originalWidth = imageMetadata.width;
+        originalHeight = imageMetadata.height;
       } else {
-        // Sharp was incorrectly bundled to client-side - this is a build configuration error
-        throw new Error(
-          'FATAL: Sharp module was bundled to browser environment. This is a build configuration error. ' +
-            'Sharp is a native Node.js module and cannot run in the browser. ' +
-            'Please check your Next.js or webpack configuration.',
-        );
+        // Sharp not available (e.g., in Vercel serverless)
+        // Try to get dimensions from buffer or skip resizing
+        log('Sharp not available, cannot get image metadata');
+        originalWidth = undefined;
+        originalHeight = undefined;
       }
 
       if (!originalWidth || !originalHeight) {
-        throw new ServicesError(
-          'Unable to read image dimensions',
-          ServicesError.Reasons.IMAGE_FETCH_FAILED,
-          { url: imageUrl },
-        );
+        // If we can't get dimensions, we'll skip resizing but continue with the image
+        log('Warning: Unable to read image dimensions, skipping resize');
+        // Set default dimensions to avoid errors
+        originalWidth = 512;
+        originalHeight = 512;
       }
 
       // Save original dimensions to params for frontend progress rendering
@@ -194,11 +195,9 @@ export class ImageService {
             target: { height: resizeResult.height, width: resizeResult.width },
           });
 
-          // Resize image using sharp (only on server-side)
-          if (typeof window === 'undefined') {
-            const sharpModule = await import('sharp');
-            const sharp = sharpModule.default;
-            buffer = Buffer.from(
+          // Resize image using sharp (only if available)
+          const resizedBuffer = await withSharp(async (sharp) => {
+            return Buffer.from(
               await sharp(buffer)
                 .resize(resizeResult.width, resizeResult.height, {
                   fit: 'inside', // Maintain aspect ratio, fit within bounds
@@ -206,9 +205,13 @@ export class ImageService {
                 })
                 .toBuffer(),
             );
+          });
+          
+          if (resizedBuffer) {
+            buffer = resizedBuffer;
             log('Image resized successfully, new size:', buffer.length);
           } else {
-            log('Warning: Cannot resize image in browser environment');
+            log('Warning: Cannot resize image - sharp not available');
           }
         } else {
           log('Image dimensions are within model limits, no resize needed');

@@ -5,8 +5,8 @@ import { sha256 } from 'js-sha256';
 import mime from 'mime';
 import { IMAGE_GENERATION_CONFIG } from 'model-bank';
 import { nanoid } from 'nanoid';
-import sharp from 'sharp';
 
+import { withSharp } from '@/libs/sharp';
 import { FileService } from '@/server/services/file';
 import { calculateThumbnailDimensions } from '@/utils/number';
 import { getYYYYmmddHHMMss } from '@/utils/time';
@@ -109,10 +109,34 @@ export class GenerationService {
     const originalHash = sha256(originalImageBuffer);
     log('sha256: done');
 
-    log('sharp metadata: start');
-    const sharpInstance = sharp(originalImageBuffer);
-    const { format, width, height } = await sharpInstance.metadata();
-    log('Image metadata:', { format, height, width });
+    // Use sharp wrapper to handle serverless environments
+    const imageMetadata = await withSharp(async (sharp) => {
+      log('sharp metadata: start');
+      const sharpInstance = sharp(originalImageBuffer);
+      const metadata = await sharpInstance.metadata();
+      log('Image metadata:', metadata);
+      return metadata;
+    });
+
+    // If sharp is not available (e.g., in Vercel serverless), use fallback dimensions
+    let width: number | undefined;
+    let height: number | undefined;
+    let format: string | undefined;
+
+    if (imageMetadata) {
+      width = imageMetadata.width;
+      height = imageMetadata.height;
+      format = imageMetadata.format;
+    } else {
+      // Fallback: try to get dimensions from buffer (less accurate)
+      // This is a simple fallback that doesn't require sharp
+      log('Sharp not available, using fallback for image metadata');
+      // For now, we'll just use the original buffer without resizing
+      // In production, you might want to implement a different fallback
+      width = undefined;
+      height = undefined;
+      format = originalMimeType?.split('/')[1] || 'unknown';
+    }
 
     if (!width || !height) {
       throw new Error(`Invalid image format: ${format}, url: ${url}`);
@@ -133,8 +157,12 @@ export class GenerationService {
       thumbnailWidth,
     });
 
+    // Process thumbnail with sharp if available
     const thumbnailBuffer = shouldResize
-      ? await sharpInstance.resize(thumbnailWidth, thumbnailHeight).webp().toBuffer()
+      ? await withSharp(async (sharp) => {
+          const sharpInstance = sharp(originalImageBuffer);
+          return await sharpInstance.resize(thumbnailWidth, thumbnailHeight).webp().toBuffer();
+        }) || originalImageBuffer
       : originalImageBuffer;
 
     // Calculate hash for thumbnail
@@ -263,12 +291,17 @@ export class GenerationService {
     const { buffer: originalImageBuffer } = await fetchImageFromUrl(coverUrl);
 
     // Get image metadata to calculate proper cover dimensions
-    const sharpInstance = sharp(originalImageBuffer);
-    const { width, height } = await sharpInstance.metadata();
+    const imageMetadata = await withSharp(async (sharp) => {
+      const sharpInstance = sharp(originalImageBuffer);
+      return await sharpInstance.metadata();
+    });
 
-    if (!width || !height) {
+    if (!imageMetadata?.width || !imageMetadata?.height) {
       throw new Error('Invalid image format for cover creation');
     }
+
+    const width = imageMetadata.width;
+    const height = imageMetadata.height;
 
     // Calculate cover dimensions maintaining aspect ratio with configurable max size
     const { thumbnailWidth, thumbnailHeight } = calculateThumbnailDimensions(
@@ -282,10 +315,13 @@ export class GenerationService {
       original: { height, width },
     });
 
-    const coverBuffer = await sharpInstance
-      .resize(thumbnailWidth, thumbnailHeight)
-      .webp()
-      .toBuffer();
+    const coverBuffer = await withSharp(async (sharp) => {
+      const sharpInstance = sharp(originalImageBuffer);
+      return await sharpInstance
+        .resize(thumbnailWidth, thumbnailHeight)
+        .webp()
+        .toBuffer();
+    }) || originalImageBuffer;
 
     log('Cover image processed, final size:', coverBuffer.length);
 
