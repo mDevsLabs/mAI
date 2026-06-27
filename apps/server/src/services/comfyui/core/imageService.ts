@@ -8,7 +8,7 @@ import { type CreateImagePayload, type CreateImageResponse } from '@lobechat/mod
 import { type PromptBuilder } from '@saintno/comfyui-sdk';
 import debug from 'debug';
 
-import { withSharp } from '../../../libs/sharp';
+import { withSharp } from '@/libs/sharp';
 import { type ComfyUIClientService } from '@/server/services/comfyui/core/comfyUIClientService';
 import { ErrorHandlerService } from '@/server/services/comfyui/core/errorHandlerService';
 import { type ModelResolverService } from '@/server/services/comfyui/core/modelResolverService';

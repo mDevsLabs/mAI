@@ -8,7 +8,7 @@ import { FileService } from '@/server/services/file';
 import { calculateThumbnailDimensions } from '@/utils/number';
 import { getYYYYmmddHHMMss } from '@/utils/time';
 import { inferFileExtensionFromImageUrl } from '@/utils/url';
-import { withSharp } from '../../../libs/sharp';
+import { withSharp } from '@/libs/sharp';
 
 import { fetchImageFromUrl, GenerationService } from './index';
 
@@ -23,7 +23,7 @@ vi.mock('js-sha256');
 vi.mock('mime');
 vi.mock('nanoid');
 vi.mock('sharp');
-vi.mock('../../../libs/sharp', () => ({
+vi.mock('@/libs/sharp', () => ({
   withSharp: vi.fn().mockImplementation(async (callback) => callback(sharp.default)),
   getSharp: vi.fn().mockResolvedValue(sharp.default),
   isSharpAvailable: vi.fn().mockReturnValue(true),
