@@ -11,6 +11,16 @@ import {
 } from './handoff';
 import { type OIDCConfig, type PKCEParams, type TokenResponse } from './types';
 
+// Helper for Base64 conversion from Uint8Array, avoiding maximum call stack errors on large arrays
+const arrayBufferToBase64 = (buffer: Uint8Array): string => {
+  let binary = '';
+  const chunkSize = 8192;
+  for (let i = 0; i < buffer.length; i += chunkSize) {
+    binary += String.fromCharCode.apply(null, Array.from(buffer.subarray(i, i + chunkSize)));
+  }
+  return btoa(binary);
+};
+
 /**
  * Market OIDC authorization utility class
  */
@@ -40,7 +50,7 @@ export class MarketOIDC {
     console.info('[MarketOIDC] Generating PKCE code verifier');
     const array = new Uint8Array(32);
     crypto.getRandomValues(array);
-    return btoa(String.fromCharCode.apply(null, Array.from(array)))
+    return arrayBufferToBase64(array)
       .replaceAll('+', '-')
       .replaceAll('/', '_')
       .replaceAll('=', '');
@@ -54,7 +64,7 @@ export class MarketOIDC {
     const encoder = new TextEncoder();
     const data = encoder.encode(codeVerifier);
     const digest = await crypto.subtle.digest('SHA-256', data);
-    return btoa(String.fromCharCode.apply(null, Array.from(new Uint8Array(digest))))
+    return arrayBufferToBase64(new Uint8Array(digest))
       .replaceAll('+', '-')
       .replaceAll('/', '_')
       .replaceAll('=', '');
@@ -67,7 +77,7 @@ export class MarketOIDC {
     console.info('[MarketOIDC] Generating random state');
     const array = new Uint8Array(16);
     crypto.getRandomValues(array);
-    return btoa(String.fromCharCode.apply(null, Array.from(array)))
+    return arrayBufferToBase64(array)
       .replaceAll('+', '-')
       .replaceAll('/', '_')
       .replaceAll('=', '');
