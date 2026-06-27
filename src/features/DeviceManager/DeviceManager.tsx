@@ -2,7 +2,8 @@
 
 import { isDesktop } from '@lobechat/const';
 import type { DeviceScope } from '@lobechat/types';
-import { Flexbox, Icon, Skeleton, Text } from '@lobehub/ui';
+import { Button, Checkbox, Flexbox, Icon, Skeleton, Text } from '@lobehub/ui';
+import { confirmModal } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar } from 'antd-style';
 import {
   ChevronRightIcon,
@@ -12,20 +13,23 @@ import {
   ServerIcon,
   ShieldCheckIcon,
   TerminalIcon,
+  Trash2Icon,
   ZapIcon,
 } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useClientDataSWR } from '@/libs/swr';
+import { lambdaQuery } from '@/libs/trpc/client';
 import { deviceService } from '@/services/device';
 import { useElectronStore } from '@/store/electron';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
-import { DEVICE_LIST_SWR_KEY } from './const';
+import { DEVICE_LIST_SWR_KEY, refreshDeviceList } from './const';
 import DeviceDetailPanel from './DeviceDetailPanel';
 import DeviceItem from './DeviceItem';
+import { useCanEditDevice } from './useCanEditDevice';
 
 const styles = createStaticStyles(({ css }) => ({
   badge: css`
@@ -103,6 +107,22 @@ const styles = createStaticStyles(({ css }) => ({
     min-width: 0;
     border: 1px solid ${cssVar.colorBorderSecondary};
     border-radius: ${cssVar.borderRadiusLG};
+  `,
+  listHeader: css`
+    padding-block: 8px;
+    padding-inline: 12px;
+    border-block-end: 1px solid ${cssVar.colorBorderSecondary};
+  `,
+  listScroll: css`
+    overflow-y: auto;
+
+    /* Cap the list so long fleets (servers / CLI agents) stay scrollable instead
+       of pushing the page — pairs with the detail panel sitting beside it. */
+    max-height: 480px;
+  `,
+  selectAll: css`
+    cursor: pointer;
+    user-select: none;
   `,
   option: css`
     cursor: pointer;
@@ -250,6 +270,16 @@ const DeviceManager = memo<DeviceManagerProps>(({ onConnect, scope }) => {
   const currentDeviceId = !isWorkspace && isDesktop ? gatewayDeviceInfo?.deviceId : undefined;
 
   const [selectedId, setSelectedId] = useState<string>();
+  const [checkedIds, setCheckedIds] = useState<Set<string>>(() => new Set());
+
+  // Bulk remove routes by the managed scope (the list is single-scope), mirroring
+  // the per-row mutation choice in `DeviceItem`.
+  const removePersonal = lambdaQuery.device.removeDevice.useMutation();
+  const removeWorkspace = lambdaQuery.device.removeWorkspaceDevice.useMutation();
+  const removeMutation = isWorkspace ? removeWorkspace : removePersonal;
+
+  // Hook must run before any early return so render order stays stable.
+  const canEditDevice = useCanEditDevice();
 
   if (isLoading) return <Skeleton active paragraph={{ rows: 4 }} title={false} />;
 
@@ -297,20 +327,107 @@ const DeviceManager = memo<DeviceManagerProps>(({ onConnect, scope }) => {
   const selected = selectedId ? devices.find((d) => d.deviceId === selectedId) : undefined;
   const isCurrent = (id: string) => !!currentDeviceId && id === currentDeviceId;
 
+  // Bulk-selection set excludes rows the user can't edit so the toolbar only
+  // ever offers actions the server would actually accept, mirroring the
+  // self-or-owner gate. `canEditDevice` is a stable callback so deriving from
+  // it on render is fine.
+  const editableDevices = devices.filter((d) => canEditDevice(d));
+
+  // Only count ids that still exist in the current scope's editable list, so a
+  // stale tick (e.g. a device removed elsewhere) never inflates the toolbar
+  // count.
+  const checkedCount = editableDevices.filter((d) => checkedIds.has(d.deviceId)).length;
+  const allChecked = editableDevices.length > 0 && checkedCount === editableDevices.length;
+  const someChecked = checkedCount > 0 && !allChecked;
+
+  const toggleChecked = (deviceId: string, next: boolean) =>
+    setCheckedIds((prev) => {
+      const draft = new Set(prev);
+      if (next) draft.add(deviceId);
+      else draft.delete(deviceId);
+      return draft;
+    });
+
+  const toggleAll = () =>
+    setCheckedIds(allChecked ? new Set() : new Set(editableDevices.map((d) => d.deviceId)));
+
+  const handleBulkRemove = () => {
+    const ids = editableDevices.filter((d) => checkedIds.has(d.deviceId)).map((d) => d.deviceId);
+    if (ids.length === 0) return;
+    confirmModal({
+      content: t('devices.remove.confirmManyDesc', { count: ids.length }),
+      okButtonProps: { danger: true },
+      okText: t('devices.actions.removeSelected', { count: ids.length }),
+      onOk: async () => {
+        await Promise.all(ids.map((deviceId) => removeMutation.mutateAsync({ deviceId })));
+        await refreshDeviceList();
+        setCheckedIds(new Set());
+        if (selectedId && ids.includes(selectedId)) setSelectedId(undefined);
+      },
+      title: t('devices.remove.confirmMany', { count: ids.length }),
+    });
+  };
+
   return (
     <Flexbox horizontal align={'flex-start'} gap={16}>
-      <Flexbox className={styles.listCol} flex={1} padding={4}>
-        {devices.map((device) => (
-          <DeviceItem
-            device={device}
-            isCurrent={isCurrent(device.deviceId)}
-            key={device.deviceId}
-            selected={device.deviceId === selectedId}
-            onSelect={() =>
-              setSelectedId((prev) => (prev === device.deviceId ? undefined : device.deviceId))
-            }
-          />
-        ))}
+      <Flexbox className={styles.listCol} flex={1}>
+        <Flexbox
+          horizontal
+          align={'center'}
+          className={styles.listHeader}
+          justify={'space-between'}
+        >
+          <Flexbox
+            horizontal
+            align={'center'}
+            className={editableDevices.length > 0 ? styles.selectAll : undefined}
+            gap={8}
+            onClick={editableDevices.length > 0 ? toggleAll : undefined}
+          >
+            {editableDevices.length > 0 && (
+              <Checkbox checked={allChecked} indeterminate={someChecked} />
+            )}
+            <Text style={{ fontSize: 13 }} type={'secondary'}>
+              {checkedCount > 0
+                ? t('devices.selection.selected', { count: checkedCount })
+                : t('devices.selection.total', { count: devices.length })}
+            </Text>
+          </Flexbox>
+          {checkedCount > 0 && (
+            <Button
+              danger
+              icon={<Icon icon={Trash2Icon} />}
+              loading={removeMutation.isPending}
+              size={'small'}
+              onClick={handleBulkRemove}
+            >
+              {t('devices.actions.removeSelected', { count: checkedCount })}
+            </Button>
+          )}
+        </Flexbox>
+        <Flexbox className={styles.listScroll} padding={4}>
+          {devices.map((device) => {
+            const editable = canEditDevice(device);
+            return (
+              <DeviceItem
+                checked={checkedIds.has(device.deviceId)}
+                device={device}
+                isCurrent={isCurrent(device.deviceId)}
+                key={device.deviceId}
+                selected={device.deviceId === selectedId}
+                // Withholding the handler also withholds the checkbox; non-
+                // editable rows render without a tick so bulk selection only
+                // ever includes devices the server would accept.
+                onCheckChange={
+                  editable ? (next) => toggleChecked(device.deviceId, next) : undefined
+                }
+                onSelect={() =>
+                  setSelectedId((prev) => (prev === device.deviceId ? undefined : device.deviceId))
+                }
+              />
+            );
+          })}
+        </Flexbox>
       </Flexbox>
       {selected && (
         <Flexbox className={styles.detailCol} flex={1}>
