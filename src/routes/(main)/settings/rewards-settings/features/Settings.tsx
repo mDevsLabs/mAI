@@ -1,7 +1,8 @@
 'use client';
 
 import { type FormGroupItemType } from '@lobehub/ui';
-import { Form, Slider } from '@lobehub/ui';
+import { Form } from '@lobehub/ui';
+import { Slider } from 'antd';
 import { Switch } from '@lobehub/ui/base-ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
