@@ -1,6 +1,6 @@
 {
   "buildCommand": "bun run build:vercel",
-  "installCommand": "npx pnpm@10.26.2 install && pnpm add sharp --include=optional",
+  "installCommand": "npx pnpm@10.26.2 install",
   "headers": [
     {
       "source": "/_spa/(.*)",
