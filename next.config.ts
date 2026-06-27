@@ -29,20 +29,19 @@ const vercelConfig = {
 };
 const nextConfig = defineConfig({
   ...(isVercel ? vercelConfig : {}),
-  // Replace native modules with our mocks in Vercel serverless environments
-  webpack: (config, { isServer, dev }) => {
-    // In Vercel serverless (which uses webpack), replace native modules with mocks
-    if (isServer && isVercel) {
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        // Replace sharp with our serverless-compatible mock
-        sharp: require.resolve('./src/libs/sharp.serverless.ts'),
-        // Replace @napi-rs/canvas with our mock
-        '@napi-rs/canvas': require.resolve('./src/libs/canvas.serverless.ts'),
-        // Replace zlib-sync with our mock
-        'zlib-sync': require.resolve('./src/libs/zlib-sync.serverless.ts'),
-      };
-    }
+  // CRITICAL: Replace native modules with our safe mocks
+  // This prevents Turbopack from trying to bundle native modules
+  webpack: (config, { isServer }) => {
+    // Replace ALL imports of these modules with our safe mocks
+    // This works for both Vercel and local development
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      // CRITICAL: Use sharp.safe.ts which NEVER imports the real sharp
+      sharp: require.resolve('./src/libs/sharp.safe.ts'),
+      // Mock other native modules
+      '@napi-rs/canvas': require.resolve('./src/libs/canvas.serverless.ts'),
+      'zlib-sync': require.resolve('./src/libs/zlib-sync.serverless.ts'),
+    };
     return config;
   },
 });

@@ -1,32 +1,24 @@
 /**
- * Sharp wrapper for Vercel Serverless Functions
- * 
- * Vercel Serverless Functions do not have libvips installed,
- * so we need to handle this gracefully.
+ * Sharp wrapper - Use this for all sharp operations
  * 
  * This wrapper will:
- * 1. In serverless environments: use a mock that doesn't require libvips
- * 2. In normal environments: load the real sharp module
- * 3. Provide clear error messages for debugging
+ * 1. In Vercel/Serverless: Always use the safe mock (no native modules)
+ * 2. In Docker/Local: Try to use real sharp if available
+ * 
+ * IMPORTANT: Do NOT import 'sharp' directly anywhere in your code.
+ * Always import from this file: import { withSharp, getSharp } from '@/libs/sharp'
  */
 
 import debug from 'debug';
 
 const log = debug('lobe:sharp-wrapper');
 
-// Detect Vercel Serverless Function environment
-const isVercelServerless = (): boolean => {
+// Detect if we're in a serverless environment
+const isServerlessEnvironment = (): boolean => {
   return (
     process.env.VERCEL_ENV === 'production' ||
     process.env.VERCEL_ENV === 'preview' ||
-    (process.env.NODE_ENV === 'production' && process.env.VERCEL)
-  );
-};
-
-// Detect if we're in a serverless environment (Vercel, AWS Lambda, etc.)
-const isServerlessEnvironment = (): boolean => {
-  return (
-    isVercelServerless() ||
+    (process.env.NODE_ENV === 'production' && process.env.VERCEL) ||
     process.env.AWS_LAMBDA_FUNCTION_NAME !== undefined ||
     process.env.FUNCTIONS_WORKER_RUNTIME !== undefined ||
     process.env.NEXT_RUNTIME === 'edge' ||
@@ -34,49 +26,48 @@ const isServerlessEnvironment = (): boolean => {
   );
 };
 
+// Detect if we're in a browser environment
+const isBrowser = typeof window !== 'undefined';
+
 // Cache for the sharp module
 let sharpModule: any = null;
-let isServerlessCached: boolean | null = null;
 
 /**
  * Get the sharp module
- * In serverless environments, returns a mock
- * In normal environments, loads the real sharp module
+ * In serverless: returns the safe mock
+ * In Node.js: tries to load real sharp, falls back to mock
  */
 async function getSharpModule(): Promise<any> {
-  // Check if we're in a serverless environment
-  const serverless = isServerlessEnvironment();
+  if (sharpModule) return sharpModule;
   
-  if (serverless) {
-    if (sharpModule) return sharpModule;
-    
-    // In serverless, use the mock
-    log('Using sharp mock in serverless environment');
-    const { default: mockSharp } = await import('./sharp.serverless');
-    sharpModule = mockSharp;
+  if (isBrowser || isServerlessEnvironment()) {
+    // In browser or serverless, use the safe mock
+    log('Using sharp safe mock');
+    const { default: safeSharp } = await import('./sharp.safe');
+    sharpModule = safeSharp;
     return sharpModule;
   }
   
-  // In non-serverless environments, try to load the real sharp
-  if (sharpModule) return sharpModule;
-  
+  // In Node.js (Docker, local), try to load real sharp
   try {
+    // IMPORTANT: We use a dynamic import here to avoid Turbopack issues
+    // The webpack alias in next.config.ts will replace this with sharp.safe.ts
+    // in Vercel, but in local Docker it should load the real sharp
     const sharp = await import('sharp');
     sharpModule = sharp.default || sharp;
-    log('Sharp module loaded successfully');
+    log('Loaded real sharp module');
     return sharpModule;
   } catch (error) {
-    log('Failed to load sharp module:', error);
-    // Fallback to mock even in non-serverless if sharp fails to load
-    const { default: mockSharp } = await import('./sharp.serverless');
-    sharpModule = mockSharp;
+    log('Failed to load real sharp, using mock:', error);
+    // Fallback to safe mock
+    const { default: safeSharp } = await import('./sharp.safe');
+    sharpModule = safeSharp;
     return sharpModule;
   }
 }
 
 /**
- * Get sharp instance if available
- * Returns mock in serverless environments, real sharp otherwise
+ * Get sharp instance
  */
 export async function getSharp() {
   return await getSharpModule();
@@ -90,16 +81,21 @@ export function isServerless(): boolean {
 }
 
 /**
- * Check if sharp is available (not in serverless)
+ * Check if real sharp is available (not in serverless)
  */
-export function isSharpAvailable(): boolean {
-  return !isServerlessEnvironment();
+export async function isSharpAvailable(): Promise<boolean> {
+  if (isBrowser || isServerlessEnvironment()) return false;
+  try {
+    await import('sharp');
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 /**
  * Safe wrapper for sharp operations
- * In serverless: uses mock that returns default values
- * In normal: uses real sharp
+ * Always returns a result (mock or real)
  */
 export async function withSharp<T>(
   callback: (sharp: any) => Promise<T>
