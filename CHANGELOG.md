@@ -2,6 +2,16 @@
 
 # Changelog
 
+## [Version 1.0.0](https://github.com/mDevsLabs/mAI/compare/v0.9.0...v1.0.0)
+
+<sup>Released on **2026-07-11**</sup>
+
+- **Pets**: Améliorations importantes de l'expérience des pets
+- **Desktop/CLI**: Améliorations diverses
+- **Rewards (Bêta)**: Introduction de la section Rewards qui ajoute quatre pages pour accomplir des quêtes, augmenter vos niveaux et gagner des badges ! D'autres nouveautés de cette section arrivent bientôt pour la version finale.
+- **Versions**: Mise à jour des versions et CHANGELOG.md
+- **Synchronisation**: Synchronisation des changements avec LobeHub.
+
 ## [Version 0.9.0](https://github.com/mDevsLabs/mAI/compare/v2.2.6...v0.4.0)
 
 <sup>Released on **2026-06-23**</sup>

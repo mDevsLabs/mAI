@@ -412,10 +412,21 @@ export const deviceKeys = {
     deviceId,
     path,
   ]),
+  gitBranch: def('device:gitBranch', (deviceId: string, path: string) => [
+    'device:gitBranch',
+    deviceId,
+    path,
+  ]),
   gitBranches: def('device:gitBranches', (deviceId: string, path: string) => [
     'device:gitBranches',
     deviceId,
     path,
+  ]),
+  gitLinkedPR: def('device:gitLinkedPR', (deviceId: string, path: string, branch: string) => [
+    'device:gitLinkedPR',
+    deviceId,
+    path,
+    branch,
   ]),
   gitRemoteBranches: def('device:gitRemoteBranches', (deviceId: string, dirPath: string) => [
     'device:gitRemoteBranches',
@@ -432,12 +443,6 @@ export const deviceKeys = {
       baseRef,
     ],
   ),
-  gitInfo: def('device:gitInfo', (deviceId: string, path: string, isGithub: boolean) => [
-    'device:gitInfo',
-    deviceId,
-    path,
-    isGithub,
-  ]),
   gitWorkingTreeStatus: def('device:gitWorkingTreeStatus', (deviceId: string, path: string) => [
     'device:gitWorkingTreeStatus',
     deviceId,
@@ -746,11 +751,20 @@ export const topicActionKeys = {
 export const homeKeys = {
   dailyBrief: def('home:dailyBrief', (userId: string) => ['home:dailyBrief', userId]),
 };
+
+/**
+ * Daily task-template recommendation cache schema version. Bump this when the
+ * persisted recommendation row shape changes incompatibly so desktop clients
+ * stop reading stale localStorage SWR entries.
+ */
+export const TASK_TEMPLATE_RECOMMENDATION_CACHE_VERSION = 2;
+const TASK_TEMPLATE_DAILY_RECOMMEND_ROOT = `taskTemplate:listDailyRecommend:v${TASK_TEMPLATE_RECOMMENDATION_CACHE_VERSION}`;
+
 export const taskTemplateKeys = {
   listDailyRecommend: def(
-    'taskTemplate:listDailyRecommend',
+    TASK_TEMPLATE_DAILY_RECOMMEND_ROOT,
     (refreshSeed: unknown, recommendationCount: number, locale: string) => [
-      'taskTemplate:listDailyRecommend',
+      TASK_TEMPLATE_DAILY_RECOMMEND_ROOT,
       refreshSeed,
       recommendationCount,
       locale,
