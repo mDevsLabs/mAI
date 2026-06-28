@@ -1,52 +1,1102 @@
 [
   {
-    "id": "badge_newcomer",
-    "name": "Nouveau Venu",
-    "icon": "🐣",
-    "description": "Votre premier pas dans l'univers de l'IA.",
-    "lore": "Un œuf éclos, symbolisant le début d'une longue aventure d'apprentissage et de découverte dans le domaine de l'intelligence artificielle.",
-    "conditionDescription": "Compléter votre première quête.",
-    "xpReward": 50,
-    "rarity": "Common"
+    "id": "badge_1",
+    "name": "Bavard En Herbe",
+    "description": "Envoyer 50 messages à un agent.",
+    "emoji": "💬",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "message_sent",
+      "target": 50
+    }
   },
   {
-    "id": "badge_explorer",
-    "name": "Explorateur Curieux",
-    "icon": "🧭",
-    "description": "A découvert les fonctionnalités de base.",
-    "lore": "La boussole indique toujours le nord, mais votre curiosité vous emmène explorer toutes les arcanes des modèles linguistiques.",
-    "conditionDescription": "Utiliser 3 modèles d'IA différents.",
-    "xpReward": 100,
-    "rarity": "Uncommon"
+    "id": "badge_2",
+    "name": "Curieux Digital",
+    "description": "Utiliser 5 plugins différents au cours de vos sessions.",
+    "emoji": "🧩",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "plugin_used",
+      "target": 5
+    }
   },
   {
-    "id": "badge_artisan",
-    "name": "Artisan Prompt",
-    "icon": "🔨",
-    "description": "A créé un agent personnalisé performant.",
-    "lore": "Le marteau et l'enclume du créateur de requêtes. Chaque mot est forgé avec précision pour tirer le meilleur des modèles.",
-    "conditionDescription": "Créer et personnaliser 5 agents IA.",
-    "xpReward": 250,
-    "rarity": "Rare"
+    "id": "badge_3",
+    "name": "Créateur d'Esprits",
+    "description": "Créer 3 agents personnalisés dans votre espace.",
+    "emoji": "🤖",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "agent_created",
+      "target": 3
+    }
   },
   {
-    "id": "badge_master",
-    "name": "Maître de l'IA",
-    "icon": "👑",
-    "description": "A atteint un niveau d'expertise exceptionnel.",
-    "lore": "La couronne réservée à ceux qui dominent la technologie et l'utilisent à son plein potentiel.",
-    "conditionDescription": "Atteindre le niveau 50 de profil.",
-    "xpReward": 1000,
-    "rarity": "Mythic"
+    "id": "badge_4",
+    "name": "Fidèle au Poste",
+    "description": "Activer une session pendant 5 jours différents.",
+    "emoji": "📅",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "session_active",
+      "target": 5
+    }
   },
   {
-    "id": "badge_legend",
-    "name": "Légende Vivante",
-    "icon": "🌌",
-    "description": "Une présence quasi-divine dans le système.",
-    "lore": "Au-delà des étoiles, votre code et vos prompts résonnent pour l'éternité.",
-    "conditionDescription": "Compléter 100 quêtes hebdomadaires.",
-    "xpReward": 5000,
-    "rarity": "Ultra"
+    "id": "badge_5",
+    "name": "Consommateur de Mots",
+    "description": "Consommer un total de 10 000 tokens.",
+    "emoji": "🪙",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "tokens_used",
+      "target": 10000
+    }
+  },
+  {
+    "id": "badge_6",
+    "name": "Apprenti Artiste",
+    "description": "Générer 5 images avec les outils de génération d'art.",
+    "emoji": "🎨",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "image_generated",
+      "target": 5
+    }
+  },
+  {
+    "id": "badge_7",
+    "name": "Voix Émergente",
+    "description": "Synthétiser 3 messages vocaux différents.",
+    "emoji": "🗣️",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "voice_synthesized",
+      "target": 3
+    }
+  },
+  {
+    "id": "badge_8",
+    "name": "Partageur de Savoir",
+    "description": "Partager 2 discussions ou sujets de conversation.",
+    "emoji": "📢",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "topic_shared",
+      "target": 2
+    }
+  },
+  {
+    "id": "badge_9",
+    "name": "Chercheur de Vérité",
+    "description": "Effectuer 10 recherches dans la base de connaissances.",
+    "emoji": "🔍",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "knowledge_base_searched",
+      "target": 10
+    }
+  },
+  {
+    "id": "badge_10",
+    "name": "Architecte de Flux",
+    "description": "Créer 2 flux de travail (workflows) personnalisés.",
+    "emoji": "⛓️",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "workflow_created",
+      "target": 2
+    }
+  },
+  {
+    "id": "badge_11",
+    "name": "Explorateur d'Extensions",
+    "description": "Installer 3 plugins différents depuis le catalogue.",
+    "emoji": "🔌",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "plugin_installed",
+      "target": 3
+    }
+  },
+  {
+    "id": "badge_12",
+    "name": "Adepte du Sur-Mesure",
+    "description": "Mettre à jour vos paramètres 5 fois pour optimiser l'interface.",
+    "emoji": "⚙️",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "settings_updated",
+      "target": 5
+    }
+  },
+  {
+    "id": "badge_13",
+    "name": "Forgeron d'Objets",
+    "description": "Générer 3 artefacts au cours de vos conversations.",
+    "emoji": "📦",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "artifact_generated",
+      "target": 3
+    }
+  },
+  {
+    "id": "badge_14",
+    "name": "Orateur Novice",
+    "description": "Envoyer 100 messages au total.",
+    "emoji": "🗨️",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "message_sent",
+      "target": 100
+    }
+  },
+  {
+    "id": "badge_15",
+    "name": "Utilisateur Malin",
+    "description": "Utiliser des plugins 10 fois dans vos requêtes.",
+    "emoji": "🛠️",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "plugin_used",
+      "target": 10
+    }
+  },
+  {
+    "id": "badge_16",
+    "name": "Père de Famille Virtuelle",
+    "description": "Créer 5 agents personnalisés différents.",
+    "emoji": "👥",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "agent_created",
+      "target": 5
+    }
+  },
+  {
+    "id": "badge_17",
+    "name": "Habitué des Lieux",
+    "description": "Rester actif sur l'application pendant 10 jours distincts.",
+    "emoji": "🕰️",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "session_active",
+      "target": 10
+    }
+  },
+  {
+    "id": "badge_18",
+    "name": "Lecteur Avide",
+    "description": "Atteindre un volume de 50 000 tokens consommés.",
+    "emoji": "📖",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "tokens_used",
+      "target": 50000
+    }
+  },
+  {
+    "id": "badge_19",
+    "name": "Dessinateur du Dimanche",
+    "description": "Générer 10 illustrations via les plugins d'images.",
+    "emoji": "🖌️",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "image_generated",
+      "target": 10
+    }
+  },
+  {
+    "id": "badge_20",
+    "name": "Mélomane Synthétique",
+    "description": "Utiliser la synthèse vocale pour 10 messages.",
+    "emoji": "🎵",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "voice_synthesized",
+      "target": 10
+    }
+  },
+  {
+    "id": "badge_21",
+    "name": "Pont d'Idées",
+    "description": "Partager 5 sujets ou discussions avec d'autres utilisateurs.",
+    "emoji": "🔗",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "topic_shared",
+      "target": 5
+    }
+  },
+  {
+    "id": "badge_22",
+    "name": "Fouilleur de Données",
+    "description": "Lancer 20 recherches ciblées dans la base de connaissances.",
+    "emoji": "📚",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "knowledge_base_searched",
+      "target": 20
+    }
+  },
+  {
+    "id": "badge_23",
+    "name": "Automatiseur Junior",
+    "description": "Configurer et enregistrer 5 workflows.",
+    "emoji": "🔧",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "workflow_created",
+      "target": 5
+    }
+  },
+  {
+    "id": "badge_24",
+    "name": "Collectionneur de Plugins",
+    "description": "Installer 5 plugins dans votre espace personnel.",
+    "emoji": "💾",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "plugin_installed",
+      "target": 5
+    }
+  },
+  {
+    "id": "badge_25",
+    "name": "Ajusteur Précis",
+    "description": "Modifier et enregistrer vos paramètres système 10 fois.",
+    "emoji": "🔨",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "settings_updated",
+      "target": 10
+    }
+  },
+  {
+    "id": "badge_26",
+    "name": "Générateur Astucieux",
+    "description": "Créer 10 artefacts uniques.",
+    "emoji": "💎",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "artifact_generated",
+      "target": 10
+    }
+  },
+  {
+    "id": "badge_27",
+    "name": "Écrivain Assidu",
+    "description": "Envoyer 250 messages au cours de vos sessions.",
+    "emoji": "✍️",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "message_sent",
+      "target": 250
+    }
+  },
+  {
+    "id": "badge_28",
+    "name": "Touche-à-tout",
+    "description": "Activer des plugins à 15 reprises.",
+    "emoji": "🎛️",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "plugin_used",
+      "target": 15
+    }
+  },
+  {
+    "id": "badge_29",
+    "name": "Innocente Création",
+    "description": "Donner naissance à 8 agents dotés d'instructions spécifiques.",
+    "emoji": "🧠",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "agent_created",
+      "target": 8
+    }
+  },
+  {
+    "id": "badge_30",
+    "name": "Régulier",
+    "description": "Enregistrer 15 sessions de connexion actives.",
+    "emoji": "📆",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "session_active",
+      "target": 15
+    }
+  },
+  {
+    "id": "badge_31",
+    "name": "Gourmand de Données",
+    "description": "Atteindre 100 000 tokens utilisés.",
+    "emoji": "📉",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "tokens_used",
+      "target": 100000
+    }
+  },
+  {
+    "id": "badge_32",
+    "name": "Illustrateur Actif",
+    "description": "Générer un total de 20 images créatives.",
+    "emoji": "🖼️",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "image_generated",
+      "target": 20
+    }
+  },
+  {
+    "id": "badge_33",
+    "name": "Synthétiseur Doué",
+    "description": "Synthétiser 15 messages audio.",
+    "emoji": "🎙️",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "voice_synthesized",
+      "target": 15
+    }
+  },
+  {
+    "id": "badge_34",
+    "name": "Propagateur",
+    "description": "Partager 8 discussions à votre entourage.",
+    "emoji": "📣",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "topic_shared",
+      "target": 8
+    }
+  },
+  {
+    "id": "badge_35",
+    "name": "Explorateur de Bibliothèque",
+    "description": "Parcourir la base de connaissances 30 fois.",
+    "emoji": "🏛️",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "knowledge_base_searched",
+      "target": 30
+    }
+  },
+  {
+    "id": "badge_36",
+    "name": "Organisateur de Tâches",
+    "description": "Créer 8 workflows pour automatiser vos processus.",
+    "emoji": "📋",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "workflow_created",
+      "target": 8
+    }
+  },
+  {
+    "id": "badge_37",
+    "name": "Pratico-Pratique",
+    "description": "Installer 8 extensions pour enrichir l'application.",
+    "emoji": "🧰",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "plugin_installed",
+      "target": 8
+    }
+  },
+  {
+    "id": "badge_38",
+    "name": "Optimisateur",
+    "description": "Mettre à jour vos préférences de configuration 15 fois.",
+    "emoji": "🔩",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "settings_updated",
+      "target": 15
+    }
+  },
+  {
+    "id": "badge_39",
+    "name": "Artisan Documentaliste",
+    "description": "Produire 15 artefacts de code ou de texte.",
+    "emoji": "📑",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "artifact_generated",
+      "target": 15
+    }
+  },
+  {
+    "id": "badge_40",
+    "name": "Plume de Bronze",
+    "description": "Envoyer 500 messages à travers le chat.",
+    "emoji": "✏️",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "message_sent",
+      "target": 500
+    }
+  },
+  {
+    "id": "badge_41",
+    "name": "Dompteur d'Extensions",
+    "description": "Utiliser les outils de plugins à 20 reprises.",
+    "emoji": "🦁",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "plugin_used",
+      "target": 20
+    }
+  },
+  {
+    "id": "badge_42",
+    "name": "Esprit Supérieur",
+    "description": "Créer 10 agents IA différents.",
+    "emoji": "🔮",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "agent_created",
+      "target": 10
+    }
+  },
+  {
+    "id": "badge_43",
+    "name": "Présence Incontournable",
+    "description": "Avoir 20 sessions actives enregistrées.",
+    "emoji": "👣",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "session_active",
+      "target": 20
+    }
+  },
+  {
+    "id": "badge_44",
+    "name": "Giga-Lecteur",
+    "description": "Totaliser 200 000 tokens consommés dans l'interface.",
+    "emoji": "📕",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "tokens_used",
+      "target": 200000
+    }
+  },
+  {
+    "id": "badge_45",
+    "name": "Créateur Visuel",
+    "description": "Générer 30 œuvres graphiques ou visuels.",
+    "emoji": "🖍️",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "image_generated",
+      "target": 30
+    }
+  },
+  {
+    "id": "badge_46",
+    "name": "Voix Mélodieuse",
+    "description": "Synthétiser 20 fichiers vocaux à partir du texte.",
+    "emoji": "🎶",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "voice_synthesized",
+      "target": 20
+    }
+  },
+  {
+    "id": "badge_47",
+    "name": "Distributeur de Liens",
+    "description": "Partager 10 thèmes de discussion avec vos contacts.",
+    "emoji": "🌐",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "topic_shared",
+      "target": 10
+    }
+  },
+  {
+    "id": "badge_48",
+    "name": "Curateur de Contenu",
+    "description": "Générer 20 artefacts complets.",
+    "emoji": "📂",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "artifact_generated",
+      "target": 20
+    }
+  },
+  {
+    "id": "badge_49",
+    "name": "Chercheur Érudit",
+    "description": "Explorer la base de connaissances à 40 reprises.",
+    "emoji": "🎓",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "knowledge_base_searched",
+      "target": 40
+    }
+  },
+  {
+    "id": "badge_50",
+    "name": "Ingénieur Simpliste",
+    "description": "Concevoir 10 flux de travail automatisés.",
+    "emoji": "📐",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "workflow_created",
+      "target": 10
+    }
+  },
+  {
+    "id": "badge_51",
+    "name": "Orateur d'Élite",
+    "description": "Atteindre 1 000 messages envoyés.",
+    "emoji": "🪶",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "message_sent",
+      "target": 1000
+    }
+  },
+  {
+    "id": "badge_52",
+    "name": "Maître des Plugins",
+    "description": "Faire appel aux plugins 50 fois.",
+    "emoji": "⚡",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "plugin_used",
+      "target": 50
+    }
+  },
+  {
+    "id": "badge_53",
+    "name": "Forgeur d'Esprits",
+    "description": "Créer 20 agents personnalisés et actifs.",
+    "emoji": "🧬",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "agent_created",
+      "target": 20
+    }
+  },
+  {
+    "id": "badge_54",
+    "name": "Compagnon Fidèle",
+    "description": "Se connecter lors de 40 sessions différentes.",
+    "emoji": "🤝",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "session_active",
+      "target": 40
+    }
+  },
+  {
+    "id": "badge_55",
+    "name": "Consommateur de Masse",
+    "description": "Consommer un total de 500 000 tokens.",
+    "emoji": "💰",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "tokens_used",
+      "target": 500000
+    }
+  },
+  {
+    "id": "badge_56",
+    "name": "Artiste Virtuose",
+    "description": "Générer 50 images de haute qualité.",
+    "emoji": "✨",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "image_generated",
+      "target": 50
+    }
+  },
+  {
+    "id": "badge_57",
+    "name": "Voix de Velours",
+    "description": "Générer 40 voix de synthèse.",
+    "emoji": "🎤",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "voice_synthesized",
+      "target": 40
+    }
+  },
+  {
+    "id": "badge_58",
+    "name": "Phare du Savoir",
+    "description": "Partager 20 sujets de discussion enrichissants.",
+    "emoji": "🌟",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "topic_shared",
+      "target": 20
+    }
+  },
+  {
+    "id": "badge_59",
+    "name": "Archéologue du Web",
+    "description": "Rechercher des informations dans la base de connaissances 80 fois.",
+    "emoji": "🏺",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "knowledge_base_searched",
+      "target": 80
+    }
+  },
+  {
+    "id": "badge_60",
+    "name": "Chef d'Orchestre",
+    "description": "Établir 20 flux de travail connectés et fonctionnels.",
+    "emoji": "🪄",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "workflow_created",
+      "target": 20
+    }
+  },
+  {
+    "id": "badge_61",
+    "name": "Surchargé de Pouvoirs",
+    "description": "Installer 15 extensions différentes dans l'application.",
+    "emoji": "🔋",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "plugin_installed",
+      "target": 15
+    }
+  },
+  {
+    "id": "badge_62",
+    "name": "Perfectionniste Clinique",
+    "description": "Ajuster et peaufiner vos paramètres système 30 fois.",
+    "emoji": "🧭",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "settings_updated",
+      "target": 30
+    }
+  },
+  {
+    "id": "badge_63",
+    "name": "Architecte de Contenu",
+    "description": "Créer 40 artefacts structurés.",
+    "emoji": "🗼",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "artifact_generated",
+      "target": 40
+    }
+  },
+  {
+    "id": "badge_64",
+    "name": "Bavard Infatigable",
+    "description": "Dépasser le cap des 2 000 messages envoyés.",
+    "emoji": "🖋️",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "message_sent",
+      "target": 2000
+    }
+  },
+  {
+    "id": "badge_65",
+    "name": "Symbiose Digitale",
+    "description": "Employer les plugins à 75 reprises au total.",
+    "emoji": "🕸️",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "plugin_used",
+      "target": 75
+    }
+  },
+  {
+    "id": "badge_66",
+    "name": "Géniteur Divin",
+    "description": "Donner vie à 30 agents virtuels différents.",
+    "emoji": "🎭",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "agent_created",
+      "target": 30
+    }
+  },
+  {
+    "id": "badge_67",
+    "name": "Résident Permanent",
+    "description": "Cumuler 60 sessions d'utilisation actives.",
+    "emoji": "🏰",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "session_active",
+      "target": 60
+    }
+  },
+  {
+    "id": "badge_68",
+    "name": "Glouton de Tokens",
+    "description": "Consommer plus de 1 000 000 de tokens au total.",
+    "emoji": "💳",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "tokens_used",
+      "target": 1000000
+    }
+  },
+  {
+    "id": "badge_69",
+    "name": "Visionnaire Esthétique",
+    "description": "Générer un total de 75 images créatives.",
+    "emoji": "👁️",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "image_generated",
+      "target": 75
+    }
+  },
+  {
+    "id": "badge_70",
+    "name": "Scribe Vocal",
+    "description": "Produire 60 enregistrements vocaux synthétisés.",
+    "emoji": "📻",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "voice_synthesized",
+      "target": 60
+    }
+  },
+  {
+    "id": "badge_71",
+    "name": "Influenceur Majeur",
+    "description": "Partager 30 sujets ou thèmes clés.",
+    "emoji": "📈",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "topic_shared",
+      "target": 30
+    }
+  },
+  {
+    "id": "badge_72",
+    "name": "Puits de Science",
+    "description": "Parcourir la base de connaissances à 120 reprises.",
+    "emoji": "🔭",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "knowledge_base_searched",
+      "target": 120
+    }
+  },
+  {
+    "id": "badge_73",
+    "name": "Ingénieur Systèmes",
+    "description": "Déployer 30 workflows automatisés.",
+    "emoji": "🏗️",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "workflow_created",
+      "target": 30
+    }
+  },
+  {
+    "id": "badge_74",
+    "name": "Intégrateur Fou",
+    "description": "Avoir installé 20 extensions actives.",
+    "emoji": "🧲",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "plugin_installed",
+      "target": 20
+    }
+  },
+  {
+    "id": "badge_75",
+    "name": "Ajusteur Millimétré",
+    "description": "Modifier et enregistrer vos options système 40 fois.",
+    "emoji": "🎚️",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "settings_updated",
+      "target": 40
+    }
+  },
+  {
+    "id": "badge_76",
+    "name": "Forgeron de Légendes",
+    "description": "Avoir conçu et édité 60 artefacts de haute qualité.",
+    "emoji": "⚒️",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "artifact_generated",
+      "target": 60
+    }
+  },
+  {
+    "id": "badge_77",
+    "name": "Plume d'Argent",
+    "description": "Rédiger 3 000 messages au cours de vos échanges.",
+    "emoji": "✒️",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "message_sent",
+      "target": 3000
+    }
+  },
+  {
+    "id": "badge_78",
+    "name": "Artiste de l'IA",
+    "description": "Générer 100 images à l'aide de nos générateurs intégrés.",
+    "emoji": "🌈",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "image_generated",
+      "target": 100
+    }
+  },
+  {
+    "id": "badge_79",
+    "name": "Chercheur d'Or",
+    "description": "Trouver des réponses dans la base de connaissances 150 fois.",
+    "emoji": "⛏️",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "knowledge_base_searched",
+      "target": 150
+    }
+  },
+  {
+    "id": "badge_80",
+    "name": "Créateur d'Artefacts",
+    "description": "Publier 80 artefacts textuels ou de programmation.",
+    "emoji": "🗿",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "artifact_generated",
+      "target": 80
+    }
+  },
+  {
+    "id": "badge_81",
+    "name": "L'Oracle de Lobe",
+    "description": "Atteindre le sommet avec 5 000 messages envoyés.",
+    "emoji": "🦉",
+    "rarity": "Legendary",
+    "requirements": {
+      "action": "message_sent",
+      "target": 5000
+    }
+  },
+  {
+    "id": "badge_82",
+    "name": "Grand Alchimiste",
+    "description": "Activer et manipuler des plugins 150 fois.",
+    "emoji": "🧪",
+    "rarity": "Legendary",
+    "requirements": {
+      "action": "plugin_used",
+      "target": 150
+    }
+  },
+  {
+    "id": "badge_83",
+    "name": "Créateur d'Univers",
+    "description": "Concevoir une armée de 50 agents personnalisés.",
+    "emoji": "🌌",
+    "rarity": "Legendary",
+    "requirements": {
+      "action": "agent_created",
+      "target": 50
+    }
+  },
+  {
+    "id": "badge_84",
+    "name": "L'Immortel",
+    "description": "Garder une activité régulière sur 100 jours distincts.",
+    "emoji": "⏳",
+    "rarity": "Legendary",
+    "requirements": {
+      "action": "session_active",
+      "target": 100
+    }
+  },
+  {
+    "id": "badge_85",
+    "name": "Le Flambeur de Code",
+    "description": "Brûler 5 000 000 de tokens au cours de requêtes complexes.",
+    "emoji": "🔥",
+    "rarity": "Legendary",
+    "requirements": {
+      "action": "tokens_used",
+      "target": 5000000
+    }
+  },
+  {
+    "id": "badge_86",
+    "name": "Le Nouveau Louvre",
+    "description": "Donner vie à 200 images uniques.",
+    "emoji": "🎆",
+    "rarity": "Legendary",
+    "requirements": {
+      "action": "image_generated",
+      "target": 200
+    }
+  },
+  {
+    "id": "badge_87",
+    "name": "La Voix Céleste",
+    "description": "Faire synthétiser sa voix à l'agent lors de 100 interventions.",
+    "emoji": "👼",
+    "rarity": "Legendary",
+    "requirements": {
+      "action": "voice_synthesized",
+      "target": 100
+    }
+  },
+  {
+    "id": "badge_88",
+    "name": "L'Éclaireur du Savoir",
+    "description": "Explorer la base de connaissances de fond en comble 250 fois.",
+    "emoji": "💡",
+    "rarity": "Legendary",
+    "requirements": {
+      "action": "knowledge_base_searched",
+      "target": 250
+    }
+  },
+  {
+    "id": "badge_89",
+    "name": "Le Grand Horloger",
+    "description": "Assembler et faire tourner 50 workflows complexes.",
+    "emoji": "⏱️",
+    "rarity": "Legendary",
+    "requirements": {
+      "action": "workflow_created",
+      "target": 50
+    }
+  },
+  {
+    "id": "badge_90",
+    "name": "Le Démiurge",
+    "description": "Générer un empire de 150 artefacts fonctionnels.",
+    "emoji": "🪐",
+    "rarity": "Legendary",
+    "requirements": {
+      "action": "artifact_generated",
+      "target": 150
+    }
+  },
+  {
+    "id": "badge_91",
+    "name": "Voix de l'Infini",
+    "description": "Atteindre la barre mythique des 10 000 messages transmis.",
+    "emoji": "🚀",
+    "rarity": "Mythic",
+    "requirements": {
+      "action": "message_sent",
+      "target": 10000
+    }
+  },
+  {
+    "id": "badge_92",
+    "name": "Omniscient",
+    "description": "Consulter la base de connaissances 500 fois au cours de vos recherches.",
+    "emoji": "👁️‍🗨️",
+    "rarity": "Mythic",
+    "requirements": {
+      "action": "knowledge_base_searched",
+      "target": 500
+    }
+  },
+  {
+    "id": "badge_93",
+    "name": "Dieu des Machines",
+    "description": "Donner vie à 100 agents IA hautement sophistiqués.",
+    "emoji": "🦾",
+    "rarity": "Mythic",
+    "requirements": {
+      "action": "agent_created",
+      "target": 100
+    }
+  },
+  {
+    "id": "badge_94",
+    "name": "Voyageur Temporel",
+    "description": "Enregistrer 200 sessions d'activity quotidiennes sur l'application.",
+    "emoji": "🌀",
+    "rarity": "Mythic",
+    "requirements": {
+      "action": "session_active",
+      "target": 200
+    }
+  },
+  {
+    "id": "badge_95",
+    "name": "Le Trou Noir",
+    "description": "Atteindre le volume astronomique de 20 000 000 de tokens consommés.",
+    "emoji": "🕳️",
+    "rarity": "Mythic",
+    "requirements": {
+      "action": "tokens_used",
+      "target": 20000000
+    }
+  },
+  {
+    "id": "badge_96",
+    "name": "Créateur de Mondes",
+    "description": "Gérer et maintenir 100 workflows complexes interconnectés.",
+    "emoji": "🌍",
+    "rarity": "Mythic",
+    "requirements": {
+      "action": "workflow_created",
+      "target": 100
+    }
+  },
+  {
+    "id": "badge_97",
+    "name": "Le Maître Artisan",
+    "description": "Publier un catalogue impressionnant de 300 artefacts.",
+    "emoji": "🏆",
+    "rarity": "Mythic",
+    "requirements": {
+      "action": "artifact_generated",
+      "target": 300
+    }
+  },
+  {
+    "id": "badge_98",
+    "name": "L'Élu de l'IA",
+    "description": "Entrer dans la légende suprême en envoyant 50 000 messages.",
+    "emoji": "👑",
+    "rarity": "Ultra",
+    "requirements": {
+      "action": "message_sent",
+      "target": 50000
+    }
+  },
+  {
+    "id": "badge_99",
+    "name": "Singularité Atteinte",
+    "description": "Totaliser 100 000 000 de tokens consommés, brisant les limites de la physique.",
+    "emoji": "🛸",
+    "rarity": "Ultra",
+    "requirements": {
+      "action": "tokens_used",
+      "target": 100000000
+    }
+  },
+  {
+    "id": "badge_100",
+    "name": "Le Grand Tout",
+    "description": "Générer 1 000 artefacts, devenant le créateur ultime de l'univers digital.",
+    "emoji": "☯️",
+    "rarity": "Ultra",
+    "requirements": {
+      "action": "artifact_generated",
+      "target": 1000
+    }
   }
 ]

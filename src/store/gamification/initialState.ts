@@ -12,6 +12,9 @@ export const INITIAL_GAMIFICATION_STATE: GamificationState = {
   settings: {
     soundVolume: 0.7,
     enableAnimations: true,
+    enableNotifications: true,
+    timezone: 'Europe/Paris',
+    timezoneLastChanged: 0,
   },
   activeDailyQuests: [],
   activeWeeklyQuests: [],
@@ -19,6 +22,10 @@ export const INITIAL_GAMIFICATION_STATE: GamificationState = {
   unlockedBadges: [],
   pinnedBadges: [],
   lastBonusQuestsUsed: 0,
+  actionCounts: {},
+  bonusClaimsTodayCount: 0,
+  lastBonusClaimedTimestamp: 0,
+  logs: [],
 };
 
 export const initialState: GamificationStoreState = {

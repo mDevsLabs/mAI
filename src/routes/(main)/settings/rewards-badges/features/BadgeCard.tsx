@@ -1,7 +1,7 @@
 'use client';
 
 import { Flexbox } from '@lobehub/ui';
-import { Card, Typography } from 'antd';
+import { Card, Typography, Tag } from 'antd';
 import { createStyles } from 'antd-style';
 import { Pin } from 'lucide-react';
 import React from 'react';
@@ -47,7 +47,19 @@ const useStyles = createStyles(({ css, token }) => ({
   `
 }));
 
-export const BadgeCard = ({ badge, isUnlocked, isPinned, onClick }: any) => {
+const getRarityTag = (rarity: string) => {
+  const map: Record<string, { color: string; label: string }> = {
+    Rare: { color: 'blue', label: 'Rare' },
+    Epic: { color: 'purple', label: 'Épique' },
+    Legendary: { color: 'gold', label: 'Légendaire' },
+    Mythic: { color: 'magenta', label: 'Mythique' },
+    Ultra: { color: 'volcano', label: 'Ultra' },
+  };
+  const config = map[rarity] || { color: 'default', label: rarity };
+  return <Tag color={config.color} style={{ fontWeight: 'bold', margin: 0 }}>{config.label}</Tag>;
+};
+
+export const BadgeCard = React.memo(({ badge, isUnlocked, isPinned, onClick }: any) => {
   const { styles, cx } = useStyles();
 
   return (
@@ -59,11 +71,11 @@ export const BadgeCard = ({ badge, isUnlocked, isPinned, onClick }: any) => {
       >
         {isPinned && <Pin size={16} className={styles.pinIcon} />}
         <div className={styles.emoji}>{badge.emoji}</div>
-        <Flexbox align="center" gap={4}>
+        <Flexbox align="center" gap={8}>
           <Text strong>{badge.name}</Text>
-          <Text type="secondary" style={{ fontSize: 12 }}>{badge.rarity}</Text>
+          {getRarityTag(badge.rarity)}
         </Flexbox>
       </Card>
     </PremiumCardWrapper>
   );
-};
+});

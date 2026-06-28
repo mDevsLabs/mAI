@@ -175,10 +175,19 @@ export default {
     'The model "{{model}}" is no longer available. Please pick a current model from the model selector.',
   'response.UnknownChatFetchError':
     'Sorry, an unknown request error occurred. Please check the information below or try again.',
+  'response.WorkspaceAgentRequiresWorkspaceDevice':
+    'This agent lives in a workspace, so it can only bind devices the whole team can reach. Personal devices stay with the user who registered them — pick a workspace device instead, or enroll this device to the workspace first.',
   'response.WorkspaceFrozenByAdmin':
     'This workspace is frozen by an admin and cannot run requests. Please contact the workspace owner to resolve the issue.',
   'response.WorkspaceFrozenByRiskControl':
     'This workspace was auto-frozen by risk control and cannot run requests. Please contact support to review the status.',
+  'workspaceBillingInactive.bannerHint': 'Click for details',
+  'workspaceBillingInactive.bannerTitle': 'Workspace subscription inactive',
+  'workspaceBillingInactive.confirm': 'Got it',
+  'workspaceBillingInactive.renew': 'Go to billing',
+  'workspaceBillingInactive.description':
+    "This workspace's paid subscription has lapsed. Sending messages and other paid actions are paused until the subscription is restored — you can still browse shared content in the meantime.",
+  'workspaceBillingInactive.title': 'Workspace subscription inactive',
   'workspaceFrozenByAdmin.bannerDescription': 'Contact support to review the reason and unfreeze.',
   'workspaceFrozenByAdmin.bannerHint': 'Click for details',
   'workspaceFrozenByAdmin.bannerTitle': 'Workspace frozen by admin',

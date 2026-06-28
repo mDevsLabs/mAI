@@ -52,6 +52,7 @@ const envNumber = (defaultValue: number) =>
 
 const getRuntimeEnv = () => ({
   ...process.env,
+  DESKTOP_BACKEND_PROXY_RETHROW_ERRORS: process.env.DESKTOP_BACKEND_PROXY_RETHROW_ERRORS,
   DESKTOP_EXTERNAL_NAVIGATION_HOSTS: process.env.DESKTOP_EXTERNAL_NAVIGATION_HOSTS,
   UPDATE_CHANNEL: process.env.UPDATE_CHANNEL,
   UPDATE_SERVER_URL: process.env.UPDATE_SERVER_URL,
@@ -77,6 +78,10 @@ export const getDesktopEnv = memoize(() =>
       // escape hatch: allow testing static renderer in dev via env
       DESKTOP_RENDERER_STATIC: envBoolean(false),
 
+      // Dev-only failure injection: surface backend proxy errors as uncaught
+      // main-process exceptions so Electron's default dialog can be reproduced.
+      DESKTOP_BACKEND_PROXY_RETHROW_ERRORS: envBoolean(false),
+
       DESKTOP_EXTERNAL_NAVIGATION_HOSTS: z.string().optional().default(''),
 
       // device gateway url override (dev: point at a local `wrangler dev` instance,
@@ -95,7 +100,7 @@ export const getDesktopEnv = memoize(() =>
       NODE_ENV: z.enum(['development', 'production', 'test']).optional(),
 
       // cloud server url (can be overridden for selfhost/dev)
-      OFFICIAL_CLOUD_SERVER: z.string().optional().default('https://mai-officiel.vercel.app'),
+      OFFICIAL_CLOUD_SERVER: z.string().optional().default('https://app.lobehub.com'),
 
       // updater
       // process.env.xxx will replace in build stage

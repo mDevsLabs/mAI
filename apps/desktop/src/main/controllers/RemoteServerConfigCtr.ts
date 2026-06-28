@@ -537,7 +537,7 @@ export default class RemoteServerConfigCtr extends ControllerModule {
     const session = electronSession.fromPartition(partition);
 
     session.webRequest.onBeforeSendHeaders(
-      { urls: [`https://*.lobehub.com/*`, `https://mai-officiel.vercel.app/*`, `https://*.mai-officiel.vercel.app/*`] },
+      { urls: [`https://*.lobehub.com/*`] },
       async (details, callback) => {
         const requestHeaders = { ...details.requestHeaders };
 

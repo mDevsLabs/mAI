@@ -8,7 +8,7 @@ const Page = () => {
   const { t } = useTranslation('setting');
   return (
     <>
-      <SettingHeader title={t('tab.rewardsSettings', { defaultValue: 'Configuration Récompenses' })} />
+      <SettingHeader title={t('tab.rewardsSettings', { defaultValue: 'Paramètres' })} />
       <Settings />
     </>
   );

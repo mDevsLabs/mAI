@@ -26,6 +26,9 @@ import {
   Gamepad2,
   ListTodo,
   Medal,
+  Trophy,
+  User,
+  TrendingUp,
   Settings2,
 } from 'lucide-react';
 import { useMemo } from 'react';
@@ -111,11 +114,6 @@ export const useCategory = () => {
         key: SettingsTabs.Pets,
         label: t('tab.pets'),
       },
-      {
-        icon: MonitorSmartphoneIcon,
-        key: SettingsTabs.Devices,
-        label: t('tab.devices'),
-      },
       !mobile && {
         icon: KeyboardIcon,
         key: SettingsTabs.Hotkey,
@@ -137,11 +135,6 @@ export const useCategory = () => {
     // Gamification group
     const gamificationItems: CategoryItem[] = [
       {
-        icon: Settings2,
-        key: SettingsTabs.RewardsSettings,
-        label: t('tab.rewardsSettings', { defaultValue: 'Configuration Récompenses' }),
-      },
-      {
         icon: ListTodo,
         key: SettingsTabs.RewardsQuests,
         label: t('tab.rewardsQuests', { defaultValue: 'Quêtes & Défis' }),
@@ -151,12 +144,22 @@ export const useCategory = () => {
         key: SettingsTabs.RewardsBadges,
         label: t('tab.rewardsBadges', { defaultValue: 'Badges & Titres' }),
       },
+      {
+        icon: Trophy,
+        key: SettingsTabs.RewardsLevels,
+        label: t('tab.rewardsLevels', { defaultValue: 'Niveaux' }),
+      },
+      {
+        icon: Settings2,
+        key: SettingsTabs.RewardsSettings,
+        label: t('tab.rewardsSettings', { defaultValue: 'Paramètres' }),
+      },
     ];
 
     groups.push({
       items: gamificationItems,
       key: SettingsGroupKey.Gamification,
-      title: t('group.gamification', { defaultValue: 'Gamification' }),
+      title: t('group.gamification', { defaultValue: 'Récompenses' }),
     });
 
     // Personal subscription / billing items. Always shown when business
