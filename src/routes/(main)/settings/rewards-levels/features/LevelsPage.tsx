@@ -1,23 +1,23 @@
 'use client';
 
 import { Flexbox } from '@lobehub/ui';
-import { Card, Typography, Progress } from 'antd';
-import { createStyles } from 'antd-style';
+import { Typography, Progress } from 'antd';
+import { createStaticStyles, useTheme } from 'antd-style';
 import React from 'react';
 
 import { useGamificationStore } from '@/store/gamification';
 
 const { Title, Text } = Typography;
 
-const useStyles = createStyles(({ css, token }) => ({
+export const styles = createStaticStyles(({ css, cssVar }) => ({
   container: css`
     padding: 32px;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 48px;
-    background: radial-gradient(circle at top, ${token.colorPrimaryBg} 0%, transparent 60%);
-    min-height: 100vh;
+    background: radial-gradient(circle at top, color-mix(in srgb, ${cssVar.colorPrimary} 12%, transparent) 0%, transparent 60%);
+    min-height: 100%;
   `,
   levelCircle: css`
     position: relative;
@@ -27,27 +27,27 @@ const useStyles = createStyles(({ css, token }) => ({
     justify-content: center;
     align-items: center;
     border-radius: 50%;
-    background: ${token.colorFillTertiary};
-    box-shadow: 0 0 40px ${token.colorPrimaryBorder};
+    background: ${cssVar.colorFillTertiary};
+    box-shadow: 0 0 40px ${cssVar.colorPrimaryBorder};
     transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     
     &:hover {
       transform: scale(1.05);
-      box-shadow: 0 0 60px ${token.colorPrimary};
+      box-shadow: 0 0 60px ${cssVar.colorPrimary};
     }
   `,
   levelNumber: css`
     font-size: 96px;
     font-weight: 900;
     line-height: 1;
-    background: linear-gradient(135deg, ${token.colorPrimary}, ${token.colorInfo});
+    background: linear-gradient(135deg, ${cssVar.colorPrimary}, ${cssVar.colorInfo});
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   `,
   progressText: css`
     margin-top: 16px;
     font-size: 20px;
-    color: ${token.colorTextSecondary};
+    color: ${cssVar.colorTextSecondary};
   `,
   statsGrid: css`
     display: grid;
@@ -60,14 +60,14 @@ const useStyles = createStyles(({ css, token }) => ({
     text-align: center;
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
-    border: 1px solid ${token.colorBorderSecondary};
+    border: 1px solid ${cssVar.colorBorderSecondary};
     border-radius: 16px;
     padding: 24px;
   `
 }));
 
 export const LevelsPage = () => {
-  const { styles } = useStyles();
+  const token = useTheme();
   const xp = useGamificationStore((s) => s.xp);
   const level = useGamificationStore((s) => s.level);
   
@@ -78,7 +78,7 @@ export const LevelsPage = () => {
   return (
     <div className={styles.container}>
       <Flexbox align="center" gap={8}>
-        <Title level={2} style={{ margin: 0 }}>Niveau de Gamification</Title>
+        <Title level={2} style={{ margin: 0 }}>Niveau</Title>
         <Text type="secondary">Explorez, progressez et débloquez des récompenses exclusives.</Text>
       </Flexbox>
       
@@ -88,7 +88,7 @@ export const LevelsPage = () => {
           percent={progressPercent} 
           size={300} 
           strokeWidth={6}
-          strokeColor={{ '0%': 'var(--color-primary)', '100%': 'var(--color-info)' }}
+          strokeColor={{ '0%': token.colorPrimary, '100%': token.colorInfo }}
           format={() => (
             <Flexbox align="center" gap={0} style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
               <Text type="secondary" style={{ fontSize: 16, textTransform: 'uppercase', letterSpacing: 2 }}>Niveau</Text>
@@ -99,12 +99,12 @@ export const LevelsPage = () => {
       </div>
 
       <div className={styles.progressText}>
-        {currentLevelXp} / 100 XP
+        {currentLevelXp} / 100 MP
       </div>
 
       <div className={styles.statsGrid}>
         <div className={styles.statCard}>
-          <Text type="secondary" style={{ display: 'block', marginBottom: 8 }}>XP Total</Text>
+          <Text type="secondary" style={{ display: 'block', marginBottom: 8 }}>MP Total</Text>
           <Title level={3} style={{ margin: 0 }}>{xp}</Title>
         </div>
         <div className={styles.statCard}>

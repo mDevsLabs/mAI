@@ -8,7 +8,7 @@
 
 - **Pets**: Améliorations importantes de l'expérience des pets
 - **Desktop/CLI**: Améliorations diverses
-- **Rewards (Bêta)**: Introduction de la section Rewards qui ajoute quatre pages pour accomplir des quêtes, augmenter vos niveaux et gagner des badges ! D'autres nouveautés de cette section arrivent bientôt pour la version finale.
+- **Rewards (Bêta)**: Introduction de la section Rewards qui ajoute quatre pages pour accomplir des quêtes, augmenter vos niveaux et gagner des badges ! D'autres nouveautés de cette section arrivent bientôt pour la version finale. Création aussi des 100 badges et 500 quêtes quotidiennes ainsi que 500 quêtes hebdomadaires.
 - **Versions**: Mise à jour des versions et CHANGELOG.md
 - **Synchronisation**: Synchronisation des changements avec LobeHub.
 

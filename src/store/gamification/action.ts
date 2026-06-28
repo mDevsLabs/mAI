@@ -1,6 +1,6 @@
 import { StateCreator } from 'zustand/vanilla';
 
-import { GamificationStoreState } from './initialState';
+import { GamificationStoreState, INITIAL_GAMIFICATION_STATE } from './initialState';
 
 export interface GamificationAction {
   addXp: (xp: number) => void;
@@ -12,6 +12,9 @@ export interface GamificationAction {
   resetQuestsBonus: () => void;
   setEnableAnimations: (enable: boolean) => void;
   setSoundVolume: (volume: number) => void;
+  setEnableNotifications: (enable: boolean) => void;
+  setTimezone: (timezone: string) => void;
+  resetProgression: () => void;
   unlockBadge: (badgeId: string) => void;
   unpinBadge: (badgeId: string) => void;
   unpinAllBadges: () => void;
@@ -139,6 +142,46 @@ export const gamificationActionSlice: StateCreator<
       (state) => ({ settings: { ...state.settings, soundVolume: volume } }),
       false,
       'gamification/setSoundVolume'
+    );
+  },
+
+  setEnableNotifications: (enable) => {
+    set(
+      (state) => ({ settings: { ...state.settings, enableNotifications: enable } }),
+      false,
+      'gamification/setEnableNotifications'
+    );
+  },
+
+  setTimezone: (timezone) => {
+    set(
+      (state) => ({
+        settings: {
+          ...state.settings,
+          timezone,
+          timezoneLastChanged: Date.now(),
+        },
+      }),
+      false,
+      'gamification/setTimezone'
+    );
+  },
+
+  resetProgression: () => {
+    set(
+      (state) => ({
+        ...INITIAL_GAMIFICATION_STATE,
+        // Preserve settings but reset progression stats
+        xp: 0,
+        level: 1,
+        activeDailyQuests: [],
+        activeWeeklyQuests: [],
+        unlockedBadges: [],
+        pinnedBadges: [],
+        actionCounts: {},
+      }),
+      false,
+      'gamification/resetProgression'
     );
   },
 

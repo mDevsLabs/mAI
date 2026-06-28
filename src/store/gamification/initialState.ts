@@ -12,6 +12,9 @@ export const INITIAL_GAMIFICATION_STATE: GamificationState = {
   settings: {
     soundVolume: 0.7,
     enableAnimations: true,
+    enableNotifications: true,
+    timezone: 'Europe/Paris',
+    timezoneLastChanged: 0,
   },
   activeDailyQuests: [],
   activeWeeklyQuests: [],

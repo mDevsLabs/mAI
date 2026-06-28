@@ -114,7 +114,7 @@ export const QuestsList = () => {
           </Flexbox>
           <Flexbox align="center" gap={12} horizontal>
             <div className={styles.xpBadge}>
-              <Star size={12} fill="currentColor" /> {quest.xpReward} XP
+              <Star size={12} fill="currentColor" /> {quest.xpReward} MP
             </div>
             <div style={{ position: 'relative' }}>
               <Button

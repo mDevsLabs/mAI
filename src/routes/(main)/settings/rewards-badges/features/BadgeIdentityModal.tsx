@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, Flexbox } from '@lobehub/ui';
-import { Modal, Typography, Progress } from 'antd';
+import { Modal, Typography, Progress, Tag } from 'antd';
 import { createStyles } from 'antd-style';
 import { Pin, PinOff } from 'lucide-react';
 import React from 'react';
@@ -11,6 +11,18 @@ import { PremiumCardWrapper } from '@/components/Gamification/PremiumEffects';
 import { useGamificationStore } from '@/store/gamification';
 
 const { Title, Text, Paragraph } = Typography;
+
+const getRarityTag = (rarity: string) => {
+  const map: Record<string, { color: string; label: string }> = {
+    Rare: { color: 'blue', label: 'Rare' },
+    Epic: { color: 'purple', label: 'Épique' },
+    Legendary: { color: 'gold', label: 'Légendaire' },
+    Mythic: { color: 'magenta', label: 'Mythique' },
+    Ultra: { color: 'volcano', label: 'Ultra' },
+  };
+  const config = map[rarity] || { color: 'default', label: rarity };
+  return <Tag color={config.color} style={{ fontWeight: 'bold', fontSize: 13, padding: '2px 8px' }}>{config.label}</Tag>;
+};
 
 const useStyles = createStyles(({ css, token }) => ({
   modalBody: css`
@@ -88,8 +100,8 @@ export const BadgeIdentityModal = ({ open, onCancel, badge, isUnlocked, isPinned
 
         <div className={styles.infoSection}>
           <Title level={3} style={{ margin: '0 0 8px 0' }}>{badge.name}</Title>
-          <div className={styles.rarityTag} style={{ marginBottom: 16, display: 'inline-block' }}>
-            {badge.rarity}
+          <div style={{ marginBottom: 16 }}>
+            {getRarityTag(badge.rarity)}
           </div>
           
           <Paragraph type="secondary" style={{ fontStyle: 'italic', marginBottom: 16 }}>

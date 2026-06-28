@@ -47,6 +47,9 @@ export interface UserQuestProgress {
 export interface GamificationSettings {
   soundVolume: number;
   enableAnimations: boolean;
+  enableNotifications: boolean;
+  timezone: string;
+  timezoneLastChanged: number;
 }
 
 export interface GamificationState {

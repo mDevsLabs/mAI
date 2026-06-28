@@ -137,7 +137,7 @@ export const useCategory = () => {
       {
         icon: Settings2,
         key: SettingsTabs.RewardsSettings,
-        label: t('tab.rewardsSettings', { defaultValue: 'Configuration Récompenses' }),
+        label: t('tab.rewardsSettings', { defaultValue: 'Paramètres' }),
       },
       {
         icon: ListTodo,
@@ -150,7 +150,7 @@ export const useCategory = () => {
         label: t('tab.rewardsBadges', { defaultValue: 'Badges & Titres' }),
       },
       {
-        icon: <TrendingUp />,
+        icon: Trophy,
         key: SettingsTabs.RewardsLevels,
         label: t('tab.rewardsLevels', { defaultValue: 'Niveaux' }),
       },
