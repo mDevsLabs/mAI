@@ -52,6 +52,14 @@ export interface GamificationSettings {
   timezoneLastChanged: number;
 }
 
+export interface GamificationLog {
+  id: string;
+  timestamp: number;
+  title: string;
+  type: 'quest' | 'badge';
+  mpReward: number;
+}
+
 export interface GamificationState {
   xp: number;
   level: number;
@@ -65,4 +73,5 @@ export interface GamificationState {
   actionCounts: Record<string, number>; // action -> count
   bonusClaimsTodayCount?: number;
   lastBonusClaimedTimestamp?: number;
+  logs?: GamificationLog[];
 }

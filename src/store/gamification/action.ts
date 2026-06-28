@@ -1,6 +1,9 @@
 import { StateCreator } from 'zustand/vanilla';
 
 import { GamificationStoreState, INITIAL_GAMIFICATION_STATE } from './initialState';
+import dailyQuestsData from '@/const/gamification/dailyQuests.json';
+import weeklyQuestsData from '@/const/gamification/weeklyQuests.json';
+import badgesCatalog from '@/const/gamification/badgesCatalog.json';
 
 export interface GamificationAction {
   addXp: (xp: number) => void;
@@ -43,11 +46,28 @@ export const gamificationActionSlice: StateCreator<
 
   claimDailyQuest: (questId) => {
     set(
-      (state) => ({
-        activeDailyQuests: state.activeDailyQuests.map((q) =>
+      (state) => {
+        const questDef = dailyQuestsData.find((q: any) => q.id === questId);
+        const title = questDef?.title || questId;
+        const reward = questDef?.xpReward || 0;
+
+        const activeDailyQuests = state.activeDailyQuests.map((q) =>
           q.questId === questId && q.completed ? { ...q, claimed: true } : q
-        ),
-      }),
+        );
+
+        const newLog = {
+          id: `log_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          timestamp: Date.now(),
+          title: title,
+          type: 'quest' as const,
+          mpReward: reward,
+        };
+
+        return {
+          activeDailyQuests,
+          logs: [newLog, ...(state.logs || [])],
+        };
+      },
       false,
       'gamification/claimDailyQuest'
     );
@@ -55,11 +75,28 @@ export const gamificationActionSlice: StateCreator<
 
   claimWeeklyQuest: (questId) => {
     set(
-      (state) => ({
-        activeWeeklyQuests: state.activeWeeklyQuests.map((q) =>
+      (state) => {
+        const questDef = weeklyQuestsData.find((q: any) => q.id === questId);
+        const title = questDef?.title || questId;
+        const reward = questDef?.xpReward || 0;
+
+        const activeWeeklyQuests = state.activeWeeklyQuests.map((q) =>
           q.questId === questId && q.completed ? { ...q, claimed: true } : q
-        ),
-      }),
+        );
+
+        const newLog = {
+          id: `log_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          timestamp: Date.now(),
+          title: title,
+          type: 'quest' as const,
+          mpReward: reward,
+        };
+
+        return {
+          activeWeeklyQuests,
+          logs: [newLog, ...(state.logs || [])],
+        };
+      },
       false,
       'gamification/claimWeeklyQuest'
     );
@@ -172,7 +209,6 @@ export const gamificationActionSlice: StateCreator<
     set(
       (state) => ({
         ...INITIAL_GAMIFICATION_STATE,
-        // Preserve settings but reset progression stats
         xp: 0,
         level: 1,
         activeDailyQuests: [],
@@ -180,6 +216,7 @@ export const gamificationActionSlice: StateCreator<
         unlockedBadges: [],
         pinnedBadges: [],
         actionCounts: {},
+        logs: [],
       }),
       false,
       'gamification/resetProgression'
@@ -190,7 +227,22 @@ export const gamificationActionSlice: StateCreator<
     set(
       (state) => {
         if (state.unlockedBadges.includes(badgeId)) return state;
-        return { unlockedBadges: [...state.unlockedBadges, badgeId] };
+        const badgeDef = badgesCatalog.find((b: any) => b.id === badgeId);
+        const emojiStr = badgeDef?.emoji ? `${badgeDef.emoji} ` : '';
+        const nameStr = badgeDef?.name || badgeId;
+
+        const newLog = {
+          id: `log_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          timestamp: Date.now(),
+          title: `Badge débloqué : ${emojiStr}${nameStr}`,
+          type: 'badge' as const,
+          mpReward: 0,
+        };
+
+        return {
+          unlockedBadges: [...state.unlockedBadges, badgeId],
+          logs: [newLog, ...(state.logs || [])],
+        };
       },
       false,
       'gamification/unlockBadge'
@@ -248,10 +300,9 @@ export const gamificationActionSlice: StateCreator<
       (state) => {
         const now = Date.now();
         const lastTimestamp = state.lastBonusClaimedTimestamp || 0;
-        const isNewDay = new Date(lastTimestamp).toDateString() !== new Date(now).toDateString();
-        const currentCount = isNewDay ? 0 : (state.bonusClaimsTodayCount || 0);
+        const msInWeek = 7 * 24 * 60 * 60 * 1000;
 
-        if (currentCount >= 3) {
+        if (lastTimestamp && (now - lastTimestamp < msInWeek)) {
           success = false;
           return {};
         }
@@ -267,7 +318,6 @@ export const gamificationActionSlice: StateCreator<
         success = true;
         return {
           activeDailyQuests: [...state.activeDailyQuests, ...newQuests],
-          bonusClaimsTodayCount: currentCount + 1,
           lastBonusClaimedTimestamp: now,
         };
       },

@@ -25,6 +25,7 @@ export const INITIAL_GAMIFICATION_STATE: GamificationState = {
   actionCounts: {},
   bonusClaimsTodayCount: 0,
   lastBonusClaimedTimestamp: 0,
+  logs: [],
 };
 
 export const initialState: GamificationStoreState = {

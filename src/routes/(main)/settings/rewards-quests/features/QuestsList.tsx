@@ -116,7 +116,7 @@ export const QuestsList = () => {
       message.success('3 nouvelles quêtes quotidiennes ont été ajoutées !');
       playGamificationSound('questClaim', soundVolume);
     } else {
-      message.error("Vous avez déjà pris vos 3 quêtes quotidiennes supplémentaires pour aujourd'hui !");
+      message.error('Vous avez déjà obtenu vos quêtes supplémentaires pour cette semaine !');
     }
   };
 
@@ -166,7 +166,7 @@ export const QuestsList = () => {
         {activeDaily.map(q => renderQuestCard(q, () => handleClaimDaily(q.questId, q.xpReward)))}
         
         <Button className={styles.bonusButton} onClick={handleGetBonusQuests}>
-          {t('gamification.quests.bonus', 'Obtenir 3 quêtes quotidiennes supplémentaires (max 3/jour)')}
+          {t('gamification.quests.bonus', 'Obtenir 3 quêtes quotidiennes supplémentaires (1/semaine)')}
         </Button>
       </div>
 

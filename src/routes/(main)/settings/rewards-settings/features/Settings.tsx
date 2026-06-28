@@ -132,6 +132,28 @@ const Settings = memo(() => {
 
   return (
     <Flexbox gap={32} width={'100%'} style={{ paddingBottom: 48 }}>
+      <style>{`
+        /* Contour autour des boutons d'agrandissement de l'accordéon */
+        .ant-collapse-header .ant-collapse-expand-icon,
+        .lobe-accordion-item-indicator,
+        [class*="AccordionItem"] [class*="indicator"],
+        [class*="accordion"] [class*="indicator"] {
+          border: 1px solid var(--color-border-secondary) !important;
+          border-radius: 6px !important;
+          padding: 4px !important;
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          background: var(--color-bg-elevated) !important;
+          transition: all 0.2s ease-in-out !important;
+        }
+        .ant-collapse-header .ant-collapse-expand-icon:hover,
+        .lobe-accordion-item-indicator:hover,
+        [class*="indicator"]:hover {
+          border-color: var(--color-primary) !important;
+          background: var(--color-fill-secondary) !important;
+        }
+      `}</style>
       <Form
         collapsible={false}
         items={[gamificationFormGroup, timezoneFormGroup, dangerFormGroup]}
@@ -149,7 +171,7 @@ const Settings = memo(() => {
           background: 'var(--color-bg-container)',
           boxShadow: '0 4px 12px rgba(0, 0, 0, 0.03)'
         }}>
-          <Accordion>
+          <Accordion defaultExpandedKeys={[]}>
             <AccordionItem itemKey="faq-1" title="Comment obtenir des Points MP (mAI Points) ?">
               <div style={{ padding: '8px 16px 16px' }}>
                 <Markdown>
