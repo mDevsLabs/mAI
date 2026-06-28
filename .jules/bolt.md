@@ -1,0 +1,3 @@
+## 2024-05-18 - Optimize string compression base64 encode/decode
+**Learning:** Found that large TypedArrays cannot be reliably encoded to base64 using `String.fromCharCode(...data)` due to a `Maximum call stack size exceeded` error in V8, and iterating with `map` on large mapped strings is quite slow.
+**Action:** When converting large `ArrayBuffer` or `Uint8Array` data to or from Base64, avoid spread syntax and use chunked processing with `String.fromCharCode.apply` (chunk size ~8192 bytes) for encoding, and pre-allocated `for` loops for decoding to optimize latency and prevent stack overflows.
