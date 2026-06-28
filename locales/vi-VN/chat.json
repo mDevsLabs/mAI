@@ -763,7 +763,6 @@
   "taskList.orderBy.updatedAt": "Ngày cập nhật",
   "taskList.title": "Công Việc",
   "taskList.unassigned": "Chưa giao",
-  "taskList.unassignedHint": "May sẽ chạy tác vụ này khi không có người được giao",
   "taskList.view.board": "Bảng",
   "taskList.view.list": "Danh sách",
   "taskList.viewAll": "Xem tất cả",

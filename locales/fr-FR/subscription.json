@@ -394,7 +394,6 @@
   "referral.errors.selfReferral": "Vous ne pouvez pas utiliser votre propre code d'invitation",
   "referral.errors.updateFailed": "Échec de la mise à jour, veuillez réessayer plus tard",
   "referral.inviteCode.description": "Partagez votre code de parrainage exclusif pour inviter vos amis",
-  "referral.inviteCode.title": "Mon code de parrainage",
   "referral.inviteLink.description": "Copiez le lien et partagez-le avec vos amis. Vous gagnez tous les deux des crédits après que votre ami ait effectué un paiement.",
   "referral.inviteLink.title": "Lien de parrainage",
   "referral.rules.antiAbuse": "Si une activité frauduleuse est détectée (par exemple, l'enregistrement massif de comptes avec des adresses e-mail jetables), les comptes associés seront définitivement bannis.",

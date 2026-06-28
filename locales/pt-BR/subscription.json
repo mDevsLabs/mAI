@@ -394,7 +394,6 @@
   "referral.errors.selfReferral": "Você não pode usar seu próprio código de convite",
   "referral.errors.updateFailed": "Falha ao atualizar, tente novamente mais tarde",
   "referral.inviteCode.description": "Compartilhe seu código exclusivo para convidar amigos a se registrarem",
-  "referral.inviteCode.title": "Meu Código de Indicação",
   "referral.inviteLink.description": "Copie o link e compartilhe com amigos. Ambos ganham créditos após seu amigo realizar um pagamento",
   "referral.inviteLink.title": "Link de Indicação",
   "referral.rules.antiAbuse": "Se for detectada atividade fraudulenta (por exemplo, registro em massa de contas de e-mail descartáveis), as contas associadas serão permanentemente banidas.",

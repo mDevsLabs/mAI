@@ -394,7 +394,6 @@
   "referral.errors.selfReferral": "Nie możesz użyć własnego kodu zaproszenia",
   "referral.errors.updateFailed": "Aktualizacja nie powiodła się, spróbuj ponownie później",
   "referral.inviteCode.description": "Udostępnij swój unikalny kod polecający, aby zaprosić znajomych do rejestracji",
-  "referral.inviteCode.title": "Mój Kod Polecający",
   "referral.inviteLink.description": "Skopiuj link i udostępnij znajomym. Oboje otrzymacie kredyty po dokonaniu płatności przez Twojego znajomego",
   "referral.inviteLink.title": "Link Polecający",
   "referral.rules.antiAbuse": "W przypadku wykrycia oszukańczej działalności (np. masowej rejestracji jednorazowych kont e-mail), powiązane konta zostaną trwale zablokowane.",

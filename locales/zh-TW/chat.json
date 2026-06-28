@@ -763,7 +763,6 @@
   "taskList.orderBy.updatedAt": "更新時間",
   "taskList.title": "任務",
   "taskList.unassigned": "未指派",
-  "taskList.unassignedHint": "未指派時，May 將自動執行此任務",
   "taskList.view.board": "看板",
   "taskList.view.list": "清單",
   "taskList.viewAll": "檢視全部",

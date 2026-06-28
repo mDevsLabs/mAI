@@ -788,7 +788,6 @@
   "taskList.orderBy.updatedAt": "Güncellenme zamanı",
   "taskList.title": "Görevler",
   "taskList.unassigned": "Atanmamış",
-  "taskList.unassignedHint": "Atanan olmadığında May bu görevi çalıştırır",
   "taskList.view.board": "Pano",
   "taskList.view.list": "Liste",
   "taskList.viewAll": "Tümünü görüntüle",

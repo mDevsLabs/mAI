@@ -16,6 +16,7 @@ export * from './device';
 export * from './documentHistory';
 export * from './documentShare';
 export * from './file';
+export * from './gamification';
 export * from './generation';
 export * from './llmGenerationTracing';
 export * from './message';

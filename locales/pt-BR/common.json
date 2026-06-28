@@ -450,7 +450,6 @@
   "taskTemplate.action.connect.short": "Conectar",
   "taskTemplate.action.connecting": "Aguardando autorização…",
   "taskTemplate.action.create.error": "Falha ao criar a tarefa. Por favor, tente novamente.",
-  "taskTemplate.action.create.success": "Tarefa agendada adicionada. Encontre-a no Lobe AI.",
   "taskTemplate.action.createButton": "Adicionar tarefa",
   "taskTemplate.action.creating": "Criando...",
   "taskTemplate.action.dismiss.error": "Falha ao descartar. Por favor, tente novamente.",

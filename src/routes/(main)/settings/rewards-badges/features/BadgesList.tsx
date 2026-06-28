@@ -4,6 +4,7 @@ import { Input, Segmented } from 'antd';
 import { createStyles } from 'antd-style';
 import { Search } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import badgesCatalog from '@/const/gamification/badgesCatalog.json';
 import { useGamificationStore } from '@/store/gamification';
@@ -33,6 +34,7 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 export const BadgesList = () => {
+  const { t } = useTranslation('setting');
   const { styles } = useStyles();
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<string>('All');
@@ -61,7 +63,7 @@ export const BadgesList = () => {
       <div className={styles.toolbar}>
         <Input
           prefix={<Search size={16} />}
-          placeholder="Rechercher un badge..."
+          placeholder={t('gamification.badges.searchPlaceholder', 'Rechercher un badge...')}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           style={{ width: 250 }}

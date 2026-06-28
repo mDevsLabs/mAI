@@ -763,7 +763,6 @@
   "taskList.orderBy.updatedAt": "Дата обновления",
   "taskList.title": "Задачи",
   "taskList.unassigned": "Не назначено",
-  "taskList.unassignedHint": "May выполнит эту задачу, если исполнитель не назначен",
   "taskList.view.board": "Доска",
   "taskList.view.list": "Список",
   "taskList.viewAll": "Посмотреть все",

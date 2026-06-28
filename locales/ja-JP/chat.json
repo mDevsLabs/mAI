@@ -763,7 +763,6 @@
   "taskList.orderBy.updatedAt": "更新日時",
   "taskList.title": "タスク",
   "taskList.unassigned": "未割り当て",
-  "taskList.unassignedHint": "担当者が設定されていない場合、May がこのタスクを実行します",
   "taskList.view.board": "ボード",
   "taskList.view.list": "リスト",
   "taskList.viewAll": "すべて表示",

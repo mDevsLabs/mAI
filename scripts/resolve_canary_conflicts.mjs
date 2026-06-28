@@ -334,6 +334,15 @@ async function main() {
       continue;
     }
 
+    if (file.endsWith('useCategory.tsx')) {
+      console.log('🛡️  Règle automatique : Conservation de useCategory.tsx');
+      runCmd(`git checkout --ours "${file}"`);
+      runCmd(`git add "${file}"`);
+      stats.auto++;
+      i++;
+      continue;
+    }
+
     if (file.endsWith('package.json')) {
       console.log('📦 Règle automatique : Fusion intelligente de package.json');
       try {

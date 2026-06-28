@@ -450,7 +450,6 @@
   "taskTemplate.action.connect.short": "Connetti",
   "taskTemplate.action.connecting": "In attesa di autorizzazione…",
   "taskTemplate.action.create.error": "Impossibile creare l'attività. Riprova.",
-  "taskTemplate.action.create.success": "Attività pianificata aggiunta. Trovala in Lobe AI.",
   "taskTemplate.action.createButton": "Aggiungi attività",
   "taskTemplate.action.creating": "Creazione in corso...",
   "taskTemplate.action.dismiss.error": "Impossibile ignorare. Riprova.",

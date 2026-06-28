@@ -450,7 +450,6 @@
   "taskTemplate.action.connect.short": "اتصل",
   "taskTemplate.action.connecting": "في انتظار التفويض...",
   "taskTemplate.action.create.error": "فشل إنشاء المهمة. يرجى المحاولة مرة أخرى.",
-  "taskTemplate.action.create.success": "تمت إضافة المهمة المجدولة. يمكنك العثور عليها في Lobe AI.",
   "taskTemplate.action.createButton": "إضافة مهمة",
   "taskTemplate.action.creating": "جاري الإنشاء...",
   "taskTemplate.action.dismiss.error": "فشل الإلغاء. يرجى المحاولة مرة أخرى.",

@@ -1,52 +1,1102 @@
 [
   {
-    "id": "badge_newcomer",
-    "name": "Nouveau Venu",
-    "icon": "🐣",
-    "description": "Votre premier pas dans l'univers de l'IA.",
-    "lore": "Un œuf éclos, symbolisant le début d'une longue aventure d'apprentissage et de découverte dans le domaine de l'intelligence artificielle.",
-    "conditionDescription": "Compléter votre première quête.",
-    "xpReward": 50,
-    "rarity": "Common"
+    "id": "badge_1",
+    "name": "Badge Legendary #1",
+    "description": "Atteindre 100 pour l'action plugin_used.",
+    "emoji": "🛡️",
+    "rarity": "Legendary",
+    "requirements": {
+      "action": "plugin_used",
+      "target": 100
+    }
   },
   {
-    "id": "badge_explorer",
-    "name": "Explorateur Curieux",
-    "icon": "🧭",
-    "description": "A découvert les fonctionnalités de base.",
-    "lore": "La boussole indique toujours le nord, mais votre curiosité vous emmène explorer toutes les arcanes des modèles linguistiques.",
-    "conditionDescription": "Utiliser 3 modèles d'IA différents.",
-    "xpReward": 100,
-    "rarity": "Uncommon"
+    "id": "badge_2",
+    "name": "Badge Epic #2",
+    "description": "Atteindre 100 pour l'action agent_created.",
+    "emoji": "🔥",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "agent_created",
+      "target": 100
+    }
   },
   {
-    "id": "badge_artisan",
-    "name": "Artisan Prompt",
-    "icon": "🔨",
-    "description": "A créé un agent personnalisé performant.",
-    "lore": "Le marteau et l'enclume du créateur de requêtes. Chaque mot est forgé avec précision pour tirer le meilleur des modèles.",
-    "conditionDescription": "Créer et personnaliser 5 agents IA.",
-    "xpReward": 250,
-    "rarity": "Rare"
+    "id": "badge_3",
+    "name": "Badge Rare #3",
+    "description": "Atteindre 30 pour l'action session_active.",
+    "emoji": "🏆",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "session_active",
+      "target": 30
+    }
   },
   {
-    "id": "badge_master",
-    "name": "Maître de l'IA",
-    "icon": "👑",
-    "description": "A atteint un niveau d'expertise exceptionnel.",
-    "lore": "La couronne réservée à ceux qui dominent la technologie et l'utilisent à son plein potentiel.",
-    "conditionDescription": "Atteindre le niveau 50 de profil.",
-    "xpReward": 1000,
-    "rarity": "Mythic"
+    "id": "badge_4",
+    "name": "Badge Rare #4",
+    "description": "Atteindre 40 pour l'action tokens_used.",
+    "emoji": "💎",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "tokens_used",
+      "target": 40
+    }
   },
   {
-    "id": "badge_legend",
-    "name": "Légende Vivante",
-    "icon": "🌌",
-    "description": "Une présence quasi-divine dans le système.",
-    "lore": "Au-delà des étoiles, votre code et vos prompts résonnent pour l'éternité.",
-    "conditionDescription": "Compléter 100 quêtes hebdomadaires.",
-    "xpReward": 5000,
-    "rarity": "Ultra"
+    "id": "badge_5",
+    "name": "Badge Epic #5",
+    "description": "Atteindre 250 pour l'action message_sent.",
+    "emoji": "🚀",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "message_sent",
+      "target": 250
+    }
+  },
+  {
+    "id": "badge_6",
+    "name": "Badge Legendary #6",
+    "description": "Atteindre 600 pour l'action plugin_used.",
+    "emoji": "🧠",
+    "rarity": "Legendary",
+    "requirements": {
+      "action": "plugin_used",
+      "target": 600
+    }
+  },
+  {
+    "id": "badge_7",
+    "name": "Badge Mythic #7",
+    "description": "Atteindre 3500 pour l'action agent_created.",
+    "emoji": "✨",
+    "rarity": "Mythic",
+    "requirements": {
+      "action": "agent_created",
+      "target": 3500
+    }
+  },
+  {
+    "id": "badge_8",
+    "name": "Badge Ultra #8",
+    "description": "Atteindre 8000 pour l'action session_active.",
+    "emoji": "⚡",
+    "rarity": "Ultra",
+    "requirements": {
+      "action": "session_active",
+      "target": 8000
+    }
+  },
+  {
+    "id": "badge_9",
+    "name": "Badge Rare #9",
+    "description": "Atteindre 90 pour l'action tokens_used.",
+    "emoji": "🎯",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "tokens_used",
+      "target": 90
+    }
+  },
+  {
+    "id": "badge_10",
+    "name": "Badge Epic #10",
+    "description": "Atteindre 500 pour l'action message_sent.",
+    "emoji": "🏅",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "message_sent",
+      "target": 500
+    }
+  },
+  {
+    "id": "badge_11",
+    "name": "Badge Epic #11",
+    "description": "Atteindre 550 pour l'action plugin_used.",
+    "emoji": "🎖️",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "plugin_used",
+      "target": 550
+    }
+  },
+  {
+    "id": "badge_12",
+    "name": "Badge Rare #12",
+    "description": "Atteindre 120 pour l'action agent_created.",
+    "emoji": "🎨",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "agent_created",
+      "target": 120
+    }
+  },
+  {
+    "id": "badge_13",
+    "name": "Badge Epic #13",
+    "description": "Atteindre 650 pour l'action session_active.",
+    "emoji": "🧩",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "session_active",
+      "target": 650
+    }
+  },
+  {
+    "id": "badge_14",
+    "name": "Badge Epic #14",
+    "description": "Atteindre 700 pour l'action tokens_used.",
+    "emoji": "💡",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "tokens_used",
+      "target": 700
+    }
+  },
+  {
+    "id": "badge_15",
+    "name": "Badge Epic #15",
+    "description": "Atteindre 750 pour l'action message_sent.",
+    "emoji": "👑",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "message_sent",
+      "target": 750
+    }
+  },
+  {
+    "id": "badge_16",
+    "name": "Badge Rare #16",
+    "description": "Atteindre 160 pour l'action plugin_used.",
+    "emoji": "🌟",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "plugin_used",
+      "target": 160
+    }
+  },
+  {
+    "id": "badge_17",
+    "name": "Badge Legendary #17",
+    "description": "Atteindre 1700 pour l'action agent_created.",
+    "emoji": "🛡️",
+    "rarity": "Legendary",
+    "requirements": {
+      "action": "agent_created",
+      "target": 1700
+    }
+  },
+  {
+    "id": "badge_18",
+    "name": "Badge Epic #18",
+    "description": "Atteindre 900 pour l'action session_active.",
+    "emoji": "🔥",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "session_active",
+      "target": 900
+    }
+  },
+  {
+    "id": "badge_19",
+    "name": "Badge Rare #19",
+    "description": "Atteindre 190 pour l'action tokens_used.",
+    "emoji": "🏆",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "tokens_used",
+      "target": 190
+    }
+  },
+  {
+    "id": "badge_20",
+    "name": "Badge Rare #20",
+    "description": "Atteindre 200 pour l'action message_sent.",
+    "emoji": "💎",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "message_sent",
+      "target": 200
+    }
+  },
+  {
+    "id": "badge_21",
+    "name": "Badge Epic #21",
+    "description": "Atteindre 1050 pour l'action plugin_used.",
+    "emoji": "🚀",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "plugin_used",
+      "target": 1050
+    }
+  },
+  {
+    "id": "badge_22",
+    "name": "Badge Epic #22",
+    "description": "Atteindre 1100 pour l'action agent_created.",
+    "emoji": "🧠",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "agent_created",
+      "target": 1100
+    }
+  },
+  {
+    "id": "badge_23",
+    "name": "Badge Rare #23",
+    "description": "Atteindre 230 pour l'action session_active.",
+    "emoji": "✨",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "session_active",
+      "target": 230
+    }
+  },
+  {
+    "id": "badge_24",
+    "name": "Badge Rare #24",
+    "description": "Atteindre 240 pour l'action tokens_used.",
+    "emoji": "⚡",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "tokens_used",
+      "target": 240
+    }
+  },
+  {
+    "id": "badge_25",
+    "name": "Badge Epic #25",
+    "description": "Atteindre 1250 pour l'action message_sent.",
+    "emoji": "🎯",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "message_sent",
+      "target": 1250
+    }
+  },
+  {
+    "id": "badge_26",
+    "name": "Badge Rare #26",
+    "description": "Atteindre 260 pour l'action plugin_used.",
+    "emoji": "🏅",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "plugin_used",
+      "target": 260
+    }
+  },
+  {
+    "id": "badge_27",
+    "name": "Badge Rare #27",
+    "description": "Atteindre 270 pour l'action agent_created.",
+    "emoji": "🎖️",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "agent_created",
+      "target": 270
+    }
+  },
+  {
+    "id": "badge_28",
+    "name": "Badge Epic #28",
+    "description": "Atteindre 1400 pour l'action session_active.",
+    "emoji": "🎨",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "session_active",
+      "target": 1400
+    }
+  },
+  {
+    "id": "badge_29",
+    "name": "Badge Epic #29",
+    "description": "Atteindre 1450 pour l'action tokens_used.",
+    "emoji": "🧩",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "tokens_used",
+      "target": 1450
+    }
+  },
+  {
+    "id": "badge_30",
+    "name": "Badge Mythic #30",
+    "description": "Atteindre 15000 pour l'action message_sent.",
+    "emoji": "💡",
+    "rarity": "Mythic",
+    "requirements": {
+      "action": "message_sent",
+      "target": 15000
+    }
+  },
+  {
+    "id": "badge_31",
+    "name": "Badge Mythic #31",
+    "description": "Atteindre 15500 pour l'action plugin_used.",
+    "emoji": "👑",
+    "rarity": "Mythic",
+    "requirements": {
+      "action": "plugin_used",
+      "target": 15500
+    }
+  },
+  {
+    "id": "badge_32",
+    "name": "Badge Epic #32",
+    "description": "Atteindre 1600 pour l'action agent_created.",
+    "emoji": "🌟",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "agent_created",
+      "target": 1600
+    }
+  },
+  {
+    "id": "badge_33",
+    "name": "Badge Rare #33",
+    "description": "Atteindre 330 pour l'action session_active.",
+    "emoji": "🛡️",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "session_active",
+      "target": 330
+    }
+  },
+  {
+    "id": "badge_34",
+    "name": "Badge Rare #34",
+    "description": "Atteindre 340 pour l'action tokens_used.",
+    "emoji": "🔥",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "tokens_used",
+      "target": 340
+    }
+  },
+  {
+    "id": "badge_35",
+    "name": "Badge Rare #35",
+    "description": "Atteindre 350 pour l'action message_sent.",
+    "emoji": "🏆",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "message_sent",
+      "target": 350
+    }
+  },
+  {
+    "id": "badge_36",
+    "name": "Badge Rare #36",
+    "description": "Atteindre 360 pour l'action plugin_used.",
+    "emoji": "💎",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "plugin_used",
+      "target": 360
+    }
+  },
+  {
+    "id": "badge_37",
+    "name": "Badge Rare #37",
+    "description": "Atteindre 370 pour l'action agent_created.",
+    "emoji": "🚀",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "agent_created",
+      "target": 370
+    }
+  },
+  {
+    "id": "badge_38",
+    "name": "Badge Rare #38",
+    "description": "Atteindre 380 pour l'action session_active.",
+    "emoji": "🧠",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "session_active",
+      "target": 380
+    }
+  },
+  {
+    "id": "badge_39",
+    "name": "Badge Rare #39",
+    "description": "Atteindre 390 pour l'action tokens_used.",
+    "emoji": "✨",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "tokens_used",
+      "target": 390
+    }
+  },
+  {
+    "id": "badge_40",
+    "name": "Badge Epic #40",
+    "description": "Atteindre 2000 pour l'action message_sent.",
+    "emoji": "⚡",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "message_sent",
+      "target": 2000
+    }
+  },
+  {
+    "id": "badge_41",
+    "name": "Badge Rare #41",
+    "description": "Atteindre 410 pour l'action plugin_used.",
+    "emoji": "🎯",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "plugin_used",
+      "target": 410
+    }
+  },
+  {
+    "id": "badge_42",
+    "name": "Badge Epic #42",
+    "description": "Atteindre 2100 pour l'action agent_created.",
+    "emoji": "🏅",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "agent_created",
+      "target": 2100
+    }
+  },
+  {
+    "id": "badge_43",
+    "name": "Badge Epic #43",
+    "description": "Atteindre 2150 pour l'action session_active.",
+    "emoji": "🎖️",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "session_active",
+      "target": 2150
+    }
+  },
+  {
+    "id": "badge_44",
+    "name": "Badge Legendary #44",
+    "description": "Atteindre 4400 pour l'action tokens_used.",
+    "emoji": "🎨",
+    "rarity": "Legendary",
+    "requirements": {
+      "action": "tokens_used",
+      "target": 4400
+    }
+  },
+  {
+    "id": "badge_45",
+    "name": "Badge Rare #45",
+    "description": "Atteindre 450 pour l'action message_sent.",
+    "emoji": "🧩",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "message_sent",
+      "target": 450
+    }
+  },
+  {
+    "id": "badge_46",
+    "name": "Badge Rare #46",
+    "description": "Atteindre 460 pour l'action plugin_used.",
+    "emoji": "💡",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "plugin_used",
+      "target": 460
+    }
+  },
+  {
+    "id": "badge_47",
+    "name": "Badge Epic #47",
+    "description": "Atteindre 2350 pour l'action agent_created.",
+    "emoji": "👑",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "agent_created",
+      "target": 2350
+    }
+  },
+  {
+    "id": "badge_48",
+    "name": "Badge Rare #48",
+    "description": "Atteindre 480 pour l'action session_active.",
+    "emoji": "🌟",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "session_active",
+      "target": 480
+    }
+  },
+  {
+    "id": "badge_49",
+    "name": "Badge Mythic #49",
+    "description": "Atteindre 24500 pour l'action tokens_used.",
+    "emoji": "🛡️",
+    "rarity": "Mythic",
+    "requirements": {
+      "action": "tokens_used",
+      "target": 24500
+    }
+  },
+  {
+    "id": "badge_50",
+    "name": "Badge Mythic #50",
+    "description": "Atteindre 25000 pour l'action message_sent.",
+    "emoji": "🔥",
+    "rarity": "Mythic",
+    "requirements": {
+      "action": "message_sent",
+      "target": 25000
+    }
+  },
+  {
+    "id": "badge_51",
+    "name": "Badge Epic #51",
+    "description": "Atteindre 2550 pour l'action plugin_used.",
+    "emoji": "🏆",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "plugin_used",
+      "target": 2550
+    }
+  },
+  {
+    "id": "badge_52",
+    "name": "Badge Rare #52",
+    "description": "Atteindre 520 pour l'action agent_created.",
+    "emoji": "💎",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "agent_created",
+      "target": 520
+    }
+  },
+  {
+    "id": "badge_53",
+    "name": "Badge Ultra #53",
+    "description": "Atteindre 53000 pour l'action session_active.",
+    "emoji": "🚀",
+    "rarity": "Ultra",
+    "requirements": {
+      "action": "session_active",
+      "target": 53000
+    }
+  },
+  {
+    "id": "badge_54",
+    "name": "Badge Epic #54",
+    "description": "Atteindre 2700 pour l'action tokens_used.",
+    "emoji": "🧠",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "tokens_used",
+      "target": 2700
+    }
+  },
+  {
+    "id": "badge_55",
+    "name": "Badge Rare #55",
+    "description": "Atteindre 550 pour l'action message_sent.",
+    "emoji": "✨",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "message_sent",
+      "target": 550
+    }
+  },
+  {
+    "id": "badge_56",
+    "name": "Badge Rare #56",
+    "description": "Atteindre 560 pour l'action plugin_used.",
+    "emoji": "⚡",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "plugin_used",
+      "target": 560
+    }
+  },
+  {
+    "id": "badge_57",
+    "name": "Badge Mythic #57",
+    "description": "Atteindre 28500 pour l'action agent_created.",
+    "emoji": "🎯",
+    "rarity": "Mythic",
+    "requirements": {
+      "action": "agent_created",
+      "target": 28500
+    }
+  },
+  {
+    "id": "badge_58",
+    "name": "Badge Rare #58",
+    "description": "Atteindre 580 pour l'action session_active.",
+    "emoji": "🏅",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "session_active",
+      "target": 580
+    }
+  },
+  {
+    "id": "badge_59",
+    "name": "Badge Rare #59",
+    "description": "Atteindre 590 pour l'action tokens_used.",
+    "emoji": "🎖️",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "tokens_used",
+      "target": 590
+    }
+  },
+  {
+    "id": "badge_60",
+    "name": "Badge Rare #60",
+    "description": "Atteindre 600 pour l'action message_sent.",
+    "emoji": "🎨",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "message_sent",
+      "target": 600
+    }
+  },
+  {
+    "id": "badge_61",
+    "name": "Badge Rare #61",
+    "description": "Atteindre 610 pour l'action plugin_used.",
+    "emoji": "🧩",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "plugin_used",
+      "target": 610
+    }
+  },
+  {
+    "id": "badge_62",
+    "name": "Badge Rare #62",
+    "description": "Atteindre 620 pour l'action agent_created.",
+    "emoji": "💡",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "agent_created",
+      "target": 620
+    }
+  },
+  {
+    "id": "badge_63",
+    "name": "Badge Rare #63",
+    "description": "Atteindre 630 pour l'action session_active.",
+    "emoji": "👑",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "session_active",
+      "target": 630
+    }
+  },
+  {
+    "id": "badge_64",
+    "name": "Badge Legendary #64",
+    "description": "Atteindre 6400 pour l'action tokens_used.",
+    "emoji": "🌟",
+    "rarity": "Legendary",
+    "requirements": {
+      "action": "tokens_used",
+      "target": 6400
+    }
+  },
+  {
+    "id": "badge_65",
+    "name": "Badge Rare #65",
+    "description": "Atteindre 650 pour l'action message_sent.",
+    "emoji": "🛡️",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "message_sent",
+      "target": 650
+    }
+  },
+  {
+    "id": "badge_66",
+    "name": "Badge Rare #66",
+    "description": "Atteindre 660 pour l'action plugin_used.",
+    "emoji": "🔥",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "plugin_used",
+      "target": 660
+    }
+  },
+  {
+    "id": "badge_67",
+    "name": "Badge Rare #67",
+    "description": "Atteindre 670 pour l'action agent_created.",
+    "emoji": "🏆",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "agent_created",
+      "target": 670
+    }
+  },
+  {
+    "id": "badge_68",
+    "name": "Badge Mythic #68",
+    "description": "Atteindre 34000 pour l'action session_active.",
+    "emoji": "💎",
+    "rarity": "Mythic",
+    "requirements": {
+      "action": "session_active",
+      "target": 34000
+    }
+  },
+  {
+    "id": "badge_69",
+    "name": "Badge Legendary #69",
+    "description": "Atteindre 6900 pour l'action tokens_used.",
+    "emoji": "🚀",
+    "rarity": "Legendary",
+    "requirements": {
+      "action": "tokens_used",
+      "target": 6900
+    }
+  },
+  {
+    "id": "badge_70",
+    "name": "Badge Epic #70",
+    "description": "Atteindre 3500 pour l'action message_sent.",
+    "emoji": "🧠",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "message_sent",
+      "target": 3500
+    }
+  },
+  {
+    "id": "badge_71",
+    "name": "Badge Rare #71",
+    "description": "Atteindre 710 pour l'action plugin_used.",
+    "emoji": "✨",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "plugin_used",
+      "target": 710
+    }
+  },
+  {
+    "id": "badge_72",
+    "name": "Badge Ultra #72",
+    "description": "Atteindre 72000 pour l'action agent_created.",
+    "emoji": "⚡",
+    "rarity": "Ultra",
+    "requirements": {
+      "action": "agent_created",
+      "target": 72000
+    }
+  },
+  {
+    "id": "badge_73",
+    "name": "Badge Legendary #73",
+    "description": "Atteindre 7300 pour l'action session_active.",
+    "emoji": "🎯",
+    "rarity": "Legendary",
+    "requirements": {
+      "action": "session_active",
+      "target": 7300
+    }
+  },
+  {
+    "id": "badge_74",
+    "name": "Badge Rare #74",
+    "description": "Atteindre 740 pour l'action tokens_used.",
+    "emoji": "🏅",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "tokens_used",
+      "target": 740
+    }
+  },
+  {
+    "id": "badge_75",
+    "name": "Badge Legendary #75",
+    "description": "Atteindre 7500 pour l'action message_sent.",
+    "emoji": "🎖️",
+    "rarity": "Legendary",
+    "requirements": {
+      "action": "message_sent",
+      "target": 7500
+    }
+  },
+  {
+    "id": "badge_76",
+    "name": "Badge Rare #76",
+    "description": "Atteindre 760 pour l'action plugin_used.",
+    "emoji": "🎨",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "plugin_used",
+      "target": 760
+    }
+  },
+  {
+    "id": "badge_77",
+    "name": "Badge Epic #77",
+    "description": "Atteindre 3850 pour l'action agent_created.",
+    "emoji": "🧩",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "agent_created",
+      "target": 3850
+    }
+  },
+  {
+    "id": "badge_78",
+    "name": "Badge Rare #78",
+    "description": "Atteindre 780 pour l'action session_active.",
+    "emoji": "💡",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "session_active",
+      "target": 780
+    }
+  },
+  {
+    "id": "badge_79",
+    "name": "Badge Rare #79",
+    "description": "Atteindre 790 pour l'action tokens_used.",
+    "emoji": "👑",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "tokens_used",
+      "target": 790
+    }
+  },
+  {
+    "id": "badge_80",
+    "name": "Badge Epic #80",
+    "description": "Atteindre 4000 pour l'action message_sent.",
+    "emoji": "🌟",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "message_sent",
+      "target": 4000
+    }
+  },
+  {
+    "id": "badge_81",
+    "name": "Badge Rare #81",
+    "description": "Atteindre 810 pour l'action plugin_used.",
+    "emoji": "🛡️",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "plugin_used",
+      "target": 810
+    }
+  },
+  {
+    "id": "badge_82",
+    "name": "Badge Legendary #82",
+    "description": "Atteindre 8200 pour l'action agent_created.",
+    "emoji": "🔥",
+    "rarity": "Legendary",
+    "requirements": {
+      "action": "agent_created",
+      "target": 8200
+    }
+  },
+  {
+    "id": "badge_83",
+    "name": "Badge Rare #83",
+    "description": "Atteindre 830 pour l'action session_active.",
+    "emoji": "🏆",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "session_active",
+      "target": 830
+    }
+  },
+  {
+    "id": "badge_84",
+    "name": "Badge Rare #84",
+    "description": "Atteindre 840 pour l'action tokens_used.",
+    "emoji": "💎",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "tokens_used",
+      "target": 840
+    }
+  },
+  {
+    "id": "badge_85",
+    "name": "Badge Epic #85",
+    "description": "Atteindre 4250 pour l'action message_sent.",
+    "emoji": "🚀",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "message_sent",
+      "target": 4250
+    }
+  },
+  {
+    "id": "badge_86",
+    "name": "Badge Epic #86",
+    "description": "Atteindre 4300 pour l'action plugin_used.",
+    "emoji": "🧠",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "plugin_used",
+      "target": 4300
+    }
+  },
+  {
+    "id": "badge_87",
+    "name": "Badge Rare #87",
+    "description": "Atteindre 870 pour l'action agent_created.",
+    "emoji": "✨",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "agent_created",
+      "target": 870
+    }
+  },
+  {
+    "id": "badge_88",
+    "name": "Badge Rare #88",
+    "description": "Atteindre 880 pour l'action session_active.",
+    "emoji": "⚡",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "session_active",
+      "target": 880
+    }
+  },
+  {
+    "id": "badge_89",
+    "name": "Badge Rare #89",
+    "description": "Atteindre 890 pour l'action tokens_used.",
+    "emoji": "🎯",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "tokens_used",
+      "target": 890
+    }
+  },
+  {
+    "id": "badge_90",
+    "name": "Badge Legendary #90",
+    "description": "Atteindre 9000 pour l'action message_sent.",
+    "emoji": "🏅",
+    "rarity": "Legendary",
+    "requirements": {
+      "action": "message_sent",
+      "target": 9000
+    }
+  },
+  {
+    "id": "badge_91",
+    "name": "Badge Rare #91",
+    "description": "Atteindre 910 pour l'action plugin_used.",
+    "emoji": "🎖️",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "plugin_used",
+      "target": 910
+    }
+  },
+  {
+    "id": "badge_92",
+    "name": "Badge Epic #92",
+    "description": "Atteindre 4600 pour l'action agent_created.",
+    "emoji": "🎨",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "agent_created",
+      "target": 4600
+    }
+  },
+  {
+    "id": "badge_93",
+    "name": "Badge Epic #93",
+    "description": "Atteindre 4650 pour l'action session_active.",
+    "emoji": "🧩",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "session_active",
+      "target": 4650
+    }
+  },
+  {
+    "id": "badge_94",
+    "name": "Badge Rare #94",
+    "description": "Atteindre 940 pour l'action tokens_used.",
+    "emoji": "💡",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "tokens_used",
+      "target": 940
+    }
+  },
+  {
+    "id": "badge_95",
+    "name": "Badge Rare #95",
+    "description": "Atteindre 950 pour l'action message_sent.",
+    "emoji": "👑",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "message_sent",
+      "target": 950
+    }
+  },
+  {
+    "id": "badge_96",
+    "name": "Badge Epic #96",
+    "description": "Atteindre 4800 pour l'action plugin_used.",
+    "emoji": "🌟",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "plugin_used",
+      "target": 4800
+    }
+  },
+  {
+    "id": "badge_97",
+    "name": "Badge Epic #97",
+    "description": "Atteindre 4850 pour l'action agent_created.",
+    "emoji": "🛡️",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "agent_created",
+      "target": 4850
+    }
+  },
+  {
+    "id": "badge_98",
+    "name": "Badge Rare #98",
+    "description": "Atteindre 980 pour l'action session_active.",
+    "emoji": "🔥",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "session_active",
+      "target": 980
+    }
+  },
+  {
+    "id": "badge_99",
+    "name": "Badge Rare #99",
+    "description": "Atteindre 990 pour l'action tokens_used.",
+    "emoji": "🏆",
+    "rarity": "Rare",
+    "requirements": {
+      "action": "tokens_used",
+      "target": 990
+    }
+  },
+  {
+    "id": "badge_100",
+    "name": "Badge Epic #100",
+    "description": "Atteindre 5000 pour l'action message_sent.",
+    "emoji": "💎",
+    "rarity": "Epic",
+    "requirements": {
+      "action": "message_sent",
+      "target": 5000
+    }
   }
 ]

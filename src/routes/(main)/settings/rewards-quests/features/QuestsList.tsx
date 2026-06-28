@@ -1,10 +1,11 @@
 'use client';
 
 import { Button, Flexbox } from '@lobehub/ui';
-import { Card, Typography } from 'antd';
+import { Card, Typography, Progress } from 'antd';
 import { createStyles } from 'antd-style';
 import { Check, Star } from 'lucide-react';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { SparkleExplosion } from '@/components/Gamification/PremiumEffects';
 import dailyQuestsData from '@/const/gamification/dailyQuests.json';
@@ -12,6 +13,7 @@ import weeklyQuestsData from '@/const/gamification/weeklyQuests.json';
 import { useGamificationStore } from '@/store/gamification';
 import { gamificationSelectors } from '@/store/gamification/selectors';
 import { playGamificationSound } from '@/utils/gamificationSound';
+import { useQuestsManager } from '../hooks/useQuestsManager';
 
 const { Title, Text } = Typography;
 
@@ -55,6 +57,8 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 export const QuestsList = () => {
+  const { t } = useTranslation('setting');
+  useQuestsManager(); // Run quest management initialization
   const { styles } = useStyles();
   const claimDaily = useGamificationStore((s) => s.claimDailyQuest);
   const claimWeekly = useGamificationStore((s) => s.claimWeeklyQuest);
@@ -62,9 +66,18 @@ export const QuestsList = () => {
   const soundVolume = useGamificationStore(gamificationSelectors.soundVolume);
   const enableAnimations = useGamificationStore(gamificationSelectors.enableAnimations);
   
-  // Simulation des quêtes actives pour l'exemple
-  const [activeDaily, setActiveDaily] = useState(dailyQuestsData.map(q => ({ ...q, claimed: false })));
-  const [activeWeekly, setActiveWeekly] = useState(weeklyQuestsData.map(q => ({ ...q, claimed: false })));
+  const storeActiveDaily = useGamificationStore((s) => s.activeDailyQuests);
+  const storeActiveWeekly = useGamificationStore((s) => s.activeWeeklyQuests);
+  
+  const activeDaily = storeActiveDaily.map(aq => {
+    const q = dailyQuestsData.find((d: any) => d.id === aq.questId) || {} as any;
+    return { ...q, ...aq };
+  });
+
+  const activeWeekly = storeActiveWeekly.map(aq => {
+    const q = weeklyQuestsData.find((d: any) => d.id === aq.questId) || {} as any;
+    return { ...q, ...aq };
+  });
 
   const handleClaimDaily = (questId: string, xp: number) => {
     claimDaily(questId);
@@ -73,7 +86,6 @@ export const QuestsList = () => {
       setExplodingQuest(questId);
     }
     playGamificationSound('questClaim', soundVolume);
-    setActiveDaily(prev => prev.map(q => q.id === questId ? { ...q, claimed: true } : q));
   };
 
   const handleClaimWeekly = (questId: string, xp: number) => {
@@ -83,32 +95,36 @@ export const QuestsList = () => {
       setExplodingQuest(questId);
     }
     playGamificationSound('questClaim', soundVolume);
-    setActiveWeekly(prev => prev.map(q => q.id === questId ? { ...q, claimed: true } : q));
   };
 
   const [explodingQuest, setExplodingQuest] = useState<string | null>(null);
 
   const renderQuestCard = (quest: any, onClaim: () => void) => {
+    if (!quest.title) return null;
+    const target = quest.requirements?.target || 1;
+    const progressPercent = Math.min(100, Math.floor((quest.progress / target) * 100));
+
     return (
-      <Card className={styles.questCard} key={quest.id}>
+      <Card className={styles.questCard} key={quest.id || quest.questId}>
         <Flexbox align="center" horizontal justify="space-between">
-          <Flexbox gap={4}>
+          <Flexbox gap={4} style={{ flex: 1, paddingRight: 16 }}>
             <Title level={5} style={{ margin: 0 }}>{quest.title}</Title>
             <Text type="secondary">{quest.description}</Text>
+            <Progress percent={progressPercent} size="small" status={quest.completed ? 'success' : 'normal'} format={() => `${quest.progress} / ${target}`} />
           </Flexbox>
           <Flexbox align="center" gap={12} horizontal>
             <div className={styles.xpBadge}>
-              <Star size={12} fill="currentColor" /> {quest.rewardXp} XP
+              <Star size={12} fill="currentColor" /> {quest.xpReward} XP
             </div>
             <div style={{ position: 'relative' }}>
               <Button
                 className={styles.claimButton}
-                disabled={quest.claimed}
+                disabled={quest.claimed || !quest.completed}
                 onClick={onClaim}
                 type={quest.claimed ? 'default' : 'primary'}
               >
-                {quest.claimed ? <Check size={16} /> : 'Réclamer'}
-                {explodingQuest === quest.id && <SparkleExplosion active={true} onComplete={() => setExplodingQuest(null)} />}
+                {quest.claimed ? <Check size={16} /> : t('gamification.quests.claim', 'Réclamer')}
+                {explodingQuest === (quest.id || quest.questId) && <SparkleExplosion active={true} onComplete={() => setExplodingQuest(null)} />}
               </Button>
             </div>
           </Flexbox>
@@ -121,24 +137,24 @@ export const QuestsList = () => {
     <div className={styles.container}>
       <div className={styles.section}>
         <Flexbox align="center" horizontal justify="space-between">
-          <Title level={4} style={{ margin: 0 }}>Quêtes Journalières</Title>
-          <Text type="secondary">Réinitialisation à minuit CET</Text>
+          <Title level={4} style={{ margin: 0 }}>{t('gamification.quests.dailyTitle', 'Quêtes Journalières')}</Title>
+          <Text type="secondary">{t('gamification.quests.dailyDesc', 'Réinitialisation à minuit CET')}</Text>
         </Flexbox>
-        {activeDaily.map(q => renderQuestCard(q, () => handleClaimDaily(q.id, q.rewardXp)))}
+        {activeDaily.map(q => renderQuestCard(q, () => handleClaimDaily(q.questId, q.xpReward)))}
         
         <Button className={styles.bonusButton} onClick={() => {
           // Logique pour générer 3 nouvelles quêtes (mocked here)
         }}>
-          Obtenir 3 quêtes supplémentaires (1/semaine)
+          {t('gamification.quests.bonus', 'Obtenir 3 quêtes supplémentaires (1/semaine)')}
         </Button>
       </div>
 
       <div className={styles.section}>
         <Flexbox align="center" horizontal justify="space-between">
-          <Title level={4} style={{ margin: 0 }}>Quêtes Hebdomadaires</Title>
-          <Text type="secondary">Réinitialisation lundi à minuit CET</Text>
+          <Title level={4} style={{ margin: 0 }}>{t('gamification.quests.weeklyTitle', 'Quêtes Hebdomadaires')}</Title>
+          <Text type="secondary">{t('gamification.quests.weeklyDesc', 'Réinitialisation lundi à minuit CET')}</Text>
         </Flexbox>
-        {activeWeekly.map(q => renderQuestCard(q, () => handleClaimWeekly(q.id, q.rewardXp)))}
+        {activeWeekly.map(q => renderQuestCard(q, () => handleClaimWeekly(q.questId, q.xpReward)))}
       </div>
     </div>
   );

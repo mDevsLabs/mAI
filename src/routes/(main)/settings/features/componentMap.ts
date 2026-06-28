@@ -99,4 +99,7 @@ export const componentMap = {
   [SettingsTabs.RewardsBadges]: dynamic(() => import('../rewards-badges'), {
     loading: loading('Settings > Rewards Badges'),
   }),
+  [SettingsTabs.RewardsLevels]: dynamic(() => import('../rewards-levels'), {
+    loading: loading('Settings > Rewards Levels'),
+  }),
 };

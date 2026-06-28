@@ -788,7 +788,6 @@
   "taskList.orderBy.updatedAt": "Aktualisiert am",
   "taskList.title": "Aufgaben",
   "taskList.unassigned": "Nicht zugewiesen",
-  "taskList.unassignedHint": "May führt diese Aufgabe aus, wenn kein Bearbeiter zugewiesen ist",
   "taskList.view.board": "Tafel",
   "taskList.view.list": "Liste",
   "taskList.viewAll": "Alle anzeigen",

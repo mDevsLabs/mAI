@@ -394,7 +394,6 @@
   "referral.errors.selfReferral": "Non puoi utilizzare il tuo stesso codice invito",
   "referral.errors.updateFailed": "Aggiornamento fallito, riprova più tardi",
   "referral.inviteCode.description": "Condividi il tuo codice invito esclusivo per invitare amici a registrarsi",
-  "referral.inviteCode.title": "Il Mio Codice Invito",
   "referral.inviteLink.description": "Copia il link e condividilo con gli amici. Entrambi guadagnate crediti dopo che il tuo amico effettua un pagamento",
   "referral.inviteLink.title": "Link Invito",
   "referral.rules.antiAbuse": "Se viene rilevata un'attività fraudolenta (ad esempio, registrazione di massa di account email usa e getta), gli account associati saranno permanentemente bannati.",

@@ -763,7 +763,6 @@
   "taskList.orderBy.updatedAt": "Atualizadas em",
   "taskList.title": "Tarefas",
   "taskList.unassigned": "Sem responsável",
-  "taskList.unassignedHint": "O May executará esta tarefa quando nenhum responsável estiver definido",
   "taskList.view.board": "Quadro",
   "taskList.view.list": "Lista",
   "taskList.viewAll": "Ver tudo",

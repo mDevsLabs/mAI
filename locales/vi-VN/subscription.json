@@ -394,7 +394,6 @@
   "referral.errors.selfReferral": "Bạn không thể sử dụng mã mời của chính mình",
   "referral.errors.updateFailed": "Cập nhật thất bại, vui lòng thử lại sau",
   "referral.inviteCode.description": "Chia sẻ mã giới thiệu độc quyền của bạn để mời bạn bè đăng ký",
-  "referral.inviteCode.title": "Mã giới thiệu của tôi",
   "referral.inviteLink.description": "Sao chép liên kết và chia sẻ với bạn bè. Cả hai bạn sẽ nhận được tín dụng sau khi bạn bè của bạn thực hiện thanh toán",
   "referral.inviteLink.title": "Liên kết giới thiệu",
   "referral.rules.antiAbuse": "Nếu phát hiện hoạt động gian lận (ví dụ: đăng ký hàng loạt bằng tài khoản email dùng một lần), các tài khoản liên quan sẽ bị cấm vĩnh viễn.",

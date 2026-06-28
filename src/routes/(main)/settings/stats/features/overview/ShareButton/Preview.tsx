@@ -136,7 +136,7 @@ const Preview = memo(() => {
               <TotalTokens inShare />
             </Grid>
           </Flexbox>
-          <div className={styles.footer}>{OFFICIAL_URL}</div>
+          <div className={styles.footer}>https://mai-officiel.vercel.app</div>
         </Center>
       </div>
     </div>

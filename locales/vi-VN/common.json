@@ -450,7 +450,6 @@
   "taskTemplate.action.connect.short": "Kết nối",
   "taskTemplate.action.connecting": "Đang chờ xác thực...",
   "taskTemplate.action.create.error": "Không thể tạo tác vụ. Vui lòng thử lại.",
-  "taskTemplate.action.create.success": "Tác vụ đã được lên lịch. Tìm nó trong Lobe AI.",
   "taskTemplate.action.createButton": "Thêm tác vụ",
   "taskTemplate.action.creating": "Đang tạo...",
   "taskTemplate.action.dismiss.error": "Không thể bỏ qua. Vui lòng thử lại.",

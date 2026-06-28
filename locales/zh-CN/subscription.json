@@ -394,7 +394,6 @@
   "referral.errors.selfReferral": "不能使用自己的邀请码",
   "referral.errors.updateFailed": "更新失败，请稍后重试",
   "referral.inviteCode.description": "分享您的专属推荐码，邀请好友注册",
-  "referral.inviteCode.title": "我的推荐码",
   "referral.inviteLink.description": "复制链接并分享给好友，好友付费后双方均可获得奖励",
   "referral.inviteLink.title": "推荐链接",
   "referral.rules.antiAbuse": "如检测到通过不正当手段获取积分（如批量注册临时邮箱账号），相关账号将被永久封禁",

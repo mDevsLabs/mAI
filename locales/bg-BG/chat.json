@@ -763,7 +763,6 @@
   "taskList.orderBy.updatedAt": "Дата на обновяване",
   "taskList.title": "Задачи",
   "taskList.unassigned": "Без отговорник",
-  "taskList.unassignedHint": "May ще изпълнява тази задача, когато няма зададен изпълнител",
   "taskList.view.board": "Табло",
   "taskList.view.list": "Списък",
   "taskList.viewAll": "Преглед на всички",

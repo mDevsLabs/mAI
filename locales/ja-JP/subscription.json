@@ -394,7 +394,6 @@
   "referral.errors.selfReferral": "自分自身の招待コードは使用できません",
   "referral.errors.updateFailed": "更新に失敗しました。後でもう一度お試しください。",
   "referral.inviteCode.description": "あなた専用の紹介コードを共有して、友達を招待しましょう",
-  "referral.inviteCode.title": "マイ紹介コード",
   "referral.inviteLink.description": "リンクをコピーして友達と共有してください。友達が支払いを行った後、両方にクレジットが付与されます。",
   "referral.inviteLink.title": "紹介リンク",
   "referral.rules.antiAbuse": "不正行為（例：使い捨てメールアカウントの大量登録）が検出された場合、関連するアカウントは永久に禁止されます。",

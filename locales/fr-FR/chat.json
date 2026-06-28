@@ -788,7 +788,6 @@
   "taskList.orderBy.updatedAt": "Date de mise à jour",
   "taskList.title": "Tâches",
   "taskList.unassigned": "Non attribuée",
-  "taskList.unassignedHint": "Lobe AI exécutera cette tâche lorsqu’aucun responsable n’est défini",
   "taskList.view.board": "Tableau",
   "taskList.view.list": "Liste",
   "taskList.viewAll": "Tout afficher",

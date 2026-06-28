@@ -450,7 +450,6 @@
   "taskTemplate.action.connect.short": "連接",
   "taskTemplate.action.connecting": "等待授權中…",
   "taskTemplate.action.create.error": "建立任務失敗。請再試一次。",
-  "taskTemplate.action.create.success": "已新增排程任務。可在 Lobe AI 中找到。",
   "taskTemplate.action.createButton": "新增任務",
   "taskTemplate.action.creating": "建立中...",
   "taskTemplate.action.dismiss.error": "取消失敗。請再試一次。",

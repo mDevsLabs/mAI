@@ -1,4 +1,4 @@
-export type Rarity = 'Common' | 'Uncommon' | 'Rare' | 'Mythic' | 'Ultra';
+export type Rarity = 'Common' | 'Uncommon' | 'Rare' | 'Epic' | 'Legendary' | 'Mythic' | 'Ultra';
 
 export interface GamificationTracking {
   eventType: string;
@@ -10,8 +10,12 @@ export interface Quest {
   title: string;
   description: string;
   xpReward: number;
-  objectiveCount: number;
-  category: string;
+  objectiveCount?: number;
+  requirements?: {
+    action: string;
+    target: number;
+  };
+  category?: string;
   tracking?: GamificationTracking;
   difficulty?: 'Easy' | 'Normal' | 'Hard' | 'Elite' | 'Legendary';
 }
@@ -19,11 +23,16 @@ export interface Quest {
 export interface Badge {
   id: string;
   name: string;
-  icon: string;
+  icon?: string;
+  emoji?: string;
   description: string;
-  lore: string;
-  conditionDescription: string;
-  xpReward: number;
+  lore?: string;
+  conditionDescription?: string;
+  requirements?: {
+    action: string;
+    target: number;
+  };
+  xpReward?: number;
   rarity: Rarity;
 }
 
@@ -50,4 +59,5 @@ export interface GamificationState {
   unlockedBadges: string[];
   pinnedBadges: string[];
   lastBonusQuestsUsed: number; // timestamp
+  actionCounts: Record<string, number>; // action -> count
 }

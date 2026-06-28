@@ -450,7 +450,6 @@
   "taskTemplate.action.connect.short": "Свържете",
   "taskTemplate.action.connecting": "Изчакване за оторизация…",
   "taskTemplate.action.create.error": "Неуспешно създаване на задача. Моля, опитайте отново.",
-  "taskTemplate.action.create.success": "Добавена е планирана задача. Намерете я в Lobe AI.",
   "taskTemplate.action.createButton": "Добавете задача",
   "taskTemplate.action.creating": "Създаване...",
   "taskTemplate.action.dismiss.error": "Неуспешно отхвърляне. Моля, опитайте отново.",

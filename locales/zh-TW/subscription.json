@@ -394,7 +394,6 @@
   "referral.errors.selfReferral": "您不能使用自己的邀請碼",
   "referral.errors.updateFailed": "更新失敗，請稍後再試",
   "referral.inviteCode.description": "分享您的專屬推薦碼，邀請朋友註冊",
-  "referral.inviteCode.title": "我的推薦碼",
   "referral.inviteLink.description": "複製連結並分享給朋友。您的朋友完成付款後，您們都可獲得點數。",
   "referral.inviteLink.title": "推薦連結",
   "referral.rules.antiAbuse": "如果檢測到欺詐活動（例如，大量註冊一次性電子郵件帳戶），相關帳戶將被永久封禁",
