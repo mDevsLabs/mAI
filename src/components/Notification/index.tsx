@@ -84,7 +84,13 @@ const Notification = memo<NotificationProps>(
           {...rest}
         >
           {showCloseIcon && (
-            <ActionIcon className={styles.cancelIcon} icon={XIcon} onClick={() => onCancel?.()} />
+            <ActionIcon
+              aria-label="Close"
+              className={styles.cancelIcon}
+              icon={XIcon}
+              title="Close"
+              onClick={() => onCancel?.()}
+            />
           )}
           <Flexbox
             horizontal
