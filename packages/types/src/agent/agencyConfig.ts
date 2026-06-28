@@ -429,5 +429,22 @@ export interface LobeAgentAgencyConfig {
    * only exists on another machine. Persisted (server-synced) so the choice
    * follows the user across sessions / ends.
    */
-  workingDirByDevice?: Record<string, string>;
+  workingDirByDevice?: Record<string, string | undefined>;
 }
+
+/**
+ * Prunes `undefined` values from `workingDirByDevice` in the merged agency config
+ * since `undefined` means a device-specific config has been explicitly deleted.
+ */
+export const pruneWorkingDirByDeviceDeletes = (
+  merged: LobeAgentAgencyConfig | undefined | null,
+  patch: Partial<LobeAgentAgencyConfig> | undefined | null,
+): void => {
+  if (!patch?.workingDirByDevice || !merged?.workingDirByDevice) return;
+
+  for (const [key, value] of Object.entries(patch.workingDirByDevice)) {
+    if (value === undefined) {
+      delete merged.workingDirByDevice[key];
+    }
+  }
+};
