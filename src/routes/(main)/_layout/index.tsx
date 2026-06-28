@@ -37,6 +37,7 @@ import DesktopAutoOidcOnFirstOpen from './DesktopAutoOidcOnFirstOpen';
 import DesktopLayoutContainer from './DesktopLayoutContainer';
 import RegisterHotkeys from './RegisterHotkeys';
 import { styles } from './style';
+import { useQuestsManager } from '../settings/rewards-quests/hooks/useQuestsManager';
 
 const CloudBanner = dynamic(() => import('@/features/AlertBanner/CloudBanner'));
 const GlobalPets = dynamic(() =>
@@ -44,6 +45,7 @@ const GlobalPets = dynamic(() =>
 );
 
 const Layout: FC = () => {
+  useQuestsManager(); // Run global gamification background listener
   const { isPWA } = usePlatform();
   const { showCloudPromotion } = useServerConfigStore(featureFlagsSelectors);
 

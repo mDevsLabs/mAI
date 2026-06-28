@@ -1,15 +1,12 @@
 import { useEffect } from 'react';
 import { useGamificationStore } from '@/store/gamification';
+import { useChatStore } from '@/store/chat';
+import { useAgentStore } from '@/store/agent';
 import dailyQuestsData from '@/const/gamification/dailyQuests.json';
 import weeklyQuestsData from '@/const/gamification/weeklyQuests.json';
 
 const getMidnightCET = () => {
   const d = new Date();
-  // We want midnight CET. We can do this roughly by adjusting timezone or using UTC.
-  // Actually, keeping it simple: just reset every 24 hours from local midnight, or precise CET.
-  // CET is UTC+1 (or UTC+2 in summer).
-  // A simple way is to use UTC and add 1 or 2 hours. Let's just use local midnight for the implementation as it's a client side check, or a simple 24h reset.
-  // Let's implement local midnight for now.
   d.setHours(0, 0, 0, 0);
   return d.getTime();
 };
@@ -18,7 +15,7 @@ const getLastMondayMidnightCET = () => {
   const d = new Date();
   d.setHours(0, 0, 0, 0);
   const day = d.getDay();
-  const diff = d.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
   return new Date(d.setDate(diff)).getTime();
 };
 
@@ -32,7 +29,9 @@ export const useQuestsManager = () => {
   const activeWeeklyQuests = useGamificationStore((s) => s.activeWeeklyQuests);
   const refreshDailyQuests = useGamificationStore((s) => s.refreshDailyQuests);
   const refreshWeeklyQuests = useGamificationStore((s) => s.refreshWeeklyQuests);
+  const trackAction = useGamificationStore((s) => s.trackAction);
 
+  // Quest Renewal Reset Logic
   useEffect(() => {
     const midnight = getMidnightCET();
     const lastDaily = activeDailyQuests[0]?.assignedAt || 0;
@@ -50,4 +49,50 @@ export const useQuestsManager = () => {
       refreshWeeklyQuests(selectedWeekly);
     }
   }, [activeDailyQuests.length, activeWeeklyQuests.length, refreshDailyQuests, refreshWeeklyQuests]);
+
+  // Automated Action Tracking Logic
+  useEffect(() => {
+    let lastUserMessageCount = -1;
+    let lastToolMessageCount = -1;
+    let lastTopicCount = -1;
+
+    const unsubscribeChat = useChatStore.subscribe((state) => {
+      const allMsgs = Object.values(state.messagesMap || {}).flat();
+      const userMsgCount = allMsgs.filter((m) => m.role === 'user').length;
+      const toolMsgCount = allMsgs.filter((m) => m.role === 'tool' || (m.role === 'assistant' && m.tools)).length;
+      const topicCount = Object.keys(state.topicsMap || {}).length;
+
+      // Track messages sent
+      if (lastUserMessageCount !== -1 && userMsgCount > lastUserMessageCount) {
+        trackAction('message_sent', userMsgCount - lastUserMessageCount);
+      }
+      lastUserMessageCount = userMsgCount;
+
+      // Track plugins used
+      if (lastToolMessageCount !== -1 && toolMsgCount > lastToolMessageCount) {
+        trackAction('plugin_used', toolMsgCount - lastToolMessageCount);
+      }
+      lastToolMessageCount = toolMsgCount;
+
+      // Track active session / topic shared
+      if (lastTopicCount !== -1 && topicCount > lastTopicCount) {
+        trackAction('topic_shared', topicCount - lastTopicCount);
+      }
+      lastTopicCount = topicCount;
+    });
+
+    let lastAgentCount = -1;
+    const unsubscribeAgent = useAgentStore.subscribe((state) => {
+      const agentCount = Object.keys(state.agentMap || {}).length;
+      if (lastAgentCount !== -1 && agentCount > lastAgentCount) {
+        trackAction('agent_created', agentCount - lastAgentCount);
+      }
+      lastAgentCount = agentCount;
+    });
+
+    return () => {
+      unsubscribeChat();
+      unsubscribeAgent();
+    };
+  }, [trackAction]);
 };

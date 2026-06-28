@@ -1,9 +1,9 @@
 'use client';
 
 import { Flexbox } from '@lobehub/ui';
-import { Typography, Progress, Table, Input, Select, Tag, Empty } from 'antd';
+import { Typography, Progress, Table, Input, Select, Tag, Empty, Card, Button } from 'antd';
 import { createStaticStyles, useTheme } from 'antd-style';
-import { Search, Trophy, CheckSquare, Award } from 'lucide-react';
+import { Search, Trophy, CheckSquare, Award, Download, Lock, MessageSquare, Puzzle, Sparkles, CheckCircle2 } from 'lucide-react';
 import React, { useState, useMemo } from 'react';
 
 import { useGamificationStore } from '@/store/gamification';
@@ -69,7 +69,6 @@ export const styles = createStaticStyles(({ css, cssVar }) => ({
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 24px;
     width: 100%;
-    max-width: 800px;
   `,
   statCard: css`
     display: flex;
@@ -91,9 +90,32 @@ export const styles = createStaticStyles(({ css, cssVar }) => ({
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
     }
   `,
+  rewardsSection: css`
+    width: 100%;
+    background: rgba(255, 255, 255, 0.01);
+    backdrop-filter: blur(15px);
+    border: 1px solid ${cssVar.colorBorderSecondary};
+    border-radius: 20px;
+    padding: 24px;
+  `,
+  rewardsGrid: css`
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    width: 100%;
+  `,
+  rewardCard: css`
+    background: rgba(255, 255, 255, 0.02) !important;
+    border: 1px solid ${cssVar.colorBorderSecondary} !important;
+    border-radius: 12px !important;
+    transition: all 0.3s ease;
+    &:hover {
+      border-color: ${cssVar.colorPrimary} !important;
+      background: rgba(255, 255, 255, 0.04) !important;
+    }
+  `,
   historySection: css`
     width: 100%;
-    max-width: 800px;
     background: rgba(255, 255, 255, 0.01);
     backdrop-filter: blur(15px);
     border: 1px solid ${cssVar.colorBorderSecondary};
@@ -128,6 +150,15 @@ export const styles = createStaticStyles(({ css, cssVar }) => ({
     }
   `
 }));
+
+const LEVEL_REWARDS = [
+  { level: 10, name: "Fond d'écran mAI - Niveau 10", url: 'https://upload.fs.fr/NpjISr5v0u.png', desc: "Fond d'écran mAI exclusif pour célébrer le passage au niveau 10." },
+  { level: 20, name: "Fond d'écran mAI - Niveau 20", url: 'https://upload.fs.fr/BAAdyao8xw.png', desc: "Fond d'écran mAI aux inspirations spatiales et technologiques." },
+  { level: 30, name: "Fond d'écran mAI - Niveau 30", url: 'https://upload.fs.fr/odxyhuFB6x.png', desc: "Fond d'écran mAI néon haute fidélité pour votre bureau." },
+  { level: 40, name: "Fond d'écran mAI - Niveau 40", url: 'https://upload.fs.fr/iycITGVLDt.png', desc: "Fond d'écran mAI abstrait généré avec le moteur premium mDevs." },
+  { level: 50, name: "Fond d'écran mAI - Niveau 50", url: 'https://upload.fs.fr/rCZU8cmpMm.png', desc: "Le fond d'écran mAI de célébration ultime pour le niveau 50." },
+  { level: 100, name: 'Logos spéciaux mAI - Niveau 100', url: 'https://upload.fs.fr/fBHTd26bOA.zip', desc: "Archive contenant la collection complète des logos vectoriels mAI spéciaux." },
+];
 
 export const LevelsPage = () => {
   const token = useTheme();
@@ -179,6 +210,25 @@ export const LevelsPage = () => {
       });
   }, [logs, search, typeFilter, dateFilter, sortBy]);
 
+  const totalGains = useMemo(() => {
+    return filteredLogs.reduce((acc, curr) => acc + curr.mpReward, 0);
+  }, [filteredLogs]);
+
+  const getLogIcon = (title: string, type: 'quest' | 'badge') => {
+    if (type === 'badge') return <Award size={16} style={{ color: 'var(--color-warning)' }} />;
+    const t = title.toLowerCase();
+    if (t.includes('message') || t.includes('discuter') || t.includes('discussion')) {
+      return <MessageSquare size={16} style={{ color: 'var(--color-primary)' }} />;
+    }
+    if (t.includes('plugin') || t.includes('outil')) {
+      return <Puzzle size={16} style={{ color: 'var(--color-info)' }} />;
+    }
+    if (t.includes('créer') || t.includes('agent')) {
+      return <Sparkles size={16} style={{ color: 'var(--color-success)' }} />;
+    }
+    return <CheckCircle2 size={16} style={{ color: 'var(--color-success)' }} />;
+  };
+
   const columns = [
     {
       title: 'N°',
@@ -222,8 +272,11 @@ export const LevelsPage = () => {
       title: 'Nom de la récompense',
       dataIndex: 'title',
       key: 'title',
-      render: (title: string) => (
-        <span style={{ fontWeight: '500' }}>{title}</span>
+      render: (title: string, record: any) => (
+        <Flexbox horizontal align="center" gap={8}>
+          {getLogIcon(title, record.type)}
+          <span style={{ fontWeight: '500' }}>{title}</span>
+        </Flexbox>
       ),
     },
     {
@@ -294,6 +347,45 @@ export const LevelsPage = () => {
         </div>
       </div>
 
+      <div className={styles.rewardsSection}>
+        <Title level={3} style={{ marginBottom: 8 }}>Récompenses de niveau</Title>
+        <Text type="secondary" style={{ display: 'block', marginBottom: 20 }}>
+          Téléchargez vos récompenses exclusives mAI dès que vous franchissez les paliers de niveau.
+        </Text>
+        <div className={styles.rewardsGrid}>
+          {LEVEL_REWARDS.map((r) => {
+            const isUnlocked = level >= r.level;
+            return (
+              <Card className={styles.rewardCard} key={r.level} style={{ opacity: isUnlocked ? 1 : 0.6 }}>
+                <Flexbox align="center" justify="space-between" horizontal style={{ width: '100%' }}>
+                  <Flexbox gap={4} style={{ flex: 1, paddingRight: 16 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <Tag color={isUnlocked ? 'success' : 'default'} style={{ fontWeight: 'bold' }}>
+                        Niveau {r.level}
+                      </Tag>
+                      <Title level={5} style={{ margin: 0 }}>{r.name}</Title>
+                    </div>
+                    <Text type="secondary" style={{ fontSize: 12, marginTop: 4 }}>{r.desc}</Text>
+                  </Flexbox>
+                  <Button
+                    type={isUnlocked ? 'primary' : 'default'}
+                    disabled={!isUnlocked}
+                    icon={isUnlocked ? <Download size={14} /> : <Lock size={14} />}
+                    onClick={() => {
+                      if (isUnlocked) {
+                        window.open(r.url, '_blank');
+                      }
+                    }}
+                  >
+                    {isUnlocked ? 'Télécharger' : 'Verrouillé'}
+                  </Button>
+                </Flexbox>
+              </Card>
+            );
+          })}
+        </div>
+      </div>
+
       <div className={styles.historySection}>
         <Title level={3} style={{ margin: 0, marginBottom: 16 }}>Historique des gains</Title>
         
@@ -338,6 +430,11 @@ export const LevelsPage = () => {
               { value: 'lowest', label: 'MP le plus bas' },
             ]}
           />
+        </div>
+
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12, fontSize: 13, color: 'var(--color-text-description)' }}>
+          <span>{filteredLogs.length} résultat{filteredLogs.length > 1 ? 's' : ''} trouvé{filteredLogs.length > 1 ? 's' : ''}</span>
+          <span style={{ fontWeight: '600', color: 'var(--color-success)' }}>Gains cumulés : +{totalGains} MP</span>
         </div>
 
         <Table

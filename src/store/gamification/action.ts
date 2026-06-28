@@ -331,11 +331,68 @@ export const gamificationActionSlice: StateCreator<
     set(
       (state) => {
         const currentCount = state.actionCounts[actionId] || 0;
+        const newActionCounts = {
+          ...state.actionCounts,
+          [actionId]: currentCount + count,
+        };
+
+        // Update active daily quests progress and completion status
+        const activeDailyQuests = state.activeDailyQuests.map((q) => {
+          if (q.completed) return q;
+          const questDef = dailyQuestsData.find((d: any) => d.id === q.questId);
+          if (questDef?.requirements?.action === actionId) {
+            const target = questDef.requirements.target || 1;
+            const newProgress = Math.min(target, q.progress + count);
+            const completed = newProgress >= target;
+            return { ...q, progress: newProgress, completed };
+          }
+          return q;
+        });
+
+        // Update active weekly quests progress and completion status
+        const activeWeeklyQuests = state.activeWeeklyQuests.map((q) => {
+          if (q.completed) return q;
+          const questDef = weeklyQuestsData.find((w: any) => w.id === q.questId);
+          if (questDef?.requirements?.action === actionId) {
+            const target = questDef.requirements.target || 1;
+            const newProgress = Math.min(target, q.progress + count);
+            const completed = newProgress >= target;
+            return { ...q, progress: newProgress, completed };
+          }
+          return q;
+        });
+
+        // Check for new badges to unlock
+        const unlockedBadges = [...state.unlockedBadges];
+        const newLogs = [...(state.logs || [])];
+
+        badgesCatalog.forEach((badge: any) => {
+          if (!unlockedBadges.includes(badge.id)) {
+            if (badge.requirements?.action === actionId) {
+              const currentTotal = newActionCounts[actionId] || 0;
+              if (currentTotal >= (badge.requirements.target || 0)) {
+                unlockedBadges.push(badge.id);
+
+                const emojiStr = badge.emoji ? `${badge.emoji} ` : '';
+                const nameStr = badge.name || badge.id;
+                newLogs.unshift({
+                  id: `log_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+                  timestamp: Date.now(),
+                  title: `Badge débloqué : ${emojiStr}${nameStr}`,
+                  type: 'badge' as const,
+                  mpReward: 0,
+                });
+              }
+            }
+          }
+        });
+
         return {
-          actionCounts: {
-            ...state.actionCounts,
-            [actionId]: currentCount + count,
-          },
+          actionCounts: newActionCounts,
+          activeDailyQuests,
+          activeWeeklyQuests,
+          unlockedBadges,
+          logs: newLogs,
         };
       },
       false,
