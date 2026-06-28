@@ -59,7 +59,7 @@ const getRarityTag = (rarity: string) => {
   return <Tag color={config.color} style={{ fontWeight: 'bold', margin: 0 }}>{config.label}</Tag>;
 };
 
-export const BadgeCard = ({ badge, isUnlocked, isPinned, onClick }: any) => {
+export const BadgeCard = React.memo(({ badge, isUnlocked, isPinned, onClick }: any) => {
   const { styles, cx } = useStyles();
 
   return (
@@ -78,4 +78,4 @@ export const BadgeCard = ({ badge, isUnlocked, isPinned, onClick }: any) => {
       </Card>
     </PremiumCardWrapper>
   );
-};
+});

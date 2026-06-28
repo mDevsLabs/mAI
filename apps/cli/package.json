@@ -1,6 +1,6 @@
 {
   "name": "@mdevs/mai-cli",
-  "version": "0.9.2",
+  "version": "1.0.0",
   "author": "mDevlopers",
   "type": "module",
   "bin": {

@@ -1,7 +1,7 @@
 'use client';
 
 import { type FormGroupItemType } from '@lobehub/ui';
-import { Accordion, AccordionItem, Flexbox, Form } from '@lobehub/ui';
+import { Accordion, AccordionItem, Flexbox, Form, Markdown } from '@lobehub/ui';
 import { Switch } from '@lobehub/ui/base-ui';
 import { confirmModal } from '@lobehub/ui/base-ui';
 import { Slider, Select, Button, Typography, App } from 'antd';
@@ -28,36 +28,33 @@ const Settings = memo(() => {
   const { t } = useTranslation('setting');
   const { message } = App.useApp();
 
-  const soundVolume = useGamificationStore(gamificationSelectors.soundVolume);
   const enableAnimations = useGamificationStore(gamificationSelectors.enableAnimations);
-  const enableNotifications = useGamificationStore(gamificationSelectors.enableNotifications);
+  const soundVolume = useGamificationStore(gamificationSelectors.soundVolume);
   const timezone = useGamificationStore(gamificationSelectors.timezone);
-  const timezoneLastChanged = useGamificationStore(gamificationSelectors.timezoneLastChanged) || 0;
+  const timezoneLastChanged = useGamificationStore(gamificationSelectors.timezoneLastChanged);
+  const enableNotifications = useGamificationStore((s) => s.enableNotifications ?? true);
 
-  const setSoundVolume = useGamificationStore((s) => s.setSoundVolume);
   const setEnableAnimations = useGamificationStore((s) => s.setEnableAnimations);
-  const setEnableNotifications = useGamificationStore((s) => s.setEnableNotifications);
+  const setSoundVolume = useGamificationStore((s) => s.setSoundVolume);
   const setTimezone = useGamificationStore((s) => s.setTimezone);
+  const setEnableNotifications = useGamificationStore((s) => s.setEnableNotifications);
   const resetProgression = useGamificationStore((s) => s.resetProgression);
 
-  const nextAllowedDate = timezoneLastChanged + 365 * 24 * 60 * 60 * 1000;
-  const canChangeTimezone = Date.now() > nextAllowedDate;
-  const nextChangeFormatted = new Date(nextAllowedDate).toLocaleDateString('fr-FR');
+  const canChangeTimezone = !timezoneLastChanged || (Date.now() - timezoneLastChanged > 365 * 24 * 60 * 60 * 1000);
+  const nextChangeDate = new Date((timezoneLastChanged || 0) + 365 * 24 * 60 * 60 * 1000);
+  const nextChangeFormatted = nextChangeDate.toLocaleDateString();
 
   const handleReset = () => {
     confirmModal({
-      cancelText: 'Annuler',
-      content: 'Cette action réinitialisera votre niveau à 1, vos points MP à 0 et bloquera à nouveau tous vos badges. Les statistiques d\'action seront également remises à zéro.',
-      okButtonProps: {
-        danger: true,
-        type: 'primary',
-      },
+      title: 'Réinitialiser toute la progression ?',
+      content: 'Cette action est irréversible. Vous perdrez tous vos points MP, votre niveau actuel ainsi que vos badges débloqués.',
       okText: 'Confirmer la réinitialisation',
+      cancelText: 'Annuler',
+      okButtonProps: { danger: true, type: 'primary' },
       onOk: () => {
         resetProgression();
-        message.success('Progression réinitialisée avec succès !');
-      },
-      title: 'Réinitialiser toute la progression ?',
+        message.success('Progression réinitialisée avec succès.');
+      }
     });
   };
 
@@ -65,16 +62,16 @@ const Settings = memo(() => {
     children: [
       {
         children: (
-          <Slider
-            max={1}
-            min={0}
-            step={0.1}
-            value={soundVolume}
-            onChange={(v: number) => setSoundVolume(v)}
+          <Slider 
+            min={0} 
+            max={100} 
+            value={soundVolume * 100} 
+            onChange={(v: number) => setSoundVolume(v / 100)} 
+            style={{ width: 150 }}
           />
         ),
-        desc: 'Volume des effets sonores lors des succès ou réclamations.',
-        label: 'Volume sonore',
+        desc: 'Ajuste le volume des effets sonores de réussite.',
+        label: 'Volume des effets sonores',
       },
       {
         children: (
@@ -130,7 +127,7 @@ const Settings = memo(() => {
         label: 'Remise à zéro',
       },
     ],
-    title: 'Zone Danger ⚠️',
+    title: 'Zone de danger',
   };
 
   return (
@@ -144,29 +141,93 @@ const Settings = memo(() => {
       />
 
       <Flexbox gap={16} style={{ padding: '0 16px' }}>
-        <Title level={4} style={{ margin: 0 }}>FAQ & Aide 💡</Title>
-        <Accordion>
-          <AccordionItem itemKey="faq-1" title="Comment obtenir des Points MP (mAI Points) ?">
-            <div style={{ lineHeight: '1.6', fontSize: 13 }}>
-              Les ***MP*** remplacent les anciens points d'expérience (XP). Vous les gagnez en accomplissant des *quêtes quotidiennes* et *hebdomadaires*. Chaque tranche de **100 MP** vous fait monter d'un **Niveau** !
-            </div>
-          </AccordionItem>
-          <AccordionItem itemKey="faq-2" title="Comment les quêtes sont-elles réinitialisées ?">
-            <div style={{ lineHeight: '1.6', fontSize: 13 }}>
-              Les *quêtes quotidiennes* (3 quêtes actives) se renouvellent tous les jours à **minuit dans votre fuseau horaire choisi**. Les *quêtes hebdomadaires* (5 quêtes actives) se renouvellent tous les **lundis à minuit**.
-            </div>
-          </AccordionItem>
-          <AccordionItem itemKey="faq-3" title="Puis-je changer mon fuseau horaire ?">
-            <div style={{ lineHeight: '1.6', fontSize: 13 }}>
-              *Oui*, mais pour éviter les abus de réinitialisation des quêtes, vous ne pouvez changer votre fuseau horaire qu'**une seule fois par an**. Choisissez-le donc avec soin !
-            </div>
-          </AccordionItem>
-          <AccordionItem itemKey="faq-4" title="À quoi servent les Badges et comment les afficher ?">
-            <div style={{ lineHeight: '1.6', fontSize: 13 }}>
-              Les **badges** récompensent vos exploits à long terme. Vous pouvez en obtenir de raretés variées (Rare, Épique, Légendaire, Mythique, Ultra). Vous pouvez en **épingler jusqu'à 5** directement sur votre profil utilisateur.
-            </div>
-          </AccordionItem>
-        </Accordion>
+        <Title level={4} style={{ margin: 0 }}>FAQ & Aide</Title>
+        <div style={{
+          border: '1px solid var(--color-border-secondary)',
+          borderRadius: '12px',
+          overflow: 'hidden',
+          background: 'var(--color-bg-container)',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.03)'
+        }}>
+          <Accordion>
+            <AccordionItem itemKey="faq-1" title="Comment obtenir des Points MP (mAI Points) ?">
+              <div style={{ padding: '8px 16px 16px' }}>
+                <Markdown>
+                  {`Les ***MP*** (mAI Points) se gagnent en réalisant des actions quotidiennes dans l'application. Chaque message envoyé, outil ou plugin utilisé, ou agent spécialisé créé vous rapporte des points de base. Les **Quêtes quotidiennes** et **Quêtes hebdomadaires** sont les moyens les plus efficaces pour accumuler de grandes quantités de ***MP*** rapidement !`}
+                </Markdown>
+              </div>
+            </AccordionItem>
+            <AccordionItem itemKey="faq-2" title="Comment fonctionne le système de Niveaux et combien de MP faut-il ?">
+              <div style={{ padding: '8px 16px 16px' }}>
+                <Markdown>
+                  {`Chaque niveau requiert exactement **200 MP** pour être franchi. Lorsque vous accumulez des points, votre barre de progression se remplit automatiquement. Une fois les **200 MP** atteints, vous passez au **Niveau supérieur** 🚀 ! Il n'y a pas de limite au niveau que vous pouvez atteindre.`}
+                </Markdown>
+              </div>
+            </AccordionItem>
+            <AccordionItem itemKey="faq-3" title="Quelles sont les différentes raretés de Badges et leurs proportions ?">
+              <div style={{ padding: '8px 16px 16px' }}>
+                <Markdown>
+                  {`Les badges sont répartis selon 5 niveaux de rareté bien distincts :
+- **Rare** (50% des badges) : Faciles à débloquer au fil de l'utilisation.
+- **Épique** (30% des badges) : Demandent un engagement plus régulier.
+- **Légendaire** (10% des badges) : Nécessitent des efforts à long terme.
+- **Mythique** (7% des badges) : Réservés aux utilisateurs chevronnés, possèdent des animations spéciales.
+- **Ultra** (3% des badges) : Les plus prestigieux du système avec des effets visuels uniques.`}
+                </Markdown>
+              </div>
+            </AccordionItem>
+            <AccordionItem itemKey="faq-4" title="Comment épingler des Badges sur mon profil et combien puis-je en afficher ?">
+              <div style={{ padding: '8px 16px 16px' }}>
+                <Markdown>
+                  {`Vous pouvez épingler jusqu'à **5 badges** simultanément sur votre profil public. Pour cela, cliquez sur un badge débloqué dans votre collection ("Badges & Titres"), puis cliquez sur le bouton **"Épingler au profil"**. Vous pouvez les désépingler à tout moment de la même manière.`}
+                </Markdown>
+              </div>
+            </AccordionItem>
+            <AccordionItem itemKey="faq-5" title="Quand les quêtes quotidiennes et hebdomadaires changent-elles ?">
+              <div style={{ padding: '8px 16px 16px' }}>
+                <Markdown>
+                  {`- Les **Quêtes quotidiennes** (3 quêtes actives) sont renouvelées toutes les nuits à **minuit (00:00)** selon le fuseau horaire choisi dans vos Paramètres.
+- Les **Quêtes hebdomadaires** (5 quêtes actives) sont renouvelées tous les **lundis à minuit (00:00)**.`}
+                </Markdown>
+              </div>
+            </AccordionItem>
+            <AccordionItem itemKey="faq-6" title="Comment fonctionne la limitation du fuseau horaire des quêtes ?">
+              <div style={{ padding: '8px 16px 16px' }}>
+                <Markdown>
+                  {`Vous pouvez configurer votre fuseau horaire préféré afin que les quêtes s'adaptent à vos horaires de vie. Pour éviter toute triche ou réinitialisation abusive, ce réglage est strictement limité à **1 modification par an**. Une fois modifié, le menu de sélection restera grisé pendant 365 jours.`}
+                </Markdown>
+              </div>
+            </AccordionItem>
+            <AccordionItem itemKey="faq-7" title="Qu'est-ce que la Zone de danger et comment fonctionne la réinitialisation ?">
+              <div style={{ padding: '8px 16px 16px' }}>
+                <Markdown>
+                  {`La section **Zone de danger** contient l'option de remise à zéro totale de votre progression. En confirmant cette action, vos **MP** retournent à \`0\`, votre **Niveau** repasse à \`1\`, et tous vos badges ainsi que l'historique de vos actions sont définitivement effacés. Utilisez cette action avec *extrême précaution*.`}
+                </Markdown>
+              </div>
+            </AccordionItem>
+            <AccordionItem itemKey="faq-8" title="Comment récupérer des quêtes quotidiennes supplémentaires ?">
+              <div style={{ padding: '8px 16px 16px' }}>
+                <Markdown>
+                  {`Si vous avez terminé vos quêtes du jour mais souhaitez continuer à progresser, vous pouvez utiliser le bouton **"Obtenir 3 quêtes quotidiennes supplémentaires"** (limité à *3 fois par jour*). Si vous tentez de dépasser cette limite quotidienne, un **message d'erreur explicite** s'affichera pour vous en avertir.`}
+                </Markdown>
+              </div>
+            </AccordionItem>
+            <AccordionItem itemKey="faq-9" title="Y a-t-il des effets sonores et visuels particuliers dans mAI ?">
+              <div style={{ padding: '8px 16px 16px' }}>
+                <Markdown>
+                  {`*Absolument !* Chaque fois que vous validez une quête ou débloquez un badge, un son festif est joué et des confettis s'affichent à l'écran. Vous pouvez régler le **volume de ces effets** ou **désactiver les animations** à tout moment dans les Paramètres des récompenses.`}
+                </Markdown>
+              </div>
+            </AccordionItem>
+            <AccordionItem itemKey="faq-10" title="Où puis-je suivre l'historique complet de mes exploits ?">
+              <div style={{ padding: '8px 16px 16px' }}>
+                <Markdown>
+                  {`Votre page **Niveau** vous offre une vue d'ensemble de vos statistiques : le total cumulé de vos points ***MP***, le nombre d'actions effectuées depuis votre inscription et le nombre total de badges uniques débloqués. C'est votre *tableau de bord personnel* de réussite !`}
+                </Markdown>
+              </div>
+            </AccordionItem>
+          </Accordion>
+        </div>
       </Flexbox>
     </Flexbox>
   );

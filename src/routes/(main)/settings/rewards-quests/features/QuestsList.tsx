@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, Flexbox } from '@lobehub/ui';
-import { Card, Typography, Progress } from 'antd';
+import { Card, Typography, Progress, message } from 'antd';
 import { createStyles } from 'antd-style';
 import { Check, Star } from 'lucide-react';
 import React, { useState } from 'react';
@@ -97,6 +97,29 @@ export const QuestsList = () => {
     playGamificationSound('questClaim', soundVolume);
   };
 
+  const addBonusQuests = useGamificationStore((s) => s.addBonusQuests);
+
+  const handleGetBonusQuests = () => {
+    const activeIds = activeDaily.map((d) => d.id);
+    const availableQuests = dailyQuestsData.filter((d) => !activeIds.includes(d.id));
+
+    if (availableQuests.length < 3) {
+      message.error('Pas assez de quêtes quotidiennes disponibles.');
+      return;
+    }
+
+    const shuffled = [...availableQuests].sort(() => 0.5 - Math.random());
+    const selected = shuffled.slice(0, 3);
+
+    const success = addBonusQuests(selected);
+    if (success) {
+      message.success('3 nouvelles quêtes quotidiennes ont été ajoutées !');
+      playGamificationSound('questClaim', soundVolume);
+    } else {
+      message.error("Vous avez déjà pris vos 3 quêtes quotidiennes supplémentaires pour aujourd'hui !");
+    }
+  };
+
   const [explodingQuest, setExplodingQuest] = useState<string | null>(null);
 
   const renderQuestCard = (quest: any, onClaim: () => void) => {
@@ -137,15 +160,13 @@ export const QuestsList = () => {
     <div className={styles.container}>
       <div className={styles.section}>
         <Flexbox align="center" horizontal justify="space-between">
-          <Title level={4} style={{ margin: 0 }}>{t('gamification.quests.dailyTitle', 'Quêtes Journalières')}</Title>
+          <Title level={4} style={{ margin: 0 }}>{t('gamification.quests.dailyTitle', 'Quêtes quotidiennes')}</Title>
           <Text type="secondary">{t('gamification.quests.dailyDesc', 'Réinitialisation à minuit CET')}</Text>
         </Flexbox>
         {activeDaily.map(q => renderQuestCard(q, () => handleClaimDaily(q.questId, q.xpReward)))}
         
-        <Button className={styles.bonusButton} onClick={() => {
-          // Logique pour générer 3 nouvelles quêtes (mocked here)
-        }}>
-          {t('gamification.quests.bonus', 'Obtenir 3 quêtes supplémentaires (1/semaine)')}
+        <Button className={styles.bonusButton} onClick={handleGetBonusQuests}>
+          {t('gamification.quests.bonus', 'Obtenir 3 quêtes quotidiennes supplémentaires (max 3/jour)')}
         </Button>
       </div>
 

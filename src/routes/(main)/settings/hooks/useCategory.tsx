@@ -135,11 +135,6 @@ export const useCategory = () => {
     // Gamification group
     const gamificationItems: CategoryItem[] = [
       {
-        icon: Settings2,
-        key: SettingsTabs.RewardsSettings,
-        label: t('tab.rewardsSettings', { defaultValue: 'Paramètres' }),
-      },
-      {
         icon: ListTodo,
         key: SettingsTabs.RewardsQuests,
         label: t('tab.rewardsQuests', { defaultValue: 'Quêtes & Défis' }),
@@ -153,6 +148,11 @@ export const useCategory = () => {
         icon: Trophy,
         key: SettingsTabs.RewardsLevels,
         label: t('tab.rewardsLevels', { defaultValue: 'Niveaux' }),
+      },
+      {
+        icon: Settings2,
+        key: SettingsTabs.RewardsSettings,
+        label: t('tab.rewardsSettings', { defaultValue: 'Paramètres' }),
       },
     ];
 

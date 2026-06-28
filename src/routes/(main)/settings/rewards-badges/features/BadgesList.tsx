@@ -37,7 +37,7 @@ export const BadgesList = () => {
   const { t } = useTranslation('setting');
   const { styles } = useStyles();
   const [search, setSearch] = useState('');
-  const [filter, setFilter] = useState<string>('All');
+  const [filter, setFilter] = useState<string>('Tous');
   const [columns, setColumns] = useState<number>(4);
   const [selectedBadge, setSelectedBadge] = useState<any | null>(null);
 
@@ -50,9 +50,9 @@ export const BadgesList = () => {
       const isUnlocked = unlockedBadges.includes(badge.id);
       const isPinned = pinnedBadges.includes(badge.id);
 
-      if (filter === 'Unlocked' && !isUnlocked) return false;
-      if (filter === 'Locked' && isUnlocked) return false;
-      if (filter === 'Pinned' && !isPinned) return false;
+      if (filter === 'Débloqués' && !isUnlocked) return false;
+      if (filter === 'Verrouillés' && isUnlocked) return false;
+      if (filter === 'Épinglés' && !isPinned) return false;
 
       return true;
     });
@@ -69,7 +69,7 @@ export const BadgesList = () => {
           onChange={(e) => setSearch(e.target.value)}
         />
         <Segmented
-          options={['All', 'Unlocked', 'Locked', 'Pinned']}
+          options={['Tous', 'Débloqués', 'Verrouillés', 'Épinglés']}
           value={filter}
           onChange={(val) => setFilter(val as string)}
         />
@@ -80,7 +80,7 @@ export const BadgesList = () => {
         />
       </div>
 
-      <div className={styles.grid} style={{ gridTemplateColumns: `repeat(\${columns}, 1fr)` }}>
+      <div className={styles.grid} style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}>
         {filteredBadges.map((badge) => {
           const isUnlocked = unlockedBadges.includes(badge.id);
           const isPinned = pinnedBadges.includes(badge.id);

@@ -18,6 +18,12 @@ export const styles = createStaticStyles(({ css, cssVar }) => ({
     gap: 48px;
     background: radial-gradient(circle at top, color-mix(in srgb, ${cssVar.colorPrimary} 12%, transparent) 0%, transparent 60%);
     min-height: 100%;
+    animation: fadeIn 0.8s ease-out;
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   `,
   levelCircle: css`
     position: relative;
@@ -30,10 +36,16 @@ export const styles = createStaticStyles(({ css, cssVar }) => ({
     background: ${cssVar.colorFillTertiary};
     box-shadow: 0 0 40px ${cssVar.colorPrimaryBorder};
     transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: pulseGlow 4s ease-in-out infinite;
     
     &:hover {
       transform: scale(1.05);
       box-shadow: 0 0 60px ${cssVar.colorPrimary};
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 30px ${cssVar.colorPrimaryBorder}; }
+      50% { box-shadow: 0 0 50px ${cssVar.colorPrimary}; }
     }
   `,
   levelNumber: css`
@@ -48,6 +60,8 @@ export const styles = createStaticStyles(({ css, cssVar }) => ({
     margin-top: 16px;
     font-size: 20px;
     color: ${cssVar.colorTextSecondary};
+    font-weight: bold;
+    letter-spacing: 0.5px;
   `,
   statsGrid: css`
     display: grid;
@@ -58,11 +72,19 @@ export const styles = createStaticStyles(({ css, cssVar }) => ({
   `,
   statCard: css`
     text-align: center;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.02);
     backdrop-filter: blur(10px);
     border: 1px solid ${cssVar.colorBorderSecondary};
     border-radius: 16px;
     padding: 24px;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.05);
+      border-color: ${cssVar.colorPrimary};
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
   `
 }));
 
@@ -71,9 +93,9 @@ export const LevelsPage = () => {
   const xp = useGamificationStore((s) => s.xp);
   const level = useGamificationStore((s) => s.level);
   
-  // Basic curve: 100 XP per level
-  const currentLevelXp = xp - ((level - 1) * 100);
-  const progressPercent = Math.min(100, Math.max(0, Math.floor((currentLevelXp / 100) * 100)));
+  // Basic curve: 200 MP per level
+  const currentLevelXp = xp - ((level - 1) * 200);
+  const progressPercent = Math.min(100, Math.max(0, Math.floor((currentLevelXp / 200) * 100)));
 
   return (
     <div className={styles.container}>
@@ -99,7 +121,7 @@ export const LevelsPage = () => {
       </div>
 
       <div className={styles.progressText}>
-        {currentLevelXp} / 100 MP
+        {currentLevelXp} / 200 MP
       </div>
 
       <div className={styles.statsGrid}>

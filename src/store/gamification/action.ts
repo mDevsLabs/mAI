@@ -20,6 +20,7 @@ export interface GamificationAction {
   unpinAllBadges: () => void;
   updateQuestProgress: (questId: string, progress: number) => void;
   trackAction: (actionId: string, count?: number) => void;
+  addBonusQuests: (quests: any[]) => boolean;
 }
 
 export const gamificationActionSlice: StateCreator<
@@ -32,7 +33,7 @@ export const gamificationActionSlice: StateCreator<
     set(
       (state) => {
         const newXp = state.xp + xp;
-        const newLevel = Math.floor(newXp / 100) + 1; // Basic curve: 100 XP per level
+        const newLevel = Math.floor(newXp / 200) + 1; // Basic curve: 200 MP per level
         return { xp: newXp, level: newLevel };
       },
       false,
@@ -239,6 +240,41 @@ export const gamificationActionSlice: StateCreator<
       false,
       'gamification/updateQuestProgress'
     );
+  },
+
+  addBonusQuests: (quests) => {
+    let success = false;
+    set(
+      (state) => {
+        const now = Date.now();
+        const lastTimestamp = state.lastBonusClaimedTimestamp || 0;
+        const isNewDay = new Date(lastTimestamp).toDateString() !== new Date(now).toDateString();
+        const currentCount = isNewDay ? 0 : (state.bonusClaimsTodayCount || 0);
+
+        if (currentCount >= 3) {
+          success = false;
+          return {};
+        }
+
+        const newQuests = quests.map((q) => ({
+          questId: q.id,
+          progress: 0,
+          completed: false,
+          claimed: false,
+          assignedAt: now,
+        }));
+
+        success = true;
+        return {
+          activeDailyQuests: [...state.activeDailyQuests, ...newQuests],
+          bonusClaimsTodayCount: currentCount + 1,
+          lastBonusClaimedTimestamp: now,
+        };
+      },
+      false,
+      'gamification/addBonusQuests'
+    );
+    return success;
   },
 
   trackAction: (actionId, count = 1) => {

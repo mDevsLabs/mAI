@@ -63,4 +63,6 @@ export interface GamificationState {
   pinnedBadges: string[];
   lastBonusQuestsUsed: number; // timestamp
   actionCounts: Record<string, number>; // action -> count
+  bonusClaimsTodayCount?: number;
+  lastBonusClaimedTimestamp?: number;
 }

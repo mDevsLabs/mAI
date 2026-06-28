@@ -23,6 +23,8 @@ export const INITIAL_GAMIFICATION_STATE: GamificationState = {
   pinnedBadges: [],
   lastBonusQuestsUsed: 0,
   actionCounts: {},
+  bonusClaimsTodayCount: 0,
+  lastBonusClaimedTimestamp: 0,
 };
 
 export const initialState: GamificationStoreState = {
