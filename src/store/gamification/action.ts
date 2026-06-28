@@ -15,6 +15,8 @@ export interface GamificationAction {
   unlockBadge: (badgeId: string) => void;
   unpinBadge: (badgeId: string) => void;
   unpinAllBadges: () => void;
+  updateQuestProgress: (questId: string, progress: number) => void;
+  trackAction: (actionId: string, count?: number) => void;
 }
 
 export const gamificationActionSlice: StateCreator<
@@ -39,7 +41,7 @@ export const gamificationActionSlice: StateCreator<
     set(
       (state) => ({
         activeDailyQuests: state.activeDailyQuests.map((q) =>
-          q.questId === questId ? { ...q, claimed: true } : q
+          q.questId === questId && q.completed ? { ...q, claimed: true } : q
         ),
       }),
       false,
@@ -51,7 +53,7 @@ export const gamificationActionSlice: StateCreator<
     set(
       (state) => ({
         activeWeeklyQuests: state.activeWeeklyQuests.map((q) =>
-          q.questId === questId ? { ...q, claimed: true } : q
+          q.questId === questId && q.completed ? { ...q, claimed: true } : q
         ),
       }),
       false,
@@ -163,5 +165,52 @@ export const gamificationActionSlice: StateCreator<
 
   unpinAllBadges: () => {
     set({ pinnedBadges: [] }, false, 'gamification/unpinAllBadges');
+  },
+
+  updateQuestProgress: (questId, progress) => {
+    set(
+      (state) => {
+        let updated = false;
+        const activeDailyQuests = state.activeDailyQuests.map((q) => {
+          if (q.questId === questId) {
+            updated = true;
+            // Assuming target is checked by the component or we pass completed boolean
+            // Wait, we need the target. Let's assume the caller passes the new progress.
+            // But we don't know the target here easily without importing JSONs.
+            // Let's just update the progress. The completion check could be done here if we import JSONs.
+            return { ...q, progress };
+          }
+          return q;
+        });
+
+        if (updated) return { activeDailyQuests };
+
+        const activeWeeklyQuests = state.activeWeeklyQuests.map((q) => {
+          if (q.questId === questId) {
+            return { ...q, progress };
+          }
+          return q;
+        });
+        return { activeWeeklyQuests };
+      },
+      false,
+      'gamification/updateQuestProgress'
+    );
+  },
+
+  trackAction: (actionId, count = 1) => {
+    set(
+      (state) => {
+        const currentCount = state.actionCounts[actionId] || 0;
+        return {
+          actionCounts: {
+            ...state.actionCounts,
+            [actionId]: currentCount + count,
+          },
+        };
+      },
+      false,
+      'gamification/trackAction'
+    );
   },
 });

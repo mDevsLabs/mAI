@@ -763,7 +763,6 @@
   "taskList.orderBy.updatedAt": "Actualizada el",
   "taskList.title": "Tareas",
   "taskList.unassigned": "Sin asignar",
-  "taskList.unassignedHint": "May ejecutará esta tarea cuando no haya ningún asignado",
   "taskList.view.board": "Tablero",
   "taskList.view.list": "Lista",
   "taskList.viewAll": "Ver todo",

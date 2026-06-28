@@ -450,7 +450,6 @@
   "taskTemplate.action.connect.short": "Verbinden",
   "taskTemplate.action.connecting": "Wachten op autorisatie…",
   "taskTemplate.action.create.error": "Taak aanmaken mislukt. Probeer het opnieuw.",
-  "taskTemplate.action.create.success": "Geplande taak toegevoegd. Vind het in Lobe AI.",
   "taskTemplate.action.createButton": "Taak toevoegen",
   "taskTemplate.action.creating": "Bezig met aanmaken...",
   "taskTemplate.action.dismiss.error": "Afwijzen mislukt. Probeer het opnieuw.",

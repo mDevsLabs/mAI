@@ -788,7 +788,6 @@
   "taskList.orderBy.updatedAt": "Bijgewerkt op",
   "taskList.title": "Taken",
   "taskList.unassigned": "Niet toegewezen",
-  "taskList.unassignedHint": "May voert deze taak uit wanneer er geen verantwoordelijke is ingesteld",
   "taskList.view.board": "Bord",
   "taskList.view.list": "Lijst",
   "taskList.viewAll": "Alles bekijken",

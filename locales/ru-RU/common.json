@@ -450,7 +450,6 @@
   "taskTemplate.action.connect.short": "Подключить",
   "taskTemplate.action.connecting": "Ожидание авторизации…",
   "taskTemplate.action.create.error": "Не удалось создать задачу. Попробуйте еще раз.",
-  "taskTemplate.action.create.success": "Запланированная задача добавлена. Найдите её в Lobe AI.",
   "taskTemplate.action.createButton": "Добавить задачу",
   "taskTemplate.action.creating": "Создание...",
   "taskTemplate.action.dismiss.error": "Не удалось отклонить. Попробуйте еще раз.",

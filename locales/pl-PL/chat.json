@@ -788,7 +788,6 @@
   "taskList.orderBy.updatedAt": "Data aktualizacji",
   "taskList.title": "Zadania",
   "taskList.unassigned": "Nieprzypisane",
-  "taskList.unassignedHint": "May uruchomi to zadanie, gdy nie ma przypisanego wykonawcy",
   "taskList.view.board": "Tablica",
   "taskList.view.list": "Lista",
   "taskList.viewAll": "Wyświetl wszystkie",

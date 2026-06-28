@@ -450,7 +450,6 @@
   "taskTemplate.action.connect.short": "Conectar",
   "taskTemplate.action.connecting": "Esperando autorización…",
   "taskTemplate.action.create.error": "No se pudo crear la tarea. Por favor, inténtalo de nuevo.",
-  "taskTemplate.action.create.success": "Tarea programada añadida. Encuéntrala en Lobe AI.",
   "taskTemplate.action.createButton": "Añadir tarea",
   "taskTemplate.action.creating": "Creando...",
   "taskTemplate.action.dismiss.error": "No se pudo descartar. Por favor, inténtalo de nuevo.",

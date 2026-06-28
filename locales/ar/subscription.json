@@ -394,7 +394,6 @@
   "referral.errors.selfReferral": "لا يمكنك استخدام رمز الدعوة الخاص بك",
   "referral.errors.updateFailed": "فشل التحديث، يرجى المحاولة لاحقًا",
   "referral.inviteCode.description": "شارك رمز الإحالة الحصري الخاص بك لدعوة الأصدقاء للتسجيل",
-  "referral.inviteCode.title": "رمز الإحالة الخاص بي",
   "referral.inviteLink.description": "انسخ الرابط وشاركه مع الأصدقاء. يحصل كلاكما على أرصدة بعد أن يقوم صديقك بالدفع",
   "referral.inviteLink.title": "رابط الإحالة",
   "referral.rules.antiAbuse": "إذا تم اكتشاف نشاط احتيالي (مثل التسجيل الجماعي لحسابات بريد إلكتروني مؤقتة)، فسيتم حظر الحسابات المرتبطة بشكل دائم.",

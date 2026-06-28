@@ -394,7 +394,6 @@
   "referral.errors.selfReferral": "Kendi davet kodunuzu kullanamazsınız",
   "referral.errors.updateFailed": "Güncelleme başarısız oldu, lütfen daha sonra tekrar deneyin",
   "referral.inviteCode.description": "Arkadaşlarınızı davet etmek için özel referans kodunuzu paylaşın",
-  "referral.inviteCode.title": "Referans Kodum",
   "referral.inviteLink.description": "Bağlantıyı kopyalayın ve arkadaşlarınızla paylaşın. Arkadaşınız ödeme yaptıktan sonra ikiniz de kredi kazanırsınız.",
   "referral.inviteLink.title": "Referans Bağlantısı",
   "referral.rules.antiAbuse": "Eğer sahtecilik tespit edilirse (örneğin, geçici e-posta hesaplarının toplu kaydı), ilgili hesaplar kalıcı olarak yasaklanacaktır.",

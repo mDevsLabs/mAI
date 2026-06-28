@@ -394,7 +394,6 @@
   "referral.errors.selfReferral": "Du kannst deinen eigenen Einladungscode nicht verwenden",
   "referral.errors.updateFailed": "Aktualisierung fehlgeschlagen, bitte später erneut versuchen",
   "referral.inviteCode.description": "Teilen Sie Ihren exklusiven Empfehlungscode, um Freunde einzuladen",
-  "referral.inviteCode.title": "Mein Empfehlungscode",
   "referral.inviteLink.description": "Kopieren Sie den Link und teilen Sie ihn mit Freunden. Beide erhalten Credits, nachdem Ihr Freund eine Zahlung getätigt hat.",
   "referral.inviteLink.title": "Empfehlungslink",
   "referral.rules.antiAbuse": "Wenn betrügerische Aktivitäten festgestellt werden (z. B. Massenregistrierung von Wegwerf-E-Mail-Konten), werden die zugehörigen Konten dauerhaft gesperrt.",

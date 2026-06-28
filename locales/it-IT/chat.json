@@ -763,7 +763,6 @@
   "taskList.orderBy.updatedAt": "Data di aggiornamento",
   "taskList.title": "Attività",
   "taskList.unassigned": "Non assegnata",
-  "taskList.unassignedHint": "May eseguirà questo task quando non è assegnato a nessuno",
   "taskList.view.board": "Bacheca",
   "taskList.view.list": "Lista",
   "taskList.viewAll": "Mostra tutto",

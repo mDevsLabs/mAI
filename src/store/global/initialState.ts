@@ -68,6 +68,7 @@ export enum SettingsTabs {
   Proxy = 'proxy',
   Referral = 'referral',
   RewardsSettings = 'rewards-settings',
+  RewardsLevels = 'rewards-levels',
   RewardsQuests = 'rewards-quests',
   RewardsBadges = 'rewards-badges',
   Security = 'security',

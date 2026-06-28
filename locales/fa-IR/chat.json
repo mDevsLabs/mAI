@@ -788,7 +788,6 @@
   "taskList.orderBy.updatedAt": "تاریخ بروزرسانی",
   "taskList.title": "وظایف",
   "taskList.unassigned": "واگذار نشده",
-  "taskList.unassignedHint": "May این وظیفه را زمانی اجرا می‌کند که مسئولی تعیین نشده باشد",
   "taskList.view.board": "برد",
   "taskList.view.list": "فهرست",
   "taskList.viewAll": "مشاهده همه",

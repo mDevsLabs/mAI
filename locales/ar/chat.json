@@ -788,7 +788,6 @@
   "taskList.orderBy.updatedAt": "تاريخ التحديث",
   "taskList.title": "المهام",
   "taskList.unassigned": "غير مكلّف",
-  "taskList.unassignedHint": "سيقوم May بتشغيل هذه المهمة عند عدم تعيين منفذ",
   "taskList.view.board": "لوحة",
   "taskList.view.list": "قائمة",
   "taskList.viewAll": "عرض الكل",

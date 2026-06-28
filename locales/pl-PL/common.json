@@ -450,7 +450,6 @@
   "taskTemplate.action.connect.short": "Połącz",
   "taskTemplate.action.connecting": "Oczekiwanie na autoryzację…",
   "taskTemplate.action.create.error": "Nie udało się utworzyć zadania. Spróbuj ponownie.",
-  "taskTemplate.action.create.success": "Zadanie zaplanowane. Znajdziesz je w Lobe AI.",
   "taskTemplate.action.createButton": "Dodaj zadanie",
   "taskTemplate.action.creating": "Tworzenie...",
   "taskTemplate.action.dismiss.error": "Nie udało się odrzucić. Spróbuj ponownie.",

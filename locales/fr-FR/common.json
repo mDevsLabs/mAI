@@ -450,7 +450,6 @@
   "taskTemplate.action.connect.short": "Connecter",
   "taskTemplate.action.connecting": "En attente d'autorisation…",
   "taskTemplate.action.create.error": "Échec de la création de la tâche. Veuillez réessayer.",
-  "taskTemplate.action.create.success": "Tâche planifiée ajoutée. Retrouvez-la dans Lobe AI.",
   "taskTemplate.action.createButton": "Ajouter une tâche",
   "taskTemplate.action.creating": "Création en cours...",
   "taskTemplate.action.dismiss.error": "Échec de la suppression. Veuillez réessayer.",

@@ -763,7 +763,6 @@
   "taskList.orderBy.updatedAt": "수정일",
   "taskList.title": "작업",
   "taskList.unassigned": "미할당",
-  "taskList.unassignedHint": "담당자가 배정되지 않은 경우 May가 이 작업을 실행합니다",
   "taskList.view.board": "보드",
   "taskList.view.list": "목록",
   "taskList.viewAll": "전체 보기",

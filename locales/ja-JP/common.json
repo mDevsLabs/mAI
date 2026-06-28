@@ -450,7 +450,6 @@
   "taskTemplate.action.connect.short": "接続",
   "taskTemplate.action.connecting": "認証を待っています…",
   "taskTemplate.action.create.error": "タスクの作成に失敗しました。もう一度お試しください。",
-  "taskTemplate.action.create.success": "スケジュールされたタスクが追加されました。Lobe AIで確認してください。",
   "taskTemplate.action.createButton": "タスクを追加",
   "taskTemplate.action.creating": "作成中...",
   "taskTemplate.action.dismiss.error": "却下に失敗しました。もう一度お試しください。",

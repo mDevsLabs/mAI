@@ -450,7 +450,6 @@
   "taskTemplate.action.connect.short": "Bağlan",
   "taskTemplate.action.connecting": "Yetkilendirme bekleniyor…",
   "taskTemplate.action.create.error": "Görev oluşturulamadı. Lütfen tekrar deneyin.",
-  "taskTemplate.action.create.success": "Planlanmış görev eklendi. Lobe AI'de bulabilirsiniz.",
   "taskTemplate.action.createButton": "Görev ekle",
   "taskTemplate.action.creating": "Oluşturuluyor...",
   "taskTemplate.action.dismiss.error": "Kapatma işlemi başarısız oldu. Lütfen tekrar deneyin.",

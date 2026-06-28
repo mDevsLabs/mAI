@@ -394,7 +394,6 @@
   "referral.errors.selfReferral": "Je kunt je eigen uitnodigingscode niet gebruiken",
   "referral.errors.updateFailed": "Bijwerken mislukt, probeer later opnieuw",
   "referral.inviteCode.description": "Deel je unieke verwijzingscode om vrienden uit te nodigen",
-  "referral.inviteCode.title": "Mijn Verwijzingscode",
   "referral.inviteLink.description": "Kopieer de link en deel deze met vrienden. Jullie verdienen allebei credits nadat je vriend een betaling heeft gedaan.",
   "referral.inviteLink.title": "Verwijzingslink",
   "referral.rules.antiAbuse": "Als frauduleuze activiteiten worden gedetecteerd (bijv. massaregistratie van wegwerp-e-mailaccounts), worden de bijbehorende accounts permanent verbannen.",
