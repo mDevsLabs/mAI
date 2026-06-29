@@ -182,9 +182,12 @@ const BetterAuthSignUpForm = () => {
           ]}
         >
           <Input
+            autoComplete="email"
+            inputMode="email"
             placeholder={t('betterAuth.signup.emailPlaceholder')}
             ref={emailInputRef}
             size="large"
+            type="email"
             prefix={
               <Icon
                 icon={Mail}
@@ -213,6 +216,7 @@ const BetterAuthSignUpForm = () => {
           ]}
         >
           <Input.Password
+            autoComplete="new-password"
             placeholder={t('betterAuth.signup.passwordPlaceholder')}
             ref={passwordInputRef}
             size="large"
@@ -242,6 +246,7 @@ const BetterAuthSignUpForm = () => {
           ]}
         >
           <Input.Password
+            autoComplete="new-password"
             placeholder={t('betterAuth.signup.confirmPasswordPlaceholder')}
             size="large"
             prefix={

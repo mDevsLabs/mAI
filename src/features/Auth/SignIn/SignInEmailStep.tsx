@@ -201,6 +201,8 @@ export const SignInEmailStep = ({
             ]}
           >
             <Input
+              autoComplete="username"
+              inputMode="email"
               placeholder={t('betterAuth.signin.emailPlaceholder')}
               ref={emailInputRef}
               size="large"
@@ -236,7 +238,18 @@ export const SignInEmailStep = ({
           description={
             <>
               {t('betterAuth.signin.socialOnlyHint')}{' '}
-              <a className={styles.setPasswordLink} onClick={onSetPassword}>
+              <a
+                className={styles.setPasswordLink}
+                role="button"
+                tabIndex={0}
+                onClick={onSetPassword}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onSetPassword();
+                  }
+                }}
+              >
                 {t('betterAuth.signin.setPassword')}
               </a>
             </>

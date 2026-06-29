@@ -12,45 +12,74 @@ const { Title, Text } = Typography;
 
 export const styles = createStaticStyles(({ css, cssVar }) => ({
   container: css`
-    padding: 32px;
+    padding: 24px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 48px;
-    background: radial-gradient(circle at top, color-mix(in srgb, ${cssVar.colorPrimary} 12%, transparent) 0%, transparent 60%);
-    min-height: 100%;
-    animation: fadeIn 0.8s ease-out;
+    gap: 24px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    animation: fadeIn 0.5s ease-out;
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
+      from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
     }
   `,
-  levelCircle: css`
+  dashboardRow: css`
+    display: flex;
+    gap: 24px;
+    width: 100%;
+    flex-wrap: wrap;
+  `,
+  leftColumn: css`
+    flex: 1;
+    min-width: 340px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  `,
+  rightColumn: css`
+    flex: 1.2;
+    min-width: 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  `,
+  glassCard: css`
+    background: ${cssVar.colorBgContainer} !important;
+    border: 1px solid ${cssVar.colorBorderSecondary} !important;
+    border-radius: 16px !important;
+    padding: 20px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+    transition: all 0.3s ease;
+  `,
+  progressCard: css`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px !important;
+  `,
+  levelCircleContainer: css`
     position: relative;
-    width: 300px;
-    height: 300px;
+    width: 180px;
+    height: 180px;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 50%;
-    background: ${cssVar.colorFillTertiary};
-    box-shadow: 0 0 40px ${cssVar.colorPrimaryBorder};
-    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    animation: pulseGlow 4s ease-in-out infinite;
+    background: rgba(255, 255, 255, 0.02);
+    box-shadow: 0 0 25px ${cssVar.colorPrimaryBorder};
+    transition: all 0.3s ease;
     
     &:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 60px ${cssVar.colorPrimary};
-    }
-
-    @keyframes pulseGlow {
-      0%, 100% { box-shadow: 0 0 30px ${cssVar.colorPrimaryBorder}; }
-      50% { box-shadow: 0 0 50px ${cssVar.colorPrimary}; }
+      transform: scale(1.03);
+      box-shadow: 0 0 35px ${cssVar.colorPrimary};
     }
   `,
   levelNumber: css`
-    font-size: 96px;
+    font-size: 54px;
     font-weight: 900;
     line-height: 1;
     background: linear-gradient(135deg, ${cssVar.colorPrimary}, ${cssVar.colorInfo});
@@ -59,74 +88,63 @@ export const styles = createStaticStyles(({ css, cssVar }) => ({
   `,
   progressText: css`
     margin-top: 16px;
-    font-size: 20px;
-    color: ${cssVar.colorTextSecondary};
-    font-weight: bold;
-    letter-spacing: 0.5px;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
   `,
   statsGrid: css`
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 24px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
     width: 100%;
   `,
-  statCard: css`
+  miniStatCard: css`
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding: 16px !important;
     text-align: center;
-    background: rgba(255, 255, 255, 0.02);
-    backdrop-filter: blur(10px);
-    border: 1px solid ${cssVar.colorBorderSecondary};
-    border-radius: 16px;
-    padding: 24px;
-    transition: all 0.3s ease;
-    
-    &:hover {
-      transform: translateY(-5px);
-      background: rgba(255, 255, 255, 0.05);
-      border-color: ${cssVar.colorPrimary};
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-    }
-  `,
-  rewardsSection: css`
-    width: 100%;
-    background: rgba(255, 255, 255, 0.01);
-    backdrop-filter: blur(15px);
-    border: 1px solid ${cssVar.colorBorderSecondary};
-    border-radius: 20px;
-    padding: 24px;
-  `,
-  rewardsGrid: css`
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 16px;
-    width: 100%;
-  `,
-  rewardCard: css`
-    background: rgba(255, 255, 255, 0.02) !important;
+    background: ${cssVar.colorBgContainer} !important;
     border: 1px solid ${cssVar.colorBorderSecondary} !important;
     border-radius: 12px !important;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
+    
     &:hover {
+      transform: translateY(-2px);
       border-color: ${cssVar.colorPrimary} !important;
-      background: rgba(255, 255, 255, 0.04) !important;
+      background: rgba(255, 255, 255, 0.02) !important;
     }
   `,
-  historySection: css`
-    width: 100%;
+  rewardList: css`
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  `,
+  rewardListItem: css`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
     background: rgba(255, 255, 255, 0.01);
-    backdrop-filter: blur(15px);
     border: 1px solid ${cssVar.colorBorderSecondary};
-    border-radius: 20px;
-    padding: 24px;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.02);
+      border-color: ${cssVar.colorPrimaryBorder};
+    }
+  `,
+  historyCard: css`
+    width: 100%;
+    margin-top: 8px;
   `,
   toolbar: css`
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     align-items: center;
   `,
   historyTable: css`
@@ -134,15 +152,15 @@ export const styles = createStaticStyles(({ css, cssVar }) => ({
       background: transparent !important;
     }
     .ant-table-thead > tr > th {
-      background: rgba(255, 255, 255, 0.02) !important;
+      background: rgba(255, 255, 255, 0.01) !important;
       color: ${cssVar.colorTextSecondary} !important;
       border-bottom: 1px solid ${cssVar.colorBorderSecondary} !important;
     }
     .ant-table-tbody > tr > td {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.03) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.02) !important;
     }
     .ant-table-tbody > tr:hover > td {
-      background: rgba(255, 255, 255, 0.02) !important;
+      background: rgba(255, 255, 255, 0.01) !important;
     }
     .ant-pagination-item-active {
       border-color: ${cssVar.colorPrimary} !important;
@@ -152,12 +170,12 @@ export const styles = createStaticStyles(({ css, cssVar }) => ({
 }));
 
 const LEVEL_REWARDS = [
-  { level: 10, name: "Fond d'écran mAI - Niveau 10", url: 'https://upload.fs.fr/NpjISr5v0u.png', desc: "Fond d'écran mAI exclusif pour célébrer le passage au niveau 10." },
-  { level: 20, name: "Fond d'écran mAI - Niveau 20", url: 'https://upload.fs.fr/BAAdyao8xw.png', desc: "Fond d'écran mAI aux inspirations spatiales et technologiques." },
+  { level: 10, name: "Fond d'écran mAI - Niveau 10", url: 'https://upload.fs.fr/NpjISr5v0u.png', desc: "Fond d'écran mAI exclusif pour le niveau 10." },
+  { level: 20, name: "Fond d'écran mAI - Niveau 20", url: 'https://upload.fs.fr/BAAdyao8xw.png', desc: "Fond d'écran mAI aux inspirations technologiques." },
   { level: 30, name: "Fond d'écran mAI - Niveau 30", url: 'https://upload.fs.fr/odxyhuFB6x.png', desc: "Fond d'écran mAI néon haute fidélité pour votre bureau." },
-  { level: 40, name: "Fond d'écran mAI - Niveau 40", url: 'https://upload.fs.fr/iycITGVLDt.png', desc: "Fond d'écran mAI abstrait généré avec le moteur premium mDevs." },
-  { level: 50, name: "Fond d'écran mAI - Niveau 50", url: 'https://upload.fs.fr/rCZU8cmpMm.png', desc: "Le fond d'écran mAI de célébration ultime pour le niveau 50." },
-  { level: 100, name: 'Logos spéciaux mAI - Niveau 100', url: 'https://upload.fs.fr/fBHTd26bOA.zip', desc: "Archive contenant la collection complète des logos vectoriels mAI spéciaux." },
+  { level: 40, name: "Fond d'écran mAI - Niveau 40", url: 'https://upload.fs.fr/iycITGVLDt.png', desc: "Fond d'écran mAI abstrait généré avec le moteur mDevs." },
+  { level: 50, name: "Fond d'écran mAI - Niveau 50", url: 'https://upload.fs.fr/rCZU8cmpMm.png', desc: "Le fond d'écran mAI de célébration pour le niveau 50." },
+  { level: 100, name: 'Logos spéciaux mAI - Niveau 100', url: 'https://upload.fs.fr/fBHTd26bOA.zip', desc: "Collection complète des logos vectoriels mAI spéciaux." },
 ];
 
 export const LevelsPage = () => {
@@ -304,90 +322,106 @@ export const LevelsPage = () => {
 
   return (
     <div className={styles.container}>
-      <Flexbox align="center" gap={8}>
-        <Title level={2} style={{ margin: 0 }}>Niveau</Title>
-        <Text type="secondary">Explorez, progressez et débloquez des récompenses exclusives.</Text>
-      </Flexbox>
-      
-      <div className={styles.levelCircle}>
-        <Progress 
-          type="circle" 
-          percent={progressPercent} 
-          size={300} 
-          strokeWidth={6}
-          strokeColor={{ '0%': token.colorPrimary, '100%': token.colorInfo }}
-          format={() => (
-            <Flexbox align="center" gap={0} style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-              <Text type="secondary" style={{ fontSize: 16, textTransform: 'uppercase', letterSpacing: 2 }}>Niveau</Text>
-              <div className={styles.levelNumber}>{level}</div>
-            </Flexbox>
-          )}
-        />
-      </div>
-
-      <div className={styles.progressText}>
-        {currentLevelXp} / 200 MP
-      </div>
-
-      <div className={styles.statsGrid}>
-        <div className={styles.statCard}>
-          <Trophy size={24} style={{ color: 'var(--color-warning)', marginBottom: 8 }} />
-          <Text type="secondary" style={{ fontSize: 12, marginBottom: 4 }}>MP Total</Text>
-          <Title level={4} style={{ margin: 0 }}>{xp} MP</Title>
-        </div>
-        <div className={styles.statCard}>
-          <CheckSquare size={24} style={{ color: 'var(--color-success)', marginBottom: 8 }} />
-          <Text type="secondary" style={{ fontSize: 12, marginBottom: 4 }}>Actions Réalisées</Text>
-          <Title level={4} style={{ margin: 0 }}>{totalActions}</Title>
-        </div>
-        <div className={styles.statCard}>
-          <Award size={24} style={{ color: 'var(--color-primary)', marginBottom: 8 }} />
-          <Text type="secondary" style={{ fontSize: 12, marginBottom: 4 }}>Badges Débloqués</Text>
-          <Title level={4} style={{ margin: 0 }}>{unlockedBadges.length} / 100</Title>
-        </div>
-      </div>
-
-      <div className={styles.rewardsSection}>
-        <Title level={3} style={{ marginBottom: 8 }}>Récompenses de niveau</Title>
-        <Text type="secondary" style={{ display: 'block', marginBottom: 20 }}>
-          Téléchargez vos récompenses exclusives mAI dès que vous franchissez les paliers de niveau.
-        </Text>
-        <div className={styles.rewardsGrid}>
-          {LEVEL_REWARDS.map((r) => {
-            const isUnlocked = level >= r.level;
-            return (
-              <Card className={styles.rewardCard} key={r.level} style={{ opacity: isUnlocked ? 1 : 0.6 }}>
-                <Flexbox align="center" justify="space-between" horizontal style={{ width: '100%' }}>
-                  <Flexbox gap={4} style={{ flex: 1, paddingRight: 16 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <Tag color={isUnlocked ? 'success' : 'default'} style={{ fontWeight: 'bold' }}>
-                        Niveau {r.level}
-                      </Tag>
-                      <Title level={5} style={{ margin: 0 }}>{r.name}</Title>
-                    </div>
-                    <Text type="secondary" style={{ fontSize: 12, marginTop: 4 }}>{r.desc}</Text>
+      <div className={styles.dashboardRow}>
+        
+        {/* Colonne Gauche : Progression & Statistiques */}
+        <div className={styles.leftColumn}>
+          
+          {/* Card de Progression circulaire */}
+          <Card className={`${styles.glassCard} ${styles.progressCard}`}>
+            <div className={styles.levelCircleContainer}>
+              <Progress 
+                type="circle" 
+                percent={progressPercent} 
+                size={160} 
+                strokeWidth={5}
+                strokeColor={{ '0%': token.colorPrimary, '100%': token.colorInfo }}
+                format={() => (
+                  <Flexbox align="center" gap={0} style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+                    <Text type="secondary" style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: 1.5 }}>Niveau</Text>
+                    <div className={styles.levelNumber}>{level}</div>
                   </Flexbox>
-                  <Button
-                    type={isUnlocked ? 'primary' : 'default'}
-                    disabled={!isUnlocked}
-                    icon={isUnlocked ? <Download size={14} /> : <Lock size={14} />}
-                    onClick={() => {
-                      if (isUnlocked) {
-                        window.open(r.url, '_blank');
-                      }
-                    }}
-                  >
-                    {isUnlocked ? 'Télécharger' : 'Verrouillé'}
-                  </Button>
-                </Flexbox>
-              </Card>
-            );
-          })}
+                )}
+              />
+            </div>
+            <div className={styles.progressText}>
+              <span style={{ color: 'var(--color-primary)' }}>{currentLevelXp}</span>
+              <span style={{ color: 'var(--color-text-description)', fontWeight: 'normal' }}> / 200 MP</span>
+            </div>
+            <Text type="secondary" style={{ fontSize: 12, marginTop: 8, textAlign: 'center' }}>
+              Encore <strong>{200 - currentLevelXp} MP</strong> pour atteindre le niveau suivant !
+            </Text>
+          </Card>
+
+          {/* Grille de statistiques miniatures */}
+          <div className={styles.statsGrid}>
+            <Card className={styles.miniStatCard}>
+              <Trophy size={18} style={{ color: 'var(--color-warning)', marginBottom: 4 }} />
+              <Text type="secondary" style={{ fontSize: 11, display: 'block', marginBottom: 2 }}>MP Total</Text>
+              <span style={{ fontSize: 16, fontWeight: 'bold' }}>{xp}</span>
+            </Card>
+            <Card className={styles.miniStatCard}>
+              <CheckSquare size={18} style={{ color: 'var(--color-success)', marginBottom: 4 }} />
+              <Text type="secondary" style={{ fontSize: 11, display: 'block', marginBottom: 2 }}>Actions</Text>
+              <span style={{ fontSize: 16, fontWeight: 'bold' }}>{totalActions}</span>
+            </Card>
+            <Card className={styles.miniStatCard}>
+              <Award size={18} style={{ color: 'var(--color-primary)', marginBottom: 4 }} />
+              <Text type="secondary" style={{ fontSize: 11, display: 'block', marginBottom: 2 }}>Badges</Text>
+              <span style={{ fontSize: 16, fontWeight: 'bold' }}>{unlockedBadges.length}</span>
+            </Card>
+          </div>
+
         </div>
+
+        {/* Colonne Droite : Récompenses débloquées */}
+        <div className={styles.rightColumn}>
+          <Card className={styles.glassCard} style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <Title level={4} style={{ margin: 0, marginBottom: 4 }}>Récompenses de niveau</Title>
+            <Text type="secondary" style={{ display: 'block', marginBottom: 16, fontSize: 13 }}>
+              Débloquez et téléchargez vos fonds d'écran et logos exclusifs.
+            </Text>
+            
+            <div className={styles.rewardList}>
+              {LEVEL_REWARDS.map((r) => {
+                const isUnlocked = level >= r.level;
+                return (
+                  <div className={styles.rewardListItem} key={r.level} style={{ opacity: isUnlocked ? 1 : 0.65 }}>
+                    <Flexbox gap={2} style={{ flex: 1, paddingRight: 12 }}>
+                      <Flexbox horizontal align="center" gap={8}>
+                        <Tag color={isUnlocked ? 'success' : 'default'} style={{ fontWeight: 'bold', fontSize: 11 }}>
+                          Lv. {r.level}
+                        </Tag>
+                        <span style={{ fontWeight: '600', fontSize: 13 }}>{r.name}</span>
+                      </Flexbox>
+                      <Text type="secondary" style={{ fontSize: 11, marginTop: 2 }}>{r.desc}</Text>
+                    </Flexbox>
+                    <Button
+                      type={isUnlocked ? 'primary' : 'default'}
+                      disabled={!isUnlocked}
+                      size="small"
+                      icon={isUnlocked ? <Download size={12} /> : <Lock size={12} />}
+                      onClick={() => {
+                        if (isUnlocked) {
+                          window.open(r.url, '_blank');
+                        }
+                      }}
+                      style={{ fontSize: 12 }}
+                    >
+                      {isUnlocked ? 'Télécharger' : 'Verrouillé'}
+                    </Button>
+                  </div>
+                );
+              })}
+            </div>
+          </Card>
+        </div>
+
       </div>
 
-      <div className={styles.historySection}>
-        <Title level={3} style={{ margin: 0, marginBottom: 16 }}>Historique des gains</Title>
+      {/* Section Historique complète */}
+      <Card className={`${styles.glassCard} ${styles.historyCard}`}>
+        <Title level={4} style={{ margin: 0, marginBottom: 16 }}>Historique des gains</Title>
         
         <div className={styles.toolbar}>
           <Input
@@ -432,7 +466,7 @@ export const LevelsPage = () => {
           />
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12, fontSize: 13, color: 'var(--color-text-description)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12, fontSize: 12, color: 'var(--color-text-description)' }}>
           <span>{filteredLogs.length} résultat{filteredLogs.length > 1 ? 's' : ''} trouvé{filteredLogs.length > 1 ? 's' : ''}</span>
           <span style={{ fontWeight: '600', color: 'var(--color-success)' }}>Gains cumulés : +{totalGains} MP</span>
         </div>
@@ -445,7 +479,7 @@ export const LevelsPage = () => {
           className={styles.historyTable}
           locale={{ emptyText: <Empty description="Aucun historique disponible." image={Empty.PRESENTED_IMAGE_SIMPLE} /> }}
         />
-      </div>
+      </Card>
     </div>
   );
 };
