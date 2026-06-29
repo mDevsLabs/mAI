@@ -265,5 +265,7 @@
   "transfer.selectTarget": "将助理移动到",
   "transfer.success": "助理已移动",
   "transfer.title": "移动",
-  "transfer.transferTo": "移动到..."
+  "transfer.transferTo": "移动到...",
+  "channel.disabled": "Désactivé",
+  "channel.enabled": "Activé"
 }

@@ -1,0 +1,28 @@
+const common = {
+  'actions.add': 'إضافة',
+  'actions.back': 'العودة',
+  'actions.cancel': 'إلغاء',
+  'actions.close': 'إغلاق',
+  'actions.confirm': 'تأكيد',
+  'actions.delete': 'حذف',
+  'actions.edit': 'تعديل',
+  'actions.more': 'المزيد',
+  'actions.next': 'التالي',
+  'actions.ok': 'موافق',
+  'actions.previous': 'السابق',
+  'actions.refresh': 'تحديث',
+  'actions.remove': 'إزالة',
+  'actions.retry': 'إعادة المحاولة',
+  'actions.save': 'حفظ',
+  'actions.search': 'بحث',
+  'actions.submit': 'إرسال',
+  'app.description': 'حيث يتعاون وكلاء الذكاء الاصطناعي',
+  'app.name': 'LobeHub',
+  'status.error': 'خطأ',
+  'status.info': 'معلومات',
+  'status.loading': 'جارٍ التحميل',
+  'status.success': 'نجاح',
+  'status.warning': 'تحذير',
+};
+
+export default common;
