@@ -3,7 +3,7 @@
 import { Flexbox } from '@lobehub/ui';
 import { Typography, Progress, Table, Input, Select, Tag, Empty, Card, Button } from 'antd';
 import { createStaticStyles, useTheme } from 'antd-style';
-import { Search, Trophy, CheckSquare, Award, Download, Lock, MessageSquare, Puzzle, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Search, Trophy, CheckSquare, Award, Download, Lock, MessageSquare, Puzzle, Sparkles, CheckCircle2, Shield, Gift, ListTodo } from 'lucide-react';
 import React, { useState, useMemo } from 'react';
 
 import { useGamificationStore } from '@/store/gamification';
@@ -59,17 +59,17 @@ export const styles = createStaticStyles(({ css, cssVar }) => ({
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 24px !important;
+    padding: 24px 20px !important;
   `,
-  levelCircleContainer: css`
+  levelCircleWrapper: css`
     position: relative;
-    width: 180px;
-    height: 180px;
+    width: 160px;
+    height: 160px;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(255, 255, 255, 0.01);
     box-shadow: 0 0 25px ${cssVar.colorPrimaryBorder};
     transition: all 0.3s ease;
     
@@ -94,7 +94,7 @@ export const styles = createStaticStyles(({ css, cssVar }) => ({
   `,
   statsGrid: css`
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 16px;
     width: 100%;
   `,
@@ -192,6 +192,26 @@ export const LevelsPage = () => {
 
   const currentLevelXp = xp - ((level - 1) * 200);
   const progressPercent = Math.min(100, Math.max(0, Math.floor((currentLevelXp / 200) * 100)));
+
+  // Calculate new stats
+  const completedQuests = useMemo(() => {
+    return logs.filter((l) => l.type === 'quest').length;
+  }, [logs]);
+
+  const userGrade = useMemo(() => {
+    if (level >= 100) return 'Légende';
+    if (level >= 50) return 'Maître';
+    if (level >= 30) return 'Expert';
+    if (level >= 20) return 'Adepte';
+    if (level >= 10) return 'Initié';
+    return 'Novice';
+  }, [level]);
+
+  const nextReward = useMemo(() => {
+    const rewards = [10, 20, 30, 40, 50, 100];
+    const next = rewards.find((r) => r > level);
+    return next ? `Niveau ${next}` : 'Max atteint';
+  }, [level]);
 
   // Filter States
   const [search, setSearch] = useState('');
@@ -329,20 +349,19 @@ export const LevelsPage = () => {
           
           {/* Card de Progression circulaire */}
           <Card className={`${styles.glassCard} ${styles.progressCard}`}>
-            <div className={styles.levelCircleContainer}>
+            <div className={styles.levelCircleWrapper}>
               <Progress 
                 type="circle" 
                 percent={progressPercent} 
                 size={160} 
                 strokeWidth={5}
                 strokeColor={{ '0%': token.colorPrimary, '100%': token.colorInfo }}
-                format={() => (
-                  <Flexbox align="center" gap={0} style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-                    <Text type="secondary" style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: 1.5 }}>Niveau</Text>
-                    <div className={styles.levelNumber}>{level}</div>
-                  </Flexbox>
-                )}
+                format={() => null}
               />
+              <Flexbox align="center" justify="center" gap={0} style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', height: '100%' }}>
+                <Text type="secondary" style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: 1.5, lineHeight: 1, marginBottom: 2 }}>Niveau</Text>
+                <div className={styles.levelNumber}>{level}</div>
+              </Flexbox>
             </div>
             <div className={styles.progressText}>
               <span style={{ color: 'var(--color-primary)' }}>{currentLevelXp}</span>
@@ -353,22 +372,37 @@ export const LevelsPage = () => {
             </Text>
           </Card>
 
-          {/* Grille de statistiques miniatures */}
+          {/* Grille de statistiques miniatures (2 colonnes, 3 lignes pour aligner la hauteur) */}
           <div className={styles.statsGrid}>
             <Card className={styles.miniStatCard}>
               <Trophy size={18} style={{ color: 'var(--color-warning)', marginBottom: 4 }} />
               <Text type="secondary" style={{ fontSize: 11, display: 'block', marginBottom: 2 }}>MP Total</Text>
-              <span style={{ fontSize: 16, fontWeight: 'bold' }}>{xp}</span>
+              <span style={{ fontSize: 15, fontWeight: 'bold' }}>{xp}</span>
             </Card>
             <Card className={styles.miniStatCard}>
               <CheckSquare size={18} style={{ color: 'var(--color-success)', marginBottom: 4 }} />
               <Text type="secondary" style={{ fontSize: 11, display: 'block', marginBottom: 2 }}>Actions</Text>
-              <span style={{ fontSize: 16, fontWeight: 'bold' }}>{totalActions}</span>
+              <span style={{ fontSize: 15, fontWeight: 'bold' }}>{totalActions}</span>
             </Card>
             <Card className={styles.miniStatCard}>
               <Award size={18} style={{ color: 'var(--color-primary)', marginBottom: 4 }} />
               <Text type="secondary" style={{ fontSize: 11, display: 'block', marginBottom: 2 }}>Badges</Text>
-              <span style={{ fontSize: 16, fontWeight: 'bold' }}>{unlockedBadges.length}</span>
+              <span style={{ fontSize: 15, fontWeight: 'bold' }}>{unlockedBadges.length}</span>
+            </Card>
+            <Card className={styles.miniStatCard}>
+              <ListTodo size={18} style={{ color: 'var(--color-info)', marginBottom: 4 }} />
+              <Text type="secondary" style={{ fontSize: 11, display: 'block', marginBottom: 2 }}>Quêtes</Text>
+              <span style={{ fontSize: 15, fontWeight: 'bold' }}>{completedQuests}</span>
+            </Card>
+            <Card className={styles.miniStatCard}>
+              <Shield size={18} style={{ color: 'var(--color-warning)', marginBottom: 4 }} />
+              <Text type="secondary" style={{ fontSize: 11, display: 'block', marginBottom: 2 }}>Grade</Text>
+              <span style={{ fontSize: 15, fontWeight: 'bold' }}>{userGrade}</span>
+            </Card>
+            <Card className={styles.miniStatCard}>
+              <Gift size={18} style={{ color: 'var(--color-primary)', marginBottom: 4 }} />
+              <Text type="secondary" style={{ fontSize: 11, display: 'block', marginBottom: 2 }}>Cadeau Suivant</Text>
+              <span style={{ fontSize: 15, fontWeight: 'bold' }}>{nextReward}</span>
             </Card>
           </div>
 

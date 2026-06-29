@@ -194,7 +194,7 @@ const Settings = memo(() => {
     children: [
       {
         children: (
-          <div style={{ width: '100%', padding: '4px 8px' }}>
+          <div id="faq-container-fullwidth" style={{ width: '100%', padding: '4px 8px' }}>
             <Markdown>{FAQ_CONTENT}</Markdown>
           </div>
         ),
@@ -225,6 +225,16 @@ const Settings = memo(() => {
         /* Supprime les marges négatives ou décalages causés par la suppression du chevron */
         .ant-collapse-header {
           padding-left: 12px !important;
+        }
+
+        /* Force le conteneur parent de la FAQ à prendre toute la largeur sans colonne vide */
+        .ant-row:has(#faq-container-fullwidth) {
+          display: block !important;
+          width: 100% !important;
+        }
+        .ant-row:has(#faq-container-fullwidth) > div {
+          width: 100% !important;
+          max-width: 100% !important;
         }
       `}</style>
       <Form
