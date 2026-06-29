@@ -1,7 +1,7 @@
 'use client';
 
 import { type FormGroupItemType } from '@lobehub/ui';
-import { Accordion, AccordionItem, Flexbox, Form, Markdown } from '@lobehub/ui';
+import { Flexbox, Form, Markdown } from '@lobehub/ui';
 import { Switch } from '@lobehub/ui/base-ui';
 import { confirmModal } from '@lobehub/ui/base-ui';
 import { Slider, Select, Button, Typography, App } from 'antd';
@@ -40,6 +40,36 @@ const TIMEZONE_DESCRIPTIONS: Record<string, string> = {
   'Asia/Dubai': 'GST = Émirats Arabes Unis, Oman, Géorgie...',
   'America/Sao_Paulo': 'BRT/BRST = Brésil (Sud/Sud-Est)...'
 };
+
+const FAQ_CONTENT = `Bienvenue dans le guide officiel du système de progression et de récompenses de **mAI**. Cette section réunit toutes les règles et explications essentielles pour comprendre et maximiser vos performances.
+
+### 📊 Fonctionnement des Niveaux et MP (mAI Points)
+- Les **MP (mAI Points)** représentent la mesure de votre activité globale dans l'écosystème.
+- Chaque niveau nécessite précisément **200 MP** pour être franchi, sans aucune limite maximale de niveau.
+- Vous gagnez des points en discutant avec vos compagnons, en créant des agents ou en exploitant des plugins.
+
+### 📅 Cycle des Quêtes et Défis Actifs
+- Les **quêtes quotidiennes** (3 actives) sont réinitialisées automatiquement chaque jour à **minuit (00:00)**.
+- Les **quêtes hebdomadaires** (5 actives) se renouvellent chaque **lundi à minuit** pour offrir de nouveaux défis.
+- Un bonus exceptionnel de **3 quêtes quotidiennes supplémentaires** est disponible **une fois par semaine** (7 jours de recharge).
+- Si vous tentez de réclamer ce bonus avant l'expiration du délai, un **message d'erreur explicite** s'affichera.
+
+### 🏆 Raretés des Badges et Épinglage
+- Votre collection comprend **100 badges uniques** classés selon 5 raretés distinctes avec leurs couleurs associées.
+- Répartition des raretés : *Rare* (50%), *Épique* (30%), *Légendaire* (10%), *Mythique* (7%), et *Ultra* (3%).
+- Les badges se débloquent automatiquement en arrière-plan lorsque vous atteignez le nombre d'actions requises.
+- Vous pouvez personnaliser votre profil en épinglant un maximum de **5 badges** simultanément dans votre vitrine.
+
+### 🌍 Paramètres Horaires et Réinitialisation
+- Le **fuseau horaire des quêtes** configure le moment précis de réinitialisation de vos défis quotidiens.
+- Pour éviter les abus de double-validation, le changement de fuseau horaire est limité à **1 fois par an**.
+- La **Zone de danger** vous permet de réinitialiser l'intégralité de vos statistiques, niveaux, badges et MP.
+- *Attention* : La réinitialisation est instantanée et **strictement irréversible** ; vos données seront perdues à jamais.
+
+### 🎁 Récompenses de Niveau à Télécharger
+- En progressant, vous débloquez l'accès à des fichiers de récompenses exclusives mAI créés par nos designers.
+- Les paliers **Niveau 10, 20, 30, 40 et 50** vous accordent le téléchargement de **fonds d'écran mAI** uniques.
+- Le palier mythique du **Niveau 100** libère le pack ultime contenant les **logos spéciaux mAI** en haute définition.`;
 
 const Settings = memo(() => {
   const { t } = useTranslation('setting');
@@ -164,85 +194,8 @@ const Settings = memo(() => {
     children: [
       {
         children: (
-          <div style={{ width: '100%' }}>
-            <Accordion defaultExpandedKeys={[]}>
-              <AccordionItem itemKey="faq-1" title="Comment obtenir des Points MP (mAI Points) ?">
-                <div style={{ padding: '8px 16px 16px' }}>
-                  <Markdown>
-                    {`Les ***MP*** (mAI Points) se gagnent en réalisant des actions quotidiennes dans l'application. Chaque message envoyé, outil ou plugin utilisé, ou agent spécialisé créé vous rapporte des points de base. Les **Quêtes quotidiennes** et **Quêtes hebdomadaires** sont les moyens les plus efficaces pour accumuler de grandes quantités de ***MP*** rapidement !`}
-                  </Markdown>
-                </div>
-              </AccordionItem>
-              <AccordionItem itemKey="faq-2" title="Comment fonctionne le système de Niveaux et combien de MP faut-il ?">
-                <div style={{ padding: '8px 16px 16px' }}>
-                  <Markdown>
-                    {`Chaque niveau requiert exactement **200 MP** pour être franchi. Lorsque vous accumulez des points, votre barre de progression se remplit automatiquement. Une fois les **200 MP** atteints, vous passez au **Niveau supérieur** 🚀 ! Il n'y a pas de limite au niveau que vous pouvez atteindre.`}
-                  </Markdown>
-                </div>
-              </AccordionItem>
-              <AccordionItem itemKey="faq-3" title="Quelles sont les différentes raretés de Badges et leurs proportions ?">
-                <div style={{ padding: '8px 16px 16px' }}>
-                  <Markdown>
-                    {`Les badges sont répartis selon 5 niveaux de rareté bien distincts :
-- **Rare** (50% des badges) : Faciles à débloquer au fil de l'utilisation.
-- **Épique** (30% des badges) : Demandent un engagement plus régulier.
-- **Légendaire** (10% des badges) : Nécessitent des efforts à long terme.
-- **Mythique** (7% des badges) : Réservés aux utilisateurs chevronnés, possèdent des animations spéciales.
-- **Ultra** (3% des badges) : Les plus prestigieux du système avec des effets visuels uniques.`}
-                  </Markdown>
-                </div>
-              </AccordionItem>
-              <AccordionItem itemKey="faq-4" title="Comment épingler des Badges sur mon profil et combien puis-je en afficher ?">
-                <div style={{ padding: '8px 16px 16px' }}>
-                  <Markdown>
-                    {`Vous pouvez épingler jusqu'à **5 badges** simultanément sur votre profil public. Pour cela, cliquez sur un badge débloqué dans votre collection ("Badges & Titres"), puis cliquez sur le bouton **"Épingler au profil"**. Vous pouvez les désépingler à tout moment de la même manière.`}
-                  </Markdown>
-                </div>
-              </AccordionItem>
-              <AccordionItem itemKey="faq-5" title="Quand les quêtes quotidiennes et hebdomadaires changent-elles ?">
-                <div style={{ padding: '8px 16px 16px' }}>
-                  <Markdown>
-                    {`- Les **Quêtes quotidiennes** (3 quêtes actives) sont renouvelées toutes les nuits à **minuit (00:00)** selon le fuseau horaire choisi dans vos Paramètres.
-- Les **Quêtes hebdomadaires** (5 quêtes actives) sont renouvelées tous les **lundis à minuit (00:00)**.`}
-                  </Markdown>
-                </div>
-              </AccordionItem>
-              <AccordionItem itemKey="faq-6" title="Comment fonctionne la limitation du fuseau horaire des quêtes ?">
-                <div style={{ padding: '8px 16px 16px' }}>
-                  <Markdown>
-                    {`Vous pouvez configurer votre fuseau horaire préféré afin que les quêtes s'adaptent à vos horaires de vie. Pour éviter toute triche ou réinitialisation abusive, ce réglage est strictement limité à **1 modification par an**. Une fois modifié, le menu de sélection restera grisé pendant 365 jours.`}
-                  </Markdown>
-                </div>
-              </AccordionItem>
-              <AccordionItem itemKey="faq-7" title="Qu'est-ce que la Zone de danger et comment fonctionne la réinitialisation ?">
-                <div style={{ padding: '8px 16px 16px' }}>
-                  <Markdown>
-                    {`La section **Zone de danger** contient l'option de remise à zéro totale de votre progression. En confirmant cette action, vos **MP** retournent à \`0\`, votre **Niveau** repasse à \`1\`, et tous vos badges ainsi que l'historique de vos actions sont définitivement effacés. Utilisez cette action avec *extrême précaution*.`}
-                  </Markdown>
-                </div>
-              </AccordionItem>
-              <AccordionItem itemKey="faq-8" title="Comment récupérer des quêtes quotidiennes supplémentaires ?">
-                <div style={{ padding: '8px 16px 16px' }}>
-                  <Markdown>
-                    {`Si vous avez terminé vos quêtes du jour mais souhaitez continuer à progresser, vous pouvez utiliser le bouton **"Obtenir 3 quêtes quotidiennes supplémentaires"** (limité à *1 fois par semaine*). Si vous tentez de dépasser cette limite hebdomadaire, un **message d'erreur explicite** s'affichera pour vous en avertir.`}
-                  </Markdown>
-                </div>
-              </AccordionItem>
-              <AccordionItem itemKey="faq-9" title="Y a-t-il des effets sonores et visuels particuliers dans mAI ?">
-                <div style={{ padding: '8px 16px 16px' }}>
-                  <Markdown>
-                    {`*Absolument !* Chaque fois que vous validez une quête ou débloquez un badge, un son festif est joué et des confettis s'affichent à l'écran. Vous pouvez régler le **volume de ces effets** ou **désactiver les animations** à tout moment dans les Paramètres des récompenses.`}
-                  </Markdown>
-                </div>
-              </AccordionItem>
-              <AccordionItem itemKey="faq-10" title="Où puis-je suivre l'historique complet de mes exploits ?">
-                <div style={{ padding: '8px 16px 16px' }}>
-                  <Markdown>
-                    {`Votre page **Niveau** vous offre une vue d'ensemble de vos statistiques : le total cumulé de vos points ***MP***, le nombre d'actions effectuées depuis votre inscription et le nombre total de badges uniques débloqués. C'est votre *tableau de bord personnel* de réussite !`}
-                  </Markdown>
-                </div>
-              </AccordionItem>
-            </Accordion>
+          <div id="faq-container-fullwidth" style={{ width: '100%', padding: '4px 8px' }}>
+            <Markdown>{FAQ_CONTENT}</Markdown>
           </div>
         ),
       }
@@ -255,25 +208,33 @@ const Settings = memo(() => {
   return (
     <Flexbox gap={32} width={'100%'} style={{ paddingBottom: 48 }}>
       <style>{`
-        /* Contour autour des boutons d'agrandissement de l'accordéon */
-        .ant-collapse-header .ant-collapse-expand-icon,
-        .lobe-accordion-item-indicator,
-        [class*="AccordionItem"] [class*="indicator"],
-        [class*="accordion"] [class*="indicator"] {
-          border: 1px solid var(--color-border-secondary) !important;
-          border-radius: 6px !important;
-          padding: 4px !important;
-          display: inline-flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-          background: var(--color-bg-elevated) !important;
-          transition: all 0.2s ease-in-out !important;
+        /* Supprime définitivement l'icône / flèche de pliage (bouton chevron ⬇) à gauche des titres de section */
+        .ant-collapse-expand-icon,
+        .ant-collapse-arrow,
+        [class*="Collapse"] [class*="indicator"],
+        [class*="Collapse"] [class*="arrow"],
+        [class*="collapse"] [class*="indicator"],
+        [class*="collapse"] [class*="arrow"] {
+          display: none !important;
+          width: 0 !important;
+          height: 0 !important;
+          padding: 0 !important;
+          margin: 0 !important;
         }
-        .ant-collapse-header .ant-collapse-expand-icon:hover,
-        .lobe-accordion-item-indicator:hover,
-        [class*="indicator"]:hover {
-          border-color: var(--color-primary) !important;
-          background: var(--color-fill-secondary) !important;
+
+        /* Supprime les marges négatives ou décalages causés par la suppression du chevron */
+        .ant-collapse-header {
+          padding-left: 12px !important;
+        }
+
+        /* Force le conteneur parent de la FAQ à prendre toute la largeur sans colonne vide */
+        .ant-row:has(#faq-container-fullwidth) {
+          display: block !important;
+          width: 100% !important;
+        }
+        .ant-row:has(#faq-container-fullwidth) > div {
+          width: 100% !important;
+          max-width: 100% !important;
         }
       `}</style>
       <Form

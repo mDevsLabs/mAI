@@ -37,15 +37,13 @@ import DesktopAutoOidcOnFirstOpen from './DesktopAutoOidcOnFirstOpen';
 import DesktopLayoutContainer from './DesktopLayoutContainer';
 import RegisterHotkeys from './RegisterHotkeys';
 import { styles } from './style';
-import { useQuestsManager } from '../settings/rewards-quests/hooks/useQuestsManager';
 
 const CloudBanner = dynamic(() => import('@/features/AlertBanner/CloudBanner'));
-const GlobalPets = dynamic(() =>
-  import('@/features/GlobalPets').then((m) => ({ default: m.GlobalPets })),
+const GlobalApprovalNotification = dynamic(
+  () => import('@/features/GlobalApprovalNotification'),
 );
 
 const Layout: FC = () => {
-  useQuestsManager(); // Run global gamification background listener
   const { isPWA } = usePlatform();
   const { showCloudPromotion } = useServerConfigStore(featureFlagsSelectors);
 
@@ -95,9 +93,7 @@ const Layout: FC = () => {
           <HotkeyHelperPanel />
           <RegisterHotkeys />
           <CmdkLazy />
-        </Suspense>
-        <Suspense fallback={null}>
-          <GlobalPets />
+          <GlobalApprovalNotification />
         </Suspense>
       </WorkspaceContextSlot>
     </HotkeysProvider>
