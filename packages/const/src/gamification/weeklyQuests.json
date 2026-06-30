@@ -1,0 +1,5602 @@
+[
+  {
+    "id": "weekly_quest_1",
+    "title": "Optimisation des échanges",
+    "description": "Envoyer des messages constructifs pour guider les assistants dans la résolution de tâches complexes.",
+    "actionType": "message_sent",
+    "targetValue": 35,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_2",
+    "title": "Clarification des exigences",
+    "description": "Formuler des instructions précises pour affiner le développement des fonctionnalités requises.",
+    "actionType": "message_sent",
+    "targetValue": 40,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_3",
+    "title": "Dialogue technique soutenu",
+    "description": "Collaborer avec les agents conversationnels pour déboguer les scripts d'intégration système.",
+    "actionType": "message_sent",
+    "targetValue": 50,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_4",
+    "title": "Briefing de projet",
+    "description": "Échanger activement pour structurer le cahier des charges d'une nouvelle application.",
+    "actionType": "message_sent",
+    "targetValue": 25,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_5",
+    "title": "Consultation d'expert",
+    "description": "Poser des questions ciblées sur l'architecture logicielle pour orienter les choix technologiques.",
+    "actionType": "message_sent",
+    "targetValue": 30,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_6",
+    "title": "Supervision de code",
+    "description": "Interagir avec les modèles pour passer en revue les pull requests et valider les modifications.",
+    "actionType": "message_sent",
+    "targetValue": 45,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_7",
+    "title": "Affinage de prompts",
+    "description": "Réaliser des ajustements successifs par messages pour parfaire les réponses générées.",
+    "actionType": "message_sent",
+    "targetValue": 28,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_8",
+    "title": "Coordination fonctionnelle",
+    "description": "Expliquer les workflows métier attendus aux agents pour automatiser les tâches administratives.",
+    "actionType": "message_sent",
+    "targetValue": 32,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_9",
+    "title": "Synergie d'outils",
+    "description": "Faire appel aux plugins disponibles pour enrichir les analyses de marché.",
+    "actionType": "plugin_used",
+    "targetValue": 8,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_10",
+    "title": "Calcul scientifique assisté",
+    "description": "Utiliser des plugins de calcul pour valider les formules mathématiques du projet.",
+    "actionType": "plugin_used",
+    "targetValue": 6,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_11",
+    "title": "Recherche web intégrée",
+    "description": "Exploiter les plugins de recherche pour collecter les dernières données sectorielles.",
+    "actionType": "plugin_used",
+    "targetValue": 12,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_12",
+    "title": "Exploration de schémas",
+    "description": "Activer les modules d'accès aux bases de données pour analyser la structure des tables.",
+    "actionType": "plugin_used",
+    "targetValue": 7,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_13",
+    "title": "Vérification de sécurité",
+    "description": "Lancer des diagnostics via des plugins d'analyse statique pour repérer les failles potentielles.",
+    "actionType": "plugin_used",
+    "targetValue": 5,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_14",
+    "title": "Rendu et modélisation",
+    "description": "Appliquer des plugins spécialisés pour générer des prototypes d'interfaces utilisateur.",
+    "actionType": "plugin_used",
+    "targetValue": 10,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_15",
+    "title": "Traduction automatique",
+    "description": "Solliciter les plugins de localisation pour traduire les fichiers de ressources linguistiques.",
+    "actionType": "plugin_used",
+    "targetValue": 9,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_16",
+    "title": "Extraction de métadonnées",
+    "description": "Traiter des documents volumineux avec les outils de parsing intégrés.",
+    "actionType": "plugin_used",
+    "targetValue": 11,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_17",
+    "title": "Architecte d'agents",
+    "description": "Concevoir de nouveaux agents personnalisés dotés de rôles clairs et spécialisés.",
+    "actionType": "agent_created",
+    "targetValue": 3,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_18",
+    "title": "Génération d'assistants",
+    "description": "Mettre en place des agents dédiés au support technique pour le service client.",
+    "actionType": "agent_created",
+    "targetValue": 2,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_19",
+    "title": "Création d'analystes",
+    "description": "Configurer des agents focalisés sur l'analyse financière et la veille concurrentielle.",
+    "actionType": "agent_created",
+    "targetValue": 4,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_20",
+    "title": "Spécialistes de contenu",
+    "description": "Développer des profils d'agents orientés rédaction de blogs et correction orthographique.",
+    "actionType": "agent_created",
+    "targetValue": 3,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_21",
+    "title": "Compagnons de code",
+    "description": "Créer des agents configurés spécifiquement avec les standards de style de votre entreprise.",
+    "actionType": "agent_created",
+    "targetValue": 2,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_22",
+    "title": "Usine à agents",
+    "description": "Déployer des profils variés pour couvrir l'ensemble des besoins de la chaîne DevOps.",
+    "actionType": "agent_created",
+    "targetValue": 5,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_23",
+    "title": "Concepteurs de flux",
+    "description": "Initialiser des agents capables d'interagir en groupe sur des tâches séquentielles.",
+    "actionType": "agent_created",
+    "targetValue": 3,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_24",
+    "title": "Facilitateurs d'intégration",
+    "description": "Créer des profils d'agents spécialisés dans l'accueil et l'onboarding des utilisateurs.",
+    "actionType": "agent_created",
+    "targetValue": 4,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_25",
+    "title": "Engagement quotidien",
+    "description": "Maintenir des sessions de travail actives sur plusieurs jours de la semaine.",
+    "actionType": "session_active",
+    "targetValue": 5,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_26",
+    "title": "Disponibilité accrue",
+    "description": "Assurer une présence et une interaction continue pour répondre aux besoins opérationnels.",
+    "actionType": "session_active",
+    "targetValue": 6,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_27",
+    "title": "Régularité opérationnelle",
+    "description": "Lancer des sessions d'analyse et de développement à intervalles réguliers.",
+    "actionType": "session_active",
+    "targetValue": 4,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_28",
+    "title": "Immersion de projet",
+    "description": "Consacrer des sessions d'utilisation intensives pour résoudre les bugs bloquants.",
+    "actionType": "session_active",
+    "targetValue": 7,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_29",
+    "title": "Suivi hebdomadaire",
+    "description": "Ouvrir des sessions de travail pour mettre à jour les plannings et les indicateurs clés.",
+    "actionType": "session_active",
+    "targetValue": 3,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_30",
+    "title": "Contrôle qualité",
+    "description": "Mener des sessions dédiées aux tests unitaires et d'intégration.",
+    "actionType": "session_active",
+    "targetValue": 5,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_31",
+    "title": "Planification agile",
+    "description": "Se connecter régulièrement pour mettre à jour les tâches du backlog.",
+    "actionType": "session_active",
+    "targetValue": 4,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_32",
+    "title": "Supervision globale",
+    "description": "Vérifier le statut du système à travers des sessions réparties sur la semaine.",
+    "actionType": "session_active",
+    "targetValue": 6,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_33",
+    "title": "Traitement de requêtes",
+    "description": "Consommer des jetons pour l'analyse de documents de spécifications techniques.",
+    "actionType": "tokens_used",
+    "targetValue": 80000,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_34",
+    "title": "Analyse textuelle massive",
+    "description": "Effectuer des traitements sémantiques nécessitant une large fenêtre de contexte.",
+    "actionType": "tokens_used",
+    "targetValue": 120000,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_35",
+    "title": "Génération de rapports denses",
+    "description": "Produire de longues synthèses et de la documentation technique détaillée.",
+    "actionType": "tokens_used",
+    "targetValue": 60000,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_36",
+    "title": "Audit de base de code",
+    "description": "Analyser l'intégralité d'un répertoire de fichiers sources pour en extraire l'architecture.",
+    "actionType": "tokens_used",
+    "targetValue": 150000,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_37",
+    "title": "Exploration sémantique",
+    "description": "Traiter des corpus de textes de référence pour enrichir la base de connaissances.",
+    "actionType": "tokens_used",
+    "targetValue": 50000,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_38",
+    "title": "Calculs linguistiques",
+    "description": "Générer des alternatives de formulation pour des supports de communication.",
+    "actionType": "tokens_used",
+    "targetValue": 70000,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_39",
+    "title": "Synthèse documentaire",
+    "description": "Résumer plusieurs articles scientifiques ou rapports sectoriels.",
+    "actionType": "tokens_used",
+    "targetValue": 90000,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_40",
+    "title": "Traitement de données RH",
+    "description": "Animer des processus d'évaluation sémantique de CV et de profils.",
+    "actionType": "tokens_used",
+    "targetValue": 100000,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_41",
+    "title": "Créativité visuelle",
+    "description": "Générer des visuels professionnels pour illustrer les présentations d'équipe.",
+    "actionType": "image_generated",
+    "targetValue": 8,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_42",
+    "title": "Identité graphique",
+    "description": "Concevoir des logos et éléments graphiques originaux pour un nouveau produit.",
+    "actionType": "image_generated",
+    "targetValue": 5,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_43",
+    "title": "Storyboard illustré",
+    "description": "Créer une suite cohérente de visuels pour matérialiser le parcours utilisateur.",
+    "actionType": "image_generated",
+    "targetValue": 12,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_44",
+    "title": "Prototypage d'interfaces",
+    "description": "Générer des maquettes réalistes d'applications mobiles ou de pages web.",
+    "actionType": "image_generated",
+    "targetValue": 10,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_45",
+    "title": "Campagne visuelle",
+    "description": "Produire des images publicitaires thématiques pour les réseaux sociaux.",
+    "actionType": "image_generated",
+    "targetValue": 15,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_46",
+    "title": "Mockups industriels",
+    "description": "Modéliser des rendus d'objets ou de packagings pour des présentations physiques.",
+    "actionType": "image_generated",
+    "targetValue": 6,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_47",
+    "title": "Illustration technique",
+    "description": "Générer des schémas d'explication conceptuels pour des manuels utilisateurs.",
+    "actionType": "image_generated",
+    "targetValue": 7,
+    "xpReward": 112
+  },
+  {
+    "id": "weekly_quest_48",
+    "title": "Créations conceptuelles",
+    "description": "Explorer des designs abstraits pour alimenter la réflexion artistique du studio.",
+    "actionType": "image_generated",
+    "targetValue": 9,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_49",
+    "title": "Narration sonore",
+    "description": "Convertir des résumés écrits en formats audio intelligibles et fluides.",
+    "actionType": "voice_synthesized",
+    "targetValue": 15,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_50",
+    "title": "Notes de réunion vocales",
+    "description": "Produire des synthèses vocales à partir des comptes-rendus de réunions hebdomadaires.",
+    "actionType": "voice_synthesized",
+    "targetValue": 10,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_51",
+    "title": "Accessibilité numérique",
+    "description": "Générer des descriptions audio pour rendre les contenus accessibles aux malvoyants.",
+    "actionType": "voice_synthesized",
+    "targetValue": 25,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_52",
+    "title": "Voix off de tutoriel",
+    "description": "Créer des fichiers audio explicatifs pour accompagner les captures vidéo.",
+    "actionType": "voice_synthesized",
+    "targetValue": 20,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_53",
+    "title": "Livre audio d'onboarding",
+    "description": "Synthétiser le guide d'accueil des nouveaux employés sous forme audio.",
+    "actionType": "voice_synthesized",
+    "targetValue": 30,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_54",
+    "title": "Annonces internes",
+    "description": "Diffuser des annonces importantes de la direction par le biais de messages audio synthétisés.",
+    "actionType": "voice_synthesized",
+    "targetValue": 12,
+    "xpReward": 108
+  },
+  {
+    "id": "weekly_quest_55",
+    "title": "Localisation linguistique vocale",
+    "description": "Générer des fichiers vocaux traduits pour des clients internationaux.",
+    "actionType": "voice_synthesized",
+    "targetValue": 18,
+    "xpReward": 122
+  },
+  {
+    "id": "weekly_quest_56",
+    "title": "Lecture de rapports financiers",
+    "description": "Produire une version audio des performances financières du trimestre.",
+    "actionType": "voice_synthesized",
+    "targetValue": 14,
+    "xpReward": 112
+  },
+  {
+    "id": "weekly_quest_57",
+    "title": "Intelligence collective",
+    "description": "Partager des sujets de discussion pertinents pour initier des débats d'équipe.",
+    "actionType": "topic_shared",
+    "targetValue": 5,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_58",
+    "title": "Partage technologique",
+    "description": "Diffuser des fils de discussion portant sur de nouvelles technologies de pointe.",
+    "actionType": "topic_shared",
+    "targetValue": 3,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_59",
+    "title": "Diffusion de bonnes pratiques",
+    "description": "Créer et partager des sujets sur les normes de codage au sein de l'espace commun.",
+    "actionType": "topic_shared",
+    "targetValue": 8,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_60",
+    "title": "Documentation collaborative",
+    "description": "Partager des synthèses d'analyses stratégiques avec les départements connexes.",
+    "actionType": "topic_shared",
+    "targetValue": 6,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_61",
+    "title": "Veille concurrentielle partagée",
+    "description": "Ouvrir des discussions sur les mouvements récents du marché et les concurrents.",
+    "actionType": "topic_shared",
+    "targetValue": 4,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_62",
+    "title": "Hub d'apprentissage",
+    "description": "Partager des guides pratiques et des ressources d'auto-formation.",
+    "actionType": "topic_shared",
+    "targetValue": 10,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_63",
+    "title": "Inspiration design",
+    "description": "Proposer des pistes visuelles et conceptuelles pour renouveler l'image de marque.",
+    "actionType": "topic_shared",
+    "targetValue": 7,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_64",
+    "title": "Résolution de problèmes",
+    "description": "Partager des cas de bugs complexes résolus pour capitaliser les connaissances.",
+    "actionType": "topic_shared",
+    "targetValue": 9,
+    "xpReward": 145
+  },
+  {
+    "id": "weekly_quest_65",
+    "title": "Exploration documentaire",
+    "description": "Parcourir la base de connaissances pour extraire des procédures techniques précises.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 15,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_66",
+    "title": "Recherche de conformité",
+    "description": "Consulter les documents légaux et de gouvernance stockés dans la base.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 10,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_67",
+    "title": "Investigation approfondie",
+    "description": "Faire des recherches croisées sur des architectures passées pour concevoir le futur système.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 25,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_68",
+    "title": "Clarification réglementaire",
+    "description": "Rechercher des normes d'accessibilité et de sécurité applicables au projet.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 12,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_69",
+    "title": "Vérification historique",
+    "description": "Retrouver des décisions d'architecture antérieures pour justifier les choix actuels.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 18,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_70",
+    "title": "Indexation d'informations",
+    "description": "Vérifier la bonne indexation des articles récents en lançant des requêtes tests.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 20,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_71",
+    "title": "Recherche de composants",
+    "description": "Identifier des bibliothèques réutilisables répertoriées dans les wikis internes.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 14,
+    "xpReward": 112
+  },
+  {
+    "id": "weekly_quest_72",
+    "title": "Auto-formation continue",
+    "description": "Consulter régulièrement les tutoriels internes pour monter en compétences.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 22,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_73",
+    "title": "Automatisation des flux",
+    "description": "Créer des flux de travail automatisés pour connecter différents services logiciels.",
+    "actionType": "workflow_created",
+    "targetValue": 3,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_74",
+    "title": "Processus d'approbation",
+    "description": "Modéliser un workflow de validation des livrables par les chefs de projet.",
+    "actionType": "workflow_created",
+    "targetValue": 2,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_75",
+    "title": "Orchestration DevOps",
+    "description": "Mettre en place des pipelines complexes de déploiement et de tests automatiques.",
+    "actionType": "workflow_created",
+    "targetValue": 5,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_76",
+    "title": "Flux de communication",
+    "description": "Configurer des règles de notification automatique des activités clés du projet.",
+    "actionType": "workflow_created",
+    "targetValue": 4,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_77",
+    "title": "Optimisation administrative",
+    "description": "Créer un circuit de validation de factures et de devis automatisé.",
+    "actionType": "workflow_created",
+    "targetValue": 3,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_78",
+    "title": "Flux de support",
+    "description": "Développer des routines automatiques pour la répartition des tickets clients.",
+    "actionType": "workflow_created",
+    "targetValue": 4,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_79",
+    "title": "Modélisation de campagne",
+    "description": "Mettre sur pied un workflow de diffusion de newsletters marketing segmentées.",
+    "actionType": "workflow_created",
+    "targetValue": 2,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_80",
+    "title": "Supervision des sauvegardes",
+    "description": "Créer un flux d'archivage hebdomadaire automatique des données sensibles.",
+    "actionType": "workflow_created",
+    "targetValue": 3,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_81",
+    "title": "Extension des capacités",
+    "description": "Installer de nouveaux plugins pour étendre les fonctionnalités de la plateforme.",
+    "actionType": "plugin_installed",
+    "targetValue": 5,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_82",
+    "title": "Boîte à outils de données",
+    "description": "Installer des plugins dédiés à l'analyse de données statistiques complexes.",
+    "actionType": "plugin_installed",
+    "targetValue": 3,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_83",
+    "title": "Sécurité renforcée",
+    "description": "Ajouter des modules de cryptage et de contrôle d'accès dans l'application.",
+    "actionType": "plugin_installed",
+    "targetValue": 7,
+    "xpReward": 145
+  },
+  {
+    "id": "weekly_quest_84",
+    "title": "Connecteurs externes",
+    "description": "Mettre en place des extensions pour se synchroniser avec des applications tierces.",
+    "actionType": "plugin_installed",
+    "targetValue": 4,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_85",
+    "title": "Amélioration ergonomique",
+    "description": "Installer des plugins d'optimisation d'interface utilisateur pour l'accessibilité.",
+    "actionType": "plugin_installed",
+    "targetValue": 6,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_86",
+    "title": "Enrichissement fonctionnel",
+    "description": "Configurer un ensemble d'extensions pour le traitement de l'image et du son.",
+    "actionType": "plugin_installed",
+    "targetValue": 8,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_87",
+    "title": "Support multilingue",
+    "description": "Ajouter des dictionnaires et des modules linguistiques supplémentaires.",
+    "actionType": "plugin_installed",
+    "targetValue": 4,
+    "xpReward": 112
+  },
+  {
+    "id": "weekly_quest_88",
+    "title": "Utilitaires développeurs",
+    "description": "Déployer des extensions améliorant l'expérience de débogage local.",
+    "actionType": "plugin_installed",
+    "targetValue": 5,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_89",
+    "title": "Ajustement des configurations",
+    "description": "Mettre à jour vos paramètres pour optimiser les performances de l'espace de travail.",
+    "actionType": "settings_updated",
+    "targetValue": 3,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_90",
+    "title": "Personnalisation du profil",
+    "description": "Actualiser vos informations et préférences d'affichage.",
+    "actionType": "settings_updated",
+    "targetValue": 2,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_91",
+    "title": "Sécurisation du compte",
+    "description": "Modifier les règles de sécurité et activer les options de double authentification.",
+    "actionType": "settings_updated",
+    "targetValue": 4,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_92",
+    "title": "Calibration fine",
+    "description": "Ajuster les seuils de détection et les temps de réponse des agents.",
+    "actionType": "settings_updated",
+    "targetValue": 5,
+    "xpReward": 145
+  },
+  {
+    "id": "weekly_quest_93",
+    "title": "Paramétrage des notifications",
+    "description": "Configurer les canaux et les heures d'alerte pour une productivité maximale.",
+    "actionType": "settings_updated",
+    "targetValue": 3,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_94",
+    "title": "Gestion des accès",
+    "description": "Définir de nouvelles permissions et rôles pour les collaborateurs invités.",
+    "actionType": "settings_updated",
+    "targetValue": 4,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_95",
+    "title": "Création de livrables",
+    "description": "Générer des rapports structurés sous forme d'artefacts réutilisables.",
+    "actionType": "artifact_generated",
+    "targetValue": 8,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_96",
+    "title": "Rédaction de spécifications",
+    "description": "Produire des cahiers des charges détaillés sous forme d'artefacts.",
+    "actionType": "artifact_generated",
+    "targetValue": 5,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_97",
+    "title": "Documentation d'API",
+    "description": "Générer la documentation complète de vos routes d'API.",
+    "actionType": "artifact_generated",
+    "targetValue": 12,
+    "xpReward": 145
+  },
+  {
+    "id": "weekly_quest_98",
+    "title": "Synthèse de recherche",
+    "description": "Créer des notes de synthèse consolidées à l'issue de recherches d'informations.",
+    "actionType": "artifact_generated",
+    "targetValue": 10,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_99",
+    "title": "Modélisation de données",
+    "description": "Concevoir des schémas d'architecture et les sauvegarder comme livrables.",
+    "actionType": "artifact_generated",
+    "targetValue": 6,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_100",
+    "title": "Rapports de performance",
+    "description": "Générer des bilans d'exécution système pour les présentations mensuelles.",
+    "actionType": "artifact_generated",
+    "targetValue": 14,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_101",
+    "title": "Communication client interne",
+    "description": "Rédiger des questions structurées pour orienter les validations internes de l'équipe produit.",
+    "actionType": "message_sent",
+    "targetValue": 30,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_102",
+    "title": "Ajustement de prompt d'extraction",
+    "description": "Donner des instructions ciblées pour extraire des entités nommées à partir de textes juridiques.",
+    "actionType": "message_sent",
+    "targetValue": 25,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_103",
+    "title": "Débogage collaboratif",
+    "description": "Résoudre les dysfonctionnements d'un script en échangeant pas à pas avec l'assistant.",
+    "actionType": "message_sent",
+    "targetValue": 45,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_104",
+    "title": "Relecture de code récursive",
+    "description": "Interagir avec les modèles de code pour analyser la complexité cyclomatique des fonctions.",
+    "actionType": "message_sent",
+    "targetValue": 35,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_105",
+    "title": "Planification fonctionnelle",
+    "description": "Spécifier les étapes clés d'une intégration continue par le biais de messages structurés.",
+    "actionType": "message_sent",
+    "targetValue": 28,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_106",
+    "title": "Génération de cas de test",
+    "description": "Demander des scripts de tests unitaires pour couvrir les cas aux limites du système.",
+    "actionType": "message_sent",
+    "targetValue": 40,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_107",
+    "title": "Rédaction de guides utilisateurs",
+    "description": "Fournir des explications progressives pour générer des sections d'aide en ligne claires.",
+    "actionType": "message_sent",
+    "targetValue": 32,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_108",
+    "title": "Optimisation SEO textuelle",
+    "description": "Solliciter des conseils d'optimisation sémantique pour les pages d'atterrissage du site.",
+    "actionType": "message_sent",
+    "targetValue": 22,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_109",
+    "title": "Exploration d'API REST",
+    "description": "Utiliser des plugins de requêtage HTTP pour tester les points de terminaison de l'API externe.",
+    "actionType": "plugin_used",
+    "targetValue": 7,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_110",
+    "title": "Validation de syntaxe SQL",
+    "description": "Appliquer des plugins de base de données pour valider des requêtes complexes avant exécution.",
+    "actionType": "plugin_used",
+    "targetValue": 6,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_111",
+    "title": "Génération de mock data",
+    "description": "Exploiter les plugins de génération de données pour peupler l'environnement de staging.",
+    "actionType": "plugin_used",
+    "targetValue": 10,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_112",
+    "title": "Calcul de métriques clés",
+    "description": "Appliquer des outils analytiques pour évaluer le coût d'exécution des pipelines de données.",
+    "actionType": "plugin_used",
+    "targetValue": 5,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_113",
+    "title": "Recherche documentaire web",
+    "description": "Mobiliser des plugins de navigation pour synthétiser les évolutions législatives.",
+    "actionType": "plugin_used",
+    "targetValue": 12,
+    "xpReward": 145
+  },
+  {
+    "id": "weekly_quest_114",
+    "title": "Vérification d'adresses IP",
+    "description": "Solliciter des plugins réseau pour auditer la provenance des requêtes d'accès.",
+    "actionType": "plugin_used",
+    "targetValue": 8,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_115",
+    "title": "Création de graphiques",
+    "description": "Utiliser des extensions de visualisation de données pour illustrer les résultats financiers.",
+    "actionType": "plugin_used",
+    "targetValue": 9,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_116",
+    "title": "Traitement de fichiers CSV",
+    "description": "Manipuler et nettoyer de gros volumes de contacts à l'aide de plugins de script intégrés.",
+    "actionType": "plugin_used",
+    "targetValue": 11,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_117",
+    "title": "Création de rédacteurs web",
+    "description": "Configurer des agents dédiés à la rédaction de fiches produits optimisées SEO.",
+    "actionType": "agent_created",
+    "targetValue": 3,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_118",
+    "title": "Déploiement d'analystes de code",
+    "description": "Mettre en place des agents entraînés pour repérer les anti-patterns JavaScript.",
+    "actionType": "agent_created",
+    "targetValue": 2,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_119",
+    "title": "Conception d'experts RGPD",
+    "description": "Créer des profils d'agents spécialisés dans la vérification de la conformité des données.",
+    "actionType": "agent_created",
+    "targetValue": 4,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_120",
+    "title": "Spécialistes de la traduction",
+    "description": "Mettre sur pied des agents dédiés à la traduction technique vers plusieurs langues.",
+    "actionType": "agent_created",
+    "targetValue": 3,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_121",
+    "title": "Développement de tuteurs IA",
+    "description": "Créer des agents pédagogiques pour guider les collaborateurs sur le nouvel ERP.",
+    "actionType": "agent_created",
+    "targetValue": 2,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_122",
+    "title": "Génération d'assistants RH",
+    "description": "Concevoir des agents pour structurer les questions d'entretien de recrutement.",
+    "actionType": "agent_created",
+    "targetValue": 4,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_123",
+    "title": "Architecte de modérateurs",
+    "description": "Mettre en ligne des agents capables d'analyser le ton et la convivialité des forums.",
+    "actionType": "agent_created",
+    "targetValue": 3,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_124",
+    "title": "Création d'agents de logistique",
+    "description": "Développer des profils focalisés sur le suivi de stocks et la gestion des livraisons.",
+    "actionType": "agent_created",
+    "targetValue": 5,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_125",
+    "title": "Présence opérationnelle",
+    "description": "Garantir un suivi régulier en maintenant des sessions actives en milieu de semaine.",
+    "actionType": "session_active",
+    "targetValue": 4,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_126",
+    "title": "Suivi de sprint",
+    "description": "Lancer des sessions d'analyse pour vérifier l'avancement des tâches du backlog.",
+    "actionType": "session_active",
+    "targetValue": 5,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_127",
+    "title": "Diagnostic récurrent",
+    "description": "Se connecter régulièrement pour vérifier l'état des serveurs et les logs applicatifs.",
+    "actionType": "session_active",
+    "targetValue": 6,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_128",
+    "title": "Consolidation hebdomadaire",
+    "description": "Tenir des sessions de synchronisation pour finaliser la documentation technique.",
+    "actionType": "session_active",
+    "targetValue": 3,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_129",
+    "title": "Gestion de crise",
+    "description": "Assurer une série de sessions pour résoudre un incident critique en production.",
+    "actionType": "session_active",
+    "targetValue": 7,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_130",
+    "title": "Relecture de spécifications",
+    "description": "Consacrer des sessions d'étude attentive aux demandes fonctionnelles des clients.",
+    "actionType": "session_active",
+    "targetValue": 4,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_131",
+    "title": "Ajustement de l'environnement",
+    "description": "Se connecter régulièrement pour optimiser la configuration de la plateforme.",
+    "actionType": "session_active",
+    "targetValue": 5,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_132",
+    "title": "Revue hebdomadaire d'avancement",
+    "description": "Analyser le chemin critique du projet lors de plusieurs sessions de planification.",
+    "actionType": "session_active",
+    "targetValue": 6,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_133",
+    "title": "Traitement de volumétrie moyenne",
+    "description": "Consommer des jetons pour l'analyse globale de rapports de ventes régionaux.",
+    "actionType": "tokens_used",
+    "targetValue": 70000,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_134",
+    "title": "Analyse linguistique étendue",
+    "description": "Soumettre des documents d'ingénierie système complexes pour extraction.",
+    "actionType": "tokens_used",
+    "targetValue": 100000,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_135",
+    "title": "Génération de code intensif",
+    "description": "Demander aux modèles de générer des squelettes de microservices complets.",
+    "actionType": "tokens_used",
+    "targetValue": 140000,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_136",
+    "title": "Relecture de thèses techniques",
+    "description": "Analyser et extraire la substantifique moelle d'études scientifiques volumineuses.",
+    "actionType": "tokens_used",
+    "targetValue": 110000,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_137",
+    "title": "Traitement sémantique d'emails",
+    "description": "Analyser un large historique de requêtes de support client pour classification.",
+    "actionType": "tokens_used",
+    "targetValue": 50000,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_138",
+    "title": "Ajustement sémantique global",
+    "description": "Ajuster des formulations marketing sur de grands volumes de descriptions.",
+    "actionType": "tokens_used",
+    "targetValue": 60000,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_139",
+    "title": "Audit de conformité juridique",
+    "description": "Soumettre l'ensemble des conditions générales pour identification des clauses à risques.",
+    "actionType": "tokens_used",
+    "targetValue": 90000,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_140",
+    "title": "Extraction sémantique financière",
+    "description": "Calculer l'impact de tendances de marché sur la base de rapports consolidés.",
+    "actionType": "tokens_used",
+    "targetValue": 80000,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_141",
+    "title": "Conception graphique promotionnelle",
+    "description": "Produire des images d'illustration pour de futurs articles de blog technique.",
+    "actionType": "image_generated",
+    "targetValue": 8,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_142",
+    "title": "Recherche d'identité visuelle",
+    "description": "Générer des prototypes de bannières pour les profils officiels de l'entreprise.",
+    "actionType": "image_generated",
+    "targetValue": 5,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_143",
+    "title": "Création d'avatars d'équipe",
+    "description": "Générer des portraits vectoriels cohérents pour les membres de l'équipe.",
+    "actionType": "image_generated",
+    "targetValue": 10,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_144",
+    "title": "Rendu de maquette 3D",
+    "description": "Générer des perspectives d'aménagement pour de nouveaux espaces de bureau.",
+    "actionType": "image_generated",
+    "targetValue": 6,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_145",
+    "title": "Création d'illustrations abstraites",
+    "description": "Générer des décors artistiques pour agrémenter les rapports annuels.",
+    "actionType": "image_generated",
+    "targetValue": 12,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_146",
+    "title": "Modélisation graphique de flux",
+    "description": "Générer des diagrammes et schémas conceptuels de façon créative.",
+    "actionType": "image_generated",
+    "targetValue": 7,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_147",
+    "title": "Création d'icônes personnalisées",
+    "description": "Produire un ensemble d'icônes fonctionnelles pour le menu de l'application.",
+    "actionType": "image_generated",
+    "targetValue": 9,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_148",
+    "title": "Campagne visuelle événementielle",
+    "description": "Générer une série de supports de communication visuelle pour un hackathon interne.",
+    "actionType": "image_generated",
+    "targetValue": 15,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_149",
+    "title": "Synthèse de formation audio",
+    "description": "Générer les versions vocales des résumés de cours pour les stagiaires.",
+    "actionType": "voice_synthesized",
+    "targetValue": 18,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_150",
+    "title": "Enregistrement de messages d'accueil",
+    "description": "Produire les voix des répondeurs téléphoniques pour différents services.",
+    "actionType": "voice_synthesized",
+    "targetValue": 10,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_151",
+    "title": "Audiobooks d'actualités",
+    "description": "Synthétiser vocalement la revue de presse interne pour diffusion hebdomadaire.",
+    "actionType": "voice_synthesized",
+    "targetValue": 22,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_152",
+    "title": "Création de guides audio",
+    "description": "Produire des explications parlées pour accompagner les démonstrations logicielles.",
+    "actionType": "voice_synthesized",
+    "targetValue": 15,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_153",
+    "title": "Synthèse vocale multilingue",
+    "description": "Générer des annonces sonores en anglais et espagnol pour le site web.",
+    "actionType": "voice_synthesized",
+    "targetValue": 25,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_154",
+    "title": "Accessibilité des présentations",
+    "description": "Convertir les diapositives de réunions en fichiers audio descriptifs.",
+    "actionType": "voice_synthesized",
+    "targetValue": 30,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_155",
+    "title": "Synthèse de rapports de sécurité",
+    "description": "Traduire les bilans de sécurité informatique en alertes audio intelligibles.",
+    "actionType": "voice_synthesized",
+    "targetValue": 12,
+    "xpReward": 108
+  },
+  {
+    "id": "weekly_quest_156",
+    "title": "Production de podcasts internes",
+    "description": "Convertir les entretiens des employés en format audio optimisé.",
+    "actionType": "voice_synthesized",
+    "targetValue": 20,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_157",
+    "title": "Animation de la communauté",
+    "description": "Lancer des discussions portant sur les nouvelles méthodologies de gestion de projet.",
+    "actionType": "topic_shared",
+    "targetValue": 5,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_158",
+    "title": "Vérification des faits partagée",
+    "description": "Diffuser des sujets de discussion pour vérifier la véracité de données de marché.",
+    "actionType": "topic_shared",
+    "targetValue": 3,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_159",
+    "title": "Partage de code d'exemple",
+    "description": "Partager des implémentations de référence pour le nouveau framework web.",
+    "actionType": "topic_shared",
+    "targetValue": 8,
+    "xpReward": 145
+  },
+  {
+    "id": "weekly_quest_160",
+    "title": "Diffusion d'études de cas",
+    "description": "Partager les analyses d'échecs et de réussites sur des lancements précédents.",
+    "actionType": "topic_shared",
+    "targetValue": 6,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_161",
+    "title": "Partage de modèles de documents",
+    "description": "Mettre à disposition des modèles de comptes-rendus et de cahiers des charges.",
+    "actionType": "topic_shared",
+    "targetValue": 4,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_162",
+    "title": "Animation de veille produit",
+    "description": "Ouvrir des fils d'échange sur les nouvelles fonctionnalités des solutions concurrentes.",
+    "actionType": "topic_shared",
+    "targetValue": 7,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_163",
+    "title": "Partage d'astuces de codage",
+    "description": "Diffuser des conseils d'optimisation de requêtes Drizzle ORM.",
+    "actionType": "topic_shared",
+    "targetValue": 9,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_164",
+    "title": "Brainstorming méthodologique",
+    "description": "Créer des sujets d'échange pour améliorer le fonctionnement des réunions de standup.",
+    "actionType": "topic_shared",
+    "targetValue": 10,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_165",
+    "title": "Exploration de documentation API",
+    "description": "Rechercher des paramètres spécifiques de bibliothèques tierces dans la base.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 15,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_166",
+    "title": "Recherche de guides administratifs",
+    "description": "Consulter les formulaires d'approbation et procédures de remboursement de frais.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 10,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_167",
+    "title": "Investigation de sécurité réseau",
+    "description": "Rechercher les protocoles de chiffrement et clés d'accès valides.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 25,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_168",
+    "title": "Consultation de fiches produits",
+    "description": "Rechercher les spécifications fonctionnelles détaillées d'un module spécifique.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 12,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_169",
+    "title": "Recherche de chartes graphiques",
+    "description": "Consulter les règles de typographie et palettes de couleurs autorisées.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 18,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_170",
+    "title": "Vérification de brevets",
+    "description": "Lancer des requêtes de recherche sur les brevets déposés par la compagnie.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 20,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_171",
+    "title": "Exploration d'historique de support",
+    "description": "Consulter les résolutions de pannes matérielles antérieures dans la base.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 14,
+    "xpReward": 112
+  },
+  {
+    "id": "weekly_quest_172",
+    "title": "Recherche de normes sanitaires",
+    "description": "Vérifier la conformité réglementaire pour l'installation de nouveaux locaux.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 22,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_173",
+    "title": "Automatisation d'onboarding",
+    "description": "Créer des flux d'invitation et d'attribution automatique de droits aux nouveaux arrivants.",
+    "actionType": "workflow_created",
+    "targetValue": 3,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_174",
+    "title": "Suivi budgétaire automatisé",
+    "description": "Concevoir un flux de relance automatique pour la transmission des factures.",
+    "actionType": "workflow_created",
+    "targetValue": 2,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_175",
+    "title": "Pipeline de build continu",
+    "description": "Modéliser un workflow de compilation automatique et d'analyse de couverture.",
+    "actionType": "workflow_created",
+    "targetValue": 5,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_176",
+    "title": "Notification d'incidents",
+    "description": "Créer un flux d'escalade d'alertes vers les équipes d'astreinte technique.",
+    "actionType": "workflow_created",
+    "targetValue": 4,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_177",
+    "title": "Archivage de logs",
+    "description": "Mettre en place un processus de rotation et de compression automatique des logs.",
+    "actionType": "workflow_created",
+    "targetValue": 3,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_178",
+    "title": "Génération de rapports automatiques",
+    "description": "Créer un workflow assemblant les bilans quotidiens en un rapport hebdomadaire.",
+    "actionType": "workflow_created",
+    "targetValue": 4,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_179",
+    "title": "Synchronisation CRM",
+    "description": "Concevoir un flux de mise à jour des contacts clients entre le site et le CRM.",
+    "actionType": "workflow_created",
+    "targetValue": 2,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_180",
+    "title": "Workflow de publication",
+    "description": "Automatiser la diffusion d'annonces produit sur l'ensemble des réseaux.",
+    "actionType": "workflow_created",
+    "targetValue": 3,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_181",
+    "title": "Extension de l'analyse linguistique",
+    "description": "Installer des plugins de traitement automatique de langues peu communes.",
+    "actionType": "plugin_installed",
+    "targetValue": 5,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_182",
+    "title": "Optimisation d'images",
+    "description": "Ajouter des extensions de compression automatique des assets de l'application.",
+    "actionType": "plugin_installed",
+    "targetValue": 3,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_183",
+    "title": "Surveillance de performances",
+    "description": "Installer des modules d'analyse des temps d'accès aux requêtes réseau.",
+    "actionType": "plugin_installed",
+    "targetValue": 7,
+    "xpReward": 145
+  },
+  {
+    "id": "weekly_quest_184",
+    "title": "Exportateurs de formats",
+    "description": "Installer des plugins d'export de données au format PDF et Excel avancés.",
+    "actionType": "plugin_installed",
+    "targetValue": 4,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_185",
+    "title": "Moteur de recherche étendu",
+    "description": "Ajouter des modules de recherche à facettes pour indexer les documents.",
+    "actionType": "plugin_installed",
+    "targetValue": 6,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_186",
+    "title": "Outillage de chiffrement",
+    "description": "Installer de nouvelles extensions de cryptographie asymétrique.",
+    "actionType": "plugin_installed",
+    "targetValue": 8,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_187",
+    "title": "Gestionnaire de polices",
+    "description": "Installer des modules pour l'intégration automatique de typographies Google Fonts.",
+    "actionType": "plugin_installed",
+    "targetValue": 4,
+    "xpReward": 112
+  },
+  {
+    "id": "weekly_quest_188",
+    "title": "Validateur syntaxique",
+    "description": "Installer des outils de vérification automatique de schémas JSON et YAML.",
+    "actionType": "plugin_installed",
+    "targetValue": 5,
+    "xpReward": 118
+  },
+  {
+    "id": "weekly_quest_189",
+    "title": "Configuration réseau",
+    "description": "Mettre à jour les adresses de redirection et paramètres DNS.",
+    "actionType": "settings_updated",
+    "targetValue": 3,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_190",
+    "title": "Ajustement du thème visuel",
+    "description": "Modifier les préférences graphiques et contrastes pour l'espace de travail.",
+    "actionType": "settings_updated",
+    "targetValue": 2,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_191",
+    "title": "Mise à jour des tokens API",
+    "description": "Renouveler les clés de connexion secrètes pour les plateformes tierces.",
+    "actionType": "settings_updated",
+    "targetValue": 4,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_192",
+    "title": "Limites de ressources",
+    "description": "Configurer les quotas de mémoire et de processeurs attribués aux agents.",
+    "actionType": "settings_updated",
+    "targetValue": 5,
+    "xpReward": 145
+  },
+  {
+    "id": "weekly_quest_193",
+    "title": "Configuration de messagerie",
+    "description": "Ajuster les serveurs SMTP et les adresses d'expédition par défaut.",
+    "actionType": "settings_updated",
+    "targetValue": 3,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_194",
+    "title": "Paramètres de rétention",
+    "description": "Définir la durée de conservation des logs et conversations passées.",
+    "actionType": "settings_updated",
+    "targetValue": 4,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_195",
+    "title": "Génération de rapports de vente",
+    "description": "Créer des synthèses de performances commerciales sous forme d'artefacts.",
+    "actionType": "artifact_generated",
+    "targetValue": 8,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_196",
+    "title": "Conception de plan d'action",
+    "description": "Produire le document de planification stratégique trimestrielle.",
+    "actionType": "artifact_generated",
+    "targetValue": 5,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_197",
+    "title": "Spécification d'architecture",
+    "description": "Générer un artefact récapitulant le diagramme de classes et d'entités.",
+    "actionType": "artifact_generated",
+    "targetValue": 12,
+    "xpReward": 145
+  },
+  {
+    "id": "weekly_quest_198",
+    "title": "Synthèse d'étude concurrentielle",
+    "description": "Créer des notes comparatives détaillant les forces et faiblesses concurrentes.",
+    "actionType": "artifact_generated",
+    "targetValue": 10,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_199",
+    "title": "Plan de tests d'intégration",
+    "description": "Générer la liste ordonnée des tests d'intégration système à exécuter.",
+    "actionType": "artifact_generated",
+    "targetValue": 6,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_200",
+    "title": "Bilan R&D annuel",
+    "description": "Créer un livrable de synthèse listant les pistes technologiques explorées.",
+    "actionType": "artifact_generated",
+    "targetValue": 14,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_201",
+    "title": "Ajustement de prompt d'assistance",
+    "description": "Donner des instructions ciblées pour configurer des modèles de réponse pour le service d'aide.",
+    "actionType": "message_sent",
+    "targetValue": 35,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_202",
+    "title": "Supervision éditoriale",
+    "description": "Interagir avec les modèles linguistiques pour valider la ligne éditoriale des communiqués.",
+    "actionType": "message_sent",
+    "targetValue": 40,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_203",
+    "title": "Coordination technique inter-agents",
+    "description": "Donner des consignes pour synchroniser le traitement de requêtes entre plusieurs agents.",
+    "actionType": "message_sent",
+    "targetValue": 45,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_204",
+    "title": "Audit de performance sémantique",
+    "description": "Discuter avec l'agent pour vérifier la pertinence de ses formulations techniques.",
+    "actionType": "message_sent",
+    "targetValue": 30,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_205",
+    "title": "Validation fonctionnelle utilisateur",
+    "description": "Échanger avec les agents pour valider la fluidité des parcours de navigation.",
+    "actionType": "message_sent",
+    "targetValue": 25,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_206",
+    "title": "Génération de scripts de migration",
+    "description": "Demander l'écriture de scripts de migration de schémas de base de données.",
+    "actionType": "message_sent",
+    "targetValue": 32,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_207",
+    "title": "Aide à la documentation de code",
+    "description": "Envoyer des requêtes d'explication de code complexe pour documenter le projet.",
+    "actionType": "message_sent",
+    "targetValue": 38,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_208",
+    "title": "Correction orthographique automatisée",
+    "description": "Soumettre des contenus textuels pour validation orthographique et stylistique.",
+    "actionType": "message_sent",
+    "targetValue": 28,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_209",
+    "title": "Validation de certificats SSL",
+    "description": "Activer des plugins réseau pour vérifier la validité des protocoles de sécurité.",
+    "actionType": "plugin_used",
+    "targetValue": 6,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_210",
+    "title": "Extraction sémantique PDF",
+    "description": "Exploiter des plugins d'analyse documentaire pour extraire des tableaux financiers.",
+    "actionType": "plugin_used",
+    "targetValue": 8,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_211",
+    "title": "Calcul de latence réseau",
+    "description": "Mobiliser des modules réseau pour évaluer les temps de réponse de l'infrastructure.",
+    "actionType": "plugin_used",
+    "targetValue": 5,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_212",
+    "title": "Analyse d'audience web",
+    "description": "Utiliser des plugins d'analyse statistique pour mesurer l'engagement utilisateur.",
+    "actionType": "plugin_used",
+    "targetValue": 10,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_213",
+    "title": "Génération de rapports métriques",
+    "description": "Faire appel aux plugins de reporting pour synthétiser les erreurs logicielles.",
+    "actionType": "plugin_used",
+    "targetValue": 7,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_214",
+    "title": "Détection de vulnérabilités",
+    "description": "Lancer des plugins d'audit de sécurité pour repérer les bibliothèques obsolètes.",
+    "actionType": "plugin_used",
+    "targetValue": 9,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_215",
+    "title": "Indexation de fichiers",
+    "description": "Exploiter les plugins d'indexation pour cataloguer les fichiers de staging.",
+    "actionType": "plugin_used",
+    "targetValue": 12,
+    "xpReward": 145
+  },
+  {
+    "id": "weekly_quest_216",
+    "title": "Synchronisation de calendriers",
+    "description": "Utiliser des extensions de productivité pour harmoniser les plannings d'équipe.",
+    "actionType": "plugin_used",
+    "targetValue": 11,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_217",
+    "title": "Création d'agents juridiques",
+    "description": "Déployer des agents spécialisés dans la relecture de contrats de partenariat.",
+    "actionType": "agent_created",
+    "targetValue": 3,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_218",
+    "title": "Architecte d'assistants administratifs",
+    "description": "Créer des agents dédiés à la rédaction de procès-verbaux de réunions.",
+    "actionType": "agent_created",
+    "targetValue": 2,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_219",
+    "title": "Création d'experts d'intégration",
+    "description": "Concevoir des agents pour assister le déploiement sur les plateformes de cloud.",
+    "actionType": "agent_created",
+    "targetValue": 4,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_220",
+    "title": "Génération de profils de testeurs",
+    "description": "Développer des agents spécialisés dans la recherche de bugs sur les interfaces mobiles.",
+    "actionType": "agent_created",
+    "targetValue": 3,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_221",
+    "title": "Compagnons de conception UX",
+    "description": "Créer des agents configurés avec les grands principes d'ergonomie et d'expérience utilisateur.",
+    "actionType": "agent_created",
+    "targetValue": 2,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_222",
+    "title": "Spécialistes SEO technique",
+    "description": "Concevoir des agents focalisés sur l'amélioration du référencement naturel.",
+    "actionType": "agent_created",
+    "targetValue": 5,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_223",
+    "title": "Concepteurs d'assistants de vente",
+    "description": "Déployer des agents configurés pour répondre aux demandes courantes sur les produits.",
+    "actionType": "agent_created",
+    "targetValue": 3,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_224",
+    "title": "Création d'agents de cybersécurité",
+    "description": "Développer des profils d'agents spécialisés dans la détection d'intrusions système.",
+    "actionType": "agent_created",
+    "targetValue": 4,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_225",
+    "title": "Suivi opérationnel quotidien",
+    "description": "Maintenir un haut niveau d'activité sur la plateforme pendant plusieurs jours.",
+    "actionType": "session_active",
+    "targetValue": 5,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_226",
+    "title": "Engagement de projet régulier",
+    "description": "Vérifier et mettre à jour les priorités opérationnelles lors de plusieurs sessions.",
+    "actionType": "session_active",
+    "targetValue": 4,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_227",
+    "title": "Assiduité technique",
+    "description": "Lancer des sessions d'administration système réparties sur la semaine.",
+    "actionType": "session_active",
+    "targetValue": 6,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_228",
+    "title": "Immersion de développement",
+    "description": "Consacrer des sessions d'écriture de code intenses pour livrer la version alpha.",
+    "actionType": "session_active",
+    "targetValue": 7,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_229",
+    "title": "Revue de backlog active",
+    "description": "Se connecter pour planifier l'attribution des tâches de développement.",
+    "actionType": "session_active",
+    "targetValue": 3,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_230",
+    "title": "Contrôle de conformité",
+    "description": "Mener des sessions de travail dédiées à l'évaluation RGPD de la plateforme.",
+    "actionType": "session_active",
+    "targetValue": 5,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_231",
+    "title": "Optimisation continue",
+    "description": "Activer des sessions pour paramétrer et stabiliser les modules applicatifs.",
+    "actionType": "session_active",
+    "targetValue": 4,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_232",
+    "title": "Supervision d'infrastructure",
+    "description": "Suivre l'activité des microservices lors de sessions réparties de façon homogène.",
+    "actionType": "session_active",
+    "targetValue": 6,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_233",
+    "title": "Traitement de données marketing",
+    "description": "Consommer des jetons pour l'analyse sémantique de questionnaires clients.",
+    "actionType": "tokens_used",
+    "targetValue": 80000,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_234",
+    "title": "Audit de base de code patrimoniale",
+    "description": "Analyser des fichiers sources historiques pour identifier les dépendances obsolètes.",
+    "actionType": "tokens_used",
+    "targetValue": 130000,
+    "xpReward": 145
+  },
+  {
+    "id": "weekly_quest_235",
+    "title": "Génération de documentation technique",
+    "description": "Produire des explications d'architecture système détaillées et complètes.",
+    "actionType": "tokens_used",
+    "targetValue": 70000,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_236",
+    "title": "Analyse de logs de production",
+    "description": "Analyser de volumineux journaux d'erreurs pour catégoriser les anomalies récurrentes.",
+    "actionType": "tokens_used",
+    "targetValue": 150000,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_237",
+    "title": "Synthèse d'études de cas clients",
+    "description": "Traiter des rapports de satisfaction pour en extraire des axes d'amélioration.",
+    "actionType": "tokens_used",
+    "targetValue": 50000,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_238",
+    "title": "Rédaction de spécifications fonctionnelles",
+    "description": "Rédiger des spécifications détaillant les fonctionnalités attendues du système.",
+    "actionType": "tokens_used",
+    "targetValue": 90000,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_239",
+    "title": "Génération de matériel de formation",
+    "description": "Concevoir des guides pédagogiques pour l'onboarding de nouveaux ingénieurs.",
+    "actionType": "tokens_used",
+    "targetValue": 100000,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_240",
+    "title": "Audit de conformité réglementaire",
+    "description": "Soumettre des contrats types pour vérifier le respect des législations en vigueur.",
+    "actionType": "tokens_used",
+    "targetValue": 60000,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_241",
+    "title": "Création d'illustrations marketing",
+    "description": "Générer des concepts visuels pour accompagner les articles de communication d'entreprise.",
+    "actionType": "image_generated",
+    "targetValue": 8,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_242",
+    "title": "Rendu visuel d'interface",
+    "description": "Générer des prototypes graphiques de pages d'accueil et de tableaux de bord.",
+    "actionType": "image_generated",
+    "targetValue": 5,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_243",
+    "title": "Création de visuels d'onboarding",
+    "description": "Générer des illustrations simples pour faciliter le parcours de découverte de la plateforme.",
+    "actionType": "image_generated",
+    "targetValue": 12,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_244",
+    "title": "Illustration de concepts d'architecture",
+    "description": "Produire des images schématiques décrivant le fonctionnement des microservices.",
+    "actionType": "image_generated",
+    "targetValue": 6,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_245",
+    "title": "Conception de bannières d'événements",
+    "description": "Générer des supports promotionnels graphiques pour des webinaires techniques.",
+    "actionType": "image_generated",
+    "targetValue": 10,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_246",
+    "title": "Production de mockups packaging",
+    "description": "Modéliser graphiquement les emballages de futurs produits physiques.",
+    "actionType": "image_generated",
+    "targetValue": 7,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_247",
+    "title": "Création de décors abstraits",
+    "description": "Générer des textures et des fonds artistiques pour les diapositives de présentation.",
+    "actionType": "image_generated",
+    "targetValue": 9,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_248",
+    "title": "Conception de logotypes vectoriels",
+    "description": "Générer des variantes de logos épurés et modernes pour de nouvelles initiatives.",
+    "actionType": "image_generated",
+    "targetValue": 15,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_249",
+    "title": "Synthèse de rapports financiers audio",
+    "description": "Générer les versions vocales des analyses budgétaires pour le comité de direction.",
+    "actionType": "voice_synthesized",
+    "targetValue": 15,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_250",
+    "title": "Enregistrement de messages vocaux de formation",
+    "description": "Produire des modules audios explicatifs pour former l'équipe commerciale.",
+    "actionType": "voice_synthesized",
+    "targetValue": 10,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_251",
+    "title": "Audiobooks techniques",
+    "description": "Synthétiser vocalement la documentation de référence du projet pour écoute nomade.",
+    "actionType": "voice_synthesized",
+    "targetValue": 25,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_252",
+    "title": "Création d'alertes audio système",
+    "description": "Produire des messages parlés d'avertissement pour les incidents d'infrastructure.",
+    "actionType": "voice_synthesized",
+    "targetValue": 20,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_253",
+    "title": "Synthèse de revues de presse vocales",
+    "description": "Générer un format audio synthétique reprenant les actualités majeures du secteur.",
+    "actionType": "voice_synthesized",
+    "targetValue": 30,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_254",
+    "title": "Voix off pour présentations produit",
+    "description": "Générer des explications audio fluides pour illustrer les démonstrations vidéo.",
+    "actionType": "voice_synthesized",
+    "targetValue": 12,
+    "xpReward": 108
+  },
+  {
+    "id": "weekly_quest_255",
+    "title": "Production de contenus éducatifs audio",
+    "description": "Convertir des cours rédigés en fichiers audios structurés et intelligibles.",
+    "actionType": "voice_synthesized",
+    "targetValue": 18,
+    "xpReward": 122
+  },
+  {
+    "id": "weekly_quest_256",
+    "title": "Notes de réunions d'équipe audio",
+    "description": "Produire une synthèse parlée des décisions stratégiques de la semaine.",
+    "actionType": "voice_synthesized",
+    "targetValue": 14,
+    "xpReward": 112
+  },
+  {
+    "id": "weekly_quest_257",
+    "title": "Animation d'échanges méthodologiques",
+    "description": "Partager des sujets de discussion pour perfectionner le travail collaboratif.",
+    "actionType": "topic_shared",
+    "targetValue": 5,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_258",
+    "title": "Partage de retours d'expérience",
+    "description": "Diffuser des cas d'échecs et d'apprentissages pour éviter les erreurs répétitives.",
+    "actionType": "topic_shared",
+    "targetValue": 3,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_259",
+    "title": "Diffusion de templates techniques",
+    "description": "Partager des modèles de fichiers de configuration Kubernetes ou Docker.",
+    "actionType": "topic_shared",
+    "targetValue": 8,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_260",
+    "title": "Partage d'analyses de performance",
+    "description": "Diffuser des fils de discussion sur les optimisations possibles de requêtes SQL.",
+    "actionType": "topic_shared",
+    "targetValue": 6,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_261",
+    "title": "Partage d'actualités technologiques",
+    "description": "Ouvrir des débats d'équipe sur l'évolution récente des modèles de langage.",
+    "actionType": "topic_shared",
+    "targetValue": 4,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_262",
+    "title": "Partage de guides méthodologiques",
+    "description": "Partager des documentations internes sur les processus de revue de code.",
+    "actionType": "topic_shared",
+    "targetValue": 10,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_263",
+    "title": "Partage de maquettes graphiques",
+    "description": "Diffuser les dernières versions d'interfaces pour recueillir les commentaires.",
+    "actionType": "topic_shared",
+    "targetValue": 7,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_264",
+    "title": "Animation de discussions R&D",
+    "description": "Lancer des pistes d'innovation sur l'architecture globale des produits.",
+    "actionType": "topic_shared",
+    "targetValue": 9,
+    "xpReward": 145
+  },
+  {
+    "id": "weekly_quest_265",
+    "title": "Recherche de protocoles de sécurité",
+    "description": "Consulter les manuels de gestion d'incidents informatiques dans la base.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 15,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_266",
+    "title": "Recherche de fiches administratives",
+    "description": "Trouver des formulaires de demande de matériel et d'accès serveurs.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 10,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_267",
+    "title": "Consultation de documentations d'API",
+    "description": "Explorer les structures de données acceptées par les routes du serveur.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 25,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_268",
+    "title": "Recherche de spécifications UX",
+    "description": "Consulter les règles d'accessibilité et chartes d'intégration web.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 12,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_269",
+    "title": "Recherche de bilans marketing",
+    "description": "Consulter les données de performance de campagnes passées.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 18,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_270",
+    "title": "Vérification de brevets technologiques",
+    "description": "Lancer des recherches sémantiques sur les technologies protégées.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 20,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_271",
+    "title": "Exploration d'historiques d'anomalies",
+    "description": "Rechercher des solutions appliquées lors d'incidents similaires passés.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 14,
+    "xpReward": 112
+  },
+  {
+    "id": "weekly_quest_272",
+    "title": "Consultation de guides d'onboarding",
+    "description": "Parcourir les wikis internes pour parfaire la formation des nouveaux arrivants.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 22,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_273",
+    "title": "Automatisation de la facturation",
+    "description": "Créer des flux d'envoi automatique de rappels de paiement aux clients.",
+    "actionType": "workflow_created",
+    "targetValue": 3,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_274",
+    "title": "Suivi de candidatures automatisé",
+    "description": "Modéliser un workflow de tri et de réponse automatique pour le recrutement.",
+    "actionType": "workflow_created",
+    "targetValue": 2,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_275",
+    "title": "Orchestration de tests d'intégration",
+    "description": "Créer un pipeline de test automatique avec rapport d'erreurs par email.",
+    "actionType": "workflow_created",
+    "targetValue": 5,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_276",
+    "title": "Acheminement d'alertes serveur",
+    "description": "Concevoir un flux de redirection automatique d'anomalies critiques.",
+    "actionType": "workflow_created",
+    "targetValue": 4,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_277",
+    "title": "Automatisation d'archivage mensuel",
+    "description": "Mettre sur pied un workflow de transfert automatique vers un stockage froid.",
+    "actionType": "workflow_created",
+    "targetValue": 3,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_278",
+    "title": "Génération automatique de newsletters",
+    "description": "Créer un circuit automatisé d'extraction d'actualités et d'envoi d'emails.",
+    "actionType": "workflow_created",
+    "targetValue": 4,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_279",
+    "title": "Intégration de formulaires web",
+    "description": "Concevoir un workflow pour enregistrer les leads du site directement dans la base.",
+    "actionType": "workflow_created",
+    "targetValue": 2,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_280",
+    "title": "Flux de modération automatique",
+    "description": "Mettre en place des règles de filtrage de contenus inappropriés sur les forums.",
+    "actionType": "workflow_created",
+    "targetValue": 3,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_281",
+    "title": "Installation de traducteurs automatisés",
+    "description": "Ajouter des modules de traduction en temps réel pour le support client.",
+    "actionType": "plugin_installed",
+    "targetValue": 5,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_282",
+    "title": "Outils de nettoyage de bases de données",
+    "description": "Installer des extensions pour automatiser la purge de données temporaires.",
+    "actionType": "plugin_installed",
+    "targetValue": 3,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_283",
+    "title": "Surveillance de bande passante",
+    "description": "Installer des plugins de monitoring de flux de paquets réseau.",
+    "actionType": "plugin_installed",
+    "targetValue": 7,
+    "xpReward": 145
+  },
+  {
+    "id": "weekly_quest_284",
+    "title": "Convertisseurs de formats documentaires",
+    "description": "Installer des utilitaires pour convertir des fichiers HTML en formats Word/Markdown.",
+    "actionType": "plugin_installed",
+    "targetValue": 4,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_285",
+    "title": "Indexation de contenus multimédias",
+    "description": "Ajouter des extensions pour transcrire automatiquement les vidéos chargées.",
+    "actionType": "plugin_installed",
+    "targetValue": 6,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_286",
+    "title": "Contrôle d'accès avancés",
+    "description": "Installer des plug-ins gérant les protocoles d'authentification OAuth2 et LDAP.",
+    "actionType": "plugin_installed",
+    "targetValue": 8,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_287",
+    "title": "Outils de gestion d'assets",
+    "description": "Installer des extensions facilitant la gestion de la bibliothèque multimédia.",
+    "actionType": "plugin_installed",
+    "targetValue": 4,
+    "xpReward": 112
+  },
+  {
+    "id": "weekly_quest_288",
+    "title": "Validateur de conformité CSS",
+    "description": "Installer des modules pour vérifier la conformité des styles avec le design system.",
+    "actionType": "plugin_installed",
+    "targetValue": 5,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_289",
+    "title": "Mise à jour de configurations de pare-feu",
+    "description": "Ajuster les règles de sécurité réseau et d'accès IP.",
+    "actionType": "settings_updated",
+    "targetValue": 3,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_290",
+    "title": "Ajustement de préférences linguistiques",
+    "description": "Mettre à jour la langue par défaut et les dictionnaires système.",
+    "actionType": "settings_updated",
+    "targetValue": 2,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_291",
+    "title": "Configuration de limites de requêtes",
+    "description": "Ajuster les seuils de rate limiting pour prévenir les surcharges du serveur.",
+    "actionType": "settings_updated",
+    "targetValue": 4,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_292",
+    "title": "Ajustement de paramètres d'automatisation",
+    "description": "Configurer les fréquences d'exécution des tâches de maintenance de la base.",
+    "actionType": "settings_updated",
+    "targetValue": 5,
+    "xpReward": 145
+  },
+  {
+    "id": "weekly_quest_293",
+    "title": "Mise à jour d'options d'alertes",
+    "description": "Configurer les adresses de dispatching d'anomalies de la plateforme.",
+    "actionType": "settings_updated",
+    "targetValue": 3,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_294",
+    "title": "Configuration de règles de modération",
+    "description": "Ajuster les listes de mots-clés interdits et les règles de signalement.",
+    "actionType": "settings_updated",
+    "targetValue": 4,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_295",
+    "title": "Génération de rapports de performance DevOps",
+    "description": "Créer des synthèses de taux de succès des builds de staging sous forme d'artefacts.",
+    "actionType": "artifact_generated",
+    "targetValue": 8,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_296",
+    "title": "Rédaction de spécifications d'API tierces",
+    "description": "Produire un document décrivant l'ensemble des intégrations externes sous forme d'artefact.",
+    "actionType": "artifact_generated",
+    "targetValue": 5,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_297",
+    "title": "Plan de migration système",
+    "description": "Générer un artefact répertoriant les étapes chronologiques du passage au cloud.",
+    "actionType": "artifact_generated",
+    "targetValue": 12,
+    "xpReward": 145
+  },
+  {
+    "id": "weekly_quest_298",
+    "title": "Synthèse d'audits d'accessibilité",
+    "description": "Créer des notes décrivant les failles d'ergonomie et d'affichage identifiées.",
+    "actionType": "artifact_generated",
+    "targetValue": 10,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_299",
+    "title": "Conception de plan de formation interne",
+    "description": "Générer un livrable listant les modules et planning de montée en compétences.",
+    "actionType": "artifact_generated",
+    "targetValue": 6,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_300",
+    "title": "Bilan d'activité trimestriel R&D",
+    "description": "Créer un artefact consolidé listant les nouvelles architectures validées.",
+    "actionType": "artifact_generated",
+    "targetValue": 14,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_301",
+    "title": "Formulation de prompt de classification",
+    "description": "Donner des règles sémantiques strictes aux agents pour la catégorisation des réclamations clients.",
+    "actionType": "message_sent",
+    "targetValue": 35,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_302",
+    "title": "Optimisation de contenu SEO",
+    "description": "Demander des suggestions de réécriture sémantique pour améliorer la lisibilité de nos articles de blog.",
+    "actionType": "message_sent",
+    "targetValue": 40,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_303",
+    "title": "Conduite de tests sémantiques",
+    "description": "Faire valider la logique de traitement d'un prompt complexe en soumettant plusieurs cas de test.",
+    "actionType": "message_sent",
+    "targetValue": 50,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_304",
+    "title": "Définition de règles métier",
+    "description": "Expliquer pas à pas aux assistants les contraintes réglementaires applicables à l'application.",
+    "actionType": "message_sent",
+    "targetValue": 30,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_305",
+    "title": "Briefing fonctionnel",
+    "description": "Échanger avec les agents pour planifier la refonte ergonomique du portail utilisateur.",
+    "actionType": "message_sent",
+    "targetValue": 25,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_306",
+    "title": "Génération de scripts de tests",
+    "description": "Demander l'écriture de cas de tests d'intégration pour nos points d'accès API.",
+    "actionType": "message_sent",
+    "targetValue": 45,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_307",
+    "title": "Analyse de spécifications",
+    "description": "Discuter avec l'agent pour clarifier les exigences techniques de l'architecture.",
+    "actionType": "message_sent",
+    "targetValue": 32,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_308",
+    "title": "Audit ergonomique interactif",
+    "description": "Soumettre des captures textuelles d'interfaces pour recueillir des commentaires d'amélioration.",
+    "actionType": "message_sent",
+    "targetValue": 28,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_309",
+    "title": "Extraction d'entités textuelles",
+    "description": "Utiliser des plugins de parsing pour identifier des dates et montants dans des documents.",
+    "actionType": "plugin_used",
+    "targetValue": 8,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_310",
+    "title": "Validation de requêtes GraphQL",
+    "description": "Utiliser des extensions spécialisées pour s'assurer de la validité de nos appels serveurs.",
+    "actionType": "plugin_used",
+    "targetValue": 6,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_311",
+    "title": "Génération de faux profils",
+    "description": "Exploiter des plugins de peuplement de données pour tester l'interface utilisateur.",
+    "actionType": "plugin_used",
+    "targetValue": 10,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_312",
+    "title": "Diagnostic d'exécution",
+    "description": "Appliquer des plugins d'évaluation de performance pour détecter les goulots d'étranglement.",
+    "actionType": "plugin_used",
+    "targetValue": 5,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_313",
+    "title": "Veille réglementaire automatisée",
+    "description": "Mobiliser des plugins de navigation pour synthétiser les directives européennes récentes.",
+    "actionType": "plugin_used",
+    "targetValue": 12,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_314",
+    "title": "Vérification d'adresses email",
+    "description": "Faire appel à des plugins de validation syntaxique de courrier électronique.",
+    "actionType": "plugin_used",
+    "targetValue": 7,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_315",
+    "title": "Calcul de statistiques de ventes",
+    "description": "Utiliser des extensions mathématiques pour agréger les résultats commerciaux.",
+    "actionType": "plugin_used",
+    "targetValue": 9,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_316",
+    "title": "Traitement de fichiers XML",
+    "description": "Niveau d'utilisation de plugins de conversion pour parser des fichiers de configuration.",
+    "actionType": "plugin_used",
+    "targetValue": 11,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_317",
+    "title": "Conception d'experts financiers",
+    "description": "Créer des agents configurés pour analyser l'évolution des budgets d'investissement.",
+    "actionType": "agent_created",
+    "targetValue": 3,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_318",
+    "title": "Génération de profils de relecteurs",
+    "description": "Concevoir des agents spécialisés dans la vérification de la grammaire et de la syntaxe.",
+    "actionType": "agent_created",
+    "targetValue": 2,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_319",
+    "title": "Création d'agents de cybersécurité cloud",
+    "description": "Mettre sur pied des agents orientés sécurité et gestion d'accès des buckets S3.",
+    "actionType": "agent_created",
+    "targetValue": 4,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_320",
+    "title": "Spécialistes de la relation client",
+    "description": "Créer des profils d'agents spécialisés dans le traitement de courriers de réclamation.",
+    "actionType": "agent_created",
+    "targetValue": 3,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_321",
+    "title": "Compagnons d'évaluation de code",
+    "description": "Développer des agents pour analyser la performance globale des requêtes SQL.",
+    "actionType": "agent_created",
+    "targetValue": 2,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_322",
+    "title": "Architecte d'assistants administratifs RH",
+    "description": "Déployer des agents pour guider la rédaction des entretiens de bilan.",
+    "actionType": "agent_created",
+    "targetValue": 5,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_323",
+    "title": "Concepteurs de formateurs virtuels",
+    "description": "Créer des agents pédagogiques pour animer les formations d'onboarding.",
+    "actionType": "agent_created",
+    "targetValue": 3,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_324",
+    "title": "Création d'agents logistiques avancés",
+    "description": "Développer des agents spécialisés dans l'organisation des plans de tournée.",
+    "actionType": "agent_created",
+    "targetValue": 4,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_325",
+    "title": "Disponibilité de projet soutenue",
+    "description": "Assurer des sessions de travail actives réparties sur plusieurs jours ouvrés.",
+    "actionType": "session_active",
+    "targetValue": 5,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_326",
+    "title": "Planification et suivi régulier",
+    "description": "Tenir des sessions régulières d'évaluation de l'avancement des développements.",
+    "actionType": "session_active",
+    "targetValue": 4,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_327",
+    "title": "Immersion de débogage",
+    "description": "Se connecter régulièrement pour résoudre les incidents et anomalies de production.",
+    "actionType": "session_active",
+    "targetValue": 6,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_328",
+    "title": "Suivi hebdomadaire continu",
+    "description": "Consacrer des sessions d'optimisation de configurations de l'application.",
+    "actionType": "session_active",
+    "targetValue": 7,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_329",
+    "title": "Revue d'architecture hebdomadaire",
+    "description": "Se connecter à la plateforme pour ajuster et documenter les diagrammes.",
+    "actionType": "session_active",
+    "targetValue": 3,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_330",
+    "title": "Contrôle de conformité de données",
+    "description": "Ouvrir des sessions pour auditer le respect des protocoles RGPD applicables.",
+    "actionType": "session_active",
+    "targetValue": 5,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_331",
+    "title": "Ajustement de l'environnement local",
+    "description": "Lancer des sessions pour mettre au point les scripts de démarrage.",
+    "actionType": "session_active",
+    "targetValue": 4,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_332",
+    "title": "Supervision globale de staging",
+    "description": "Suivre le déploiement sur les environnements de test lors de plusieurs sessions.",
+    "actionType": "session_active",
+    "targetValue": 6,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_333",
+    "title": "Analyse de rapports sectoriels",
+    "description": "Consommer des jetons pour l'extraction de synthèses à partir d'études de marché.",
+    "actionType": "tokens_used",
+    "targetValue": 80000,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_334",
+    "title": "Traitement de documentation technique massive",
+    "description": "Analyser l'intégralité d'un manuel d'API d'un fournisseur tiers.",
+    "actionType": "tokens_used",
+    "targetValue": 120000,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_335",
+    "title": "Génération de microservices",
+    "description": "Demander la génération complète de services d'arrière-plan en TypeScript.",
+    "actionType": "tokens_used",
+    "targetValue": 140000,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_336",
+    "title": "Relecture de code récursive globale",
+    "description": "Analyser de volumineux modules de code pour en extraire des diagrammes de flux.",
+    "actionType": "tokens_used",
+    "targetValue": 100000,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_337",
+    "title": "Traitement sémantique d'études clients",
+    "description": "Traiter des centaines d'avis utilisateurs pour classifier les retours négatifs.",
+    "actionType": "tokens_used",
+    "targetValue": 60000,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_338",
+    "title": "Ajustement sémantique de newsletters",
+    "description": "Demander des suggestions de réécriture pour nos campagnes d'information.",
+    "actionType": "tokens_used",
+    "targetValue": 50000,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_339",
+    "title": "Audit de conformité de contrats",
+    "description": "Soumettre des ensembles de clauses juridiques pour en vérifier la validité légale.",
+    "actionType": "tokens_used",
+    "targetValue": 90000,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_340",
+    "title": "Extraction sémantique comptable",
+    "description": "Calculer l'impact de transactions financières à partir de rapports consolidés.",
+    "actionType": "tokens_used",
+    "targetValue": 70000,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_341",
+    "title": "Conception d'images promotionnelles",
+    "description": "Générer des illustrations originales pour la prochaine lettre d'information.",
+    "actionType": "image_generated",
+    "targetValue": 8,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_342",
+    "title": "Recherche d'identité graphique produit",
+    "description": "Générer des designs de boutons et de bandeaux pour l'application mobile.",
+    "actionType": "image_generated",
+    "targetValue": 5,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_343",
+    "title": "Création de visuels d'onboarding de marque",
+    "description": "Générer des schémas d'explication visuels pour le manuel d'accueil.",
+    "actionType": "image_generated",
+    "targetValue": 12,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_344",
+    "title": "Illustration de schémas de base de données",
+    "description": "Générer des diagrammes relationnels de façon créative et originale.",
+    "actionType": "image_generated",
+    "targetValue": 6,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_345",
+    "title": "Conception de bannières publicitaires",
+    "description": "Générer des supports graphiques marketing pour des salons professionnels.",
+    "actionType": "image_generated",
+    "targetValue": 10,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_346",
+    "title": "Rendu visuel industriel 3D",
+    "description": "Générer des maquettes réalistes de packagings pour des tests consommateurs.",
+    "actionType": "image_generated",
+    "targetValue": 7,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_347",
+    "title": "Création de fonds visuels abstraits",
+    "description": "Générer des décors et des textures graphiques pour agrémenter les rapports.",
+    "actionType": "image_generated",
+    "targetValue": 9,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_348",
+    "title": "Conception de logos minimalistes",
+    "description": "Générer des concepts graphiques de logos pour nos futures initiatives R&D.",
+    "actionType": "image_generated",
+    "targetValue": 15,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_349",
+    "title": "Synthèse vocale de bilans comptables",
+    "description": "Générer les versions vocales des analyses financières pour les investisseurs.",
+    "actionType": "voice_synthesized",
+    "targetValue": 15,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_350",
+    "title": "Enregistrement de tutoriels audio de vente",
+    "description": "Produire des messages audio pour former l'équipe commerciale aux nouveautés.",
+    "actionType": "voice_synthesized",
+    "targetValue": 10,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_351",
+    "title": "Audiobooks d'actualités technologiques",
+    "description": "Synthétiser vocalement la documentation de référence des nouvelles API.",
+    "actionType": "voice_synthesized",
+    "targetValue": 25,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_352",
+    "title": "Création d'alertes audio de production",
+    "description": "Produire des vocaux d'alertes instantanées pour les pannes réseau.",
+    "actionType": "voice_synthesized",
+    "targetValue": 20,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_353",
+    "title": "Synthèse de revues de presse sectorielles",
+    "description": "Générer un format audio reprenant les nouveautés marquantes du secteur.",
+    "actionType": "voice_synthesized",
+    "targetValue": 30,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_354",
+    "title": "Voix off explicative pour vidéos",
+    "description": "Générer des explications parlées fluides pour illustrer les démonstrations logicielles.",
+    "actionType": "voice_synthesized",
+    "targetValue": 12,
+    "xpReward": 108
+  },
+  {
+    "id": "weekly_quest_355",
+    "title": "Production de contenus éducatifs parlés",
+    "description": "Convertir des modules d'e-learning rédigés en fichiers vocaux bien structurés.",
+    "actionType": "voice_synthesized",
+    "targetValue": 18,
+    "xpReward": 122
+  },
+  {
+    "id": "weekly_quest_356",
+    "title": "Notes de réunion hebdomadaire audio",
+    "description": "Produire une synthèse vocale claire reprenant les livrables de la semaine.",
+    "actionType": "voice_synthesized",
+    "targetValue": 14,
+    "xpReward": 112
+  },
+  {
+    "id": "weekly_quest_357",
+    "title": "Animation de forums méthodologiques",
+    "description": "Partager des sujets de discussion pour améliorer la coordination en équipe agile.",
+    "actionType": "topic_shared",
+    "targetValue": 5,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_358",
+    "title": "Partage de retours d'expérience produit",
+    "description": "Diffuser des cas réels d'incidents résolus pour capitaliser les connaissances.",
+    "actionType": "topic_shared",
+    "targetValue": 3,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_359",
+    "title": "Diffusion de fichiers de configurations types",
+    "description": "Partager des modèles de fichiers Docker Compose et de pipelines CI/CD.",
+    "actionType": "topic_shared",
+    "targetValue": 8,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_360",
+    "title": "Partage d'analyses de temps de chargement",
+    "description": "Diffuser des discussions sur l'optimisation des performances front-end.",
+    "actionType": "topic_shared",
+    "targetValue": 6,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_361",
+    "title": "Partage d'actualités technologiques IA",
+    "description": "Ouvrir des débats d'équipe portant sur l'usage professionnel des modèles LLM.",
+    "actionType": "topic_shared",
+    "targetValue": 4,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_362",
+    "title": "Partage de guides de style UI/UX",
+    "description": "Partager des documentations internes sur l'implémentation de composants d'interface.",
+    "actionType": "topic_shared",
+    "targetValue": 10,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_363",
+    "title": "Partage de maquettes de spécification",
+    "description": "Diffuser des wireframes pour recueillir les avis avant développement.",
+    "actionType": "topic_shared",
+    "targetValue": 7,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_364",
+    "title": "Animation de sujets d'innovation R&D",
+    "description": "Partager des fils de discussion sur les nouvelles architectures logicielles.",
+    "actionType": "topic_shared",
+    "targetValue": 9,
+    "xpReward": 145
+  },
+  {
+    "id": "weekly_quest_365",
+    "title": "Recherche de chartes de sécurité interne",
+    "description": "Consulter les protocoles de réponse aux failles de sécurité dans la base.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 15,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_366",
+    "title": "Recherche de modèles administratifs RH",
+    "description": "Trouver des modèles de demandes de congés et d'avenants au contrat.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 10,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_367",
+    "title": "Consultation de documentations d'API REST",
+    "description": "Explorer les formats de données acceptés par nos points d'accès serveurs.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 25,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_368",
+    "title": "Recherche de spécifications UI/UX",
+    "description": "Consulter les règles d'accessibilité numérique et chartes graphiques.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 12,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_369",
+    "title": "Recherche de rapports marketing sectoriels",
+    "description": "Consulter les données de performance de campagnes publicitaires passées.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 18,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_370",
+    "title": "Vérification de technologies brevetées",
+    "description": "Lancer des recherches sémantiques sur les innovations brevetées par l'entreprise.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 20,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_371",
+    "title": "Exploration d'historiques de support client",
+    "description": "Consulter les solutions appliquées lors d'incidents serveurs passés.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 14,
+    "xpReward": 112
+  },
+  {
+    "id": "weekly_quest_372",
+    "title": "Consultation de ressources d'onboarding R&D",
+    "description": "Parcourir les wikis internes pour guider l'onboarding de nouveaux ingénieurs.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 22,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_373",
+    "title": "Automatisation de facturation client",
+    "description": "Créer des flux d'envoi automatique de rappels de paiement par email.",
+    "actionType": "workflow_created",
+    "targetValue": 3,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_374",
+    "title": "Suivi de candidatures automatisé RH",
+    "description": "Modéliser un workflow de tri et de réponse automatique pour les recruteurs.",
+    "actionType": "workflow_created",
+    "targetValue": 2,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_375",
+    "title": "Orchestration de tests de staging",
+    "description": "Créer un pipeline de test d'intégration automatique avec alerte Slack.",
+    "actionType": "workflow_created",
+    "targetValue": 5,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_376",
+    "title": "Acheminement automatique de tickets support",
+    "description": "Concevoir un flux de dispatching de requêtes vers les équipes qualifiées.",
+    "actionType": "workflow_created",
+    "targetValue": 4,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_377",
+    "title": "Archivage de sauvegardes de base de données",
+    "description": "Mettre sur pied un workflow d'archivage hebdomadaire automatique.",
+    "actionType": "workflow_created",
+    "targetValue": 3,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_378",
+    "title": "Génération automatique de bilans d'activité",
+    "description": "Créer un workflow agrégeant les rapports des collaborateurs en un PDF global.",
+    "actionType": "workflow_created",
+    "targetValue": 4,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_379",
+    "title": "Intégration de prospects CRM",
+    "description": "Concevoir un workflow pour enregistrer les prospects issus du site.",
+    "actionType": "workflow_created",
+    "targetValue": 2,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_380",
+    "title": "Modération automatique de contenus",
+    "description": "Mettre en place des règles de blocage automatique de spams sur le chat.",
+    "actionType": "workflow_created",
+    "targetValue": 3,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_381",
+    "title": "Installation de plugins de traduction",
+    "description": "Ajouter des modules de traduction multilingue en temps réel.",
+    "actionType": "plugin_installed",
+    "targetValue": 5,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_382",
+    "title": "Nettoyage automatique de caches",
+    "description": "Installer des extensions pour vider automatiquement les caches temporaires.",
+    "actionType": "plugin_installed",
+    "targetValue": 3,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_383",
+    "title": "Surveillance de trafic réseau",
+    "description": "Installer des plugins de monitoring de flux de requêtes entrantes.",
+    "actionType": "plugin_installed",
+    "targetValue": 7,
+    "xpReward": 145
+  },
+  {
+    "id": "weekly_quest_384",
+    "title": "Convertisseurs automatiques de formats",
+    "description": "Installer des extensions pour transformer des rapports Word en Markdown.",
+    "actionType": "plugin_installed",
+    "targetValue": 4,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_385",
+    "title": "Transcription automatique de réunions",
+    "description": "Ajouter des plugins pour transcrire automatiquement les enregistrements vocaux.",
+    "actionType": "plugin_installed",
+    "targetValue": 6,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_386",
+    "title": "Gestion avancée de droits d'accès",
+    "description": "Installer des extensions gérant l'authentification multifacteur et OAuth.",
+    "actionType": "plugin_installed",
+    "targetValue": 8,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_387",
+    "title": "Bibliothèques d'icônes SVG",
+    "description": "Installer des extensions proposant des galeries d'icônes pour l'interface.",
+    "actionType": "plugin_installed",
+    "targetValue": 4,
+    "xpReward": 112
+  },
+  {
+    "id": "weekly_quest_388",
+    "title": "Validateurs automatiques de schémas JSON",
+    "description": "Installer des plugins pour vérifier la conformité des configurations système.",
+    "actionType": "plugin_installed",
+    "targetValue": 5,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_389",
+    "title": "Configuration de règles de sécurité",
+    "description": "Mettre à jour les adresses autorisées à accéder à l'API de staging.",
+    "actionType": "settings_updated",
+    "targetValue": 3,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_390",
+    "title": "Ajustement de chartes de couleurs",
+    "description": "Modifier les préférences graphiques pour l'affichage en mode sombre.",
+    "actionType": "settings_updated",
+    "targetValue": 2,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_391",
+    "title": "Mise à jour de clés de sécurité API",
+    "description": "Renouveler les identifiants de connexion secrètes pour nos outils tiers.",
+    "actionType": "settings_updated",
+    "targetValue": 4,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_392",
+    "title": "Limites de stockage",
+    "description": "Configurer les quotas d'espace disque attribués aux répertoires partagés.",
+    "actionType": "settings_updated",
+    "targetValue": 5,
+    "xpReward": 145
+  },
+  {
+    "id": "weekly_quest_393",
+    "title": "Configuration d'emails de notification",
+    "description": "Ajuster les serveurs et adresses d'envoi automatique de bilans.",
+    "actionType": "settings_updated",
+    "targetValue": 3,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_394",
+    "title": "Configuration de quotas de requêtes",
+    "description": "Ajuster le nombre maximal de requêtes autorisées par utilisateur par jour.",
+    "actionType": "settings_updated",
+    "targetValue": 4,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_395",
+    "title": "Génération de rapports de performance système",
+    "description": "Créer des bilans de taux de succès des pipelines CI/CD sous forme d'artefacts.",
+    "actionType": "artifact_generated",
+    "targetValue": 8,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_396",
+    "title": "Rédaction de spécifications techniques d'API",
+    "description": "Produire un document décrivant l'ensemble de nos points d'accès serveurs.",
+    "actionType": "artifact_generated",
+    "targetValue": 5,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_397",
+    "title": "Plan de migration vers le cloud",
+    "description": "Générer un artefact répertoriant les étapes logistiques du passage au cloud.",
+    "actionType": "artifact_generated",
+    "targetValue": 12,
+    "xpReward": 145
+  },
+  {
+    "id": "weekly_quest_398",
+    "title": "Synthèse d'audits d'utilisabilité UX",
+    "description": "Créer des notes décrivant les retours utilisateurs suite aux tests de design.",
+    "actionType": "artifact_generated",
+    "targetValue": 10,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_399",
+    "title": "Plan de formation technique interne",
+    "description": "Générer un livrable listant les modules d'onboarding sur notre framework.",
+    "actionType": "artifact_generated",
+    "targetValue": 6,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_400",
+    "title": "Bilan R&D d'avancement technique",
+    "description": "Créer un artefact listant les nouvelles technologies validées ce trimestre.",
+    "actionType": "artifact_generated",
+    "targetValue": 14,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_401",
+    "title": "Optimisation des interactions sémantiques",
+    "description": "Donner des directives détaillées pour guider les agents dans la rédaction de synthèses complexes.",
+    "actionType": "message_sent",
+    "targetValue": 35,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_402",
+    "title": "Ajustement de prompt d'extraction de données",
+    "description": "Formuler des requêtes d'extraction de métadonnées précises à partir de textes volumineux.",
+    "actionType": "message_sent",
+    "targetValue": 40,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_403",
+    "title": "Dialogue d'évaluation technique",
+    "description": "Collaborer avec les modèles conversationnels pour valider un algorithme d'ordonnancement.",
+    "actionType": "message_sent",
+    "targetValue": 50,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_404",
+    "title": "Vérification des exigences métiers",
+    "description": "Rédiger des questions d'explication pour affiner les priorités fonctionnelles du projet.",
+    "actionType": "message_sent",
+    "targetValue": 30,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_405",
+    "title": "Conduite d'entretiens techniques",
+    "description": "Discuter avec les agents pour valider la faisabilité d'une intégration logicielle tierce.",
+    "actionType": "message_sent",
+    "targetValue": 25,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_406",
+    "title": "Génération de scripts SQL",
+    "description": "Demander des suggestions d'écriture de requêtes de reporting agrégées aux modèles.",
+    "actionType": "message_sent",
+    "targetValue": 45,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_407",
+    "title": "Analyse de cas d'utilisation",
+    "description": "Interagir avec les modèles linguistiques pour clarifier les cas aux limites du système.",
+    "actionType": "message_sent",
+    "targetValue": 32,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_408",
+    "title": "Audit qualité interactif",
+    "description": "Soumettre des portions de code source pour repérer des duplications logicielles.",
+    "actionType": "message_sent",
+    "targetValue": 28,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_409",
+    "title": "Traitement documentaire automatique",
+    "description": "Faire appel à des plugins de numérisation pour extraire les données clés de factures.",
+    "actionType": "plugin_used",
+    "targetValue": 8,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_410",
+    "title": "Validation de syntaxe JSON",
+    "description": "Utiliser des plugins de validation pour certifier la conformité de fichiers de configuration.",
+    "actionType": "plugin_used",
+    "targetValue": 6,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_411",
+    "title": "Génération de contacts tests",
+    "description": "Exploiter des plugins de génération de données fictives pour tester le CRM.",
+    "actionType": "plugin_used",
+    "targetValue": 10,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_412",
+    "title": "Calcul de charge processeur",
+    "description": "Mobiliser des plugins de diagnostic pour évaluer la consommation des microservices.",
+    "actionType": "plugin_used",
+    "targetValue": 5,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_413",
+    "title": "Recherche web de conformité légale",
+    "description": "Utiliser des plugins de navigation web pour synthétiser les directives environnementales.",
+    "actionType": "plugin_used",
+    "targetValue": 12,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_414",
+    "title": "Audit réseau de ports ouverts",
+    "description": "Faire appel à des extensions réseau pour s'assurer de la fermeture de ports à risques.",
+    "actionType": "plugin_used",
+    "targetValue": 7,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_415",
+    "title": "Génération de statistiques d'utilisation",
+    "description": "Utiliser des extensions de calcul pour obtenir la moyenne des temps d'accès.",
+    "actionType": "plugin_used",
+    "targetValue": 9,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_416",
+    "title": "Conversion de formats d'images",
+    "description": "Appliquer des plugins de script pour transformer des formats PNG en WebP.",
+    "actionType": "plugin_used",
+    "targetValue": 11,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_417",
+    "title": "Création d'assistants marketing",
+    "description": "Configurer des agents dédiés à l'évaluation des statistiques de campagnes publicitaires.",
+    "actionType": "agent_created",
+    "targetValue": 3,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_418",
+    "title": "Architecte d'agents de relecture",
+    "description": "Concevoir des agents spécialisés dans la vérification de la formulation des emails.",
+    "actionType": "agent_created",
+    "targetValue": 2,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_419",
+    "title": "Création d'experts d'intégration continue",
+    "description": "Déployer des agents pour guider la mise en place de tests unitaires systématiques.",
+    "actionType": "agent_created",
+    "targetValue": 4,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_420",
+    "title": "Génération de profils d'analystes SEO",
+    "description": "Créer des agents spécialisés dans l'analyse de pertinence des mots-clés d'articles.",
+    "actionType": "agent_created",
+    "targetValue": 3,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_421",
+    "title": "Compagnons d'évaluation de sécurité",
+    "description": "Créer des agents configurés pour identifier des vulnérabilités dans le code source.",
+    "actionType": "agent_created",
+    "targetValue": 2,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_422",
+    "title": "Déploiement d'assistants RH administratifs",
+    "description": "Concevoir des agents pour automatiser le suivi des demandes de congés payés.",
+    "actionType": "agent_created",
+    "targetValue": 5,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_423",
+    "title": "Concepteurs d'agents pédagogiques",
+    "description": "Créer des agents d'accompagnement pour former les équipes aux outils internes.",
+    "actionType": "agent_created",
+    "targetValue": 3,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_424",
+    "title": "Création d'agents de logistique urbaine",
+    "description": "Développer des profils d'agents spécialisés dans le suivi de livraisons express.",
+    "actionType": "agent_created",
+    "targetValue": 4,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_425",
+    "title": "Présence de projet quotidienne",
+    "description": "Assurer des sessions de travail actives réparties sur l'ensemble de la semaine.",
+    "actionType": "session_active",
+    "targetValue": 5,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_426",
+    "title": "Engagement opérationnel régulier",
+    "description": "Lancer des sessions d'analyse pour vérifier l'avancement des objectifs.",
+    "actionType": "session_active",
+    "targetValue": 4,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_427",
+    "title": "Suivi technique de production",
+    "description": "Se connecter régulièrement pour diagnostiquer d'éventuelles pannes de base de données.",
+    "actionType": "session_active",
+    "targetValue": 6,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_428",
+    "title": "Immersion de développement intensive",
+    "description": "Consacrer des sessions d'écriture de code complexes pour finaliser le sprint en cours.",
+    "actionType": "session_active",
+    "targetValue": 7,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_429",
+    "title": "Revue d'objectifs hebdomadaires",
+    "description": "Se connecter à la plateforme pour planifier la répartition des tâches d'équipe.",
+    "actionType": "session_active",
+    "targetValue": 3,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_430",
+    "title": "Contrôle qualité de sécurité",
+    "description": "Mener des sessions dédiées à l'évaluation des permissions et accès serveurs.",
+    "actionType": "session_active",
+    "targetValue": 5,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_431",
+    "title": "Optimisation des environnements locaux",
+    "description": "Lancer des sessions pour ajuster les variables de configuration de staging.",
+    "actionType": "session_active",
+    "targetValue": 4,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_432",
+    "title": "Supervision globale de déploiement",
+    "description": "Vérifier le statut des containers Docker lors de sessions régulières.",
+    "actionType": "session_active",
+    "targetValue": 6,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_433",
+    "title": "Analyse de spécifications documentaires",
+    "description": "Consommer des jetons pour l'extraction automatique de contraintes d'architecture.",
+    "actionType": "tokens_used",
+    "targetValue": 80000,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_434",
+    "title": "Audit sémantique global de wikis",
+    "description": "Soumettre des documentations volumineuses pour identifier les incohérences de style.",
+    "actionType": "tokens_used",
+    "targetValue": 120000,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_435",
+    "title": "Génération intensive de code backend",
+    "description": "Demander aux modèles de structurer l'ensemble des modules d'un service d'API.",
+    "actionType": "tokens_used",
+    "targetValue": 140000,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_436",
+    "title": "Analyse linguistique de logs applicatifs",
+    "description": "Traiter d'imposants fichiers de traces pour en extraire des synthèses d'incidents.",
+    "actionType": "tokens_used",
+    "targetValue": 100000,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_437",
+    "title": "Synthèse documentaire de satisfaction client",
+    "description": "Analyser sémantiquement des centaines de retours utilisateurs pour classification.",
+    "actionType": "tokens_used",
+    "targetValue": 60000,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_438",
+    "title": "Ajustement sémantique d'articles de presse",
+    "description": "Demander des suggestions de réécriture sémantique pour optimiser l'impact marketing.",
+    "actionType": "tokens_used",
+    "targetValue": 50000,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_439",
+    "title": "Audit de conformité de contrats légaux",
+    "description": "Soumettre des conditions d'utilisation pour vérifier le respect des lois.",
+    "actionType": "tokens_used",
+    "targetValue": 90000,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_440",
+    "title": "Extraction de métriques financières sémantiques",
+    "description": "Calculer l'impact financier de tendances de ventes à partir de rapports consolidés.",
+    "actionType": "tokens_used",
+    "targetValue": 70000,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_441",
+    "title": "Création d'illustrations d'articles",
+    "description": "Générer des illustrations originales pour accompagner les futurs articles de blog.",
+    "actionType": "image_generated",
+    "targetValue": 8,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_442",
+    "title": "Recherche d'identité graphique mobile",
+    "description": "Générer des prototypes visuels de menus et d'icônes pour l'application mobile.",
+    "actionType": "image_generated",
+    "targetValue": 5,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_443",
+    "title": "Création de visuels de onboarding RH",
+    "description": "Générer des illustrations claires pour agrémenter les guides d'accueil d'équipe.",
+    "actionType": "image_generated",
+    "targetValue": 12,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_444",
+    "title": "Illustration de concepts réseau complexes",
+    "description": "Générer des schémas descriptifs de flux de données de manière créative.",
+    "actionType": "image_generated",
+    "targetValue": 6,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_445",
+    "title": "Conception de visuels marketing d'événements",
+    "description": "Générer des supports promotionnels graphiques originaux pour des hackathons.",
+    "actionType": "image_generated",
+    "targetValue": 10,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_446",
+    "title": "Rendu graphique de maquettes 3D",
+    "description": "Générer des modèles visuels réalistes de futurs packagings industriels.",
+    "actionType": "image_generated",
+    "targetValue": 7,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_447",
+    "title": "Création de fonds artistiques de slides",
+    "description": "Générer des décors abstraits pour illustrer les présentations de projets.",
+    "actionType": "image_generated",
+    "targetValue": 9,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_448",
+    "title": "Conception de logos vectoriels minimalistes",
+    "description": "Générer des concepts épurés de logos pour nos nouvelles branches de R&D.",
+    "actionType": "image_generated",
+    "targetValue": 15,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_449",
+    "title": "Synthèse vocale de bilans financiers d'activité",
+    "description": "Générer les versions vocales des budgets d'investissement pour l'équipe.",
+    "actionType": "voice_synthesized",
+    "targetValue": 15,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_450",
+    "title": "Enregistrement de modules vocaux de vente",
+    "description": "Produire des messages audio pour présenter les arguments clés des produits.",
+    "actionType": "voice_synthesized",
+    "targetValue": 10,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_451",
+    "title": "Audiobooks d'architecture technique",
+    "description": "Synthétiser vocalement la documentation d'API de référence pour écoute nomade.",
+    "actionType": "voice_synthesized",
+    "targetValue": 25,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_452",
+    "title": "Création d'alertes audio système d'infrastructure",
+    "description": "Produire des vocaux d'alertes de panne réseau pour les astreintes.",
+    "actionType": "voice_synthesized",
+    "targetValue": 20,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_453",
+    "title": "Synthèse vocale de revues de presse sectorielles",
+    "description": "Générer un format audio reprenant les actualités majeures du secteur.",
+    "actionType": "voice_synthesized",
+    "targetValue": 30,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_454",
+    "title": "Voix off explicative pour vidéos tutorielles",
+    "description": "Générer des explications parlées fluides pour illustrer les captures d'écrans.",
+    "actionType": "voice_synthesized",
+    "targetValue": 12,
+    "xpReward": 108
+  },
+  {
+    "id": "weekly_quest_455",
+    "title": "Production de contenus éducatifs vocaux",
+    "description": "Convertir des modules rédigés en fichiers audios bien structurés.",
+    "actionType": "voice_synthesized",
+    "targetValue": 18,
+    "xpReward": 122
+  },
+  {
+    "id": "weekly_quest_456",
+    "title": "Notes vocales de rapports d'avancement d'équipe",
+    "description": "Produire une synthèse parlée reprenant les livrables de la semaine.",
+    "actionType": "voice_synthesized",
+    "targetValue": 14,
+    "xpReward": 112
+  },
+  {
+    "id": "weekly_quest_457",
+    "title": "Animation d'échanges collaboratifs agiles",
+    "description": "Partager des sujets de discussion pour perfectionner le fonctionnement en sprint.",
+    "actionType": "topic_shared",
+    "targetValue": 5,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_458",
+    "title": "Partage de retours d'utilisation produits",
+    "description": "Diffuser des cas d'échecs et d'apprentissages pour capitaliser les connaissances.",
+    "actionType": "topic_shared",
+    "targetValue": 3,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_459",
+    "title": "Diffusion de fichiers de configurations réseaux",
+    "description": "Partager des modèles de fichiers Kubernetes et de pipelines CI/CD.",
+    "actionType": "topic_shared",
+    "targetValue": 8,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_460",
+    "title": "Partage d'analyses de performance d'affichage",
+    "description": "Diffuser des discussions sur l'optimisation des requêtes de base de données.",
+    "actionType": "topic_shared",
+    "targetValue": 6,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_461",
+    "title": "Partage d'actualités technologiques d'entreprise",
+    "description": "Ouvrir des débats d'équipe portant sur l'usage des nouveaux modèles de langage.",
+    "actionType": "topic_shared",
+    "targetValue": 4,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_462",
+    "title": "Partage de guides de style ergonomiques UI",
+    "description": "Partager des documentations internes sur l'utilisation de composants d'interfaces.",
+    "actionType": "topic_shared",
+    "targetValue": 10,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_463",
+    "title": "Partage de maquettes de spécifications UX",
+    "description": "Diffuser des wireframes pour recueillir les commentaires avant développement.",
+    "actionType": "topic_shared",
+    "targetValue": 7,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_464",
+    "title": "Animation de sujets d'innovation technologique",
+    "description": "Partager des fils de discussion sur les futures architectures applicatives.",
+    "actionType": "topic_shared",
+    "targetValue": 9,
+    "xpReward": 145
+  },
+  {
+    "id": "weekly_quest_465",
+    "title": "Recherche de chartes de sécurité réseau",
+    "description": "Consulter les protocoles de chiffrement et clés d'accès autorisés dans la base.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 15,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_466",
+    "title": "Recherche de formulaires administratifs RH",
+    "description": "Trouver des modèles de demandes de congés et d'avenants au contrat.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 10,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_467",
+    "title": "Consultation de documentations d'API serveurs",
+    "description": "Explorer les structures de données acceptées par les routes du serveur.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 25,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_468",
+    "title": "Recherche de spécifications graphiques UI",
+    "description": "Consulter les règles d'accessibilité numérique et palettes de couleurs.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 12,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_469",
+    "title": "Recherche de bilans de campagnes marketing",
+    "description": "Consulter les données de performance de lancements publicitaires passés.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 18,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_470",
+    "title": "Vérification d'innovations brevetées",
+    "description": "Lancer des recherches sémantiques sur les brevets technologiques déposés.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 20,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_471",
+    "title": "Exploration d'historiques d'incidents serveurs",
+    "description": "Consulter les solutions appliquées lors d'incidents techniques passés.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 14,
+    "xpReward": 112
+  },
+  {
+    "id": "weekly_quest_472",
+    "title": "Consultation de ressources de onboarding technique",
+    "description": "Parcourir les wikis internes pour parfaire la formation des nouveaux arrivants.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 22,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_473",
+    "title": "Automatisation d'envoi de factures clients",
+    "description": "Créer des flux d'envoi automatique de rappels de paiement par email.",
+    "actionType": "workflow_created",
+    "targetValue": 3,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_474",
+    "title": "Suivi automatisé de candidatures RH",
+    "description": "Modéliser un workflow de tri et de réponse automatique pour les recruteurs.",
+    "actionType": "workflow_created",
+    "targetValue": 2,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_475",
+    "title": "Orchestration de tests d'intégration staging",
+    "description": "Créer un pipeline de test automatique avec rapport de succès par Slack.",
+    "actionType": "workflow_created",
+    "targetValue": 5,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_476",
+    "title": "Acheminement automatique d'incidents techniques",
+    "description": "Concevoir un flux de dispatching de tickets vers les équipes qualifiées.",
+    "actionType": "workflow_created",
+    "targetValue": 4,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_477",
+    "title": "Automatisation d'archivage hebdomadaire",
+    "description": "Mettre sur pied un workflow de transfert automatique de sauvegardes.",
+    "actionType": "workflow_created",
+    "targetValue": 3,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_478",
+    "title": "Génération automatique de bilans marketing",
+    "description": "Créer un workflow assemblant les rapports des campagnes en un PDF global.",
+    "actionType": "workflow_created",
+    "targetValue": 4,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_479",
+    "title": "Intégration automatique de contacts CRM",
+    "description": "Concevoir un workflow pour enregistrer les prospects du site.",
+    "actionType": "workflow_created",
+    "targetValue": 2,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_480",
+    "title": "Flux de modération de forum automatique",
+    "description": "Mettre en place des règles de filtrage de spams sur les espaces d'échanges.",
+    "actionType": "workflow_created",
+    "targetValue": 3,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_481",
+    "title": "Installation de traducteurs automatiques client",
+    "description": "Ajouter des modules de traduction en temps réel pour le support client.",
+    "actionType": "plugin_installed",
+    "targetValue": 5,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_482",
+    "title": "Extensions de purge de cache",
+    "description": "Installer des extensions pour vider automatiquement les dossiers temporaires.",
+    "actionType": "plugin_installed",
+    "targetValue": 3,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_483",
+    "title": "Surveillance de requêtes réseau entrantes",
+    "description": "Installer des plugins de monitoring de bande passante applicative.",
+    "actionType": "plugin_installed",
+    "targetValue": 7,
+    "xpReward": 145
+  },
+  {
+    "id": "weekly_quest_484",
+    "title": "Outils de conversion de fichiers markdown",
+    "description": "Installer des plugins pour convertir des rapports Word en Markdown.",
+    "actionType": "plugin_installed",
+    "targetValue": 4,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_485",
+    "title": "Transcription automatique d'audios de réunion",
+    "description": "Ajouter des plugins de transcription de voix pour les comptes-rendus.",
+    "actionType": "plugin_installed",
+    "targetValue": 6,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_486",
+    "title": "Contrôle d'accès et double authentification",
+    "description": "Installer des extensions gérant l'authentification multifacteur sécurisée.",
+    "actionType": "plugin_installed",
+    "targetValue": 8,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_487",
+    "title": "Modules d'affichage typographique",
+    "description": "Installer des extensions proposant des bibliothèques d'icônes SVG pour l'interface.",
+    "actionType": "plugin_installed",
+    "targetValue": 4,
+    "xpReward": 112
+  },
+  {
+    "id": "weekly_quest_488",
+    "title": "Validateurs de configurations JSON",
+    "description": "Installer des plugins pour vérifier la conformité des schémas de fichiers.",
+    "actionType": "plugin_installed",
+    "targetValue": 5,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_489",
+    "title": "Configuration de pare-feu et accès réseau",
+    "description": "Mettre à jour les adresses IP autorisées pour l'accès aux serveurs de staging.",
+    "actionType": "settings_updated",
+    "targetValue": 3,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_490",
+    "title": "Ajustement de chartes graphiques de marque",
+    "description": "Modifier les préférences visuelles et contrastes pour l'affichage en mode sombre.",
+    "actionType": "settings_updated",
+    "targetValue": 2,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_491",
+    "title": "Mise à jour de clés de chiffrement de l'API",
+    "description": "Renouveler les identifiants de connexion secrètes pour nos outils tiers.",
+    "actionType": "settings_updated",
+    "targetValue": 4,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_492",
+    "title": "Limites de stockage de fichiers",
+    "description": "Configurer les quotas d'espace disque attribués aux espaces partagés.",
+    "actionType": "settings_updated",
+    "targetValue": 5,
+    "xpReward": 145
+  },
+  {
+    "id": "weekly_quest_493",
+    "title": "Configuration de redirection d'alertes",
+    "description": "Ajuster les serveurs SMTP pour l'envoi automatique des emails de diagnostics.",
+    "actionType": "settings_updated",
+    "targetValue": 3,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_494",
+    "title": "Configuration de limites de requêtes journalières",
+    "description": "Ajuster le nombre maximal de requêtes autorisées par utilisateur par jour.",
+    "actionType": "settings_updated",
+    "targetValue": 4,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_495",
+    "title": "Génération de rapports de couverture de tests",
+    "description": "Créer des synthèses de taux de succès des builds de staging sous forme d'artefacts.",
+    "actionType": "artifact_generated",
+    "targetValue": 8,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_496",
+    "title": "Rédaction de spécifications techniques système",
+    "description": "Produire un document décrivant l'ensemble de nos points d'accès serveurs.",
+    "actionType": "artifact_generated",
+    "targetValue": 5,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_497",
+    "title": "Plan de migration d'infrastructure cloud",
+    "description": "Générer un artefact répertoriant les étapes logistiques du passage au cloud.",
+    "actionType": "artifact_generated",
+    "targetValue": 12,
+    "xpReward": 145
+  },
+  {
+    "id": "weekly_quest_498",
+    "title": "Synthèse d'audits d'accessibilité utilisateur UX",
+    "description": "Créer des notes décrivant les failles d'ergonomie identifiées.",
+    "actionType": "artifact_generated",
+    "targetValue": 10,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_499",
+    "title": "Plan de formation technique interne d'onboarding",
+    "description": "Générer un livrable listant les modules d'auto-formation sur notre framework.",
+    "actionType": "artifact_generated",
+    "targetValue": 6,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_500",
+    "title": "Bilan de recherche R&D trimestriel",
+    "description": "Créer un artefact consolidé listant les nouvelles architectures logicielles validées.",
+    "actionType": "artifact_generated",
+    "targetValue": 14,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_501",
+    "title": "Optimisation d'instructions linguistiques",
+    "description": "Formuler des instructions précises pour orienter les modèles dans la réécriture d'articles techniques.",
+    "actionType": "message_sent",
+    "targetValue": 35,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_502",
+    "title": "Clarification des exigences techniques",
+    "description": "Rédiger des questions détaillées pour affiner les priorités fonctionnelles du projet.",
+    "actionType": "message_sent",
+    "targetValue": 40,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_503",
+    "title": "Dialogue d'intégration sémantique",
+    "description": "Collaborer avec les modèles conversationnels pour valider un algorithme de recommandation.",
+    "actionType": "message_sent",
+    "targetValue": 50,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_504",
+    "title": "Validation des contraintes d'affaires",
+    "description": "Expliquer pas à pas aux assistants les contraintes législatives applicables au projet.",
+    "actionType": "message_sent",
+    "targetValue": 30,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_505",
+    "title": "Briefing fonctionnel UX",
+    "description": "Échanger avec les agents pour planifier la refonte du portail utilisateur.",
+    "actionType": "message_sent",
+    "targetValue": 25,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_506",
+    "title": "Génération de scripts de tests unitaires",
+    "description": "Demander l'écriture de cas de tests d'intégration pour nos points d'accès API.",
+    "actionType": "message_sent",
+    "targetValue": 45,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_507",
+    "title": "Analyse de spécifications de données",
+    "description": "Discuter avec l'agent pour clarifier les exigences techniques de la base.",
+    "actionType": "message_sent",
+    "targetValue": 32,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_508",
+    "title": "Audit ergonomique applicatif",
+    "description": "Soumettre des captures d'interfaces pour recueillir des commentaires d'amélioration.",
+    "actionType": "message_sent",
+    "targetValue": 28,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_509",
+    "title": "Extraction d'entités textuelles comptables",
+    "description": "Utiliser des plugins de parsing pour identifier des dates et montants de factures.",
+    "actionType": "plugin_used",
+    "targetValue": 8,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_510",
+    "title": "Validation de schémas GraphQL",
+    "description": "Utiliser des extensions spécialisées pour s'assurer de la validité de nos appels serveurs.",
+    "actionType": "plugin_used",
+    "targetValue": 6,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_511",
+    "title": "Génération de faux contacts CRM",
+    "description": "Exploiter des plugins de génération de données fictives pour tester l'application.",
+    "actionType": "plugin_used",
+    "targetValue": 10,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_512",
+    "title": "Diagnostic d'exécution des microservices",
+    "description": "Appliquer des plugins d'évaluation de performance pour détecter les ralentissements.",
+    "actionType": "plugin_used",
+    "targetValue": 5,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_513",
+    "title": "Veille réglementaire automatisée web",
+    "description": "Mobiliser des plugins de navigation pour synthétiser les directives régionales récentes.",
+    "actionType": "plugin_used",
+    "targetValue": 12,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_514",
+    "title": "Audit réseau de ports système",
+    "description": "Faire appel à des extensions réseau pour s'assurer de la fermeture de ports à risques.",
+    "actionType": "plugin_used",
+    "targetValue": 7,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_515",
+    "title": "Calcul de moyennes de temps de chargement",
+    "description": "Utiliser des extensions de calcul pour obtenir les statistiques d'utilisation.",
+    "actionType": "plugin_used",
+    "targetValue": 9,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_516",
+    "title": "Conversion automatique de fichiers PNG",
+    "description": "Appliquer des plugins de script pour transformer des formats d'images en WebP.",
+    "actionType": "plugin_used",
+    "targetValue": 11,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_517",
+    "title": "Création d'assistants d'analyse financière",
+    "description": "Créer des agents configurés pour analyser l'évolution des budgets d'investissement.",
+    "actionType": "agent_created",
+    "targetValue": 3,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_518",
+    "title": "Conception d'agents de relecture éditoriale",
+    "description": "Concevoir des agents spécialisés dans la vérification des règles de style.",
+    "actionType": "agent_created",
+    "targetValue": 2,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_519",
+    "title": "Création d'experts d'intégration cloud",
+    "description": "Mettre sur pied des agents orientés sécurité et gestion d'accès des buckets de stockage.",
+    "actionType": "agent_created",
+    "targetValue": 4,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_520",
+    "title": "Génération de profils d'assistants support",
+    "description": "Créer des profils d'agents spécialisés dans le traitement de courriers de réclamation.",
+    "actionType": "agent_created",
+    "targetValue": 3,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_521",
+    "title": "Compagnons d'évaluation de requêtes SQL",
+    "description": "Développer des agents pour analyser la performance globale des appels de base.",
+    "actionType": "agent_created",
+    "targetValue": 2,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_522",
+    "title": "Architecte d'assistants administratifs de paie",
+    "description": "Déployer des agents pour guider la rédaction des entretiens de recrutement.",
+    "actionType": "agent_created",
+    "targetValue": 5,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_523",
+    "title": "Concepteurs de guides de formation virtuels",
+    "description": "Créer des agents pédagogiques pour animer les formations d'onboarding.",
+    "actionType": "agent_created",
+    "targetValue": 3,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_524",
+    "title": "Création d'agents de routage logistique",
+    "description": "Développer des agents spécialisés dans l'organisation des plans de tournée.",
+    "actionType": "agent_created",
+    "targetValue": 4,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_525",
+    "title": "Assiduité de projet soutenue",
+    "description": "Assurer des sessions de travail actives réparties sur plusieurs jours ouvrés.",
+    "actionType": "session_active",
+    "targetValue": 5,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_526",
+    "title": "Planification de sprints régulière",
+    "description": "Tenir des sessions régulières d'évaluation de l'avancement des développements.",
+    "actionType": "session_active",
+    "targetValue": 4,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_527",
+    "title": "Immersion de débogage système",
+    "description": "Se connecter régulièrement pour résoudre les incidents et anomalies de production.",
+    "actionType": "session_active",
+    "targetValue": 6,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_528",
+    "title": "Suivi hebdomadaire de configurations",
+    "description": "Consacrer des sessions d'optimisation de configurations de l'application.",
+    "actionType": "session_active",
+    "targetValue": 7,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_529",
+    "title": "Revue d'architecture de bases de données",
+    "description": "Se connecter à la plateforme pour ajuster et documenter les schémas.",
+    "actionType": "session_active",
+    "targetValue": 3,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_530",
+    "title": "Contrôle de conformité de données RGPD",
+    "description": "Ouvrir des sessions pour auditer le respect des protocoles applicables.",
+    "actionType": "session_active",
+    "targetValue": 5,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_531",
+    "title": "Ajustement de scripts de démarrage",
+    "description": "Lancer des sessions pour mettre au point les modules d'arrière-plan.",
+    "actionType": "session_active",
+    "targetValue": 4,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_532",
+    "title": "Supervision globale de staging cloud",
+    "description": "Suivre le déploiement sur les environnements de test lors de plusieurs sessions.",
+    "actionType": "session_active",
+    "targetValue": 6,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_533",
+    "title": "Analyse documentaire de rapports sectoriels",
+    "description": "Consommer des jetons pour l'extraction de synthèses à partir d'études de marché.",
+    "actionType": "tokens_used",
+    "targetValue": 80000,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_534",
+    "title": "Traitement de documentations d'API massives",
+    "description": "Analyser l'intégralité d'un manuel d'API d'un fournisseur tiers.",
+    "actionType": "tokens_used",
+    "targetValue": 120000,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_535",
+    "title": "Génération de modules backend complets",
+    "description": "Demander la génération complète de services d'arrière-plan en TypeScript.",
+    "actionType": "tokens_used",
+    "targetValue": 140000,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_536",
+    "title": "Relecture de code récursive globale de staging",
+    "description": "Analyser de volumineux modules de code pour en extraire des diagrammes de flux.",
+    "actionType": "tokens_used",
+    "targetValue": 100000,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_537",
+    "title": "Traitement sémantique d'avis clients",
+    "description": "Traiter des centaines d'avis utilisateurs pour classifier les retours négatifs.",
+    "actionType": "tokens_used",
+    "targetValue": 60000,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_538",
+    "title": "Ajustement sémantique de campagnes newsletters",
+    "description": "Demander des suggestions de réécriture pour nos lettres d'information.",
+    "actionType": "tokens_used",
+    "targetValue": 50000,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_539",
+    "title": "Audit de conformité de contrats de partenariat",
+    "description": "Soumettre des ensembles de clauses juridiques pour en vérifier la validité légale.",
+    "actionType": "tokens_used",
+    "targetValue": 90000,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_540",
+    "title": "Extraction sémantique comptable analytique",
+    "description": "Calculer l'impact de transactions financières à partir de rapports consolidés.",
+    "actionType": "tokens_used",
+    "targetValue": 70000,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_541",
+    "title": "Conception d'illustrations publicitaires",
+    "description": "Générer des illustrations originales pour la prochaine lettre d'information.",
+    "actionType": "image_generated",
+    "targetValue": 8,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_542",
+    "title": "Recherche d'identité graphique d'interface",
+    "description": "Générer des designs de boutons et de bandeaux pour l'application mobile.",
+    "actionType": "image_generated",
+    "targetValue": 5,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_543",
+    "title": "Création de visuels d'onboarding de collaborateurs",
+    "description": "Générer des schémas d'explication visuels pour le manuel d'accueil.",
+    "actionType": "image_generated",
+    "targetValue": 12,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_544",
+    "title": "Illustration de diagrammes relationnels",
+    "description": "Générer des schémas de base de données de façon créative et originale.",
+    "actionType": "image_generated",
+    "targetValue": 6,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_545",
+    "title": "Conception de bannières d'événements physiques",
+    "description": "Générer des supports graphiques marketing pour des salons professionnels.",
+    "actionType": "image_generated",
+    "targetValue": 10,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_546",
+    "title": "Rendu visuel industriel 3D de packaging",
+    "description": "Générer des maquettes réalistes de boîtes pour des tests consommateurs.",
+    "actionType": "image_generated",
+    "targetValue": 7,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_547",
+    "title": "Création de fonds visuels abstraits de rapports",
+    "description": "Générer des décors et des textures graphiques pour agrémenter les bilans.",
+    "actionType": "image_generated",
+    "targetValue": 9,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_548",
+    "title": "Conception de logos minimalistes de filiales",
+    "description": "Générer des concepts graphiques de logos pour nos futures initiatives R&D.",
+    "actionType": "image_generated",
+    "targetValue": 15,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_549",
+    "title": "Synthèse vocale de rapports financiers d'activité",
+    "description": "Générer les versions vocales des analyses financières pour les investisseurs.",
+    "actionType": "voice_synthesized",
+    "targetValue": 15,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_550",
+    "title": "Enregistrement de modules vocaux de formation",
+    "description": "Produire des messages audio pour former l'équipe commerciale aux nouveautés.",
+    "actionType": "voice_synthesized",
+    "targetValue": 10,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_551",
+    "title": "Audiobooks d'actualités technologiques R&D",
+    "description": "Synthétiser vocalement la documentation de référence des nouvelles API.",
+    "actionType": "voice_synthesized",
+    "targetValue": 25,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_552",
+    "title": "Création d'alertes audio de production réseau",
+    "description": "Produire des vocaux d'alertes instantanées pour les pannes réseau.",
+    "actionType": "voice_synthesized",
+    "targetValue": 20,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_553",
+    "title": "Synthèse de revues de presse sectorielles vocales",
+    "description": "Générer un format audio reprenant les nouveautés marquantes du secteur.",
+    "actionType": "voice_synthesized",
+    "targetValue": 30,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_554",
+    "title": "Voix off explicative pour vidéos tutorielles de code",
+    "description": "Générer des explications parlées fluides pour illustrer les démonstrations logicielles.",
+    "actionType": "voice_synthesized",
+    "targetValue": 12,
+    "xpReward": 108
+  },
+  {
+    "id": "weekly_quest_555",
+    "title": "Production de contenus éducatifs parlés d'onboarding",
+    "description": "Convertir des modules d'e-learning rédigés en fichiers vocaux bien structurés.",
+    "actionType": "voice_synthesized",
+    "targetValue": 18,
+    "xpReward": 122
+  },
+  {
+    "id": "weekly_quest_556",
+    "title": "Notes de réunion hebdomadaire audio d'avancement",
+    "description": "Produire une synthèse vocale claire reprenant les livrables de la semaine.",
+    "actionType": "voice_synthesized",
+    "targetValue": 14,
+    "xpReward": 112
+  },
+  {
+    "id": "weekly_quest_557",
+    "title": "Animation de forums d'échanges méthodologiques",
+    "description": "Partager des sujets de discussion pour améliorer la coordination en équipe agile.",
+    "actionType": "topic_shared",
+    "targetValue": 5,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_558",
+    "title": "Partage de retours d'expérience technique produit",
+    "description": "Diffuser des cas réels d'incidents résolus pour capitaliser les connaissances.",
+    "actionType": "topic_shared",
+    "targetValue": 3,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_559",
+    "title": "Diffusion de templates de configurations types",
+    "description": "Partager des modèles de fichiers Docker Compose et de pipelines CI/CD.",
+    "actionType": "topic_shared",
+    "targetValue": 8,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_560",
+    "title": "Partage d'analyses de performance de chargement",
+    "description": "Diffuser des discussions sur l'optimisation des performances front-end.",
+    "actionType": "topic_shared",
+    "targetValue": 6,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_561",
+    "title": "Partage d'actualités technologiques sur les LLM",
+    "description": "Ouvrir des débats d'équipe portant sur l'usage professionnel des modèles d'agents.",
+    "actionType": "topic_shared",
+    "targetValue": 4,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_562",
+    "title": "Partage de guides de style UI/UX de marque",
+    "description": "Partager des documentations internes sur l'implémentation de composants d'interface.",
+    "actionType": "topic_shared",
+    "targetValue": 10,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_563",
+    "title": "Partage de maquettes de spécification d'interfaces",
+    "description": "Diffuser des wireframes pour recueillir les avis avant développement.",
+    "actionType": "topic_shared",
+    "targetValue": 7,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_564",
+    "title": "Animation de sujets d'innovation d'architecture",
+    "description": "Partager des fils de discussion sur les nouvelles architectures logicielles.",
+    "actionType": "topic_shared",
+    "targetValue": 9,
+    "xpReward": 145
+  },
+  {
+    "id": "weekly_quest_565",
+    "title": "Recherche de chartes de sécurité et conformité",
+    "description": "Consulter les protocoles de réponse aux failles de sécurité dans la base.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 15,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_566",
+    "title": "Recherche de formulaires de demandes RH",
+    "description": "Trouver des modèles de demandes de congés et d'avenants au contrat.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 10,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_567",
+    "title": "Consultation de spécifications d'API REST",
+    "description": "Explorer les formats de données acceptés par nos points d'accès serveurs.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 25,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_568",
+    "title": "Recherche de guides d'accessibilité UI/UX",
+    "description": "Consulter les règles d'accessibilité numérique et chartes graphiques.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 12,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_569",
+    "title": "Recherche de rapports marketing et ventes",
+    "description": "Consulter les données de performance de campagnes publicitaires passées.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 18,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_570",
+    "title": "Vérification de technologies brevetées de R&D",
+    "description": "Lancer des recherches sémantiques sur les innovations brevetées par l'entreprise.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 20,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_571",
+    "title": "Exploration d'historiques d'incidents techniques",
+    "description": "Consulter les solutions appliquées lors d'incidents serveurs passés.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 14,
+    "xpReward": 112
+  },
+  {
+    "id": "weekly_quest_572",
+    "title": "Consultation de ressources d'onboarding de dev",
+    "description": "Parcourir les wikis internes pour guider l'onboarding de nouveaux ingénieurs.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 22,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_573",
+    "title": "Automatisation d'envoi de factures",
+    "description": "Créer des flux d'envoi automatique de rappels de paiement par email.",
+    "actionType": "workflow_created",
+    "targetValue": 3,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_574",
+    "title": "Suivi automatisé de candidatures de recrutement",
+    "description": "Modéliser un workflow de tri et de réponse automatique pour les recruteurs.",
+    "actionType": "workflow_created",
+    "targetValue": 2,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_575",
+    "title": "Orchestration de tests d'intégration de staging",
+    "description": "Créer un pipeline de test d'intégration automatique avec alerte Slack.",
+    "actionType": "workflow_created",
+    "targetValue": 5,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_576",
+    "title": "Acheminement automatique d'alertes support",
+    "description": "Concevoir un flux de dispatching de requêtes vers les équipes qualifiées.",
+    "actionType": "workflow_created",
+    "targetValue": 4,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_577",
+    "title": "Archivage automatique de bases de données",
+    "description": "Mettre sur pied un workflow d'archivage hebdomadaire automatique.",
+    "actionType": "workflow_created",
+    "targetValue": 3,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_578",
+    "title": "Génération de bilans d'activité automatiques",
+    "description": "Créer un workflow agrégeant les rapports des collaborateurs en un PDF global.",
+    "actionType": "workflow_created",
+    "targetValue": 4,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_579",
+    "title": "Intégration de prospects CRM automatique",
+    "description": "Concevoir un workflow pour enregistrer les prospects issus du site.",
+    "actionType": "workflow_created",
+    "targetValue": 2,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_580",
+    "title": "Modération automatique de contenus textuels",
+    "description": "Mettre en place des règles de blocage automatique de spams sur le chat.",
+    "actionType": "workflow_created",
+    "targetValue": 3,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_581",
+    "title": "Installation de plugins de traduction client",
+    "description": "Ajouter des modules de traduction multilingue en temps réel.",
+    "actionType": "plugin_installed",
+    "targetValue": 5,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_582",
+    "title": "Nettoyage automatique de dossiers caches",
+    "description": "Installer des extensions pour vider automatiquement les caches temporaires.",
+    "actionType": "plugin_installed",
+    "targetValue": 3,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_583",
+    "title": "Surveillance de trafic réseau applicatif",
+    "description": "Installer des plugins de monitoring de flux de requêtes entrantes.",
+    "actionType": "plugin_installed",
+    "targetValue": 7,
+    "xpReward": 145
+  },
+  {
+    "id": "weekly_quest_584",
+    "title": "Convertisseurs automatiques de formats de documents",
+    "description": "Installer des extensions pour transformer des rapports Word en Markdown.",
+    "actionType": "plugin_installed",
+    "targetValue": 4,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_585",
+    "title": "Transcription automatique d'audios de réunions",
+    "description": "Ajouter des plugins pour transcrire automatiquement les enregistrements vocaux.",
+    "actionType": "plugin_installed",
+    "targetValue": 6,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_586",
+    "title": "Gestion avancée de droits d'authentification",
+    "description": "Installer des extensions gérant l'authentification multifacteur et OAuth.",
+    "actionType": "plugin_installed",
+    "targetValue": 8,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_587",
+    "title": "Bibliothèques d'icônes SVG d'interface",
+    "description": "Installer des extensions proposant des galeries d'icônes pour l'interface.",
+    "actionType": "plugin_installed",
+    "targetValue": 4,
+    "xpReward": 112
+  },
+  {
+    "id": "weekly_quest_588",
+    "title": "Validateurs automatiques de schémas de fichiers",
+    "description": "Installer des plugins pour vérifier la conformité des configurations système.",
+    "actionType": "plugin_installed",
+    "targetValue": 5,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_589",
+    "title": "Configuration de pare-feu et accès serveurs",
+    "description": "Mettre à jour les adresses autorisées à accéder à l'API de staging.",
+    "actionType": "settings_updated",
+    "targetValue": 3,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_590",
+    "title": "Ajustement de chartes de couleurs d'interface",
+    "description": "Modifier les préférences graphiques pour l'affichage en mode sombre.",
+    "actionType": "settings_updated",
+    "targetValue": 2,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_591",
+    "title": "Mise à jour de clés de sécurité d'API tierces",
+    "description": "Renouveler les identifiants de connexion secrètes pour nos outils tiers.",
+    "actionType": "settings_updated",
+    "targetValue": 4,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_592",
+    "title": "Limites de stockage et disques",
+    "description": "Configurer les quotas d'espace disque attribués aux répertoires partagés.",
+    "actionType": "settings_updated",
+    "targetValue": 5,
+    "xpReward": 145
+  },
+  {
+    "id": "weekly_quest_593",
+    "title": "Configuration de messagerie d'alertes",
+    "description": "Ajuster les serveurs et adresses d'envoi automatique de bilans.",
+    "actionType": "settings_updated",
+    "targetValue": 3,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_594",
+    "title": "Configuration de quotas de requêtes clients",
+    "description": "Ajuster le nombre maximal de requêtes autorisées par utilisateur par jour.",
+    "actionType": "settings_updated",
+    "targetValue": 4,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_595",
+    "title": "Génération de rapports de couverture CI/CD",
+    "description": "Créer des bilans de taux de succès des pipelines sous forme d'artefacts.",
+    "actionType": "artifact_generated",
+    "targetValue": 8,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_596",
+    "title": "Rédaction de spécifications techniques de base de données",
+    "description": "Produire un document décrivant l'ensemble de nos tables et relations.",
+    "actionType": "artifact_generated",
+    "targetValue": 5,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_597",
+    "title": "Plan de migration d'infrastructure",
+    "description": "Générer un artefact répertoriant les étapes logistiques du passage au cloud.",
+    "actionType": "artifact_generated",
+    "targetValue": 12,
+    "xpReward": 145
+  },
+  {
+    "id": "weekly_quest_598",
+    "title": "Synthèse d'audits d'accessibilité utilisateur",
+    "description": "Créer des notes décrivant les failles d'ergonomie et de lisibilité.",
+    "actionType": "artifact_generated",
+    "targetValue": 10,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_599",
+    "title": "Plan de formation technique R&D",
+    "description": "Générer un livrable listant les modules d'auto-formation de l'équipe.",
+    "actionType": "artifact_generated",
+    "targetValue": 6,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_600",
+    "title": "Bilan de recherche R&D de fin d'année",
+    "description": "Créer un artefact consolidé listant les architectures logicielles validées.",
+    "actionType": "artifact_generated",
+    "targetValue": 14,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_601",
+    "title": "Ajustement linguistique de prompts",
+    "description": "Formuler des requêtes sémantiques précises pour orienter les assistants dans le traitement de données.",
+    "actionType": "message_sent",
+    "targetValue": 35,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_602",
+    "title": "Affinage d'exigences fonctionnelles",
+    "description": "Échanger avec les agents pour valider la pertinence d'une évolution ergonomique.",
+    "actionType": "message_sent",
+    "targetValue": 40,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_603",
+    "title": "Dialogue d'évaluation technique R&D",
+    "description": "Collaborer avec les modèles de code pour valider un algorithme d'optimisation.",
+    "actionType": "message_sent",
+    "targetValue": 50,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_604",
+    "title": "Clarification de règles métiers complexes",
+    "description": "Poser des questions structurées pour définir les limites applicatives du système.",
+    "actionType": "message_sent",
+    "targetValue": 30,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_605",
+    "title": "Briefing technique de conception",
+    "description": "Expliquer par messages aux assistants les choix technologiques pour la refonte du portail.",
+    "actionType": "message_sent",
+    "targetValue": 25,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_606",
+    "title": "Génération de scripts de tests fonctionnels",
+    "description": "Demander aux modèles d'écrire des scripts de tests pour les formulaires utilisateur.",
+    "actionType": "message_sent",
+    "targetValue": 45,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_607",
+    "title": "Relecture de spécifications d'API",
+    "description": "Interagir avec les modèles linguistiques pour s'assurer du respect des conventions d'écriture.",
+    "actionType": "message_sent",
+    "targetValue": 32,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_608",
+    "title": "Audit ergonomique de composants",
+    "description": "Soumettre des exemples de code CSS pour repérer les incohérences de style.",
+    "actionType": "message_sent",
+    "targetValue": 28,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_609",
+    "title": "Extraction d'entités textuelles juridiques",
+    "description": "Utiliser des plugins de traitement de texte pour identifier les signataires de contrats.",
+    "actionType": "plugin_used",
+    "targetValue": 8,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_610",
+    "title": "Validation de schémas de configuration XML",
+    "description": "Utiliser des plugins de validation pour certifier la conformité de fichiers système.",
+    "actionType": "plugin_used",
+    "targetValue": 6,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_611",
+    "title": "Génération de données d'utilisateurs tests",
+    "description": "Exploiter des plugins de génération pour simuler l'inscription de prospects.",
+    "actionType": "plugin_used",
+    "targetValue": 10,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_612",
+    "title": "Diagnostic d'exécution réseau",
+    "description": "Appliquer des plugins de diagnostic de trames pour analyser la latence applicative.",
+    "actionType": "plugin_used",
+    "targetValue": 5,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_613",
+    "title": "Recherche web de technologies d'avenir",
+    "description": "Mobiliser des plugins de recherche pour lister les nouvelles tendances logicielles.",
+    "actionType": "plugin_used",
+    "targetValue": 12,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_614",
+    "title": "Audit réseau de ports DNS",
+    "description": "Faire appel à des extensions réseau pour s'assurer de la bonne configuration des DNS.",
+    "actionType": "plugin_used",
+    "targetValue": 7,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_615",
+    "title": "Calcul de moyennes de performances serveurs",
+    "description": "Utiliser des extensions de calcul pour obtenir les indicateurs de disponibilité.",
+    "actionType": "plugin_used",
+    "targetValue": 9,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_616",
+    "title": "Conversion automatique de fichiers SVG",
+    "description": "Appliquer des plugins de conversion d'images pour optimiser l'affichage web.",
+    "actionType": "plugin_used",
+    "targetValue": 11,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_617",
+    "title": "Création d'assistants de relecture de code",
+    "description": "Déployer des agents configurés pour repérer les anti-patterns TypeScript.",
+    "actionType": "agent_created",
+    "targetValue": 3,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_618",
+    "title": "Conception d'assistants logistiques",
+    "description": "Créer des agents spécialisés dans le suivi de stocks et la gestion des livraisons.",
+    "actionType": "agent_created",
+    "targetValue": 2,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_619",
+    "title": "Création d'experts juridiques RGPD",
+    "description": "Créer des profils d'agents spécialisés dans la vérification de conformité des bases.",
+    "actionType": "agent_created",
+    "targetValue": 4,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_620",
+    "title": "Génération de profils d'assistants administratifs",
+    "description": "Concevoir des agents pour automatiser la rédaction de procès-verbaux de réunions.",
+    "actionType": "agent_created",
+    "targetValue": 3,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_621",
+    "title": "Compagnons d'évaluation de sécurité applicative",
+    "description": "Créer des agents configurés pour identifier des vulnérabilités logicielles.",
+    "actionType": "agent_created",
+    "targetValue": 2,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_622",
+    "title": "Architecte d'assistants RH de recrutement",
+    "description": "Déployer des agents pour structurer les questions d'entretiens d'évaluation.",
+    "actionType": "agent_created",
+    "targetValue": 5,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_623",
+    "title": "Concepteurs d'assistants d'accueil d'équipe",
+    "description": "Créer des agents pédagogiques pour guider les collaborateurs sur le nouvel outil.",
+    "actionType": "agent_created",
+    "targetValue": 3,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_624",
+    "title": "Création d'agents de modération de forum",
+    "description": "Développer des profils d'agents capables d'analyser le ton des publications.",
+    "actionType": "agent_created",
+    "targetValue": 4,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_625",
+    "title": "Présence de projet soutenue",
+    "description": "Assurer des sessions de travail actives réparties sur l'ensemble de la semaine.",
+    "actionType": "session_active",
+    "targetValue": 5,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_626",
+    "title": "Planification de sprints régulière",
+    "description": "Tenir des sessions régulières d'évaluation de l'avancement des développements.",
+    "actionType": "session_active",
+    "targetValue": 4,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_627",
+    "title": "Immersion de débogage d'infrastructure",
+    "description": "Se connecter régulièrement pour résoudre les incidents et anomalies de staging.",
+    "actionType": "session_active",
+    "targetValue": 6,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_628",
+    "title": "Suivi hebdomadaire de versions logicielles",
+    "description": "Consacrer des sessions d'optimisation de configurations de l'application.",
+    "actionType": "session_active",
+    "targetValue": 7,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_629",
+    "title": "Revue d'architecture de microservices",
+    "description": "Se connecter à la plateforme pour ajuster et documenter les diagrammes UML.",
+    "actionType": "session_active",
+    "targetValue": 3,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_630",
+    "title": "Contrôle de conformité de données clients",
+    "description": "Ouvrir des sessions pour auditer le respect des protocoles RGPD applicables.",
+    "actionType": "session_active",
+    "targetValue": 5,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_631",
+    "title": "Ajustement de scripts de compilation",
+    "description": "Lancer des sessions pour mettre au point les modules d'arrière-plan.",
+    "actionType": "session_active",
+    "targetValue": 4,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_632",
+    "title": "Supervision globale de staging réseau",
+    "description": "Suivre le déploiement sur les environnements de test lors de plusieurs sessions.",
+    "actionType": "session_active",
+    "targetValue": 6,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_633",
+    "title": "Analyse documentaire de manuels API",
+    "description": "Consommer des jetons pour l'extraction de synthèses à partir d'études de marché.",
+    "actionType": "tokens_used",
+    "targetValue": 80000,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_634",
+    "title": "Traitement de documentations techniques massives",
+    "description": "Analyser l'intégralité d'un manuel d'API d'un fournisseur tiers.",
+    "actionType": "tokens_used",
+    "targetValue": 120000,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_635",
+    "title": "Génération de modules TypeScript complets",
+    "description": "Demander la génération complète de services d'arrière-plan en TypeScript.",
+    "actionType": "tokens_used",
+    "targetValue": 140000,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_636",
+    "title": "Relecture de code récursive de staging web",
+    "description": "Analyser de volumineux modules de code pour en extraire des diagrammes de flux.",
+    "actionType": "tokens_used",
+    "targetValue": 100000,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_637",
+    "title": "Traitement sémantique de formulaires clients",
+    "description": "Traiter des centaines d'avis utilisateurs pour classifier les retours négatifs.",
+    "actionType": "tokens_used",
+    "targetValue": 60000,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_638",
+    "title": "Ajustement sémantique de mails de prospection",
+    "description": "Demander des suggestions de réécriture pour nos lettres d'information.",
+    "actionType": "tokens_used",
+    "targetValue": 50000,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_639",
+    "title": "Audit de conformité de conditions générales",
+    "description": "Soumettre des ensembles de clauses juridiques pour en vérifier la validité légale.",
+    "actionType": "tokens_used",
+    "targetValue": 90000,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_640",
+    "title": "Extraction sémantique comptable de transactions",
+    "description": "Calculer l'impact de transactions financières à partir de rapports consolidés.",
+    "actionType": "tokens_used",
+    "targetValue": 70000,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_641",
+    "title": "Conception d'illustrations promotionnelles R&D",
+    "description": "Générer des illustrations originales pour la prochaine lettre d'information.",
+    "actionType": "image_generated",
+    "targetValue": 8,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_642",
+    "title": "Recherche d'identité graphique web",
+    "description": "Générer des designs de boutons et de bandeaux pour l'application mobile.",
+    "actionType": "image_generated",
+    "targetValue": 5,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_643",
+    "title": "Création de visuels d'onboarding de partenaires",
+    "description": "Générer des schémas d'explication visuels pour le manuel d'accueil.",
+    "actionType": "image_generated",
+    "targetValue": 12,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_644",
+    "title": "Illustration de diagrammes de classes",
+    "description": "Générer des schémas de base de données de façon créative et originale.",
+    "actionType": "image_generated",
+    "targetValue": 6,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_645",
+    "title": "Conception de bannières d'événements virtuels",
+    "description": "Générer des supports graphiques marketing pour des salons professionnels.",
+    "actionType": "image_generated",
+    "targetValue": 10,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_646",
+    "title": "Rendu visuel industriel 3D de packaging de marque",
+    "description": "Générer des maquettes réalistes de boîtes pour des tests consommateurs.",
+    "actionType": "image_generated",
+    "targetValue": 7,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_647",
+    "title": "Création de fonds visuels abstraits d'analyses",
+    "description": "Générer des décors et des textures graphiques pour agrémenter les bilans.",
+    "actionType": "image_generated",
+    "targetValue": 9,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_648",
+    "title": "Conception de logos minimalistes d'outils",
+    "description": "Générer des concepts graphiques de logos pour nos futures initiatives R&D.",
+    "actionType": "image_generated",
+    "targetValue": 15,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_649",
+    "title": "Synthèse vocale de budgets financiers",
+    "description": "Générer les versions vocales des analyses financières pour les investisseurs.",
+    "actionType": "voice_synthesized",
+    "targetValue": 15,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_650",
+    "title": "Enregistrement de modules vocaux de vente internes",
+    "description": "Produire des messages audio pour former l'équipe commerciale aux nouveautés.",
+    "actionType": "voice_synthesized",
+    "targetValue": 10,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_651",
+    "title": "Audiobooks d'actualités technologiques d'entreprise",
+    "description": "Synthétiser vocalement la documentation de référence des nouvelles API.",
+    "actionType": "voice_synthesized",
+    "targetValue": 25,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_652",
+    "title": "Création d'alertes audio de production d'infrastructure",
+    "description": "Produire des vocaux d'alertes instantanées pour les pannes réseau.",
+    "actionType": "voice_synthesized",
+    "targetValue": 20,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_653",
+    "title": "Synthèse de revues de presse sectorielles vocales R&D",
+    "description": "Générer un format audio reprenant les nouveautés marquantes du secteur.",
+    "actionType": "voice_synthesized",
+    "targetValue": 30,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_654",
+    "title": "Voix off explicative pour vidéos tutorielles d'architecture",
+    "description": "Générer des explications parlées fluides pour illustrer les démonstrations logicielles.",
+    "actionType": "voice_synthesized",
+    "targetValue": 12,
+    "xpReward": 108
+  },
+  {
+    "id": "weekly_quest_655",
+    "title": "Production de contenus éducatifs parlés d'onboarding R&D",
+    "description": "Convertir des modules d'e-learning rédigés en fichiers vocaux bien structurés.",
+    "actionType": "voice_synthesized",
+    "targetValue": 18,
+    "xpReward": 122
+  },
+  {
+    "id": "weekly_quest_656",
+    "title": "Notes de réunion hebdomadaire audio d'avancement technique",
+    "description": "Produire une synthèse vocale claire reprenant les livrables de la semaine.",
+    "actionType": "voice_synthesized",
+    "targetValue": 14,
+    "xpReward": 112
+  },
+  {
+    "id": "weekly_quest_657",
+    "title": "Animation de forums d'échanges collaboratifs R&D",
+    "description": "Partager des sujets de discussion pour améliorer la coordination en équipe agile.",
+    "actionType": "topic_shared",
+    "targetValue": 5,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_658",
+    "title": "Partage de retours d'expérience d'incidents",
+    "description": "Diffuser des cas réels d'incidents résolus pour capitaliser les connaissances.",
+    "actionType": "topic_shared",
+    "targetValue": 3,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_659",
+    "title": "Diffusion de configurations types de serveurs",
+    "description": "Partager des modèles de fichiers Docker Compose et de pipelines CI/CD.",
+    "actionType": "topic_shared",
+    "targetValue": 8,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_660",
+    "title": "Partage d'analyses de performance d'API",
+    "description": "Diffuser des discussions sur l'optimisation des performances front-end.",
+    "actionType": "topic_shared",
+    "targetValue": 6,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_661",
+    "title": "Partage d'actualités technologiques d'agents",
+    "description": "Ouvrir des débats d'équipe portant sur l'usage professionnel des modèles LLM.",
+    "actionType": "topic_shared",
+    "targetValue": 4,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_662",
+    "title": "Partage de guides de style UI/UX de composants",
+    "description": "Partager des documentations internes sur l'implémentation de composants d'interface.",
+    "actionType": "topic_shared",
+    "targetValue": 10,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_663",
+    "title": "Partage de maquettes de spécification d'écrans",
+    "description": "Diffuser des wireframes pour recueillir les avis avant développement.",
+    "actionType": "topic_shared",
+    "targetValue": 7,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_664",
+    "title": "Animation de sujets d'innovation de microservices",
+    "description": "Partager des fils de discussion sur les nouvelles architectures logicielles.",
+    "actionType": "topic_shared",
+    "targetValue": 9,
+    "xpReward": 145
+  },
+  {
+    "id": "weekly_quest_665",
+    "title": "Recherche de chartes de sécurité de données",
+    "description": "Consulter les protocoles de réponse aux failles de sécurité dans la base.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 15,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_666",
+    "title": "Recherche de formulaires de demandes de congés RH",
+    "description": "Trouver des modèles de demandes de congés et d'avenants au contrat.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 10,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_667",
+    "title": "Consultation de spécifications d'API tierces",
+    "description": "Explorer les formats de données acceptés par nos points d'accès serveurs.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 25,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_668",
+    "title": "Recherche de guides d'accessibilité de marque",
+    "description": "Consulter les règles d'accessibilité numérique et chartes graphiques.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 12,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_669",
+    "title": "Recherche de rapports marketing et concurrence",
+    "description": "Consulter les données de performance de campagnes publicitaires passées.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 18,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_670",
+    "title": "Vérification de technologies brevetées d'entreprise",
+    "description": "Lancer des recherches sémantiques sur les innovations brevetées par l'entreprise.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 20,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_671",
+    "title": "Exploration d'historiques d'incidents d'infrastructures",
+    "description": "Consulter les solutions appliquées lors d'incidents serveurs passés.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 14,
+    "xpReward": 112
+  },
+  {
+    "id": "weekly_quest_672",
+    "title": "Consultation de ressources d'onboarding de staging",
+    "description": "Parcourir les wikis internes pour guider l'onboarding de nouveaux ingénieurs.",
+    "actionType": "knowledge_base_searched",
+    "targetValue": 22,
+    "xpReward": 140
+  },
+  {
+    "id": "weekly_quest_673",
+    "title": "Automatisation d'envoi de relances factures",
+    "description": "Créer des flux d'envoi automatique de rappels de paiement par email.",
+    "actionType": "workflow_created",
+    "targetValue": 3,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_674",
+    "title": "Suivi automatisé de candidatures de techniciens",
+    "description": "Modéliser un workflow de tri et de réponse automatique pour les recruteurs.",
+    "actionType": "workflow_created",
+    "targetValue": 2,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_675",
+    "title": "Orchestration de tests d'intégration globaux",
+    "description": "Créer un pipeline de test d'intégration automatique avec alerte Slack.",
+    "actionType": "workflow_created",
+    "targetValue": 5,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_676",
+    "title": "Acheminement automatique d'alertes techniques",
+    "description": "Concevoir un flux de dispatching de requêtes vers les équipes qualifiées.",
+    "actionType": "workflow_created",
+    "targetValue": 4,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_677",
+    "title": "Archivage automatique de wikis internes",
+    "description": "Mettre sur pied un workflow d'archivage hebdomadaire automatique.",
+    "actionType": "workflow_created",
+    "targetValue": 3,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_678",
+    "title": "Génération de bilans d'activité automatiques R&D",
+    "description": "Créer un workflow agrégeant les rapports des collaborateurs en un PDF global.",
+    "actionType": "workflow_created",
+    "targetValue": 4,
+    "xpReward": 135
+  },
+  {
+    "id": "weekly_quest_679",
+    "title": "Intégration de prospects CRM automatique web",
+    "description": "Concevoir un workflow pour enregistrer les prospects issus du site.",
+    "actionType": "workflow_created",
+    "targetValue": 2,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_680",
+    "title": "Modération automatique de contenus d'échanges",
+    "description": "Mettre en place des règles de blocage automatique de spams sur le chat.",
+    "actionType": "workflow_created",
+    "targetValue": 3,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_681",
+    "title": "Installation de plugins de traduction web",
+    "description": "Ajouter des modules de traduction multilingue en temps réel.",
+    "actionType": "plugin_installed",
+    "targetValue": 5,
+    "xpReward": 115
+  },
+  {
+    "id": "weekly_quest_682",
+    "title": "Nettoyage automatique de dossiers caches temporaires",
+    "description": "Installer des extensions pour vider automatiquement les caches temporaires.",
+    "actionType": "plugin_installed",
+    "targetValue": 3,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_683",
+    "title": "Surveillance de trafic réseau et serveurs",
+    "description": "Installer des plugins de monitoring de flux de requêtes entrantes.",
+    "actionType": "plugin_installed",
+    "targetValue": 7,
+    "xpReward": 145
+  },
+  {
+    "id": "weekly_quest_684",
+    "title": "Convertisseurs automatiques de formats de wikis",
+    "description": "Installer des extensions pour transformer des rapports Word en Markdown.",
+    "actionType": "plugin_installed",
+    "targetValue": 4,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_685",
+    "title": "Transcription automatique de réunions R&D",
+    "description": "Ajouter des plugins pour transcrire automatiquement les enregistrements vocaux.",
+    "actionType": "plugin_installed",
+    "targetValue": 6,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_686",
+    "title": "Gestion avancée de droits d'authentification OAuth",
+    "description": "Installer des extensions gérant l'authentification multifacteur et OAuth.",
+    "actionType": "plugin_installed",
+    "targetValue": 8,
+    "xpReward": 150
+  },
+  {
+    "id": "weekly_quest_687",
+    "title": "Bibliothèques d'icônes SVG d'applications",
+    "description": "Installer des extensions proposant des galeries d'icônes pour l'interface.",
+    "actionType": "plugin_installed",
+    "targetValue": 4,
+    "xpReward": 112
+  },
+  {
+    "id": "weekly_quest_688",
+    "title": "Validateurs automatiques de schémas de staging",
+    "description": "Installer des plugins pour vérifier la conformité des configurations système.",
+    "actionType": "plugin_installed",
+    "targetValue": 5,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_689",
+    "title": "Configuration de pare-feu et accès serveurs cloud",
+    "description": "Mettre à jour les adresses autorisées à accéder à l'API de staging.",
+    "actionType": "settings_updated",
+    "targetValue": 3,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_690",
+    "title": "Ajustement de chartes de couleurs en mode sombre",
+    "description": "Modifier les préférences graphiques pour l'affichage en mode sombre.",
+    "actionType": "settings_updated",
+    "targetValue": 2,
+    "xpReward": 100
+  },
+  {
+    "id": "weekly_quest_691",
+    "title": "Mise à jour de clés de sécurité d'API externes",
+    "description": "Renouveler les identifiants de connexion secrètes pour nos outils tiers.",
+    "actionType": "settings_updated",
+    "targetValue": 4,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_692",
+    "title": "Limites de stockage et disques de bases",
+    "description": "Configurer les quotas d'espace disque attribués aux répertoires partagés.",
+    "actionType": "settings_updated",
+    "targetValue": 5,
+    "xpReward": 145
+  },
+  {
+    "id": "weekly_quest_693",
+    "title": "Configuration de messagerie d'alertes d'infrastructures",
+    "description": "Ajuster les serveurs et adresses d'envoi automatique de bilans.",
+    "actionType": "settings_updated",
+    "targetValue": 3,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_694",
+    "title": "Configuration de quotas de requêtes clients serveurs",
+    "description": "Ajuster le nombre maximal de requêtes autorisées par utilisateur par jour.",
+    "actionType": "settings_updated",
+    "targetValue": 4,
+    "xpReward": 125
+  },
+  {
+    "id": "weekly_quest_695",
+    "title": "Génération de rapports de couverture CI/CD de staging",
+    "description": "Créer des bilans de taux de succès des pipelines sous forme d'artefacts.",
+    "actionType": "artifact_generated",
+    "targetValue": 8,
+    "xpReward": 120
+  },
+  {
+    "id": "weekly_quest_696",
+    "title": "Rédaction de spécifications de bases de données de staging",
+    "description": "Produire un document décrivant l'ensemble de nos tables et relations.",
+    "actionType": "artifact_generated",
+    "targetValue": 5,
+    "xpReward": 105
+  },
+  {
+    "id": "weekly_quest_697",
+    "title": "Plan de migration d'infrastructure cloud de marque",
+    "description": "Générer un artefact répertoriant les étapes logistiques du passage au cloud.",
+    "actionType": "artifact_generated",
+    "targetValue": 12,
+    "xpReward": 145
+  },
+  {
+    "id": "weekly_quest_698",
+    "title": "Synthèse d'audits d'accessibilité utilisateur de marque",
+    "description": "Créer des notes décrivant les failles d'ergonomie et de lisibilité.",
+    "actionType": "artifact_generated",
+    "targetValue": 10,
+    "xpReward": 130
+  },
+  {
+    "id": "weekly_quest_699",
+    "title": "Plan de formation technique R&D d'onboarding",
+    "description": "Générer un livrable listant les modules d'auto-formation de l'équipe.",
+    "actionType": "artifact_generated",
+    "targetValue": 6,
+    "xpReward": 110
+  },
+  {
+    "id": "weekly_quest_700",
+    "title": "Bilan de recherche R&D de fin d'année de marque",
+    "description": "Créer un artefact consolidé listant les architectures logicielles validées.",
+    "actionType": "artifact_generated",
+    "targetValue": 14,
+    "xpReward": 150
+  }
+]

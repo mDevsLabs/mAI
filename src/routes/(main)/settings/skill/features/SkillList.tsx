@@ -65,12 +65,12 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
     gap: 4px;
     align-items: center;
 
-    padding-block: 8px 2px;
-    padding-inline: 0;
+    padding-block: 12px 4px;
+    padding-inline: 4px;
 
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 500;
-    color: ${cssVar.colorTextTertiary};
+    color: ${cssVar.colorTextSecondary};
 
     &:hover {
       color: ${cssVar.colorText};
@@ -457,11 +457,11 @@ const SkillList = memo<SkillListProps>(
             builtinToolItems.map((item) => {
               if (item.type !== 'builtin') return null;
               const localizedTitle = t(`tools.builtins.${item.builtinTool.identifier}.title`, {
-                defaultValue: item.builtinTool.manifest.meta?.title || item.builtinTool.identifier,
+                defaultValue: item.builtinTool.title || item.builtinTool.identifier,
               });
               return (
                 <BuiltinSkillItem
-                  avatar={item.builtinTool.manifest.meta?.avatar}
+                  avatar={item.builtinTool.avatar}
                   identifier={item.builtinTool.identifier}
                   isSelected={selectedIdentifier === item.builtinTool.identifier}
                   key={item.builtinTool.identifier}

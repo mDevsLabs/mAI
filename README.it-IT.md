@@ -145,8 +145,8 @@ Questo progetto è rilasciato sotto licenza [mAI Community License](./LICENSE).
 <!-- LINK GROUP -->
 
 [back-to-top]: https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square
-[blog]: https://mprojects.odoo.com/blog
-[changelog]: https://mprojects.odoo.com/m-ai
+[blog]: https://mprojects-officiel.vercel.app/blog
+[changelog]: https://mprojects-officiel.vercel.app/m-ai
 [chat-plugin-sdk]: https://github.com/lobehub/chat-plugin-sdk
 [chat-plugin-template]: https://github.com/lobehub/chat-plugin-template
 [chat-plugins-gateway]: https://github.com/lobehub/chat-plugins-gateway
@@ -222,7 +222,7 @@ Questo progetto è rilasciato sotto licenza [mAI Community License](./LICENSE).
 [lobe-ui-github]: https://github.com/lobehub/lobe-ui
 [lobe-ui-link]: https://www.npmjs.com/package/@lobehub/ui
 [lobe-ui-shield]: https://img.shields.io/npm/v/@lobehub/ui?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
-[official-site]: https://mprojects.odoo.com
+[official-site]: https://mprojects-officiel.vercel.app
 [pr-welcome-link]: https://github.com/mDevsLabs/mAI/pulls
 [pr-welcome-shield]: https://img.shields.io/badge/🤯_pr_welcome-%E2%86%92-ffcb47?labelColor=black&style=for-the-badge
 [profile-link]: https://github.com/mDevsLabs

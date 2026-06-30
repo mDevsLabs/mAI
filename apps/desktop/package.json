@@ -1,9 +1,9 @@
 {
   "name": "@mdevs/mai-app",
-  "version": "0.9.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Avec mAI sur bureau, augmentez votre productivité !",
-  "homepage": "https://mprojects.odoo.com",
+  "homepage": "https://mprojects-officiel.vercel.app",
   "repository": {
     "type": "git",
     "url": "https://github.com/mDevsLabs/mAI.git"
@@ -16,7 +16,6 @@
     "build:run-unpack": "electron .",
     "dev": "electron-vite dev",
     "dev:static": "cross-env DESKTOP_RENDERER_STATIC=1 npm run dev",
-    "download:agent-browser": "node scripts/download-agent-browser.mjs",
     "format": "prettier --write ",
     "i18n": "tsx scripts/i18nWorkflow/index.ts && lobe-i18n",
     "postinstall": "electron-builder install-app-deps",

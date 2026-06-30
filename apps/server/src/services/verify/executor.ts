@@ -41,6 +41,8 @@ const log = debug('lobe-server:verify-executor');
 export interface VerifierAgentRunner {
   (args: {
     checkItem: VerifyCheckItem;
+    /** Evidence the builder captured for this item — input to the verifier's judgment. */
+    evidence?: JudgeEvidence[];
     goal: string;
     operationId: string;
   }): Promise<{ verifierOperationId: string } | null>;
@@ -60,6 +62,7 @@ export interface ExecuteVerifyParams {
 
 const verdictToStatus = (verdict: VerifyVerdict): VerifyCheckResultStatus =>
   verdict === 'passed' ? 'passed' : 'failed';
+const terminalResultStatuses = new Set<VerifyCheckResultStatus>(['passed', 'failed', 'skipped']);
 
 /** Group a run's evidence rows by the plan item they back, for judge injection. */
 type EvidenceByItem = Map<string, JudgeEvidence[]>;
@@ -150,7 +153,9 @@ export class VerifyExecutorService {
     await Promise.all([
       this.runProgramItems(verifyRunId, programItems),
       this.runLlmItems(params, verifyRunId, llmItems, evidenceByItem),
-      ...agentItems.map((item) => this.runAgentItem(params, verifyRunId, item)),
+      ...agentItems.map((item) =>
+        this.runAgentItem(params, verifyRunId, item, evidenceByItem.get(item.id) ?? []),
+      ),
     ]);
 
     await this.statusService.recompute(params.operationId);
@@ -162,7 +167,14 @@ export class VerifyExecutorService {
     const byItem: EvidenceByItem = new Map();
     for (const row of rows) {
       const list = byItem.get(row.checkItemId) ?? [];
-      list.push({ content: row.content, description: row.description, type: row.type });
+      // Keep `fileId` so the agent verifier can attach the actual artifact (the
+      // LLM judge ignores it and renders text only).
+      list.push({
+        content: row.content,
+        description: row.description,
+        fileId: row.fileId,
+        type: row.type,
+      });
       byItem.set(row.checkItemId, list);
     }
     return byItem;
@@ -235,6 +247,7 @@ export class VerifyExecutorService {
     params: ExecuteVerifyParams,
     verifyRunId: string,
     item: VerifyCheckItem,
+    evidence: JudgeEvidence[],
   ): Promise<void> {
     if (!params.runVerifierAgent) {
       await this.resultModel.updateByCheckItem(verifyRunId, item.id, {
@@ -247,13 +260,30 @@ export class VerifyExecutorService {
     try {
       const spawned = await params.runVerifierAgent({
         checkItem: item,
+        evidence,
         goal: params.goal,
         operationId: params.operationId,
       });
+
+      if (!spawned?.verifierOperationId) {
+        await this.resultModel.updateByCheckItem(verifyRunId, item.id, {
+          completedAt: new Date(),
+          status: 'failed',
+          toulmin: { limitation: 'Agent verifier failed to start.' },
+          verdict: 'uncertain',
+        });
+        return;
+      }
+
+      const current = (await this.resultModel.listByRun(verifyRunId)).find(
+        (result) => result.checkItemId === item.id,
+      );
+      if (current && terminalResultStatuses.has(current.status)) return;
+
       await this.resultModel.updateByCheckItem(verifyRunId, item.id, {
         startedAt: new Date(),
         status: 'running',
-        verifierOperationId: spawned?.verifierOperationId ?? null,
+        verifierOperationId: spawned.verifierOperationId,
       });
     } catch (error) {
       log('agent verifier spawn failed for item %s: %O', item.id, error);

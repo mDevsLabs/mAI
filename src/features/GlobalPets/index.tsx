@@ -1,6 +1,6 @@
 'use client';
 
-import { createStaticStyles } from 'antd-style';
+import { createStaticStyles, useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { m } from 'motion/react';
 import { memo, useEffect, useRef, useState } from 'react';
@@ -116,6 +116,7 @@ const Pet = memo(
     zoom: number;
     config: any;
   }) => {
+    const theme = useTheme();
     const [animation, setAnimation] = useState<string>('waving');
     const [mounted, setMounted] = useState(false);
     const [currentQuote, setCurrentQuote] = useState<{ text: string; author: string } | null>(null);
@@ -274,7 +275,8 @@ const Pet = memo(
                 left: '50%',
                 transform: 'translateX(-50%)',
                 width: 260,
-                backgroundColor: 'var(--color-bg-container)',
+                backgroundColor: `color-mix(in srgb, ${theme.colorBgContainer} 90%, transparent)`,
+                backdropFilter: 'blur(8px)',
                 border: '1px solid var(--color-border)',
                 borderRadius: '16px',
                 padding: '12px 16px',
@@ -318,7 +320,7 @@ const Pet = memo(
                   transform: 'translateX(-50%) rotate(45deg)',
                   width: 12,
                   height: 12,
-                  backgroundColor: 'var(--color-bg-container)',
+                  backgroundColor: `color-mix(in srgb, ${theme.colorBgContainer} 90%, transparent)`,
                   borderRight: '1px solid var(--color-border)',
                   borderBottom: '1px solid var(--color-border)',
                 }}

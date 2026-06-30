@@ -36,13 +36,13 @@ import {
 import { app as electronApp, BrowserWindow } from 'electron';
 
 import { HETERO_AGENT_FILES_DIR, HETERO_AGENT_TRACING_DIR } from '@/const/heteroAgent';
+import { detectHeterogeneousCliCommand } from '@/modules/binaries';
 import { getHeterogeneousAgentDriver } from '@/modules/heterogeneousAgent';
 import type {
   HeterogeneousAgentBuildPlan,
   HeterogeneousAgentImageAttachment,
 } from '@/modules/heterogeneousAgent/types';
 import { buildProxyEnv } from '@/modules/networkProxy/envBuilder';
-import { detectHeterogeneousCliCommand } from '@/modules/toolDetectors';
 import { createLogger } from '@/utils/logger';
 
 import { ControllerModule, IpcMethod } from './index';
@@ -480,7 +480,7 @@ export default class HeterogeneousAgentCtr extends ControllerModule {
     const command = this.resolveSessionCommand(session);
     const status =
       command === defaultCommand
-        ? await this.app.toolDetectorManager?.detect?.(defaultCommand, true)
+        ? await this.app.binaryManager?.detect?.(defaultCommand, true)
         : await detectHeterogeneousCliCommand(
             session.agentType === 'claude-code' ? 'claude-code' : 'codex',
             command,
@@ -1471,6 +1471,8 @@ export default class HeterogeneousAgentCtr extends ControllerModule {
    */
   spawnLhHeteroExec(params: {
     agentType: string;
+    /** Resolved `lh hetero exec` wrapper args. */
+    args?: string[];
     cwd?: string;
     /** Image attachments (signed URLs) appended as image content blocks. */
     imageList?: HeteroExecImageRef[];
@@ -1484,6 +1486,7 @@ export default class HeterogeneousAgentCtr extends ControllerModule {
   }): void {
     const {
       agentType,
+      args: extraArgs,
       cwd,
       imageList,
       jwt,
@@ -1521,6 +1524,7 @@ export default class HeterogeneousAgentCtr extends ControllerModule {
       workDir,
       ...(resumeSessionId ? ['--resume', resumeSessionId] : []),
       ...(rawDumpDir ? ['--raw-dump', rawDumpDir] : []),
+      ...(extraArgs ?? []),
     ];
 
     const env = {

@@ -10,11 +10,11 @@ export const BRANDING_LOGO_URL = '/avatars/may.PNG';
 export const ORG_NAME = 'mAI';
 
 export const BRANDING_URL = {
-  help: 'https://mprojects.odoo.com/contact',
-  privacy: 'https://mprojects.odoo.com',
-  subscription: 'https://mprojects.odoo.com',
-  support: 'https://mprojects.odoo.com',
-  terms: 'https://mprojects.odoo.com',
+  help: 'https://mprojects-officiel.vercel.app/contact',
+  privacy: 'https://mprojects-officiel.vercel.app',
+  subscription: 'https://mprojects-officiel.vercel.app',
+  support: 'https://mprojects-officiel.vercel.app',
+  terms: 'https://mprojects-officiel.vercel.app',
 };
 
 export const SOCIAL_URL = {

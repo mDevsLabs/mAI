@@ -152,6 +152,54 @@ describe('ClaudeCodeAdapter', () => {
       expect(events[1].data).toMatchObject({ code: 'overloaded', message: rawError });
     });
 
+    it('replays a real session that streamed a turn then overloaded → overloaded + clears echo', () => {
+      // Faithful transport-layer replay of a captured CC session shape: init →
+      // a streamed assistant turn → the exact upstream throttle the user hit
+      // (api_error_status 429 + the "not your usage limit" wording, alongside a
+      // generic rate_limit_event with no reset window). This is how the
+      // overloaded guide is driven without waiting on a real upstream outage.
+      const adapter = new ClaudeCodeAdapter();
+      const rawError =
+        'API Error: Server is temporarily limiting requests (not your usage limit) · Rate limited';
+
+      adapter.adapt({
+        model: 'claude-opus-4-8',
+        session_id: 'sess_replay',
+        subtype: 'init',
+        type: 'system',
+      });
+      // A turn that already streamed content before the throttle landed.
+      adapter.adapt({
+        message: {
+          content: [{ text: 'Let me read loadEvidence and the runner', type: 'text' }],
+          id: 'msg_replay',
+          role: 'assistant',
+        },
+        type: 'assistant',
+      });
+      adapter.adapt({
+        rate_limit_info: { isUsingOverage: false, status: 'rejected' },
+        type: 'rate_limit_event',
+      });
+
+      const events = adapter.adapt({
+        api_error_status: 429,
+        is_error: true,
+        result: rawError,
+        type: 'result',
+      });
+
+      const errorEvent = events.find((e) => e.type === 'error');
+      expect(errorEvent?.data).toMatchObject({
+        agentType: 'claude-code',
+        // The UI keys auto-retry on this exact code; clearEchoedContent wipes
+        // the half-streamed turn so the guide stands in for the whole bubble.
+        clearEchoedContent: true,
+        code: 'overloaded',
+        message: rawError,
+      });
+    });
+
     it('classifies a user quota limit from rateLimitType alone (no resetsAt)', () => {
       const adapter = new ClaudeCodeAdapter();
       const rawError = 'API Error: 429 · Rate limited';
@@ -2443,6 +2491,97 @@ describe('ClaudeCodeAdapter', () => {
       );
       expect(secondChunk!.data.subagent.parentToolCallId).toBe('toolu_task');
       expect(secondChunk!.data.subagent.spawnMetadata).toBeUndefined();
+    });
+
+    it('stamps spawnMetadata on a reasoning-FIRST subagent event (titles the Thread correctly)', () => {
+      // A thinking Explore agent reasons before its first tool call. The
+      // executor lazy-creates + titles the Thread off the FIRST subagent event
+      // it sees, so the metadata must ride the reasoning chunk too — otherwise
+      // the Thread is born with the generic "Subagent" title.
+      const adapter = new ClaudeCodeAdapter();
+      adapter.adapt(init);
+      adapter.adapt(
+        mainAssistant('msg_main', {
+          id: 'toolu_agent',
+          input: {
+            description: 'Find git remote url lobe-chat',
+            prompt: 'locate the remote',
+            subagent_type: 'Explore',
+          },
+          name: 'Agent',
+          type: 'tool_use',
+        }),
+      );
+
+      // First subagent event is a reasoning block — no tool call yet.
+      const first = adapter.adapt(
+        subAgent('msg_sub_1', 'toolu_agent', { thinking: 'Let me look…', type: 'thinking' }),
+      );
+      const reasoningChunk = first.find(
+        (e) => e.type === 'stream_chunk' && e.data.chunkType === 'reasoning',
+      );
+      expect(reasoningChunk!.data.subagent.spawnMetadata).toEqual({
+        description: 'Find git remote url lobe-chat',
+        prompt: 'locate the remote',
+        subagentType: 'Explore',
+      });
+
+      // The later tool event for the same parent must NOT re-announce.
+      const second = adapter.adapt(
+        subAgent('msg_sub_2', 'toolu_agent', {
+          id: 'toolu_child',
+          input: {},
+          name: 'Bash',
+          type: 'tool_use',
+        }),
+      );
+      const toolChunk = second.find(
+        (e) => e.type === 'stream_chunk' && e.data.chunkType === 'tools_calling',
+      );
+      expect(toolChunk!.data.subagent.spawnMetadata).toBeUndefined();
+    });
+
+    it('does NOT burn the one-shot on a first event that emits no chunk', () => {
+      // The very first subagent event can carry nothing the reducer consumes —
+      // an empty text/thinking block or a usage-only `content: []`. That event
+      // never reaches `ensureRun` (no chunk), so it must NOT mark the parent
+      // announced; the metadata has to survive for the next REAL chunk, which is
+      // the one that actually lazy-creates + titles the Thread.
+      const adapter = new ClaudeCodeAdapter();
+      adapter.adapt(init);
+      adapter.adapt(
+        mainAssistant('msg_main', {
+          id: 'toolu_agent',
+          input: {
+            description: 'Find git remote url lobe-chat',
+            prompt: 'locate the remote',
+            subagent_type: 'Explore',
+          },
+          name: 'Agent',
+          type: 'tool_use',
+        }),
+      );
+
+      // First subagent event: empty content + an empty text block — emits nothing.
+      const first = adapter.adapt({
+        message: { content: [{ text: '', type: 'text' }], id: 'msg_sub_0', usage: {} },
+        parent_tool_use_id: 'toolu_agent',
+        type: 'assistant',
+      });
+      expect(first.some((e) => e.type === 'stream_chunk')).toBe(false);
+
+      // Second event is the first REAL chunk — it must still carry spawnMetadata.
+      const second = adapter.adapt(
+        subAgent('msg_sub_1', 'toolu_agent', { thinking: 'Let me look…', type: 'thinking' }),
+      );
+      const reasoningChunk = second.find(
+        (e) => e.type === 'stream_chunk' && e.data.chunkType === 'reasoning',
+      );
+      expect(reasoningChunk!.data.subagent.spawnMetadata).toEqual({
+        description: 'Find git remote url lobe-chat',
+        prompt: 'locate the remote',
+        subagentType: 'Explore',
+      });
     });
 
     it('extracts spawnMetadata from the `Agent` spawn-tool variant too (not just Task)', () => {

@@ -1,6 +1,7 @@
 export * from './agent';
 export * from './agentExecution';
 export * from './agentGroup';
+export * from './agentHook';
 export * from './aiChat';
 export * from './aiProvider';
 export * from './artifact';
@@ -19,6 +20,7 @@ export * from './export';
 export * from './fetch';
 export * from './files';
 export * from './followUpAction';
+export * from './gamification';
 export * from './generation';
 export * from './home';
 export * from './hotkey';

@@ -1,7 +1,7 @@
 import { DEFAULT_PREFERENCE } from '@lobechat/const';
 import type { UserAgentOnboarding, UserOnboarding } from '@lobechat/types';
 import { sql } from 'drizzle-orm';
-import { boolean, index, jsonb, pgTable, text, varchar } from 'drizzle-orm/pg-core';
+import { boolean, index, integer, jsonb, pgTable, text, varchar } from 'drizzle-orm/pg-core';
 
 import { timestamps, timestamptz } from './_helpers';
 
@@ -46,6 +46,10 @@ export const users = pgTable(
     // better-auth phone number
     phoneNumberVerified: boolean('phone_number_verified'),
     lastActiveAt: timestamptz('last_active_at').notNull().defaultNow(),
+
+    // Gamification
+    xp: integer('xp').default(0).notNull(),
+    level: integer('level').default(1).notNull(),
 
     ...timestamps,
   },

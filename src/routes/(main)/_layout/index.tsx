@@ -39,8 +39,8 @@ import RegisterHotkeys from './RegisterHotkeys';
 import { styles } from './style';
 
 const CloudBanner = dynamic(() => import('@/features/AlertBanner/CloudBanner'));
-const GlobalPets = dynamic(() =>
-  import('@/features/GlobalPets').then((m) => ({ default: m.GlobalPets })),
+const GlobalApprovalNotification = dynamic(
+  () => import('@/features/GlobalApprovalNotification'),
 );
 
 const Layout: FC = () => {
@@ -93,9 +93,7 @@ const Layout: FC = () => {
           <HotkeyHelperPanel />
           <RegisterHotkeys />
           <CmdkLazy />
-        </Suspense>
-        <Suspense fallback={null}>
-          <GlobalPets />
+          <GlobalApprovalNotification />
         </Suspense>
       </WorkspaceContextSlot>
     </HotkeysProvider>
