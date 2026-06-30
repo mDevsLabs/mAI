@@ -6,7 +6,7 @@ import { Switch } from '@lobehub/ui/base-ui';
 import { confirmModal } from '@lobehub/ui/base-ui';
 import { Slider, Select, Button, Typography, App } from 'antd';
 import { AlertTriangle, Globe, Sliders, HelpCircle } from 'lucide-react';
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
@@ -16,30 +16,20 @@ import { gamificationSelectors } from '@/store/gamification/selectors';
 const { Title, Text } = Typography;
 
 const TIMEZONE_OPTIONS = [
-  { value: 'Europe/Paris', label: 'Europe/Paris (CET)' },
-  { value: 'UTC', label: 'UTC (GMT)' },
-  { value: 'America/New_York', label: 'America/New_York (EST)' },
-  { value: 'America/Los_Angeles', label: 'America/Los_Angeles (PST)' },
-  { value: 'Asia/Tokyo', label: 'Asia/Tokyo (JST)' },
-  { value: 'Asia/Shanghai', label: 'Asia/Shanghai (CST)' },
-  { value: 'Europe/London', label: 'Europe/London (GMT/BST)' },
-  { value: 'Australia/Sydney', label: 'Australia/Sydney (AEST)' },
-  { value: 'Asia/Dubai', label: 'Asia/Dubai (GST)' },
-  { value: 'America/Sao_Paulo', label: 'America/Sao_Paulo (BRT)' }
+  { value: 'PT', label: 'PT (Pacific Time)' },
+  { value: 'MT', label: 'MT (Mountain Time)' },
+  { value: 'CT', label: 'CT (Central Time)' },
+  { value: 'ET', label: 'ET (Eastern Time)' },
+  { value: 'GMT', label: 'GMT (Greenwich Mean Time)' },
+  { value: 'CET', label: 'CET (Central European Time)' },
+  { value: 'EET', label: 'EET (Eastern European Time)' },
+  { value: 'MSK', label: 'MSK (Moscow Standard Time)' },
+  { value: 'GST', label: 'GST (Gulf Standard Time)' },
+  { value: 'IST', label: 'IST (India Standard Time)' },
+  { value: 'CST', label: 'CST (China Standard Time)' },
+  { value: 'JST', label: 'JST (Japan Standard Time)' },
+  { value: 'AEST', label: 'AEST (Australian Eastern Standard Time)' }
 ];
-
-const TIMEZONE_DESCRIPTIONS: Record<string, string> = {
-  'Europe/Paris': 'CET/CEST = France, Espagne, Italie, Allemagne, Belgique, Pays-Bas, Suisse...',
-  'UTC': 'Coordinated Universal Time = Royaume-Uni (hiver), Islande, pays d\'Afrique de l\'Ouest...',
-  'America/New_York': 'EST/EDT = États-Unis (Est), Canada (Est), Bahamas, Colombie...',
-  'America/Los_Angeles': 'PST/PDT = États-Unis (Pacifique), Canada (Pacifique), Mexique (Nord)...',
-  'Asia/Tokyo': 'JST = Japon, Corée du Sud, Indonésie (Est)...',
-  'Asia/Shanghai': 'CST = Chine, Taïwan, Singapour, Malaisie...',
-  'Europe/London': 'GMT/BST = Royaume-Uni, Irlande, Portugal...',
-  'Australia/Sydney': 'AEST/AEDT = Australie (Est/Sud-Est)...',
-  'Asia/Dubai': 'GST = Émirats Arabes Unis, Oman, Géorgie...',
-  'America/Sao_Paulo': 'BRT/BRST = Brésil (Sud/Sud-Est)...'
-};
 
 const FAQ_CONTENT = `Bienvenue dans le guide officiel du système de progression et de récompenses de **mAI**. Cette section réunit toutes les règles et explications essentielles pour comprendre et maximiser vos performances.
 
@@ -77,7 +67,7 @@ const Settings = memo(() => {
 
   const enableAnimations = useGamificationStore(gamificationSelectors.enableAnimations);
   const soundVolume = useGamificationStore(gamificationSelectors.soundVolume);
-  const timezone = useGamificationStore(gamificationSelectors.timezone);
+  const rawTimezone = useGamificationStore(gamificationSelectors.timezone);
   const timezoneLastChanged = useGamificationStore(gamificationSelectors.timezoneLastChanged);
   const enableNotifications = useGamificationStore((s) => s.enableNotifications ?? true);
 
@@ -86,6 +76,15 @@ const Settings = memo(() => {
   const setTimezone = useGamificationStore((s) => s.setTimezone);
   const setEnableNotifications = useGamificationStore((s) => s.setEnableNotifications);
   const resetProgression = useGamificationStore((s) => s.resetProgression);
+
+  const timezone = useMemo(() => {
+    if (['PT', 'MT', 'CT', 'ET', 'GMT', 'CET', 'EET', 'MSK', 'GST', 'IST', 'CST', 'JST', 'AEST'].includes(rawTimezone)) {
+      return rawTimezone;
+    }
+    if (rawTimezone === 'Europe/Paris') return 'CET';
+    if (rawTimezone === 'UTC') return 'GMT';
+    return 'CET';
+  }, [rawTimezone]);
 
   const canChangeTimezone = !timezoneLastChanged || (Date.now() - timezoneLastChanged > 365 * 24 * 60 * 60 * 1000);
   const nextChangeDate = new Date((timezoneLastChanged || 0) + 365 * 24 * 60 * 60 * 1000);
@@ -144,27 +143,22 @@ const Settings = memo(() => {
     children: [
       {
         children: (
-          <Select
-            disabled={!canChangeTimezone}
-            options={TIMEZONE_OPTIONS}
-            style={{ width: 220 }}
-            value={timezone}
-            onChange={(v: string) => {
-              setTimezone(v);
-              message.success(`Fuseau horaire configuré sur ${v}`);
-            }}
-          />
-        ),
-        desc: (
-          <Flexbox gap={4}>
-            <div>{canChangeTimezone 
-              ? 'Détermine l\'heure de renouvellement de vos quêtes quotidiennes (limité à 1 changement par an).'
-              : `Prochain changement possible le ${nextChangeFormatted} (limité à 1 changement par an).`}</div>
-            <div style={{ color: 'var(--color-primary)', fontWeight: '600', marginTop: 4 }}>
-              {TIMEZONE_DESCRIPTIONS[timezone] || ''}
-            </div>
+          <Flexbox horizontal justify={'flex-end'}>
+            <Select
+              disabled={!canChangeTimezone}
+              options={TIMEZONE_OPTIONS}
+              style={{ width: 220 }}
+              value={timezone}
+              onChange={(v: string) => {
+                setTimezone(v);
+                message.success(`Fuseau horaire configuré sur ${v}`);
+              }}
+            />
           </Flexbox>
         ),
+        desc: canChangeTimezone 
+          ? 'Détermine l\'heure de renouvellement de vos quêtes quotidiennes (limité à 1 changement par an).'
+          : `Prochain changement possible le ${nextChangeFormatted} (limité à 1 changement par an).`,
         label: 'Fuseau horaire des quêtes',
       },
     ],
