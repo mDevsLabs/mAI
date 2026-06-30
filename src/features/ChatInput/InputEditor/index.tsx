@@ -10,7 +10,7 @@ import {
 import { isCommandPressed } from '@lobechat/utils';
 import type { IEditor } from '@lobehub/editor';
 import { INSERT_MENTION_COMMAND, ReactAutoCompletePlugin, ReactMathPlugin } from '@lobehub/editor';
-import { Editor, FloatMenu, useEditorState } from '@lobehub/editor/react';
+import { Editor, FloatActions, useEditorState } from '@lobehub/editor/react';
 import { combineKeys } from '@lobehub/ui';
 import { css, cx } from 'antd-style';
 import Fuse from 'fuse.js';
@@ -427,11 +427,7 @@ const InputEditor = memo<{
       : createChatInputRichPlugins({
           linkPlugin: false,
           mathPlugin: Editor.withProps(ReactMathPlugin, {
-            renderComp: expand
-              ? undefined
-              : (props) => (
-                  <FloatMenu {...props} getPopupContainer={() => (slashMenuRef as any)?.current} />
-                ),
+            renderComp: expand ? undefined : (props) => <FloatActions {...props} />,
           }),
         });
 
