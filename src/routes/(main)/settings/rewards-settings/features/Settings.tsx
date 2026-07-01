@@ -31,7 +31,7 @@ const TIMEZONE_OPTIONS = [
   { value: 'AEST', label: 'AEST (Australian Eastern Standard Time)' }
 ];
 
-const FAQ_CONTENT = `Bienvenue dans le guide officiel du système de progression et de récompenses de **mAI**. Cette section réunit toutes les règles et explications essentielles pour comprendre et maximiser vos performances.
+const FAQ_CONTENT = useMemo(() => `Bienvenue dans le guide officiel du système de progression et de récompenses de **mAI**. Cette section réunit toutes les règles et explications essentielles pour comprendre et maximiser vos performances.
 
 ### 📊 Fonctionnement des Niveaux et MP (mAI Points)
 - Les **MP (mAI Points)** représentent la mesure de votre activité globale dans l'écosystème.
@@ -59,7 +59,7 @@ const FAQ_CONTENT = `Bienvenue dans le guide officiel du système de progression
 ### 🎁 Récompenses de Niveau à Télécharger
 - En progressant, vous débloquez l'accès à des fichiers de récompenses exclusives mAI créés par nos designers.
 - Les paliers **Niveau 10, 20, 30, 40 et 50** vous accordent le téléchargement de **fonds d'écran mAI** uniques.
-- Le palier mythique du **Niveau 100** libère le pack ultime contenant les **logos spéciaux mAI** en haute définition.`;
+- Le palier mythique du **Niveau 100** libère le pack ultime contenant les **logos spéciaux mAI** en haute définition.`, []);
 
 const Settings = memo(() => {
   const { t } = useTranslation('setting');
@@ -69,7 +69,8 @@ const Settings = memo(() => {
   const soundVolume = useGamificationStore(gamificationSelectors.soundVolume);
   const rawTimezone = useGamificationStore(gamificationSelectors.timezone);
   const timezoneLastChanged = useGamificationStore(gamificationSelectors.timezoneLastChanged);
-  const enableNotifications = useGamificationStore((s) => s.enableNotifications ?? true);
+  const enableNotifications = useGamificationStore(gamificationSelectors.enableNotifications) ?? true;
+  const isStatusInit = useGamificationStore((s) => s.isStatusInit);
 
   const setEnableAnimations = useGamificationStore((s) => s.setEnableAnimations);
   const setSoundVolume = useGamificationStore((s) => s.setSoundVolume);
@@ -85,6 +86,12 @@ const Settings = memo(() => {
     if (rawTimezone === 'UTC') return 'GMT';
     return 'CET';
   }, [rawTimezone]);
+
+
+  // Attendre que le store soit initialisé avant d'afficher les contrôles
+  if (!isStatusInit) {
+    return <div style={{ padding: '20px', textAlign: 'center' }}>Chargement des paramètres...</div>;
+  }
 
   const canChangeTimezone = !timezoneLastChanged || (Date.now() - timezoneLastChanged > 365 * 24 * 60 * 60 * 1000);
   const nextChangeDate = new Date((timezoneLastChanged || 0) + 365 * 24 * 60 * 60 * 1000);
@@ -149,7 +156,8 @@ const Settings = memo(() => {
               options={TIMEZONE_OPTIONS}
               style={{ width: 220 }}
               value={timezone}
-              getPopupContainer={(triggerNode) => triggerNode.parentNode}
+              placeholder="Sélectionner un fuseau horaire"
+              getPopupContainer={(triggerNode) => triggerNode.parentElement as HTMLElement}
               onChange={(v: string) => {
                 setTimezone(v);
                 message.success(`Fuseau horaire configuré sur ${v}`);
@@ -157,7 +165,7 @@ const Settings = memo(() => {
             />
           </Flexbox>
         ),
-        desc: canChangeTimezone 
+        desc: canChangeTimezone
           ? 'Détermine l\'heure de renouvellement de vos quêtes quotidiennes (limité à 1 changement par an).'
           : `Prochain changement possible le ${nextChangeFormatted} (limité à 1 changement par an).`,
         label: 'Fuseau horaire des quêtes',
@@ -244,3 +252,4 @@ const Settings = memo(() => {
 });
 
 export default Settings;
+

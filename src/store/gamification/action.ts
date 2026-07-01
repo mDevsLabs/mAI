@@ -24,6 +24,7 @@ export interface GamificationAction {
   updateQuestProgress: (questId: string, progress: number) => void;
   trackAction: (actionId: string, count?: number) => void;
   addBonusQuests: (quests: any[]) => boolean;
+  initGamificationStatus: () => Promise<void>;
 }
 
 export const gamificationActionSlice: StateCreator<
@@ -169,7 +170,15 @@ export const gamificationActionSlice: StateCreator<
 
   setEnableAnimations: (enable) => {
     set(
-      (state) => ({ settings: { ...state.settings, enableAnimations: enable } }),
+      (state) => {
+        const newState = {
+          ...state,
+          settings: { ...state.settings, enableAnimations: enable }
+        };
+        // Save to localStorage immediately
+        get().statusStorage.saveToLocalStorage(newState);
+        return { settings: { ...state.settings, enableAnimations: enable } };
+      },
       false,
       'gamification/setEnableAnimations'
     );
@@ -177,7 +186,15 @@ export const gamificationActionSlice: StateCreator<
 
   setSoundVolume: (volume) => {
     set(
-      (state) => ({ settings: { ...state.settings, soundVolume: volume } }),
+      (state) => {
+        const newState = {
+          ...state,
+          settings: { ...state.settings, soundVolume: volume }
+        };
+        // Save to localStorage immediately
+        get().statusStorage.saveToLocalStorage(newState);
+        return { settings: { ...state.settings, soundVolume: volume } };
+      },
       false,
       'gamification/setSoundVolume'
     );
@@ -185,7 +202,15 @@ export const gamificationActionSlice: StateCreator<
 
   setEnableNotifications: (enable) => {
     set(
-      (state) => ({ settings: { ...state.settings, enableNotifications: enable } }),
+      (state) => {
+        const newState = {
+          ...state,
+          settings: { ...state.settings, enableNotifications: enable }
+        };
+        // Save to localStorage immediately
+        get().statusStorage.saveToLocalStorage(newState);
+        return { settings: { ...state.settings, enableNotifications: enable } };
+      },
       false,
       'gamification/setEnableNotifications'
     );
@@ -193,13 +218,25 @@ export const gamificationActionSlice: StateCreator<
 
   setTimezone: (timezone) => {
     set(
-      (state) => ({
-        settings: {
-          ...state.settings,
-          timezone,
-          timezoneLastChanged: Date.now(),
-        },
-      }),
+      (state) => {
+        const newState = {
+          ...state,
+          settings: {
+            ...state.settings,
+            timezone,
+            timezoneLastChanged: Date.now(),
+          }
+        };
+        // Save to localStorage immediately
+        get().statusStorage.saveToLocalStorage(newState);
+        return {
+          settings: {
+            ...state.settings,
+            timezone,
+            timezoneLastChanged: Date.now(),
+          }
+        };
+      },
       false,
       'gamification/setTimezone'
     );
@@ -398,5 +435,27 @@ export const gamificationActionSlice: StateCreator<
       false,
       'gamification/trackAction'
     );
+  },
+
+  initGamificationStatus: async () => {
+    try {
+      const status = await get().statusStorage.getFromLocalStorage();
+
+      if (status) {
+        set(
+          {
+            ...status,
+            isStatusInit: true,
+          },
+          false,
+          'initGamificationStatus'
+        );
+      } else {
+        set({ isStatusInit: true }, false, 'setGamificationStatusInit');
+      }
+    } catch (error) {
+      console.error('Failed to initialize gamification status:', error);
+      set({ isStatusInit: true }, false, 'setGamificationStatusInit');
+    }
   },
 });
