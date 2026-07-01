@@ -27,7 +27,7 @@ jobs:
       - name: 📦 Install dependencies
         run: pnpm install
 
-        - name: 🌐 Run i18n Translation
+      - name: 🌐 Run i18n Translation
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           OPENAI_API_KEY: ''

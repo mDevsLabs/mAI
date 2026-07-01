@@ -2,12 +2,10 @@ name: 🔀 Création Automatique de PR
 
 on:
   push:
-    branches:
-      - '**'
-      exclude:
-        - 'canary'
-        - 'main'
-        - 'master'
+    branches-ignore:
+      - 'canary'
+      - 'main'
+      - 'master'
 
 jobs:
   auto-pr:
