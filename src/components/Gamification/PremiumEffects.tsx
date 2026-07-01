@@ -1,7 +1,7 @@
-import { createStyles } from 'antd-style';
+import { createStaticStyles } from 'antd-style';
 import React, { useEffect, useState } from 'react';
 
-const useStyles = createStyles(({ css, token }) => ({
+const useStyles = createStaticStyles(({ css, cssVar }) => ({
   sparkleContainer: css`
     position: absolute;
     inset: 0;
@@ -13,7 +13,7 @@ const useStyles = createStyles(({ css, token }) => ({
     position: absolute;
     width: 6px;
     height: 6px;
-    background: ${token.colorWarning};
+    background: ${cssVar.colorWarning};
     clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
     animation: sparkleAnim 0.8s ease-in-out forwards;
 

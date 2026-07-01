@@ -49,7 +49,9 @@ const runPluginTable = async (lang?: string) => {
   consola.success(`Sync ${lang || 'en-US'} plugin index success!`);
 };
 
-export default async () => {
+const syncPluginIndex = async () => {
   await runPluginTable();
   await runPluginTable('zh-CN');
 };
+
+export default syncPluginIndex;

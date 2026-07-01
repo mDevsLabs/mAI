@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { exit } from 'node:process';
 
 import { MemorySourceType } from '@lobechat/types';

@@ -108,6 +108,7 @@ describe('sanitizeJsonSchema', () => {
   });
 
   it('should handle deeply nested schemas with $defs and if/then/else', () => {
+    // eslint-disable-next-line unicorn/no-thenable
     const schema = {
       $defs: {
         Foo: {

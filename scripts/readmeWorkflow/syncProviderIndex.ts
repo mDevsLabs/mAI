@@ -45,7 +45,9 @@ const runProviderTable = async (lang?: string) => {
   consola.success(`Sync ${lang || 'en-US'} provider index success!`);
 };
 
-export default async () => {
+const syncProviderIndex = async () => {
   await runProviderTable();
   await runProviderTable('zh-CN');
 };
+
+export default syncProviderIndex;

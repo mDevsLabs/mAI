@@ -12,7 +12,7 @@ const copyUsingFallback = (imageUrl: string) => {
         // @ts-ignore
         const item = new ClipboardItem({ 'image/png': blob });
         navigator.clipboard.write([item]).then(function () {
-          console.log('Image copied to clipboard successfully using canvas and modern API');
+          console.info('Image copied to clipboard successfully using canvas and modern API');
         });
       });
     } catch {

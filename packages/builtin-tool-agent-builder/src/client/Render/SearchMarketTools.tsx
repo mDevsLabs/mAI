@@ -1,7 +1,8 @@
 'use client';
 
 import type { BuiltinRenderProps } from '@lobechat/types';
-import { Avatar, Button, Flexbox, Tag } from '@lobehub/ui';
+import { Avatar, Flexbox, Tag } from '@lobehub/ui';
+import { Button } from '@lobehub/ui/base-ui';
 import { CheckCircle, Download, Package, Search } from 'lucide-react';
 import { memo, useState } from 'react';
 

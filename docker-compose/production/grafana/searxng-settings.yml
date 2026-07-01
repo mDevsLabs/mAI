@@ -84,7 +84,7 @@ server:
   bind_address: '127.0.0.1'
   # public URL of the instance, to ensure correct inbound links. Is overwritten
   # by ${SEARXNG_URL}.
-  base_url: / # "http://example.com/location"
+  base_url: /  # "http://example.com/location"
   # rate limit the number of request on the instance, block some bots.
   # Is overwritten by ${SEARXNG_LIMITER}
   limiter: false
@@ -95,7 +95,7 @@ server:
   # If your instance owns a /etc/searxng/settings.yml file, then set the following
   # values there.
 
-  secret_key: '779c5b69fe650f147be9012abca6b44a8697acdb2817b46353f4779bb07d81d1' # Is overwritten by ${SEARXNG_SECRET}
+  secret_key: '779c5b69fe650f147be9012abca6b44a8697acdb2817b46353f4779bb07d81d1'  # Is overwritten by ${SEARXNG_SECRET}
   # Proxy image results through SearXNG. Is overwritten by ${SEARXNG_IMAGE_PROXY}
   image_proxy: false
   # 1.0 and 1.1 are supported
@@ -325,16 +325,16 @@ checker:
           - has_infobox
 
 categories_as_tabs:
-  general:
-  images:
-  videos:
-  news:
-  map:
-  music:
-  it:
-  science:
-  files:
-  social media:
+  general: null
+  images: null
+  videos: null
+  news: null
+  map: null
+  music: null
+  it: null
+  science: null
+  files: null
+  social media: null
 
 engines:
   - name: 9gag
@@ -729,7 +729,7 @@ engines:
     about:
       website: https://www.erowid.org/
       wikidata_id: Q1430691
-      official_api_documentation:
+      official_api_documentation: null
       use_official_api: false
       require_api_key: false
       results: HTML
@@ -819,7 +819,7 @@ engines:
     about:
       website: https://www.etymonline.com/
       wikidata_id: Q1188617
-      official_api_documentation:
+      official_api_documentation: null
       use_official_api: false
       require_api_key: false
       results: HTML
@@ -1144,7 +1144,7 @@ engines:
     about:
       website: https://libgen.fun/
       wikidata_id: Q22017206
-      official_api_documentation:
+      official_api_documentation: null
       use_official_api: false
       require_api_key: false
       results: HTML
@@ -1189,7 +1189,7 @@ engines:
     about:
       website: https://lobste.rs/
       wikidata_id: Q60762874
-      official_api_documentation:
+      official_api_documentation: null
       use_official_api: false
       require_api_key: false
       results: HTML
@@ -1394,8 +1394,8 @@ engines:
     shortcut: or
     about:
       website: https://openrepos.net/
-      wikidata_id:
-      official_api_documentation:
+      wikidata_id: null
+      official_api_documentation: null
       use_official_api: false
       require_api_key: false
       results: HTML
@@ -1859,7 +1859,8 @@ engines:
   - name: torch
     engine: xpath
     paging: true
-    search_url: http://xmh57jrknzkhv6y3ls3ubitzfqnkrwxhopf5aygthi7d6rplyvk3noyd.onion/cgi-bin/omega/omega?P={query}&DEFAULTOP=and
+    search_url:
+      http://xmh57jrknzkhv6y3ls3ubitzfqnkrwxhopf5aygthi7d6rplyvk3noyd.onion/cgi-bin/omega/omega?P={query}&DEFAULTOP=and
     results_xpath: //table//tr
     url_xpath: ./td[2]/a
     title_xpath: ./td[2]/b
@@ -2314,7 +2315,7 @@ engines:
     no_result_for_http_status: [404]
     about:
       website: https://www.woxikon.de/
-      wikidata_id: # No Wikidata ID
+      wikidata_id: null
       use_official_api: false
       require_api_key: false
       results: HTML

@@ -235,7 +235,7 @@ describe('errorType', () => {
             expect(e.name).toBe('TimeoutError');
             expect(e.message).toBe('timeout error');
           } else {
-            throw new Error('Unexpected error type');
+            throw new Error('Unexpected error type', { cause: e });
           }
         }
       });

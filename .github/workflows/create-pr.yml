@@ -2,14 +2,12 @@ name: 🔀 Création Automatique de PR
 
 on:
   push:
-    branches-ignore:
-      - 'canary'
-      - 'main'
-      - 'master'
-
-permissions:
-  contents: read
-  pull-requests: write
+    branches:
+      - '**'
+      exclude:
+        - 'canary'
+        - 'main'
+        - 'master'
 
 jobs:
   auto-pr:
@@ -21,6 +19,7 @@ jobs:
       - name: 🚀 Création ou Mise à jour de la PR
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CANARY_BRANCH: 'canary'
         run: |
           TEMPLATE_PATH=".github/PULL_REQUEST_TEMPLATE.md"
           
@@ -29,19 +28,84 @@ jobs:
             exit 1
           fi
 
-          COMMIT_MSG="${{ github.event.head_commit.message }}"
           BRANCH_NAME="${{ github.ref_name }}"
+          EVENT_BRANCH="${{ github.event.ref }}"
+          EVENT_NAME="${{ github.event_name }}"
+
+          # Skip if push to canary branch
+          if [[ "$BRANCH_NAME" == "refs/heads/$CANARY_BRANCH" ]]; then
+            echo "⏭️ Skip canary branch: create-pr will only handle non-canary branches"
+            exit 0
+          fi
+
+          # Get version from current branch
+          VERSION_FILE="package.json"
+          if [ ! -f "$VERSION_FILE" ]; then
+            echo "❌ Erreur : Le fichier $VERSION_FILE n'existe pas !"
+            exit 1
+          fi
+
+          CURRENT_VERSION=$(node -p "require('./$VERSION_FILE').version")
+
+          # Get canary version
+          CANARY_VERSION=$(git show "origin/$CANARY_BRANCH:$VERSION_FILE" 2>/dev/null || echo "")
+          if [ -z "$CANARY_VERSION" ]; then
+            echo "⚠️ Impossible de récupérer la version canary, en utilisant ${CURRENT_VERSION}"
+            TARGET_VERSION="$CURRENT_VERSION"
+          else
+            CANARY_VERSION=$(node -p "require('buffer').from('$CANARY_VERSION', 'utf8').toString()" 2>/dev/null || echo "$CANARY_VERSION")
+            echo "📊 Version actuelle : $CURRENT_VERSION"
+            echo "📊 Version canary : $CANARY_VERSION"
+
+            # Compare versions
+            npm view --json semver "$CURRENT_VERSION" >/dev/null 2>&1 || {
+              echo "⚠️ Vérification sémantique impossible, en utilisant semver standard"
+              # Simple version comparison
+              IFS='.' read -r cur_major cur_minor cur_patch <<< "$CURRENT_VERSION"
+              IFS='.' read -r can_major can_minor can_patch <<< "$CANARY_VERSION"
+
+              if [[ "$cur_major" -gt "$can_major" ]] || \
+                 ([[ "$cur_major" -eq "$can_major" ]] && [[ "$cur_minor" -gt "$can_minor" ]]) || \
+                 ([[ "$cur_major" -eq "$can_major" ]] && [[ "$cur_minor" -eq "$can_minor" ]] && [[ "$cur_patch" -gt "$can_patch" ]]); then
+                TARGET_VERSION="$CURRENT_VERSION"
+                echo "🔄 Version plus récente : ${TARGET_VERSION}"
+              else
+                TARGET_VERSION="$CANARY_VERSION"
+                echo "⏩ Mise à jour pour rester à jour : ${TARGET_VERSION}"
+              fi
+            }
+          fi
 
           # On vérifie si une PR existe déjà pour cette branche pour éviter les doublons
           PR_NUMBER=$(gh pr list --head "$BRANCH_NAME" --json number --jq '.[0].number')
 
           if [ -n "$PR_NUMBER" ]; then
-            echo "🔄 La PR #$PR_NUMBER existe déjà. Aucune action requise."
+            # If we have a PR, check if we need to update the canary dependency
+            TARGET_BRANCH_PR=$(gh pr view "$PR_NUMBER" --json baseRefName --jq '.baseRefName')
+            if [[ "$TARGET_BRANCH_PR" == "$CANARY_BRANCH" ]]; then
+              echo "✅ PR #$PR_NUMBER existe déjà vers $CANARY_BRANCH"
+              # Update canary package.json with newer version if needed
+              if [[ "$TARGET_VERSION" != "$CANARY_VERSION" ]]; then
+                echo "🔄 Mise à jour de la version canary depuis $CANARY_VERSION vers $TARGET_VERSION"
+                # Extract package.json from canary branch and update version
+                git show "origin/$CANARY_BRANCH:$VERSION_FILE" | sed "s/\"version\": \"[^\"]*\"/\"version\": \"$TARGET_VERSION\"/" > "/tmp/canary.json"
+                gh api "repos/${{ github.repository }}/contents/$VERSION_FILE" \
+                  --method PUT \
+                  --field message="Mise à jour de la version canary depuis $CURRENT_VERSION vers $TARGET_VERSION via PR #$PR_NUMBER" \
+                  --field content="$(base64 -w 0 /tmp/canary.json)" \
+                  --field branch="$CANARY_BRANCH"
+                echo "✅ Package.json canary mis à jour vers $TARGET_VERSION"
+              fi
+              exit 0
+            else
+              echo "⚠️ La PR #$PR_NUMBER existe déjà mais n'est pas vers $CANARY_BRANCH"
+              exit 0
+            fi
           else
-            echo "🆕 Aucune PR trouvée. Création d'une nouvelle PR..."
+            echo "🆕 Aucune PR trouvée. Création d'une nouvelle PR vers $CANARY_BRANCH..."
             gh pr create \
-              --title "$COMMIT_MSG" \
+              --title "$CURRENT_VERSION → Canary" \
               --body-file "$TEMPLATE_PATH" \
               --head "$BRANCH_NAME" \
-              --base main
+              --base "$CANARY_BRANCH"
           fi
