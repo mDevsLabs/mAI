@@ -60,11 +60,18 @@ export const imageUrlToBase64 = async (
     const mimeType = await resolveMimeTypeFromBytes(blob.type, arrayBuffer);
 
     // Client-side uses btoa, server-side uses Buffer
-    const base64 = isServer
-      ? Buffer.from(arrayBuffer).toString('base64')
-      : btoa(
-          new Uint8Array(arrayBuffer).reduce((data, byte) => data + String.fromCharCode(byte), ''),
-        );
+    let base64 = '';
+    if (isServer) {
+      base64 = Buffer.from(arrayBuffer).toString('base64');
+    } else {
+      const bytes = new Uint8Array(arrayBuffer);
+      let binary = '';
+      const chunkSize = 8192;
+      for (let i = 0; i < bytes.length; i += chunkSize) {
+        binary += String.fromCharCode.apply(null, Array.from(bytes.subarray(i, i + chunkSize)));
+      }
+      base64 = btoa(binary);
+    }
 
     return { base64, mimeType };
   } catch (error) {

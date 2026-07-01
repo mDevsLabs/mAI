@@ -73,7 +73,12 @@ export class StrCompressor {
   }
 
   private urlSafeBase64Encode = (data: Uint8Array): string => {
-    const base64Str = btoa(String.fromCharCode(...data));
+    let binary = '';
+    const chunkSize = 8192;
+    for (let i = 0; i < data.length; i += chunkSize) {
+      binary += String.fromCharCode.apply(null, Array.from(data.subarray(i, i + chunkSize)));
+    }
+    const base64Str = btoa(binary);
     return base64Str.replaceAll('+', '_0_').replaceAll('/', '_').replace(/=+$/, '');
   };
 
