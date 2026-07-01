@@ -42,7 +42,11 @@ const StoreInitialization = memo(() => {
   useInitSystemStatus();
 
   // init gamification status from localStorage
-  useEffect(() => {\n    initGamificationStatus().catch((error) => {\n      console.error("Failed to initialize gamification status:", error);\n    });\n  }, [initGamificationStatus]);
+  useEffect(() => {
+    initGamificationStatus().catch((error) => {
+      console.error("Failed to initialize gamification status:", error);
+    });
+  }, [initGamificationStatus]);
 
   // check server version in desktop app
   useCheckServerVersion();

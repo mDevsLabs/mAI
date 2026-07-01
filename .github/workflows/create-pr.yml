@@ -45,33 +45,47 @@ jobs:
 
           CURRENT_VERSION=$(node -p "require('./$VERSION_FILE').version")
 
-          # Get canary version
-          CANARY_VERSION=$(git show "origin/$CANARY_BRANCH:$VERSION_FILE" 2>/dev/null || echo "")
+          # Get canary package.json and its sha via GitHub API
+          CANARY_JSON_DATA=$(gh api "repos/${{ github.repository }}/contents/$VERSION_FILE?ref=$CANARY_BRANCH" 2>/dev/null || echo "")
+          CANARY_SHA=""
+          CANARY_VERSION=""
+          if [ -n "$CANARY_JSON_DATA" ]; then
+            CANARY_SHA=$(echo "$CANARY_JSON_DATA" | jq -r '.sha' 2>/dev/null || echo "")
+            CANARY_CONTENT_BASE64=$(echo "$CANARY_JSON_DATA" | jq -r '.content' | tr -d '\n\r' 2>/dev/null || echo "")
+            if [ -n "$CANARY_CONTENT_BASE64" ]; then
+              CANARY_VERSION=$(node -p "
+                try {
+                  const buf = Buffer.from('$CANARY_CONTENT_BASE64', 'base64');
+                  const pkg = JSON.parse(buf.toString('utf8'));
+                  pkg.version || '';
+                } catch (e) {
+                  '';
+                }
+              " 2>/dev/null || echo "")
+            fi
+          fi
+
           if [ -z "$CANARY_VERSION" ]; then
             echo "⚠️ Impossible de récupérer la version canary, en utilisant ${CURRENT_VERSION}"
             TARGET_VERSION="$CURRENT_VERSION"
           else
-            CANARY_VERSION=$(node -p "require('buffer').from('$CANARY_VERSION', 'utf8').toString()" 2>/dev/null || echo "$CANARY_VERSION")
             echo "📊 Version actuelle : $CURRENT_VERSION"
             echo "📊 Version canary : $CANARY_VERSION"
 
             # Compare versions
-            npm view --json semver "$CURRENT_VERSION" >/dev/null 2>&1 || {
-              echo "⚠️ Vérification sémantique impossible, en utilisant semver standard"
-              # Simple version comparison
-              IFS='.' read -r cur_major cur_minor cur_patch <<< "$CURRENT_VERSION"
-              IFS='.' read -r can_major can_minor can_patch <<< "$CANARY_VERSION"
-
-              if [[ "$cur_major" -gt "$can_major" ]] || \
-                 ([[ "$cur_major" -eq "$can_major" ]] && [[ "$cur_minor" -gt "$can_minor" ]]) || \
-                 ([[ "$cur_major" -eq "$can_major" ]] && [[ "$cur_minor" -eq "$can_minor" ]] && [[ "$cur_patch" -gt "$can_patch" ]]); then
-                TARGET_VERSION="$CURRENT_VERSION"
-                echo "🔄 Version plus récente : ${TARGET_VERSION}"
-              else
-                TARGET_VERSION="$CANARY_VERSION"
-                echo "⏩ Mise à jour pour rester à jour : ${TARGET_VERSION}"
-              fi
-            }
+            TARGET_VERSION=$(node -p "
+              const cmp = (a, b) => {
+                const pa = String(a).split('.').map(Number);
+                const pb = String(b).split('.').map(Number);
+                for (let i = 0; i < 3; i++) {
+                  if ((pa[i] || 0) > (pb[i] || 0)) return 1;
+                  if ((pa[i] || 0) < (pb[i] || 0)) return -1;
+                }
+                return 0;
+              };
+              cmp('$CURRENT_VERSION', '$CANARY_VERSION') > 0 ? '$CURRENT_VERSION' : '$CANARY_VERSION';
+            " 2>/dev/null || echo "$CURRENT_VERSION")
+            echo "🎯 Version cible : $TARGET_VERSION"
           fi
 
           # On vérifie si une PR existe déjà pour cette branche pour éviter les doublons
@@ -83,16 +97,31 @@ jobs:
             if [[ "$TARGET_BRANCH_PR" == "$CANARY_BRANCH" ]]; then
               echo "✅ PR #$PR_NUMBER existe déjà vers $CANARY_BRANCH"
               # Update canary package.json with newer version if needed
-              if [[ "$TARGET_VERSION" != "$CANARY_VERSION" ]]; then
+              if [[ "$TARGET_VERSION" != "$CANARY_VERSION" ]] && [ -n "$CANARY_SHA" ] && [ -n "$CANARY_CONTENT_BASE64" ]; then
                 echo "🔄 Mise à jour de la version canary depuis $CANARY_VERSION vers $TARGET_VERSION"
-                # Extract package.json from canary branch and update version
-                git show "origin/$CANARY_BRANCH:$VERSION_FILE" | sed "s/\"version\": \"[^\"]*\"/\"version\": \"$TARGET_VERSION\"/" > "/tmp/canary.json"
-                gh api "repos/${{ github.repository }}/contents/$VERSION_FILE" \
-                  --method PUT \
-                  --field message="Mise à jour de la version canary depuis $CURRENT_VERSION vers $TARGET_VERSION via PR #$PR_NUMBER" \
-                  --field content="$(base64 -w 0 /tmp/canary.json)" \
-                  --field branch="$CANARY_BRANCH"
-                echo "✅ Package.json canary mis à jour vers $TARGET_VERSION"
+                # Update version in the decoded JSON content and re-encode to base64
+                NEW_CONTENT_BASE64=$(node -p "
+                  try {
+                    const buf = Buffer.from('$CANARY_CONTENT_BASE64', 'base64');
+                    const pkg = JSON.parse(buf.toString('utf8'));
+                    pkg.version = '$TARGET_VERSION';
+                    Buffer.from(JSON.stringify(pkg, null, 2) + '\n').toString('base64');
+                  } catch (e) {
+                    '';
+                  }
+                " 2>/dev/null || echo "")
+
+                if [ -n "$NEW_CONTENT_BASE64" ]; then
+                  gh api "repos/${{ github.repository }}/contents/$VERSION_FILE" \
+                    --method PUT \
+                    --field message="Mise à jour de la version canary depuis $CURRENT_VERSION vers $TARGET_VERSION via PR #$PR_NUMBER" \
+                    --field content="$NEW_CONTENT_BASE64" \
+                    --field sha="$CANARY_SHA" \
+                    --field branch="$CANARY_BRANCH"
+                  echo "✅ Package.json canary mis à jour vers $TARGET_VERSION"
+                else
+                  echo "❌ Erreur de génération du nouveau package.json pour canary"
+                fi
               fi
               exit 0
             else
