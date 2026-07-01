@@ -149,6 +149,7 @@ const Settings = memo(() => {
               options={TIMEZONE_OPTIONS}
               style={{ width: 220 }}
               value={timezone}
+              getPopupContainer={(triggerNode) => triggerNode.parentNode}
               onChange={(v: string) => {
                 setTimezone(v);
                 message.success(`Fuseau horaire configuré sur ${v}`);

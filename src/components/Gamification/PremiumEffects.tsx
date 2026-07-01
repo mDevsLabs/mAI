@@ -1,7 +1,7 @@
 import { createStaticStyles } from 'antd-style';
 import React, { useEffect, useState } from 'react';
 
-const useStyles = createStaticStyles(({ css, cssVar }) => ({
+const styles = createStaticStyles(({ css, cssVar }) => ({
   sparkleContainer: css`
     position: absolute;
     inset: 0;
@@ -66,7 +66,6 @@ const useStyles = createStaticStyles(({ css, cssVar }) => ({
 }));
 
 export const SparkleExplosion: React.FC<{ active: boolean; onComplete?: () => void }> = ({ active, onComplete }) => {
-  const { styles } = useStyles();
   const [sparkles, setSparkles] = useState<any[]>([]);
 
   useEffect(() => {
@@ -107,7 +106,6 @@ export const SparkleExplosion: React.FC<{ active: boolean; onComplete?: () => vo
 };
 
 export const PremiumCardWrapper: React.FC<{ children: React.ReactNode; rarity: string; active?: boolean }> = ({ children, rarity, active = true }) => {
-  const { styles } = useStyles();
   
   if (!active) return <>{children}</>;
 

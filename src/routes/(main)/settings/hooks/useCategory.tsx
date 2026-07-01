@@ -142,7 +142,7 @@ export const useCategory = () => {
       {
         icon: Medal,
         key: SettingsTabs.RewardsBadges,
-        label: t('tab.rewardsBadges', { defaultValue: 'Badges & Titres' }),
+        label: t('tab.rewardsBadges', { defaultValue: 'Badges' }),
       },
       {
         icon: Trophy,

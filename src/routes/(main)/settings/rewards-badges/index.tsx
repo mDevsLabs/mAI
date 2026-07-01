@@ -8,7 +8,7 @@ const Page = () => {
   const { t } = useTranslation('setting');
   return (
     <>
-      <SettingHeader title={t('tab.rewardsBadges', { defaultValue: 'Badges & Titres' })} />
+      <SettingHeader title={t('tab.rewardsBadges', { defaultValue: 'Badges' })} />
       <BadgesList />
     </>
   );
