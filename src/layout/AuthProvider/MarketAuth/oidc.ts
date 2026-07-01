@@ -40,12 +40,7 @@ export class MarketOIDC {
     console.info('[MarketOIDC] Generating PKCE code verifier');
     const array = new Uint8Array(32);
     crypto.getRandomValues(array);
-    let binary = '';
-    const chunkSize = 8192;
-    for (let i = 0; i < array.length; i += chunkSize) {
-      binary += String.fromCharCode.apply(null, Array.from(array.subarray(i, i + chunkSize)));
-    }
-    return btoa(binary)
+    return btoa(String.fromCharCode.apply(null, Array.from(array)))
       .replaceAll('+', '-')
       .replaceAll('/', '_')
       .replaceAll('=', '');
@@ -59,13 +54,7 @@ export class MarketOIDC {
     const encoder = new TextEncoder();
     const data = encoder.encode(codeVerifier);
     const digest = await crypto.subtle.digest('SHA-256', data);
-    const array = new Uint8Array(digest);
-    let binary = '';
-    const chunkSize = 8192;
-    for (let i = 0; i < array.length; i += chunkSize) {
-      binary += String.fromCharCode.apply(null, Array.from(array.subarray(i, i + chunkSize)));
-    }
-    return btoa(binary)
+    return btoa(String.fromCharCode.apply(null, Array.from(new Uint8Array(digest))))
       .replaceAll('+', '-')
       .replaceAll('/', '_')
       .replaceAll('=', '');
@@ -78,12 +67,7 @@ export class MarketOIDC {
     console.info('[MarketOIDC] Generating random state');
     const array = new Uint8Array(16);
     crypto.getRandomValues(array);
-    let binary = '';
-    const chunkSize = 8192;
-    for (let i = 0; i < array.length; i += chunkSize) {
-      binary += String.fromCharCode.apply(null, Array.from(array.subarray(i, i + chunkSize)));
-    }
-    return btoa(binary)
+    return btoa(String.fromCharCode.apply(null, Array.from(array)))
       .replaceAll('+', '-')
       .replaceAll('/', '_')
       .replaceAll('=', '');
