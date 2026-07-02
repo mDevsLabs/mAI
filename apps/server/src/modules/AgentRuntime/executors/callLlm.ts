@@ -64,6 +64,7 @@ import { type ExtendParamsType, ModelProvider } from 'model-bank';
 
 import { composioEnv } from '@/config/composio';
 import { AgentModel } from '@/database/models/agent';
+import { AiModelModel } from '@/database/models/aiModel';
 import { FileModel } from '@/database/models/file';
 import { MessageModel as MessageModelClass } from '@/database/models/message';
 import { PluginModel } from '@/database/models/plugin';
@@ -99,6 +100,7 @@ import {
 import { formatErrorEventData } from '../formatErrorEventData';
 import { classifyLLMError } from '../llmErrorClassification';
 import { createConversationParentMissingError } from '../messagePersistErrors';
+import { VISIBLE_OUTPUT_END_PUBLISHED_STEP_INDEX_METADATA_KEY } from '../visibleOutputEnd';
 
 export const callLlm =
   (ctx: RuntimeExecutorContext): InstructionExecutor =>
@@ -107,6 +109,7 @@ export const callLlm =
     const llmPayload = payload as CallLLMPayload;
     const { operationId, stepIndex, streamManager } = ctx;
     const events: AgentEvent[] = [];
+    let visibleOutputEndPublishedStepIndex: number | undefined;
 
     // Fallback to state's modelRuntimeConfig if not in payload
     const model = llmPayload.model || state.modelRuntimeConfig?.model;
@@ -288,6 +291,22 @@ export const callLlm =
         const modelKnowledgeCutoff =
           modelCard?.knowledgeCutoff ??
           (provider === ModelProvider.LobeHub ? canonicalModelCard?.knowledgeCutoff : undefined);
+        let modelDisplayName =
+          modelCard?.displayName ??
+          (provider === ModelProvider.LobeHub ? canonicalModelCard?.displayName : undefined);
+
+        // Custom/remote user models aren't in the bundled model bank, so both cards
+        // miss. Fall back to the user's own AI model record so server-side runs still
+        // surface identity (the inbox `{{model}}` fallback no longer exists).
+        if (!modelDisplayName && ctx.serverDB && ctx.userId) {
+          try {
+            const aiModelModel = new AiModelModel(ctx.serverDB, ctx.userId);
+            const userModel = await aiModelModel.findByIdAndProvider(model, provider);
+            modelDisplayName = userModel?.displayName ?? undefined;
+          } catch (error) {
+            log('Failed to resolve user model display name for %s: %O', model, error);
+          }
+        }
 
         let modelExtendParams = readExtendParams(modelCard);
 
@@ -805,6 +824,7 @@ export const callLlm =
           },
           messages: messagesForContext,
           model,
+          modelDisplayName,
           modelKnowledgeCutoff,
           provider,
           systemRole: agentConfig.systemRole ?? undefined,
@@ -1438,6 +1458,29 @@ export const callLlm =
                 type: 'stream_end',
               });
 
+              const canPublishEarlyFinalAnswerVisibleEnd =
+                ctx.allowEarlyFinalAnswerVisibleOutputEnd ?? true;
+              if (
+                canPublishEarlyFinalAnswerVisibleEnd &&
+                toolsCalling.length === 0 &&
+                tool_calls.length === 0
+              ) {
+                try {
+                  // Example: a no-tool answer can publish stream_end, then spend
+                  // several seconds in DB/Redis persistence before terminal done.
+                  // Clear visible loading once no more text/tool output can appear.
+                  await streamManager.publishStreamEvent(operationId, {
+                    data: { reason: 'final_answer' },
+                    stepIndex,
+                    type: 'visible_output_end',
+                  });
+                  visibleOutputEndPublishedStepIndex = stepIndex;
+                } catch (error) {
+                  // Terminal saveStepResult still publishes the same hint as a fallback.
+                  console.error('Failed to publish visible_output_end:', error);
+                }
+              }
+
               log('[%s:%d] call_llm completed', operationId, stepIndex);
 
               // ===== 1. First save original usage to message.metadata =====
@@ -1554,9 +1597,14 @@ export const callLlm =
               }
 
               // Propagate stepLabel from instruction to state metadata for hook consumers
-              if (stepLabel) {
-                if (!newState.metadata) newState.metadata = {};
-                newState.metadata._stepLabel = stepLabel;
+              if (stepLabel || visibleOutputEndPublishedStepIndex !== undefined) {
+                const stateMetadata = { ...newState.metadata };
+                if (stepLabel) stateMetadata._stepLabel = stepLabel;
+                if (visibleOutputEndPublishedStepIndex !== undefined) {
+                  stateMetadata[VISIBLE_OUTPUT_END_PUBLISHED_STEP_INDEX_METADATA_KEY] =
+                    visibleOutputEndPublishedStepIndex;
+                }
+                newState.metadata = stateMetadata;
               }
 
               // Record chat response attributes on the OTel span.

@@ -318,10 +318,10 @@ async function main() {
     }
 
     if (file.startsWith('.github/workflows') || file === '.github/workflows' || file.includes('/workflows/')) {
-      console.log('🔄 Règle automatique : Conservation de la version entrante (canary) pour les fichiers de workflow GitHub');
-      runCmd(`git checkout --theirs "${file}"`);
+      console.log('🔄 Règle automatique : Conservation de la version actuelle (mAI) pour les fichiers de workflow GitHub');
+      runCmd(`git checkout --ours "${file}"`);
       runCmd(`git add "${file}"`);
-      stats.theirs++;
+      stats.ours++;
       i++;
       continue;
     }
