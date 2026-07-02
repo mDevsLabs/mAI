@@ -79,6 +79,7 @@ const Settings = memo(() => {
   const resetProgression = useGamificationStore((s) => s.resetProgression);
 
   const timezone = useMemo(() => {
+    if (!rawTimezone) return 'CET';
     if (['PT', 'MT', 'CT', 'ET', 'GMT', 'CET', 'EET', 'MSK', 'GST', 'IST', 'CST', 'JST', 'AEST'].includes(rawTimezone)) {
       return rawTimezone;
     }
@@ -87,13 +88,12 @@ const Settings = memo(() => {
     return 'CET';
   }, [rawTimezone]);
 
-
   // Attendre que le store soit initialisé avant d'afficher les contrôles
   if (!isStatusInit) {
     return <div style={{ padding: '20px', textAlign: 'center' }}>Chargement des paramètres...</div>;
   }
 
-  const canChangeTimezone = !timezoneLastChanged || (Date.now() - timezoneLastChanged > 365 * 24 * 60 * 60 * 1000);
+  const canChangeTimezone = !(timezoneLastChanged && Date.now() - timezoneLastChanged < 365 * 24 * 60 * 60 * 1000);
   const nextChangeDate = new Date((timezoneLastChanged || 0) + 365 * 24 * 60 * 60 * 1000);
   const nextChangeFormatted = nextChangeDate.toLocaleDateString();
 
