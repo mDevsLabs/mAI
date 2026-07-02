@@ -1,9 +1,10 @@
 'use client';
 
-import { Input, Segmented } from 'antd';
+import { Flexbox } from '@lobehub/ui';
+import { Input, Segmented, Spin } from 'antd';
 import { createStyles } from 'antd-style';
 import { Search } from 'lucide-react';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import badgesCatalog from '@/const/gamification/badgesCatalog.json';
@@ -19,6 +20,13 @@ const useStyles = createStyles(({ css, token }) => ({
     flex-direction: column;
     gap: 24px;
     padding: 24px;
+    opacity: 0;
+    animation: fadeIn 0.5s ease-out forwards;
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
   `,
   toolbar: css`
     display: flex;
@@ -26,14 +34,41 @@ const useStyles = createStyles(({ css, token }) => ({
     gap: 16px;
     align-items: center;
     justify-content: space-between;
+    opacity: 0;
+    animation: slideDown 0.5s ease-out 0.2s forwards;
+
+    @keyframes slideDown {
+      from { 
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
   `,
   grid: css`
     display: grid;
-    gap: 16px;
+    gap: 20px;
+    opacity: 0;
+    animation: gridFadeIn 0.5s ease-out 0.3s forwards;
+
+    @keyframes gridFadeIn {
+      from { 
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
   `,
 }));
 
 export const BadgesList = () => {
+  const [loading, setLoading] = useState(false);
   const { t } = useTranslation('setting');
   const { styles } = useStyles();
   const [search, setSearch] = useState('');
@@ -43,6 +78,14 @@ export const BadgesList = () => {
 
   const unlockedBadges = useGamificationStore(gamificationSelectors.unlockedBadges);
   const pinnedBadges = useGamificationStore(gamificationSelectors.pinnedBadges);
+
+  useEffect(() => {
+    setLoading(true);
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 200);
+    return () => clearTimeout(timer);
+  }, []);
 
   const filteredBadges = useMemo(() => {
     return badgesCatalog.filter((badge) => {
@@ -80,21 +123,28 @@ export const BadgesList = () => {
         />
       </div>
 
-      <div className={styles.grid} style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}>
-        {filteredBadges.map((badge) => {
-          const isUnlocked = unlockedBadges.includes(badge.id);
-          const isPinned = pinnedBadges.includes(badge.id);
-          return (
-            <BadgeCard
-              badge={badge}
-              isPinned={isPinned}
-              isUnlocked={isUnlocked}
-              key={badge.id}
-              onClick={() => setSelectedBadge(badge)}
-            />
-          );
-        })}
-      </div>
+      {loading ? (
+        <Flexbox align="center" justify="center" style={{ minHeight: 400, width: '100%' }}>
+          <Spin size="large" />
+          <div style={{ marginTop: 16, color: 'var(--color-text-description)', fontSize: 16 }}>Chargement...</div>
+        </Flexbox>
+      ) : (
+        <div className={styles.grid} style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}>
+          {filteredBadges.map((badge) => {
+            const isUnlocked = unlockedBadges.includes(badge.id);
+            const isPinned = pinnedBadges.includes(badge.id);
+            return (
+              <BadgeCard
+                badge={badge}
+                isPinned={isPinned}
+                isUnlocked={isUnlocked}
+                key={badge.id}
+                onClick={() => setSelectedBadge(badge)}
+              />
+            );
+          })}
+        </div>
+      )}
 
       {selectedBadge && (
         <BadgeIdentityModal

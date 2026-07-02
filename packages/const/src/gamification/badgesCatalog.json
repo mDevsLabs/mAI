@@ -50,7 +50,7 @@
     "emoji": "🪙",
     "rarity": "Rare",
     "requirements": {
-      "action": "tokens_used",
+      "action": "message_sent",
       "target": 10000
     }
   },
@@ -61,7 +61,7 @@
     "emoji": "🎨",
     "rarity": "Rare",
     "requirements": {
-      "action": "image_generated",
+      "action": "plugin_used",
       "target": 5
     }
   },
@@ -72,7 +72,7 @@
     "emoji": "🗣️",
     "rarity": "Rare",
     "requirements": {
-      "action": "voice_synthesized",
+      "action": "message_sent",
       "target": 3
     }
   },
@@ -94,7 +94,7 @@
     "emoji": "🔍",
     "rarity": "Rare",
     "requirements": {
-      "action": "knowledge_base_searched",
+      "action": "message_sent",
       "target": 10
     }
   },
@@ -105,7 +105,7 @@
     "emoji": "⛓️",
     "rarity": "Rare",
     "requirements": {
-      "action": "workflow_created",
+      "action": "topic_shared",
       "target": 2
     }
   },
@@ -116,7 +116,7 @@
     "emoji": "🔌",
     "rarity": "Rare",
     "requirements": {
-      "action": "plugin_installed",
+      "action": "plugin_used",
       "target": 3
     }
   },
@@ -127,7 +127,7 @@
     "emoji": "⚙️",
     "rarity": "Rare",
     "requirements": {
-      "action": "settings_updated",
+      "action": "session_active",
       "target": 5
     }
   },
@@ -138,7 +138,7 @@
     "emoji": "📦",
     "rarity": "Rare",
     "requirements": {
-      "action": "artifact_generated",
+      "action": "plugin_used",
       "target": 3
     }
   },
@@ -193,7 +193,7 @@
     "emoji": "📖",
     "rarity": "Rare",
     "requirements": {
-      "action": "tokens_used",
+      "action": "message_sent",
       "target": 50000
     }
   },
@@ -204,7 +204,7 @@
     "emoji": "🖌️",
     "rarity": "Rare",
     "requirements": {
-      "action": "image_generated",
+      "action": "plugin_used",
       "target": 10
     }
   },
@@ -215,7 +215,7 @@
     "emoji": "🎵",
     "rarity": "Rare",
     "requirements": {
-      "action": "voice_synthesized",
+      "action": "message_sent",
       "target": 10
     }
   },
@@ -237,7 +237,7 @@
     "emoji": "📚",
     "rarity": "Rare",
     "requirements": {
-      "action": "knowledge_base_searched",
+      "action": "message_sent",
       "target": 20
     }
   },
@@ -248,7 +248,7 @@
     "emoji": "🔧",
     "rarity": "Rare",
     "requirements": {
-      "action": "workflow_created",
+      "action": "topic_shared",
       "target": 5
     }
   },
@@ -259,7 +259,7 @@
     "emoji": "💾",
     "rarity": "Rare",
     "requirements": {
-      "action": "plugin_installed",
+      "action": "plugin_used",
       "target": 5
     }
   },
@@ -270,7 +270,7 @@
     "emoji": "🔨",
     "rarity": "Rare",
     "requirements": {
-      "action": "settings_updated",
+      "action": "session_active",
       "target": 10
     }
   },
@@ -281,7 +281,7 @@
     "emoji": "💎",
     "rarity": "Rare",
     "requirements": {
-      "action": "artifact_generated",
+      "action": "plugin_used",
       "target": 10
     }
   },
@@ -336,7 +336,7 @@
     "emoji": "📉",
     "rarity": "Rare",
     "requirements": {
-      "action": "tokens_used",
+      "action": "message_sent",
       "target": 100000
     }
   },
@@ -347,7 +347,7 @@
     "emoji": "🖼️",
     "rarity": "Rare",
     "requirements": {
-      "action": "image_generated",
+      "action": "plugin_used",
       "target": 20
     }
   },
@@ -358,7 +358,7 @@
     "emoji": "🎙️",
     "rarity": "Rare",
     "requirements": {
-      "action": "voice_synthesized",
+      "action": "message_sent",
       "target": 15
     }
   },
@@ -380,7 +380,7 @@
     "emoji": "🏛️",
     "rarity": "Rare",
     "requirements": {
-      "action": "knowledge_base_searched",
+      "action": "message_sent",
       "target": 30
     }
   },
@@ -391,7 +391,7 @@
     "emoji": "📋",
     "rarity": "Rare",
     "requirements": {
-      "action": "workflow_created",
+      "action": "topic_shared",
       "target": 8
     }
   },
@@ -402,7 +402,7 @@
     "emoji": "🧰",
     "rarity": "Rare",
     "requirements": {
-      "action": "plugin_installed",
+      "action": "plugin_used",
       "target": 8
     }
   },
@@ -413,7 +413,7 @@
     "emoji": "🔩",
     "rarity": "Rare",
     "requirements": {
-      "action": "settings_updated",
+      "action": "session_active",
       "target": 15
     }
   },
@@ -424,7 +424,7 @@
     "emoji": "📑",
     "rarity": "Rare",
     "requirements": {
-      "action": "artifact_generated",
+      "action": "plugin_used",
       "target": 15
     }
   },
@@ -479,7 +479,7 @@
     "emoji": "📕",
     "rarity": "Rare",
     "requirements": {
-      "action": "tokens_used",
+      "action": "message_sent",
       "target": 200000
     }
   },
@@ -490,7 +490,7 @@
     "emoji": "🖍️",
     "rarity": "Rare",
     "requirements": {
-      "action": "image_generated",
+      "action": "plugin_used",
       "target": 30
     }
   },
@@ -501,7 +501,7 @@
     "emoji": "🎶",
     "rarity": "Rare",
     "requirements": {
-      "action": "voice_synthesized",
+      "action": "message_sent",
       "target": 20
     }
   },
@@ -523,7 +523,7 @@
     "emoji": "📂",
     "rarity": "Rare",
     "requirements": {
-      "action": "artifact_generated",
+      "action": "plugin_used",
       "target": 20
     }
   },
@@ -534,7 +534,7 @@
     "emoji": "🎓",
     "rarity": "Rare",
     "requirements": {
-      "action": "knowledge_base_searched",
+      "action": "message_sent",
       "target": 40
     }
   },
@@ -545,7 +545,7 @@
     "emoji": "📐",
     "rarity": "Rare",
     "requirements": {
-      "action": "workflow_created",
+      "action": "topic_shared",
       "target": 10
     }
   },
@@ -600,7 +600,7 @@
     "emoji": "💰",
     "rarity": "Epic",
     "requirements": {
-      "action": "tokens_used",
+      "action": "message_sent",
       "target": 500000
     }
   },
@@ -611,7 +611,7 @@
     "emoji": "✨",
     "rarity": "Epic",
     "requirements": {
-      "action": "image_generated",
+      "action": "plugin_used",
       "target": 50
     }
   },
@@ -622,7 +622,7 @@
     "emoji": "🎤",
     "rarity": "Epic",
     "requirements": {
-      "action": "voice_synthesized",
+      "action": "message_sent",
       "target": 40
     }
   },
@@ -644,7 +644,7 @@
     "emoji": "🏺",
     "rarity": "Epic",
     "requirements": {
-      "action": "knowledge_base_searched",
+      "action": "message_sent",
       "target": 80
     }
   },
@@ -655,7 +655,7 @@
     "emoji": "🪄",
     "rarity": "Epic",
     "requirements": {
-      "action": "workflow_created",
+      "action": "topic_shared",
       "target": 20
     }
   },
@@ -666,7 +666,7 @@
     "emoji": "🔋",
     "rarity": "Epic",
     "requirements": {
-      "action": "plugin_installed",
+      "action": "plugin_used",
       "target": 15
     }
   },
@@ -677,7 +677,7 @@
     "emoji": "🧭",
     "rarity": "Epic",
     "requirements": {
-      "action": "settings_updated",
+      "action": "session_active",
       "target": 30
     }
   },
@@ -688,7 +688,7 @@
     "emoji": "🗼",
     "rarity": "Epic",
     "requirements": {
-      "action": "artifact_generated",
+      "action": "plugin_used",
       "target": 40
     }
   },
@@ -743,7 +743,7 @@
     "emoji": "💳",
     "rarity": "Epic",
     "requirements": {
-      "action": "tokens_used",
+      "action": "message_sent",
       "target": 1000000
     }
   },
@@ -754,7 +754,7 @@
     "emoji": "👁️",
     "rarity": "Epic",
     "requirements": {
-      "action": "image_generated",
+      "action": "plugin_used",
       "target": 75
     }
   },
@@ -765,7 +765,7 @@
     "emoji": "📻",
     "rarity": "Epic",
     "requirements": {
-      "action": "voice_synthesized",
+      "action": "message_sent",
       "target": 60
     }
   },
@@ -787,7 +787,7 @@
     "emoji": "🔭",
     "rarity": "Epic",
     "requirements": {
-      "action": "knowledge_base_searched",
+      "action": "message_sent",
       "target": 120
     }
   },
@@ -798,7 +798,7 @@
     "emoji": "🏗️",
     "rarity": "Epic",
     "requirements": {
-      "action": "workflow_created",
+      "action": "topic_shared",
       "target": 30
     }
   },
@@ -809,7 +809,7 @@
     "emoji": "🧲",
     "rarity": "Epic",
     "requirements": {
-      "action": "plugin_installed",
+      "action": "plugin_used",
       "target": 20
     }
   },
@@ -820,7 +820,7 @@
     "emoji": "🎚️",
     "rarity": "Epic",
     "requirements": {
-      "action": "settings_updated",
+      "action": "session_active",
       "target": 40
     }
   },
@@ -831,7 +831,7 @@
     "emoji": "⚒️",
     "rarity": "Epic",
     "requirements": {
-      "action": "artifact_generated",
+      "action": "plugin_used",
       "target": 60
     }
   },
@@ -853,7 +853,7 @@
     "emoji": "🌈",
     "rarity": "Epic",
     "requirements": {
-      "action": "image_generated",
+      "action": "plugin_used",
       "target": 100
     }
   },
@@ -864,7 +864,7 @@
     "emoji": "⛏️",
     "rarity": "Epic",
     "requirements": {
-      "action": "knowledge_base_searched",
+      "action": "message_sent",
       "target": 150
     }
   },
@@ -875,7 +875,7 @@
     "emoji": "🗿",
     "rarity": "Epic",
     "requirements": {
-      "action": "artifact_generated",
+      "action": "plugin_used",
       "target": 80
     }
   },
@@ -930,7 +930,7 @@
     "emoji": "🔥",
     "rarity": "Legendary",
     "requirements": {
-      "action": "tokens_used",
+      "action": "message_sent",
       "target": 5000000
     }
   },
@@ -941,7 +941,7 @@
     "emoji": "🎆",
     "rarity": "Legendary",
     "requirements": {
-      "action": "image_generated",
+      "action": "plugin_used",
       "target": 200
     }
   },
@@ -952,7 +952,7 @@
     "emoji": "👼",
     "rarity": "Legendary",
     "requirements": {
-      "action": "voice_synthesized",
+      "action": "message_sent",
       "target": 100
     }
   },
@@ -963,7 +963,7 @@
     "emoji": "💡",
     "rarity": "Legendary",
     "requirements": {
-      "action": "knowledge_base_searched",
+      "action": "message_sent",
       "target": 250
     }
   },
@@ -974,7 +974,7 @@
     "emoji": "⏱️",
     "rarity": "Legendary",
     "requirements": {
-      "action": "workflow_created",
+      "action": "topic_shared",
       "target": 50
     }
   },
@@ -985,7 +985,7 @@
     "emoji": "🪐",
     "rarity": "Legendary",
     "requirements": {
-      "action": "artifact_generated",
+      "action": "plugin_used",
       "target": 150
     }
   },
@@ -1007,7 +1007,7 @@
     "emoji": "👁️‍🗨️",
     "rarity": "Mythic",
     "requirements": {
-      "action": "knowledge_base_searched",
+      "action": "message_sent",
       "target": 500
     }
   },
@@ -1040,7 +1040,7 @@
     "emoji": "🕳️",
     "rarity": "Mythic",
     "requirements": {
-      "action": "tokens_used",
+      "action": "message_sent",
       "target": 20000000
     }
   },
@@ -1051,7 +1051,7 @@
     "emoji": "🌍",
     "rarity": "Mythic",
     "requirements": {
-      "action": "workflow_created",
+      "action": "topic_shared",
       "target": 100
     }
   },
@@ -1062,7 +1062,7 @@
     "emoji": "🏆",
     "rarity": "Mythic",
     "requirements": {
-      "action": "artifact_generated",
+      "action": "plugin_used",
       "target": 300
     }
   },
@@ -1084,7 +1084,7 @@
     "emoji": "🛸",
     "rarity": "Ultra",
     "requirements": {
-      "action": "tokens_used",
+      "action": "message_sent",
       "target": 100000000
     }
   },
@@ -1095,7 +1095,7 @@
     "emoji": "☯️",
     "rarity": "Ultra",
     "requirements": {
-      "action": "artifact_generated",
+      "action": "plugin_used",
       "target": 1000
     }
   }

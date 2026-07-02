@@ -169,4 +169,9 @@ export const useQuestsManager = () => {
       unsubscribeAgent();
     };
   }, [trackAction]);
+
+  // Session Active Tracking
+  useEffect(() => {
+    trackAction('session_active', 1);
+  }, [trackAction]);
 };
