@@ -27,6 +27,7 @@ import {
   topics,
 } from '../schemas';
 import type { LobeChatDatabase } from '../type';
+import { genEndDateWhere, genRangeWhere, genStartDateWhere, genWhere } from '../utils/genWhere';
 import { normalizeInboxAgentMeta } from '../utils/inboxAgent';
 import { buildWorkspacePayload, buildWorkspaceWhere } from '../utils/workspace';
 
@@ -69,11 +70,20 @@ export class AgentModel {
 
   /**
    * Compat-mode ownership predicate for the `agents` table.
-   * - team mode (workspaceId set): `workspace_id = ?` (every member sees the same agents)
-   * - personal mode: `user_id = ? AND workspace_id IS NULL`
+   * - team mode (workspaceId set): `workspace_id = ?` plus visibility-aware
+   *   filtering — public agents are visible to every member, private agents
+   *   are only visible to their creator.
+   * - personal mode: `user_id = ? AND workspace_id IS NULL`.
    */
   private ownership = () =>
-    buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, agents);
+    buildWorkspaceWhere(
+      { userId: this.userId, workspaceId: this.workspaceId },
+      {
+        userId: agents.userId,
+        workspaceId: agents.workspaceId,
+        visibility: agents.visibility,
+      },
+    );
 
   /** Same predicate but for the `sessions` table (used in delete cascade). */
   private sessionsOwnership = () =>
@@ -161,6 +171,21 @@ export class AgentModel {
     return this.enrichAgentWithKnowledge(agent);
   };
 
+  /**
+   * Returns the agent's visibility, scoped by the model's ownership filter, or
+   * `null` when the agent is missing or not visible to the current caller.
+   * Used by the task service to inherit a private agent's visibility onto
+   * tasks created against it.
+   */
+  getAgentVisibility = async (id: string): Promise<'private' | 'public' | null> => {
+    const rows = await this.db
+      .select({ visibility: agents.visibility })
+      .from(agents)
+      .where(and(eq(agents.id, id), this.ownership()))
+      .limit(1);
+    return (rows[0]?.visibility as 'private' | 'public' | undefined) ?? null;
+  };
+
   existsById = async (id: string): Promise<boolean> => {
     const rows = await this.db
       .select({ id: agents.id })
@@ -190,6 +215,39 @@ export class AgentModel {
     const row = rows[0];
     if (!row || !row.model || !row.provider) return null;
     return { model: row.model, provider: row.provider };
+  };
+
+  /**
+   * Single-SELECT lookup of the fields `TaskService.createTask` needs in one
+   * round-trip: the model/provider snapshot (for `task.config`) and the
+   * visibility (for inference + cross-table invariant assertion). Replaces
+   * the previous two-query path (`getAgentModelConfig` + `getAgentVisibility`).
+   *
+   * Returns `null` when the agent is not visible to the current caller. When
+   * found, `snapshot` is non-null only if both `model` and `provider` are set
+   * — same contract as `getAgentModelConfig`.
+   */
+  getAgentSnapshotForTaskCreate = async (
+    idOrSlug: string,
+  ): Promise<{
+    snapshot: { model: string; provider: string } | null;
+    visibility: 'private' | 'public';
+  } | null> => {
+    const rows = await this.db
+      .select({
+        model: agents.model,
+        provider: agents.provider,
+        visibility: agents.visibility,
+      })
+      .from(agents)
+      .where(and(this.ownership(), or(eq(agents.id, idOrSlug), eq(agents.slug, idOrSlug))))
+      .limit(1);
+
+    const row = rows[0];
+    if (!row) return null;
+    const snapshot =
+      row.model && row.provider ? { model: row.model, provider: row.provider } : null;
+    return { snapshot, visibility: row.visibility as 'private' | 'public' };
   };
 
   /**
@@ -251,12 +309,33 @@ export class AgentModel {
   /**
    * Count non-virtual agents matching the same conditions as queryAgents.
    * Used to report real totals (and pagination) when queryAgents is limited.
+   * Accepts the same date filters as SessionModel.count so callers can compare
+   * current vs. prior-period totals without falling back to the legacy
+   * sessions table.
    */
-  countAgents = async (params?: { keyword?: string }): Promise<number> => {
+  countAgents = async (params?: {
+    endDate?: string;
+    keyword?: string;
+    range?: [string, string];
+    startDate?: string;
+  }): Promise<number> => {
     const result = await this.db
       .select({ count: count() })
       .from(agents)
-      .where(this.buildQueryAgentsWhere(params?.keyword));
+      .where(
+        genWhere([
+          this.buildQueryAgentsWhere(params?.keyword),
+          params?.range
+            ? genRangeWhere(params.range, agents.createdAt, (date) => date.toDate())
+            : undefined,
+          params?.endDate
+            ? genEndDateWhere(params.endDate, agents.createdAt, (date) => date.toDate())
+            : undefined,
+          params?.startDate
+            ? genStartDateWhere(params.startDate, agents.createdAt, (date) => date.toDate())
+            : undefined,
+        ]),
+      );
 
     return result[0]?.count ?? 0;
   };
@@ -626,6 +705,30 @@ export class AgentModel {
       .update(agents)
       .set({ ...data, updatedAt: new Date() })
       .where(and(eq(agents.id, agentId), this.ownership()));
+  };
+
+  /**
+   * Publish a private agent into the workspace. **One-way only** — once an
+   * agent has been shared with the workspace, other members may already be
+   * using it, so we never let it slip back to `private`. Likewise the
+   * `user_id = ?` + `visibility = 'private'` guards lock the operation to
+   * the creator's own still-private agent.
+   *
+   * Use the existing `update` to change other fields; visibility is the only
+   * one with this asymmetric rule.
+   */
+  publishToWorkspace = async (agentId: string) => {
+    return this.db
+      .update(agents)
+      .set({ updatedAt: new Date(), visibility: 'public' })
+      .where(
+        and(
+          eq(agents.id, agentId),
+          this.ownership(),
+          eq(agents.userId, this.userId),
+          eq(agents.visibility, 'private'),
+        ),
+      );
   };
 
   touchUpdatedAt = async (agentId: string) => {

@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import type * as LocalFileShell from '@lobechat/local-file-shell';
+
 const { fileSearchMock } = vi.hoisted(() => ({
   fileSearchMock: {
     glob: vi.fn(),
@@ -8,7 +10,7 @@ const { fileSearchMock } = vi.hoisted(() => ({
 }));
 
 vi.mock('@lobechat/local-file-shell', async () => {
-  const actual = await vi.importActual<typeof import('@lobechat/local-file-shell')>(
+  const actual = await vi.importActual<typeof LocalFileShell>(
     '@lobechat/local-file-shell',
   );
 

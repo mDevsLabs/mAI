@@ -94,11 +94,11 @@ export class ChangelogService {
       });
 
       const text = await response.text();
-      const { data, content } = matter(text);
+      const { data, content: rawContent } = matter(text);
 
       const regex = /^#\s(.+)/;
-      const match = regex.exec(content.trim());
-      const matches = content.trim().split(regex);
+      const match = regex.exec(rawContent.trim());
+      const matches = rawContent.trim().split(regex);
 
       let description: string;
 
@@ -109,7 +109,7 @@ export class ChangelogService {
       }
 
       if (docCdnPrefix) {
-        const images = this.extractHttpsLinks(content);
+        const images = this.extractHttpsLinks(rawContent);
         for (const url of images) {
           const cdnUrl = this.replaceCdnUrl(url);
           if (cdnUrl && url !== cdnUrl) {
@@ -132,7 +132,7 @@ export class ChangelogService {
         tags: ['changelog'],
         title: match ? match[1] : '',
         ...data,
-        content: description,
+        content: rawContent,
         rawTitle: match ? match[1] : '',
       };
     } catch (e) {

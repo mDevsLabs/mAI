@@ -143,9 +143,9 @@ class ImageCDNUploader {
   private replaceLinksInPosts() {
     let count = 0;
 
-    for (const post of posts) {
       const mdx = readFileSync(post, 'utf8');
-      let { content, data } = matter(mdx);
+      const { data } = matter(mdx);
+      let { content } = matter(mdx);
       const inlineLinks = extractHttpsLinks(content);
 
       for (const link of inlineLinks) {

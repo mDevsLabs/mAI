@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // no need to introduce a package to get the current time as this module is just a debug utility
 const getTime = () => {
   const date = new Date();

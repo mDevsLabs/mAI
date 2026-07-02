@@ -3,7 +3,7 @@ name: 🌐 Auto i18n Translation
 on:
   schedule:
     - cron: '0 2 * * *' # Every day at 2am
-  workflow_dispatch: # Allows manual trigger
+  workflow_dispatch: {}
 
 jobs:
   translation:
@@ -29,10 +29,11 @@ jobs:
 
       - name: 🌐 Run i18n Translation
         env:
-          OPENAI_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
-          OPENAI_PROXY_URL: https://api.mistral.ai/v1
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENAI_API_KEY: ''
+          OPENAI_PROXY_URL: https://openrouter.ai/api/v1
         run: |
-          sed -i "s/'gpt-4o'/'open-mistral-nemo'/g" .i18nrc.js
+          echo "Using OpenRouter for translation"
           pnpm run i18n
 
       - name: 🚀 Create Pull Request

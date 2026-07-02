@@ -7,10 +7,10 @@ import {
   Highlighter,
   Icon,
   Markdown,
-  Segmented,
   stopPropagation,
   Text,
 } from '@lobehub/ui';
+import { Segmented } from '@lobehub/ui/base-ui';
 import { Descriptions } from 'antd';
 import { createStaticStyles } from 'antd-style';
 import { ExternalLink } from 'lucide-react';

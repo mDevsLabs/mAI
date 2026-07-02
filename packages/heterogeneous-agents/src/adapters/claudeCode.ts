@@ -738,6 +738,9 @@ export class ClaudeCodeAdapter implements AgentEventAdapter {
       this.makeEvent('stream_start', {
         model: raw.model,
         provider: 'claude-code',
+        // The CC session id every message this run produces belongs to. A
+        // change in this value across a topic means CC forked a new session.
+        sessionId: this.sessionId,
       }),
     ];
   }
@@ -1383,7 +1386,12 @@ export class ClaudeCodeAdapter implements AgentEventAdapter {
     // wrongly inherit the previous run's task-completion tag).
     this.pendingTaskCompletion = undefined;
 
-    return [...events, this.makeEvent('stream_end', {}), finalEvent];
+    return [
+      ...events,
+      this.makeEvent('stream_end', {}),
+      this.makeEvent('visible_output_end', {}),
+      finalEvent,
+    ];
   }
 
   /**
@@ -1483,7 +1491,13 @@ export class ClaudeCodeAdapter implements AgentEventAdapter {
       this.started = true;
       this.currentMessageId = messageId;
       this.currentTurnHadToolUse = false;
-      return [this.makeEvent('stream_start', { model, provider: 'claude-code' })];
+      return [
+        this.makeEvent('stream_start', {
+          model,
+          provider: 'claude-code',
+          sessionId: this.sessionId,
+        }),
+      ];
     }
 
     if (messageId === this.currentMessageId) {
@@ -1519,15 +1533,28 @@ export class ClaudeCodeAdapter implements AgentEventAdapter {
           model,
           newStep: true,
           provider: 'claude-code',
+          sessionId: this.sessionId,
         }),
       ];
     }
 
     if (this.currentMessageId === undefined) {
       // First assistant/delta after system init — record without step boundary.
+      // Emit a non-newStep stream_start carrying this turn's CC message.id so
+      // the reducer records `currentMainMessageId` for the SEEDED assistant.
+      // system:init opened the seed with no id, so without this the first turn's
+      // rows (assistant / tools / usage) would carry no `heteroMessageId` — the
+      // exact first turn of a resumed/forked operation this provenance targets.
       this.currentMessageId = messageId;
       this.currentTurnHadToolUse = false;
-      return [];
+      return [
+        this.makeEvent('stream_start', {
+          messageId,
+          model,
+          provider: 'claude-code',
+          sessionId: this.sessionId,
+        }),
+      ];
     }
 
     this.currentMessageId = messageId;
@@ -1583,6 +1610,7 @@ export class ClaudeCodeAdapter implements AgentEventAdapter {
         model,
         newStep: true,
         provider: 'claude-code',
+        sessionId: this.sessionId,
       }),
     ];
   }

@@ -1,5 +1,6 @@
 import type { SearchQuery, UniformSearchResponse } from '@lobechat/types';
-import { Block, Button, Empty, Flexbox, Icon, ScrollShadow, Skeleton } from '@lobehub/ui';
+import { Block, Empty, Flexbox, Icon, ScrollShadow, Skeleton } from '@lobehub/ui';
+import { Button } from '@lobehub/ui/base-ui';
 import { uniq } from 'es-toolkit/compat';
 import { Edit2Icon, SearchIcon } from 'lucide-react';
 import { memo } from 'react';

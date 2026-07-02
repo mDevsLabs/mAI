@@ -1,7 +1,7 @@
-import { createStyles } from 'antd-style';
+import { createStaticStyles } from 'antd-style';
 import React, { useEffect, useState } from 'react';
 
-const useStyles = createStyles(({ css, token }) => ({
+const styles = createStaticStyles(({ css, cssVar }) => ({
   sparkleContainer: css`
     position: absolute;
     inset: 0;
@@ -13,13 +13,17 @@ const useStyles = createStyles(({ css, token }) => ({
     position: absolute;
     width: 6px;
     height: 6px;
-    background: ${token.colorWarning};
+    background: ${cssVar.colorWarning};
     clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
     animation: sparkleAnim 0.8s ease-in-out forwards;
+    opacity: 0;
 
     @keyframes sparkleAnim {
       0% {
         transform: scale(0) rotate(0deg);
+        opacity: 0;
+      }
+      50% {
         opacity: 1;
       }
       100% {
@@ -30,6 +34,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   mythicCard: css`
     position: relative;
+    overflow: hidden;
     &::after {
       content: '';
       position: absolute;
@@ -40,6 +45,8 @@ const useStyles = createStyles(({ css, token }) => ({
       z-index: -1;
       animation: glowing 20s linear infinite;
       opacity: 0.7;
+      transform: translateZ(0);
+      backface-visibility: hidden;
     }
 
     @keyframes glowing {
@@ -50,6 +57,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   ultraCard: css`
     position: relative;
+    overflow: hidden;
     &::after {
       content: '';
       position: absolute;
@@ -61,12 +69,13 @@ const useStyles = createStyles(({ css, token }) => ({
       animation: glowing 10s linear infinite;
       opacity: 1;
       filter: blur(5px);
+      transform: translateZ(0);
+      backface-visibility: hidden;
     }
   `
 }));
 
 export const SparkleExplosion: React.FC<{ active: boolean; onComplete?: () => void }> = ({ active, onComplete }) => {
-  const { styles } = useStyles();
   const [sparkles, setSparkles] = useState<any[]>([]);
 
   useEffect(() => {
@@ -74,10 +83,13 @@ export const SparkleExplosion: React.FC<{ active: boolean; onComplete?: () => vo
       const newSparkles = Array.from({ length: 12 }).map((_, i) => {
         const angle = (i / 12) * Math.PI * 2;
         const radius = 20 + Math.random() * 20;
+        const delay = (12 - i) * 0.02;
         return {
           id: i,
           tx: `${Math.cos(angle) * radius}px`,
           ty: `${Math.sin(angle) * radius}px`,
+          delay,
+          animationStartTime: performance.now() + delay * 1000,
         };
       });
       setSparkles(newSparkles);
@@ -106,18 +118,36 @@ export const SparkleExplosion: React.FC<{ active: boolean; onComplete?: () => vo
   );
 };
 
-export const PremiumCardWrapper: React.FC<{ children: React.ReactNode; rarity: string; active?: boolean }> = ({ children, rarity, active = true }) => {
-  const { styles } = useStyles();
-  
+export interface PremiumCardWrapperProps {
+  active?: boolean;
+  children: React.ReactNode;
+  className?: string;
+  rarity?: string;
+  style?: React.CSSProperties;
+}
+
+export const PremiumCardWrapper: React.FC<PremiumCardWrapperProps> = ({
+  active = true,
+  children,
+  className,
+  rarity,
+  style,
+}) => {
   if (!active) return <>{children}</>;
 
+  let effectClass = '';
   if (rarity === 'Mythic') {
-    return <div className={styles.mythicCard} style={{ height: '100%', borderRadius: 8 }}>{children}</div>;
+    effectClass = styles.mythicCard;
+  } else if (rarity === 'Ultra') {
+    effectClass = styles.ultraCard;
   }
 
-  if (rarity === 'Ultra') {
-    return <div className={styles.ultraCard} style={{ height: '100%', borderRadius: 8 }}>{children}</div>;
-  }
+  if (!effectClass) return <>{children}</>;
 
-  return <>{children}</>;
+  return (
+    <div className={className ? `${effectClass} ${className}` : effectClass} style={style}>
+      {children}
+    </div>
+  );
 };
+

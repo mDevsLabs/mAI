@@ -40,7 +40,7 @@ export const computeImageCost = (
     return undefined;
   }
 
-  let pricePerImageInUSD = 0;
+  let pricePerImageInUSD: number;
   let lookupKey: string | undefined;
 
   switch (imageGenUnit.strategy) {

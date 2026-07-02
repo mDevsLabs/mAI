@@ -28,40 +28,29 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 🧮 Calculate canary version
+      - name: 🧮 Get canary version from package.json
         id: version
         run: |
-          latest_tag=$(git tag --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -n 1)
-
-          if [ -z "$latest_tag" ]; then
-            echo "⚠️ No stable tag found, fallback to e2e/package.json version"
-            pkg_version=$(node -p "require('./e2e/package.json').version")
-            latest_tag="v${pkg_version}"
+          # Get version from canary branch package.json
+          VERSION_FILE="package.json"
+          if [ ! -f "$VERSION_FILE" ]; then
+            echo "❌ Erreur : Le fichier $VERSION_FILE n'existe pas !"
+            exit 1
           fi
 
-          echo "📌 Latest stable tag: $latest_tag"
+          CANARY_VERSION=$(node -p "require('./$VERSION_FILE').version")
+          echo "📦 Version canary trouvée dans package.json: $CANARY_VERSION"
 
-          base_version="${latest_tag#v}"
-          IFS='.' read -r major minor patch <<< "$base_version"
-          new_patch=$((patch + 1))
-          base_canary="${major}.${minor}.${new_patch}"
-
-          max_seq=0
-          for t in $(git tag -l "v${base_canary}-canary.*" 2>/dev/null || true); do
-            seq=$(echo "$t" | grep -oE '[0-9]+$' || true)
-            if [ -n "$seq" ] && [ "$seq" -gt "$max_seq" ] 2>/dev/null; then
-              max_seq=$seq
-            fi
-          done
-          next_seq=$((max_seq + 1))
-
-          version="${base_canary}-canary.${next_seq}"
-          tag="v${version}"
-
-          echo "version=${version}" >> $GITHUB_OUTPUT
-          echo "tag=${tag}" >> $GITHUB_OUTPUT
-          echo "✅ Canary version: ${version}"
-          echo "🏷️ Tag: ${tag}"
+          # Validate version format
+          if [[ "$CANARY_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "✅ Version valide: $CANARY_VERSION"
+            echo "version=$CANARY_VERSION" >> $GITHUB_OUTPUT
+            echo "tag=v$CANARY_VERSION" >> $GITHUB_OUTPUT
+          else
+            echo "⚠️ Format de version invalide: $CANARY_VERSION"
+            echo "❌ Erreur : Invalid version format "$CANARY_VERSION". Expected format: x.y.z"
+            exit 1
+          fi
 
       - name: 📝 Generate canary release notes
         id: release-notes

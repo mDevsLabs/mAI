@@ -142,7 +142,7 @@ export const buildIngestPayload = (
       );
     }
 
-    console.log(
+    console.info(
       `[locomo converter] processing sample ${sample.sample_id} session ${session.id} (on ${session.dateTime ?? 'unknown dateTime'}) with ${session.turns.length} turns`,
     );
 

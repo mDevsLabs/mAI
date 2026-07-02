@@ -100,7 +100,6 @@ vi.mock('@lobehub/editor/react', () => {
 
   return {
     Editor,
-    FloatMenu: vi.fn(() => null),
     useEditorState: vi.fn(() => ({ isEmpty: true })),
   };
 });
@@ -175,6 +174,7 @@ vi.mock('@/store/user/selectors', () => ({
   systemAgentSelectors: {
     inputCompletion: () => mocks.inputCompletionConfig,
   },
+  userProfileSelectors: { userId: () => 'user-id' },
 }));
 
 vi.mock('../hooks/useAgentId', () => ({ useAgentId: () => 'agent-id' }));

@@ -1,12 +1,13 @@
 'use client';
 
 import { INBOX_SESSION_ID } from '@lobechat/const';
-import { lazy, memo, Suspense } from 'react';
+import React, { lazy, memo, Suspense, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createStoreUpdater } from 'zustand-utils';
 
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAgentStore } from '@/store/agent';
+import { useGamificationStore } from '@/store/gamification';
 import { useGlobalStore } from '@/store/global';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { serverConfigSelectors } from '@/store/serverConfig/selectors';
@@ -35,8 +36,17 @@ const StoreInitialization = memo(() => {
 
   const useInitBuiltinAgent = useAgentStore((s) => s.useInitBuiltinAgent);
 
+  const initGamificationStatus = useGamificationStore((s) => s.initGamificationStatus);
+
   // init the system preference
   useInitSystemStatus();
+
+  // init gamification status from localStorage
+  useEffect(() => {
+    initGamificationStatus().catch((error) => {
+      console.error("Failed to initialize gamification status:", error);
+    });
+  }, [initGamificationStatus]);
 
   // check server version in desktop app
   useCheckServerVersion();
@@ -84,3 +94,5 @@ const StoreInitialization = memo(() => {
 });
 
 export default StoreInitialization;
+
+

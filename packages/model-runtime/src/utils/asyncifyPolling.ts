@@ -190,7 +190,7 @@ export async function asyncifyPolling<T, R>(options: AsyncifyPollingOptions<T, R
 
     // Handle max retries exceeded
     if (error instanceof PendingError) {
-      throw new Error(`Task timeout after ${maxRetries} attempts`);
+      throw new Error(`Task timeout after ${maxRetries} attempts`, { cause: error });
     }
 
     throw error;

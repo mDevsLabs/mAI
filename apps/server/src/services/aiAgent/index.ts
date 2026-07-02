@@ -46,6 +46,7 @@ import type {
 } from '@lobechat/types';
 import { buildHeteroExecArgs, RequestTrigger, ThreadStatus, ThreadType } from '@lobechat/types';
 import { nanoid } from '@lobechat/utils';
+import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 
 import { AgentModel } from '@/database/models/agent';
@@ -91,7 +92,7 @@ import type {
 import { AgentRuntimeService } from '@/server/services/agentRuntime';
 import { getAbortError, isAbortError, throwIfAborted } from '@/server/services/agentRuntime/abort';
 import { CompletionLifecycle } from '@/server/services/agentRuntime/CompletionLifecycle';
-import { dispatchTerminalHooks, hookDispatcher } from '@/server/services/agentRuntime/hooks';
+import { hookDispatcher } from '@/server/services/agentRuntime/hooks';
 import type { AgentHook } from '@/server/services/agentRuntime/hooks/types';
 import type {
   ExecGroupMemberParams,
@@ -124,6 +125,7 @@ import { markdownToTxt } from '@/utils/markdownToTxt';
 import { resolveDeviceAccessPolicy } from './deviceAccessPolicy';
 import { buildAllowedBuiltinTools, isDeviceToolIdentifier } from './deviceToolRegistry';
 import { ingestAttachment } from './ingestAttachment';
+import { pruneRegeneratedBranch } from './pruneRegeneratedBranch';
 import { resolveDeviceWorkingDirectory } from './resolveDeviceWorkingDirectory';
 import { isWorkspaceCacheFresh, upsertWorkspaceScan } from './workspaceInitCache';
 
@@ -473,12 +475,13 @@ export class AiAgentService {
    * each one would strand the run: the assistant bubble would show an error but
    * the UI stream would never close and a long-run task would hang in `running`.
    *
-   * Routes through the SAME terminal funnel a normal exit uses — it fires the
-   * run's onComplete/onError hooks via `dispatchTerminalHooks`, so the task
-   * lifecycle (onTopicComplete → task failed) and any IM bot completion callback
-   * fire exactly as they would for a real failure — then closes the UI stream and
-   * clears the (never-started) running operation. The hooks were registered and
-   * serialized onto `runningOperation` at dispatch time.
+   * Routes through the SAME terminal funnel a normal exit uses —
+   * `CompletionLifecycle.completeOperation` finalizes the op row and fires the
+   * run's onComplete/onError hooks, so the task lifecycle (onTopicComplete → task
+   * failed) and any IM bot completion callback fire exactly as they would for a
+   * real failure — then closes the UI stream and clears the (never-started)
+   * running operation. The hooks were registered and serialized onto
+   * `runningOperation` at dispatch time.
    *
    * Stream-close / hook dispatch / metadata clear are best-effort: a failure
    * there must not mask the original dispatch error the caller surfaces.
@@ -500,20 +503,27 @@ export class AiAgentService {
       error: { body: { detail }, message, type: 'ServerAgentRuntimeError' },
     });
 
-    // 1b. Mark the agent_operations row terminal. The row was inserted at
-    //     recordStart, but a dispatch failure goes through THIS path, not
-    //     heteroFinish — so without this the row stays status='running' forever
-    //     and pollutes operation-lifecycle / verify views for failed starts.
-    try {
-      await this.agentOperationModel.recordCompletion(operationId, {
-        completedAt: new Date(),
-        completionReason: 'error',
+    // 1b. Finalize the run through CompletionLifecycle's single entry — the SAME
+    //     owner the CLI exit (heteroFinish) / in-process paths use. It marks the
+    //     agent_operations row terminal (the row was inserted at recordStart, but a
+    //     dispatch failure goes through THIS path, not heteroFinish, so without
+    //     finalizing it the row stays status='running' forever) AND fires the run's
+    //     onComplete/onError hooks (task lifecycle → task failed + IM bot callback).
+    //     `skipErrorMessageWrite` keeps the bespoke device-specific bubble written
+    //     in step 1; verify is done-only, so it no-ops on this error path.
+    await new CompletionLifecycle(this.db, this.userId, this.workspaceId).completeOperation(
+      {
+        agentId,
+        assistantMessageId,
         error: { message, type: 'ServerAgentRuntimeError' },
-        status: 'error',
-      });
-    } catch (err) {
-      log('finalizeHeteroDispatchError: recordCompletion failed (non-fatal): %O', err);
-    }
+        operationId,
+        serializedHooks: hookDispatcher.getSerializedHooks(operationId),
+        topicId,
+        userId: this.userId,
+      },
+      'error',
+      { skipErrorMessageWrite: true },
+    );
 
     // 2. Close the UI stream.
     try {
@@ -528,21 +538,7 @@ export class AiAgentService {
       log('finalizeHeteroDispatchError: publishAgentRuntimeEnd failed (non-fatal): %O', err);
     }
 
-    // 3. Fire onComplete/onError hooks (task lifecycle + bot callback). Hooks
-    //    were registered in-memory (local mode) and serialized onto
-    //    runningOperation (queue mode) at dispatch time.
-    await dispatchTerminalHooks({
-      agentId,
-      errorMessage: message,
-      errorType: 'ServerAgentRuntimeError',
-      operationId,
-      reason: 'error',
-      serializedHooks: hookDispatcher.getSerializedHooks(operationId),
-      topicId,
-      userId: this.userId,
-    });
-
-    // 4. The operation never started — drop the running marker so reconnect /
+    // 3. The operation never started — drop the running marker so reconnect /
     //    heteroIngest validation and the next turn don't see a stale operation.
     try {
       await this.topicModel.updateMetadata(topicId, { runningOperation: null });
@@ -977,7 +973,12 @@ export class AiAgentService {
       agentConfig = await this.agentService.getAgentConfig(identifier);
     }
     if (!agentConfig) {
-      throw new Error(`Agent not found: ${identifier}`);
+      // `agentService.getAgentConfig` already routes through `AgentModel`'s
+      // workspace + visibility ownership predicate, so a cross-user private
+      // agent resolves to null here. Surface that as NOT_FOUND (not a generic
+      // 500) so callers — chat, bot, cron task, sub-agent, REST — return a
+      // uniform 404 and we never leak whether the id exists for another user.
+      throw new TRPCError({ code: 'NOT_FOUND', message: `Agent not found: ${identifier}` });
     }
 
     // Use actual agent ID from config for subsequent operations
@@ -1103,7 +1104,7 @@ export class AiAgentService {
       log('execAgent: appended additional instructions to systemRole');
     }
 
-    let resumeParentMessage;
+    let resumeParentMessage: Awaited<ReturnType<MessageModel['findById']>>;
 
     // `resumeApproval` implies the same "load parent message + skip user
     // message creation" semantics as `resume`. Callers that go through the
@@ -1312,10 +1313,7 @@ export class AiAgentService {
     const heteroProviderType = agentConfig.agencyConfig?.heterogeneousProvider?.type;
     const isHeteroAgent = !!heteroProviderType || HETERO_AGENT_MODELS.has(model);
     const heteroType = (heteroProviderType ?? model) as
-      | 'claude-code'
-      | 'codex'
-      | 'hermes'
-      | 'openclaw';
+      'claude-code' | 'codex' | 'hermes' | 'openclaw';
 
     // ── Shared turn setup (runs for BOTH hetero and normal agents) ──────────
     // Everything up to and including persisting the turn is identical for both
@@ -1342,6 +1340,13 @@ export class AiAgentService {
     // exclude this freshly-created turn — history must be the PRIOR turns only,
     // otherwise the new prompt is double-counted in the LLM context.
     const selfMessageIds = new Set<string>();
+    const userMessageParentId =
+      runFromHistory || parentMessageId
+        ? undefined
+        : await this.messageModel.getLatestSpineMessageId?.({
+            threadId: appContext?.threadId ?? null,
+            topicId,
+          });
     const userMessageRecord = runFromHistory
       ? undefined
       : await this.messageModel.create({
@@ -1353,6 +1358,7 @@ export class AiAgentService {
           // shows when the topic is reopened (group topic sidebar + ownership fix).
           groupId: appContext?.groupId ?? undefined,
           metadata: requestTriggerMetadata,
+          parentId: userMessageParentId,
           role: 'user',
           threadId: appContext?.threadId ?? undefined,
           topicId,
@@ -2040,6 +2046,40 @@ export class AiAgentService {
         historyMessagesCache = messages.filter((msg) => !selfMessageIds.has(msg.id));
       } else {
         historyMessagesCache = [];
+      }
+
+      // ── Regenerate: drop the anchor user message's existing answer branch ──
+      // In gateway/server runtime mode the client only sends `parentMessageId`
+      // (the user message being regenerated) and lets the server rebuild the
+      // context. The topic query above still returns the anchor's *previous*
+      // assistant branch (the answer being replaced) and — when a middle turn is
+      // regenerated — the later turns that continued from it. Leaving them in
+      // makes the model see an already-answered turn and "continue" it instead of
+      // producing a fresh answer (`[U1, A1]` → continue rather than `[U1]` → A2).
+      //
+      // The branch must be pruned even after `/compact`: compaction hides the
+      // grouped messages and `query` returns a synthetic `compressedGroup` node
+      // that carries neither `parentId` nor (for compaction) the group's
+      // `parentMessageId`, so ancestry can't be walked from `query` output alone.
+      // We load the raw message tree (including hidden/compacted messages) and
+      // compute the anchor's descendants from it, then drop both regular
+      // descendant messages and any group node whose members fall in that branch.
+      //
+      // Scoped to a `user`-role anchor: the human-approval resume path anchors on
+      // a tool message and must keep the in-flight turn (including parallel-tool
+      // sibling messages) intact, so it is intentionally left untouched.
+      if (
+        historyMessagesCache &&
+        effectiveResume &&
+        parentMessageId &&
+        resumeParentMessage?.role === 'user' &&
+        appContext?.topicId
+      ) {
+        const tree = await this.messageModel.queryTopicMessageTree({
+          threadId: appContext.threadId,
+          topicId: appContext.topicId,
+        });
+        historyMessagesCache = pruneRegeneratedBranch(historyMessagesCache, tree, parentMessageId);
       }
 
       return historyMessagesCache;
@@ -4211,8 +4251,7 @@ export class AiAgentService {
     if (topicId) {
       const topic = await this.topicModel.findById(topicId);
       const runningOp = (topic?.metadata as any)?.runningOperation as
-        | { deviceId?: string; heteroType?: string; operationId?: string }
-        | undefined;
+        { deviceId?: string; heteroType?: string; operationId?: string } | undefined;
 
       if (
         runningOp?.deviceId &&

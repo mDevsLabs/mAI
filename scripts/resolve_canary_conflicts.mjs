@@ -69,7 +69,7 @@ const UPSTREAM_URL = 'https://github.com/lobehub/lobe-chat.git';
 function runCmd(cmd) {
   try {
     return execSync(cmd, { encoding: 'utf-8', stdio: ['pipe', 'pipe', 'ignore'] }).trim();
-  } catch (e) {
+  } catch {
     return '';
   }
 }
@@ -77,7 +77,7 @@ function runCmd(cmd) {
 function runCmdInteractive(cmd) {
   try {
     execSync(cmd, { stdio: 'inherit' });
-  } catch (e) {
+  } catch {
     // Ignore error
   }
 }
@@ -132,7 +132,7 @@ function getConflictCount(file) {
     const content = fs.readFileSync(file, 'utf-8');
     const matches = content.match(/^<<<<<<< /gm);
     return matches ? matches.length : 0;
-  } catch (e) {
+  } catch {
     return 0;
   }
 }
@@ -151,7 +151,7 @@ function detectsBrandingOverwrite(file) {
       }
     }
     return lostKeywords;
-  } catch (e) {
+  } catch {
     return [];
   }
 }
@@ -215,8 +215,8 @@ async function handleNoConflicts() {
         const confirm = await askKey('\n⚠️ Voulez-vous supprimer "node_modules", ".next" et nettoyer le cache pnpm ? (y/n) : ', ['y', 'n']);
         if (confirm === 'y') {
           console.log('\n🧹 Nettoyage en cours...');
-          try { fs.rmSync('node_modules', { recursive: true, force: true }); } catch (e) {}
-          try { fs.rmSync('.next', { recursive: true, force: true }); } catch (e) {}
+          try { fs.rmSync('node_modules', { recursive: true, force: true }); } catch {}
+          try { fs.rmSync('.next', { recursive: true, force: true }); } catch {}
           runCmdInteractive('pnpm store prune');
           console.log('✅ Nettoyage terminé.');
         }
@@ -283,7 +283,7 @@ async function main() {
       } else {
         console.log('🗑️  Nouvelle session démarrée.');
       }
-    } catch (e) {
+    } catch {
       console.log('⚠️ Impossible de charger l\'état précédent.');
     }
   }
@@ -317,19 +317,11 @@ async function main() {
       continue;
     }
 
-    if (file.startsWith('docs/')) {
-      console.log('🗑️  Règle automatique : Suppression du dossier docs/');
-      runCmd(`git rm -f "${file}"`);
-      stats.auto++;
-      i++;
-      continue;
-    }
-
-    if (file === 'CHANGELOG.md') {
-      console.log('🛡️  Règle automatique : Conservation de CHANGELOG.md');
+    if (file.startsWith('.github/workflows') || file === '.github/workflows' || file.includes('/workflows/')) {
+      console.log('🔄 Règle automatique : Conservation de la version actuelle (mAI) pour les fichiers de workflow GitHub');
       runCmd(`git checkout --ours "${file}"`);
       runCmd(`git add "${file}"`);
-      stats.auto++;
+      stats.ours++;
       i++;
       continue;
     }
@@ -361,7 +353,7 @@ async function main() {
           i++;
           continue;
         }
-      } catch (e) {
+      } catch {
         console.log('❌ Erreur de fusion auto de package.json, passage manuel.');
       }
     }

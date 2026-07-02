@@ -13,7 +13,7 @@ export default {
   'gamification.quests.bonus': 'Obtenir 3 quêtes bonus (1/semaine)',
   'tab.rewardsSettings': 'Paramètres',
   'tab.rewardsQuests': 'Quêtes & Défis',
-  'tab.rewardsBadges': 'Badges & Titres',
+  'tab.rewardsBadges': 'Badges',
   'tab.rewardsLevels': 'Niveau',
   '_cloud.officialProvider': '{{name}} Official Model Service',
   'about.title': 'About',

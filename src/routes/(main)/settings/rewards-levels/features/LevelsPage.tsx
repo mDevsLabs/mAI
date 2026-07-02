@@ -1,7 +1,7 @@
 'use client';
 
 import { Flexbox } from '@lobehub/ui';
-import { Typography, Progress, Table, Input, Select, Tag, Empty, Card, Button } from 'antd';
+import { Typography, Progress, Table, Input, Select, Tag, Empty, Button } from 'antd';
 import { createStaticStyles, useTheme } from 'antd-style';
 import { Search, Trophy, CheckSquare, Award, Download, Lock, MessageSquare, Puzzle, Sparkles, CheckCircle2, Shield, Gift, ListTodo } from 'lucide-react';
 import React, { useState, useMemo } from 'react';
@@ -26,41 +26,38 @@ export const styles = createStaticStyles(({ css, cssVar }) => ({
       to { opacity: 1; transform: translateY(0); }
     }
   `,
-  dashboardRow: css`
+  topRow: css`
     display: flex;
     gap: 24px;
     width: 100%;
     flex-wrap: wrap;
-  `,
-  leftColumn: css`
-    flex: 1;
-    min-width: 340px;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-  `,
-  rightColumn: css`
-    flex: 1.2;
-    min-width: 420px;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-  `,
-  glassCard: css`
-    background: ${cssVar.colorBgContainer} !important;
-    border: 1px solid ${cssVar.colorBorderSecondary} !important;
-    border-radius: 16px !important;
-    padding: 20px !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
-    transition: all 0.3s ease;
+    align-items: stretch;
   `,
   progressCard: css`
+    flex: 1;
+    min-width: 300px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 24px 20px !important;
+    padding: 20px !important;
   `,
+  statsCard: css`
+    flex: 2;
+    min-width: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  `,
+  glassCard: css`
+    background: ${cssVar.colorBgContainer};
+    border: 1px solid ${cssVar.colorBorderSecondary};
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+  `,
+
   levelCircleWrapper: css`
     position: relative;
     width: 160px;
@@ -94,8 +91,8 @@ export const styles = createStaticStyles(({ css, cssVar }) => ({
   `,
   statsGrid: css`
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
     width: 100%;
   `,
   miniStatCard: css`
@@ -103,23 +100,24 @@ export const styles = createStaticStyles(({ css, cssVar }) => ({
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 16px !important;
+    padding: 10px 8px;
     text-align: center;
-    background: ${cssVar.colorBgContainer} !important;
-    border: 1px solid ${cssVar.colorBorderSecondary} !important;
-    border-radius: 12px !important;
+    background: ${cssVar.colorBgContainer};
+    border: 1px solid ${cssVar.colorBorderSecondary};
+    border-radius: 12px;
     transition: all 0.2s ease;
     
     &:hover {
       transform: translateY(-2px);
-      border-color: ${cssVar.colorPrimary} !important;
-      background: rgba(255, 255, 255, 0.02) !important;
+      border-color: ${cssVar.colorPrimary};
+      background: rgba(255, 255, 255, 0.02);
     }
   `,
   rewardList: css`
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
   `,
   rewardListItem: css`
     display: flex;
@@ -134,6 +132,28 @@ export const styles = createStaticStyles(({ css, cssVar }) => ({
     &:hover {
       background: rgba(255, 255, 255, 0.02);
       border-color: ${cssVar.colorPrimaryBorder};
+    }
+  `,
+  level100Card: css`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 140, 0, 0.1));
+    border: 2px solid rgba(255, 215, 0, 0.5);
+    border-radius: 16px;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+    animation: pulseGlow 2s infinite alternate;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      box-shadow: 0 0 40px rgba(255, 215, 0, 0.4);
+      transform: scale(1.02);
+    }
+
+    @keyframes pulseGlow {
+      from { box-shadow: 0 0 20px rgba(255, 215, 0, 0.2); }
+      to { box-shadow: 0 0 40px rgba(255, 215, 0, 0.6); }
     }
   `,
   historyCard: css`
@@ -175,6 +195,10 @@ const LEVEL_REWARDS = [
   { level: 30, name: "Fond d'écran mAI - Niveau 30", url: 'https://upload.fs.fr/odxyhuFB6x.png', desc: "Fond d'écran mAI néon haute fidélité pour votre bureau." },
   { level: 40, name: "Fond d'écran mAI - Niveau 40", url: 'https://upload.fs.fr/iycITGVLDt.png', desc: "Fond d'écran mAI abstrait généré avec le moteur mDevs." },
   { level: 50, name: "Fond d'écran mAI - Niveau 50", url: 'https://upload.fs.fr/rCZU8cmpMm.png', desc: "Le fond d'écran mAI de célébration pour le niveau 50." },
+  { level: 60, name: "Fond d'écran mAI - Niveau 60", url: 'https://upload.fs.fr/bBLIGnciMl.png', desc: "Fond d'écran mAI exclusif pour le niveau 60." },
+  { level: 70, name: "Fond d'écran mAI - Niveau 70", url: 'https://upload.fs.fr/Bc2pcFIXYe.png', desc: "Fond d'écran mAI exclusif pour le niveau 70." },
+  { level: 80, name: "Fond d'écran mAI - Niveau 80", url: 'https://upload.fs.fr/TaVvYn5JHn.png', desc: "Fond d'écran mAI exclusif pour le niveau 80." },
+  { level: 90, name: "Fond d'écran mAI - Niveau 90", url: 'https://upload.fs.fr/pu5AbDHPDs.png', desc: "Fond d'écran mAI exclusif pour le niveau 90." },
   { level: 100, name: 'Logos spéciaux mAI - Niveau 100', url: 'https://upload.fs.fr/fBHTd26bOA.zip', desc: "Collection complète des logos vectoriels mAI spéciaux." },
 ];
 
@@ -208,7 +232,7 @@ export const LevelsPage = () => {
   }, [level]);
 
   const nextReward = useMemo(() => {
-    const rewards = [10, 20, 30, 40, 50, 100];
+    const rewards = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
     const next = rewards.find((r) => r > level);
     return next ? `Niveau ${next}` : 'Max atteint';
   }, [level]);
@@ -342,119 +366,153 @@ export const LevelsPage = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.dashboardRow}>
-        
-        {/* Colonne Gauche : Progression & Statistiques */}
-        <div className={styles.leftColumn}>
-          
-          {/* Card de Progression circulaire */}
-          <Card className={`${styles.glassCard} ${styles.progressCard}`}>
-            <div className={styles.levelCircleWrapper}>
-              <Progress 
-                type="circle" 
-                percent={progressPercent} 
-                size={160} 
-                strokeWidth={5}
-                strokeColor={{ '0%': token.colorPrimary, '100%': token.colorInfo }}
-                format={() => null}
-              />
-              <Flexbox align="center" justify="center" gap={0} style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', height: '100%' }}>
-                <Text type="secondary" style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: 1.5, lineHeight: 1, marginBottom: 2 }}>Niveau</Text>
-                <div className={styles.levelNumber}>{level}</div>
-              </Flexbox>
-            </div>
-            <div className={styles.progressText}>
-              <span style={{ color: 'var(--color-primary)' }}>{currentLevelXp}</span>
-              <span style={{ color: 'var(--color-text-description)', fontWeight: 'normal' }}> / 200 MP</span>
-            </div>
-            <Text type="secondary" style={{ fontSize: 12, marginTop: 8, textAlign: 'center' }}>
-              Encore <strong>{200 - currentLevelXp} MP</strong> pour atteindre le niveau suivant !
-            </Text>
-          </Card>
-
-          {/* Grille de statistiques miniatures (2 colonnes, 3 lignes pour aligner la hauteur) */}
-          <div className={styles.statsGrid}>
-            <Card className={styles.miniStatCard}>
-              <Trophy size={18} style={{ color: 'var(--color-warning)', marginBottom: 4 }} />
-              <Text type="secondary" style={{ fontSize: 11, display: 'block', marginBottom: 2 }}>MP Total</Text>
-              <span style={{ fontSize: 15, fontWeight: 'bold' }}>{xp}</span>
-            </Card>
-            <Card className={styles.miniStatCard}>
-              <CheckSquare size={18} style={{ color: 'var(--color-success)', marginBottom: 4 }} />
-              <Text type="secondary" style={{ fontSize: 11, display: 'block', marginBottom: 2 }}>Actions</Text>
-              <span style={{ fontSize: 15, fontWeight: 'bold' }}>{totalActions}</span>
-            </Card>
-            <Card className={styles.miniStatCard}>
-              <Award size={18} style={{ color: 'var(--color-primary)', marginBottom: 4 }} />
-              <Text type="secondary" style={{ fontSize: 11, display: 'block', marginBottom: 2 }}>Badges</Text>
-              <span style={{ fontSize: 15, fontWeight: 'bold' }}>{unlockedBadges.length}</span>
-            </Card>
-            <Card className={styles.miniStatCard}>
-              <ListTodo size={18} style={{ color: 'var(--color-info)', marginBottom: 4 }} />
-              <Text type="secondary" style={{ fontSize: 11, display: 'block', marginBottom: 2 }}>Quêtes</Text>
-              <span style={{ fontSize: 15, fontWeight: 'bold' }}>{completedQuests}</span>
-            </Card>
-            <Card className={styles.miniStatCard}>
-              <Shield size={18} style={{ color: 'var(--color-warning)', marginBottom: 4 }} />
-              <Text type="secondary" style={{ fontSize: 11, display: 'block', marginBottom: 2 }}>Grade</Text>
-              <span style={{ fontSize: 15, fontWeight: 'bold' }}>{userGrade}</span>
-            </Card>
-            <Card className={styles.miniStatCard}>
-              <Gift size={18} style={{ color: 'var(--color-primary)', marginBottom: 4 }} />
-              <Text type="secondary" style={{ fontSize: 11, display: 'block', marginBottom: 2 }}>Cadeau Suivant</Text>
-              <span style={{ fontSize: 15, fontWeight: 'bold' }}>{nextReward}</span>
-            </Card>
+      <div className={styles.topRow}>
+        {/* Card de Progression circulaire */}
+        <div className={`${styles.glassCard} ${styles.progressCard}`}>
+          <div className={styles.levelCircleWrapper}>
+            <Progress 
+              type="circle" 
+              percent={progressPercent} 
+              size={160} 
+              strokeWidth={5}
+              strokeColor={{ '0%': token.colorPrimary, '100%': token.colorInfo }}
+              format={() => null}
+            />
+            <Flexbox align="center" justify="center" gap={0} style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', height: '100%' }}>
+              <Text type="secondary" style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: 1.5, lineHeight: 1, marginBottom: 2 }}>Niveau</Text>
+              <div className={styles.levelNumber}>{level}</div>
+            </Flexbox>
           </div>
-
+          <div className={styles.progressText}>
+            <span style={{ color: 'var(--color-primary)' }}>{currentLevelXp}</span>
+            <span style={{ color: 'var(--color-text-description)', fontWeight: 'normal' }}> / 200 MP</span>
+          </div>
+          <Text type="secondary" style={{ fontSize: 12, marginTop: 8, textAlign: 'center' }}>
+            Encore <strong>{200 - currentLevelXp} MP</strong> pour atteindre le niveau suivant !
+          </Text>
         </div>
 
-        {/* Colonne Droite : Récompenses débloquées */}
-        <div className={styles.rightColumn}>
-          <Card className={styles.glassCard} style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-            <Title level={4} style={{ margin: 0, marginBottom: 4 }}>Récompenses de niveau</Title>
-            <Text type="secondary" style={{ display: 'block', marginBottom: 16, fontSize: 13 }}>
-              Débloquez et téléchargez vos fonds d'écran et logos exclusifs.
-            </Text>
-            
-            <div className={styles.rewardList}>
-              {LEVEL_REWARDS.map((r) => {
-                const isUnlocked = level >= r.level;
-                return (
-                  <div className={styles.rewardListItem} key={r.level} style={{ opacity: isUnlocked ? 1 : 0.65 }}>
-                    <Flexbox gap={2} style={{ flex: 1, paddingRight: 12 }}>
-                      <Flexbox horizontal align="center" gap={8}>
-                        <Tag color={isUnlocked ? 'success' : 'default'} style={{ fontWeight: 'bold', fontSize: 11 }}>
-                          Lv. {r.level}
-                        </Tag>
-                        <span style={{ fontWeight: '600', fontSize: 13 }}>{r.name}</span>
-                      </Flexbox>
-                      <Text type="secondary" style={{ fontSize: 11, marginTop: 2 }}>{r.desc}</Text>
-                    </Flexbox>
-                    <Button
-                      type={isUnlocked ? 'primary' : 'default'}
-                      disabled={!isUnlocked}
-                      size="small"
-                      icon={isUnlocked ? <Download size={12} /> : <Lock size={12} />}
-                      onClick={() => {
-                        if (isUnlocked) {
-                          window.open(r.url, '_blank');
-                        }
-                      }}
-                      style={{ fontSize: 12 }}
-                    >
-                      {isUnlocked ? 'Télécharger' : 'Verrouillé'}
-                    </Button>
-                  </div>
-                );
-              })}
+        {/* Card de Statistiques contenant la grille */}
+        <div className={`${styles.glassCard} ${styles.statsCard}`}>
+          <Title level={5} style={{ margin: 0, marginBottom: 16 }}>Statistiques de progression</Title>
+          <div className={styles.statsGrid}>
+            <div className={styles.miniStatCard}>
+              <Trophy size={15} style={{ color: 'var(--color-warning)', marginBottom: 4 }} />
+              <Text type="secondary" style={{ fontSize: 10, display: 'block', marginBottom: 2 }}>MP Total</Text>
+              <span style={{ fontSize: 13, fontWeight: 'bold' }}>{xp}</span>
             </div>
-          </Card>
+            <div className={styles.miniStatCard}>
+              <CheckSquare size={15} style={{ color: 'var(--color-success)', marginBottom: 4 }} />
+              <Text type="secondary" style={{ fontSize: 10, display: 'block', marginBottom: 2 }}>Actions</Text>
+              <span style={{ fontSize: 13, fontWeight: 'bold' }}>{totalActions}</span>
+            </div>
+            <div className={styles.miniStatCard}>
+              <Award size={15} style={{ color: 'var(--color-primary)', marginBottom: 4 }} />
+              <Text type="secondary" style={{ fontSize: 10, display: 'block', marginBottom: 2 }}>Badges</Text>
+              <span style={{ fontSize: 13, fontWeight: 'bold' }}>{unlockedBadges.length}</span>
+            </div>
+            <div className={styles.miniStatCard}>
+              <ListTodo size={15} style={{ color: 'var(--color-info)', marginBottom: 4 }} />
+              <Text type="secondary" style={{ fontSize: 10, display: 'block', marginBottom: 2 }}>Quêtes</Text>
+              <span style={{ fontSize: 13, fontWeight: 'bold' }}>{completedQuests}</span>
+            </div>
+            <div className={styles.miniStatCard}>
+              <Shield size={15} style={{ color: 'var(--color-warning)', marginBottom: 4 }} />
+              <Text type="secondary" style={{ fontSize: 10, display: 'block', marginBottom: 2 }}>Grade</Text>
+              <span style={{ fontSize: 13, fontWeight: 'bold' }}>{userGrade}</span>
+            </div>
+            <div className={styles.miniStatCard}>
+              <Gift size={15} style={{ color: 'var(--color-primary)', marginBottom: 4 }} />
+              <Text type="secondary" style={{ fontSize: 10, display: 'block', marginBottom: 2 }}>Cadeau Suivant</Text>
+              <span style={{ fontSize: 13, fontWeight: 'bold' }}>{nextReward}</span>
+            </div>
+          </div>
         </div>
+      </div>
 
+      {/* Section Récompenses */}
+      <div className={styles.glassCard} style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+        <Title level={4} style={{ margin: 0, marginBottom: 4 }}>Récompenses de niveau</Title>
+        <Text type="secondary" style={{ display: 'block', marginBottom: 24, fontSize: 13 }}>
+          Débloquez et téléchargez vos fonds d'écran et logos exclusifs.
+        </Text>
+        
+        <div className={styles.rewardList}>
+          {LEVEL_REWARDS.filter(r => r.level < 100).map((r) => {
+            const isUnlocked = level >= r.level;
+            return (
+              <div className={styles.rewardListItem} key={r.level} style={{ opacity: isUnlocked ? 1 : 0.65 }}>
+                <Flexbox gap={2} style={{ flex: 1, paddingRight: 12 }}>
+                  <Flexbox horizontal align="center" gap={8}>
+                    <Tag color={isUnlocked ? 'success' : 'default'} style={{ fontWeight: 'bold', fontSize: 11 }}>
+                      Lv. {r.level}
+                    </Tag>
+                    <span style={{ fontWeight: '600', fontSize: 13 }}>{r.name}</span>
+                  </Flexbox>
+                  <Text type="secondary" style={{ fontSize: 11, marginTop: 2 }}>{r.desc}</Text>
+                </Flexbox>
+                <Button
+                  type={isUnlocked ? 'primary' : 'default'}
+                  disabled={!isUnlocked}
+                  size="small"
+                  icon={isUnlocked ? <Download size={12} /> : <Lock size={12} />}
+                  onClick={() => {
+                    if (isUnlocked) {
+                      window.open(r.url, '_blank');
+                    }
+                  }}
+                  style={{ fontSize: 12 }}
+                >
+                  {isUnlocked ? 'Télécharger' : 'Verrouillé'}
+                </Button>
+              </div>
+            );
+          })}
+        </div>
+        
+        {/* Special Level 100 Reward */}
+        {(() => {
+          const r = LEVEL_REWARDS.find(r => r.level === 100);
+          if (!r) return null;
+          const isUnlocked = level >= r.level;
+          return (
+            <div className={styles.level100Card} style={{ opacity: isUnlocked ? 1 : 0.8 }}>
+              <Flexbox gap={8} style={{ flex: 1, paddingRight: 24 }}>
+                <Flexbox horizontal align="center" gap={12}>
+                  <Tag color={isUnlocked ? 'gold-inverse' : 'default'} style={{ fontWeight: '900', fontSize: 14, padding: '4px 12px' }}>
+                    🏆 LÉGENDE LV. 100
+                  </Tag>
+                  <span style={{ fontWeight: '900', fontSize: 18, color: isUnlocked ? '#FFA500' : 'var(--color-text)' }}>{r.name}</span>
+                </Flexbox>
+                <Text type="secondary" style={{ fontSize: 14 }}>{r.desc}</Text>
+              </Flexbox>
+              <Button
+                type="primary"
+                disabled={!isUnlocked}
+                size="large"
+                icon={isUnlocked ? <Download size={16} /> : <Lock size={16} />}
+                onClick={() => {
+                  if (isUnlocked) {
+                    window.open(r.url, '_blank');
+                  }
+                }}
+                style={{ 
+                  fontSize: 14, 
+                  fontWeight: 'bold', 
+                  backgroundColor: isUnlocked ? '#FFA500' : undefined,
+                  borderColor: isUnlocked ? '#FFA500' : undefined,
+                  boxShadow: isUnlocked ? '0 0 15px rgba(255, 165, 0, 0.5)' : 'none'
+                }}
+              >
+                {isUnlocked ? 'Déverrouiller le Graal' : 'Niveau 100 Requis'}
+              </Button>
+            </div>
+          );
+        })()}
       </div>
 
       {/* Section Historique complète */}
-      <Card className={`${styles.glassCard} ${styles.historyCard}`}>
+      <div className={`${styles.glassCard} ${styles.historyCard}`}>
         <Title level={4} style={{ margin: 0, marginBottom: 16 }}>Historique des gains</Title>
         
         <div className={styles.toolbar}>
@@ -513,7 +571,7 @@ export const LevelsPage = () => {
           className={styles.historyTable}
           locale={{ emptyText: <Empty description="Aucun historique disponible." image={Empty.PRESENTED_IMAGE_SIMPLE} /> }}
         />
-      </Card>
+      </div>
     </div>
   );
 };

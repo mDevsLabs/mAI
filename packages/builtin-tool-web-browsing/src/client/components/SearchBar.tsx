@@ -4,11 +4,10 @@ import {
   Checkbox,
   Flexbox,
   SearchBar as Search,
-  Segmented,
-  Select,
   Text,
   Tooltip,
 } from '@lobehub/ui';
+import { Segmented, Select } from '@lobehub/ui/base-ui';
 import { createStaticStyles } from 'antd-style';
 import type { ReactNode } from 'react';
 import { memo, useState } from 'react';

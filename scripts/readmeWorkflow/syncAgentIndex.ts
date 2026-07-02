@@ -49,7 +49,9 @@ const runAgentTable = async (lang?: string) => {
   consola.success(`Sync ${lang || 'en-US'} agent index success!`);
 };
 
-export default async () => {
+const syncAgentIndex = async () => {
   await runAgentTable();
   await runAgentTable('zh-CN');
 };
+
+export default syncAgentIndex;

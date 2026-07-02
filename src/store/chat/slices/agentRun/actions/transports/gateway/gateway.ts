@@ -4,7 +4,12 @@ import {
   type AgentStreamEvent,
   type ConnectionStatus,
 } from '@lobechat/agent-gateway-client';
-import type { ConversationContext, ExecAgentResult, MessageMetadata } from '@lobechat/types';
+import type {
+  ChatTopicMetadata,
+  ConversationContext,
+  ExecAgentResult,
+  MessageMetadata,
+} from '@lobechat/types';
 
 import { isDesktop } from '@/const/version';
 import { aiAgentService, type ResumeApprovalParam } from '@/services/aiAgent';
@@ -16,6 +21,7 @@ import { chatConfigByIdSelectors } from '@/store/agent/selectors';
 import { consumePendingTopicRepos, getPendingTopicRepos } from '@/store/chat/pendingTopicRepos';
 import { topicSelectors } from '@/store/chat/selectors';
 import type { ChatStore } from '@/store/chat/store';
+import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import type { StoreSetter } from '@/store/types';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors, toolInterventionSelectors } from '@/store/user/selectors';
@@ -365,6 +371,8 @@ export class GatewayActionImpl {
     metadata?: Pick<MessageMetadata, 'trigger'>;
     /** Called when the gateway session completes (agent finished running) */
     onComplete?: () => void;
+    /** Temporary sidebar topic inserted by sendMessage before the server creates the real topic. */
+    optimisticTopic?: { id: string; metadata?: ChatTopicMetadata; title: string };
     /** Parent message ID for regeneration/continue (skip user message creation, branch from this message) */
     parentMessageId?: string;
     /**
@@ -397,6 +405,7 @@ export class GatewayActionImpl {
       message,
       metadata,
       onComplete,
+      optimisticTopic,
       parentMessageId,
       parentOperationId,
       resumeApproval,
@@ -487,6 +496,20 @@ export class GatewayActionImpl {
     if (isCreateNewTopic && result.topicId) {
       // Topic created successfully — now safe to clear the pending repo selection.
       if (context.agentId) consumePendingTopicRepos(context.agentId);
+      if (optimisticTopic) {
+        const topicMetadata = optimisticTopic.metadata ?? initialTopicMetadata;
+        this.#get().internal_replaceTopicId({
+          agentId: context.agentId,
+          groupId: context.groupId,
+          nextId: result.topicId,
+          previousId: optimisticTopic.id,
+          value: {
+            ...(topicMetadata ? { metadata: topicMetadata } : {}),
+            ...(context.groupId ? {} : { sessionId: context.agentId }),
+            title: optimisticTopic.title,
+          },
+        });
+      }
       try {
         const newContext = { ...context, topicId: result.topicId };
         const messages = await messageService.getMessages(newContext);
@@ -518,9 +541,10 @@ export class GatewayActionImpl {
 
     // Use the server-created topicId for the execution context
     const execContext = { ...context, topicId: result.topicId };
+    this.#get().moveQueuedMessages(messageMapKey(context), messageMapKey(execContext));
 
     if (result.topicId) {
-      this.#get().internal_updateTopicLoading(result.topicId, true);
+      if (!optimisticTopic) this.#get().internal_updateTopicLoading(result.topicId, true);
       void this.#get().updateTopicStatus?.({
         agentId: context.agentId,
         groupId: context.groupId,

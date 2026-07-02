@@ -1,4 +1,7 @@
 {
+  "asyncState.desc": "加载时出了点问题，请重试。",
+  "asyncState.metricLabel": "加载失败",
+  "asyncState.title": "加载失败",
   "error.backHome": "返回首页",
   "error.desc": "页面暂时不可用。你可以返回首页，或稍后重试（你的设置不会因此丢失）",
   "error.retry": "重新加载",
@@ -9,6 +12,9 @@
   "exceededContext.title": "上下文窗口超出限制",
   "fetchError.detail": "查看详情",
   "fetchError.title": "请求未能完成",
+  "forbidden.backHome": "返回首页",
+  "forbidden.desc": "你没有权限访问该页面。如需访问，请联系空间所有者",
+  "forbidden.title": "无权访问",
   "import.importConfigFile.description": "原因：{{reason}}",
   "import.importConfigFile.title": "导入遇到了问题",
   "import.incompatible.description": "该文件由更高版本导出。请升级到最新版后再导入",
