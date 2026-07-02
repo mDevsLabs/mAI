@@ -117,8 +117,8 @@ export const styles = createStaticStyles(({ css, cssVar }) => ({
     }
   `,
   rewardList: css`
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 12px;
   `,
   rewardListItem: css`
@@ -175,6 +175,10 @@ const LEVEL_REWARDS = [
   { level: 30, name: "Fond d'écran mAI - Niveau 30", url: 'https://upload.fs.fr/odxyhuFB6x.png', desc: "Fond d'écran mAI néon haute fidélité pour votre bureau." },
   { level: 40, name: "Fond d'écran mAI - Niveau 40", url: 'https://upload.fs.fr/iycITGVLDt.png', desc: "Fond d'écran mAI abstrait généré avec le moteur mDevs." },
   { level: 50, name: "Fond d'écran mAI - Niveau 50", url: 'https://upload.fs.fr/rCZU8cmpMm.png', desc: "Le fond d'écran mAI de célébration pour le niveau 50." },
+  { level: 60, name: "Fond d'écran mAI - Niveau 60", url: 'https://upload.fs.fr/bBLIGnciMl.png', desc: "Fond d'écran mAI exclusif pour le niveau 60." },
+  { level: 70, name: "Fond d'écran mAI - Niveau 70", url: 'https://upload.fs.fr/Bc2pcFIXYe.png', desc: "Fond d'écran mAI exclusif pour le niveau 70." },
+  { level: 80, name: "Fond d'écran mAI - Niveau 80", url: 'https://upload.fs.fr/TaVvYn5JHn.png', desc: "Fond d'écran mAI exclusif pour le niveau 80." },
+  { level: 90, name: "Fond d'écran mAI - Niveau 90", url: 'https://upload.fs.fr/pu5AbDHPDs.png', desc: "Fond d'écran mAI exclusif pour le niveau 90." },
   { level: 100, name: 'Logos spéciaux mAI - Niveau 100', url: 'https://upload.fs.fr/fBHTd26bOA.zip', desc: "Collection complète des logos vectoriels mAI spéciaux." },
 ];
 
@@ -208,7 +212,7 @@ export const LevelsPage = () => {
   }, [level]);
 
   const nextReward = useMemo(() => {
-    const rewards = [10, 20, 30, 40, 50, 100];
+    const rewards = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
     const next = rewards.find((r) => r > level);
     return next ? `Niveau ${next}` : 'Max atteint';
   }, [level]);
