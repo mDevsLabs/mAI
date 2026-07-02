@@ -117,3 +117,37 @@ export const SparkleExplosion: React.FC<{ active: boolean; onComplete?: () => vo
     </div>
   );
 };
+
+export interface PremiumCardWrapperProps {
+  active?: boolean;
+  children: React.ReactNode;
+  className?: string;
+  rarity?: string;
+  style?: React.CSSProperties;
+}
+
+export const PremiumCardWrapper: React.FC<PremiumCardWrapperProps> = ({
+  active = true,
+  children,
+  className,
+  rarity,
+  style,
+}) => {
+  if (!active) return <>{children}</>;
+
+  let effectClass = '';
+  if (rarity === 'Mythic') {
+    effectClass = styles.mythicCard;
+  } else if (rarity === 'Ultra') {
+    effectClass = styles.ultraCard;
+  }
+
+  if (!effectClass) return <>{children}</>;
+
+  return (
+    <div className={className ? `${effectClass} ${className}` : effectClass} style={style}>
+      {children}
+    </div>
+  );
+};
+
