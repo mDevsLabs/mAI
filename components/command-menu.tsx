@@ -75,6 +75,13 @@ export function CommandMenu({
                   className="text-xs font-semibold text-slate-500 px-2 py-2"
                 >
                   <Command.Item
+                    onSelect={() => runCommand(() => router.push("/projects/mai-cli"))}
+                    className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer aria-selected:bg-black/5 aria-selected:text-slate-900 transition-colors"
+                  >
+                    <Folder className="w-4 h-4 text-emerald-500" />
+                    <span>mAI CLI - Assistant Terminal & Messagerie</span>
+                  </Command.Item>
+                  <Command.Item
                     onSelect={() => runCommand(() => router.push("/projects/mai"))}
                     className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer aria-selected:bg-black/5 aria-selected:text-slate-900 transition-colors"
                   >

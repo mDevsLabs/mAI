@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Terminal } from "lucide-react";
 import Link from "next/link";
 import { GithubRepoStats } from "@/components/github-repo-stats";
 import Image from "next/image";
@@ -32,16 +32,77 @@ export default function ProjectsPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Project 1 : mSearch */}
+        {/* Project 1 : mAI CLI */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2 }}
-          className="group relative bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 hover:border-blue-500/30 transition-all overflow-hidden shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] hover:shadow-[0_8px_32px_0_rgba(59,130,246,0.2)]"
+          className="group relative bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 hover:border-purple-500/30 transition-all overflow-hidden shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] hover:shadow-[0_8px_32px_0_rgba(168,85,247,0.2)]"
         >
           <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
             <div className="text-6xl font-black italic tracking-tighter select-none text-slate-900">
               01
+            </div>
+          </div>
+
+          <div className="flex flex-col h-full relative z-10">
+            <div className="w-16 h-16 rounded-2xl mb-4 flex items-center justify-center bg-slate-900 text-purple-400 shadow-md">
+              <Terminal className="w-9 h-9" />
+            </div>
+
+            <h2 className="text-3xl font-black mb-2 text-slate-900 flex items-center gap-2">
+              mAI CLI
+            </h2>
+
+            <div className="flex flex-wrap gap-2 mb-4">
+              <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 font-bold uppercase tracking-widest">
+                Accès Anticipé
+              </span>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/40 backdrop-blur-md border border-white/60 shadow-sm text-slate-800 uppercase font-bold tracking-widest">
+                macOS
+              </span>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/40 backdrop-blur-md border border-white/60 shadow-sm text-slate-800 uppercase font-bold tracking-widest">
+                Linux
+              </span>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/40 backdrop-blur-md border border-white/60 shadow-sm text-slate-800 uppercase font-bold tracking-widest">
+                Windows
+              </span>
+            </div>
+
+            <p className="text-purple-600 font-medium mb-4 italic">
+              &quot;L&apos;assistant de développement qui vit dans votre terminal.&quot;
+            </p>
+
+            <p className="text-slate-600 text-sm leading-relaxed mb-3">
+              Un assistant IA natif, gratuit et BYOK, capable de relire des PRs, gérer vos tickets, exécuter des commandes et envoyer des messages (WhatsApp, Discord, X, Reddit) sans quitter le terminal.
+            </p>
+
+            <div className="flex flex-wrap items-center gap-3 my-3">
+              <Link
+                href="/projects/mai-cli"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/40 backdrop-blur-md border border-white/60 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] text-slate-900 font-bold hover:bg-white/60 transition-all w-fit"
+              >
+                Découvrir mAI CLI
+                <ExternalLink className="w-4 h-4" />
+              </Link>
+            </div>
+
+            <div className="mt-auto">
+              <GithubRepoStats repo="mDevsLabs/mAI-CLI" />
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Project 2 : mSearch */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.3 }}
+          className="group relative bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 hover:border-blue-500/30 transition-all overflow-hidden shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] hover:shadow-[0_8px_32px_0_rgba(59,130,246,0.2)]"
+        >
+          <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+            <div className="text-6xl font-black italic tracking-tighter select-none text-slate-900">
+              02
             </div>
           </div>
 
@@ -96,16 +157,16 @@ export default function ProjectsPage() {
           </div>
         </motion.div>
 
-        {/* Project 2 : Snob */}
+        {/* Project 3 : Snob */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.4 }}
           className="group relative bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 hover:border-amber-500/30 transition-all overflow-hidden shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] hover:shadow-[0_8px_32px_0_rgba(245,158,11,0.2)]"
         >
           <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
             <div className="text-6xl font-black italic tracking-tighter select-none text-slate-900">
-              02
+              03
             </div>
           </div>
 
@@ -156,27 +217,27 @@ export default function ProjectsPage() {
           </div>
         </motion.div>
 
-        {/* Project 3 : mAI */}
+        {/* Project 4 : mAI */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.4 }}
-          className="group relative bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 hover:border-purple-500/30 transition-all overflow-hidden shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] hover:shadow-[0_8px_32px_0_rgba(168,85,247,0.2)] md:col-span-2 lg:col-span-1"
+          transition={{ delay: 0.5 }}
+          className="group relative bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 hover:border-purple-500/30 transition-all overflow-hidden shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] hover:shadow-[0_8px_32px_0_rgba(168,85,247,0.2)]"
         >
           <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
             <div className="text-6xl font-black italic tracking-tighter select-none text-slate-900">
-              03
+              04
             </div>
           </div>
 
           <div className="flex flex-col h-full relative z-10">
-            <div className="w-20 h-20 rounded-full bg-white/30 backdrop-blur-md border border-white/60 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] mb-4 flex items-center justify-center p-3">
+            <div className="w-16 h-16 rounded-full bg-white/30 backdrop-blur-md border border-white/60 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] mb-4 flex items-center justify-center p-2.5">
               <Image
                 src="/mai.png"
                 alt="mAI logo"
-                width={80}
-                height={80}
-                sizes="80px"
+                width={64}
+                height={64}
+                sizes="64px"
                 className="w-full h-full object-contain drop-shadow-md"
               />
             </div>
