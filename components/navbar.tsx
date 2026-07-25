@@ -32,9 +32,9 @@ const navLinks: NavItem[] = [
     subitems: [
       { name: "Tout", href: "/projects" },
       { name: "mAI CLI", href: "/projects/mai-cli" },
-      { name: "mAI", href: "/projects/mai" },
       { name: "mSearch", href: "/projects/msearch" },
       { name: "Snob", href: "/projects/snob" },
+      { name: "mAI", href: "/projects/mai" },
     ],
   },
   {

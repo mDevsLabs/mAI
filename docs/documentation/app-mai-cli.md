@@ -42,11 +42,6 @@ powershell -ExecutionPolicy Bypass -c "irm https://raw.githubusercontent.com/mDe
 powershell -ExecutionPolicy Bypass -c "irm https://raw.githubusercontent.com/mDevsLabs/mAI-CLI/canary/scripts/install-canary.ps1 | iex"
 ```
 
-### Via npm (Paquet global)
-```bash
-npm i -g @mdevs/mai-cli
-```
-
 ### Depuis les sources
 ```bash
 git clone https://github.com/mDevsLabs/mAI-CLI.git

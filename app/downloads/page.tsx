@@ -84,8 +84,8 @@ export default function DownloadPage() {
                 </p>
                 <div className="mt-3 flex flex-col gap-2 max-w-md">
                   <div className="p-3 rounded-xl bg-slate-950 text-slate-100 font-mono text-xs border border-slate-800 shadow-inner flex flex-col gap-1">
-                    <span className="text-slate-500 text-[10px] uppercase font-bold tracking-wider">mAI CLI (npm)</span>
-                    <code className="text-slate-100 font-semibold">npm i @mdevs/mai-cli</code>
+                    <span className="text-slate-500 text-[10px] uppercase font-bold tracking-wider">mAI CLI (Homebrew)</span>
+                    <code className="text-slate-100 font-semibold">brew install mDevsLabs/mAI-CLI/mai</code>
                   </div>
                 </div>
               </div>
@@ -93,10 +93,10 @@ export default function DownloadPage() {
 
             <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
               <button
-                onClick={() => handleCopy("npm i @mdevs/mai-cli", "mai-cli-npm", "mAI CLI")}
+                onClick={() => handleCopy("brew install mDevsLabs/mAI-CLI/mai", "mai-cli-brew", "mAI CLI")}
                 className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-purple-600 text-white font-bold hover:bg-purple-700 transition-all shadow-md text-sm cursor-pointer"
               >
-                {copiedKey === "mai-cli-npm" ? (
+                {copiedKey === "mai-cli-brew" ? (
                   <>
                     <Check className="w-4 h-4 text-emerald-400" />
                     Copié !
