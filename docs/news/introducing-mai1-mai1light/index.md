@@ -1,63 +1,1 @@
-# L'IA repensée pour vous : Découvrez mAI-1 et mAI-1-Light
-
-L'intelligence artificielle transforme notre façon de travailler, mais elle soulève souvent une question cruciale : où vont nos données ? Aujourd'hui, nous changeons la donne en vous redonnant le contrôle total de vos informations.
-
-Voici la nouvelle génération de notre assistant IA orienté productivité, conçue pour s'intégrer parfaitement à votre flux de travail. L'objectif est simple : vous offrir un outil surpuissant tournant directement sur votre machine, sans jamais avoir besoin d'envoyer vos données dans le cloud. C'est ce qu'on appelle le "Local-first" : une approche qui garantit une confidentialité absolue et un environnement sécurisé.
-
-Pour s'adapter à toutes les exigences et à toutes les configurations matérielles, cet assistant se décline en deux versions distinctes, toutes deux propulsées par le moteur Ollama.
-
----
-
-![mAI-1](https://upload.fs.fr/YdirFBxLxC.png)
-
-## mAI-1 : Le moteur de puissance et de raisonnement complexe
-
-mAI-1 est la version complète et sans compromis de la famille mAI. Conçu spécifiquement pour les stations de travail et les ordinateurs portables puissants, il est propulsé par le modèle Google Gemma 4 12B Unified. C'est l'outil ultime pour les professionnels et les développeurs faisant face à des défis techniques ardus.
-
-* Raisonnement avancé : Il ne se contente pas de répondre, il analyse. Il est capable de gérer des tâches complexes, d'établir des planifications détaillées et d'effectuer du raisonnement en plusieurs étapes (multi-step reasoning).
-* Assistant de développement complet : C'est votre binôme pour le code. Il gère la génération de code, le refactoring, le débogage complexe, la création de scripts, l'intégration d'API et la rédaction de documentations techniques approfondies.
-* Analyse Multimodale : Ne vous limitez plus au texte, mAI-1 est capable d'analyser des images directement via Ollama, idéal pour décortiquer des schémas, des architectures ou des maquettes.
-* Contexte ultra-large : Il possède une capacité de rétention allant jusqu'à 256 000 tokens (en fonction de la mémoire de votre machine), ce qui le rend parfait pour ingérer, synthétiser et interroger de très longs documents ou des bases de code entières sans perdre le fil.
-* Prêt pour l'écosystème : Totalement "Agent-ready" (compatible avec le tool/function calling selon l'intégration) et "RAG-ready", il est taillé sur mesure pour s'intégrer dans des pipelines de recherche documentaire avancée et d'extraction de données.
-
-### 📊 Benchmarks de mAI-1
-
-mAI-1 se distingue par des performances exceptionnelles pour sa catégorie de taille, rivalisant avec des modèles bien plus lourds sur les tâches de raisonnement et de compréhension de code :
-
-:::flex
-![mAI-1 Benchmark 1](/mai-1/mai-1-benchmark-1.png)
-![mAI-1 Benchmark 2](/mai-1/mai-1-benchmark-2.png)
-:::
-
----
-
-![mAI-1-Light](https://upload.fs.fr/8P7ceTZ0wf.png)
-
-## mAI-1-Light : L'efficacité et la vitesse au quotidien
-
-Si vous recherchez un assistant IA ultra-réactif ou si vous travaillez sur une machine aux caractéristiques matérielles plus modestes, mAI-1-Light est la solution idéale. Propulsé par le modèle IBM Granite 4.1 3B, il est optimisé pour la rapidité sans pour autant sacrifier son utilité au quotidien.
-
-* Légèreté et fluidité : Conçu pour s'exécuter avec une grande rapidité, c'est un modèle "Local-first" avec une approche épurée, idéal pour offrir d'excellentes performances sur des configurations standards.
-* Assistant généraliste tout-terrain : Votre copilote pour toutes les tâches quotidiennes telles que les questions/réponses, la rédaction de contenus, la reformulation claire ou encore les sessions de brainstorming.
-* Synthèse éclair : Il excelle dans le résumé et l'extraction d'informations clés à partir de documents massifs, de notes de réunion, d'articles web ou même de fichiers logs complexes.
-* Support au code ciblé : Il reste une aide précieuse pour les développeurs, toujours disponible pour générer des fonctions, expliquer des blocs de code, vous aider au refactoring ou vous assister dans le débogage.
-* Connectivité et Polyvalence : Tout comme son grand frère, il est "RAG-ready" et préparé pour l'appel de fonctions. De plus, c'est un véritable polyglotte qui maîtrise couramment le français, l'anglais, l'espagnol, l'allemand, le japonais, le portugais, l'arabe, l'italien, le coréen, le chinois, et bien d'autres langues.
-
-### 📊 Benchmarks de mAI-1-Light
-
-mAI-1-Light affiche un excellent ratio performance/taille, garantissant une exécution ultra-rapide en local tout en conservant d'excellents scores sur les benchmarks standards :
-
-:::flex
-![mAI-1-Light Benchmark 1](/mai-1-light/mai-1-light-benchmark-1.png)
-![mAI-1-Light Benchmark 2](/mai-1-light/mai-1-light-benchmark-2.png)
-:::
-
----
-
-## Pourquoi intégrer la famille mAI à votre workflow ?
-
-L'avantage majeur de mAI-1 et mAI-1-Light réside dans leur fonctionnement "Local-first"[cite: 1, 2]. Vos codes sources, vos documents internes et vos requêtes restent confinés sur votre ordinateur[cite: 1, 2]. Aucune donnée ne transite vers des serveurs externes. C'est l'équilibre parfait entre la performance d'une intelligence artificielle de pointe et la sécurité absolue de vos données.
-
-### Prêt à transformer votre productivité ?
-
-Le déploiement est immédiat. Il vous suffit de [télécharger l'outil Ollama](https://ollama.com/download) sur votre machine pour lancer le modèle de votre choix en quelques secondes et bénéficier de toute la puissance de l'IA en local. Vous pouvez aussi le télécharger via Hugging Face : [Hugging Face](https://huggingface.co/mDevsLabs).
+# L'IA repensée pour vous : Découvrez mAI-1 et mAI-1-LightL'intelligence artificielle transforme notre façon de travailler, mais elle soulève souvent une question cruciale : où vont nos données ? Aujourd'hui, nous changeons la donne en vous redonnant le contrôle total de vos informations.Voici la nouvelle génération de notre assistant IA orienté productivité, conçue pour s'intégrer parfaitement à votre flux de travail. L'objectif est simple : vous offrir un outil surpuissant tournant directement sur votre machine, sans jamais avoir besoin d'envoyer vos données dans le cloud. C'est ce qu'on appelle le "Local-first" : une approche qui garantit une confidentialité absolue et un environnement sécurisé.Pour s'adapter à toutes les exigences et à toutes les configurations matérielles, cet assistant se décline en deux versions distinctes, toutes deux propulsées par le moteur Ollama.\---!\[mAI-1](https://upload.fs.fr/YdirFBxLxC.png)## mAI-1 : Le moteur de puissance et de raisonnement complexemAI-1 est la version complète et sans compromis de la famille mAI. Conçu spécifiquement pour les stations de travail et les ordinateurs portables puissants, il est propulsé par le modèle Google Gemma 4 12B Unified. C'est l'outil ultime pour les professionnels et les développeurs faisant face à des défis techniques ardus.* Raisonnement avancé : Il ne se contente pas de répondre, il analyse. Il est capable de gérer des tâches complexes, d'établir des planifications détaillées et d'effectuer du raisonnement en plusieurs étapes (multi-step reasoning).* Assistant de développement complet : C'est votre binôme pour le code. Il gère la génération de code, le refactoring, le débogage complexe, la création de scripts, l'intégration d'API et la rédaction de documentations techniques approfondies.* Analyse Multimodale : Ne vous limitez plus au texte, mAI-1 est capable d'analyser des images directement via Ollama, idéal pour décortiquer des schémas, des architectures ou des maquettes.* Contexte ultra-large : Il possède une capacité de rétention allant jusqu'à 256 000 tokens (en fonction de la mémoire de votre machine), ce qui le rend parfait pour ingérer, synthétiser et interroger de très longs documents ou des bases de code entières sans perdre le fil.* Prêt pour l'écosystème : Totalement "Agent-ready" (compatible avec le tool/function calling selon l'intégration) et "RAG-ready", il est taillé sur mesure pour s'intégrer dans des pipelines de recherche documentaire avancée et d'extraction de données.\---!\[mAI-1-Light](https://upload.fs.fr/8P7ceTZ0wf.png)## mAI-1-Light : L'efficacité et la vitesse au quotidienSi vous recherchez un assistant IA ultra-réactif ou si vous travaillez sur une machine aux caractéristiques matérielles plus modestes, mAI-1-Light est la solution idéale. Propulsé par le modèle IBM Granite 4.1 3B, il est optimisé pour la rapidité sans pour autant sacrifier son utilité au quotidien.* Légèreté et fluidité : Conçu pour s'exécuter avec une grande rapidité, c'est un modèle "Local-first" avec une approche épurée, idéal pour offrir d'excellentes performances sur des configurations standards.* Assistant généraliste tout-terrain : Votre copilote pour toutes les tâches quotidiennes telles que les questions/réponses, la rédaction de contenus, la reformulation claire ou encore les sessions de brainstorming.* Synthèse éclair : Il excelle dans le résumé et l'extraction d'informations clés à partir de documents massifs, de notes de réunion, d'articles web ou même de fichiers logs complexes.* Support au code ciblé : Il reste une aide précieuse pour les développeurs, toujours disponible pour générer des fonctions, expliquer des blocs de code, vous aider au refactoring ou vous assister dans le débogage.* Connectivité et Polyvalence : Tout comme son grand frère, il est "RAG-ready" et préparé pour l'appel de fonctions. De plus, c'est un véritable polyglotte qui maîtrise couramment le français, l'anglais, l'espagnol, l'allemand, le japonais, le portugais, l'arabe, l'italien, le coréen, le chinois, et bien d'autres langues.\---## Pourquoi intégrer la famille mAI à votre workflow ?L'avantage majeur de mAI-1 et mAI-1-Light réside dans leur fonctionnement "Local-first"\[cite: 1, 2]. Vos codes sources, vos documents internes et vos requêtes restent confinés sur votre ordinateur\[cite: 1, 2]. Aucune donnée ne transite vers des serveurs externes. C'est l'équilibre parfait entre la performance d'une intelligence artificielle de pointe et la sécurité absolue de vos données.### Prêt à transformer votre productivité ?Le déploiement est immédiat. Il vous suffit de [télécharger l'outil Ollama](https://ollama.com/download) sur votre machine pour lancer le modèle de votre choix en quelques secondes et bénéficier de toute la puissance de l'IA en local.
