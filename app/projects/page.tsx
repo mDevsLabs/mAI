@@ -285,6 +285,72 @@ export default function ProjectsPage() {
             </div>
           </div>
         </motion.div>
+
+        {/* Project 5 : OpenProvider */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.6 }}
+          className="group relative bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 hover:border-pink-500/30 transition-all overflow-hidden shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] hover:shadow-[0_8px_32px_0_rgba(236,72,153,0.2)]"
+        >
+          <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+            <div className="text-6xl font-black italic tracking-tighter select-none text-slate-900">
+              05
+            </div>
+          </div>
+
+          <div className="flex flex-col h-full relative z-10">
+            <div className="w-16 h-16 rounded-xl mb-4 flex items-center justify-center">
+              <Image
+                src="/openprovider.png"
+                alt="OpenProvider logo"
+                width={64}
+                height={64}
+                sizes="64px"
+                className="w-full h-full object-contain drop-shadow-md rounded-2xl"
+              />
+            </div>
+
+            <h2 className="text-3xl font-black mb-2 text-slate-900">OpenProvider</h2>
+
+            <div className="flex flex-wrap gap-2 mb-4">
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/40 backdrop-blur-md border border-white/60 shadow-sm text-slate-800 uppercase font-bold tracking-widest">
+                CLI
+              </span>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/40 backdrop-blur-md border border-white/60 shadow-sm text-slate-800 uppercase font-bold tracking-widest">
+                Windows
+              </span>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/40 backdrop-blur-md border border-white/60 shadow-sm text-slate-800 uppercase font-bold tracking-widest">
+                macOS
+              </span>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/40 backdrop-blur-md border border-white/60 shadow-sm text-slate-800 uppercase font-bold tracking-widest">
+                Linux
+              </span>
+            </div>
+
+            <p className="text-pink-600 font-medium mb-4 italic">
+              &quot;Rendez Codex ouvert !&quot;
+            </p>
+
+            <p className="text-slate-600 text-sm leading-relaxed mb-3">
+              Proxy universel de fournisseurs pour OpenAI Codex, Claude Code, Claude Desktop et Grok Build.
+            </p>
+
+            <div className="flex flex-wrap items-center gap-3 my-3">
+              <Link
+                href="/projects/openprovider"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/40 backdrop-blur-md border border-white/60 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] text-slate-900 font-bold hover:bg-white/60 transition-all w-fit"
+              >
+                Découvrir OpenProvider
+                <ExternalLink className="w-4 h-4" />
+              </Link>
+            </div>
+
+            <div className="mt-auto">
+              <GithubRepoStats repo="mDevsLabs/OpenProvider" />
+            </div>
+          </div>
+        </motion.div>
       </div>
     </div>
   );

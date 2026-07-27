@@ -144,3 +144,56 @@ export function searchDocs(query: string): DocMetadata[] {
     );
   });
 }
+
+function walkDocs(dir: string, baseDir: string): DocMetadata[] {
+  let docs: DocMetadata[] = [];
+  if (!fs.existsSync(dir)) return docs;
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  for (const entry of entries) {
+    if (entry.isDirectory()) {
+      docs = docs.concat(walkDocs(path.join(dir, entry.name), baseDir));
+    } else if (entry.isFile() && entry.name.endsWith('.md')) {
+      const fullPath = path.join(dir, entry.name);
+      const fileContents = fs.readFileSync(fullPath, 'utf8');
+      const { data, content } = matter(fileContents);
+
+      const relativePath = path.relative(baseDir, fullPath);
+      let category = data.category;
+      if (!category) {
+        const dirname = path.dirname(relativePath);
+        if (dirname === '.') {
+          category = 'Général';
+        } else {
+          category = dirname.replace(/\\/g, '/').split('/').map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' - ');
+        }
+      }
+
+      docs.push({
+        slug: relativePath.replace(/\\/g, '/').replace(/\.md$/, ''),
+        title: data.title || entry.name.replace(/\.md$/, ''),
+        description: data.description || '',
+        category,
+        order: typeof data.order === 'number' ? data.order : 999,
+        content,
+      });
+    }
+  }
+  return docs;
+}
+
+export function getOpenProviderDocs(): DocMetadata[] {
+  const docsDirectory = path.join(process.cwd(), 'docs/documentation/openprovider');
+  const docs = walkDocs(docsDirectory, docsDirectory);
+  
+  docs.sort((a, b) => {
+    if (a.category !== b.category) {
+      return a.category.localeCompare(b.category, 'fr');
+    }
+    if (a.order !== b.order) {
+      return a.order - b.order;
+    }
+    return a.title.localeCompare(b.title, 'fr');
+  });
+
+  return docs;
+}
