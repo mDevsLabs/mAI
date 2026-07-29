@@ -66,6 +66,13 @@ const ENDPOINTS: EndpointChoice[] = [
     description: "Liste tous les modèles IA disponibles",
   },
   {
+    id: "get-mai-models",
+    method: "GET",
+    path: "/v1/mai/models",
+    name: "GET /v1/mai/models",
+    description: "Liste les modèles mAI exclusifs",
+  },
+  {
     id: "chat-completions",
     method: "POST",
     path: "/v1/chat/completions",
@@ -86,82 +93,18 @@ const ENDPOINTS: EndpointChoice[] = [
     ),
   },
   {
-    id: "get-model-detail",
-    method: "GET",
-    path: "/v1/models/mai-1",
-    name: "GET /v1/models/mai-1",
-    description: "Obtient les métadonnées détaillées du modèle mAI-1",
-  },
-  {
-    id: "get-model-detail-light",
-    method: "GET",
-    path: "/v1/models/mai-1-light",
-    name: "GET /v1/models/mai-1-light",
-    description: "Obtient les métadonnées détaillées du modèle mAI-1-Light",
-  },
-  {
-    id: "get-model-detail-12-light",
-    method: "GET",
-    path: "/v1/models/mai-1.2-light",
-    name: "GET /v1/models/mai-1.2-light",
-    description: "Obtient les métadonnées détaillées du modèle mAI-1.2-Light",
-  },
-  {
-    id: "get-model-detail-12-apex",
-    method: "GET",
-    path: "/v1/models/mai-1.2-apex",
-    name: "GET /v1/models/mai-1.2-apex",
-    description: "Obtient les métadonnées détaillées du modèle mAI-1.2-Apex",
-  },
-  {
-    id: "get-model-detail-12-opal",
-    method: "GET",
-    path: "/v1/models/mai-1.2-opal",
-    name: "GET /v1/models/mai-1.2-opal",
-    description: "Obtient les métadonnées détaillées du modèle mAI-1.2-Opal",
-  },
-  {
-    id: "create-embeddings",
-    method: "POST",
-    path: "/v1/embeddings",
-    name: "POST /v1/embeddings",
-    description: "Génère des embeddings vectoriels pour un texte donné",
-    defaultBody: JSON.stringify(
-      {
-        model: "text-embedding-mai",
-        input: "mDevsLabs est une équipe passionnée d'intelligence artificielle.",
-      },
-      null,
-      2
-    ),
-  },
-  {
-    id: "content-moderation",
-    method: "POST",
-    path: "/v1/moderations",
-    name: "POST /v1/moderations",
-    description: "Vérifie si un contenu respecte les règles de sécurité",
-    defaultBody: JSON.stringify(
-      {
-        input: "Ceci est un exemple de texte à modérer.",
-      },
-      null,
-      2
-    ),
-  },
-  {
     id: "get-projects",
     method: "GET",
     path: "/v1/projects",
     name: "GET /v1/projects",
-    description: "Liste tous les projets créés par l'utilisateur (Route factice)",
+    description: "Liste tous les projets créés par l'utilisateur",
   },
   {
     id: "create-project",
     method: "POST",
     path: "/v1/projects",
     name: "POST /v1/projects",
-    description: "Création d'un nouveau projet (Route factice)",
+    description: "Création d'un nouveau projet",
     defaultBody: JSON.stringify(
       {
         name: "Projet Alpha",
@@ -175,9 +118,9 @@ const ENDPOINTS: EndpointChoice[] = [
   {
     id: "get-project-detail",
     method: "GET",
-    path: "/v1/projects/proj-12345",
+    path: "/v1/projects/msearch",
     name: "GET /v1/projects/:id",
-    description: "Obtient les détails et statistiques d'un projet (Route factice)",
+    description: "Remplacez 'msearch' par l'ID réel de votre projet pour obtenir ses détails.",
   },
 ];
 
@@ -221,14 +164,15 @@ export default function ApiPage() {
 
   useEffect(() => {
     if (newKeyPlan === "Free" || (newKeyPlan as string) === "gratuit") setNewKeyMaxUsage(500);
-    else if (newKeyPlan === "Plus") setNewKeyMaxUsage(1500);
-    else if (newKeyPlan === "Pro" || (newKeyPlan as string) === "pro") setNewKeyMaxUsage(5000);
-    else if (newKeyPlan === "Max" || (newKeyPlan as string) === "entreprise") setNewKeyMaxUsage(999999999);
+    else if (newKeyPlan === "Plus") setNewKeyMaxUsage(1000);
+    else if (newKeyPlan === "Pro" || (newKeyPlan as string) === "pro") setNewKeyMaxUsage(2000);
+    else if (newKeyPlan === "Max" || (newKeyPlan as string) === "entreprise") setNewKeyMaxUsage(5000);
   }, [newKeyPlan]);
 
   // Playground States
   const [playgroundKey, setPlaygroundKey] = useState("");
   const [selectedEndpointId, setSelectedEndpointId] = useState<string>(ENDPOINTS[0].id);
+  const [snippetEndpointId, setSnippetEndpointId] = useState<string>(ENDPOINTS[1].id); // chat-completions by default
   const [requestBody, setRequestBody] = useState<string>("");
   const [isLoadingRequest, setIsLoadingRequest] = useState(false);
   const [responseStatus, setResponseStatus] = useState<{ code: number; text: string; time?: number } | null>(null);
@@ -272,7 +216,7 @@ export default function ApiPage() {
             name: `Clé API (${k.plan})`,
             createdAt: new Date(k.createdAt).toLocaleDateString("fr-FR"),
             status: "active" as const,
-            maxUsage: k.plan === "Max" ? 10000 : k.plan === "Pro" ? 5000 : k.plan === "Plus" ? 2000 : 1000,
+            maxUsage: k.plan === "Max" ? 5000 : k.plan === "Pro" ? 2000 : k.plan === "Plus" ? 1000 : 500,
             usageCount: k.requestCount,
             note: "Synchronisée depuis la base de données",
             shownOnce: true,
@@ -287,26 +231,7 @@ export default function ApiPage() {
 
     fetchDbKeys();
 
-    // Si aucune clé n'existe, on ne crée plus de fausse clé par défaut 
-    // On attend que l'utilisateur clique sur "Générer"
-    if (keysList.length === 0) {
-      const defaultKey: ApiKey = {
-        id: "key-demo-1",
-        key: generateApiKeyString(),
-        name: "Clé de démonstration",
-        createdAt: new Date().toLocaleDateString("fr-FR"),
-        status: "active",
-        maxUsage: 1000,
-        usageCount: 0,
-        note: "Clé générée automatiquement lors de la première visite",
-        shownOnce: false,
-        plan: "gratuit",
-        ipRestriction: "",
-        domainRestriction: "",
-      };
-      keysList = [defaultKey];
-      localStorage.setItem("mprojects_api_keys", JSON.stringify(keysList));
-    }
+    // (La génération de clé par défaut a été retirée pour forcer l'utilisateur à créer une clé enregistrée)
 
     setApiKeys(keysList);
 
@@ -349,7 +274,15 @@ export default function ApiPage() {
   // Création d'une clé API supplémentaire
   const handleGenerateKey = async () => {
     const userId = user?.username || user?.email || "anonymous";
-    const result = await generateAndSaveApiKey(userId, newKeyPlan);
+    const userPlan = user?.tier || "Free";
+    
+    // Le maxUsage est déterminé par le forfait de l'utilisateur
+    let maxUsg = 1000;
+    if (userPlan === "Plus") maxUsg = 1500;
+    if (userPlan === "Pro") maxUsg = 5000;
+    if (userPlan === "Max") maxUsg = 999999999;
+
+    const result = await generateAndSaveApiKey(userId, userPlan);
     
     let keyStr = "";
     if (result.success && result.apiKey) {
@@ -366,20 +299,18 @@ export default function ApiPage() {
       name: keyName,
       createdAt: new Date().toLocaleDateString("fr-FR"),
       status: "active",
-      maxUsage: newKeyMaxUsage,
+      maxUsage: maxUsg,
       usageCount: 0,
       note: newKeyNote.trim(),
       shownOnce: false,
-      plan: newKeyPlan as "gratuit" | "pro" | "entreprise", // Typage pour correspondre
+      plan: userPlan as any,
       ipRestriction: newKeyIp.trim(),
       domainRestriction: newKeyDomain.trim(),
     };
     const updatedKeys = [newKeyObj, ...apiKeys];
     saveKeysToStorage(updatedKeys);
     setNewKeyName("");
-    setNewKeyMaxUsage(1000);
     setNewKeyNote("");
-    setNewKeyPlan("Free");
     setNewKeyIp("");
     setNewKeyDomain("");
     toast.success(`Clé API "${keyName}" créée avec succès !`, { icon: "🔐" });
@@ -495,119 +426,6 @@ export default function ApiPage() {
 
     const startTime = Date.now();
 
-    // Cas spécifique : POST /v1/chat/completions répond 200 mais indique indisponible dans le playground
-    if (ep.id === "chat-completions") {
-      setTimeout(() => {
-        const duration = Date.now() - startTime;
-        setResponseStatus({ code: 200, text: "200 OK", time: duration + 45 });
-        setResponseData(
-          JSON.stringify(
-            {
-              status: 200,
-              message: "Le service de chat completions (POST /v1/chat/completions) est indisponible dans le Playground.",
-              notice: "Veuillez utiliser un SDK mAI officiel ou une clé API de production avec quota actif.",
-              error: null
-            },
-            null,
-            2
-          )
-        );
-        setIsLoadingRequest(false);
-      }, 350);
-      return;
-    }
-
-    // Données factices réalistes pour les routes d'API
-    const getMockData = () => {
-      let parsedBody: any = {};
-      try {
-        if (requestBody.trim()) parsedBody = JSON.parse(requestBody.trim());
-      } catch {}
-
-      switch (ep.id) {
-        case "get-models":
-          return {
-            object: "list",
-            data: [
-              { id: "mai-1", object: "model", created: 1700000000, owned_by: "mDevsLabs", description: "Modèle mAI standard v1" },
-              { id: "mai-1-light", object: "model", created: 1705000000, owned_by: "mDevsLabs", description: "Modèle mAI ultra-léger et rapide" },
-              { id: "mai-1.2-light", object: "model", created: 1710000000, owned_by: "mDevsLabs", description: "Modèle v1.2 optimisé pour la vitesse" },
-              { id: "mai-1.2-apex", object: "model", created: 1715000000, owned_by: "mDevsLabs", description: "Modèle v1.2 avec haute précision de raisonnement" },
-              { id: "mai-1.2-opal", object: "model", created: 1720000000, owned_by: "mDevsLabs", description: "Modèle flagship mAI v1.2 haute performance" }
-            ]
-          };
-        case "get-model-detail":
-          return { id: "mai-1", object: "model", created: 1700000000, owned_by: "mDevsLabs", context_window: 8192, max_output_tokens: 2048, status: "active" };
-        case "get-model-detail-light":
-          return { id: "mai-1-light", object: "model", created: 1705000000, owned_by: "mDevsLabs", context_window: 4096, max_output_tokens: 1024, status: "active" };
-        case "get-model-detail-12-light":
-          return { id: "mai-1.2-light", object: "model", created: 1710000000, owned_by: "mDevsLabs", context_window: 16384, max_output_tokens: 4096, status: "active" };
-        case "get-model-detail-12-apex":
-          return { id: "mai-1.2-apex", object: "model", created: 1715000000, owned_by: "mDevsLabs", context_window: 32768, max_output_tokens: 8192, status: "active" };
-        case "get-model-detail-12-opal":
-          return { id: "mai-1.2-opal", object: "model", created: 1720000000, owned_by: "mDevsLabs", context_window: 128000, max_output_tokens: 16384, status: "active" };
-        case "create-embeddings":
-          return {
-            object: "list",
-            data: [
-              {
-                object: "embedding",
-                index: 0,
-                embedding: [0.0123, -0.0456, 0.0789, 0.0012, -0.0987, 0.0543, -0.0210, 0.0876, 0.0345, -0.0654, 0.0198, -0.0432, 0.0765, 0.0891, -0.0123]
-              }
-            ],
-            model: parsedBody.model || "text-embedding-mai",
-            usage: { prompt_tokens: 12, total_tokens: 12 }
-          };
-        case "content-moderation":
-          return {
-            id: "modr-789xyz",
-            model: "text-moderation-007",
-            results: [
-              {
-                flagged: false,
-                categories: { sexual: false, hate: false, harassment: false, "self-harm": false, violence: false },
-                category_scores: { sexual: 0.000012, hate: 0.000005, harassment: 0.000034, "self-harm": 0.000001, violence: 0.000045 }
-              }
-            ]
-          };
-        case "get-projects":
-          return {
-            object: "list",
-            data: [
-              { id: "proj-12345", name: "Dashboard SaaS", description: "Application web de statistiques avec React & Tailwind", created_at: "2026-07-20T10:00:00Z", updated_at: "2026-07-28T14:30:00Z", status: "published", isPublic: true },
-              { id: "proj-67890", name: "Assistant IA E-commerce", description: "Chatbot d'assistance aux ventes basé sur mAI-1.2-Apex", created_at: "2026-07-25T16:20:00Z", updated_at: "2026-07-29T11:15:00Z", status: "draft", isPublic: false }
-            ],
-            total: 2
-          };
-        case "create-project":
-          return {
-            id: `proj-${Math.floor(10000 + Math.random() * 90000)}`,
-            name: parsedBody.name || "Projet Alpha",
-            description: parsedBody.description || "Un projet génial généré via l'API",
-            isPublic: parsedBody.isPublic ?? false,
-            status: "created",
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          };
-        case "get-project-detail":
-          return {
-            id: "proj-12345",
-            name: "Dashboard SaaS",
-            description: "Application web de statistiques avec React & Tailwind",
-            created_at: "2026-07-20T10:00:00Z",
-            updated_at: "2026-07-28T14:30:00Z",
-            status: "published",
-            isPublic: true,
-            owner: "dev@mdevslabs.com",
-            deploy_url: "https://dashboard-saas.mprojects.app",
-            metrics: { requests: 14250, active_users: 380, bandwidth_mb: 1280 }
-          };
-        default:
-          return { success: true, message: "Données chargées avec succès" };
-      }
-    };
-
     const url = `${MAI_API_BASE}${ep.path}`;
 
     try {
@@ -625,34 +443,43 @@ export default function ApiPage() {
 
       const res = await fetch(url, init);
       const duration = Date.now() - startTime;
-
-      if (res.ok) {
-        const rawText = await res.text();
-        let formatted: string;
-        try {
-          formatted = JSON.stringify(JSON.parse(rawText), null, 2);
-        } catch {
-          formatted = rawText || "(réponse vide)";
-        }
-        setResponseStatus({
-          code: res.status,
-          text: `${res.status} ${res.statusText || ""}`.trim(),
-          time: duration,
-        });
-        setResponseData(formatted);
-      } else {
-        const mock = getMockData();
-        setResponseStatus({ code: 200, text: "200 OK", time: duration + 15 });
-        setResponseData(JSON.stringify(mock, null, 2));
+      const rawText = await res.text();
+      
+      let formatted: string;
+      try {
+        formatted = JSON.stringify(JSON.parse(rawText), null, 2);
+      } catch {
+        formatted = rawText || "(réponse vide)";
       }
-    } catch {
+      
+      setResponseStatus({
+        code: res.status,
+        text: `${res.status} ${res.statusText || ""}`.trim(),
+        time: duration,
+      });
+      setResponseData(formatted);
+    } catch (error: any) {
       const duration = Date.now() - startTime;
-      const mock = getMockData();
-      setResponseStatus({ code: 200, text: "200 OK", time: duration + 20 });
-      setResponseData(JSON.stringify(mock, null, 2));
+      setResponseStatus({ code: 500, text: "500 Internal Error", time: duration });
+      setResponseData(JSON.stringify({ error: error.message || "Impossible de joindre le serveur API." }, null, 2));
     } finally {
       setIsLoadingRequest(false);
     }
+  };
+
+  const getSnippetCode = (endpointId: string) => {
+    const ep = ENDPOINTS.find((e) => e.id === endpointId);
+    if (!ep) return "";
+    
+    let fetchOptions = `{\n  method: "<span class="text-purple-400">${ep.method}</span>",\n  headers: {\n    "<span class="text-blue-300">Authorization</span>": "<span class="text-emerald-400">Bearer VOTRE_CLE_API</span>"`;
+    
+    if (ep.method === "POST" || ep.method === "PUT") {
+      fetchOptions += `,\n    "<span class="text-blue-300">Content-Type</span>": "<span class="text-emerald-400">application/json</span>"\n  },\n  body: JSON.stringify(${ep.defaultBody ? ep.defaultBody.replace(/\n/g, '\n  ') : "{}"})\n}`;
+    } else {
+      fetchOptions += `\n  }\n}`;
+    }
+
+    return `const response = await fetch("<span class="text-emerald-400">https://mprojects.val.run${ep.path}</span>", ${fetchOptions});\n\nconst data = await response.json();\nconsole.log(<span class="text-emerald-300">"Réponse :"</span>, data);`;
   };
 
   if (!isHydrated || loading) {
@@ -691,38 +518,7 @@ export default function ApiPage() {
         </motion.p>
       </div>
 
-      {/* Grid Caractéristiques API */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] hover:border-purple-500/40 transition-all">
-          <div className="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-600 mb-4">
-            <Zap className="w-6 h-6" />
-          </div>
-          <h3 className="text-lg font-bold text-slate-900 mb-2">Latence Basse</h3>
-          <p className="text-slate-600 text-sm leading-relaxed">
-            Infrastructure optimisée offrant un temps de réponse en millisecondes et une haute disponibilité.
-          </p>
-        </div>
-
-        <div className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] hover:border-blue-500/40 transition-all">
-          <div className="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-600 mb-4">
-            <Shield className="w-6 h-6" />
-          </div>
-          <h3 className="text-lg font-bold text-slate-900 mb-2">Sécurité & Chiffrement</h3>
-          <p className="text-slate-600 text-sm leading-relaxed">
-            Authentification par clé Bearer chiffrée, isolation stricte et conformité aux standards de sécurité.
-          </p>
-        </div>
-
-        <div className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] hover:border-emerald-500/40 transition-all">
-          <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-600 mb-4">
-            <Layers className="w-6 h-6" />
-          </div>
-          <h3 className="text-lg font-bold text-slate-900 mb-2">Standard v1 Universel</h3>
-          <p className="text-slate-600 text-sm leading-relaxed">
-            Format d'API compatible REST standard, prêt à s'intégrer avec fetch, cURL, Python et tout client HTTP.
-          </p>
-        </div>
-      </div>
+      {/* Grid Caractéristiques API supprimée comme demandé */}
 
       {/* Section Gestion Compte & Clés API */}
       <section className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)]">
@@ -772,12 +568,6 @@ export default function ApiPage() {
               <p className="text-slate-600 text-sm leading-relaxed">
                 Utilisez le même compte que sur <code className="bg-slate-100 px-1.5 py-0.5 rounded text-purple-600 font-mono">/account/login</code> — la session est partagée et le Playground utilisera automatiquement votre token mAI (Bearer) pour appeler le backend <code className="bg-slate-100 px-1.5 py-0.5 rounded text-purple-600 font-mono">{MAI_API_BASE}</code>.
               </p>
-              <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-900 text-xs flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-                <span>
-                  <strong>Information de démonstration :</strong> Des clés API d'essai sont pré-générées localement dans votre navigateur afin de vous permettre de tester le Playground ci-dessous. Pour une authentification réelle, connectez-vous via le compte mAI unifié.
-                </span>
-              </div>
             </div>
 
             {/* Panneau de connexion partagé */}
@@ -811,7 +601,7 @@ export default function ApiPage() {
               <h4 className="text-sm font-bold text-slate-900 flex items-center gap-2">
                 <Plus className="w-4 h-4 text-purple-600" /> Générer une nouvelle clé API
               </h4>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">Nom de la clé</label>
                   <input
@@ -822,19 +612,7 @@ export default function ApiPage() {
                     className="w-full px-4 py-2.5 rounded-xl bg-white/40 backdrop-blur-md border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/30 text-slate-900 placeholder-slate-400"
                   />
                 </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Forfait & Quota</label>
-                  <select
-                    value={newKeyPlan}
-                    onChange={(e) => setNewKeyPlan(e.target.value as any)}
-                    className="w-full px-4 py-2.5 rounded-xl bg-white/40 backdrop-blur-md border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/30 text-slate-900 font-medium"
-                  >
-                    <option value="Free">Forfait Free (500 req/mois)</option>
-                    <option value="Plus">Forfait Plus (1 500 req/mois)</option>
-                    <option value="Pro">Forfait Pro (5 000 req/mois)</option>
-                    <option value="Max">Forfait Max (Illimité)</option>
-                  </select>
-                </div>
+                {/* Choix du forfait supprimé : le forfait de l'utilisateur est utilisé automatiquement */}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -892,13 +670,16 @@ export default function ApiPage() {
                 <p className="text-sm text-slate-500 italic py-4">Aucune clé API enregistrée.</p>
               ) : (
                 <div className="grid grid-cols-1 gap-3">
-                  {apiKeys.map((k) => {
-                    const isVisible = visibleKeys[k.id];
-                    const isCopied = copiedKeyId === k.id;
-                    const isRevoked = k.status === "revoked";
-                    const isUsageLimitReached = k.usageCount >= k.maxUsage;
+                  {(() => {
+                    const globalUsageCount = apiKeys.reduce((acc, key) => acc + (key.usageCount || 0), 0);
+                    
+                    return apiKeys.map((k) => {
+                      const isVisible = visibleKeys[k.id];
+                      const isCopied = copiedKeyId === k.id;
+                      const isRevoked = k.status === "revoked";
+                      const isUsageLimitReached = globalUsageCount >= k.maxUsage;
 
-                    return (
+                      return (
                       <div
                         key={k.id}
                         className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl border transition-all ${
@@ -938,11 +719,11 @@ export default function ApiPage() {
                             <p className="text-xs text-slate-500 italic">{k.note}</p>
                           )}
                           <div className="flex items-center gap-3 text-xs text-slate-500">
-                            <span>Usage: {k.usageCount}/{k.maxUsage}</span>
-                            <div className="w-16 h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                            <span>Usage global compte : {globalUsageCount.toLocaleString()} / {k.maxUsage.toLocaleString()}</span>
+                            <div className="w-16 h-1.5 bg-slate-200 rounded-full overflow-hidden" title="L'usage est partagé sur tout le compte">
                               <div
-                                className="h-full bg-purple-500 transition-width"
-                                style={{ width: `${Math.min(100, (k.usageCount / k.maxUsage) * 100)}%` }}
+                                className={`h-full transition-width ${isUsageLimitReached ? 'bg-amber-500' : 'bg-purple-500'}`}
+                                style={{ width: `${Math.min(100, (globalUsageCount / k.maxUsage) * 100)}%` }}
                               ></div>
                             </div>
                           </div>
@@ -1037,10 +818,11 @@ export default function ApiPage() {
                               <Trash2 className="w-4 h-4" />
                             </button>
                           )}
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    });
+                  })()}
                 </div>
               )}
             </div>
@@ -1274,6 +1056,48 @@ export default function ApiPage() {
                 <p className="text-xs text-slate-500">Crée un nouveau projet en spécifiant le nom et la description.</p>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Section Code d'Intégration */}
+      <section className="bg-slate-950 rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 p-8 opacity-10">
+          <Code className="w-48 h-48 text-purple-500" />
+        </div>
+        <div className="relative z-10">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+            <div className="flex items-center gap-3">
+              <div className="p-3 rounded-2xl bg-white/10 text-white border border-white/20">
+                <Terminal className="w-6 h-6" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-black text-white tracking-tight">
+                  Intégrer l'API mProjects
+                </h2>
+                <p className="text-slate-400 text-xs md:text-sm mt-1">
+                  Sélectionnez un endpoint pour obtenir son code d'intégration.
+                </p>
+              </div>
+            </div>
+
+            <select
+              value={snippetEndpointId}
+              onChange={(e) => setSnippetEndpointId(e.target.value)}
+              className="px-4 py-2.5 rounded-xl bg-white/10 border border-white/20 text-sm font-bold text-white focus:outline-none focus:border-purple-500 max-w-xs w-full md:w-auto"
+            >
+              {ENDPOINTS.map((ep) => (
+                <option key={`snippet-${ep.id}`} value={ep.id} className="bg-slate-900 text-white">
+                  {ep.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="bg-[#0f111a] rounded-2xl border border-white/10 p-5 overflow-x-auto">
+            <pre className="text-sm font-mono leading-relaxed text-slate-300">
+              <code dangerouslySetInnerHTML={{ __html: getSnippetCode(snippetEndpointId) }} />
+            </pre>
           </div>
         </div>
       </section>

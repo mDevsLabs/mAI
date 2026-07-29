@@ -18,6 +18,7 @@ export type MaiUsage = {
   tier: string;
   email: string;
   username: string;
+  avatarUrl?: string;
   tokensUsed: number;
   limit: number;
   weekStart: string;
@@ -130,4 +131,30 @@ export async function updateProfile(
     token,
     body: JSON.stringify(params),
   });
+}
+
+export async function uploadAvatar(
+  token: string,
+  file: File
+): Promise<{ success: boolean; avatarUrl?: string; error?: string }> {
+  const formData = new FormData();
+  formData.append("avatar", file);
+
+  const res = await fetch(`${MAI_API_BASE}/upload-avatar`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    body: formData,
+  });
+
+  try {
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || "Erreur HTTP " + res.status);
+    }
+    return data;
+  } catch (err: any) {
+    throw new MaiApiError(err.message, res.status);
+  }
 }

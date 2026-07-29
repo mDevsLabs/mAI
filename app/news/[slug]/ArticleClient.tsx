@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ThumbsUp, ThumbsDown, MessageCircle, Send, Smile, Share2, Twitter, Facebook, Linkedin, Instagram, Youtube, Edit, Trash2, LogIn, UserPlus } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, MessageCircle, Send, Share2, Twitter, Facebook, Linkedin, Instagram, Youtube, Edit, Trash2, LogIn, UserPlus } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '@/components/auth-provider';
 
@@ -108,31 +108,28 @@ function CommentForm({
   onUpdateComment,
   authorName,
   authorEmail,
+  authorAvatar,
 }: {
   onAddComment: (comment: Comment) => void;
   editingComment?: Comment | null;
   onUpdateComment?: (comment: Comment) => void;
   authorName: string;
   authorEmail: string;
+  authorAvatar?: string;
 }) {
-  const [avatar, setAvatar] = useState(editingComment?.avatar || '');
   const [message, setMessage] = useState(editingComment?.message || '');
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [rating, setRating] = useState(editingComment?.rating || 0);
 
   useEffect(() => {
     if (editingComment) {
-      setAvatar(editingComment.avatar || '');
       setMessage(editingComment.message || '');
       setRating(editingComment.rating || 0);
     } else {
-      setAvatar('');
       setMessage('');
       setRating(0);
     }
-  }, [editingComment]);
+  }, [editingComment, authorAvatar]);
   
-  const emojiOptions = ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚', '😋', '😛', '😝', '😜', '🤪', '🤓', '🧐', '😐', '😑', '😶', '🙄', '😏', '😣', '😥', '😮', '🤐', '😯', '😪', '😫', '🥱', '😴', '🤤', '😒', '😓', '😔', '😕', '🙁', '☹️', '😖', '😞', '😟', '😤', '😢', '😭', '😦', '😧', '😨', '😰', '😥', '😮', '😳', '😵', '😡', '😠', '🤬', '😺', '😸', '😹', '😻', '😼', '😽', '🙈', '🙉', '🙊', '🐵', '🐶', '🐺', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🦝', '🐮', '🐷', '🐗', '🐸', '🐳', '🐋', '🐬', '🦭', '🐟', '🐠', '🐡', '🦐', '🦀', '🦑', '🦈', '🐙', '🐚', '🌸', '💐', '🌷', '🌹', '🥀', '🌺', '🌻', '🌼', '🌱', '🌲', '🌳', '🌴', '🌵', '🌶️', '🌿', '☘️', '🍀', '🍁', '🍂', '🍃', '🌰', '🍄', '🌪️', '🌈', '☀️', '🌙', '⭐', '🌟', '✨', '⚡', '☔', '❄️', '⛄', '☃️', '🔥', '💧', '🌊', '🌫️', '🌥️', '🌤️', '⛅', '🌛', '🌝', '🌕', '🌗', '🌖', '🌒', '🌓', '🌔'];
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -145,7 +142,7 @@ function CommentForm({
       id: editingComment?.id || Date.now().toString(),
       name: authorName,
       email: authorEmail,
-      avatar: avatar || undefined,
+      avatar: authorAvatar || undefined,
       message: message.trim(),
       timestamp: editingComment?.timestamp || Date.now(),
       rating: rating || undefined,
@@ -158,14 +155,13 @@ function CommentForm({
       onAddComment(newComment);
       toast.success("Commentaire publié !");
     }
-    setAvatar('');
     setMessage('');
     setRating(0);
   };
   
   return (
     <form onSubmit={handleSubmit} className="space-y-4 mb-8 relative">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-2">Nom</label>
           <input
@@ -185,42 +181,6 @@ function CommentForm({
             className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-slate-700 cursor-not-allowed"
             aria-label="Email du compte"
           />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-slate-700 mb-2">Avatar/Emoji</label>
-          <div className="flex gap-2">
-            <input
-              type="text"
-              value={avatar}
-              onChange={(e) => setAvatar(e.target.value)}
-              className="flex-1 px-3 py-2 rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-orange-500"
-              placeholder="Ajoutez un emoji ou une URL"
-            />
-            <button
-              type="button"
-              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-              className="px-3 py-2 rounded-lg bg-white/40 border border-slate-300 hover:bg-orange-50 transition-colors"
-            >
-              <Smile className="w-5 h-5" />
-            </button>
-          </div>
-          {showEmojiPicker && (
-            <div className="absolute z-50 mt-2 p-3 bg-white border border-slate-300 rounded-lg shadow-lg grid grid-cols-10 gap-2 max-h-64 overflow-y-auto">
-              {emojiOptions.map((emoji) => (
-                <button
-                  key={emoji}
-                  type="button"
-                  onClick={() => {
-                    setAvatar(avatar ? avatar + ' ' + emoji : emoji);
-                    setShowEmojiPicker(false);
-                  }}
-                  className="text-2xl hover:bg-slate-100 rounded p-1 transition-colors"
-                >
-                  {emoji}
-                </button>
-              ))}
-            </div>
-          )}
         </div>
       </div>
       
@@ -334,7 +294,7 @@ function CommentItem({ comment, commentId, onDelete, onEdit }: { comment: Commen
           width={48}
           height={48}
           unoptimized
-          className="w-12 h-12 rounded-full object-cover border-2 border-orange-200"
+          className="w-12 h-12 rounded-full object-cover border-2 border-orange-200 bg-white"
         />
       );
     } else if (comment.avatar && comment.avatar.match(/[^\u0000-\uFFFF]/)) {
@@ -447,6 +407,24 @@ export function CommentSection({ articleSlug }: { articleSlug: string }) {
     }
     setHydrated(true);
   }, [articleSlug]);
+
+  // Synchroniser l'avatar de l'utilisateur connecté avec ses anciens commentaires
+  useEffect(() => {
+    if (user?.email && comments.length > 0) {
+      let changed = false;
+      const updatedComments = comments.map(c => {
+        if (c.email === user.email && c.avatar !== (user.avatarUrl || '')) {
+          changed = true;
+          return { ...c, avatar: user.avatarUrl || '' };
+        }
+        return c;
+      });
+      if (changed) {
+        setComments(updatedComments);
+        localStorage.setItem(`comments_${articleSlug}`, JSON.stringify(updatedComments));
+      }
+    }
+  }, [user, comments, articleSlug]);
   
   useEffect(() => {
     if (!hydrated) return;
@@ -518,6 +496,7 @@ export function CommentSection({ articleSlug }: { articleSlug: string }) {
           onUpdateComment={updateComment}
           authorName={user.username}
           authorEmail={user.email}
+          authorAvatar={user.avatarUrl}
         />
       ) : (
         <div className="mb-8 p-6 rounded-2xl bg-white/40 backdrop-blur-md border border-white/60 text-center space-y-4">

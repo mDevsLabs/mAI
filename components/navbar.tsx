@@ -56,7 +56,14 @@ const navLinks: NavItem[] = [
     href: "#",
     subitems: [
       { name: "Télécharger", href: "/downloads" },
-      { name: "API", href: "/api" },
+      {
+        name: "API",
+        href: "/api",
+        subitems: [
+          { name: "Tout", href: "/api" },
+          { name: "Usage", href: "/api/usage" }
+        ]
+      },
       { 
         name: "Documentation", 
         href: "/docs",
@@ -252,8 +259,10 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
               }`}
               title={isAuthenticated ? `Compte (${user?.tier || "Free"})` : "Se connecter"}
             >
-              {accountInitials ? (
-                <span className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 text-white text-[10px] font-bold flex items-center justify-center">
+              {user?.avatarUrl ? (
+                <img src={user.avatarUrl} alt="Avatar" className="w-6 h-6 rounded-full object-cover bg-white ring-1 ring-black/10 shadow-sm" />
+              ) : accountInitials ? (
+                <span className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 text-white text-[10px] font-bold flex items-center justify-center shadow-sm">
                   {accountInitials}
                 </span>
               ) : (
@@ -433,8 +442,10 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
                   : "text-slate-700 hover:bg-black/5"
               }`}
             >
-              {accountInitials ? (
-                <span className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 text-white text-xs font-bold flex items-center justify-center">
+              {user?.avatarUrl ? (
+                <img src={user.avatarUrl} alt="Avatar" className="w-8 h-8 rounded-full object-cover bg-white ring-1 ring-black/10 shadow-sm" />
+              ) : accountInitials ? (
+                <span className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 text-white text-xs font-bold flex items-center justify-center shadow-sm">
                   {accountInitials}
                 </span>
               ) : (

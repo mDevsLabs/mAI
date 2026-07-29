@@ -15,6 +15,7 @@ import {
   register as apiRegister,
   verifyCode as apiVerifyCode,
   updateProfile as apiUpdateProfile,
+  uploadAvatar as apiUploadAvatar,
   type MaiUsage,
 } from "@/lib/mai-api";
 import {
@@ -28,6 +29,7 @@ export type AuthUser = {
   email: string;
   username: string;
   tier: string;
+  avatarUrl?: string;
 };
 
 type AuthContextValue = {
@@ -46,6 +48,7 @@ type AuthContextValue = {
   refreshUsage: () => Promise<MaiUsage | null>;
   verifyUpgradeCode: (code: string) => Promise<string>;
   updateProfile: (params: { username?: string; password?: string }) => Promise<void>;
+  uploadAvatar: (file: File) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -54,8 +57,9 @@ function sessionToUser(session: MaiSession, usage?: MaiUsage | null): AuthUser |
   const email = usage?.email || session.email;
   const username = usage?.username || session.username;
   const tier = usage?.tier || session.tier || "Free";
+  const avatarUrl = usage?.avatarUrl;
   if (!email || !username) return null;
-  return { email, username, tier };
+  return { email, username, tier, avatarUrl };
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -70,6 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       email: data.email,
       username: data.username,
       tier: data.tier,
+      avatarUrl: data.avatarUrl,
     });
     setSession({
       token: tok,
@@ -194,6 +199,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [applyUsage, token]
   );
 
+  const uploadAvatar = useCallback(
+    async (file: File) => {
+      if (!token) throw new Error("Non authentifié.");
+      const res = await apiUploadAvatar(token, file);
+      if (res.error) throw new Error(res.error);
+      const data = await getUsage(token);
+      applyUsage(token, data);
+    },
+    [applyUsage, token]
+  );
+
   const value = useMemo<AuthContextValue>(
     () => ({
       user,
@@ -207,6 +223,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       refreshUsage,
       verifyUpgradeCode,
       updateProfile,
+      uploadAvatar,
     }),
     [
       user,
@@ -219,6 +236,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       refreshUsage,
       verifyUpgradeCode,
       updateProfile,
+      uploadAvatar,
     ]
   );
 

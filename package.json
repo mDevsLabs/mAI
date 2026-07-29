@@ -8,7 +8,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "setup": "npm install"
+    "setup": "npm install",
+    "reset:api": "node --env-file=.env scripts/reset-api-usage.js",
+    "reset:mai": "node --env-file=.env scripts/reset-mai-usage.js"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
@@ -24,6 +26,7 @@
     "react-hot-toast": "^2.6.0",
     "react-icons": "^5.7.0",
     "react-markdown": "^10.1.0",
+    "recharts": "^3.10.1",
     "sharp": "^0.35.3",
     "tailwind-merge": "^3.6.0",
     "tailwindcss-animate": "^1.0.7"
