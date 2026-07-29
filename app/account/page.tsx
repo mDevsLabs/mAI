@@ -453,6 +453,7 @@ export default function AccountPage() {
         >
           Actualités
         </Link>
+      </div>
     </div>
   );
 }
