@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { ThumbsUp, ThumbsDown, MessageCircle, Send, Smile, Share2, Twitter, Facebook, Linkedin, Instagram, Youtube, Edit, Trash2 } from 'lucide-react';
+import Link from 'next/link';
+import { ThumbsUp, ThumbsDown, MessageCircle, Send, Smile, Share2, Twitter, Facebook, Linkedin, Instagram, Youtube, Edit, Trash2, LogIn, UserPlus } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+import { useAuth } from '@/components/auth-provider';
 
 export type Comment = {
   id: string;
@@ -100,70 +102,88 @@ export function ShareButtons({ title, description }: ShareButtonsProps) {
   );
 }
 
-function CommentForm({ onAddComment, editingComment, onUpdateComment }: { onAddComment: (comment: Comment) => void; editingComment?: Comment | null; onUpdateComment?: (comment: Comment) => void }) {
-  const [name, setName] = useState(editingComment?.name || '');
-  const [email, setEmail] = useState(editingComment?.email || '');
+function CommentForm({
+  onAddComment,
+  editingComment,
+  onUpdateComment,
+  authorName,
+  authorEmail,
+}: {
+  onAddComment: (comment: Comment) => void;
+  editingComment?: Comment | null;
+  onUpdateComment?: (comment: Comment) => void;
+  authorName: string;
+  authorEmail: string;
+}) {
   const [avatar, setAvatar] = useState(editingComment?.avatar || '');
   const [message, setMessage] = useState(editingComment?.message || '');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [rating, setRating] = useState(editingComment?.rating || 0);
+
+  useEffect(() => {
+    if (editingComment) {
+      setAvatar(editingComment.avatar || '');
+      setMessage(editingComment.message || '');
+      setRating(editingComment.rating || 0);
+    } else {
+      setAvatar('');
+      setMessage('');
+      setRating(0);
+    }
+  }, [editingComment]);
   
   const emojiOptions = ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚', '😋', '😛', '😝', '😜', '🤪', '🤓', '🧐', '😐', '😑', '😶', '🙄', '😏', '😣', '😥', '😮', '🤐', '😯', '😪', '😫', '🥱', '😴', '🤤', '😒', '😓', '😔', '😕', '🙁', '☹️', '😖', '😞', '😟', '😤', '😢', '😭', '😦', '😧', '😨', '😰', '😥', '😮', '😳', '😵', '😡', '😠', '🤬', '😺', '😸', '😹', '😻', '😼', '😽', '🙈', '🙉', '🙊', '🐵', '🐶', '🐺', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🦝', '🐮', '🐷', '🐗', '🐸', '🐳', '🐋', '🐬', '🦭', '🐟', '🐠', '🐡', '🦐', '🦀', '🦑', '🦈', '🐙', '🐚', '🌸', '💐', '🌷', '🌹', '🥀', '🌺', '🌻', '🌼', '🌱', '🌲', '🌳', '🌴', '🌵', '🌶️', '🌿', '☘️', '🍀', '🍁', '🍂', '🍃', '🌰', '🍄', '🌪️', '🌈', '☀️', '🌙', '⭐', '🌟', '✨', '⚡', '☔', '❄️', '⛄', '☃️', '🔥', '💧', '🌊', '🌫️', '🌥️', '🌤️', '⛅', '🌛', '🌝', '🌕', '🌗', '🌖', '🌒', '🌓', '🌔'];
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !email || !message) {
-      toast.error("Veuillez remplir tous les champs obligatoires");
+    if (!authorName || !authorEmail || !message.trim()) {
+      toast.error("Veuillez écrire un commentaire");
       return;
     }
     
     const newComment: Comment = {
       id: editingComment?.id || Date.now().toString(),
-      name,
-      email,
+      name: authorName,
+      email: authorEmail,
       avatar: avatar || undefined,
-      message,
+      message: message.trim(),
       timestamp: editingComment?.timestamp || Date.now(),
       rating: rating || undefined,
     };
     
-    if (onUpdateComment) {
+    if (editingComment && onUpdateComment) {
       onUpdateComment(newComment);
       toast.success("Commentaire mis à jour !");
     } else {
       onAddComment(newComment);
       toast.success("Commentaire publié !");
     }
-    setName('');
-    setEmail('');
     setAvatar('');
     setMessage('');
     setRating(0);
   };
   
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 mb-8">
+    <form onSubmit={handleSubmit} className="space-y-4 mb-8 relative">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-2">Nom</label>
           <input
             type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-orange-500"
-            placeholder="Votre nom"
-            required
+            value={authorName}
+            readOnly
+            className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-slate-700 cursor-not-allowed"
+            aria-label="Nom d'utilisateur du compte"
           />
         </div>
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-2">Email</label>
           <input
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-orange-500"
-            placeholder="email@example.com"
-            required
+            value={authorEmail}
+            readOnly
+            className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-slate-700 cursor-not-allowed"
+            aria-label="Email du compte"
           />
         </div>
         <div>
@@ -407,21 +427,31 @@ function CommentItem({ comment, commentId, onDelete, onEdit }: { comment: Commen
 }
 
 export function CommentSection({ articleSlug }: { articleSlug: string }) {
+  const { user, isAuthenticated, loading: authLoading } = useAuth();
   const [comments, setComments] = useState<Comment[]>([]);
   const [editingComment, setEditingComment] = useState<Comment | null>(null);
+  const [hydrated, setHydrated] = useState(false);
+
+  const nextPath = `/news/${articleSlug}`;
   
   useEffect(() => {
     const storedComments = localStorage.getItem(`comments_${articleSlug}`);
     if (storedComments) {
-      setComments(JSON.parse(storedComments));
+      try {
+        setComments(JSON.parse(storedComments));
+      } catch {
+        setComments([]);
+      }
+    } else {
+      setComments([]);
     }
+    setHydrated(true);
   }, [articleSlug]);
   
   useEffect(() => {
-    if (comments.length > 0) {
-      localStorage.setItem(`comments_${articleSlug}`, JSON.stringify(comments));
-    }
-  }, [comments, articleSlug]);
+    if (!hydrated) return;
+    localStorage.setItem(`comments_${articleSlug}`, JSON.stringify(comments));
+  }, [comments, articleSlug, hydrated]);
   
   const addComment = (comment: Comment) => {
     setComments(prev => [comment, ...prev]);
@@ -433,12 +463,21 @@ export function CommentSection({ articleSlug }: { articleSlug: string }) {
   };
   
   const deleteComment = (id: string) => {
-    setComments(prev => prev.filter(c => c.id !== id));
+    setComments(prev => {
+      const next = prev.filter(c => c.id !== id);
+      return next;
+    });
+    setEditingComment(null);
   };
   
   const avgRating = comments.length > 0
     ? comments.reduce((sum, comment) => (comment.rating || 0) + sum, 0) / comments.length
     : 0;
+
+  const canModerate = (comment: Comment) =>
+    isAuthenticated &&
+    !!user?.email &&
+    comment.email.toLowerCase() === user.email.toLowerCase();
   
   return (
     <div className="mt-16">
@@ -467,8 +506,45 @@ export function CommentSection({ articleSlug }: { articleSlug: string }) {
           </div>
         )}
       </div>
-      
-      <CommentForm onAddComment={addComment} editingComment={editingComment} onUpdateComment={updateComment} />
+
+      {authLoading ? (
+        <div className="mb-8 p-6 rounded-2xl bg-white/40 border border-white/60 text-slate-500 text-sm">
+          Chargement de la session…
+        </div>
+      ) : isAuthenticated && user ? (
+        <CommentForm
+          onAddComment={addComment}
+          editingComment={editingComment}
+          onUpdateComment={updateComment}
+          authorName={user.username}
+          authorEmail={user.email}
+        />
+      ) : (
+        <div className="mb-8 p-6 rounded-2xl bg-white/40 backdrop-blur-md border border-white/60 text-center space-y-4">
+          <p className="text-slate-700 font-medium">
+            Connectez-vous avec votre compte mAI pour commenter.
+          </p>
+          <p className="text-sm text-slate-500">
+            Votre e-mail et nom d&apos;utilisateur seront associés au commentaire.
+          </p>
+          <div className="flex flex-wrap justify-center gap-3">
+            <Link
+              href={`/account/login?next=${encodeURIComponent(nextPath)}`}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-purple-600 hover:bg-purple-500 text-white text-sm font-semibold transition-colors"
+            >
+              <LogIn className="w-4 h-4" />
+              Se connecter
+            </Link>
+            <Link
+              href={`/account/register?next=${encodeURIComponent(nextPath)}`}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-purple-200 bg-purple-50 hover:bg-purple-100 text-purple-700 text-sm font-semibold transition-colors"
+            >
+              <UserPlus className="w-4 h-4" />
+              Créer un compte
+            </Link>
+          </div>
+        </div>
+      )}
       
       {comments.length > 0 ? (
         <div className="space-y-6 mt-8">
@@ -477,8 +553,8 @@ export function CommentSection({ articleSlug }: { articleSlug: string }) {
               key={comment.id} 
               comment={comment} 
               commentId={comment.id} 
-              onDelete={deleteComment}
-              onEdit={setEditingComment}
+              onDelete={canModerate(comment) ? deleteComment : undefined}
+              onEdit={canModerate(comment) ? setEditingComment : undefined}
             />
           ))}
         </div>

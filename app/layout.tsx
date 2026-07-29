@@ -3,6 +3,7 @@ import Script from "next/script";
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
 import { BackToTop } from "@/components/back-to-top";
+import { AuthProvider } from "@/components/auth-provider";
 import { ToastProvider, CookieBanner } from "@/components/ui/index";
 import { getChangelogs } from "@/lib/changelog";
 import { getNewsArticles } from "@/lib/news";
@@ -46,50 +47,52 @@ export default async function RootLayout({
         className="antialiased font-sans min-h-screen flex flex-col pt-24 overflow-x-hidden relative bg-white text-slate-900"
       >
           <ToastProvider>
-            <Navbar changelogs={changelogs} news={news} />
-            <CookieBanner />
-            {/* Background Orbs */}
-            <div className="absolute -top-24 -left-24 w-96 h-96 bg-purple-400/20 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
-            <div className="absolute top-1/2 -right-24 w-80 h-80 bg-blue-400/20 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
+            <AuthProvider>
+              <Navbar changelogs={changelogs} news={news} />
+              <CookieBanner />
+              {/* Background Orbs */}
+              <div className="absolute -top-24 -left-24 w-96 h-96 bg-purple-400/20 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
+              <div className="absolute top-1/2 -right-24 w-80 h-80 bg-blue-400/20 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
 
-            <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 pb-12 md:pb-32 pt-6 z-10">
-              {children}
-            </main>
+              <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 pb-12 md:pb-32 pt-6 z-10">
+                {children}
+              </main>
 
-            <footer className="relative mt-auto mb-4 w-[95%] max-w-5xl mx-auto md:fixed md:bottom-4 md:left-1/2 md:-translate-x-1/2 z-50 rounded-3xl md:rounded-full border border-black/10 bg-white/30 backdrop-blur-md shadow-sm px-4 md:px-8 py-3 flex flex-col md:flex-row items-center justify-between gap-2 md:gap-0 transition-all duration-300">
-              <p className="text-xs md:text-sm text-slate-500 font-medium">
-                {new Date().getFullYear()} © All rights reserved | mProjects | Official Website
-              </p>
+              <footer className="relative mt-auto mb-4 w-[95%] max-w-5xl mx-auto md:fixed md:bottom-4 md:left-1/2 md:-translate-x-1/2 z-50 rounded-3xl md:rounded-full border border-black/10 bg-white/30 backdrop-blur-md shadow-sm px-4 md:px-8 py-3 flex flex-col md:flex-row items-center justify-between gap-2 md:gap-0 transition-all duration-300">
+                <p className="text-xs md:text-sm text-slate-500 font-medium">
+                  {new Date().getFullYear()} © All rights reserved | mProjects | Official Website
+                </p>
 
-              {/* Menu Déroulant Légal */}
-              <div className="relative group text-xs md:text-sm text-slate-500 font-medium cursor-pointer">
-                <span className="hover:text-slate-900 transition-colors flex items-center gap-1">
-                  Légal
-                  <ChevronDown className="w-4 h-4 transition-transform duration-200 group-hover:-rotate-180" />
-                </span>
+                {/* Menu Déroulant Légal */}
+                <div className="relative group text-xs md:text-sm text-slate-500 font-medium cursor-pointer">
+                  <span className="hover:text-slate-900 transition-colors flex items-center gap-1">
+                    Légal
+                    <ChevronDown className="w-4 h-4 transition-transform duration-200 group-hover:-rotate-180" />
+                  </span>
 
-                {/* Liste de liens s'ouvrant vers le haut */}
-                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 translate-y-2 invisible group-hover:opacity-100 group-hover:translate-y-0 group-hover:visible transition-all duration-200 z-50">
-                  <div className="bg-white/95 backdrop-blur-xl border border-black/10 shadow-xl rounded-2xl p-1.5 min-w-[140px] flex flex-col gap-0.5">
-                    <Link
-                      href="/legal/privacy"
-                      className="px-3 py-2 rounded-xl text-xs font-medium transition-colors text-slate-600 hover:bg-black/5 hover:text-slate-900 text-center"
-                    >
-                      Confidentialité
-                    </Link>
-<Link
-                      href="/legal/terms"
-                      className="px-3 py-2 rounded-xl text-xs font-medium transition-colors text-slate-600 hover:bg-black/5 hover:text-slate-900 text-center"
-                    >
-                      CGU
-                    </Link>
+                  {/* Liste de liens s'ouvrant vers le haut */}
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 translate-y-2 invisible group-hover:opacity-100 group-hover:translate-y-0 group-hover:visible transition-all duration-200 z-50">
+                    <div className="bg-white/95 backdrop-blur-xl border border-black/10 shadow-xl rounded-2xl p-1.5 min-w-[140px] flex flex-col gap-0.5">
+                      <Link
+                        href="/legal/privacy"
+                        className="px-3 py-2 rounded-xl text-xs font-medium transition-colors text-slate-600 hover:bg-black/5 hover:text-slate-900 text-center"
+                      >
+                        Confidentialité
+                      </Link>
+                      <Link
+                        href="/legal/terms"
+                        className="px-3 py-2 rounded-xl text-xs font-medium transition-colors text-slate-600 hover:bg-black/5 hover:text-slate-900 text-center"
+                      >
+                        CGU
+                      </Link>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </footer>
+              </footer>
 
-            {/* Footer Decorative */}
-            <footer className="fixed bottom-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 via-blue-500 to-emerald-400 z-50"></footer>
+              {/* Footer Decorative */}
+              <footer className="fixed bottom-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 via-blue-500 to-emerald-400 z-50"></footer>
+            </AuthProvider>
           </ToastProvider>
           <BackToTop />
         <Script 

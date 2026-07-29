@@ -1,0 +1,200 @@
+"use client";
+
+import { FormEvent, useEffect, useState, Suspense } from "react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { UserPlus, Loader2 } from "lucide-react";
+import { useAuth } from "@/components/auth-provider";
+import { MaiApiError } from "@/lib/mai-api";
+import toast from "react-hot-toast";
+
+function RegisterForm() {
+  const { register, isAuthenticated, loading: authLoading } = useAuth();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const next = searchParams.get("next") || "/account";
+
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!authLoading && isAuthenticated) {
+      router.replace(next.startsWith("/") ? next : "/account");
+    }
+  }, [authLoading, isAuthenticated, next, router]);
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setError("");
+
+    if (!email.trim() || !username.trim() || !password) {
+      setError("Veuillez remplir tous les champs.");
+      return;
+    }
+    if (username.trim().length < 3) {
+      setError("Le nom d'utilisateur doit contenir au moins 3 caractères.");
+      return;
+    }
+    if (password.length < 6) {
+      setError("Le mot de passe doit contenir au moins 6 caractères.");
+      return;
+    }
+    if (password !== confirm) {
+      setError("Les mots de passe ne correspondent pas.");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      await register(email.trim(), username.trim(), password);
+      toast.success("Compte créé avec succès");
+      router.push(next.startsWith("/") ? next : "/account");
+    } catch (err) {
+      const message =
+        err instanceof MaiApiError
+          ? err.message
+          : err instanceof Error
+            ? err.message
+            : "Erreur lors de la création du compte.";
+      setError(message);
+      toast.error(message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (authLoading) {
+    return (
+      <div className="flex justify-center py-20 text-slate-500">
+        <Loader2 className="w-6 h-6 animate-spin" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-md mx-auto">
+      <div className="mb-8 text-center">
+        <h1 className="text-3xl font-black text-slate-900 tracking-tight mb-2">
+          Créer un compte
+        </h1>
+        <p className="text-slate-600 text-sm">
+          Un seul compte mAI pour mProjects, mAI CLI et les autres projets.
+        </p>
+      </div>
+
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-4"
+      >
+        {error && (
+          <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-700 text-sm font-medium">
+            {error}
+          </div>
+        )}
+
+        <div>
+          <label className="block text-xs font-bold text-slate-700 mb-1.5">
+            Adresse e-mail
+          </label>
+          <input
+            type="email"
+            autoComplete="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="vous@exemple.com"
+            className="w-full px-4 py-2.5 rounded-xl bg-white/60 border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/30 text-slate-900 placeholder-slate-400"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block text-xs font-bold text-slate-700 mb-1.5">
+            Nom d&apos;utilisateur
+          </label>
+          <input
+            type="text"
+            autoComplete="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="ex. mathias"
+            className="w-full px-4 py-2.5 rounded-xl bg-white/60 border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/30 text-slate-900 placeholder-slate-400"
+            required
+            minLength={3}
+          />
+        </div>
+
+        <div>
+          <label className="block text-xs font-bold text-slate-700 mb-1.5">
+            Mot de passe
+          </label>
+          <input
+            type="password"
+            autoComplete="new-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Au moins 6 caractères"
+            className="w-full px-4 py-2.5 rounded-xl bg-white/60 border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/30 text-slate-900 placeholder-slate-400"
+            required
+            minLength={6}
+          />
+        </div>
+
+        <div>
+          <label className="block text-xs font-bold text-slate-700 mb-1.5">
+            Confirmer le mot de passe
+          </label>
+          <input
+            type="password"
+            autoComplete="new-password"
+            value={confirm}
+            onChange={(e) => setConfirm(e.target.value)}
+            placeholder="••••••••"
+            className="w-full px-4 py-2.5 rounded-xl bg-white/60 border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/30 text-slate-900 placeholder-slate-400"
+            required
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={submitting}
+          className="w-full py-3 rounded-xl bg-purple-600 hover:bg-purple-500 disabled:opacity-60 text-white font-bold text-sm transition-all flex items-center justify-center gap-2"
+        >
+          {submitting ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <UserPlus className="w-4 h-4" />
+          )}
+          Créer mon compte
+        </button>
+
+        <p className="text-center text-sm text-slate-600 pt-2">
+          Déjà un compte ?{" "}
+          <Link
+            href={`/account/login${next !== "/account" ? `?next=${encodeURIComponent(next)}` : ""}`}
+            className="text-purple-600 font-semibold hover:underline"
+          >
+            Se connecter
+          </Link>
+        </p>
+      </form>
+    </div>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex justify-center py-20 text-slate-500">
+          <Loader2 className="w-6 h-6 animate-spin" />
+        </div>
+      }
+    >
+      <RegisterForm />
+    </Suspense>
+  );
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { Github, Menu, X, ChevronDown } from "lucide-react";
+import { Github, Menu, X, ChevronDown, UserRound } from "lucide-react";
 import { useState, useEffect } from "react";
 import { CommandMenu } from "@/components/command-menu";
 import type { ChangelogsByProject } from "@/lib/changelog";
@@ -9,6 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Sheet } from "@/components/sheet";
+import { useAuth } from "@/components/auth-provider";
 
 interface NavSubItem {
   name: string;
@@ -82,11 +83,20 @@ function checkLinkActive(link: NavItem, pathname: string): boolean {
 
 export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject; news?: NewsArticle[] }) {
   const pathname = usePathname();
+  const { user, isAuthenticated, loading: authLoading } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeMobileSubmenu, setActiveMobileSubmenu] = useState<string | null>(null);
   const [activeMobileNestedSubmenu, setActiveMobileNestedSubmenu] = useState<string | null>(null);
   const [isCommandOpen, setIsCommandOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  const accountHref = isAuthenticated ? "/account" : "/account/login";
+  const accountLabel = isAuthenticated
+    ? user?.username || "Compte"
+    : "Compte";
+  const accountInitials = isAuthenticated
+    ? (user?.username || user?.email || "U").slice(0, 2).toUpperCase()
+    : null;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -232,6 +242,28 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
 
           {/* Actions */}
           <div className="flex items-center gap-2 md:gap-4">
+            {/* Compte (desktop) */}
+            <Link
+              href={accountHref}
+              className={`hidden md:inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-semibold transition-all duration-200 ${
+                pathname.startsWith("/account")
+                  ? "border-purple-300 bg-purple-50 text-purple-700"
+                  : "border-black/10 bg-black/5 text-slate-700 hover:bg-black/10 hover:scale-105"
+              }`}
+              title={isAuthenticated ? `Compte (${user?.tier || "Free"})` : "Se connecter"}
+            >
+              {accountInitials ? (
+                <span className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 text-white text-[10px] font-bold flex items-center justify-center">
+                  {accountInitials}
+                </span>
+              ) : (
+                <UserRound className="w-4 h-4" />
+              )}
+              <span className="max-w-[100px] truncate">
+                {authLoading ? "…" : accountLabel}
+              </span>
+            </Link>
+
             {/* Socials */}
             <div className="hidden md:flex gap-2">
               <a
@@ -259,6 +291,26 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
                 </div>
               </a>
             </div>
+
+            {/* Compte (mobile icon) */}
+            <Link
+              href={accountHref}
+              className={`md:hidden p-2 rounded-full border transition-colors ${
+                pathname.startsWith("/account")
+                  ? "border-purple-300 bg-purple-50 text-purple-700"
+                  : "border-black/10 bg-black/5 text-slate-600 hover:bg-black/10"
+              }`}
+              aria-label={accountLabel}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              {accountInitials ? (
+                <span className="w-5 h-5 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 text-white text-[9px] font-bold flex items-center justify-center">
+                  {accountInitials}
+                </span>
+              ) : (
+                <UserRound className="w-5 h-5" />
+              )}
+            </Link>
 
             {/* Mobile Menu Toggle */}
             <button
@@ -371,6 +423,30 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
                 </div>
               );
             })}
+
+            <Link
+              href={accountHref}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={`mt-2 px-4 py-3 rounded-2xl text-sm font-semibold transition-colors flex items-center gap-3 ${
+                pathname.startsWith("/account")
+                  ? "bg-purple-50 text-purple-600"
+                  : "text-slate-700 hover:bg-black/5"
+              }`}
+            >
+              {accountInitials ? (
+                <span className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 text-white text-xs font-bold flex items-center justify-center">
+                  {accountInitials}
+                </span>
+              ) : (
+                <UserRound className="w-5 h-5" />
+              )}
+              <span className="flex flex-col">
+                <span>{authLoading ? "Compte…" : isAuthenticated ? accountLabel : "Se connecter"}</span>
+                {isAuthenticated && user?.tier && (
+                  <span className="text-[11px] font-medium text-slate-500">Forfait {user.tier}</span>
+                )}
+              </span>
+            </Link>
 
             <div className="flex gap-2 mt-3 pt-3 border-t border-black/5 justify-center">
               <a
