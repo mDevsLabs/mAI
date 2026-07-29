@@ -5,7 +5,7 @@
 
 export const MAI_API_BASE =
   process.env.NEXT_PUBLIC_MAI_API_URL?.replace(/\/$/, "") ||
-  "https://mai.val.run";
+  "https://mprojects.val.run";
 
 export type MaiAuthResponse = {
   success: boolean;
@@ -118,5 +118,16 @@ export async function verifyCode(
     method: "POST",
     token,
     body: JSON.stringify({ code }),
+  });
+}
+
+export async function updateProfile(
+  token: string,
+  params: { username?: string; password?: string }
+): Promise<{ success: boolean; username?: string; tier?: string; email?: string; error?: string }> {
+  return request("/update-profile", {
+    method: "POST",
+    token,
+    body: JSON.stringify(params),
   });
 }

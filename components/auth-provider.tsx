@@ -14,6 +14,7 @@ import {
   login as apiLogin,
   register as apiRegister,
   verifyCode as apiVerifyCode,
+  updateProfile as apiUpdateProfile,
   type MaiUsage,
 } from "@/lib/mai-api";
 import {
@@ -44,6 +45,7 @@ type AuthContextValue = {
   logout: () => void;
   refreshUsage: () => Promise<MaiUsage | null>;
   verifyUpgradeCode: (code: string) => Promise<string>;
+  updateProfile: (params: { username?: string; password?: string }) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -181,6 +183,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [applyUsage, token]
   );
 
+  const updateProfile = useCallback(
+    async (params: { username?: string; password?: string }) => {
+      if (!token) throw new Error("Non authentifié.");
+      const res = await apiUpdateProfile(token, params);
+      if (res.error) throw new Error(res.error);
+      const data = await getUsage(token);
+      applyUsage(token, data);
+    },
+    [applyUsage, token]
+  );
+
   const value = useMemo<AuthContextValue>(
     () => ({
       user,
@@ -193,6 +206,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       logout,
       refreshUsage,
       verifyUpgradeCode,
+      updateProfile,
     }),
     [
       user,
@@ -204,6 +218,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       logout,
       refreshUsage,
       verifyUpgradeCode,
+      updateProfile,
     ]
   );
 

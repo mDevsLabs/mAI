@@ -8,3 +8,5 @@ node_modules*
 .env*
 !.env.example
 main.ts
+main-projects.ts
+aiModels.ts
