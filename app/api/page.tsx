@@ -148,6 +148,36 @@ const ENDPOINTS: EndpointChoice[] = [
       2
     ),
   },
+  {
+    id: "get-projects",
+    method: "GET",
+    path: "/v1/projects",
+    name: "GET /v1/projects",
+    description: "Liste tous les projets créés par l'utilisateur (Route factice)",
+  },
+  {
+    id: "create-project",
+    method: "POST",
+    path: "/v1/projects",
+    name: "POST /v1/projects",
+    description: "Création d'un nouveau projet (Route factice)",
+    defaultBody: JSON.stringify(
+      {
+        name: "Projet Alpha",
+        description: "Un projet génial généré via l'API",
+        isPublic: false
+      },
+      null,
+      2
+    ),
+  },
+  {
+    id: "get-project-detail",
+    method: "GET",
+    path: "/v1/projects/proj-12345",
+    name: "GET /v1/projects/:id",
+    description: "Obtient les détails et statistiques d'un projet (Route factice)",
+  },
 ];
 
 // Générateur de clé unique au format exact : mp-[10 caractères alphanumériques]-[5 chiffres]
@@ -190,10 +220,6 @@ export default function ApiPage() {
   const [isLoadingRequest, setIsLoadingRequest] = useState(false);
   const [responseStatus, setResponseStatus] = useState<{ code: number; text: string; time?: number } | null>(null);
   const [responseData, setResponseData] = useState<string | null>(null);
-
-  // Documentation tab
-  const [docTab, setDocTab] = useState<"curl" | "javascript" | "python">("curl");
-  const [copiedDoc, setCopiedDoc] = useState(false);
 
   // Initialisation au chargement côté client
   useEffect(() => {
@@ -379,13 +405,6 @@ export default function ApiPage() {
     setTimeout(() => setCopiedKeyId(null), 2000);
   };
 
-  // Copier la doc
-  const copyDocCode = (code: string) => {
-    navigator.clipboard.writeText(code);
-    setCopiedDoc(true);
-    setTimeout(() => setCopiedDoc(false), 2000);
-  };
-
   // Masquer la clé avec astérisques pour la sécurité UI
   const maskKey = (keyStr: string) => {
     const parts = keyStr.split("-");
@@ -476,40 +495,6 @@ export default function ApiPage() {
       setIsLoadingRequest(false);
     }
   };
-
-  // Exemples de code dynamiques pour la doc
-  const getDynamicCodeExamples = () => {
-    const activeEndpoint = ENDPOINTS.find((e) => e.id === selectedEndpointId) || ENDPOINTS[0];
-    const key = playgroundKey || token || "VOTRE_CLE_API";
-    const method = activeEndpoint.method;
-    const url = `${MAI_API_BASE}${activeEndpoint.path}`;
-    const hasBody = method === "POST";
-
-    return {
-      curl: `curl -X ${method} ${url} \\
-  -H "Authorization: Bearer ${key}"${hasBody ? ` \\\n  -H "Content-Type: application/json" \\\n  -d '${requestBody.trim().replace(/'/g, "'\\''")}'` : ""}`,
-      javascript: `const response = await fetch("${url}", {
-  method: "${method}",
-  headers: {
-    "Authorization": "Bearer ${key}"${hasBody ? `,\n    "Content-Type": "application/json"` : ""}
-  }${hasBody ? `,\n  body: JSON.stringify(${requestBody.trim()})` : ""}
-});
-
-const data = await response.json();
-console.log(data);`,
-      python: `import requests
-
-url = "${url}"
-headers = {
-    "Authorization": "Bearer ${key}"${hasBody ? `,\n    "Content-Type": "application/json"` : ""}
-}
-${hasBody ? `payload = ${requestBody.trim()}\nresponse = requests.post(url, headers=headers, json=payload)` : `response = requests.get(url, headers=headers)`}
-
-print(response.json())`,
-    };
-  };
-
-  const codeExamples = getDynamicCodeExamples();
 
   if (!isHydrated || loading) {
     return (
@@ -1057,95 +1042,78 @@ print(response.json())`,
         </div>
       </section>
 
-      {/* Section Documentation & Exemples de Code */}
-      <section className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-6">
+      {/* Explications des Modèles et Projets */}
+      <section className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-8">
         <div className="flex items-center gap-3 pb-6 border-b border-slate-200/60">
           <div className="p-3 rounded-2xl bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
-            <Code className="w-6 h-6" />
+            <Layers className="w-6 h-6" />
           </div>
           <div>
             <h2 className="text-2xl font-black text-slate-900 tracking-tight">
-              Documentation & Intégration Code
+              Ressources API : Modèles & Projets
             </h2>
             <p className="text-slate-500 text-xs md:text-sm">
-              Consultez l'URL de base et copiez les snippets de code prêts à l'emploi.
+              Découvrez les modèles IA disponibles et la gestion des projets via notre API.
             </p>
           </div>
         </div>
 
-        {/* Base URL Highlight */}
-        <div className="p-4 rounded-2xl bg-white/70 border border-white/90 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <Globe className="w-5 h-5 text-purple-600 shrink-0" />
-            <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-500 block">
-                URL de base API v1
-              </span>
-              <code className="text-sm font-mono font-bold text-slate-900">
-                {MAI_API_BASE}/v1/
-              </code>
-            </div>
-          </div>
-          <span className="text-xs px-3 py-1 rounded-full bg-purple-100 text-purple-700 font-bold self-start sm:self-auto">
-            HTTPS / TLS v1.3
-          </span>
-        </div>
-
-        {/* Onglets de Langage */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between flex-wrap gap-2">
-            <div className="flex gap-2 bg-slate-200/50 p-1 rounded-2xl">
-              <button
-                onClick={() => setDocTab("curl")}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                  docTab === "curl"
-                    ? "bg-slate-900 text-white shadow"
-                    : "text-slate-700 hover:bg-white/50"
-                }`}
-              >
-                cURL / HTTP
-              </button>
-              <button
-                onClick={() => setDocTab("javascript")}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                  docTab === "javascript"
-                    ? "bg-slate-900 text-white shadow"
-                    : "text-slate-700 hover:bg-white/50"
-                }`}
-              >
-                JavaScript (fetch)
-              </button>
-              <button
-                onClick={() => setDocTab("python")}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                  docTab === "python"
-                    ? "bg-slate-900 text-white shadow"
-                    : "text-slate-700 hover:bg-white/50"
-                }`}
-              >
-                Python (requests)
-              </button>
-            </div>
-
-            <button
-              onClick={() => copyDocCode(codeExamples[docTab])}
-              className="px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-bold flex items-center gap-1.5 transition-colors shadow-sm"
-            >
-              {copiedDoc ? (
-                <>
-                  <Check className="w-4 h-4 text-emerald-600" /> Code copié !
-                </>
-              ) : (
-                <>
-                  <Copy className="w-4 h-4" /> Copier l'exemple
-                </>
-              )}
-            </button>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="space-y-4">
+            <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+              <Zap className="w-5 h-5 text-purple-600" /> Modèles IA (mAI)
+            </h3>
+            <p className="text-sm text-slate-600 leading-relaxed">
+              L'API vous donne accès à notre dernière génération de modèles :
+            </p>
+            <ul className="space-y-3">
+              <li className="flex gap-3">
+                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-purple-100 text-purple-700 text-xs font-bold shrink-0">1</span>
+                <div>
+                  <strong className="text-sm text-slate-800">mAI-1.2-Light</strong>
+                  <p className="text-xs text-slate-500 mt-0.5">Modèle ultra-rapide, idéal pour les tâches simples et l'analyse de texte basique.</p>
+                </div>
+              </li>
+              <li className="flex gap-3">
+                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-purple-100 text-purple-700 text-xs font-bold shrink-0">2</span>
+                <div>
+                  <strong className="text-sm text-slate-800">mAI-1.2-Apex</strong>
+                  <p className="text-xs text-slate-500 mt-0.5">Équilibre parfait entre vitesse et capacités de raisonnement avancé.</p>
+                </div>
+              </li>
+              <li className="flex gap-3">
+                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-purple-100 text-purple-700 text-xs font-bold shrink-0">3</span>
+                <div>
+                  <strong className="text-sm text-slate-800">mAI-1.2-Opal</strong>
+                  <p className="text-xs text-slate-500 mt-0.5">Le modèle le plus puissant, conçu pour le code complexe et la création structurée.</p>
+                </div>
+              </li>
+            </ul>
           </div>
 
-          {/* Block Code */}
-          <div className="bg-slate-950 border border-slate-800 rounded-2xl p-5 font-mono text-xs text-slate-100 overflow-x-auto shadow-inner">
-            <pre className="leading-relaxed">{codeExamples[docTab]}</pre>
+          <div className="space-y-4">
+            <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+              <Code className="w-5 h-5 text-blue-600" /> Gestion des Projets
+            </h3>
+            <p className="text-sm text-slate-600 leading-relaxed">
+              Les routes <code className="bg-slate-100 px-1.5 py-0.5 rounded text-blue-600 font-mono text-xs">/v1/projects</code> (factices) vous permettent de manipuler vos projets générés :
+            </p>
+            <div className="space-y-3">
+              <div className="p-3 rounded-xl bg-white/60 border border-slate-200">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[10px] px-2 py-0.5 rounded bg-blue-100 text-blue-700 font-bold uppercase">GET</span>
+                  <code className="text-xs font-bold text-slate-700">/v1/projects</code>
+                </div>
+                <p className="text-xs text-slate-500">Récupère la liste de tous vos projets créés récemment.</p>
+              </div>
+              <div className="p-3 rounded-xl bg-white/60 border border-slate-200">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-100 text-emerald-700 font-bold uppercase">POST</span>
+                  <code className="text-xs font-bold text-slate-700">/v1/projects</code>
+                </div>
+                <p className="text-xs text-slate-500">Crée un nouveau projet en spécifiant le nom et la description.</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
