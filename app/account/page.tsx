@@ -17,6 +17,7 @@ import { useAuth } from "@/components/auth-provider";
 import { MaiApiError } from "@/lib/mai-api";
 import { getUserApiUsage } from "@/app/actions/api-keys";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 
 function formatTokens(n: number): string {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(n % 1_000_000 === 0 ? 0 : 1)}M`;
