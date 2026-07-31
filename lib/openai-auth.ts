@@ -6,6 +6,7 @@ import { OpenAIErrorResponse } from './openai-types';
 export interface AuthenticatedOpenAIContext {
   valid: true;
   apiKeyId: string;
+  plan: string;
 }
 
 export interface InvalidOpenAIContext {
@@ -87,5 +88,6 @@ export async function authenticateOpenAIRequest(
   return {
     valid: true,
     apiKeyId: validation.keyInfo.id,
+    plan: validation.keyInfo.name || 'Free',
   };
 }

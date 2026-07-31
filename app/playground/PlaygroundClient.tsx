@@ -30,7 +30,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/auth-provider';
 import toast from 'react-hot-toast';
 import { maiModelsList } from '@/maiModels';
-import { fetchOpenRouterModels, openRouterModels } from '@/aiModels';
+import { openRouterModels } from '@/lib/ai-models';
 
 export default function PlaygroundClient() {
   const { user, isAuthenticated, loading: authLoading } = useAuth();
@@ -96,7 +96,7 @@ export default function PlaygroundClient() {
     scrollToBottom();
   }, [messages, isStreaming]);
 
-  // Chargement des modèles dynamiques
+  // Chargement des modèles dynamiques via /api/v1/models
   useEffect(() => {
     const loadModels = async () => {
       try {
@@ -117,7 +117,33 @@ export default function PlaygroundClient() {
         }));
 
         const isFree = !user || user.tier === 'Free' || user.tier === 'gratuit';
-        const fetchedCloud = await fetchOpenRouterModels(isFree);
+        let fetchedCloud: any[] = [];
+        try {
+          let res = await fetch('/api/v1/models', {
+            headers: user?.username || user?.email ? { 'x-user-id': encodeURIComponent(user.username || user.email) } : {},
+          }).catch(() => null);
+
+          if (!res || !res.ok) {
+            res = await fetch('https://mprojects.val.run/v1/models').catch(() => null);
+          }
+
+          if (res && res.ok) {
+            const data = await res.json();
+            if (data.data && Array.isArray(data.data)) {
+              fetchedCloud = data.data
+                .filter((m: any) => !maiModelsList.some(mai => mai.ollamaTag === m.id || mai.id === m.id))
+                .map((m: any) => ({
+                  id: m.id,
+                  name: m.id,
+                  provider: m.owned_by || 'v1',
+                  maxContext: m.maxContext || 128000,
+                }));
+            }
+          }
+        } catch (err) {
+          console.error('Erreur lors de la récupération des modèles v1/models:', err);
+        }
+
         let allowedCloudModels = fetchedCloud.length > 0 ? fetchedCloud : openRouterModels;
         if (fetchedCloud.length === 0 && isFree) {
           allowedCloudModels = allowedCloudModels.filter(m => m.id.includes(':free'));
@@ -130,7 +156,7 @@ export default function PlaygroundClient() {
           badge: 'Premium',
           parameters: 'Cloud',
           vision: m.id.includes('vision') || m.id.includes('vl') || m.id.includes('gemini') || m.id.includes('claude-3-5'),
-          context: `${Math.round(m.maxContext / 1024)}K`,
+          context: m.maxContext ? `${Math.round(m.maxContext / 1024)}K` : '128K',
           releaseDate: '',
           bannerImage: '',
           squareImage: '',
@@ -153,7 +179,7 @@ export default function PlaygroundClient() {
     if (!authLoading) {
       loadModels();
     }
-  }, [authLoading, user?.tier]);
+  }, [authLoading, user?.tier, user?.username, user?.email]);
 
   // Vérification précise du modèle sélectionné et du serveur Ollama
   const checkOllama = async (modelTag?: string) => {

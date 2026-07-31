@@ -5,7 +5,7 @@ import {
   Copy, Check, Terminal, Code2, Cpu, Key, Sparkles, RefreshCcw, Layers, Settings2, Sliders, Play
 } from 'lucide-react';
 import { maiModelsList } from '@/maiModels';
-import { fetchOpenRouterModels, openRouterModels, AIModel } from '@/aiModels';
+import { AIModel, openRouterModels } from '@/lib/ai-models';
 import { useAuth } from '@/components/auth-provider';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
@@ -27,13 +27,38 @@ export default function ConfigClient() {
   const [maxTokens, setMaxTokens] = useState(2048);
   const [cloudModelsList, setCloudModelsList] = useState<AIModel[]>(openRouterModels);
 
-  // Charger les modèles OpenRouter dynamiquement
+  // Charger les modèles depuis l'API v1/models
   useEffect(() => {
     async function loadModels() {
-      const isFree = !user || user.tier === 'Free' || user.tier === 'gratuit';
-      const models = await fetchOpenRouterModels(isFree);
-      if (models && models.length > 0) {
-        setCloudModelsList(models);
+      try {
+        let res = await fetch('/api/v1/models', {
+          headers: user?.username || user?.email ? { 'x-user-id': encodeURIComponent(user.username || user.email) } : {},
+        }).catch(() => null);
+
+        if (!res || !res.ok) {
+          res = await fetch('https://mprojects.val.run/v1/models').catch(() => null);
+        }
+
+        if (res && res.ok) {
+          const data = await res.json();
+          if (data.data && Array.isArray(data.data)) {
+            const apiModels: AIModel[] = data.data.map((m: any) => ({
+              id: m.id,
+              name: m.id,
+              provider: m.owned_by || 'mAI',
+              maxContext: m.maxContext || 128000,
+              maxOutput: m.maxOutput || 4096,
+            }));
+            const cloudOnly = apiModels.filter(
+              (m) => !maiModelsList.some((mai) => mai.ollamaTag === m.id || mai.id === m.id)
+            );
+            if (cloudOnly.length > 0) {
+              setCloudModelsList(cloudOnly);
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Erreur lors du chargement des modèles v1/models:', err);
       }
     }
     loadModels();

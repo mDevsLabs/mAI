@@ -44,7 +44,7 @@ export const maiModelsList: MAIModelDetail[] = [
     ollamaTag: "mDevsLabs/mAI-1.5-Light",
     huggingFaceTag: "mDevsLabs/mAI-1.5-Light",
     license: "MIT",
-    status: "beta",
+    status: "active",
     capabilities: {
       coding: true,
       reasoning: true,
@@ -75,7 +75,7 @@ export const maiModelsList: MAIModelDetail[] = [
     ollamaTag: "mDevsLabs/mAI-1.5-Apex",
     huggingFaceTag: "mDevsLabs/mAI-1.5-Apex",
     license: "MIT",
-    status: "beta",
+    status: "active",
     capabilities: {
       coding: true,
       reasoning: true,
@@ -105,7 +105,7 @@ export const maiModelsList: MAIModelDetail[] = [
     ollamaTag: "mDevsLabs/mAI-1.5-Opal",
     huggingFaceTag: "mDevsLabs/mAI-1.5-Opal",
     license: "MIT",
-    status: "beta",
+    status: "active",
     capabilities: {
       coding: true,
       reasoning: true,

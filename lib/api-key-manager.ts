@@ -34,7 +34,7 @@ const memoryKeysStore: Map<string, {
   isActive: boolean;
 }> = new Map();
 
-function getDb() {
+export function getDb() {
   const url = process.env.DATABASE_URL;
   if (!url) return null;
   return neon(url);
@@ -339,9 +339,10 @@ export async function validateApiKey(secretKey: string): Promise<{ valid: boolea
     try {
       const prefixCandidate = cleanedKey.substring(0, 11);
       const rows = await db`
-        SELECT user_id, plan, request_count, created_at, last_used_at, max_limit, is_active
-        FROM mprojects_api_keys
-        WHERE api_key = ${hash} OR api_key = ${cleanedKey} OR api_key LIKE ${prefixCandidate + '%'}
+        SELECT k.user_id, k.plan, k.request_count, k.created_at, k.last_used_at, k.max_limit, k.is_active, u.tier as user_tier
+        FROM mprojects_api_keys k
+        LEFT JOIN users u ON k.user_id = u.id::text
+        WHERE k.api_key = ${hash} OR k.api_key = ${cleanedKey} OR k.api_key LIKE ${prefixCandidate + '%'}
         LIMIT 1
       `;
 
@@ -362,11 +363,13 @@ export async function validateApiKey(secretKey: string): Promise<{ valid: boolea
           WHERE api_key = ${hash} OR api_key = ${cleanedKey} OR api_key LIKE ${prefixCandidate + '%'}
         `;
 
+        const resolvedPlan = row.plan || row.user_tier || 'Free';
+
         return {
           valid: true,
           keyInfo: {
-            id: `db_key_${row.plan}`,
-            name: row.plan || 'Clé API',
+            id: `db_key_${resolvedPlan}`,
+            name: resolvedPlan,
             prefix: `${cleanedKey.substring(0, 11)}_••••••••`,
             createdAt: row.created_at ? new Date(row.created_at).toISOString() : now,
             lastUsedAt: now,

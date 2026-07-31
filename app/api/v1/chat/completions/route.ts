@@ -48,11 +48,16 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (!body.model.includes(':free') && !body.model.startsWith('mDevsLabs/') && !body.model.startsWith('mai-')) {
+    const planStr = (auth.plan || 'Free').toLowerCase().trim();
+    const isPaidPlan = ['plus', 'pro', 'max'].includes(planStr);
+    const isFreePlan = !isPaidPlan;
+    const modelName = (body.model || '').toLowerCase();
+
+    if (isFreePlan && !modelName.includes('free')) {
       return NextResponse.json<OpenAIErrorResponse>(
         {
           error: {
-            message: `Le modèle '${body.model}' nécessite un forfait payant (Plus, Pro ou Max). Votre forfait actuel (Free) autorise uniquement les modèles gratuits dont l'ID contient ':free'.`,
+            message: `Le modèle '${body.model}' nécessite un forfait payant (Plus, Pro ou Max). Votre forfait actuel (${auth.plan}) autorise uniquement les modèles contenant 'free'.`,
             type: 'permission_error',
             param: 'model',
             code: 'model_access_denied',
