@@ -5,11 +5,77 @@ import { Cpu, Eye, EyeOff, Layers, Calendar, ArrowRight, Sparkles, Zap } from "l
 import Link from "next/link";
 import Image from "next/image";
 
+const models15 = [
+  {
+    id: "mai-1.5-light",
+    name: "mAI-1.5-Light",
+    num: "01",
+    badge: "4B • Vision • Tools • 256K",
+    description:
+      "Assistant IA local ultra-rapide et multimodal de nouvelle génération 1.5. Léger (4B), équipé de la vision, du raisonnement approfondi (thinking) et des appels d'outils (tools) 100% en local.",
+    tagline: "Ultra-rapide, vision, thinking & tools (4B).",
+    parameters: "4B",
+    vision: true,
+    context: "256K tokens",
+    releaseDate: "28/08/2026",
+    bannerImage: "/mai-1.5-light/mAI-1.5-Light.png",
+    squareImage: "/mai-1.5-light/mAI-1.5-Light.png",
+    color: "from-cyan-400 to-blue-500",
+    shadowHover: "hover:shadow-[0_8px_32px_0_rgba(6,182,212,0.25)]",
+    borderHover: "hover:border-cyan-400/40",
+    tags: ["4B Paramètres", "Vision Multimodale", "Thinking", "Tools", "Contexte 256K"],
+    serieColor: "text-cyan-600",
+    serieBg: "bg-cyan-500/10 border-cyan-500/20",
+  },
+  {
+    id: "mai-1.5-apex",
+    name: "mAI-1.5-Apex",
+    num: "02",
+    badge: "9B • Vision • Tools • 256K",
+    description:
+      "Le modèle Flagship d'élite de la série 1.5. Avec 9 milliards de paramètres, il combine une puissance de calcul maximale, la vision haute précision, le raisonnement (thinking) et l'exécution d'outils.",
+    tagline: "Le sommet de la gamme. Flagship, vision, thinking & tools.",
+    parameters: "9B",
+    vision: true,
+    context: "256K tokens",
+    releaseDate: "28/08/2026",
+    bannerImage: "/mai-1.5-apex/mAI-1.5-Apex.png",
+    squareImage: "/mai-1.5-apex/mAI-1.5-Apex.png",
+    color: "from-amber-500 to-rose-600",
+    shadowHover: "hover:shadow-[0_8px_32px_0_rgba(245,158,11,0.25)]",
+    borderHover: "hover:border-amber-500/40",
+    tags: ["9B Paramètres", "Flagship", "Vision", "Thinking", "Tools"],
+    serieColor: "text-amber-600",
+    serieBg: "bg-amber-500/10 border-amber-500/20",
+  },
+  {
+    id: "mai-1.5-opal",
+    name: "mAI-1.5-Opal",
+    num: "03",
+    badge: "27B • Vision • Tools • 256K",
+    description:
+      "L'équilibre parfait entre vélocité et haute intelligence. Modèle 27B surpuissant avec vision multimodale, raisonnement pas-à-pas (thinking) et function calling (tools) pour les projets exigeants.",
+    tagline: "Haute intelligence (27B), vision, thinking & tools.",
+    parameters: "27B",
+    vision: true,
+    context: "256K tokens",
+    releaseDate: "28/08/2026",
+    bannerImage: "/mai-1.5-opal/mAI-1.5-Opal.png",
+    squareImage: "/mai-1.5-opal/mAI-1.5-Opal.png",
+    color: "from-indigo-500 to-purple-600",
+    shadowHover: "hover:shadow-[0_8px_32px_0_rgba(99,102,241,0.25)]",
+    borderHover: "hover:border-indigo-500/40",
+    tags: ["27B Paramètres", "Haute Intelligence", "Vision", "Thinking", "Tools"],
+    serieColor: "text-indigo-600",
+    serieBg: "bg-indigo-500/10 border-indigo-500/20",
+  },
+];
+
 const models12 = [
   {
     id: "mai-1.2-light",
     name: "mAI-1.2-Light",
-    num: "01",
+    num: "04",
     badge: "3B • Vision • 256K",
     description:
       "Assistant IA local ultra-rapide et multimodal. Léger, capable de voir tes visuels et de gérer tes requêtes au quotidien — productivité, code, résumé et analyse d'images sans envoyer tes données dans le cloud.",
@@ -149,10 +215,6 @@ function ModelCard({ model, index }: { model: typeof models12[0]; index: number 
             <h2 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">
               {model.name}
             </h2>
-            <p className={`text-xs font-semibold uppercase tracking-wider mt-1 flex items-center gap-1 ${model.serieColor}`}>
-              <Sparkles className="w-4 h-4" />
-              {model.tagline}
-            </p>
           </div>
         </div>
 
@@ -201,18 +263,6 @@ function ModelCard({ model, index }: { model: typeof models12[0]; index: number 
             <span>Sortie : <strong>{model.releaseDate}</strong></span>
           </div>
         </div>
-
-        {/* Badges de tags */}
-        <div className="flex flex-wrap gap-2 mb-6">
-          {model.tags.map((tag) => (
-            <span
-              key={tag}
-              className="text-[10px] px-2 py-1 rounded-full bg-white/50 backdrop-blur-md border border-white/70 shadow-sm text-slate-800 uppercase font-bold tracking-wider"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
       </div>
 
       {/* Actions / Liens */}
@@ -255,21 +305,56 @@ export default function ModelsPage() {
         </motion.p>
       </div>
 
-      {/* ─── Section mAI-1.2 (Nouvelle Génération) ─────────────────────────── */}
+      {/* ─── Section mAI-1.5 (Nouvelle Génération 1.5) ───────────────────────── */}
       <motion.section
+        id="mai-1.5"
+        className="scroll-mt-24"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15 }}
       >
         {/* Bandeau série */}
         <div className="flex items-center gap-3 mb-6">
-          <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-emerald-500/10 via-violet-500/10 to-rose-500/10 border border-emerald-500/20 text-slate-700 text-xs font-bold uppercase tracking-wider">
-            <Zap className="w-4 h-4 text-emerald-500" />
-            Nouvelle Génération
+          <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-cyan-500/10 via-amber-500/10 to-indigo-500/10 border border-cyan-500/20 text-slate-700 text-xs font-bold uppercase tracking-wider">
+            <Zap className="w-4 h-4 text-cyan-500" />
+            Nouvelle Génération 1.5
           </div>
-          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-500 text-white text-[10px] font-black uppercase tracking-widest shadow-sm">
+          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-cyan-500 text-white text-[10px] font-black uppercase tracking-widest shadow-sm">
             <Sparkles className="w-3 h-3" /> NEW
           </span>
+          <div className="flex-1 h-px bg-gradient-to-r from-cyan-500/20 to-transparent" />
+        </div>
+
+        <div className="mb-3">
+          <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
+            Série <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-amber-500 to-indigo-600">mAI-1.5</span>
+          </h2>
+          <p className="text-slate-500 text-sm font-light mt-1 max-w-2xl">
+            La toute dernière génération mAI : vision multimodale intégrée, mode thinking (raisonnement étape par étape) et support natif des appels d'outils (tools) 100% en local.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-6">
+          {models15.map((model, index) => (
+            <ModelCard key={model.id} model={model} index={index} />
+          ))}
+        </div>
+      </motion.section>
+
+      {/* ─── Section mAI-1.2 (Génération 1.2) ─────────────────────────── */}
+      <motion.section
+        id="mai-1.2"
+        className="scroll-mt-24"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+      >
+        {/* Bandeau série */}
+        <div className="flex items-center gap-3 mb-6">
+          <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-emerald-500/10 via-violet-500/10 to-rose-500/10 border border-emerald-500/20 text-slate-700 text-xs font-bold uppercase tracking-wider">
+            <Sparkles className="w-4 h-4 text-emerald-500" />
+            Génération 1.2
+          </div>
           <div className="flex-1 h-px bg-gradient-to-r from-emerald-500/20 to-transparent" />
         </div>
 
@@ -278,7 +363,7 @@ export default function ModelsPage() {
             Série <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 via-violet-500 to-rose-500">mAI-1.2</span>
           </h2>
           <p className="text-slate-500 text-sm font-light mt-1 max-w-2xl">
-            Multimodaux dès le départ, plus rapides, plus intelligents. Tous les modèles mAI-1.2 intègrent nativement la vision et tournent 100% en local via Ollama.
+            Multimodaux dès le départ, rapides et intelligents. Tous les modèles mAI-1.2 intègrent la vision et tournent 100% en local via Ollama.
           </p>
         </div>
 
@@ -291,6 +376,8 @@ export default function ModelsPage() {
 
       {/* ─── Section mAI-1 (Première Génération) ───────────────────────────── */}
       <motion.section
+        id="mai-1"
+        className="scroll-mt-24"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}

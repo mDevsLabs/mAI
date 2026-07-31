@@ -32,7 +32,7 @@ GET /v1/models
 \`\`\`
 
 ## Lister les modèles mAI exclusifs
-Renvoie la liste des modèles spécifiques à mAI, tels que `mai-1.2-apex`, `mai-1.2-opal`, et `mai-1-light`.
+Renvoie la liste des modèles spécifiques à mAI, tels que `mai-1.5-apex`, `mai-1.5-opal`, `mai-1.5-light`, ainsi que les séries mAI-1.2 et mAI-1.
 
 **Endpoint**
 \`\`\`http
@@ -45,16 +45,22 @@ GET /v1/mai/models
   "object": "list",
   "data": [
     {
-      "id": "mai-1.2-apex",
-      "name": "mAI 1.2 Apex",
-      "description": "Le modèle mAI le plus avancé pour la logique complexe.",
-      "context_length": 128000
+      "id": "mai-1.5-apex",
+      "name": "mAI 1.5 Apex",
+      "description": "Le modèle mAI haut de gamme Flagship avec vision, thinking et tools.",
+      "context_length": 262144
     },
     {
-      "id": "mai-1.2-opal",
-      "name": "mAI 1.2 Opal",
-      "description": "Modèle équilibré pour les tâches quotidiennes rapides.",
-      "context_length": 64000
+      "id": "mai-1.5-opal",
+      "name": "mAI 1.5 Opal",
+      "description": "Modèle 27B ultra-équilibré pour l'intelligence élevée et la vélocité.",
+      "context_length": 262144
+    },
+    {
+      "id": "mai-1.5-light",
+      "name": "mAI 1.5 Light",
+      "description": "Modèle 4B ultra-rapide et multimodal pour les machines personnelles.",
+      "context_length": 262144
     }
   ]
 }

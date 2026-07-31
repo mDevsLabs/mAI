@@ -1,15 +1,14 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
 import { BackToTop } from "@/components/back-to-top";
+import { StatusWidget } from "@/components/status-widget";
 import { AuthProvider } from "@/components/auth-provider";
 import { ToastProvider, CookieBanner } from "@/components/ui/index";
 import { getChangelogs } from "@/lib/changelog";
 import { getNewsArticles } from "@/lib/news";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
-
 
 const inter = {
   variable: "font-sans inter-variable",
@@ -29,7 +28,7 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
-    apple: "/mprojects.png",
+    apple: "/logo.png",
   },
 };
 
@@ -95,10 +94,7 @@ export default async function RootLayout({
             </AuthProvider>
           </ToastProvider>
           <BackToTop />
-        <Script 
-          src="https://api.dashboard.instatus.com/widget?host=mprojects.instatus.com&code=1ac64775&locale=fr" 
-          strategy="afterInteractive" 
-        />
+          <StatusWidget />
         <script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js"></script>
         <script src="https://files.bpcontent.cloud/2026/05/02/11/20260502114920-JBX5UCAM.js" defer></script>
       </body>

@@ -1,8 +1,6 @@
 "use client";
 
 import { motion } from "motion/react";
-import { useState } from "react";
-import { toast } from "react-hot-toast";
 import {
   ExternalLink,
   Sparkles,
@@ -15,8 +13,6 @@ import {
   Cpu,
   Github,
   BookOpen,
-  Copy,
-  Check,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";

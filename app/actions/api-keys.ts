@@ -52,7 +52,7 @@ export async function getUserApiUsage(userId: string) {
     const sql = neon(databaseUrl);
     
     const keys = await sql`
-      SELECT api_key, plan, request_count, created_at, last_used_at
+      SELECT api_key, plan, request_count, created_at, last_used_at, max_limit
       FROM mprojects_api_keys
       WHERE user_id = ${userId}
     `;
@@ -64,7 +64,8 @@ export async function getUserApiUsage(userId: string) {
         plan: k.plan,
         requestCount: k.request_count,
         createdAt: k.created_at,
-        lastUsedAt: k.last_used_at
+        lastUsedAt: k.last_used_at,
+        maxLimit: k.max_limit
       }))
     };
   } catch (error) {

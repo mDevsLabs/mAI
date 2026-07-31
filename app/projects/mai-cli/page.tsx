@@ -13,14 +13,10 @@ import {
   FileCode,
   MessageSquare,
   Key,
-  ShieldCheck,
   Github,
   BookOpen,
   Copy,
   Check,
-  Cpu,
-  Layers,
-  ArrowRight,
 } from "lucide-react";
 import Link from "next/link";
 import { GithubRepoStats } from "@/components/github-repo-stats";

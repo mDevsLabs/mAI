@@ -24,6 +24,6 @@ export default [
     },
   },
   {
-    ignores: [".next/**", "node_modules/**", "public/**"],
+    ignores: [".next/**", "node_modules/**", "public/**", "main.ts", "scripts/**"],
   }
 ];

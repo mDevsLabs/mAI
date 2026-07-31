@@ -1,5 +1,7 @@
 "use client";
 
+// Client component for Account Page
+
 import { FormEvent, useEffect, useMemo, useState, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -13,12 +15,16 @@ import {
   KeyRound,
   RefreshCw,
   Camera,
+  Phone,
+  Lock,
 } from "lucide-react";
 import { useAuth } from "@/components/auth-provider";
 import { MaiApiError } from "@/lib/mai-api";
 import { getUserApiUsage } from "@/app/actions/api-keys";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
+import Confetti from "react-confetti";
+import { useWindowSize } from "react-use";
 
 function formatTokens(n: number): string {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(n % 1_000_000 === 0 ? 0 : 1)}M`;
@@ -38,6 +44,18 @@ function formatResetDate(iso?: string): string {
   }
 }
 
+function getMonthlyResetDate(): string {
+  const now = new Date();
+  const nextMonth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1, 0, 0, 0));
+  return nextMonth.toLocaleString("fr-FR", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
 export default function AccountPage() {
   const {
     user,
@@ -55,15 +73,27 @@ export default function AccountPage() {
   const [codeError, setCodeError] = useState("");
   const [upgrading, setUpgrading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [refreshingApi, setRefreshingApi] = useState(false);
 
   // Formulaires d'édition du profil
   const [newUsername, setNewUsername] = useState("");
+  const [newEmail, setNewEmail] = useState("");
+  const [newPhone, setNewPhone] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [newsletter, setNewsletter] = useState(true);
+  const [notifyLimits, setNotifyLimits] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
   const [updatingProfile, setUpdatingProfile] = useState(false);
   
   // Avatar upload
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
+
+  // Effets de récompense pour l'upgrade
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [showRocket, setShowRocket] = useState(false);
+  const [upgradedTier, setUpgradedTier] = useState<string | null>(null);
+  const { width, height } = useWindowSize();
 
   // Stats d'utilisation des clés API (Neon)
   const [apiUsageStats, setApiUsageStats] = useState<{key: string, plan: string, requestCount: number, limit: number}[]>([]);
@@ -75,10 +105,19 @@ export default function AccountPage() {
   }, [loading, isAuthenticated, router]);
 
   useEffect(() => {
-    if (user?.username) {
-      setNewUsername(user.username);
+    if (user) {
+      if (user.username) setNewUsername(user.username);
+      if (user.email) setNewEmail(user.email);
+      if (user.phone) setNewPhone(user.phone);
     }
-  }, [user?.username]);
+  }, [user]);
+
+  useEffect(() => {
+    if (usage) {
+      if (usage.newsletter !== undefined) setNewsletter(usage.newsletter);
+      if (usage.notify_limits !== undefined) setNotifyLimits(usage.notify_limits);
+    }
+  }, [usage]);
 
   const percent = useMemo(() => {
     if (!usage || !usage.limit) return 0;
@@ -123,19 +162,38 @@ export default function AccountPage() {
     }
   };
 
+  const handleRefreshApiUsage = async () => {
+    setRefreshingApi(true);
+    try {
+      await loadApiUsage();
+      await refreshUsage();
+      toast.success("Usage API actualisé !");
+    } catch {
+      toast.error("Erreur lors de l'actualisation de l'usage API.");
+    } finally {
+      setRefreshingApi(false);
+    }
+  };
+
   const handleUpdateProfile = async (e: FormEvent) => {
     e.preventDefault();
-    if (!newUsername.trim() && !newPassword.trim()) {
-      toast.error("Veuillez remplir au moins un champ à modifier.");
+    if (!currentPassword.trim()) {
+      toast.error("Veuillez saisir votre mot de passe actuel pour valider les modifications.");
       return;
     }
     setUpdatingProfile(true);
     try {
       await updateProfile({
+        currentPassword: currentPassword.trim(),
         ...(newUsername.trim() !== user?.username ? { username: newUsername.trim() } : {}),
+        ...(newEmail.trim() !== user?.email ? { email: newEmail.trim() } : {}),
+        ...(newPhone.trim() !== (user?.phone || "") ? { phone: newPhone.trim() } : {}),
         ...(newPassword.trim() ? { password: newPassword.trim() } : {}),
+        newsletter: newsletter,
+        notify_limits: notifyLimits,
       });
       setNewPassword("");
+      setCurrentPassword("");
       toast.success("Profil mis à jour avec succès ! ✨");
     } catch (err: any) {
       toast.error(err.message || "Erreur lors de la mise à jour du profil.");
@@ -155,7 +213,44 @@ export default function AccountPage() {
     try {
       const tier = await verifyUpgradeCode(code.trim());
       setCode("");
-      toast.success(`Compte passé en ${tier}`);
+      setUpgradedTier(tier);
+      setShowConfetti(true);
+      setShowRocket(true);
+
+      // Son de succès
+      const audio = new Audio('/sounds/plan-update.mp3');
+      audio.play().catch(() => {});
+
+      await loadApiUsage();
+
+      // Toast personnalisé
+      toast.custom(
+        (_t) => (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-4 rounded-xl shadow-lg"
+          >
+            <div className="flex items-center gap-3">
+              <Sparkles className="w-5 h-5" />
+              <div>
+                <p className="font-bold">🎉 Félicitations !</p>
+                <p className="text-sm">Forfait <span className="font-black">{tier}</span> activé ! ✨</p>
+              </div>
+            </div>
+          </motion.div>
+        ),
+        { duration: 5000 }
+      );
+
+      // Arrêt des animations après 5s
+      setTimeout(() => {
+        setShowConfetti(false);
+        setShowRocket(false);
+        setUpgradedTier(null);
+      }, 5000);
+
     } catch (err) {
       const message =
         err instanceof MaiApiError
@@ -205,16 +300,56 @@ export default function AccountPage() {
   }
 
   // Quotas selon le forfait utilisateur (Free: 500, Plus: 1000, Pro: 2000, Max: 5000)
-  const getTierQuotaLabel = (tierStr?: string) => {
-    const t = (tierStr || "Free").toLowerCase();
-    if (t === "plus") return "1 000 requêtes / mois";
-    if (t === "pro") return "2 000 requêtes / mois";
-    if (t === "max") return "5 000 requêtes / mois";
-    return "500 requêtes / mois";
+  const getTierQuotaLimit = (tierStr?: string) => {
+    const t = (tierStr || "Free").toLowerCase().trim();
+    if (t === "plus") return 1000;
+    if (t === "pro") return 2000;
+    if (t === "max") return 5000;
+    return 500;
   };
 
   return (
     <div className="max-w-3xl mx-auto space-y-8 pb-12">
+      {/* Confettis */}
+      {showConfetti && (
+        <Confetti
+          width={width}
+          height={height}
+          colors={['#8B5CF6', '#EC4899', '#3B82F6', '#10B981', '#F59E0B']}
+          numberOfPieces={200}
+          gravity={0.15}
+          tweenDuration={5000}
+        />
+      )}
+
+      {/* Fusée */}
+      {showRocket && (
+        <motion.div
+          initial={{ x: -50, y: height / 2, opacity: 0, scale: 0.5 }}
+          animate={{ x: width + 50, y: height / 2, opacity: 1, scale: 1 }}
+          transition={{ duration: 3, ease: "easeInOut" }}
+          className="fixed z-50 pointer-events-none"
+        >
+          <div className="relative">
+            <motion.div
+              className="w-16 h-24 bg-gradient-to-b from-orange-400 to-red-500 rounded-t-full"
+              animate={{ y: [0, -5, 0] }}
+              transition={{ duration: 0.3, repeat: Infinity }}
+            />
+            <motion.div
+              className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-8 h-12"
+              animate={{
+                opacity: [0.3, 1, 0.3],
+                scaleY: [0.8, 1.2, 0.8],
+              }}
+              transition={{ duration: 0.5, repeat: Infinity }}
+            >
+              <div className="w-full h-full bg-gradient-to-t from-orange-500 to-transparent rounded-full" />
+            </motion.div>
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 w-4 h-4 bg-cyan-300 rounded-full border-2 border-white" />
+          </div>
+        </motion.div>
+      )}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-black text-slate-900 tracking-tight">
@@ -233,20 +368,118 @@ export default function AccountPage() {
         </button>
       </div>
 
-      {/* Modification de profil */}
-      <section className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-4">
+      {/* Section Profil unifiée : présentation + modification */}
+      <section id="profil" className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-6">
+
+        {/* --- Présentation du profil (en haut) --- */}
+        <div className="flex items-center gap-4">
+          <div className="relative group">
+            <div
+              onClick={() => fileInputRef.current?.click()}
+              className={`relative w-16 h-16 rounded-2xl flex items-center justify-center text-xl font-black shadow-md cursor-pointer overflow-hidden transition-all hover:ring-2 hover:ring-purple-500 hover:ring-offset-2 ${
+                user.avatarUrl ? "bg-white" : "bg-gradient-to-br from-purple-600 via-blue-600 to-emerald-500 text-white"
+              }`}
+            >
+              {user.avatarUrl ? (
+                <img src={user.avatarUrl} alt="Avatar" className="w-full h-full object-cover bg-white" />
+              ) : (
+                (user.username || user.email).slice(0, 2).toUpperCase()
+              )}
+              <div className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${uploadingAvatar ? "bg-black/60 opacity-100 backdrop-blur-sm" : "bg-black/40 opacity-0 group-hover:opacity-100"}`}>
+                {uploadingAvatar ? (
+                  <Loader2 className="w-5 h-5 animate-spin text-white" />
+                ) : (
+                  <Camera className="w-5 h-5 text-white" />
+                )}
+              </div>
+            </div>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleAvatarUpload}
+              accept="image/png, image/jpeg, image/webp"
+              className="hidden"
+            />
+          </div>
+          <div>
+            <h2 className="text-xl font-bold text-slate-900">{user.username}</h2>
+            <p className="text-sm text-slate-500 flex items-center gap-1.5 mt-0.5">
+              <Mail className="w-4 h-4 text-purple-600" />
+              {user.email}
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="rounded-2xl bg-white/60 border border-slate-200/80 p-4 shadow-sm">
+            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+              <User className="w-3.5 h-3.5 text-purple-600" /> Nom d&apos;utilisateur
+            </p>
+            <p className="font-bold text-slate-900 text-base">{user.username}</p>
+          </div>
+          <div className="rounded-2xl bg-white/60 border border-slate-200/80 p-4 shadow-sm">
+            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+              <Phone className="w-3.5 h-3.5 text-purple-600" /> Téléphone
+            </p>
+            <p className="font-bold text-slate-900 text-base">{user.phone || "Non renseigné"}</p>
+          </div>
+          <Link href="/pricing" className={`rounded-2xl bg-white/60 border border-slate-200/80 p-4 shadow-sm transition-all duration-300 hover:border-purple-300 hover:shadow-md cursor-pointer block ${
+            upgradedTier === user.tier ? "ring-4 ring-purple-500/50 shadow-purple-500/30" : ""
+          }`}>
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                <Sparkles className={`w-3.5 h-3.5 ${
+                  upgradedTier === user.tier ? "text-purple-500 animate-pulse" : "text-purple-600"
+                }`} /> Abonnement
+              </p>
+              <span className="text-[10px] text-purple-600 font-bold hover:underline">Voir les offres →</span>
+            </div>
+            <motion.p
+              className="font-bold text-slate-900 text-base"
+              animate={upgradedTier === user.tier ? { scale: [1, 1.1, 1] } : {}}
+              transition={{ duration: 0.5 }}
+            >
+              {user.tier || "Free"}
+            </motion.p>
+          </Link>
+        </div>
+
+        {/* --- Séparateur --- */}
+        <div className="border-t border-slate-200/60" />
+
+        {/* --- Formulaire de modification (en bas) --- */}
         <form onSubmit={handleUpdateProfile} className="space-y-4">
           <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
             <User className="w-4 h-4 text-purple-600" /> Modifier mon profil
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Nouveau nom d&apos;utilisateur</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1">Nom d&apos;utilisateur</label>
               <input
                 type="text"
                 value={newUsername}
                 onChange={(e) => setNewUsername(e.target.value)}
                 placeholder="Mon pseudo"
+                className="w-full px-4 py-2.5 rounded-xl bg-white/60 border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/30 text-slate-900"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">Adresse e-mail</label>
+              <input
+                type="email"
+                value={newEmail}
+                onChange={(e) => setNewEmail(e.target.value)}
+                placeholder="mon.email@exemple.com"
+                className="w-full px-4 py-2.5 rounded-xl bg-white/60 border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/30 text-slate-900"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">Numéro de téléphone</label>
+              <input
+                type="tel"
+                value={newPhone}
+                onChange={(e) => setNewPhone(e.target.value)}
+                placeholder="+33612345678"
                 className="w-full px-4 py-2.5 rounded-xl bg-white/60 border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/30 text-slate-900"
               />
             </div>
@@ -261,6 +494,68 @@ export default function AccountPage() {
               />
             </div>
           </div>
+
+          {/* Préférences e-mail */}
+          <div className="pt-2">
+            <h4 className="text-xs font-bold text-slate-700 mb-3 uppercase tracking-wider">Préférences e-mail</h4>
+            <div className="space-y-3">
+              <label className="flex items-start gap-3 cursor-pointer group">
+                <div className="relative flex items-center justify-center mt-0.5">
+                  <input
+                    type="checkbox"
+                    checked={newsletter}
+                    onChange={(e) => setNewsletter(e.target.checked)}
+                    className="peer sr-only"
+                  />
+                  <div className="w-5 h-5 rounded-md border-2 border-slate-300 bg-white peer-checked:bg-purple-600 peer-checked:border-purple-600 transition-colors group-hover:border-purple-500 flex items-center justify-center">
+                    <svg className={`w-3 h-3 text-white fill-current opacity-0 peer-checked:opacity-100 transition-opacity`} viewBox="0 0 20 20">
+                      <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" />
+                    </svg>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-slate-900">S'inscrire à la newsletter</p>
+                  <p className="text-xs text-slate-500">Recevoir les actualités mProjects et les mises à jour importantes.</p>
+                </div>
+              </label>
+
+              <label className="flex items-start gap-3 cursor-pointer group">
+                <div className="relative flex items-center justify-center mt-0.5">
+                  <input
+                    type="checkbox"
+                    checked={notifyLimits}
+                    onChange={(e) => setNotifyLimits(e.target.checked)}
+                    className="peer sr-only"
+                  />
+                  <div className="w-5 h-5 rounded-md border-2 border-slate-300 bg-white peer-checked:bg-purple-600 peer-checked:border-purple-600 transition-colors group-hover:border-purple-500 flex items-center justify-center">
+                    <svg className={`w-3 h-3 text-white fill-current opacity-0 peer-checked:opacity-100 transition-opacity`} viewBox="0 0 20 20">
+                      <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" />
+                    </svg>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-slate-900">M'avertir des limites de quota</p>
+                  <p className="text-xs text-slate-500">Recevoir un e-mail lorsque mes quotas API sont proches d'être atteints ou réinitialisés.</p>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div className="pt-2 border-t border-slate-200/60">
+            <label className="block text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+              <Lock className="w-3.5 h-3.5 text-red-500" />
+              Mot de passe actuel <span className="text-red-500 font-normal">(Obligatoire pour enregistrer)</span>
+            </label>
+            <input
+              type="password"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              placeholder="Saisissez votre mot de passe actuel"
+              className="w-full sm:w-1/2 px-4 py-2.5 rounded-xl bg-white/80 border border-red-200 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30 text-slate-900"
+              required
+            />
+          </div>
+
           <div className="flex justify-end pt-2">
             <button
               type="submit"
@@ -274,77 +569,21 @@ export default function AccountPage() {
         </form>
       </section>
 
-      {/* Forfaits & Quotas (Profil header) */}
-      <section className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-6">
-        <div className="flex items-center gap-4">
-          <div className="relative group">
-            <div 
-              onClick={() => fileInputRef.current?.click()}
-              className={`relative w-16 h-16 rounded-2xl flex items-center justify-center text-xl font-black shadow-md cursor-pointer overflow-hidden transition-all hover:ring-2 hover:ring-purple-500 hover:ring-offset-2 ${
-                user.avatarUrl ? "bg-white" : "bg-gradient-to-br from-purple-600 via-blue-600 to-emerald-500 text-white"
-              }`}
-            >
-              {user.avatarUrl ? (
-                <img src={user.avatarUrl} alt="Avatar" className="w-full h-full object-cover bg-white" />
-              ) : (
-                (user.username || user.email).slice(0, 2).toUpperCase()
-              )}
-              
-              {/* Overlay Hover / Loading */}
-              <div className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${uploadingAvatar ? "bg-black/60 opacity-100 backdrop-blur-sm" : "bg-black/40 opacity-0 group-hover:opacity-100"}`}>
-                {uploadingAvatar ? (
-                  <div className="flex flex-col items-center gap-1">
-                    <Loader2 className="w-5 h-5 animate-spin text-white" />
-                  </div>
-                ) : (
-                  <Camera className="w-5 h-5 text-white" />
-                )}
-              </div>
-            </div>
-            <input 
-              type="file" 
-              ref={fileInputRef}
-              onChange={handleAvatarUpload}
-              accept="image/png, image/jpeg, image/webp"
-              className="hidden"
-            />
-          </div>
-          <div>
-            <h2 className="text-xl font-bold text-slate-900">{user.username}</h2>
-            <p className="text-sm text-slate-500 flex items-center gap-1.5 mt-0.5">
-              <Mail className="w-4 h-4 text-purple-600" />
-              {user.email}
-            </p>
-          </div>
-          <span className="ml-auto inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-700 text-xs font-bold uppercase tracking-wider">
-            <Sparkles className="w-4 h-4 text-purple-600" />
-            {user.tier || "Free"}
-          </span>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-          <div className="rounded-2xl bg-white/60 border border-slate-200/80 p-4 shadow-sm">
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 flex items-center gap-1.5">
-              <User className="w-3.5 h-3.5 text-purple-600" /> Nom d&apos;utilisateur
-            </p>
-            <p className="font-bold text-slate-900 text-base">{user.username}</p>
-          </div>
-          <div className="rounded-2xl bg-white/60 border border-slate-200/80 p-4 shadow-sm">
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-purple-600" /> Quota API Réglé
-            </p>
-            <p className="font-bold text-slate-900 text-base">{getTierQuotaLabel(user.tier)}</p>
-          </div>
-        </div>
-      </section>
-
       {/* Usage API */}
-      <section className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-4">
+      <section id="usage-api" className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-4">
         <div className="flex items-center justify-between gap-3">
           <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
             <KeyRound className="w-5 h-5 text-purple-600" />
             Usage API (Toutes clés confondues)
           </h2>
+          <button
+            onClick={handleRefreshApiUsage}
+            disabled={refreshingApi}
+            className="p-2 rounded-xl border border-slate-200 hover:bg-white/80 text-slate-600 transition-colors disabled:opacity-50 cursor-pointer"
+            title="Actualiser"
+          >
+            <RefreshCw className={`w-4 h-4 ${refreshingApi ? "animate-spin" : ""}`} />
+          </button>
         </div>
 
         {apiUsageStats.length > 0 ? (
@@ -352,9 +591,9 @@ export default function AccountPage() {
             {(() => {
               // Calcul de l'usage global (toutes les clés confondues)
               const totalRequests = apiUsageStats.reduce((acc, curr) => acc + curr.requestCount, 0);
-              // La limite globale du compte est la limite du forfait de la première clé (qui est liée à l'utilisateur)
-              const globalLimit = apiUsageStats[0]?.limit || 500;
-              const percent = Math.min(100, (totalRequests / globalLimit) * 100);
+              // La limite globale du compte s'appuie directement sur le forfait de l'utilisateur
+              const globalLimit = getTierQuotaLimit(user?.tier);
+              const percent = Math.min(100, Math.round((totalRequests / globalLimit) * 100));
 
               return (
                 <div className="space-y-2">
@@ -375,7 +614,7 @@ export default function AccountPage() {
                     />
                   </div>
                   <p className="text-xs text-slate-500 mt-2">
-                    Le quota de requêtes est appliqué au niveau de votre compte et partagé entre toutes vos clés.
+                    Réinitialisation mensuelle : {getMonthlyResetDate()}
                   </p>
                 </div>
               );
@@ -397,7 +636,7 @@ export default function AccountPage() {
       
 
       {/* Usage mAI */}
-      <section className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-4">
+      <section id="usage-mai" className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-4">
         <div className="flex items-center justify-between gap-3">
           <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
             <Gauge className="w-5 h-5 text-purple-600" />
@@ -447,38 +686,10 @@ export default function AccountPage() {
         )}
       </section>
 
-      {/* Tableau récapitulatif des forfaits */}
-      <section className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-4">
-        <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-purple-600" />
-          Rappel des Forfaits &amp; Quotas API
-        </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-          <div className={`p-4 rounded-2xl border ${user.tier?.toLowerCase() === "free" ? "bg-purple-50/80 border-purple-300 ring-2 ring-purple-500/20" : "bg-white/50 border-slate-200"}`}>
-            <p className="font-bold text-slate-900 text-sm">Free</p>
-            <p className="text-purple-700 font-extrabold text-base mt-1">500</p>
-            <p className="text-slate-500 text-[11px]">req / mois</p>
-          </div>
-          <div className={`p-4 rounded-2xl border ${user.tier?.toLowerCase() === "plus" ? "bg-purple-50/80 border-purple-300 ring-2 ring-purple-500/20" : "bg-white/50 border-slate-200"}`}>
-            <p className="font-bold text-slate-900 text-sm">Plus</p>
-            <p className="text-purple-700 font-extrabold text-base mt-1">1 500</p>
-            <p className="text-slate-500 text-[11px]">req / mois</p>
-          </div>
-          <div className={`p-4 rounded-2xl border ${user.tier?.toLowerCase() === "pro" ? "bg-purple-50/80 border-purple-300 ring-2 ring-purple-500/20" : "bg-white/50 border-slate-200"}`}>
-            <p className="font-bold text-slate-900 text-sm">Pro</p>
-            <p className="text-purple-700 font-extrabold text-base mt-1">5 000</p>
-            <p className="text-slate-500 text-[11px]">req / mois</p>
-          </div>
-          <div className={`p-4 rounded-2xl border ${user.tier?.toLowerCase() === "max" ? "bg-purple-50/80 border-purple-300 ring-2 ring-purple-500/20" : "bg-white/50 border-slate-200"}`}>
-            <p className="font-bold text-slate-900 text-sm">Max</p>
-            <p className="text-purple-700 font-extrabold text-base mt-1">Illimité</p>
-            <p className="text-slate-500 text-[11px]">req / mois</p>
-          </div>
-        </div>
-      </section>
+
 
       {/* Upgrade code */}
-      <section className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-4">
+      <section id="upgrade-code" className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-4">
         <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
           <KeyRound className="w-5 h-5 text-purple-600" />
           Activer un Code d&apos;Upgrade

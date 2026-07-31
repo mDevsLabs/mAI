@@ -9,8 +9,10 @@ export const MAI_API_BASE =
 
 export type MaiAuthResponse = {
   success: boolean;
-  token: string;
-  tier: string;
+  status?: string; // "verification_required"
+  email?: string;
+  token?: string;
+  tier?: string;
   error?: string;
 };
 
@@ -18,7 +20,10 @@ export type MaiUsage = {
   tier: string;
   email: string;
   username: string;
+  phone?: string;
   avatarUrl?: string;
+  newsletter?: boolean;
+  notify_limits?: boolean;
   tokensUsed: number;
   limit: number;
   weekStart: string;
@@ -27,8 +32,8 @@ export type MaiUsage = {
 
 export type MaiVerifyCodeResponse = {
   success: boolean;
-  tier: string;
-  token: string;
+  tier?: string;
+  token?: string;
   error?: string;
 };
 
@@ -94,11 +99,44 @@ export async function register(params: {
   });
 }
 
-export async function login(params: {
+export async function verifyRegister(params: {
   email: string;
+  username: string;
+  password: string;
+  code: string;
+}): Promise<MaiAuthResponse> {
+  return request<MaiAuthResponse>("/verify-register", {
+    method: "POST",
+    body: JSON.stringify(params),
+  });
+}
+
+export async function login(params: {
+  identifier?: string;
+  email?: string;
   password: string;
 }): Promise<MaiAuthResponse> {
   return request<MaiAuthResponse>("/login", {
+    method: "POST",
+    body: JSON.stringify(params),
+  });
+}
+
+export async function verifyLogin(params: {
+  email: string;
+  code: string;
+}): Promise<MaiAuthResponse> {
+  return request<MaiAuthResponse>("/verify-login", {
+    method: "POST",
+    body: JSON.stringify(params),
+  });
+}
+
+export async function resendVerificationCode(params: {
+  email: string;
+  action: "register" | "login";
+}): Promise<{ success: boolean; error?: string }> {
+  return request<{ success: boolean; error?: string }>("/resend-code", {
     method: "POST",
     body: JSON.stringify(params),
   });
@@ -124,8 +162,8 @@ export async function verifyCode(
 
 export async function updateProfile(
   token: string,
-  params: { username?: string; password?: string }
-): Promise<{ success: boolean; username?: string; tier?: string; email?: string; error?: string }> {
+  params: { username?: string; email?: string; phone?: string; password?: string; currentPassword?: string; newsletter?: boolean; notify_limits?: boolean }
+): Promise<{ success: boolean; username?: string; tier?: string; email?: string; phone?: string; newsletter?: boolean; notify_limits?: boolean; error?: string }> {
   return request("/update-profile", {
     method: "POST",
     token,

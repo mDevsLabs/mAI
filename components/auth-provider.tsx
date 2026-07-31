@@ -28,6 +28,7 @@ import {
 export type AuthUser = {
   email: string;
   username: string;
+  phone?: string;
   tier: string;
   avatarUrl?: string;
 };
@@ -38,16 +39,14 @@ type AuthContextValue = {
   usage: MaiUsage | null;
   loading: boolean;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  register: (
-    email: string,
-    username: string,
-    password: string
-  ) => Promise<void>;
+  login: (emailOrId: string, password: string) => Promise<any>;
+  verifyLogin: (email: string, code: string) => Promise<void>;
+  register: (email: string, username: string, password: string) => Promise<any>;
+  verifyRegister: (email: string, username: string, password: string, code: string) => Promise<void>;
   logout: () => void;
   refreshUsage: () => Promise<MaiUsage | null>;
   verifyUpgradeCode: (code: string) => Promise<string>;
-  updateProfile: (params: { username?: string; password?: string }) => Promise<void>;
+  updateProfile: (params: { username?: string; email?: string; phone?: string; password?: string; currentPassword?: string; newsletter?: boolean; notify_limits?: boolean }) => Promise<void>;
   uploadAvatar: (file: File) => Promise<void>;
 };
 
@@ -56,10 +55,11 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 function sessionToUser(session: MaiSession, usage?: MaiUsage | null): AuthUser | null {
   const email = usage?.email || session.email;
   const username = usage?.username || session.username;
+  const phone = usage?.phone;
   const tier = usage?.tier || session.tier || "Free";
   const avatarUrl = usage?.avatarUrl;
   if (!email || !username) return null;
-  return { email, username, tier, avatarUrl };
+  return { email, username, phone, tier, avatarUrl };
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -73,6 +73,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser({
       email: data.email,
       username: data.username,
+      phone: data.phone,
       tier: data.tier,
       avatarUrl: data.avatarUrl,
     });
@@ -140,11 +141,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [applyUsage]);
 
   const login = useCallback(
-    async (email: string, password: string) => {
-      const res = await apiLogin({ email, password });
+    async (emailOrId: string, password: string) => {
+      return await apiLogin({ identifier: emailOrId, email: emailOrId, password });
+    },
+    []
+  );
+
+  const verifyLogin = useCallback(
+    async (email: string, code: string) => {
+      const res = await import("@/lib/mai-api").then(m => m.verifyLogin({ email, code }));
       if (!res.token) throw new Error("Token manquant dans la réponse.");
       setToken(res.token);
-      setSession({ token: res.token, tier: res.tier, email });
+      setSession({ token: res.token, tier: res.tier });
       const data = await getUsage(res.token);
       applyUsage(res.token, data);
     },
@@ -153,7 +161,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const register = useCallback(
     async (email: string, username: string, password: string) => {
-      const res = await apiRegister({ email, username, password });
+      return await apiRegister({ email, username, password });
+    },
+    []
+  );
+
+  const verifyRegister = useCallback(
+    async (email: string, username: string, password: string, code: string) => {
+      const res = await import("@/lib/mai-api").then(m => m.verifyRegister({ email, username, password, code }));
       if (!res.token) throw new Error("Token manquant dans la réponse.");
       setToken(res.token);
       setSession({
@@ -183,13 +198,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setToken(res.token);
       const data = await getUsage(res.token);
       applyUsage(res.token, data);
-      return res.tier;
+      return res.tier || "Free";
     },
     [applyUsage, token]
   );
 
   const updateProfile = useCallback(
-    async (params: { username?: string; password?: string }) => {
+    async (params: { username?: string; email?: string; phone?: string; password?: string; currentPassword?: string; newsletter?: boolean; notify_limits?: boolean }) => {
       if (!token) throw new Error("Non authentifié.");
       const res = await apiUpdateProfile(token, params);
       if (res.error) throw new Error(res.error);
@@ -218,7 +233,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       loading,
       isAuthenticated: !!token && !!user,
       login,
+      verifyLogin,
       register,
+      verifyRegister,
       logout,
       refreshUsage,
       verifyUpgradeCode,
@@ -231,7 +248,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       usage,
       loading,
       login,
+      verifyLogin,
       register,
+      verifyRegister,
       logout,
       refreshUsage,
       verifyUpgradeCode,

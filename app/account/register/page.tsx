@@ -9,7 +9,7 @@ import { MaiApiError } from "@/lib/mai-api";
 import toast from "react-hot-toast";
 
 function RegisterForm() {
-  const { register, isAuthenticated, loading: authLoading } = useAuth();
+  const { register, verifyRegister, isAuthenticated, loading: authLoading } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const next = searchParams.get("next") || "/account";
@@ -20,6 +20,9 @@ function RegisterForm() {
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  const [step, setStep] = useState<"register" | "verify">("register");
+  const [verificationCode, setVerificationCode] = useState("");
 
   useEffect(() => {
     if (!authLoading && isAuthenticated) {
@@ -50,9 +53,14 @@ function RegisterForm() {
 
     setSubmitting(true);
     try {
-      await register(email.trim(), username.trim(), password);
-      toast.success("Compte créé avec succès");
-      router.push(next.startsWith("/") ? next : "/account");
+      const res = await register(email.trim(), username.trim(), password);
+      if (res.status === "verification_required") {
+        setStep("verify");
+        toast.success("Code de vérification envoyé à votre adresse e-mail.");
+      } else {
+        toast.success("Compte créé avec succès");
+        router.push(next.startsWith("/") ? next : "/account");
+      }
     } catch (err) {
       const message =
         err instanceof MaiApiError
@@ -67,10 +75,125 @@ function RegisterForm() {
     }
   };
 
+  const handleVerify = async (e: FormEvent) => {
+    e.preventDefault();
+    setError("");
+    if (!verificationCode.trim()) {
+      setError("Veuillez renseigner le code de vérification.");
+      return;
+    }
+    setSubmitting(true);
+    try {
+      await verifyRegister(email.trim(), username.trim(), password, verificationCode.trim());
+      toast.success("Compte vérifié et créé avec succès");
+      router.push(next.startsWith("/") ? next : "/account");
+    } catch (err) {
+      const message =
+        err instanceof MaiApiError
+          ? err.message
+          : err instanceof Error
+            ? err.message
+            : "Code de vérification invalide.";
+      setError(message);
+      toast.error(message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleResend = async () => {
+    try {
+      const { resendVerificationCode } = await import("@/lib/mai-api");
+      await resendVerificationCode({ email: email.trim(), action: "register" });
+      toast.success("Nouveau code envoyé");
+    } catch (err) {
+      const message =
+        err instanceof MaiApiError
+          ? err.message
+          : err instanceof Error
+            ? err.message
+            : "Erreur lors du renvoi du code.";
+      toast.error(message);
+    }
+  };
+
   if (authLoading) {
     return (
       <div className="flex justify-center py-20 text-slate-500">
         <Loader2 className="w-6 h-6 animate-spin" />
+      </div>
+    );
+  }
+
+  if (step === "verify") {
+    return (
+      <div className="max-w-md mx-auto">
+        <div className="mb-8 text-center">
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight mb-2">
+            Vérification
+          </h1>
+          <p className="text-slate-600 text-sm">
+            Un code à 6 chiffres a été envoyé à <strong>{email}</strong>.
+          </p>
+        </div>
+
+        <form
+          onSubmit={handleVerify}
+          className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-4"
+        >
+          {error && (
+            <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-700 text-sm font-medium">
+              {error}
+            </div>
+          )}
+
+          <div>
+            <label className="block text-xs font-bold text-slate-700 mb-1.5">
+              Code de vérification
+            </label>
+            <input
+              type="text"
+              value={verificationCode}
+              onChange={(e) => setVerificationCode(e.target.value)}
+              placeholder="123456"
+              className="w-full px-4 py-2.5 rounded-xl bg-white/60 border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/30 text-slate-900 placeholder-slate-400 text-center tracking-widest font-mono text-lg"
+              maxLength={6}
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={submitting}
+            className="w-full py-3 rounded-xl bg-purple-600 hover:bg-purple-500 disabled:opacity-60 text-white font-bold text-sm transition-all flex items-center justify-center gap-2"
+          >
+            {submitting ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              "Vérifier"
+            )}
+          </button>
+
+          <p className="text-center text-sm text-slate-600 pt-2">
+            Vous n'avez rien reçu ?{" "}
+            <button
+              type="button"
+              onClick={handleResend}
+              className="text-purple-600 font-semibold hover:underline"
+            >
+              Renvoyer le code
+            </button>
+          </p>
+          <p className="text-center text-sm text-slate-600">
+            <button
+              type="button"
+              onClick={() => setStep("register")}
+              className="text-slate-500 font-medium hover:underline"
+            >
+              Modifier mes informations
+            </button>
+          </p>
+        </form>
       </div>
     );
   }
