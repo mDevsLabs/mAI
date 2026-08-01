@@ -10,4 +10,5 @@ node_modules*
 main.ts
 main-projects.ts
 aiModels.ts
+maiModels.ts
 .neon

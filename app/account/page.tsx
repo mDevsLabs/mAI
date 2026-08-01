@@ -574,7 +574,7 @@ export default function AccountPage() {
         <div className="flex items-center justify-between gap-3">
           <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
             <KeyRound className="w-5 h-5 text-purple-600" />
-            Usage API (Toutes clés confondues)
+            Usage API
           </h2>
           <button
             onClick={handleRefreshApiUsage}
@@ -597,11 +597,14 @@ export default function AccountPage() {
 
               return (
                 <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-slate-700 font-bold">Requêtes API globales</span>
-                    <span className="text-slate-900 font-medium">
-                      {totalRequests.toLocaleString()} / {globalLimit.toLocaleString()} requêtes
-                    </span>
+                  <div className="flex items-end justify-between text-sm">
+                    <p className="text-slate-600">
+                      <span className="font-bold text-slate-900">
+                        {totalRequests.toLocaleString()}
+                      </span>{" "}
+                      / {globalLimit.toLocaleString()} requêtes
+                    </p>
+                    <p className="font-semibold text-slate-900">{percent}%</p>
                   </div>
                   <div className="w-full bg-slate-200/80 rounded-full h-3 overflow-hidden">
                     <motion.div
