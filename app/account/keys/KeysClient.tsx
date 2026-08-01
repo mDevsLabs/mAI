@@ -53,7 +53,7 @@ export default function KeysClient() {
     try {
       const res = await fetch('/api/dev-keys', {
         headers: {
-          'x-user-id': encodeURIComponent(user?.username || user?.email || 'dev_user'),
+          'x-user-id': encodeURIComponent(String(user?.id || user?.username || user?.email || 'dev_user')),
         },
       });
       const data = await res.json();
@@ -82,7 +82,7 @@ export default function KeysClient() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-user-id': encodeURIComponent(user?.username || user?.email || 'dev_user'),
+          'x-user-id': encodeURIComponent(String(user?.id || user?.username || user?.email || 'dev_user')),
         },
         body: JSON.stringify({ name: newKeyName.trim(), maxLimit: newKeyLimit }),
       });
@@ -116,7 +116,7 @@ export default function KeysClient() {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'x-user-id': encodeURIComponent(user?.username || user?.email || 'dev_user'),
+          'x-user-id': encodeURIComponent(String(user?.id || user?.username || user?.email || 'dev_user')),
         },
         body: JSON.stringify({ 
           maxLimit: editLimit,
@@ -161,7 +161,7 @@ export default function KeysClient() {
       const res = await fetch(`/api/dev-keys/${encodeURIComponent(targetId)}`, {
         method: 'DELETE',
         headers: {
-          'x-user-id': encodeURIComponent(user?.username || user?.email || 'dev_user'),
+          'x-user-id': encodeURIComponent(String(user?.id || user?.username || user?.email || 'dev_user')),
         },
       });
 

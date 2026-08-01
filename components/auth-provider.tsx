@@ -26,6 +26,7 @@ import {
 } from "@/lib/auth-storage";
 
 export type AuthUser = {
+  id?: string | number;
   email: string;
   username: string;
   phone?: string;

@@ -15,8 +15,9 @@ export async function getDashboardStats(userId: string) {
     const totalRequestsResult = await sql`
       SELECT COUNT(*) as count 
       FROM mprojects_api_logs l
-      JOIN mprojects_api_keys k ON l.api_key = k.api_key
-      WHERE k.user_id = ${userId}
+      JOIN mprojects_api_keys k ON l.api_key = k.api_key OR l.api_key LIKE (k.api_key || '%') OR k.api_key LIKE (l.api_key || '%')
+      LEFT JOIN users u ON k.user_id = u.id::text OR k.user_id = u.username OR k.user_id = u.email
+      WHERE k.user_id = ${userId}::text OR u.id::text = ${userId}::text OR u.username = ${userId}::text OR u.email = ${userId}::text
     `;
     const totalRequests = parseInt(totalRequestsResult[0].count, 10);
 
@@ -24,8 +25,9 @@ export async function getDashboardStats(userId: string) {
     const avgLatencyResult = await sql`
       SELECT AVG(latency_ms) as avg_latency 
       FROM mprojects_api_logs l
-      JOIN mprojects_api_keys k ON l.api_key = k.api_key
-      WHERE k.user_id = ${userId}
+      JOIN mprojects_api_keys k ON l.api_key = k.api_key OR l.api_key LIKE (k.api_key || '%') OR k.api_key LIKE (l.api_key || '%')
+      LEFT JOIN users u ON k.user_id = u.id::text OR k.user_id = u.username OR k.user_id = u.email
+      WHERE k.user_id = ${userId}::text OR u.id::text = ${userId}::text OR u.username = ${userId}::text OR u.email = ${userId}::text
     `;
     const avgLatency = avgLatencyResult[0].avg_latency ? Math.round(parseFloat(avgLatencyResult[0].avg_latency)) : 0;
 
@@ -33,8 +35,9 @@ export async function getDashboardStats(userId: string) {
     const errorRequestsResult = await sql`
       SELECT COUNT(*) as error_count 
       FROM mprojects_api_logs l
-      JOIN mprojects_api_keys k ON l.api_key = k.api_key
-      WHERE k.user_id = ${userId} AND status_code >= 400
+      JOIN mprojects_api_keys k ON l.api_key = k.api_key OR l.api_key LIKE (k.api_key || '%') OR k.api_key LIKE (l.api_key || '%')
+      LEFT JOIN users u ON k.user_id = u.id::text OR k.user_id = u.username OR k.user_id = u.email
+      WHERE (k.user_id = ${userId}::text OR u.id::text = ${userId}::text OR u.username = ${userId}::text OR u.email = ${userId}::text) AND status_code >= 400
     `;
     const errorCount = parseInt(errorRequestsResult[0].error_count, 10);
     const successRate = totalRequests > 0 ? Math.round(((totalRequests - errorCount) / totalRequests) * 100) : 100;
@@ -43,19 +46,19 @@ export async function getDashboardStats(userId: string) {
     const endpointsResult = await sql`
       SELECT l.endpoint as name, COUNT(*) as value
       FROM mprojects_api_logs l
-      JOIN mprojects_api_keys k ON l.api_key = k.api_key
-      WHERE k.user_id = ${userId}
+      JOIN mprojects_api_keys k ON l.api_key = k.api_key OR l.api_key LIKE (k.api_key || '%') OR k.api_key LIKE (l.api_key || '%')
+      LEFT JOIN users u ON k.user_id = u.id::text OR k.user_id = u.username OR k.user_id = u.email
+      WHERE k.user_id = ${userId}::text OR u.id::text = ${userId}::text OR u.username = ${userId}::text OR u.email = ${userId}::text
       GROUP BY l.endpoint
       ORDER BY value DESC
     `;
     const endpointsData = endpointsResult.map(r => ({
       name: r.name,
       value: parseInt(r.value, 10),
-      color: "#" + Math.floor(Math.random()*16777215).toString(16) // Random color ou attribuer via le frontend
+      color: "#" + Math.floor(Math.random()*16777215).toString(16)
     }));
 
     // Données sur les 30 derniers jours (graphique principal)
-    // Utilisation de generate_series pour avoir des 0 pour les jours sans requêtes
     const monthlyDataResult = await sql`
       WITH date_series AS (
         SELECT generate_series(
@@ -72,8 +75,9 @@ export async function getDashboardStats(userId: string) {
       LEFT JOIN (
         SELECT al.id, al.status_code, al.created_at::date as date
         FROM mprojects_api_logs al
-        JOIN mprojects_api_keys ak ON al.api_key = ak.api_key
-        WHERE ak.user_id = ${userId}
+        JOIN mprojects_api_keys ak ON al.api_key = ak.api_key OR al.api_key LIKE (ak.api_key || '%') OR ak.api_key LIKE (al.api_key || '%')
+        LEFT JOIN users u ON ak.user_id = u.id::text OR ak.user_id = u.username OR ak.user_id = u.email
+        WHERE ak.user_id = ${userId}::text OR u.id::text = ${userId}::text OR u.username = ${userId}::text OR u.email = ${userId}::text
       ) l ON d.date = l.date
       GROUP BY d.date
       ORDER BY d.date ASC
@@ -100,8 +104,9 @@ export async function getDashboardStats(userId: string) {
       LEFT JOIN (
         SELECT al.latency_ms, date_trunc('hour', al.created_at) as hour_ts
         FROM mprojects_api_logs al
-        JOIN mprojects_api_keys ak ON al.api_key = ak.api_key
-        WHERE ak.user_id = ${userId}
+        JOIN mprojects_api_keys ak ON al.api_key = ak.api_key OR al.api_key LIKE (ak.api_key || '%') OR ak.api_key LIKE (al.api_key || '%')
+        LEFT JOIN users u ON ak.user_id = u.id::text OR ak.user_id = u.username OR ak.user_id = u.email
+        WHERE ak.user_id = ${userId}::text OR u.id::text = ${userId}::text OR u.username = ${userId}::text OR u.email = ${userId}::text
       ) l ON h.hour_ts = l.hour_ts
       GROUP BY h.hour_ts
       ORDER BY h.hour_ts ASC
@@ -123,10 +128,10 @@ export async function getDashboardStats(userId: string) {
       }
     };
   } catch (error) {
-    console.error("Erreur lors de la récupération des statistiques:", error);
+    console.error("Erreur lors de la récupération des stats du dashboard:", error);
     return {
       success: false,
-      error: "Impossible de récupérer les statistiques."
+      error: "Impossible de récupérer les statistiques du dashboard"
     };
   }
 }

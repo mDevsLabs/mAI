@@ -72,7 +72,7 @@ export async function createApiKey(userId: string, name: string, maxLimit: numbe
     try {
       await db`
         INSERT INTO mprojects_api_keys (user_id, api_key, plan, request_count, created_at, max_limit, is_active)
-        VALUES (${userId}, ${prefix}, ${name}, 0, ${now}, ${maxLimit}, true)
+        VALUES (${userId}, ${secretKey}, ${name}, 0, ${now}, ${maxLimit}, true)
       `;
       storedInDb = true;
     } catch (err) {
@@ -116,10 +116,14 @@ export async function listApiKeys(userId: string): Promise<ApiKeyMetadata[]> {
   if (db) {
     try {
       const rows = await db`
-        SELECT api_key, plan, request_count, created_at, last_used_at, max_limit, is_active
-        FROM mprojects_api_keys
-        WHERE user_id = ${userId}
-        ORDER BY created_at DESC
+        SELECT k.api_key, k.plan, k.request_count, k.created_at, k.last_used_at, k.max_limit, k.is_active
+        FROM mprojects_api_keys k
+        LEFT JOIN users u ON k.user_id = u.id::text OR k.user_id = u.username OR k.user_id = u.email
+        WHERE k.user_id = ${userId}::text
+           OR u.id::text = ${userId}::text
+           OR u.username = ${userId}::text
+           OR u.email = ${userId}::text
+        ORDER BY k.created_at DESC
       `;
 
       rows.forEach((row: any, idx: number) => {
@@ -341,8 +345,12 @@ export async function validateApiKey(secretKey: string): Promise<{ valid: boolea
       const rows = await db`
         SELECT k.user_id, k.plan, k.request_count, k.created_at, k.last_used_at, k.max_limit, k.is_active, u.tier as user_tier
         FROM mprojects_api_keys k
-        LEFT JOIN users u ON k.user_id = u.id::text
-        WHERE k.api_key = ${hash} OR k.api_key = ${cleanedKey} OR k.api_key LIKE ${prefixCandidate + '%'}
+        LEFT JOIN users u ON k.user_id = u.id::text OR k.user_id = u.username OR k.user_id = u.email
+        WHERE k.api_key = ${hash} 
+           OR k.api_key = ${cleanedKey} 
+           OR k.api_key = ${prefixCandidate}
+           OR k.api_key LIKE ${prefixCandidate + '%'}
+           OR ${cleanedKey} LIKE (k.api_key || '%')
         LIMIT 1
       `;
 
@@ -360,7 +368,11 @@ export async function validateApiKey(secretKey: string): Promise<{ valid: boolea
         await db`
           UPDATE mprojects_api_keys
           SET request_count = request_count + 1, last_used_at = NOW()
-          WHERE api_key = ${hash} OR api_key = ${cleanedKey} OR api_key LIKE ${prefixCandidate + '%'}
+          WHERE api_key = ${hash} 
+             OR api_key = ${cleanedKey} 
+             OR api_key = ${prefixCandidate}
+             OR api_key LIKE ${prefixCandidate + '%'}
+             OR ${cleanedKey} LIKE (api_key || '%')
         `;
 
         const resolvedPlan = row.plan || row.user_tier || 'Free';
