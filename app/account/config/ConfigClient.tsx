@@ -36,7 +36,7 @@ export default function ConfigClient() {
         }).catch(() => null);
 
         if (!res || !res.ok) {
-          res = await fetch('https://mprojects.val.run/v1/models').catch(() => null);
+          res = await fetch('https://mai.val.run/v1/models').catch(() => null);
         }
 
         if (res && res.ok) {
@@ -229,7 +229,7 @@ runAnthropic();`;
   const handleVerifyConnection = async () => {
     setIsVerifying(true);
     try {
-      const url = hostTarget === 'ollama' ? 'http://localhost:11434/api/generate' : (hostTarget === 'cloud' ? 'https://mprojects.val.run/v1/chat/completions' : '/api/v1/chat/completions');
+      const url = hostTarget === 'ollama' ? 'http://localhost:11434/api/generate' : (hostTarget === 'cloud' ? 'https://mai.val.run/v1/chat/completions' : '/api/v1/chat/completions');
       
       const payload = hostTarget === 'ollama' ? {
         model: selectedModel,

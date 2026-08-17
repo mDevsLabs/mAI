@@ -11,14 +11,16 @@ Toutes les applications et modèles développés par **mDevsLabs** sont héberg�
 
 ## 🔗 Dépôts principaux
 
-- **mAI** : [Dépôt principal mAI](https://github.com/mDevsLabs/mAI)
-- **mSearch** : [Dépôt principal mSearch](https://github.com/mDevsLabs/mSearch)
-- **mProjects** : [Dépôt de ce portail web](https://github.com/mDevsLabs/mProjects)
+- **Web** : [Dépôt officiel mAI Web](https://github.com/mDevsLabs/Web)
+- **Pulse** : [Dépôt officiel mAI Pulse](https://github.com/mDevsLabs/Pulse)
+- **CLI** : [Dépôt officiel mAI CLI](https://github.com/mDevsLabs/CLI)
+- **Office** : [Dépôt officiel mAI Office](https://github.com/mDevsLabs/Office)
+- **mAI Portail** : [Dépôt du portail officiel](https://github.com/mDevsLabs/mAI)
 
 ## 🛠️ Cloner un projet
 
 Pour cloner un de nos projets en local et l'exécuter, utilisez la commande git suivante dans votre terminal :
 
 ```bash
-git clone https://github.com/mDevsLabs/NomDuProjet.git
+git clone https://github.com/mDevsLabs/Web.git
 ```

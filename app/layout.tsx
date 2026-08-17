@@ -20,11 +20,11 @@ const spaceGrotesk = {
 
 export const metadata: Metadata = {
   title: {
-    default: "mProjects - Just build",
-    template: "%s | mProjects - Just build",
+    default: "mAI - Just build",
+    template: "%s | mAI - Just build",
   },
   description:
-    "Portail de suivi des versions et documentation pour les projets de mDevsLabs.",
+    "Portail de suivi des versions, documentation et outils d'intelligence artificielle de mDevsLabs.",
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
@@ -59,7 +59,7 @@ export default async function RootLayout({
 
               <footer className="relative mt-auto mb-4 w-[95%] max-w-5xl mx-auto md:fixed md:bottom-4 md:left-1/2 md:-translate-x-1/2 z-50 rounded-3xl md:rounded-full border border-black/10 bg-white/30 backdrop-blur-md shadow-sm px-4 md:px-8 py-3 flex flex-col md:flex-row items-center justify-between gap-2 md:gap-0 transition-all duration-300">
                 <p className="text-xs md:text-sm text-slate-500 font-medium">
-                  {new Date().getFullYear()} © All rights reserved | mProjects | Official Website
+                  {new Date().getFullYear()} © All rights reserved | mAI | Official Website
                 </p>
 
                 {/* Menu Déroulant Légal */}

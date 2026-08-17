@@ -38,7 +38,7 @@ export function HeroSection() {
           transition={{ duration: 0.8, delay: 0.25, ease: "easeOut" }}
           className="text-sm sm:text-base md:text-lg text-slate-600 max-w-2xl mb-8 font-normal leading-relaxed px-4"
         >
-          Découvrez nos assistants IA locaux ultra-rapides, notre CLI natif pour terminal, notre moteur de recherche unifié et nos proxies d&apos;API ouverts.
+          Découvrez la suite mAI (Web, Pulse, CLI, Office, Cloud), nos modèles d&apos;IA de pointe et notre API unifiée haute performance.
         </motion.p>
 
         {/* Boutons d'Action */}

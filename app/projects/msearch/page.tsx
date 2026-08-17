@@ -60,9 +60,14 @@ export default function MsearchProjectPage() {
               />
             </motion.div>
             <div>
-              <h1 className="text-4xl sm:text-5xl md:text-7xl font-black italic tracking-tighter leading-[0.9] md:leading-[0.85] uppercase text-slate-900 drop-shadow-sm">
-                mSearch
-              </h1>
+              <div className="flex items-center gap-3">
+                <h1 className="text-4xl sm:text-5xl md:text-7xl font-black italic tracking-tighter leading-[0.9] md:leading-[0.85] uppercase text-slate-900 drop-shadow-sm">
+                  mSearch
+                </h1>
+                <span className="text-xs px-3 py-1 rounded-full bg-red-500/10 border border-red-500/30 text-red-600 font-bold uppercase tracking-widest">
+                  Archivé
+                </span>
+              </div>
               <p className="text-blue-600 font-medium text-lg italic mt-1">
                 Avec mSearch, recherchez en toute sécurité !
               </p>

@@ -16,19 +16,15 @@ C'est à la mi-2025 que la transition s'est faite vers le modèle de chatbot **N
 
 Face à ces obstacles, une pause s'imposait : un bloc d'environ six mois a été dédié exclusivement à la montée en compétences, à l'apprentissage du développement approfondi et à une meilleure organisation.
 
-Ce temps a été mis à profit pour analyser minutieusement l'architecture de projets existants. L'objectif était clair : dénicher le projet open-source le plus actif, complet et robuste possible.
+Ce temps a été mis à profit pour analyser minutieusement l'architecture de projets existants. L'objectif était clair : bâtir une architecture web active, complète et robuste.
 
-C’est au bout de cette recherche intense, en avril 2026, que la solution idéale s'est présentée : **LobeHub**.
+C’est au bout de cette recherche intense, en avril 2026, que la vision définitive de **mAI Web** a pris forme.
 
-## IV - LobeHub : Le déclic
+## IV - Le déclic technique
 
-Pendant une à deux semaines, une observation attentive de l'activité du dépôt a été nécessaire avant de poser le diagnostic :
+Pendant plusieurs semaines, l'architecture a été affinée pour construire une base solide, moderne et ergonomique.
 
-> "C'est le bon."
-
-C'était de loin la base la plus solide, la plus moderne et la plus complète trouvée sur le marché.
-
-Le clonage de ce projet a marqué le top départ du défi technique le plus complexe et le plus stimulant jamais réalisé jusqu'ici.
+Ce projet a marqué le top départ du défi technique le plus stimulant jamais réalisé jusqu'ici.
 
 ## V - Conclusion & Lancement
 
@@ -36,7 +32,7 @@ Après d'innombrables sessions de tests, des phases d'incertitude et un apprenti
 
 Le résultat de toute cette persévérance est désormais accessible.
 
-Découvrez **mAI** dès aujourd'hui et plongez dans le futur de l'interface IA.
+Découvrez **mAI Web** dès aujourd'hui et plongez dans le futur de l'interface IA.
 
 ---
 

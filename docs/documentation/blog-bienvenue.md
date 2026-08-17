@@ -1,15 +1,15 @@
 ---
 title: "Bienvenue"
-description: "Découvrez le portail mProjects, son rôle et sa genèse."
+description: "Découvrez le portail mAI, son rôle et sa genèse."
 category: "Guides"
 order: 10
 ---
 
-# Bienvenue sur mProjects 🚀
+# Bienvenue sur mAI 🚀
 
-Nous sommes fiers de vous présenter le tout nouveau portail **mProjects**. 
+Nous sommes fiers de vous présenter le tout nouveau portail **mAI**. 
 
-Ce portail réunit désormais toutes nos créations, avec un suivi clair et centralisé des mises à jour (onglet Notes de version) et des annonces importantes (Actualités).
+Ce portail réunit désormais toutes nos créations (Web, Pulse, CLI, Office, Cloud), avec un suivi clair et centralisé des modèles et des annonces importantes (Actualités).
 
 ### Pourquoi cette plateforme ?
 
@@ -21,7 +21,7 @@ Nous mettrons à jour l'application tous les mois ou plus régulièrement pour a
 
 ### Application conçue sur Google
 
-Nous vous informons également que le nouveau site mProjects a été conçu en **moins de 2 heures via Google AI Studio** en utilisant Google Gemini 3.1 Pro Preview en mode de réflexion _High_. Nous avons peaufiné l'architecture et les performances via l'outil CLI de **Google Antigravity**.
+Nous vous informons également que le nouveau site mAI a été conçu en **moins de 2 heures via Google AI Studio** en utilisant Google Gemini 3.1 Pro Preview en mode de réflexion _High_. Nous avons peaufiné l'architecture et les performances via l'outil CLI de **Google Antigravity**.
 
 ### Présentation des onglets
 

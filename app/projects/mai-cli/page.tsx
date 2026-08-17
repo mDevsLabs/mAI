@@ -97,11 +97,8 @@ export default function MaiCliProjectPage() {
                 <h1 className="text-3xl sm:text-5xl md:text-7xl font-black italic tracking-tighter leading-[0.9] uppercase text-slate-900 drop-shadow-sm">
                   mAI CLI
                 </h1>
-                <span className="text-[10px] sm:text-xs px-2.5 sm:px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 font-bold uppercase tracking-widest">
-                  Accès Anticipé
-                </span>
-                <span className="text-[10px] sm:text-xs px-2.5 sm:px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-600 font-bold uppercase tracking-widest">
-                  Terminal Natif
+                <span className="text-[10px] sm:text-xs px-2.5 sm:px-3 py-1 rounded-full bg-red-500/10 border border-red-500/30 text-red-600 font-bold uppercase tracking-widest">
+                  Archivé
                 </span>
               </div>
               <p className="text-purple-600 font-medium text-base sm:text-lg italic mt-1">

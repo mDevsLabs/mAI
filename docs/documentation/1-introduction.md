@@ -1,15 +1,15 @@
-# Bienvenue sur l'API mProjects
+# Bienvenue sur l'API mAI
 
-L'API REST mProjects vous permet d'accéder programmatiquement aux modèles mAI (série 1.0, 1.2, Apex, Opal...) ainsi qu'à la gestion de vos projets et ressources IA.
+L'API REST mAI vous permet d'accéder programmatiquement aux modèles mAI (série 1.0, 1.2, 1.5, Light, Apex, Opal) ainsi qu'au catalogue des projets de la suite mAI (Web, Pulse, CLI, Office, Cloud).
 
 ## URL de Base
 Toutes les requêtes vers l'API s'effectuent sur l'URL de base suivante :
-\`\`\`text
-https://mprojects.val.run/v1
-\`\`\`
+```text
+https://mai.val.run/v1
+```
 
 ## Format de Données
-- L'API accepte uniquement du **JSON** dans le corps des requêtes HTTP (méthodes POST). Assurez-vous de configurer l'en-tête \`Content-Type: application/json\`.
+- L'API accepte uniquement du **JSON** dans le corps des requêtes HTTP (méthodes POST). Assurez-vous de configurer l'en-tête `Content-Type: application/json`.
 - Toutes les réponses sont retournées au format **JSON**.
 
 ## Compatibilité OpenAI

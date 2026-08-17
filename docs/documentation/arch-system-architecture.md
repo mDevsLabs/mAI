@@ -16,7 +16,7 @@ L'architecture globale de l'écosystème **mDevsLabs** repose sur une découpe m
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                     Front-end & User Layer                      │
-│      mProjects Web (Next.js)  │  mDevsLabs Studio  │  CLI       │
+│      mAI Web (Next.js)        │  mAI Pulse / Office │  mAI CLI  │
 └────────────────────────────────┬────────────────────────────────┘
                                  │
 ┌────────────────────────────────▼────────────────────────────────┐
@@ -27,8 +27,8 @@ L'architecture globale de l'écosystème **mDevsLabs** repose sur une découpe m
          ┌────────────────────────┴────────────────────────┐
          │                                                 │
 ┌───────▼────────────────────────┐      ┌─────────────────▼───────────────┐
-│     Inference Engine (mAI)     │      │     Search & RAG (mSearch)     │
-│   Ollama / Llama.cpp backend   │      │   HNSW Dense Vector Store      │
+│     Inference Engine (mAI)     │      │     Cloud & RAG Storage         │
+│   Ollama / Llama.cpp backend   │      │   HNSW Dense Vector Store       │
 └────────────────────────────────┘      └─────────────────────────────────┘
 ```
 
@@ -37,9 +37,9 @@ L'architecture globale de l'écosystème **mDevsLabs** repose sur une découpe m
 ## 🛠️ Microservices Principaux
 
 1. **mAI Inference Core** : Serveur d'inférence de modèles LLM et multimodaux.
-2. **mSearch Vector Service** : Moteur de recherche sémantique et hybride.
+2. **mAI Cloud & Storage Service** : Moteur de stockage et recherche sémantique documentaire.
 3. **Agent Manager** : Orchestrateur de tâches asynchrones, d'outils externes et de communication inter-agents.
-4. **mProjects Portal** : Portail web et centre de documentation interactif.
+4. **mAI Portal** : Portail web et centre de documentation interactif.
 
 ---
 

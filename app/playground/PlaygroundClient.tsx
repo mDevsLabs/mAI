@@ -205,7 +205,7 @@ export default function PlaygroundClient() {
           }).catch(() => null);
 
           if (!res || !res.ok) {
-            res = await fetch('https://mprojects.val.run/v1/models').catch(() => null);
+            res = await fetch('https://mai.val.run/v1/models').catch(() => null);
           }
 
           if (res && res.ok) {

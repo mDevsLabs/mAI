@@ -1,6 +1,6 @@
 # Erreurs et Limites (Quotas)
 
-L'API mProjects implémente plusieurs mécanismes de sécurité et de limites d'utilisation (Rate Limiting) basés sur votre forfait d'abonnement. 
+L'API mAI implémente plusieurs mécanismes de sécurité et de limites d'utilisation (Rate Limiting) basés sur votre forfait d'abonnement. 
 
 ## Limites par forfait
 

@@ -73,7 +73,7 @@ export async function POST(req: NextRequest) {
 
     // Si c'est un modèle cloud (ou si l'utilisateur demande directement un modèle cloud), on délègue au proxy Val Town
     if (!isLocalModel) {
-      const valTownRes = await fetch('https://mprojects.val.run/v1/chat/completions', {
+      const valTownRes = await fetch('https://mai.val.run/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

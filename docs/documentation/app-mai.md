@@ -1,19 +1,19 @@
 ---
-title: "mAI"
-description: "Présentation complète et architecture de l'assistant mAI propulsé par Gemma 4 et Ollama."
+title: "mAI Web"
+description: "Présentation complète et architecture de l'assistant mAI Web."
 category: "Applications"
 order: 1
 ---
 
-# mAI - Assistant IA Local & Multimodal 🧠✨
+# mAI Web - Assistant IA Web & Multimodal 🧠✨
 
-**mAI** est le flagship de l'écosystème **mDevsLabs**. Il s'agit d'un assistant IA local, hautement sécurisé, capable de traiter du texte, du code, des documents complexes et des données visuelles directement sur votre poste de travail.
+**mAI Web** est l'assistant IA web de l'écosystème **mDevsLabs**. Il s'agit d'un assistant IA hautement sécurisé, capable de traiter du texte, du code, des documents complexes et des données visuelles directement depuis votre navigateur.
 
 ---
 
 ## 🌟 Caractéristiques Principales
 
-- **Conception Local-First** : Vos données restent à 100% sur votre machine. Aucune télémétrie ou donnée sensible n'est envoyée vers des serveurs tiers.
+- **Conception Web Moderne** : Une interface d'IA réactive et fluide accessible sur le Web.
 - **Moteur Multimodal** : Capacité native d'analyse d'images, de diagrammes et d'images techniques grâce aux encodeurs visuels mAI-Vision.
 - **Intégration Ollama & Llama.cpp** : Moteur d'inférence basé sur `ollama` avec quantification automatique (GGUF Q4_K_M et Q8_0).
 - **Agent Framework Intégré** : Support natif du *tool calling* pour exécuter des fonctions Python, interroger des bases de données ou exécuter du code isolé.
@@ -24,7 +24,7 @@ order: 1
 
 ```
 ┌───────────────────────────────────────────────────────────┐
-│                    mAI Client Interface                   │
+│                    mAI Web Interface                      │
 └─────────────────────────────┬─────────────────────────────┘
                               │ API REST / WebSockets
 ┌─────────────────────────────▼─────────────────────────────┐
@@ -37,27 +37,6 @@ order: 1
 │       Ollama Engine         ││     Vector Store (HNSW)    │
 └─────────────────────────────┘└──────────────────────────────┘
 ```
-
----
-
-## 💻 Extension Navigateur
-
-mAI s'intègre parfaitement aux navigateurs modernes via notre extension officielle :
-
-- **Chrome / Edge / Brave** : Installez depuis `chrome://extensions` avec le fichier ZIP officiel.
-- **Activation** : Utilisez le raccourci `Alt + M` pour ouvrir le prompt d'assistant depuis n'importe quelle page web.
-- **Fonctionnalités** : Résumé de page, traduction instantanée, extraction d'informations, autocomplétion contextuelle.
-
----
-
-## 💻 Extension Visual Studio Code
-
-Pour les développeurs, mAI s'intègre directement dans votre IDE :
-
-- **Autocomplétion intelligente** : Suggestions de code contextualisées en temps réel.
-- **Chat intégré** : Accès direct à l'assistant via la barre latérale VS Code.
-- **Explication de code** : Sélectionnez du code et choisissez "mAI : Expliquer" pour obtenir une explication détaillée.
-- **Refactoring** : Demandez à mAI d'optimiser ou de corriger votre code.
 
 ---
 

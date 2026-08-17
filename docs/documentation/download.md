@@ -1,6 +1,6 @@
 ---
 title: "Télécharger"
-description: "Guide d'installation globale pour mAI, mSearch et nos modèles IA."
+description: "Guide d'installation globale pour la suite mAI et nos modèles IA."
 category: "Guides"
 order: 13
 ---
@@ -9,16 +9,16 @@ order: 13
 
 Ce document récapitule les étapes nécessaires pour télécharger, installer et déployer nos outils de travail.
 
-## 🚀 Applications desktop
+## 🚀 Applications & Outils
 
-1. Accédez à la page [Télécharger](/downloads) de mProjects.
+1. Accédez à la page [Télécharger](/downloads) de mAI.
 2. Choisissez le canal souhaité :
    - **Canal Stable** : Version testée et recommandée pour la production.
    - **Canal Canary** : Version expérimentale contenant les dernières fonctionnalités.
 
 ## 📱 Application Mobile Android
 
-1. Accédez à la page [Télécharger](/downloads) de mProjects.
+1. Accédez à la page [Télécharger](/downloads) de mAI.
 2. Téléchargez l'application mobile Android (archive ZIP contenant l'APK).
 3. Consultez le [Guide d'installation Android](/docs?doc=guide-application-android) pour savoir comment extraire et installer l'application sur votre appareil.
 

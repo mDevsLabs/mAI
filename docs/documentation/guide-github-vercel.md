@@ -1,23 +1,23 @@
 ---
 title: "Déploiement GitHub & Vercel"
-description: "Comment publier et héberger le site mProjects avec GitHub et Vercel."
+description: "Comment publier et héberger le portail mAI avec GitHub et Vercel."
 category: "Guides"
 order: 13
 ---
 
 # Déploiement GitHub & Vercel 🌐🚀
 
-Le site **mProjects** est conçu pour être hébergé de manière continue et automatisée grâce à l'intégration de **GitHub** et **Vercel**.
+Le portail **mAI** est conçu pour être hébergé de manière continue et automatisée grâce à l'intégration de **GitHub** et **Vercel**.
 
 ---
 
 ## 📦 1. Publier sur GitHub
 
-1. **Créer un dépôt** sur votre compte GitHub (ex: `mProjects`).
+1. **Créer un dépôt** sur votre compte GitHub (ex: `mAI`).
 2. **Lier votre projet local** :
    ```bash
    git init
-   git remote add origin https://github.com/votre-compte/mProjects.git
+   git remote add origin https://github.com/votre-compte/mAI.git
    git add .
    git commit -m "Initial commit"
    git branch -M main

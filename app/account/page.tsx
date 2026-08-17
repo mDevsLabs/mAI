@@ -17,6 +17,7 @@ import {
   Camera,
   Phone,
   Lock,
+  Monitor,
 } from "lucide-react";
 import { useAuth } from "@/components/auth-provider";
 import { MaiApiError } from "@/lib/mai-api";
@@ -25,6 +26,7 @@ import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import Confetti from "react-confetti";
 import { useWindowSize } from "react-use";
+import { DevicesList } from "@/components/account/devices-list";
 
 function formatTokens(n: number): string {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(n % 1_000_000 === 0 ? 0 : 1)}M`;
@@ -94,6 +96,39 @@ export default function AccountPage() {
   const [showRocket, setShowRocket] = useState(false);
   const [upgradedTier, setUpgradedTier] = useState<string | null>(null);
   const { width, height } = useWindowSize();
+
+  // Active section for Scroll Spy
+  const [activeSection, setActiveSection] = useState("profil");
+  
+  // Refresh trigger pour DevicesList
+  const [devicesRefreshCounter, setDevicesRefreshCounter] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = ["profil", "usage-api", "usage-mai", "upgrade-code", "appareils"];
+      let current = sections[0];
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          if (rect.top <= 150) {
+            current = section;
+          }
+        }
+      }
+      setActiveSection(current);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollTo = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      const y = element.getBoundingClientRect().top + window.scrollY - 100;
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
+  };
 
   // Stats d'utilisation des clés API (Neon)
   const [apiUsageStats, setApiUsageStats] = useState<{key: string, plan: string, requestCount: number, limit: number}[]>([]);
@@ -225,7 +260,7 @@ export default function AccountPage() {
 
       // Toast personnalisé
       toast.custom(
-        (_t) => (
+        (_t: any) => (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -309,48 +344,8 @@ export default function AccountPage() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-8 pb-12">
-      {/* Confettis */}
-      {showConfetti && (
-        <Confetti
-          width={width}
-          height={height}
-          colors={['#8B5CF6', '#EC4899', '#3B82F6', '#10B981', '#F59E0B']}
-          numberOfPieces={200}
-          gravity={0.15}
-          tweenDuration={5000}
-        />
-      )}
-
-      {/* Fusée */}
-      {showRocket && (
-        <motion.div
-          initial={{ x: -50, y: height / 2, opacity: 0, scale: 0.5 }}
-          animate={{ x: width + 50, y: height / 2, opacity: 1, scale: 1 }}
-          transition={{ duration: 3, ease: "easeInOut" }}
-          className="fixed z-50 pointer-events-none"
-        >
-          <div className="relative">
-            <motion.div
-              className="w-16 h-24 bg-gradient-to-b from-orange-400 to-red-500 rounded-t-full"
-              animate={{ y: [0, -5, 0] }}
-              transition={{ duration: 0.3, repeat: Infinity }}
-            />
-            <motion.div
-              className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-8 h-12"
-              animate={{
-                opacity: [0.3, 1, 0.3],
-                scaleY: [0.8, 1.2, 0.8],
-              }}
-              transition={{ duration: 0.5, repeat: Infinity }}
-            >
-              <div className="w-full h-full bg-gradient-to-t from-orange-500 to-transparent rounded-full" />
-            </motion.div>
-            <div className="absolute top-4 left-1/2 -translate-x-1/2 w-4 h-4 bg-cyan-300 rounded-full border-2 border-white" />
-          </div>
-        </motion.div>
-      )}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="max-w-5xl mx-auto pb-12">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-black text-slate-900 tracking-tight">
             Mon compte mAI
@@ -368,8 +363,76 @@ export default function AccountPage() {
         </button>
       </div>
 
-      {/* Section Profil unifiée : présentation + modification */}
-      <section id="profil" className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-6">
+      <div className="flex flex-col md:flex-row gap-8">
+        <aside className="w-full md:w-64 shrink-0">
+          <nav className="sticky top-24 flex md:flex-col gap-2 overflow-x-auto md:overflow-visible pb-2 md:pb-0">
+            {[
+              { id: "profil", label: "Profil & Paramètres", icon: User },
+              { id: "usage-api", label: "Usage API", icon: KeyRound },
+              { id: "usage-mai", label: "Usage mAI", icon: Gauge },
+              { id: "appareils", label: "Appareils Connectés", icon: Monitor },
+              { id: "upgrade-code", label: "Activer un Code", icon: Sparkles },
+            ].map((item) => (
+              <button
+                key={item.id}
+                onClick={() => scrollTo(item.id)}
+                className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold transition-all whitespace-nowrap ${
+                  activeSection === item.id
+                    ? "bg-purple-600 text-white shadow-md"
+                    : "bg-white/40 text-slate-600 hover:bg-white border border-slate-200/50"
+                }`}
+              >
+                <item.icon className="w-4 h-4" />
+                {item.label}
+              </button>
+            ))}
+          </nav>
+        </aside>
+
+        <div className="flex-1 space-y-8">
+          {/* Confettis */}
+          {showConfetti && (
+            <Confetti
+              width={width}
+              height={height}
+              colors={['#8B5CF6', '#EC4899', '#3B82F6', '#10B981', '#F59E0B']}
+              numberOfPieces={200}
+              gravity={0.15}
+              tweenDuration={5000}
+            />
+          )}
+
+          {/* Fusée */}
+          {showRocket && (
+            <motion.div
+              initial={{ x: -50, y: height / 2, opacity: 0, scale: 0.5 }}
+              animate={{ x: width + 50, y: height / 2, opacity: 1, scale: 1 }}
+              transition={{ duration: 3, ease: "easeInOut" }}
+              className="fixed z-50 pointer-events-none"
+            >
+              <div className="relative">
+                <motion.div
+                  className="w-16 h-24 bg-gradient-to-b from-orange-400 to-red-500 rounded-t-full"
+                  animate={{ y: [0, -5, 0] }}
+                  transition={{ duration: 0.3, repeat: Infinity }}
+                />
+                <motion.div
+                  className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-8 h-12"
+                  animate={{
+                    opacity: [0.3, 1, 0.3],
+                    scaleY: [0.8, 1.2, 0.8],
+                  }}
+                  transition={{ duration: 0.5, repeat: Infinity }}
+                >
+                  <div className="w-full h-full bg-gradient-to-t from-orange-500 to-transparent rounded-full" />
+                </motion.div>
+                <div className="absolute top-4 left-1/2 -translate-x-1/2 w-4 h-4 bg-cyan-300 rounded-full border-2 border-white" />
+              </div>
+            </motion.div>
+          )}
+
+          {/* Section Profil unifiée : présentation + modification */}
+          <section id="profil" className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-6">
 
         {/* --- Présentation du profil (en haut) --- */}
         <div className="flex items-center gap-4">
@@ -515,7 +578,7 @@ export default function AccountPage() {
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-slate-900">S'inscrire à la newsletter</p>
-                  <p className="text-xs text-slate-500">Recevoir les actualités mProjects et les mises à jour importantes.</p>
+                  <p className="text-xs text-slate-500">Recevoir les actualités mAI et les mises à jour importantes.</p>
                 </div>
               </label>
 
@@ -691,6 +754,22 @@ export default function AccountPage() {
 
 
 
+      {/* Appareils Connectés */}
+      <section 
+        id="appareils" 
+        className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-4"
+        onMouseEnter={() => setDevicesRefreshCounter(c => c + 1)}
+      >
+        <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <Monitor className="w-5 h-5 text-purple-600" />
+          Appareils Connectés
+        </h2>
+        <p className="text-sm text-slate-600">
+          Consultez et gérez les appareils actuellement connectés à votre compte.
+        </p>
+        <DevicesList refreshTrigger={devicesRefreshCounter} />
+      </section>
+
       {/* Upgrade code */}
       <section id="upgrade-code" className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-4">
         <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
@@ -726,6 +805,8 @@ export default function AccountPage() {
         )}
       </section>
 
+        </div>
+      </div>
     </div>
   );
 }

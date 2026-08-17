@@ -60,10 +60,13 @@ export default function OpenProviderProjectPage() {
               />
             </motion.div>
             <div>
-              <div className="flex items-center gap-2 sm:gap-3 flex-wrap mb-1">
+              <div className="flex items-center gap-3 flex-wrap mb-1">
                 <h1 className="text-4xl sm:text-5xl md:text-7xl font-black italic tracking-tighter leading-[0.9] md:leading-[0.85] uppercase text-slate-900 drop-shadow-sm">
                   OpenProvider
                 </h1>
+                <span className="text-xs px-3 py-1 rounded-full bg-red-500/10 border border-red-500/30 text-red-600 font-bold uppercase tracking-widest">
+                  Archivé
+                </span>
               </div>
               <div className="flex flex-wrap gap-2 mt-2 mb-2">
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-pink-500/10 border border-pink-500/30 text-pink-600 font-bold uppercase tracking-widest">

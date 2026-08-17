@@ -4,8 +4,8 @@ import { getAllDocs } from '@/lib/docs';
 import { DocsClient } from './DocsClient';
 
 export const metadata: Metadata = {
-  title: 'Documentation (Bêta) | mProjects',
-  description: 'Hub de documentation technique pour les projets et modèles mDevsLabs.',
+  title: 'Documentation | mAI',
+  description: 'Hub de documentation technique pour la suite mAI et les modèles mDevsLabs.',
 };
 
 export default function DocsPage() {

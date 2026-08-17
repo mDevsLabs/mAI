@@ -9,47 +9,59 @@ import { GithubRepoStats } from "@/components/github-repo-stats";
 export function ProjectsShowcase() {
   const projects = [
     {
-      id: "mai-cli",
-      title: "mAI CLI",
-      tagline: "L'assistant de développement qui vit dans votre terminal.",
-      description: "Un assistant IA natif, gratuit et respectueux de votre vie privée, capable de relire des PRs, gérer vos tickets, exécuter des commandes et envoyer des messages sans quitter le terminal.",
-      link: "/projects/mai-cli",
-      repo: "mDevsLabs/mAI-CLI",
-      platforms: ["macOS", "Linux", "Windows"],
+      id: "web",
+      title: "Web",
+      label: "Alpha",
+      tagline: "L'application d'IA en ligne directe et intuitive.",
+      description: "Application d'IA en ligne web directement et simplement pour discuter avec l'IA mAI.",
+      link: "/projects/web",
+      repo: "mDevsLabs/Web",
+      platforms: ["Web", "Cloud"],
       highlightColor: "hover:border-purple-500/40 hover:shadow-[0_12px_32px_rgba(168,85,247,0.15)]",
     },
     {
-      id: "openprovider",
-      title: "OpenProvider",
-      tagline: "Rendez Codex ouvert !",
-      description: "Proxy universel de fournisseurs pour OpenAI Codex, Claude Code, Claude Desktop et Grok Build.",
-      link: "/projects/openprovider",
-      repo: "mDevsLabs/OpenProvider",
-      image: "/openprovider.png",
-      platforms: ["CLI", "Windows", "macOS", "Linux"],
-      highlightColor: "hover:border-pink-500/40 hover:shadow-[0_12px_32px_rgba(236,72,153,0.15)]",
+      id: "pulse",
+      title: "Pulse",
+      label: "Bêta",
+      tagline: "L'IA partout dans vos outils favoris.",
+      description: "Ensemble d'extensions pour diverses applications pour discuter avec mAI directement (navigateur, VS Code...).",
+      link: "/projects/pulse",
+      repo: "mDevsLabs/Pulse",
+      platforms: ["Navigateur", "VS Code", "Extensions"],
+      highlightColor: "hover:border-indigo-500/40 hover:shadow-[0_12px_32px_rgba(99,102,241,0.15)]",
     },
     {
-      id: "msearch",
-      title: "mSearch",
-      tagline: "Recherchez en toute sécurité !",
-      description: "Un outil de recherche unifié ultra-rapide, téléchargeable et natif pour tous vos appareils.",
-      link: "/projects/msearch",
-      repo: "mDevsLabs/mSearch",
-      image: "/msearch.png",
-      platforms: ["Windows", "macOS", "Linux"],
+      id: "cli",
+      title: "CLI",
+      label: "Bêta",
+      tagline: "Discussions et séances de codage dans votre terminal.",
+      description: "Discussions et séances de codage dans le terminal CLI via mAI.",
+      link: "/projects/cli",
+      repo: "mDevsLabs/CLI",
+      platforms: ["macOS", "Linux", "Windows"],
+      highlightColor: "hover:border-emerald-500/40 hover:shadow-[0_12px_32px_rgba(16,185,129,0.15)]",
+    },
+    {
+      id: "office",
+      title: "Office",
+      label: "Bêta",
+      tagline: "Création de documents et présentations assistée par l'IA.",
+      description: "Création de documents et présentations avec mAI.",
+      link: "/projects/office",
+      repo: "mDevsLabs/Office",
+      platforms: ["macOS", "Windows", "Export PDF/PPT"],
       highlightColor: "hover:border-blue-500/40 hover:shadow-[0_12px_32px_rgba(59,130,246,0.15)]",
     },
     {
-      id: "snob",
-      title: "Snob",
-      tagline: "L'expérience ultime de Block Blast revisitée.",
-      description: "Un jeu de puzzle de prestige alliant un design élégant à des mécaniques profondément tactiques.",
-      link: "/projects/snob",
-      repo: "mDevsLabs/Snob",
-      image: "/snob.png",
-      platforms: ["Web", "Android"],
-      highlightColor: "hover:border-amber-500/40 hover:shadow-[0_12px_32px_rgba(245,158,11,0.15)]",
+      id: "cloud",
+      title: "Cloud",
+      label: "Réflexion",
+      tagline: "Stockage cloud et résumés IA automatisés.",
+      description: "Stockage cloud de documents et intégration d'mAI pour des résumés.",
+      link: "/projects/cloud",
+      repo: null,
+      platforms: ["Cloud", "En conception"],
+      highlightColor: "hover:border-cyan-500/40 hover:shadow-[0_12px_32px_rgba(6,182,212,0.15)]",
     },
   ];
 
@@ -64,10 +76,10 @@ export function ProjectsShowcase() {
       >
         <div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black italic tracking-tighter uppercase text-slate-900">
-            Nos Projets <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-emerald-500">Phares</span>
+            La Suite <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-blue-600 to-emerald-500">mAI</span>
           </h2>
           <p className="text-slate-500 text-sm sm:text-base font-light mt-1 max-w-xl">
-            Des outils natifs conçus pour améliorer la productivité des développeurs et simplifier l&apos;usage de l&apos;IA au quotidien.
+            Cinq produits dédiés conçus pour booster votre productivité, votre créativité et vos workflows avec l&apos;IA.
           </p>
         </div>
 
@@ -80,7 +92,7 @@ export function ProjectsShowcase() {
         </Link>
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {projects.map((project, index) => (
           <motion.div
             key={project.id}
@@ -98,20 +110,17 @@ export function ProjectsShowcase() {
             </div>
 
             <div className="relative z-10">
-              <div className="flex items-center mb-3">
-                <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-slate-900 text-white shadow-md overflow-hidden p-2 group-hover:scale-105 transition-transform duration-200">
-                  {project.image ? (
-                    <Image
-                      src={project.image}
-                      alt={project.title}
-                      width={48}
-                      height={48}
-                      className="w-full h-full object-contain rounded-xl"
-                    />
-                  ) : (
-                    <Terminal className="w-7 h-7 text-purple-400" />
-                  )}
+              <div className="flex items-center justify-between mb-3">
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-slate-900 text-white shadow-md p-2 group-hover:scale-105 transition-transform duration-200">
+                  <Terminal className="w-6 h-6 text-purple-400" />
                 </div>
+                <span className={`text-[10px] px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider border ${
+                  project.label === 'Alpha' ? 'bg-amber-500/10 border-amber-500/30 text-amber-600' :
+                  project.label === 'Bêta' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-600' :
+                  'bg-blue-500/10 border-blue-500/30 text-blue-600'
+                }`}>
+                  {project.label}
+                </span>
               </div>
 
               <h3 className="text-2xl font-black text-slate-900 mb-1 flex items-center gap-2">
@@ -148,7 +157,11 @@ export function ProjectsShowcase() {
               </Link>
 
               <div className="shrink-0">
-                <GithubRepoStats repo={project.repo} />
+                {project.repo ? (
+                  <GithubRepoStats repo={project.repo} />
+                ) : (
+                  <span className="text-[11px] font-bold text-slate-400 italic">En conception</span>
+                )}
               </div>
             </div>
           </motion.div>

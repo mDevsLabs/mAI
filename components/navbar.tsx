@@ -31,12 +31,12 @@ const navLinks: NavItem[] = [
     name: "Projets",
     href: "/projects",
     subitems: [
-      { name: "Tout", href: "/projects" },
-      { name: "mAI CLI", href: "/projects/mai-cli" },
-      { name: "OpenProvider", href: "/projects/openprovider" },
-      { name: "mSearch", href: "/projects/msearch" },
-      { name: "Snob", href: "/projects/snob" },
-      { name: "mAI", href: "/projects/mai" },
+      { name: "Tous les projets", href: "/projects" },
+      { name: "Web (Alpha)", href: "/projects/web" },
+      { name: "Pulse (Bêta)", href: "/projects/pulse" },
+      { name: "CLI (Bêta)", href: "/projects/cli" },
+      { name: "Office (Bêta)", href: "/projects/office" },
+      { name: "Cloud (Réflexion)", href: "/projects/cloud" },
     ],
   },
   {
@@ -92,10 +92,6 @@ const navLinks: NavItem[] = [
       { 
         name: "Documentation", 
         href: "/docs",
-        subitems: [
-          { name: "Tout", href: "/docs" },
-          { name: "OpenProvider", href: "/docs/openprovider" }
-        ]
       },
     ],
   },
@@ -162,7 +158,7 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
             <div className="flex items-center">
               <img
                 src="/logo.png"
-                alt="mProjects"
+                alt="mAI"
                 width={160}
                 height={48}
                 style={{ height: '40px', width: 'auto', objectFit: 'contain' }}
@@ -303,7 +299,7 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
                 <div className="glass-dropdown w-64 space-y-1">
                   {isAuthenticated ? (
                     <>
-                      <div className="p-3 rounded-2xl bg-purple-50/70 border border-purple-100 space-y-1">
+                      <Link href="/account" className="block p-3 rounded-2xl bg-purple-50/70 border border-purple-100 space-y-1 hover:bg-purple-100 transition-colors">
                         <div className="flex items-center justify-between">
                           <p className="font-extrabold text-slate-900 text-sm truncate">{user?.username || "Utilisateur"}</p>
                           <span className="px-2 py-0.5 rounded-full bg-purple-600 text-white text-[10px] font-black uppercase">
@@ -311,36 +307,22 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
                           </span>
                         </div>
                         <p className="text-xs text-slate-500 truncate">{user?.email}</p>
-                      </div>
+                      </Link>
 
                       <div className="pt-1 space-y-0.5">
-                        <Link
-                          href="/account#profil"
-                          className="w-full px-3.5 py-2.5 rounded-2xl text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-700 transition-colors flex items-center gap-2.5"
-                        >
-                          <User className="w-4 h-4 text-purple-600" />
-                          Mon Profil &amp; Compte
-                        </Link>
                         <Link
                           href="/account#usage-mai"
                           className="w-full px-3.5 py-2.5 rounded-2xl text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-700 transition-colors flex items-center gap-2.5"
                         >
                           <Gauge className="w-4 h-4 text-purple-600" />
-                          Utilisation du Compte &amp; Quotas
+                          Usage mAI
                         </Link>
                         <Link
-                          href="/account/usage"
+                          href="/account#usage-api"
                           className="w-full px-3.5 py-2.5 rounded-2xl text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-700 transition-colors flex items-center gap-2.5"
                         >
                           <Activity className="w-4 h-4 text-purple-600" />
-                          Statistiques d&apos;Usage API
-                        </Link>
-                        <Link
-                          href="/pricing"
-                          className="w-full px-3.5 py-2.5 rounded-2xl text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-700 transition-colors flex items-center gap-2.5"
-                        >
-                          <Sparkles className="w-4 h-4 text-purple-600" />
-                          Abonnements
+                          Usage API
                         </Link>
                       </div>
 

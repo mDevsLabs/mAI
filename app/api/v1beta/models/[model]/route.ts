@@ -9,7 +9,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ mod
     const body = await req.json();
     const authHeader = req.headers.get('authorization') || req.headers.get('Authorization') || '';
     
-    const res = await fetch(`https://mprojects.val.run/v1beta/models/${model}`, {
+    const res = await fetch(`https://mai.val.run/v1beta/models/${model}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

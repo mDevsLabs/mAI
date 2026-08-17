@@ -205,7 +205,7 @@ function RegisterForm() {
           Créer un compte
         </h1>
         <p className="text-slate-600 text-sm">
-          Un seul compte mAI pour mProjects, mAI CLI et les autres projets.
+          Un seul compte mAI pour accéder à tous vos projets et clés API.
         </p>
       </div>
 

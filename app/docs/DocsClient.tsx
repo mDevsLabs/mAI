@@ -147,7 +147,7 @@ export function DocsClient({ initialDocs, titleSpan }: DocsClientProps) {
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-black italic tracking-tighter leading-[0.9] md:leading-[0.85] uppercase text-slate-900">
             Documentation <br className="hidden sm:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-blue-500 to-emerald-500">
-              {titleSpan || "mProjects"}
+              {titleSpan || "mAI"}
             </span>
           </h1>
           <p className="text-slate-500 text-base md:text-lg font-light mt-2 md:mt-4 max-w-2xl">

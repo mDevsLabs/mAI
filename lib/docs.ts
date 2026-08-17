@@ -181,19 +181,3 @@ function walkDocs(dir: string, baseDir: string): DocMetadata[] {
   return docs;
 }
 
-export function getOpenProviderDocs(): DocMetadata[] {
-  const docsDirectory = path.join(process.cwd(), 'docs/documentation/openprovider');
-  const docs = walkDocs(docsDirectory, docsDirectory);
-  
-  docs.sort((a, b) => {
-    if (a.category !== b.category) {
-      return a.category.localeCompare(b.category, 'fr');
-    }
-    if (a.order !== b.order) {
-      return a.order - b.order;
-    }
-    return a.title.localeCompare(b.title, 'fr');
-  });
-
-  return docs;
-}

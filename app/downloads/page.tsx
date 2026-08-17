@@ -7,8 +7,7 @@ import Image from "next/image";
 import { toast } from "react-hot-toast";
 
 import { useRouter } from "next/navigation";
-import { VscCode } from "react-icons/vsc";
-import { FaChrome, FaAndroid } from "react-icons/fa";
+import { FaAndroid } from "react-icons/fa";
 
 export default function DownloadPage() {
   const router = useRouter();
@@ -78,9 +77,9 @@ export default function DownloadPage() {
                 />
               </div>
               <div>
-                <h2 className="text-3xl font-black text-slate-900 tracking-tight">mAI</h2>
+                <h2 className="text-3xl font-black text-slate-900 tracking-tight">mAI Web</h2>
                 <p className="text-slate-600 text-sm mt-1 max-w-xl">
-                  L&apos;assistant IA local de nouvelle génération pour booster votre productivité au quotidien.
+                  L&apos;assistant IA Web de nouvelle génération pour booster votre productivité au quotidien.
                 </p>
                 <div className="mt-3 flex flex-col gap-2 max-w-md">
                   <div className="p-3 rounded-xl bg-slate-950 text-slate-100 font-mono text-xs border border-slate-800 shadow-inner flex flex-col gap-1">
@@ -128,30 +127,6 @@ export default function DownloadPage() {
                 Canal Canary
                 <ExternalLink className="w-4 h-4 opacity-70" />
               </a>
-              <button
-                onClick={() =>
-                  handleDownloadAndRedirect(
-                    "https://upload.fs.fr/ObQWvEwYTk.zip",
-                    "guide-extension-vscode"
-                  )
-                }
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-white text-slate-900 border border-slate-200 hover:bg-slate-50 font-bold transition-all shadow-sm text-sm cursor-pointer"
-              >
-                <VscCode className="w-5 h-5 text-slate-900" />
-                VS Code
-              </button>
-              <button
-                onClick={() =>
-                  handleDownloadAndRedirect(
-                    "https://upload.fs.fr/Zn7FIHWR6M.zip",
-                    "guide-extension-navigateur"
-                  )
-                }
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-white text-slate-900 border border-slate-200 hover:bg-slate-50 font-bold transition-all shadow-sm text-sm cursor-pointer"
-              >
-                <FaChrome className="w-5 h-5 text-slate-900" />
-                Extension Navigateur
-              </button>
               <button
                 onClick={() =>
                   handleDownloadAndRedirect(

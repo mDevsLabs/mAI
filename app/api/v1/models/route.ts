@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
     if (userId) forwardHeaders['x-user-id'] = userId;
 
     // Fetch OpenRouter models depuis Val Town
-    const maiRes = await fetch('https://mprojects.val.run/v1/models', { headers: forwardHeaders }).catch(() => null);
+    const maiRes = await fetch('https://mai.val.run/v1/models', { headers: forwardHeaders }).catch(() => null);
 
     let cloudModels: any[] = [];
     if (maiRes && maiRes.ok) {

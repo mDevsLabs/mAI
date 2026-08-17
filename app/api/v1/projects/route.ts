@@ -6,7 +6,7 @@ export const runtime = 'nodejs';
 export async function GET(req: NextRequest) {
   try {
     const authHeader = req.headers.get('authorization') || '';
-    const res = await fetch('https://mprojects.val.run/v1/projects', {
+    const res = await fetch('https://mai.val.run/v1/projects', {
       headers: { Authorization: authHeader },
     });
     const data = await res.json();
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const authHeader = req.headers.get('authorization') || '';
-    const res = await fetch('https://mprojects.val.run/v1/projects', {
+    const res = await fetch('https://mai.val.run/v1/projects', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: authHeader },
       body: JSON.stringify(body),

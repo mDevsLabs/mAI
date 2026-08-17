@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const authHeader = req.headers.get('authorization') || req.headers.get('Authorization') || '';
     
-    const res = await fetch('https://mprojects.val.run/v1/messages', {
+    const res = await fetch('https://mai.val.run/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

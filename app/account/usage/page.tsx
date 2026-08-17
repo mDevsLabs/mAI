@@ -92,7 +92,7 @@ export default function ApiUsagePage() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "mprojects_api_usage.csv";
+      a.download = "mai_api_usage.csv";
       a.click();
     }, 1500);
   };

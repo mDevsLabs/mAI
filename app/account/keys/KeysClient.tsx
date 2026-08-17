@@ -197,7 +197,7 @@ export default function KeysClient() {
   const handleExportTxt = () => {
     const toExport = keys.filter(k => selectedKeys.includes(k.id));
     if (toExport.length === 0) return;
-    let content = "Clés API mProjects\n==================\n\n";
+    let content = "Clés API mAI\n==================\n\n";
     toExport.forEach(k => {
       content += `Nom : ${k.name}\n`;
       content += `Prefixe (Public) : ${k.prefix}\n`;
@@ -213,7 +213,7 @@ export default function KeysClient() {
   const handleExportEnv = () => {
     const toExport = keys.filter(k => selectedKeys.includes(k.id));
     if (toExport.length === 0) return;
-    let content = "# mProjects API Keys\n";
+    let content = "# mAI API Keys\n";
     toExport.forEach((k, idx) => {
       content += `# Key: ${k.name} (Prefix: ${k.prefix})\n`;
       content += `MAI_API_KEY_${idx + 1}="mai_live_..."\n\n`;
@@ -274,7 +274,7 @@ export default function KeysClient() {
             Consignes de Sécurité Développeur
           </h3>
           <p className="text-slate-700 leading-relaxed text-xs">
-            Vos clés API mProjects confèrent un accès direct aux modèles d&apos;IA. Ne partagez jamais vos clés secrètes dans des dépôts publics GitHub ou dans du code frontend exécuté côté client. Seul le hash SHA-256 de vos clés est conservé dans nos bases.
+            Vos clés API mAI confèrent un accès direct aux modèles d&apos;IA. Ne partagez jamais vos clés secrètes dans des dépôts publics GitHub ou dans du code frontend exécuté côté client. Seul le hash SHA-256 de vos clés est conservé dans nos bases.
           </p>
         </div>
       </div>

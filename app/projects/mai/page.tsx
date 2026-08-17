@@ -9,34 +9,16 @@ import {
   MessageSquare,
   Code,
   Layout,
-  Download,
-  Cpu,
+  Globe,
   Github,
   BookOpen,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { VscCode } from "react-icons/vsc";
-import { FaChrome } from "react-icons/fa";
 
 import { GithubRelease } from "@/components/github-release";
 
 export default function MaiProjectPage() {
-  const router = useRouter();
-
-  const handleDownloadAndRedirect = (downloadUrl: string, docSlug: string) => {
-    const a = document.createElement("a");
-    a.href = downloadUrl;
-    a.download = "";
-    a.target = "_blank";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-
-    router.push(`/docs?doc=${docSlug}`);
-  };
-
   return (
     <div className="flex flex-col gap-10 md:gap-16">
       {/* Header */}
@@ -49,7 +31,7 @@ export default function MaiProjectPage() {
             Projets
           </Link>
           <span>/</span>
-          <span className="text-purple-600 font-medium">mAI</span>
+          <span className="text-purple-600 font-medium">mAI Web</span>
         </div>
 
         <motion.div
@@ -71,7 +53,7 @@ export default function MaiProjectPage() {
             >
               <Image
                 src="/mai.png"
-                alt="mAI logo"
+                alt="mAI Web logo"
                 width={112}
                 height={112}
                 className="w-full h-full object-contain drop-shadow-md"
@@ -81,7 +63,7 @@ export default function MaiProjectPage() {
             <div>
               <div className="flex items-center gap-3">
                 <h1 className="text-4xl sm:text-5xl md:text-7xl font-black italic tracking-tighter leading-[0.9] md:leading-[0.85] uppercase text-slate-900 drop-shadow-sm">
-                  mAI
+                  mAI Web
                 </h1>
                 <span className="text-xs px-3 py-1 rounded-full bg-red-500/10 border border-red-500/30 text-red-600 font-bold uppercase tracking-widest">
                   Archivé
@@ -111,23 +93,8 @@ export default function MaiProjectPage() {
             L&apos;intelligence artificielle réinventée pour vous.
           </h2>
           <p className="text-slate-600 text-lg leading-relaxed mb-8 max-w-3xl">
-            mAI est votre assistant personnel de nouvelle génération, propulsé
-            par
-            <a
-              href="https://lobehub.com"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-1 text-purple-600 font-semibold ml-1 group relative transition-colors"
-            >
-              <span className="relative z-10 flex items-center gap-1 group-hover:-translate-y-0.5 transition-transform duration-300">
-                LobeHub <ExternalLink className="w-3 h-3 group-hover:rotate-12 transition-transform duration-300" />
-              </span>
-              <span className="absolute inset-x-0 -bottom-0.5 h-0.5 bg-purple-600 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
-            </a>
-            . Il intègre les modèles de langage les plus avancés dans une
-            interface fluide, intuitive et hautement personnalisable.
+            mAI Web est votre assistant personnel de nouvelle génération. Il intègre les modèles de langage les plus avancés dans une interface fluide, intuitive et hautement personnalisable.
           </p>
-
 
           <div className="flex flex-row items-center gap-2 sm:gap-3 overflow-x-auto p-4 -m-4 max-w-full whitespace-nowrap scrollbar-none">
             <a
@@ -136,7 +103,7 @@ export default function MaiProjectPage() {
               rel="noreferrer"
               className="inline-flex items-center gap-2 px-4 sm:px-5 py-3 rounded-full bg-white/40 backdrop-blur-md border border-white/60 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] text-slate-900 font-semibold text-xs sm:text-sm hover:bg-white/60 transition-colors shrink-0"
             >
-              Découvrir mAI
+              Découvrir mAI Web
               <ExternalLink className="w-4 h-4" />
             </a>
             <a
@@ -155,37 +122,6 @@ export default function MaiProjectPage() {
               Changelog
               <BookOpen className="w-4 h-4" />
             </Link>
-            <Link
-              href="/downloads"
-              className="inline-flex items-center gap-2 px-4 sm:px-5 py-3 rounded-full bg-white/40 backdrop-blur-md border border-white/60 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] text-slate-900 font-semibold text-xs sm:text-sm hover:bg-white/60 transition-colors shrink-0"
-            >
-              Télécharger mAI
-              <Download className="w-4 h-4" />
-            </Link>
-            <button
-              onClick={() =>
-                handleDownloadAndRedirect(
-                  "https://upload.fs.fr/ObQWvEwYTk.zip",
-                  "guide-extension-vscode"
-                )
-              }
-              className="inline-flex items-center gap-2 px-4 sm:px-5 py-3 rounded-full bg-white/40 backdrop-blur-md border border-white/60 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] text-slate-900 font-semibold text-xs sm:text-sm hover:bg-white/60 transition-colors cursor-pointer shrink-0"
-            >
-              VS Code
-              <VscCode className="w-4 h-4 text-slate-900" />
-            </button>
-            <button
-              onClick={() =>
-                handleDownloadAndRedirect(
-                  "https://upload.fs.fr/Zn7FIHWR6M.zip",
-                  "guide-extension-navigateur"
-                )
-              }
-              className="inline-flex items-center gap-2 px-4 sm:px-5 py-3 rounded-full bg-white/40 backdrop-blur-md border border-white/60 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] text-slate-900 font-semibold text-xs sm:text-sm hover:bg-white/60 transition-colors cursor-pointer shrink-0"
-            >
-              Extension Navigateur
-              <FaChrome className="w-4 h-4 text-slate-900" />
-            </button>
           </div>
         </div>
       </motion.div>
@@ -229,9 +165,9 @@ export default function MaiProjectPage() {
             delay={0.6}
           />
           <FeatureCard
-            icon={<Cpu className="w-6 h-6 text-purple-600" />}
-            title="Propulsé par LobeHub"
-            description="Une puissance de fonctionnalités et meilleure stabilité."
+            icon={<Globe className="w-6 h-6 text-purple-600" />}
+            title="Application Web"
+            description="Une expérience réactive et puissante accessible directement dans votre navigateur."
             delay={0.7}
           />
         </div>

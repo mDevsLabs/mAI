@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import ConfigClient from './ConfigClient';
 
 export const metadata: Metadata = {
-  title: 'Configuration API & SDKs | mProjects',
+  title: 'Configuration API & SDKs | mAI',
   description:
     'Générez dynamiquement vos extraits de code pour intégrer nos API avec les SDK OpenAI, Google, Anthropic, Python et cURL.',
 };

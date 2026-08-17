@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
     };
 
     // Appel à la route Val Town
-    const response = await fetch('https://mprojects.val.run/v1/chat/completions', {
+    const response = await fetch('https://mai.val.run/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

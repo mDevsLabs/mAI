@@ -38,67 +38,67 @@ const ROUTE_DEFINITIONS: RouteDefinition[] = [
     category: "Projets",
     method: "GET",
     path: "v1/projects",
-    description: "Récupère la liste globale de tous les projets de la plateforme mProjects (mAI, mSearch, mAI CLI, OpenProvider, SNOB).",
+    description: "Récupère la liste globale de tous les projets de la plateforme mAI (Web, Pulse, CLI, Office, Cloud).",
     requiresAuth: true,
     defaultHeaders: {
       "Content-Type": "application/json"
     }
   },
   {
-    id: "projects-mai",
-    name: "Projet mAI",
+    id: "projects-web",
+    name: "Projet Web",
     category: "Projets",
     method: "GET",
-    path: "v1/projects/mai",
-    description: "Obtient les détails, la version et les fonctionnalités du projet mAI Suite.",
+    path: "v1/projects/web",
+    description: "Obtient les détails et l'état de l'application mAI Web.",
     requiresAuth: true,
     defaultHeaders: {
       "Content-Type": "application/json"
     }
   },
   {
-    id: "projects-msearch",
-    name: "Projet mSearch",
+    id: "projects-pulse",
+    name: "Projet Pulse",
     category: "Projets",
     method: "GET",
-    path: "v1/projects/msearch",
-    description: "Obtient les détails et l'architecture du projet mSearch.",
+    path: "v1/projects/pulse",
+    description: "Obtient les détails de la suite d'extensions mAI Pulse.",
     requiresAuth: true,
     defaultHeaders: {
       "Content-Type": "application/json"
     }
   },
   {
-    id: "projects-maicli",
-    name: "Projet mAI CLI",
+    id: "projects-cli",
+    name: "Projet CLI",
     category: "Projets",
     method: "GET",
-    path: "v1/projects/maicli",
-    description: "Obtient les détails et fonctionnalités du projet mAI CLI.",
+    path: "v1/projects/cli",
+    description: "Obtient les détails de l'assistant de terminal mAI CLI.",
     requiresAuth: true,
     defaultHeaders: {
       "Content-Type": "application/json"
     }
   },
   {
-    id: "projects-openprovider",
-    name: "Projet OpenProvider",
+    id: "projects-office",
+    name: "Projet Office",
     category: "Projets",
     method: "GET",
-    path: "v1/projects/openprovider",
-    description: "Obtient les détails et l'état du projet OpenProvider.",
+    path: "v1/projects/office",
+    description: "Obtient les détails de la suite de productivité mAI Office.",
     requiresAuth: true,
     defaultHeaders: {
       "Content-Type": "application/json"
     }
   },
   {
-    id: "projects-snob",
-    name: "Projet SNOB",
+    id: "projects-cloud",
+    name: "Projet Cloud",
     category: "Projets",
     method: "GET",
-    path: "v1/projects/snob",
-    description: "Obtient les détails et l'état du projet SNOB Infrastructure.",
+    path: "v1/projects/cloud",
+    description: "Obtient les détails et fonctionnalités du projet mAI Cloud.",
     requiresAuth: true,
     defaultHeaders: {
       "Content-Type": "application/json"
@@ -121,7 +121,7 @@ const ROUTE_DEFINITIONS: RouteDefinition[] = [
       model: "poolside/laguna-xs-2.1:free",
       messages: [
         { role: "system", content: "Tu es un assistant IA serviable et précis." },
-        { role: "user", content: "Explique l'écosystème mProjects en une phrase !" }
+        { role: "user", content: "Explique l'écosystème mAI en une phrase !" }
       ],
       temperature: 0.7
     }
@@ -155,7 +155,7 @@ const ROUTE_DEFINITIONS: RouteDefinition[] = [
       model: "poolside/laguna-xs-2.1:free",
       max_tokens: 1024,
       messages: [
-        { role: "user", content: "Bonjour Claude, résume les capacités de mProjects !" }
+        { role: "user", content: "Bonjour Claude, résume les capacités de mAI !" }
       ]
     }
   },
@@ -201,7 +201,7 @@ const ROUTE_DEFINITIONS: RouteDefinition[] = [
     category: "Système",
     method: "GET",
     path: "v1/status",
-    description: "Vérifie l'état et la santé globale de l'infrastucture mProjects.",
+    description: "Vérifie l'état et la santé globale de l'infrastucture mAI.",
     requiresAuth: false,
     defaultHeaders: {
       "Content-Type": "application/json"
@@ -293,7 +293,7 @@ export default function RequestsClient() {
       return `/api/${clean}`;
     }
 
-    return `https://mprojects.val.run/${clean}`;
+    return `https://mai.val.run/${clean}`;
   };
 
   const targetValTownUrl = getComputedValTownUrl();
@@ -463,7 +463,7 @@ axios(config)
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `mprojects-api-response-${selectedRoute.id}.json`;
+    a.download = `mai-api-response-${selectedRoute.id}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

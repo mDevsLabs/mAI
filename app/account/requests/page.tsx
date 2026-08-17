@@ -40,7 +40,7 @@ export default function ApiRequestsPage() {
               </span>
             </h1>
             <p className="text-slate-500 text-sm md:text-base font-light max-w-2xl">
-              Explorez et exécutez directement toutes les routes de l&apos;API mProjects. Générez vos extraits de code en cURL, JavaScript, Python et Node.js, puis exportez ou partagez vos résultats.
+              Explorez et exécutez directement toutes les routes de l&apos;API mAI. Générez vos extraits de code en cURL, JavaScript, Python et Node.js, puis exportez ou partagez vos résultats.
             </p>
           </div>
         </div>
