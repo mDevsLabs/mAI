@@ -61,7 +61,7 @@ export function DevicesList() {
       } else {
         console.error("Devices fetch error:", res.status, await res.text());
       }
-    } catch {
+    } catch (err) {
       console.error(err);
       toast.error("Erreur lors de la récupération des appareils.");
     } finally {
