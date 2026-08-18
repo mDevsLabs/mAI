@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Cloud, Sparkles, Database, FileSearch, ShieldCheck, ArrowRight } from "lucide-react";
+import { Cloud, Sparkles, Database, FileSearch} from "lucide-react";
 import Link from "next/link";
 
 export default function CloudProjectPage() {

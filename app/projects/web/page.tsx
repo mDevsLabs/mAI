@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { ExternalLink, Globe, Sparkles, Zap, MessageSquare, ShieldCheck, Github, ArrowRight } from "lucide-react";
+import { ExternalLink, Globe, Sparkles, Zap, MessageSquare,  Github} from "lucide-react";
 import Link from "next/link";
 import { GithubRelease } from "@/components/github-release";
 

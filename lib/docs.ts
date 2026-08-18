@@ -48,8 +48,7 @@ export function getAllDocs(): DocMetadata[] {
       description: data.description || '',
       category: data.category || 'Général',
       order: typeof data.order === 'number' ? data.order : 999,
-      content,
-    });
+      content});
   }
 
   // Ordre canonique des catégories
@@ -58,8 +57,7 @@ export function getAllDocs(): DocMetadata[] {
     "Modèles d'IA": 2,
     'Guides': 3,
     'Architecture': 4,
-    'API': 5,
-  };
+    'API': 5};
 
   docs.sort((a, b) => {
     const catOrderA = categoryOrderMap[a.category] ?? 99;
@@ -106,8 +104,7 @@ export function getDocBySlug(slug: string): DocMetadata | null {
     description: data.description || '',
     category: data.category || 'Général',
     order: typeof data.order === 'number' ? data.order : 999,
-    content,
-  };
+    content};
 }
 
 /**
@@ -145,7 +142,7 @@ export function searchDocs(query: string): DocMetadata[] {
   });
 }
 
-function walkDocs(dir: string, baseDir: string): DocMetadata[] {
+export function walkDocs(dir: string, baseDir: string): DocMetadata[] {
   let docs: DocMetadata[] = [];
   if (!fs.existsSync(dir)) return docs;
   const entries = fs.readdirSync(dir, { withFileTypes: true });
@@ -174,8 +171,7 @@ function walkDocs(dir: string, baseDir: string): DocMetadata[] {
         description: data.description || '',
         category,
         order: typeof data.order === 'number' ? data.order : 999,
-        content,
-      });
+        content});
     }
   }
   return docs;

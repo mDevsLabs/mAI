@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Shield, ArrowLeft, Lock, Eye, FileText, Key, Database, Cookie, Zap } from "lucide-react";
+import { Shield, ArrowLeft, Lock,   Key, Database, Cookie, Zap } from "lucide-react";
 import Link from "next/link";
 
 export default function PrivacyPage() {

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { ExternalLink, Cpu, Sparkles, Code2, Chrome, Layers, Github, ArrowRight } from "lucide-react";
+import { ExternalLink, Cpu,  Code2, Chrome,  Github} from "lucide-react";
 import Link from "next/link";
 import { GithubRelease } from "@/components/github-release";
 

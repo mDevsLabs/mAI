@@ -1,6 +1,6 @@
 "use client";
 
-import { Github, Menu, X, ChevronDown, UserRound, LogOut, Gauge, User, Activity, Sparkles } from "lucide-react";
+import { Github, Menu, X, ChevronDown, UserRound, LogOut, Gauge,  Activity} from "lucide-react";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { CommandMenu } from "@/components/command-menu";
@@ -37,8 +37,7 @@ const navLinks: NavItem[] = [
       { name: "CLI (Bêta)", href: "/projects/cli" },
       { name: "Office (Bêta)", href: "/projects/office" },
       { name: "Cloud (Réflexion)", href: "/projects/cloud" },
-    ],
-  },
+    ]},
   {
     name: "Modèles",
     href: "/models",
@@ -51,8 +50,7 @@ const navLinks: NavItem[] = [
           { name: "mAI-1.5-Light", href: "/models/mai-1.5-light" },
           { name: "mAI-1.5-Apex", href: "/models/mai-1.5-apex" },
           { name: "mAI-1.5-Opal", href: "/models/mai-1.5-opal" },
-        ],
-      },
+        ]},
       {
         name: "mAI-1.2",
         href: "/models#mai-1.2",
@@ -60,18 +58,15 @@ const navLinks: NavItem[] = [
           { name: "mAI-1.2-Light", href: "/models/mai-1.2-light" },
           { name: "mAI-1.2-Apex", href: "/models/mai-1.2-apex" },
           { name: "mAI-1.2-Opal", href: "/models/mai-1.2-opal" },
-        ],
-      },
+        ]},
       {
         name: "mAI-1",
         href: "/models#mai-1",
         subitems: [
           { name: "mAI-1", href: "/models/mai-1" },
           { name: "mAI-1-Light", href: "/models/mai-1-light" },
-        ],
-      },
-    ],
-  },
+        ]},
+    ]},
   {
     name: "API",
     href: "/account/keys",
@@ -81,8 +76,7 @@ const navLinks: NavItem[] = [
       { name: "Usage", href: "/account/usage" },
       { name: "Configuration", href: "/account/config" },
       { name: "Terrain de jeu", href: "/playground" },
-    ],
-  },
+    ]},
   {
     name: "Plus",
     href: "#",
@@ -91,10 +85,8 @@ const navLinks: NavItem[] = [
       { name: "Télécharger", href: "/downloads" },
       { 
         name: "Documentation", 
-        href: "/docs",
-      },
-    ],
-  },
+        href: "/docs"},
+    ]},
 ];
 
 function checkSubActive(sub: NavSubItem, pathname: string): boolean {

@@ -14,7 +14,9 @@ import {
   Clock, 
   LogOut,
   Search,
-  Laptop
+  Laptop,
+  Ban,
+  Unlock
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/components/auth-provider";
@@ -29,9 +31,10 @@ type Device = {
   last_active: string;
   created_at?: string;
   is_current?: boolean;
+  is_blocked?: boolean;
 };
 
-export function DevicesList({ refreshTrigger = 0 }: { refreshTrigger?: number }) {
+export function DevicesList() {
   const { token, logout } = useAuth();
   const [devices, setDevices] = useState<Device[]>([]);
   const [loading, setLoading] = useState(true);
@@ -58,7 +61,7 @@ export function DevicesList({ refreshTrigger = 0 }: { refreshTrigger?: number })
       } else {
         console.error("Devices fetch error:", res.status, await res.text());
       }
-    } catch (err) {
+    } catch {
       console.error(err);
       toast.error("Erreur lors de la récupération des appareils.");
     } finally {
@@ -67,9 +70,11 @@ export function DevicesList({ refreshTrigger = 0 }: { refreshTrigger?: number })
     }
   }, [token]);
 
+  const [showBlocked, setShowBlocked] = useState(false);
+
   useEffect(() => {
     fetchDevices();
-  }, [fetchDevices, refreshTrigger]);
+  }, [fetchDevices]);
 
   const handleRename = async (id: string) => {
     if (!editName.trim()) return;
@@ -92,7 +97,7 @@ export function DevicesList({ refreshTrigger = 0 }: { refreshTrigger?: number })
       } else {
         toast.error("Erreur lors du renommage");
       }
-    } catch (err) {
+    } catch {
       toast.error("Erreur réseau");
     } finally {
       setActionLoading(null);
@@ -119,7 +124,7 @@ export function DevicesList({ refreshTrigger = 0 }: { refreshTrigger?: number })
       } else {
         toast.error("Erreur lors de la déconnexion");
       }
-    } catch (err) {
+    } catch {
       toast.error("Erreur réseau");
     } finally {
       setActionLoading(null);
@@ -142,7 +147,7 @@ export function DevicesList({ refreshTrigger = 0 }: { refreshTrigger?: number })
       } else {
         toast.error("Erreur lors de la déconnexion des autres appareils");
       }
-    } catch (err) {
+    } catch {
       toast.error("Erreur réseau");
     } finally {
       setActionLoading(null);
@@ -162,8 +167,38 @@ export function DevicesList({ refreshTrigger = 0 }: { refreshTrigger?: number })
     }
   };
 
+  const handleBlockDevice = async (device: Device) => {
+    setActionLoading(`block-${device.id}`);
+    try {
+      const newStatus = !device.is_blocked;
+      const res = await fetch(`/api/v1/devices/${device.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token || ""}`,
+        },
+        body: JSON.stringify({ is_blocked: newStatus }),
+      });
+      if (res.ok) {
+        toast.success(newStatus ? "Appareil bloqué" : "Appareil débloqué");
+        setDevices((prev) =>
+          prev.map((d) => (d.id === device.id ? { ...d, is_blocked: newStatus } : d))
+        );
+      } else {
+        toast.error("Erreur lors de l'opération");
+      }
+    } catch {
+      toast.error("Erreur réseau");
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
   const filteredDevices = devices.filter((d) => {
     const q = searchQuery.toLowerCase().trim();
+    const matchStatus = showBlocked ? d.is_blocked : !d.is_blocked;
+    if (!matchStatus) return false;
+    
     if (!q) return true;
     return (
       d.device_name?.toLowerCase().includes(q) ||
@@ -174,7 +209,9 @@ export function DevicesList({ refreshTrigger = 0 }: { refreshTrigger?: number })
     );
   });
 
-  const otherDevicesCount = devices.filter((d) => !d.is_current).length;
+  const activeDevicesCount = devices.filter(d => !d.is_blocked).length;
+  const blockedDevicesCount = devices.filter(d => d.is_blocked).length;
+  const otherDevicesCount = devices.filter((d) => !d.is_current && !d.is_blocked).length;
 
   if (loading && devices.length === 0) {
     return (
@@ -191,7 +228,7 @@ export function DevicesList({ refreshTrigger = 0 }: { refreshTrigger?: number })
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-100">
         <div className="flex items-center gap-2">
           <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-purple-100 text-purple-700">
-            {devices.length} {devices.length > 1 ? "appareils connectés" : "appareil connecté"}
+            {activeDevicesCount} {activeDevicesCount > 1 ? "appareils connectés" : "appareil connecté"}
           </span>
           {devices.some((d) => d.is_current) && (
             <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-100 text-emerald-700">
@@ -202,6 +239,24 @@ export function DevicesList({ refreshTrigger = 0 }: { refreshTrigger?: number })
         </div>
 
         <div className="flex items-center gap-2">
+          <div className="flex bg-slate-100 p-1 rounded-xl">
+            <button
+              onClick={() => setShowBlocked(false)}
+              className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors ${
+                !showBlocked ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
+              }`}
+            >
+              Actifs ({activeDevicesCount})
+            </button>
+            <button
+              onClick={() => setShowBlocked(true)}
+              className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors ${
+                showBlocked ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
+              }`}
+            >
+              Bloqués ({blockedDevicesCount})
+            </button>
+          </div>
           {/* Bouton Actualiser */}
           <button
             onClick={() => fetchDevices(true)}
@@ -382,24 +437,49 @@ export function DevicesList({ refreshTrigger = 0 }: { refreshTrigger?: number })
                   </div>
                 </div>
 
-                {/* Bouton de Déconnexion */}
-                <button
-                  onClick={() => handleDisconnect(device)}
-                  disabled={actionLoading === `delete-${device.id}`}
-                  className={`inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer disabled:opacity-50 ${
-                    device.is_current
-                      ? "bg-slate-100 text-slate-700 hover:bg-red-50 hover:text-red-600"
-                      : "bg-red-50 text-red-600 hover:bg-red-100 border border-red-100"
-                  }`}
-                  title={device.is_current ? "Fermer cette session" : "Déconnecter cet appareil"}
-                >
-                  {actionLoading === `delete-${device.id}` ? (
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  ) : (
-                    <Trash2 className="w-3.5 h-3.5" />
+                <div className="flex flex-col sm:flex-row items-center gap-2 shrink-0">
+                  {/* Bouton Bloquer/Débloquer */}
+                  {!device.is_current && (
+                    <button
+                      onClick={() => handleBlockDevice(device)}
+                      disabled={actionLoading === `block-${device.id}`}
+                      className={`inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer disabled:opacity-50 ${
+                        device.is_blocked
+                          ? "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                          : "bg-orange-50 text-orange-600 hover:bg-orange-100 border border-orange-100"
+                      }`}
+                      title={device.is_blocked ? "Débloquer l'appareil" : "Bloquer l'appareil"}
+                    >
+                      {actionLoading === `block-${device.id}` ? (
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      ) : device.is_blocked ? (
+                        <Unlock className="w-3.5 h-3.5" />
+                      ) : (
+                        <Ban className="w-3.5 h-3.5" />
+                      )}
+                      <span>{device.is_blocked ? "Débloquer" : "Bloquer"}</span>
+                    </button>
                   )}
-                  <span>{device.is_current ? "Se déconnecter" : "Déconnecter"}</span>
-                </button>
+
+                  {/* Bouton de Déconnexion */}
+                  <button
+                    onClick={() => handleDisconnect(device)}
+                    disabled={actionLoading === `delete-${device.id}`}
+                    className={`inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer disabled:opacity-50 ${
+                      device.is_current
+                        ? "bg-slate-100 text-slate-700 hover:bg-red-50 hover:text-red-600"
+                        : "bg-red-50 text-red-600 hover:bg-red-100 border border-red-100"
+                    }`}
+                    title={device.is_current ? "Fermer cette session" : "Déconnecter cet appareil"}
+                  >
+                    {actionLoading === `delete-${device.id}` ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    ) : (
+                      <Trash2 className="w-3.5 h-3.5" />
+                    )}
+                    <span>{device.is_current ? "Se déconnecter" : "Déconnecter"}</span>
+                  </button>
+                </div>
               </div>
             );
           })}

@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
     });
     const data = await res.json();
     return NextResponse.json(data, { status: res.status });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Erreur proxy de récupération des appareils' }, { status: 500 });
   }
 }

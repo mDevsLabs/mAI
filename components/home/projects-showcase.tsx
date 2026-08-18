@@ -3,7 +3,6 @@
 import { motion } from "motion/react";
 import { Terminal, ExternalLink, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
 import { GithubRepoStats } from "@/components/github-repo-stats";
 
 export function ProjectsShowcase() {
@@ -17,8 +16,7 @@ export function ProjectsShowcase() {
       link: "/projects/web",
       repo: "mDevsLabs/Web",
       platforms: ["Web", "Cloud"],
-      highlightColor: "hover:border-purple-500/40 hover:shadow-[0_12px_32px_rgba(168,85,247,0.15)]",
-    },
+      highlightColor: "hover:border-purple-500/40 hover:shadow-[0_12px_32px_rgba(168,85,247,0.15)]"},
     {
       id: "pulse",
       title: "Pulse",
@@ -28,8 +26,7 @@ export function ProjectsShowcase() {
       link: "/projects/pulse",
       repo: "mDevsLabs/Pulse",
       platforms: ["Navigateur", "VS Code", "Extensions"],
-      highlightColor: "hover:border-indigo-500/40 hover:shadow-[0_12px_32px_rgba(99,102,241,0.15)]",
-    },
+      highlightColor: "hover:border-indigo-500/40 hover:shadow-[0_12px_32px_rgba(99,102,241,0.15)]"},
     {
       id: "cli",
       title: "CLI",
@@ -39,8 +36,7 @@ export function ProjectsShowcase() {
       link: "/projects/cli",
       repo: "mDevsLabs/CLI",
       platforms: ["macOS", "Linux", "Windows"],
-      highlightColor: "hover:border-emerald-500/40 hover:shadow-[0_12px_32px_rgba(16,185,129,0.15)]",
-    },
+      highlightColor: "hover:border-emerald-500/40 hover:shadow-[0_12px_32px_rgba(16,185,129,0.15)]"},
     {
       id: "office",
       title: "Office",
@@ -50,8 +46,7 @@ export function ProjectsShowcase() {
       link: "/projects/office",
       repo: "mDevsLabs/Office",
       platforms: ["macOS", "Windows", "Export PDF/PPT"],
-      highlightColor: "hover:border-blue-500/40 hover:shadow-[0_12px_32px_rgba(59,130,246,0.15)]",
-    },
+      highlightColor: "hover:border-blue-500/40 hover:shadow-[0_12px_32px_rgba(59,130,246,0.15)]"},
     {
       id: "cloud",
       title: "Cloud",
@@ -61,8 +56,7 @@ export function ProjectsShowcase() {
       link: "/projects/cloud",
       repo: null,
       platforms: ["Cloud", "En conception"],
-      highlightColor: "hover:border-cyan-500/40 hover:shadow-[0_12px_32px_rgba(6,182,212,0.15)]",
-    },
+      highlightColor: "hover:border-cyan-500/40 hover:shadow-[0_12px_32px_rgba(6,182,212,0.15)]"},
   ];
 
   return (

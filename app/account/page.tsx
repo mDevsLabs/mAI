@@ -99,9 +99,6 @@ export default function AccountPage() {
 
   // Active section for Scroll Spy
   const [activeSection, setActiveSection] = useState("profil");
-  
-  // Refresh trigger pour DevicesList
-  const [devicesRefreshCounter, setDevicesRefreshCounter] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -758,7 +755,6 @@ export default function AccountPage() {
       <section 
         id="appareils" 
         className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-4"
-        onMouseEnter={() => setDevicesRefreshCounter(c => c + 1)}
       >
         <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
           <Monitor className="w-5 h-5 text-purple-600" />
@@ -767,7 +763,7 @@ export default function AccountPage() {
         <p className="text-sm text-slate-600">
           Consultez et gérez les appareils actuellement connectés à votre compte.
         </p>
-        <DevicesList refreshTrigger={devicesRefreshCounter} />
+        <DevicesList />
       </section>
 
       {/* Upgrade code */}
