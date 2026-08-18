@@ -257,7 +257,7 @@ export default function PlaygroundClient() {
     }
 
     const target = modelTag || config.model;
-    setOllamaStatus((prev) => ({ ...prev, checking: true }));
+    setOllamaStatus((prev: any) => ({ ...prev, checking: true }));
     try {
       const res = await fetch(`/api/ollama/status?model=${encodeURIComponent(target)}`);
       const data = await res.json();
