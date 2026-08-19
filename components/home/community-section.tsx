@@ -113,7 +113,7 @@ export function CommunitySection() {
         <div className="absolute bottom-0 left-0 w-72 h-72 bg-blue-500/20 rounded-full blur-[80px] pointer-events-none" />
 
         <h3 className="text-2xl sm:text-3xl md:text-4xl font-black italic tracking-tighter uppercase mb-3 max-w-xl leading-tight">
-          Prêt à propulser votre workflow avec <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">mProjects</span> ?
+          Prêt à propulser votre workflow avec <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">mAI</span> ?
         </h3>
 
         <p className="text-slate-300 text-xs sm:text-sm max-w-lg mb-6 font-light">

@@ -2,7 +2,7 @@ import { getChangelogs } from "@/lib/changelog";
 import ChangelogView from "../changelog-view";
 
 export const metadata = {
-  title: "mProjects | Changelog mSearch",
+  title: "mAI | Changelog mSearch",
   description: "Notes de version du projet mSearch.",
 };
 

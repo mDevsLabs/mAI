@@ -57,8 +57,8 @@ const TEMPLATES: Record<string, EmailTemplate> = {
     name: "🚀 Nouveauté Produit / Mise à jour",
     badge: "NOUVEAUTÉ",
     badgeColor: "#7c3aed",
-    defaultSubject: "🚀 Découvrez les nouvelles fonctionnalités de mProjects !",
-    defaultContent: "Nous sommes ravis de vous présenter les dernières améliorations apportées à la plateforme mProjects. Découvrez dès maintenant nos nouveaux outils et optimisations conçus pour vous simplifier la vie.",
+    defaultSubject: "🚀 Découvrez les nouvelles fonctionnalités de mAI !",
+    defaultContent: "Nous sommes ravis de vous présenter les dernières améliorations apportées à la plateforme mAI. Découvrez dès maintenant nos nouveaux outils et optimisations conçus pour vous simplifier la vie.",
     hasCta: true,
   },
   "2": {
@@ -66,8 +66,8 @@ const TEMPLATES: Record<string, EmailTemplate> = {
     name: "📣 Annonce Générale",
     badge: "ANNONCE",
     badgeColor: "#2563eb",
-    defaultSubject: "📣 Des nouvelles importantes concernant mProjects",
-    defaultContent: "Bonjour {{username}},\n\nNous tenions à partager avec vous une mise à jour importante concernant l'écosystème mProjects.",
+    defaultSubject: "📣 Des nouvelles importantes concernant mAI",
+    defaultContent: "Bonjour {{username}},\n\nNous tenions à partager avec vous une mise à jour importante concernant l'écosystème mAI.",
     hasCta: false,
   },
   "3": {
@@ -75,7 +75,7 @@ const TEMPLATES: Record<string, EmailTemplate> = {
     name: "⚡ Maintenance & Système",
     badge: "INFOS SYSTÈME",
     badgeColor: "#d97706",
-    defaultSubject: "⚡ Maintenance programmée sur les services mProjects",
+    defaultSubject: "⚡ Maintenance programmée sur les services mAI",
     defaultContent: "Une intervention technique de maintenance est programmée afin d'améliorer les performances et la stabilité de nos infrastructures. Nos services resteront accessibles avec de possibles micro-coupures.",
     hasCta: false,
   },
@@ -84,8 +84,8 @@ const TEMPLATES: Record<string, EmailTemplate> = {
     name: "✏️ Contenu Libre / HTML Sur-Mesure",
     badge: "NEWSLETTER",
     badgeColor: "#059669",
-    defaultSubject: "L'actualité mProjects du moment",
-    defaultContent: "Bonjour {{username}},\n\nVoici les dernières actualités mProjects.",
+    defaultSubject: "L'actualité mAI du moment",
+    defaultContent: "Bonjour {{username}},\n\nVoici les dernières actualités mAI.",
     hasCta: false,
   },
 };
@@ -100,7 +100,7 @@ function clearConsole() {
 function printHeader() {
   console.log("");
   console.log(`${c.bgPurple}${c.bold}${c.brightWhite}  ╔══════════════════════════════════════════════════════════════════════╗  ${c.reset}`);
-  console.log(`${c.bgPurple}${c.bold}${c.brightWhite}  ║             📧  mProjects — STUDIO NEWSLETTER INTERACTIF            ║  ${c.reset}`);
+  console.log(`${c.bgPurple}${c.bold}${c.brightWhite}  ║                📧  mAI — STUDIO NEWSLETTER INTERACTIF                ║  ${c.reset}`);
   console.log(`${c.bgPurple}${c.bold}${c.brightWhite}  ╚══════════════════════════════════════════════════════════════════════╝  ${c.reset}`);
   console.log("");
 }
@@ -188,7 +188,7 @@ function buildNewsletterHtml(
 
         <!-- Header & Logo -->
         <div style="background:linear-gradient(135deg, #1e1b4b 0%, #2e1065 50%, #0f172a 100%); padding:36px 28px; text-align:center; border-bottom:1px solid #2e1065;">
-          <img src="https://upload.fs.fr/azq3C6GLea.png" alt="mProjects Logo" style="height:44px; width:auto; max-width:180px; object-fit:contain; display:inline-block;" />
+          <img src="https://upload.fs.fr/azq3C6GLea.png" alt="mAI Logo" style="height:44px; width:auto; max-width:180px; object-fit:contain; display:inline-block;" />
           <h1 style="color:#ffffff; font-size:22px; font-weight:800; margin:20px 0 0 0; letter-spacing:-0.5px; line-height:1.3;">${subject}</h1>
         </div>
 
@@ -205,8 +205,8 @@ function buildNewsletterHtml(
 
         <!-- Footer -->
         <div style="background-color:#0b0f19; padding:24px; text-align:center; border-top:1px solid #1e293b; font-size:12px; color:#64748b; line-height:1.5;">
-          <p style="margin:0 0 8px 0; font-weight:600; color:#94a3b8;">© 2026 mProjects — Plateforme mAI & APIs</p>
-          <p style="margin:0;">Vous recevez cet e-mail car votre compte est inscrit aux mises à jour mProjects.</p>
+          <p style="margin:0 0 8px 0; font-weight:600; color:#94a3b8;">© 2026 mAI — Plateforme mAI & APIs</p>
+          <p style="margin:0;">Vous recevez cet e-mail car votre compte est inscrit aux mises à jour mAI.</p>
         </div>
 
       </div>
@@ -362,8 +362,8 @@ async function main() {
         console.log("");
         const wantCta = await rl.question(`  ${c.brightYellow}➔ Ajouter un bouton d'action (CTA) ? (O/n) : ${c.reset}`);
         if (wantCta.toLowerCase() !== "n") {
-          ctaText = (await rl.question(`  ${c.cyan}→${c.reset} Texte du bouton (ex: Essayer mAI 1.2) : `)).trim() || "Découvrir mProjects";
-          ctaUrl = (await rl.question(`  ${c.cyan}→${c.reset} Lien URL du bouton (ex: https://mprojects.fr) : `)).trim() || "https://mprojects.fr";
+          ctaText = (await rl.question(`  ${c.cyan}→${c.reset} Texte du bouton (ex: Essayer mAI 1.2) : `)).trim() || "Découvrir mAI";
+          ctaUrl = (await rl.question(`  ${c.cyan}→${c.reset} Lien URL du bouton (ex: https://mai-devs.vercel.app) : `)).trim() || "https://mai-devs.vercel.app";
         }
       }
     }
@@ -382,7 +382,7 @@ async function main() {
       printStep(4, "Récapitulatif & Actions");
 
       console.log(`  ${c.bold}📌 Objet :${c.reset} ${c.brightCyan}${subject}${c.reset}`);
-      console.log(`  ${c.bold}📧 Expéditeur :${c.reset} "mProjects" <${gmailUser}>`);
+      console.log(`  ${c.bold}📧 Expéditeur :${c.reset} "mAI" <${gmailUser}>`);
       console.log(`  ${c.bold}👥 Destinataires :${c.reset} ${c.brightGreen}${targetUsers.length} personne(s)${c.reset}`);
       console.log(`  ${c.bold}🎨 Modèle :${c.reset} ${selectedTemplate.name}`);
       if (ctaText && ctaUrl) {
@@ -421,7 +421,7 @@ async function main() {
 
           try {
             await transporter.sendMail({
-              from: `"mProjects (TEST)" <${gmailUser}>`,
+              from: `"mAI (TEST)" <${gmailUser}>`,
               to: testTarget,
               subject: `[TEST] ${subject}`,
               html,
@@ -471,7 +471,7 @@ async function main() {
 
       try {
         await transporter.sendMail({
-          from: `"mProjects" <${gmailUser}>`,
+          from: `"mAI" <${gmailUser}>`,
           to: u.email,
           subject,
           html,

@@ -1,39 +1,32 @@
-## I - Introduction
+# Historique et vision de développement de mAI
 
-Tout a commencé en 2022. Le défi de départ ? Partir de zéro, avec un budget absolument inexistant, et réussir l'exploit de publier une interface d'intelligence artificielle plus performante et mieux optimisée que ce qui existait déjà.
+## I. Contexte et genèse du projet
 
-Ce long voyage a suivi une évolution naturelle : d'abord une simple idée, puis un premier croquis, suivis d'un prototype fonctionnel. Aujourd'hui, quatre ans de travail plus tard, le produit final est enfin une réalité.
+Initié en 2022, le projet avait pour objectif fondamental de concevoir une interface d'intelligence artificielle performante, optimisée et accessible, capable de répondre aux exigences de souveraineté et d'ergonomie modernes.
 
-## II - Les premiers tests et débuts
+Ce parcours d'ingénierie s'est structuré autour de phases itératives rigoureuses : de la formalisation des cas d'usage initiaux à l'élaboration de prototypes fonctionnels, jusqu'au déploiement d'une architecture de production robuste.
 
-Pour tester les premières idées, la première étape a été d'explorer le no-code via la plateforme **Base 44**.
+## II. Évaluation des approches initiales
 
-Cependant, la complexité technique pour obtenir un résultat vraiment poussé sans budget s'est vite fait ressentir. Un second test a été lancé sur **Google AI Studio**, mais l'obligation de passer par une interface purement web est rapidement devenue une limite.
+Les premières expérimentations ont débuté par l'évaluation d'outils no-code, notamment Base 44, afin de tester rapidement les flux conversationnels.
 
-C'est à la mi-2025 que la transition s'est faite vers le modèle de chatbot **Next.js** de **Vercel** — un environnement puissant, mais dont la prise en main s'est avérée particulièrement difficile au départ.
+Face aux limites d'extensibilité rencontrées, les recherches se sont orientées vers Google AI Studio, puis vers l'écosystème Next.js et Vercel à la mi-2025. Cette étape a mis en évidence la nécessité d'une maîtrise complète de la couche logicielle pour garantir flexibilité et performance.
 
-## III - Période d'apprentissage
+## III. Phase de recherche et consolidation architecturale
 
-Face à ces obstacles, une pause s'imposait : un bloc d'environ six mois a été dédié exclusivement à la montée en compétences, à l'apprentissage du développement approfondi et à une meilleure organisation.
+Une phase d'approfondissement technique de plusieurs mois a ensuite été consacrée à l'étude des architectures distribuées, de la gestion de contexte et de l'interopérabilité multi-modèles.
 
-Ce temps a été mis à profit pour analyser minutieusement l'architecture de projets existants. L'objectif était clair : bâtir une architecture web active, complète et robuste.
+Cette démarche a permis de définir les spécifications structurelles de la solution, aboutissant en avril 2026 à la conception finale de **mAI Web**.
 
-C’est au bout de cette recherche intense, en avril 2026, que la vision définitive de **mAI Web** a pris forme.
+## IV. Déploiement et optimisations
 
-## IV - Le déclic technique
+Le développement a porté sur la modularité des composants, l'optimisation des temps de réponse et la standardisation des interfaces d'inférence, garantissant une intégration fluide des modèles locaux et distants.
 
-Pendant plusieurs semaines, l'architecture a été affinée pour construire une base solide, moderne et ergonomique.
+## V. Conclusion
 
-Ce projet a marqué le top départ du défi technique le plus stimulant jamais réalisé jusqu'ici.
-
-## V - Conclusion & Lancement
-
-Après d'innombrables sessions de tests, des phases d'incertitude et un apprentissage constant au fur et à mesure du temps, le travail a enfin payé : l'objectif est pleinement atteint.
-
-Le résultat de toute cette persévérance est désormais accessible.
-
-Découvrez **mAI Web** dès aujourd'hui et plongez dans le futur de l'interface IA.
+Grâce à cette méthodologie continue d'apprentissage et de validation technique, la plateforme mAI Web est aujourd'hui opérationnelle et disponible.
 
 ---
 
-**Mathias Tusseau**
+**Mathias Tusseau**  
+*Fondateur mDevsLabs*

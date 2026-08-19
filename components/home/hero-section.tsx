@@ -38,7 +38,7 @@ export function HeroSection() {
           transition={{ duration: 0.8, delay: 0.25, ease: "easeOut" }}
           className="text-sm sm:text-base md:text-lg text-slate-600 max-w-2xl mb-8 font-normal leading-relaxed px-4"
         >
-          Découvrez la suite mAI (Web, Pulse, CLI, Office, Cloud), nos modèles d&apos;IA de pointe et notre API unifiée haute performance.
+          Découvrez la suite mAI (Web, Pulse, CLI, Office), nos modèles d&apos;IA de pointe et notre API unifiée haute performance.
         </motion.p>
 
         {/* Boutons d'Action */}
@@ -86,8 +86,8 @@ export function HeroSection() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 w-full max-w-4xl">
           {[
             { label: "Modèles IA Disponibles", value: "8+", icon: Cpu, color: "text-purple-600" },
-            { label: "Projets Open & Utilitaires", value: "5", icon: Layers, color: "text-blue-600" },
-            { label: "Fenêtre de Contexte Max", value: "256K", icon: Zap, color: "text-emerald-600" },
+            { label: "Projets Open & Utilitaires", value: "4", icon: Layers, color: "text-blue-600" },
+            { label: "API performante", value: "800ms", icon: Zap, color: "text-emerald-600" },
             { label: "Respect de la Vie Privée", value: "100%", icon: ShieldCheck, color: "text-amber-600" },
           ].map((stat, i) => (
             <motion.div

@@ -13,7 +13,7 @@ Ce document détaille les mécanismes de sécurité, les méthodes d'authentific
 
 ## 🔑 Authentification par Clé API (`Bearer Token`)
 
-Toutes les requêtes vers l'API REST mDevsLabs Cloud doivent contenir l'en-tête HTTP `Authorization` :
+Toutes les requêtes vers l'API REST mAI doivent contenir l'en-tête HTTP `Authorization` :
 
 ```http
 Authorization: Bearer mdevs_sk_live_9f8d7c6b5a4e3d2c1b0a

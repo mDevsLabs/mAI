@@ -98,7 +98,7 @@ export default function MaiProjectPage() {
 
           <div className="flex flex-row items-center gap-2 sm:gap-3 overflow-x-auto p-4 -m-4 max-w-full whitespace-nowrap scrollbar-none">
             <a
-              href="https://mai-officiel.vercel.app"
+              href="https://mai-devs.vercel.app"
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center gap-2 px-4 sm:px-5 py-3 rounded-full bg-white/40 backdrop-blur-md border border-white/60 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] text-slate-900 font-semibold text-xs sm:text-sm hover:bg-white/60 transition-colors shrink-0"

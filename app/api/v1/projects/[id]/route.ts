@@ -17,7 +17,6 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
       pulse: { project_id: "pulse", name: "Pulse", description: "Ensemble d'extensions pour diverses applications pour discuter avec mAI directement.", status: "beta", label: "Bêta", category: "Extensions", is_public: true },
       cli: { project_id: "cli", name: "CLI", description: "Discussions et séances de codage dans le terminal CLI via mAI.", status: "beta", label: "Bêta", category: "Developer Tools", is_public: true },
       office: { project_id: "office", name: "Office", description: "Création de documents et présentations avec mAI.", status: "beta", label: "Bêta", category: "Productivity", is_public: true },
-      cloud: { project_id: "cloud", name: "Cloud", description: "Stockage cloud de documents et intégration d'mAI pour des résumés.", status: "conception", label: "Réflexion", category: "Cloud & Storage", is_public: true },
       mai: { project_id: "mai", name: "mAI Web (Legacy)", description: "Ancienne interface web de mAI.", status: "archived", label: "Archivé", category: "AI Suite", is_public: true },
       msearch: { project_id: "msearch", name: "mSearch", description: "Moteur de recherche sémantique et d'indexation vectorielle.", status: "archived", label: "Archivé", category: "Search Engine", is_public: true },
       openprovider: { project_id: "openprovider", name: "OpenProvider", description: "Hub universel d'agrégation et de routage d'API et modèles LLM.", status: "archived", label: "Archivé", category: "API Gateway", is_public: true },

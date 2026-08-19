@@ -30,7 +30,7 @@ import { mDevsClient } from '@mdevslabs/sdk';
 
 const client = new mDevsClient({
   apiKey: process.env.MDEVS_API_KEY,
-  baseUrl: 'https://mprojects-officiel.vercel.app/api/v1/',
+  baseUrl: 'https://mai-devs.vercel.app/api/v1/',
 });
 
 export async function askAssistant(question: string) {
@@ -207,7 +207,7 @@ import { mDevsClient } from '@mdevslabs/sdk';
 // Le SDK détecte automatiquement l'environnement
 const client = new mDevsClient({
   apiKey: process.env.NEXT_PUBLIC_MDEVS_API_KEY,
-  baseUrl: 'https://mprojects-officiel.vercel.app/api/v1/',
+  baseUrl: 'https://mai-devs.vercel.app/api/v1/',
 });
 
 // Utilisation dans un composant React

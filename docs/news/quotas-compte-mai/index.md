@@ -1,92 +1,83 @@
-# 📊 Les quotas d'mAI et le Compte mAI sont maintenant disponibles sur mProjects
+# Disponibilité du suivi des quotas et gestion du compte mAI
 
 ![Compte mAI](https://upload.fs.fr/acJN4xd9ys.png)
 
-L'écosystème **mAI** continue de s'enrichir pour vous offrir une expérience toujours plus maîtrisée et transparente. Nous sommes heureux d'annoncer que **les quotas d'mAI** et le **Compte mAI** sont désormais accessibles directement depuis le site **mProjects** actuel.
+L'écosystème **mAI** intègre de nouvelles fonctionnalités d'administration pour offrir une visibilité complète sur la consommation de ressources. Le **suivi des quotas** et le **compte mAI unifié** sont désormais directement accessibles depuis la plateforme **mAI**.
 
-Plus besoin de quitter votre espace de travail ou de jongler entre plusieurs interfaces : toute la gestion de votre consommation, de votre profil et de votre abonnement se fait désormais depuis une seule et même page, entièrement intégrée à votre compte unifié.
-
----
-
-## 🧮 Qu'est-ce que le suivi de quota d'mAI ?
-
-Chaque interaction avec les modèles **mAI** consomme des *tokens*. Pour garantir une utilisation équitable, pédagogique et pérenne de nos services, un système de **quotas hebdomadaires** a été mis en place.
-
-Depuis votre compte, vous pouvez consulter en temps réel :
-
-- **Le nombre de tokens utilisés** par rapport à votre limite hebdomadaire.
-- **Le pourcentage d'occupation** de votre quota, illustré par une barre de progression dynamique (verte, ambrée ou rouge selon le niveau d'utilisation).
-- **La date et l'heure de réinitialisation** de votre quota, pour savoir exactement quand votre compteur repart à zéro.
-- **Votre forfait actuel** (Free, Plus, Pro ou Max).
-
-> 💡 Un bouton *Actualiser* vous permet de forcer la synchronisation avec le backend à tout moment, si vous constatez un écart.
+Cette intégration centralise la gestion de profil, le suivi d'utilisation des modèles et l'administration des forfaits au sein d'une interface unique.
 
 ---
 
-## 👤 Le Compte mAI unifié
+## Fonctionnement du suivi des quotas mAI
 
-Le **Compte mAI** est votre portail unique, unifié entre **mProjects** et l'ensemble des projets **mDevsLabs**. Il centralise :
+Chaque requête adressée aux modèles **mAI** mobilise un volume de *tokens*. Afin de garantir une répartition équitable des ressources d'inférence, un système de **quotas hebdomadaires** est appliqué.
 
-### Profil & Identité
-- Votre **nom d'utilisateur** et votre **adresse email**.
-- Votre **forfait actuel**, affiché en badge coloré (Free, Plus, Pro, Max).
-- Un **avatar généré automatiquement** à partir des initiales de votre nom.
+Depuis le tableau de bord, vous pouvez suivre en temps réel :
 
-### Gestion de l'abonnement
-- **Visualisation claire de votre quota hebdomadaire** (tokens utilisés / tokens maximum).
-- **Activation de codes d'upgrade** : saisissez simplement un code *Plus*, *Pro* ou *Max* pour passer immédiatement à un niveau supérieur et démultiplier vos capacités.
+- **Le volume de tokens consommés** par rapport au plafond hebdomadaire alloué.
+- **Le taux d'utilisation** du quota, représenté par un indicateur visuel de progression.
+- **La date et l'heure de réinitialisation**, indiquant le moment précis du renouvellement du quota.
+- **Le forfait associé** (Free, Plus, Pro ou Max).
 
-### Outils & Accès
-- **Clés API** : accédez à votre console de gestion des clés pour intégrer mAI dans vos propres applications.
-- **mAI CLI** : lien direct vers la documentation et l'utilisation de l'interface en ligne de commande.
+Un contrôle d'actualisation permet de synchroniser instantanément l'état des compteurs avec les services backend.
 
 ---
 
-## 📈 Les quotas hebdomadaires par forfait
+## Le Compte mAI unifié
 
-Voici les quotas hebdomadaires de tokens (input + output confondus) appliqués à chaque niveau :
+Le **Compte mAI** constitue le point d'accès centralisé entre **mAI** et l'ensemble des services de **mDevsLabs**. Il regroupe :
 
-> 🚀 **Pas de limite de débit !** Quel que soit votre forfait, **aucune limite RPM/TPM n'est appliquée**. Vous pouvez envoyer des requêtes à la vitesse de votre machine — seul le quota hebdomadaire de tokens est comptabilisé.
+### Profil et identité
+- **Informations de compte** : Nom d'utilisateur et adresse de messagerie associée.
+- **Niveau d'abonnement** : Affichage du forfait actif (Free, Plus, Pro, Max).
+- **Identifiant visuel** : Génération automatique des initiales de profil.
 
-| Forfait | Tokens / semaine |
+### Gestion des forfaits
+- **Suivi d'utilisation** : Visualisation claire de la consommation de tokens (consommés / maximum).
+- **Mise à niveau** : Activation de codes d'évolution (*Plus*, *Pro* ou *Max*) pour étendre instantanément les capacités de traitement.
+
+### Outils et accès développeur
+- **Clés API** : Console de génération et d'administration des clés d'accès programmatiques.
+- **mAI CLI** : Accès direct à la documentation et aux commandes d'installation de l'interface terminal.
+
+---
+
+## Plafonds hebdomadaires par forfait
+
+La grille ci-dessous détaille le volume hebdomadaire de tokens (entrée et sortie confondues) attribué par niveau :
+
+*Remarque : Aucune limitation restrictive de débit par minute (RPM/TPM) n'est imposée. Seul le volume total hebdomadaire de tokens fait l'objet d'un décompte.*
+
+| Forfait | Plafond de tokens / semaine |
 |---|---|
 | **Community / Free** | 2 000 000 |
 | **Plus** | 5 000 000 |
 | **Pro** | 10 000 000 |
 | **Max** | 20 000 000 |
 
-> ⚠️ **Attention** : si votre quota est épuisé, l'accès aux modèles est temporairement suspendu jusqu'à la prochaine réinitialisation hebdomadaire. Pensez à surveiller votre barre de progression !
+*En cas d'atteinte du plafond alloué, l'accès aux modèles est suspendu jusqu'à la réinitialisation hebdomadaire suivante.*
 
 ---
 
-## 🔑 Comment accéder à votre Compte mAI ?
+## Accéder à votre espace compte mAI
 
-1. Rendez-vous sur [le site mProjects](/) et connectez-vous à votre compte.
-2. Accédez à la page **[Mon compte](/account)** depuis le menu ou votre espace personnel.
-3. Découvrez votre tableau de bord mAI avec le suivi en temps réel de votre quota.
-4. Pour augmenter votre forfait, saisissez simplement votre **code d'upgrade** dans le champ prévu à cet effet.
-
----
-
-## 🚀 Pourquoi ces fonctionnalités maintenant ?
-
-Depuis la première mise en ligne de mProjects, de nombreux utilisateurs ont demandé une visibilité claire sur leur consommation et un moyen simple de gérer leur abonnement sans quitter l'écosystème. En intégrant le suivi de quota et le Compte mAI directement dans le site actuel, nous répondons à cette attente tout en conservant notre philosophie : **transparence, simplicité et performance**.
+1. Connectez-vous à votre espace utilisateur sur [le portail mAI](/).
+2. Rendez-vous sur la page **[Mon compte](/account)**.
+3. Consultez le tableau de bord analytique et l'état de vos quotas.
+4. Le cas échéant, appliquez un code d'évolution pour ajuster votre forfait.
 
 ---
 
-## 🎯 En résumé
+## Synthèse
 
-- ✅ **Suivi hebdomadaire** de votre consommation de tokens en temps réel.
-- ✅ **Compte mAI unifié** entre mProjects et les projets mDevsLabs.
-- ✅ **Gestion de forfait** simple via des codes d'upgrade (Plus, Pro, Max).
-- ✅ **Clés API** et **mAI CLI** accessibles depuis votre compte.
-- ✅ **Aucune limite RPM/TPM** — envoyez des requêtes sans frein, seul le quota hebdomadaire de tokens est comptabilisé.
-- ✅ **Limites claires** par niveau, avec réinitialisation hebdomadaire automatique.
+- Suivi en temps réel de la consommation hebdomadaire de tokens.
+- Compte unifié entre mAI et l'écosystème mDevsLabs.
+- Gestion fluide des niveaux de service via des codes d'activation.
+- Administration directe des clés API et de l'outil mAI CLI.
+- Renouvellement automatique hebdomadaire des quotas.
 
----
-
-Les quotas d'mAI et le Compte mAI sont **disponibles dès aujourd'hui** sur [mProjects](/). Connectez-vous à votre compte et commencez à surveiller votre usage dès maintenant !
+Ces fonctionnalités sont dès à présent actives et accessibles depuis votre espace [mAI](/).
 
 ---
 
-*L'équipe mAI*
+*Équipe mAI – mDevsLabs*

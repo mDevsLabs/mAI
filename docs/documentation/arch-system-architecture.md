@@ -27,7 +27,7 @@ L'architecture globale de l'écosystème **mDevsLabs** repose sur une découpe m
          ┌────────────────────────┴────────────────────────┐
          │                                                 │
 ┌───────▼────────────────────────┐      ┌─────────────────▼───────────────┐
-│     Inference Engine (mAI)     │      │     Cloud & RAG Storage         │
+│     Inference Engine (mAI)     │      │     Vector & RAG Storage        │
 │   Ollama / Llama.cpp backend   │      │   HNSW Dense Vector Store       │
 └────────────────────────────────┘      └─────────────────────────────────┘
 ```
@@ -37,7 +37,7 @@ L'architecture globale de l'écosystème **mDevsLabs** repose sur une découpe m
 ## 🛠️ Microservices Principaux
 
 1. **mAI Inference Core** : Serveur d'inférence de modèles LLM et multimodaux.
-2. **mAI Cloud & Storage Service** : Moteur de stockage et recherche sémantique documentaire.
+2. **mAI Storage & Indexing Service** : Moteur de stockage et recherche sémantique documentaire.
 3. **Agent Manager** : Orchestrateur de tâches asynchrones, d'outils externes et de communication inter-agents.
 4. **mAI Portal** : Portail web et centre de documentation interactif.
 

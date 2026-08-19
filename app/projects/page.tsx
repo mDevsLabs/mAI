@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { ExternalLink, Terminal, Globe, Cpu, FileText, Cloud, Archive, Search, Layers, Gamepad2 } from "lucide-react";
+import { ExternalLink, Terminal, Globe, Cpu, FileText, Archive, Search, Layers, Gamepad2 } from "lucide-react";
 import Link from "next/link";
 import { GithubRepoStats } from "@/components/github-repo-stats";
 import Image from "next/image";
@@ -20,7 +20,7 @@ export default function ProjectsPage() {
       description: "Application d'IA en ligne web directement et simplement pour discuter avec l'IA mAI.",
       link: "/projects/web",
       repo: "mDevsLabs/Web",
-      platforms: ["Web", "Cloud", "Multi-plateforme"],
+      platforms: ["Web", "Multi-plateforme"],
       borderHover: "hover:border-amber-500/30 hover:shadow-[0_8px_32px_0_rgba(245,158,11,0.15)]",
     },
     {
@@ -36,7 +36,7 @@ export default function ProjectsPage() {
       link: "/projects/pulse",
       repo: "mDevsLabs/Pulse",
       platforms: ["Navigateur", "VS Code", "Extensions"],
-      borderHover: "hover:border-emerald-500/30 hover:shadow-[0_8px_32px_0_rgba(16,185,129,0.15)]",
+      borderHover: "hover:border-emerald-500/30 hover:shadow-[0_8px_32px_0_rgba(160,185,129,0.15)]",
     },
     {
       id: "cli",
@@ -67,21 +67,6 @@ export default function ProjectsPage() {
       repo: "mDevsLabs/Office",
       platforms: ["macOS", "Windows", "Export PDF/PPT"],
       borderHover: "hover:border-blue-500/30 hover:shadow-[0_8px_32px_0_rgba(59,130,246,0.15)]",
-    },
-    {
-      id: "cloud",
-      number: "05",
-      name: "Cloud",
-      label: "Réflexion",
-      labelColor: "bg-cyan-500/10 border-cyan-500/30 text-cyan-600",
-      icon: Cloud,
-      iconColor: "text-cyan-400",
-      tagline: "Stockage cloud intelligent et résumés IA automatisés.",
-      description: "Stockage cloud de documents et intégration d'mAI pour des résumés.",
-      link: "/projects/cloud",
-      repo: null,
-      platforms: ["Cloud", "En conception"],
-      borderHover: "hover:border-cyan-500/30 hover:shadow-[0_8px_32px_0_rgba(6,182,212,0.15)]",
     },
   ];
 
@@ -156,11 +141,11 @@ export default function ProjectsPage() {
           transition={{ delay: 0.1 }}
           className="text-slate-500 text-base md:text-lg font-light mt-2 md:mt-4 max-w-2xl"
         >
-          Découvrez la suite officielle des 5 projets mAI développés par mDevsLabs pour révolutionner votre façon de travailler avec l&apos;intelligence artificielle.
+          Découvrez la suite officielle des 4 projets mAI développés par mDevsLabs pour révolutionner votre façon de travailler avec l&apos;intelligence artificielle.
         </motion.p>
       </div>
 
-      {/* Grille des 5 Nouveaux Projets Actifs */}
+      {/* Grille des 4 Nouveaux Projets Actifs */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {activeProjects.map((project, idx) => {
           const IconComponent = project.icon;

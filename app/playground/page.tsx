@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import PlaygroundClient from './PlaygroundClient';
 
 export const metadata: Metadata = {
-  title: 'Playground IA | mProjects',
+  title: 'Playground IA | mAI',
   description:
     'Testez les modèles de la famille mAI en direct. Streaming, contrôles de température et suivi des performances en temps réel.',
 };

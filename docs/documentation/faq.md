@@ -22,4 +22,4 @@ Vous pouvez générer des clés d'accès directement depuis la console développ
 ---
 
 ### 3. Quels sont les projets de la suite mAI ?
-La suite mAI regroupe **Web** (Alpha), **Pulse** (Bêta), **CLI** (Bêta), **Office** (Bêta) et **Cloud** (Réflexion).
+La suite mAI regroupe **Web** (Alpha), **Pulse** (Bêta), **CLI** (Bêta) et **Office** (Bêta).

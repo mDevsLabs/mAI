@@ -38,7 +38,7 @@ const ROUTE_DEFINITIONS: RouteDefinition[] = [
     category: "Projets",
     method: "GET",
     path: "v1/projects",
-    description: "Récupère la liste globale de tous les projets de la plateforme mAI (Web, Pulse, CLI, Office, Cloud).",
+    description: "Récupère la liste globale de tous les projets de la plateforme mAI (Web, Pulse, CLI, Office).",
     requiresAuth: true,
     defaultHeaders: {
       "Content-Type": "application/json"
@@ -87,18 +87,6 @@ const ROUTE_DEFINITIONS: RouteDefinition[] = [
     method: "GET",
     path: "v1/projects/office",
     description: "Obtient les détails de la suite de productivité mAI Office.",
-    requiresAuth: true,
-    defaultHeaders: {
-      "Content-Type": "application/json"
-    }
-  },
-  {
-    id: "projects-cloud",
-    name: "Projet Cloud",
-    category: "Projets",
-    method: "GET",
-    path: "v1/projects/cloud",
-    description: "Obtient les détails et fonctionnalités du projet mAI Cloud.",
     requiresAuth: true,
     defaultHeaders: {
       "Content-Type": "application/json"

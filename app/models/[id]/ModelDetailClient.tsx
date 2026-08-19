@@ -90,7 +90,7 @@ export function ModelDetailClient({ model }: { model: ModelInfo }) {
   };
 
   const handleDownload = (command: string, filename: string) => {
-    const fileContent = `#!/bin/bash\n# Script de lancement automatique mProjects / Ollama\n# Modèle : ${model.name}\n\n${command}\n`;
+    const fileContent = `#!/bin/bash\n# Script de lancement automatique mAI / Ollama\n# Modèle : ${model.name}\n\n${command}\n`;
     const blob = new Blob([fileContent], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");

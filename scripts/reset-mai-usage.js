@@ -14,7 +14,7 @@ function buildEmailHtml(title, username, messageText) {
         
         <!-- Header & Logo -->
         <div style="background:linear-gradient(135deg, #1e1b4b 0%, #31104b 100%); padding:32px 24px; text-align:center; border-bottom:1px solid #2e1065;">
-          <img src="https://upload.fs.fr/azq3C6GLea.png" alt="mProjects Logo" style="height:48px; width:auto; max-width:180px; object-fit:contain; display:inline-block;" />
+          <img src="https://upload.fs.fr/azq3C6GLea.png" alt="mAI Logo" style="height:48px; width:auto; max-width:180px; object-fit:contain; display:inline-block;" />
           <h1 style="color:#ffffff; font-size:20px; font-weight:700; margin:16px 0 0 0; letter-spacing:-0.5px;">${title}</h1>
         </div>
 
@@ -33,7 +33,7 @@ function buildEmailHtml(title, username, messageText) {
 
         <!-- Footer -->
         <div style="background-color:#0b0f19; padding:20px 24px; text-align:center; border-top:1px solid #1e293b; font-size:12px; color:#64748b;">
-          <p style="margin:0 0 6px 0;">© 2026 mProjects — Plateforme mAI & APIs</p>
+          <p style="margin:0 0 6px 0;">© 2026 mAI — Plateforme mAI & APIs</p>
           <p style="margin:0;">Vous recevez cet e-mail car les notifications de quotas sont activées sur votre profil.</p>
         </div>
 
@@ -78,9 +78,9 @@ async function main() {
           auth: { user: gmailUser, pass: gmailAppPass },
         });
         await transporter.sendMail({
-          from: `"mProjects" <${gmailUser}>`,
+          from: `"mAI" <${gmailUser}>`,
           to: user.email,
-          subject: "Vos quotas mAI mProjects ont été réinitialisés",
+          subject: "Vos quotas mAI ont été réinitialisés",
           html,
         });
         success++;

@@ -15,7 +15,7 @@ export function ProjectsShowcase() {
       description: "Application d'IA en ligne web directement et simplement pour discuter avec l'IA mAI.",
       link: "/projects/web",
       repo: "mDevsLabs/Web",
-      platforms: ["Web", "Cloud"],
+      platforms: ["Web", "Multi-plateforme"],
       highlightColor: "hover:border-purple-500/40 hover:shadow-[0_12px_32px_rgba(168,85,247,0.15)]"},
     {
       id: "pulse",
@@ -47,16 +47,6 @@ export function ProjectsShowcase() {
       repo: "mDevsLabs/Office",
       platforms: ["macOS", "Windows", "Export PDF/PPT"],
       highlightColor: "hover:border-blue-500/40 hover:shadow-[0_12px_32px_rgba(59,130,246,0.15)]"},
-    {
-      id: "cloud",
-      title: "Cloud",
-      label: "Réflexion",
-      tagline: "Stockage cloud et résumés IA automatisés.",
-      description: "Stockage cloud de documents et intégration d'mAI pour des résumés.",
-      link: "/projects/cloud",
-      repo: null,
-      platforms: ["Cloud", "En conception"],
-      highlightColor: "hover:border-cyan-500/40 hover:shadow-[0_12px_32px_rgba(6,182,212,0.15)]"},
   ];
 
   return (
@@ -73,7 +63,7 @@ export function ProjectsShowcase() {
             La Suite <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-blue-600 to-emerald-500">mAI</span>
           </h2>
           <p className="text-slate-500 text-sm sm:text-base font-light mt-1 max-w-xl">
-            Cinq produits dédiés conçus pour booster votre productivité, votre créativité et vos workflows avec l&apos;IA.
+            Quatre produits dédiés conçus pour booster votre productivité, votre créativité et vos workflows avec l&apos;IA.
           </p>
         </div>
 

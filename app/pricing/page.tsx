@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Sparkles, Gauge, KeyRound, Zap, ArrowRight, ShieldCheck } from "lucide-react";
+import { Sparkles, Gauge, KeyRound, Zap, ArrowRight, ShieldCheck, Cloud } from "lucide-react";
 import { useAuth } from "@/components/auth-provider";
 
 interface PlanItem {
@@ -13,6 +13,7 @@ interface PlanItem {
   isPopular?: boolean;
   maiTokens: string;
   apiRequests: string;
+  cloudStorage: string;
 }
 
 const PLANS: PlanItem[] = [
@@ -22,6 +23,7 @@ const PLANS: PlanItem[] = [
     subtitle: "Découvrez ce que l'IA peut faire",
     maiTokens: "1 000 000 tokens / semaine",
     apiRequests: "500 requêtes / mois",
+    cloudStorage: "500 MO Cloud",
   },
   {
     id: "plus",
@@ -29,6 +31,7 @@ const PLANS: PlanItem[] = [
     subtitle: "Bénéficiez d'une expérience complète",
     maiTokens: "5 000 000 tokens / semaine",
     apiRequests: "1 000 requêtes / mois",
+    cloudStorage: "1 GB Cloud",
   },
   {
     id: "pro",
@@ -38,6 +41,7 @@ const PLANS: PlanItem[] = [
     isPopular: true,
     maiTokens: "10 000 000 tokens / semaine",
     apiRequests: "2 000 requêtes / mois",
+    cloudStorage: "2 GB Cloud",
   },
   {
     id: "max",
@@ -45,6 +49,7 @@ const PLANS: PlanItem[] = [
     subtitle: "Puissance et limites maximales",
     maiTokens: "20 000 000 tokens / semaine",
     apiRequests: "5 000 requêtes / mois",
+    cloudStorage: "5 GB Cloud",
   },
 ];
 
@@ -154,6 +159,16 @@ export default function PricingPage() {
                     <div>
                       <p className="text-xs font-bold text-slate-900">Quota API</p>
                       <p className="text-xs text-slate-600 font-medium">{plan.apiRequests}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-2.5">
+                    <div className="p-1 rounded-lg bg-cyan-100 text-cyan-600 mt-0.5">
+                      <Cloud className="w-3.5 h-3.5" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-slate-900">Stockage Cloud</p>
+                      <p className="text-xs text-slate-600 font-medium">{plan.cloudStorage}</p>
                     </div>
                   </div>
                 </div>

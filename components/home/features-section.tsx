@@ -1,38 +1,38 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Zap, Terminal, ShieldCheck, Code2 } from "lucide-react";
+import { Globe, Cpu, Terminal, FileText } from "lucide-react";
 
 export function FeaturesSection() {
   const features = [
     {
-      icon: Zap,
-      title: "Inférence Locale & Ultra-Rapide",
-      description: "Exécutez nos modèles mAI-1.5 directement sur vos machines via Ollama sans latence réseau et avec zéro dépendance nuage obligatoire.",
+      icon: Globe,
+      title: "Application Web Directe",
+      description: "Discutez et interagissez avec mAI instantanément depuis votre navigateur avec une interface moderne, fluide et du streaming haute vitesse.",
       color: "text-purple-600",
       bg: "bg-purple-500/10 border-purple-500/20",
       accent: "from-purple-500 to-indigo-500",
     },
     {
-      icon: Terminal,
-      title: "Workflows Natifs Terminal",
-      description: "Conçu pour les développeurs exigeants. Automatisez vos relectures de code, vos tickets GitHub et vos communications en ligne de commande.",
-      color: "text-blue-600",
-      bg: "bg-blue-500/10 border-blue-500/20",
-      accent: "from-blue-500 to-cyan-500",
-    },
-    {
-      icon: ShieldCheck,
-      title: "Respect de la Vie Privée",
-      description: "Utilisez nos modèles et outils en toute sérénité. Vos données restent confidentielles avec un respect strict de la vie privée et aucun suivi de données.",
+      icon: Cpu,
+      title: "Intégration Quotidienne Pulse",
+      description: "Retrouvez la puissance de mAI au cœur de vos outils du quotidien grâce à nos extensions dédiées pour navigateurs et votre environnement VS Code.",
       color: "text-emerald-600",
       bg: "bg-emerald-500/10 border-emerald-500/20",
       accent: "from-emerald-500 to-teal-500",
     },
     {
-      icon: Code2,
-      title: "API Unifiée & Compatibilité",
-      description: "Bénéficiez d'une couche d'interopérabilité universelle compatible OpenAI, Claude Desktop et Grok grâce à notre outil OpenProvider.",
+      icon: Terminal,
+      title: "Assistant Terminal CLI",
+      description: "Pilotez vos séances de codage, automatisez vos relectures de code et vos scripts de développement directement en ligne de commande.",
+      color: "text-blue-600",
+      bg: "bg-blue-500/10 border-blue-500/20",
+      accent: "from-blue-500 to-cyan-500",
+    },
+    {
+      icon: FileText,
+      title: "Création de Documents Office",
+      description: "Concevez des documents structurés et des présentations dynamiques assistés par l'IA mAI pour tous vos besoins de productivité.",
       color: "text-amber-600",
       bg: "bg-amber-500/10 border-amber-500/20",
       accent: "from-amber-500 to-orange-500",

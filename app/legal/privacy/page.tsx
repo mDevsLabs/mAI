@@ -31,14 +31,14 @@ export default function PrivacyPage() {
         </h1>
 
         <p className="text-slate-500 font-light mb-10 text-base md:text-lg">
-          Dernière mise à jour : 1er août 2026. Chez mDevsLabs, nous accordons une importance capitale à la protection de vos données personnelles et au respect de votre vie privée. Cette politique détaille le traitement de vos données avec l'intégration de la nouvelle API mProjects, la gestion des clés API et les cookies de session.
+          Dernière mise à jour : 1er août 2026. Chez mDevsLabs, nous accordons une importance capitale à la protection de vos données personnelles et au respect de votre vie privée. Cette politique détaille le traitement de vos données avec l'intégration de la nouvelle API mAI, la gestion des clés API et les cookies de session.
         </p>
 
         <div className="space-y-8 text-slate-600">
           <section className="space-y-4">
             <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
               <Lock className="w-5 h-5 text-purple-500" />
-              1. Données Collectées &amp; Clés API mProjects
+              1. Données Collectées &amp; Clés API mAI
             </h2>
             <p className="leading-relaxed font-light">
               <strong>Compte Utilisateur</strong> : Nous collectons votre adresse e-mail, votre nom d'utilisateur, le type de forfait souscrit (Free, Plus, Pro, Max) ainsi que votre mot de passe chiffré.
@@ -123,7 +123,7 @@ export default function PrivacyPage() {
               5. Vos Droits (RGPD)
             </h2>
             <p className="leading-relaxed font-light">
-              Conformément au Règlement Général sur la Protection des Données (RGPD), vous disposez d'un droit d'accès, de rectification, de suppression et de portabilité de vos données. Vous pouvez à tout moment révoquer une clé API ou demander la suppression de votre compte depuis votre espace client mProjects.
+              Conformément au Règlement Général sur la Protection des Données (RGPD), vous disposez d'un droit d'accès, de rectification, de suppression et de portabilité de vos données. Vous pouvez à tout moment révoquer une clé API ou demander la suppression de votre compte depuis votre espace client mAI.
             </p>
           </section>
         </div>

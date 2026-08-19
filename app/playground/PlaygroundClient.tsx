@@ -292,7 +292,6 @@ export default function PlaygroundClient() {
     setErrorMsg(null);
     setTokenCount(0);
     setTokensPerSecond(0);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     setCompareStates({});
     toast.success('Conversation effacée');
   };
@@ -607,7 +606,7 @@ export default function PlaygroundClient() {
         fileContent += `"${st.modelTag}",${st.tokens},${st.tokensPerSec},${st.latencyMs},"${st.rating || ''}",${cleanContent}\n`;
       });
     } else {
-      fileContent = `# Comparaison de Modèles - mProjects\n\n**Prompt:** ${userPrompt}\n\n`;
+      fileContent = `# Comparaison de Modèles - mAI\n\n**Prompt:** ${userPrompt}\n\n`;
       Object.values(compareStates).forEach((st) => {
         fileContent += `## Modèle: ${st.modelTag}\n`;
         fileContent += `- **Tokens:** ${st.tokens}\n`;

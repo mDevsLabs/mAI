@@ -5,33 +5,33 @@ category: "Guides"
 order: 11
 ---
 
-# Introduction à mAI Web 🧠✨
+# Introduction à mAI Web
 
-La conception d'une interface d'intelligence artificielle performante est un parcours jalonné d'apprentissages et d'itérations. Après avoir conçu, développé et éprouvé plusieurs projets majeurs, mAI Web s'est imposé comme une interface claire, réactive et modulaire.
+La conception d'une interface d'intelligence artificielle performante requiert une architecture rigoureuse et évolutive. mAI Web s'impose comme une interface unifiée, réactive et modulaire, conçue pour orchestrer l'ensemble des capacités d'inférence modernes.
 
-C'est sur ce socle technologique particulièrement solide qu'est né mAI Web. Conçue pour unifier et maximiser la puissance des plus grands modèles d'intelligence artificielle du marché, cette interface représente la synthèse de plusieurs mois de tests. Cet article détaille la genèse de mAI Web.
+Conçue pour standardiser l'accès aux modèles majeurs du marché, cette interface représente l'aboutissement d'un cycle continu d'ingénierie et de tests techniques. Cet article présente les fondements structurels de mAI Web.
 
 ---
 
 # Qu'est-ce que mAI Web ?
 
-mAI Web est une interface d'intelligence artificielle centralisée, conçue pour orchestrer et unifier les principales interfaces de programmation (API) d'IA du marché au sein d'une expérience utilisateur unique, homogène et hautement optimisée.
+mAI Web est une interface d'intelligence artificielle centralisée, conçue pour orchestrer et unifier les principales interfaces de programmation (API) au sein d'une expérience utilisateur homogène et optimisée.
 
-L'ambition première du projet réside dans la simplification : proposer un point d'accès universel et standardisé à tous vos modèles.
-
----
-
-## Une approche agnostique et polyvalente
-
-- **Interopérabilité multi-fournisseurs :** Connexion native aux services d'OpenAI, d'Anthropic, de Google Gemini, mais aussi à des solutions d'hébergement local comme Ollama.
-- **Flexibilité dynamique :** Possibilité de basculer d'un modèle à un autre au cours d'une même session.
-- **Confort et ergonomie d'usage :** Rendu Markdown impeccable, coloration syntaxique avancée pour le code.
+L'objectif premier réside dans la rationalisation des accès : proposer un point d'entrée standardisé et sécurisé vers l'ensemble de vos modèles d'inférence.
 
 ---
 
-## Une architecture axée sur la souveraineté et la confidentialité
+## Approche agnostique et polyvalente
 
-La plateforme prend en charge de manière native de nombreux fournisseurs de modèles. Cette compatibilité s'étend des leaders historiques du marché de l'IA propriétaire aux architectures d'inférence ultra-rapides comme Groq, sans oublier l'exécution locale de modèles via Ollama.
+- **Interopérabilité multi-fournisseurs :** Connexion native aux services d'OpenAI, d'Anthropic, de Google Gemini, ainsi qu'aux environnements d'inférence locaux comme Ollama.
+- **Flexibilité dynamique :** Possibilité d'alterner entre plusieurs modèles au cours d'une même session d'analyse.
+- **Confort d'utilisation et ergonomie :** Rendu Markdown standardisé et coloration syntaxique avancée pour les blocs de code.
 
-L'architecture place la confidentialité au centre de sa philosophie de conception en permettant l'utilisation de clés d'API personnelles.
+---
+
+## Architecture axée sur la souveraineté et la confidentialité
+
+La plateforme prend en charge de manière native un large éventail de fournisseurs de modèles, des architectures d'inférence propriétaires aux moteurs d'inférence ultra-rapides et locaux via Ollama.
+
+Cette conception garantit la souveraineté des flux applicatifs en permettant l'usage exclusif de clés d'API directes et de modèles hébergés en local.
 

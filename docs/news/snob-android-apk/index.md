@@ -1,7 +1,14 @@
-Le projet Snob franchit une nouvelle étape en devenant disponible sur Android via un fichier APK. Vous pouvez dès maintenant télécharger et installer l'application directement sur votre appareil mobile pour profiter de l'expérience ultime de Block Blast revisitée.
+# Disponibilité du projet Snob sur Android
 
-## Téléchargement de l'APK
+Le projet Snob est désormais disponible sur les appareils Android sous la forme d'un paquet d'installation APK. Cette version permet d'exécuter l'application sur terminaux mobiles compatibles.
 
-Rendez-vous sur la page de téléchargement pour obtenir le fichier `.apk`. Une fois téléchargé, vous pourrez l'installer facilement sur votre smartphone. Pensez à autoriser l'installation d'applications issues de sources inconnues si ce n'est pas déjà fait sur votre appareil.
+## Procédure de téléchargement et d'installation
 
-Rejoignez la partie et profitez de l'interface élégante, des effets de particules magiques et des modes de jeu exclusifs où que vous soyez !
+Le fichier d'installation `.apk` est accessible depuis la section [Téléchargements](/downloads) du portail.
+
+Une fois le fichier récupéré sur votre terminal :
+1. Activez l'autorisation d'installation depuis des sources externes dans les paramètres de sécurité Android.
+2. Lancez le fichier d'installation `.apk`.
+3. Validez les étapes d'installation système.
+
+L'application intègre l'ensemble des modes de jeu et des optimisations de rendu développés pour cette version mobile.

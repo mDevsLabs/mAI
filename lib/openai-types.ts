@@ -1,4 +1,4 @@
-// Types standards de l'API OpenAI v1 pour la couche de compatibilité mAI / mProjects
+// Types standards de l'API OpenAI v1 pour la couche de compatibilité mAI
 
 export interface OpenAIChatMessage {
   role: 'system' | 'user' | 'assistant' | 'tool';

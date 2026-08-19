@@ -1,57 +1,54 @@
-# mProjects devient officiellement mAI 🚀✨
+# Évolution stratégique : Transition de mProjects vers mAI
 
-Aujourd'hui marque un tournant stratégique majeur pour l'écosystème **mDevsLabs** : notre plateforme **mProjects** change d'identité pour devenir **mAI**.
+L'écosystème **mDevsLabs** structure son offre logicielle : la plateforme **mProjects** évolue officiellement sous la dénomination **mAI**.
 
-Ce renommage incarne notre engagement résolu vers l'intelligence artificielle appliquée, les outils de productivité pour développeurs et créateurs, et une offre logicielle claire, unifiée et cohérente.
+Ce changement d'identité reflète notre orientation stratégique vers le développement d'outils d'intelligence artificielle locale, l'assistance aux développeurs et l'unification de nos gammes d'applications.
 
 ---
 
-## 🌟 Une Nouvelle Suite de 5 Projets Dédiés
+## Architecture de la suite logicielle mAI
 
-Dans le cadre de cette transformation, nous structurons notre catalogue autour de 5 projets phares :
+Le catalogue s'articule autour de 4 projets dédiés :
 
-### 1. 🌐 Web *(Alpha)*
-- **Description** : Application d'IA en ligne web directement et simplement pour discuter avec l'IA mAI.
-- **Label** : `Alpha`
+### 1. Web *(Alpha)*
+- **Description** : Interface web unifiée pour l'interrogation et l'orchestration des modèles d'IA.
+- **Statut** : `Alpha`
 - **Dépôt GitHub** : [github.com/mDevsLabs/Web](https://github.com/mDevsLabs/Web)
 
-### 2. ⚡ Pulse *(Bêta)*
-- **Description** : Ensemble d'extensions pour diverses applications pour discuter avec mAI directement (navigateur, VS Code...).
-- **Label** : `Bêta`
+### 2. Pulse *(Bêta)*
+- **Description** : Ensemble d'extensions d'intégration pour environnements de travail (navigateurs Chromium, VS Code).
+- **Statut** : `Bêta`
 - **Dépôt GitHub** : [github.com/mDevsLabs/Pulse](https://github.com/mDevsLabs/Pulse)
 
-### 3. 💻 CLI *(Bêta)*
-- **Description** : Discussions et séances de codage dans le terminal CLI via mAI.
-- **Label** : `Bêta`
+### 3. CLI *(Bêta)*
+- **Description** : Assistant de développement et de revue de code directement intégré en terminal.
+- **Statut** : `Bêta`
 - **Dépôt GitHub** : [github.com/mDevsLabs/CLI](https://github.com/mDevsLabs/CLI)
 
-### 4. 📄 Office *(Bêta)*
-- **Description** : Création de documents et présentations avec mAI.
-- **Label** : `Bêta`
+### 4. Office *(Bêta)*
+- **Description** : Outils de génération et de traitement documentaire assistés par IA.
+- **Statut** : `Bêta`
 - **Dépôt GitHub** : [github.com/mDevsLabs/Office](https://github.com/mDevsLabs/Office)
 
-### 5. ☁️ Cloud *(Réflexion)*
-- **Description** : Stockage cloud de documents et intégration d'mAI pour des résumés.
-- **Label** : `Réflexion`
-- **Statut** : En conception
+---
+
+## Statut des projets historiques (Archivés)
+
+Afin de concentrer nos efforts de maintenance et d'ingénierie sur cette suite logicielle, les dépôts historiques (**mSearch**, **OpenProvider**, **Snob**, ainsi que les branches initiales **mAI Web Legacy** et **mAI CLI Legacy**) adoptent le statut **Archivé**.
+
+Leur code source demeure consultable en lecture seule sur leurs dépôts GitHub respectifs.
 
 ---
 
-## 📦 Statut des Projets Précédents (Archivés)
+## Point de terminaison API
 
-Afin de focaliser nos ressources d'ingénierie sur cette nouvelle suite logicielle, nos créations historiques (**mSearch**, **OpenProvider**, **Snob**, ainsi que les versions initiales **mAI Web Legacy** et **mAI CLI Legacy**) passent officiellement sous le statut **Archivé**.
-
-Ces projets restent pleinement consultables dans la section dédiée aux archives de notre portail et sur leurs dépôts GitHub respectifs.
-
----
-
-## 🌐 Nouvelle URL d'API
-
-L'API Val Town unifiée est désormais accessible à l'adresse officielle :
+Le point d'accès API unifié est disponible à l'adresse suivante :
 ```text
 https://mai.val.run
 ```
 
-Toutes les clés API actives continuent de fonctionner sans interruption de service.
+L'ensemble des clés API en cours de validité reste pleinement opérationnel.
 
-Merci à toute notre communauté pour votre soutien continu ! 🚀
+---
+
+*mDevsLabs – Direction Technique*

@@ -24,7 +24,7 @@ Ce guide résume les meilleures pratiques pour tirer le meilleur parti des modè
 
 ```markdown
 <system>
-Tu es un expert en audit de code TypeScript pour la plateforme mProjects.
+Tu es un expert en audit de code TypeScript pour la plateforme mAI.
 </system>
 
 <instructions>

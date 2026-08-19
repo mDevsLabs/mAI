@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Terminal, Copy, Check } from "lucide-react";
 
 export function InteractiveCodeBox() {
-  const [activeTab, setActiveTab] = useState<"cli" | "ollama" | "api" | "openprovider">("cli");
+  const [activeTab, setActiveTab] = useState<"cli" | "ollama" | "api" | "sdk">("cli");
   const [copied, setCopied] = useState(false);
 
   const snippets = {
@@ -31,7 +31,7 @@ ollama run mDevsLabs/mAI-1.5-Light`,
     api: {
       title: "Appeler l'API mAI (Compatible OpenAI)",
       language: "bash",
-      code: `curl -X POST https://mprojects.mdevslabs.fr/api/v1/chat/completions \\
+      code: `curl -X POST https://mai-devs.vercel.app/api/v1/chat/completions \\
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -39,14 +39,19 @@ ollama run mDevsLabs/mAI-1.5-Light`,
     "messages": [{"role": "user", "content": "Rédige une fonction TypeScript optimisée"}]
   }'`,
     },
-    openprovider: {
-      title: "Configurer OpenProvider Proxy",
-      language: "bash",
-      code: `# Lancer le proxy OpenProvider
-openprovider start --port 8080
+    sdk: {
+      title: "Intégrer avec le SDK TypeScript officiel",
+      language: "typescript",
+      code: `import { mAI } from "@mdevs/mai-sdk";
 
-# Rediriger Codex & Claude Code vers n'importe quel fournisseur
-export OPENAI_BASE_URL="http://localhost:8080/v1"`,
+const client = new mAI({ apiKey: process.env.MAI_API_KEY });
+
+const completion = await client.chat.completions.create({
+  model: "mai-1.5-apex",
+  messages: [{ role: "user", content: "Optimise cette fonction TypeScript" }],
+});
+
+console.log(completion.choices[0].message.content);`,
     },
   };
 
@@ -78,15 +83,17 @@ export OPENAI_BASE_URL="http://localhost:8080/v1"`,
 
           {/* Tabs switcher */}
           <div className="flex flex-wrap gap-1 bg-slate-900 p-1 rounded-2xl border border-slate-800">
-            {[
-              { id: "cli", label: "mAI CLI" },
-              { id: "ollama", label: "Ollama" },
-              { id: "api", label: "API cURL" },
-              { id: "openprovider", label: "OpenProvider" },
-            ].map((tab) => (
+            {(
+              [
+                { id: "cli", label: "mAI CLI" },
+                { id: "ollama", label: "Ollama" },
+                { id: "api", label: "API cURL" },
+                { id: "sdk", label: "SDK TypeScript" },
+              ] as const
+            ).map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
+                onClick={() => setActiveTab(tab.id)}
                 className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
                   activeTab === tab.id
                     ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-sm"

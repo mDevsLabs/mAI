@@ -1,14 +1,14 @@
-# Présentation du Terrain de Jeu mAI
+# Présentation de l'environnement de test mAI (Playground local)
 
-Le **Terrain de Jeu mAI (Playground Local)** est désormais disponible sur notre plateforme ! 
+L'environnement **mAI Playground** est désormais disponible au sein de notre console de développement.
 
-Cet outil vous permet de tester en temps réel vos prompts sur l'ensemble de la famille de modèles mAI et d'observer le flux de génération en streaming directement relié à votre instance Ollama locale.
+Cet outil permet d'évaluer en temps réel le comportement des modèles de la gamme mAI et de mesurer la vitesse de génération en streaming, en liaison directe avec votre instance Ollama locale.
 
-## Fonctionnalités clés du Playground
+## Fonctionnalités principales
 
-* **Streaming temps réel** : Visualisez les tokens générés instantanément avec un indicateur animé à 3 points.
-* **Calculateur de vitesse** : Suivez le débit de génération exprimé en **tokens/seconde ($t/s$)** rafraîchi à chaque morceau de réponse.
-* **Contrôles avancés** : Sliders interactifs pour ajuster la température (de $0.0$ à $2.0$) et la limite de tokens d'output ($64$ à $4096$).
-* **Prompt Système personnalisé** : Définissez des règles strictes de comportement pour votre assistant IA.
+* **Streaming en temps réel** : Restitution instantanée des tokens générés au fil de l'inférence.
+* **Mesure du débit d'inférence** : Affichage dynamique de la vitesse de génération exprimée en **tokens par seconde ($t/s$)**.
+* **Contrôles d'échantillonnage** : Ajustement de la température (de $0.0$ à $2.0$) et de la longueur maximale de réponse ($64$ à $4096$ tokens).
+* **Instructions système configurables** : Définition précise des consignes de cadrage pour l'évaluation des flux conversationnels.
 
-Essayez le dès maintenant dans la section [Terrain de Jeu](/playground) !
+L'outil est accessible dès à présent depuis la section [Terrain de Jeu](/playground) de la plateforme.

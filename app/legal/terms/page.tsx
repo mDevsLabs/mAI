@@ -31,7 +31,7 @@ export default function TermsPage() {
         </h1>
 
         <p className="text-slate-500 font-light mb-10 text-base md:text-lg">
-          Dernière mise à jour : 1er août 2026. Bienvenue sur mProjects. Les présentes Conditions Générales d'Utilisation (CGU) régissent votre accès et l'utilisation de nos plateformes, de nos services mAI, de notre Playground et des points de terminaison de l'API mProjects.
+          Dernière mise à jour : 1er août 2026. Bienvenue sur mAI. Les présentes Conditions Générales d'Utilisation (CGU) régissent votre accès et l'utilisation de nos plateformes, de nos services mAI, de notre Playground et des points de terminaison de l'API mAI.
         </p>
 
         <div className="space-y-8 text-slate-600">
@@ -41,7 +41,7 @@ export default function TermsPage() {
               1. Acceptation des Conditions
             </h2>
             <p className="leading-relaxed font-light">
-              En créant un compte, en générant une clé API ou en accédant aux services mProjects, vous acceptez sans réserve de vous conformer aux présentes conditions. Si vous n'acceptez pas l'ensemble de ces termes, vous ne devez pas utiliser nos API ni nos services.
+              En créant un compte, en générant une clé API ou en accédant aux services mAI, vous acceptez sans réserve de vous conformer aux présentes conditions. Si vous n'acceptez pas l'ensemble de ces termes, vous ne devez pas utiliser nos API ni nos services.
             </p>
           </section>
 
@@ -51,7 +51,7 @@ export default function TermsPage() {
               2. Utilisation des Clés API &amp; Quotas
             </h2>
             <p className="leading-relaxed font-light">
-              <strong>Responsabilité des Clés API</strong> : Votre clé API mProjects (format <code className="bg-purple-50 px-1.5 py-0.5 rounded text-purple-700 font-mono text-xs">mp-...</code>) est strictement personnelle et confidentielle. Vous êtes entièrement responsable de l'ensemble des activités et requêtes exécutées avec vos clés API.
+              <strong>Responsabilité des Clés API</strong> : Votre clé API mAI (format <code className="bg-purple-50 px-1.5 py-0.5 rounded text-purple-700 font-mono text-xs">mp-...</code>) est strictement personnelle et confidentielle. Vous êtes entièrement responsable de l'ensemble des activités et requêtes exécutées avec vos clés API.
             </p>
 
             <div className="space-y-2 pt-2">
@@ -73,7 +73,7 @@ export default function TermsPage() {
               3. Usage Interdit &amp; Sécurité
             </h2>
             <p className="leading-relaxed font-light">
-              Il est strictement interdit d'utiliser les services mProjects pour :
+              Il est strictement interdit d'utiliser les services mAI pour :
             </p>
             <ul className="list-disc list-inside space-y-1.5 ml-4 text-sm font-light">
               <li>Tenter de contourner les limites de quota ou de partager sa clé API de manière illégale</li>
@@ -89,7 +89,7 @@ export default function TermsPage() {
               4. Disponibilité &amp; Limites de Garantie
             </h2>
             <p className="leading-relaxed font-light">
-              Nous nous efforçons de maintenir un taux de disponibilité supérieur à 99,9% sur l'API mProjects. Cependant, les services sont fournis « en l'état ». mDevsLabs ne saurait être tenu responsable des interruptions temporaires dues à la maintenance des serveurs ou à des pannes d'infrastructure tierces.
+              Nous nous efforçons de maintenir un taux de disponibilité supérieur à 99,9% sur l'API mAI. Cependant, les services sont fournis « en l'état ». mDevsLabs ne saurait être tenu responsable des interruptions temporaires dues à la maintenance des serveurs ou à des pannes d'infrastructure tierces.
             </p>
           </section>
 

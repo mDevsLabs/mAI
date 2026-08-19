@@ -4,7 +4,7 @@ export const runtime = 'nodejs';
 
 export async function GET() {
   try {
-    const res = await fetch('https://mprojects.instatus.com/summary.json');
+    const res = await fetch('https://mai.instatus.com/summary.json');
     const data = await res.json();
     return NextResponse.json(data);
   } catch {

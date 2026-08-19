@@ -102,13 +102,6 @@ export function CommandMenu({
                     <Folder className="w-4 h-4 text-blue-500" />
                     <span>Office (Bêta) - Documents & Présentations</span>
                   </Command.Item>
-                  <Command.Item
-                    onSelect={() => runCommand(() => router.push("/projects/cloud"))}
-                    className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer aria-selected:bg-black/5 aria-selected:text-slate-900 transition-colors"
-                  >
-                    <Folder className="w-4 h-4 text-cyan-500" />
-                    <span>Cloud (Réflexion) - Stockage & Résumés</span>
-                  </Command.Item>
                 </Command.Group>
 
                 <Command.Group

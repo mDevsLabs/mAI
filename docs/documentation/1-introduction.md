@@ -1,6 +1,6 @@
 # Bienvenue sur l'API mAI
 
-L'API REST mAI vous permet d'accéder programmatiquement aux modèles mAI (série 1.0, 1.2, 1.5, Light, Apex, Opal) ainsi qu'au catalogue des projets de la suite mAI (Web, Pulse, CLI, Office, Cloud).
+L'API REST mAI vous permet d'accéder programmatiquement aux modèles mAI (série 1.0, 1.2, 1.5, Light, Apex, Opal) ainsi qu'au catalogue des projets de la suite mAI (Web, Pulse, CLI, Office).
 
 ## URL de Base
 Toutes les requêtes vers l'API s'effectuent sur l'URL de base suivante :

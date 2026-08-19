@@ -5,7 +5,7 @@ category: "Guides"
 order: 3
 ---
 
-# Déploiement Cloud sur Kubernetes & mDevsLabs Cloud ☁️☸️
+# Déploiement sur Kubernetes & Clusters Dédiés ☸️🚀
 
 Ce guide fournit les étapes d'architecture et de déploiement pour héberger les services **mAI** sur un cluster Kubernetes d'entreprise (EKS, GKE, AKS ou Kubernetes sur site).
 

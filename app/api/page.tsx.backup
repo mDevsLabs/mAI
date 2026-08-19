@@ -821,7 +821,7 @@ print(response.json())`,
         >
           API <br className="hidden sm:block" />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-blue-500 to-emerald-500">
-            mProjects
+            mAI
           </span>
         </motion.h1>
 
@@ -914,7 +914,7 @@ print(response.json())`,
                 Connectez-vous pour gérer vos accès
               </h3>
               <p className="text-slate-600 text-sm leading-relaxed">
-                Créez un compte développeur mProjects ou connectez-vous avec vos identifiants pour générer des clés API dédiées et suivre votre consommation.
+                Créez un compte développeur mAI ou connectez-vous avec vos identifiants pour générer des clés API dédiées et suivre votre consommation.
               </p>
               <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-900 text-xs flex items-start gap-3">
                 <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />

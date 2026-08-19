@@ -33,7 +33,6 @@ fixCatch('components/account/devices-list.tsx');
 // fix imports
 removeVars('app/legal/privacy/page.tsx', ['Eye', 'FileText']);
 removeVars('app/projects/cli/page.tsx', ['Sparkles', 'Code', 'ShieldCheck', 'ArrowRight', 'Download']);
-removeVars('app/projects/cloud/page.tsx', ['ShieldCheck', 'ArrowRight']);
 removeVars('app/projects/office/page.tsx', ['Sparkles', 'FileSpreadsheet', 'ArrowRight']);
 removeVars('app/projects/pulse/page.tsx', ['Sparkles', 'Layers', 'ArrowRight']);
 removeVars('app/projects/web/page.tsx', ['ShieldCheck', 'ArrowRight']);

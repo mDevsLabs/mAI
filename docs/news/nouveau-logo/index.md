@@ -1,24 +1,22 @@
-# Un nouveau visage pour mProjects
+# Nouvelle identité visuelle pour mAI
 
-Nous sommes ravis de vous présenter aujourd'hui l'évolution de notre identité visuelle avec l'officialisation de notre **nouveau logo mProjects**.
+Nous présentons l'évolution de notre identité visuelle avec l'officialisation du **nouveau logo mAI**.
 
-![Nouveau Logo mProjects](https://upload.fs.fr/Xump0j43bV.png)
+![Nouveau Logo mAI](https://upload.fs.fr/Xump0j43bV.png)
 
-## Un design fluide, moderne et vibrant
+## Conception et principes graphiques
 
-Ce nouveau symbole en forme de **M tridimensionnel et fluide** incarne la synergie entre la puissance brute des modèles d'IA et l'élégance de l'expérience utilisateur que nous construisons chaque jour.
+Ce nouveau symbole en forme de **M tridimensionnel et fluide** incarne la convergence entre la puissance des modèles d'intelligence artificielle et la clarté des interfaces utilisateurs développées par mDevsLabs.
 
-### Que symbolisent ces dégradés ?
+### Signification des éléments visuels
 
-* **Rouge & Orange vibrant** : La passion de notre équipe, la vitesse d'exécution et la réactivité de nos moteurs d'inférence locaux.
-* **Violet & Bleu profond** : La profondeur algorithmique, la rigueur de notre architecture et la sécurité de vos données.
-* **Cyan & Vert émeraude** : La créativité, l'ouverture de l'écosystème open-source et la légèreté de nos séries de modèles **mAI-1.2**.
+* **Nuances rouge et orange** : Réactivité et vitesse d'exécution des moteurs d'inférence locaux.
+* **Nuances violet et bleu** : Rigueur algorithmique, robustesse architecturale et sécurité des données.
+* **Nuances cyan et émeraude** : Modularité, intégration open source et légèreté des modèles de la gamme.
 
-## Déploiement sur toutes nos plateformes
+## Déploiement transversal
 
-Cette nouvelle identité graphique est déployée dès aujourd'hui sur l'ensemble de nos outils :
-- Le site web et la console développeur **mProjects**
-- Le CLI officiel **mAI CLI**
-- Nos documentations interactives et le dépôt d'exemples
-
-Nous espérons que ce nouveau visuel vous plaît autant qu'à nous. Merci pour votre soutien continu dans l'aventure mProjects !
+Cette identité graphique s'applique désormais à l'ensemble de l'écosystème :
+- Le portail web et la console d'administration **mAI** ;
+- L'interface en ligne de commande **mAI CLI** ;
+- La documentation technique et les dépôts de référence.

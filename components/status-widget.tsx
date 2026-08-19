@@ -7,7 +7,7 @@ export function StatusWidget() {
   const [status, setStatus] = useState<string>("UP");
 
   useEffect(() => {
-    fetch("https://mprojects.instatus.com/summary.json")
+    fetch("https://mai.instatus.com/summary.json")
       .then((res) => res.json())
       .then((data) => {
         if (data?.page?.status) {
@@ -36,7 +36,7 @@ export function StatusWidget() {
 
   return (
     <Link
-      href="https://mprojects.instatus.com"
+      href="https://mai.instatus.com/"
       target="_blank"
       className="fixed bottom-4 left-4 z-50 flex items-center gap-2 bg-white/90 backdrop-blur-md border border-slate-200/60 shadow-lg rounded-full px-3 py-1.5 hover:scale-105 transition-transform duration-200"
     >
