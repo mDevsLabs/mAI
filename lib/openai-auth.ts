@@ -6,6 +6,7 @@ import { OpenAIErrorResponse } from './openai-types';
 export interface AuthenticatedOpenAIContext {
   valid: true;
   apiKeyId: string;
+  apiKeyToken: string;
   plan: string;
 }
 
@@ -42,18 +43,24 @@ export async function authenticateOpenAIRequest(
   const validation = await validateApiKey(token);
 
   if (!validation.valid || !validation.keyInfo) {
+    const errorMsg = validation.error || 'Incorrect API key provided. You can find your API key at /api/keys.';
+    const isQuotaError = errorMsg.toLowerCase().includes('limit') || errorMsg.toLowerCase().includes('quota');
+    const isDeactivated = errorMsg.toLowerCase().includes('désactiv');
+    const statusCode = isQuotaError ? 429 : isDeactivated ? 403 : 401;
+    const errorCode = isQuotaError ? 'quota_exceeded' : isDeactivated ? 'account_deactivated' : 'invalid_api_key';
+
     return {
       valid: false,
       response: NextResponse.json<OpenAIErrorResponse>(
         {
           error: {
-            message: 'Incorrect API key provided. You can find your API key at /api/keys.',
-            type: 'invalid_request_error',
+            message: errorMsg,
+            type: isQuotaError ? 'requests' : 'invalid_request_error',
             param: null,
-            code: 'invalid_api_key',
+            code: errorCode,
           },
         },
-        { status: 401 }
+        { status: statusCode }
       ),
     };
   }
@@ -88,6 +95,7 @@ export async function authenticateOpenAIRequest(
   return {
     valid: true,
     apiKeyId: validation.keyInfo.id,
+    apiKeyToken: token,
     plan: validation.keyInfo.name || 'Free',
   };
 }

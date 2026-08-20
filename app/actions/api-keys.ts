@@ -52,9 +52,14 @@ export async function getUserApiUsage(userId: string) {
     const sql = neon(databaseUrl);
     
     const keys = await sql`
-      SELECT api_key, plan, request_count, created_at, last_used_at, max_limit
-      FROM mprojects_api_keys
-      WHERE user_id = ${userId}
+      SELECT k.api_key, k.plan, k.request_count, k.created_at, k.last_used_at, k.max_limit
+      FROM mprojects_api_keys k
+      LEFT JOIN users u ON k.user_id = u.id::text OR k.user_id = u.username OR k.user_id = u.email
+      WHERE k.user_id = ${userId}::text
+         OR u.id::text = ${userId}::text
+         OR u.username = ${userId}::text
+         OR u.email = ${userId}::text
+      ORDER BY k.created_at DESC
     `;
 
     return {

@@ -30,6 +30,35 @@ export type MaiUsage = {
   resetAt: string;
 };
 
+export type MaiCloudStorageUsage = {
+  bytes_limit: number;
+  bytes_used: number;
+  files_count: number;
+  over_limit: boolean;
+  percent_used: number;
+  tier: string;
+};
+
+// Limites de stockage Cloud par tier (en octets)
+export const CLOUD_STORAGE_LIMITS: Record<string, number> = {
+  Free: 500 * 1024 * 1024,       // 500 MO
+  Plus: 1 * 1024 * 1024 * 1024,  // 1 GB
+  Pro: 2 * 1024 * 1024 * 1024,   // 2 GB
+  Max: 5 * 1024 * 1024 * 1024,   // 5 GB
+};
+
+export function formatStorageBytes(bytes: number): string {
+  if (!bytes || bytes <= 0) return "0 Mo";
+  const gb = 1024 * 1024 * 1024;
+  const mb = 1024 * 1024;
+  if (bytes >= gb) {
+    const val = bytes / gb;
+    return `${val % 1 === 0 ? val.toFixed(0) : val.toFixed(1)} Go`;
+  }
+  const val = bytes / mb;
+  return `${val % 1 === 0 ? val.toFixed(0) : val.toFixed(1)} Mo`;
+}
+
 export type MaiVerifyCodeResponse = {
   success: boolean;
   tier?: string;
@@ -147,6 +176,29 @@ export async function getUsage(token: string): Promise<MaiUsage> {
     method: "GET",
     token,
   });
+}
+
+export async function getCloudStorage(token: string): Promise<MaiCloudStorageUsage> {
+  const data = await request<MaiCloudStorageUsage>("/cloud/storage", {
+    method: "GET",
+    token,
+  });
+  
+  // Appliquer les limites officielles par forfait : Free 500MO, Plus 1GB, Pro 2GB, Max 5GB
+  const tier = data.tier || "Free";
+  const limit = CLOUD_STORAGE_LIMITS[tier] || CLOUD_STORAGE_LIMITS["Free"];
+  const bytesUsed = Number(data.bytes_used || 0);
+  const percentUsed = limit > 0 ? Math.min(100, Math.round((bytesUsed / limit) * 10000) / 100) : 0;
+
+  return {
+    ...data,
+    bytes_limit: limit,
+    bytes_used: bytesUsed,
+    files_count: Number(data.files_count || 0),
+    over_limit: bytesUsed >= limit,
+    percent_used: percentUsed,
+    tier,
+  };
 }
 
 export async function verifyCode(

@@ -1,21 +1,57 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Message } from '@/lib/playground-types';
+import { validateApiKey, checkAndTrackUserUsage, recordApiLog } from '@/lib/api-key-manager';
 
 export const runtime = 'nodejs';
 
 export async function POST(req: NextRequest) {
+  const startTime = performance.now();
   try {
+    const rawUserId = req.headers.get('x-user-id');
+    const userId = rawUserId ? decodeURIComponent(rawUserId) : null;
+    const authHeader = req.headers.get('authorization') || req.headers.get('Authorization') || '';
+
     const body = await req.json();
-    const { model, messages, temperature, maxTokens, systemPrompt } = body as {
+    const { model, messages, temperature, maxTokens, systemPrompt, apiKey: bodyApiKey } = body as {
       model: string;
       messages: Message[];
       temperature: number;
       maxTokens: number;
       systemPrompt?: string;
+      apiKey?: string;
     };
 
     if (!model) {
       return NextResponse.json({ error: 'Le modèle est requis.' }, { status: 400 });
+    }
+
+    const customKey = (authHeader.startsWith('Bearer ') ? authHeader.substring(7).trim() : '') || (bodyApiKey ? String(bodyApiKey).trim() : '');
+    let effectiveKey = '';
+
+    if (customKey) {
+      const validation = await validateApiKey(customKey);
+      if (!validation.valid) {
+        const isQuota = validation.error?.toLowerCase().includes('limit') || validation.error?.toLowerCase().includes('quota');
+        return NextResponse.json(
+          { error: validation.error || 'Clé API invalide ou quota atteint.' },
+          { status: isQuota ? 429 : 403 }
+        );
+      }
+      effectiveKey = customKey;
+    } else if (userId) {
+      const usageCheck = await checkAndTrackUserUsage({
+        userId,
+        endpoint: '/api/ollama/chat',
+        method: 'POST',
+      });
+
+      if (!usageCheck.allowed) {
+        return NextResponse.json(
+          { error: usageCheck.error || 'Limite de requêtes API atteinte pour votre compte.' },
+          { status: 429 }
+        );
+      }
+      effectiveKey = usageCheck.apiKey || '';
     }
 
     const ollamaHost = process.env.OLLAMA_BASE_URL || 'http://localhost:11434';
@@ -138,6 +174,15 @@ export async function POST(req: NextRequest) {
           }
 
           controller.close();
+          if (customKey && effectiveKey) {
+            recordApiLog({
+              apiKey: effectiveKey,
+              endpoint: '/api/ollama/chat',
+              method: 'POST',
+              statusCode: 200,
+              latencyMs: Math.round(performance.now() - startTime),
+            }).catch(() => {});
+          }
         } catch {
           console.error('Streaming error');
           controller.error('Streaming error');

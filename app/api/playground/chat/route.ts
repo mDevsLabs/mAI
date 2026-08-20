@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { neon } from '@neondatabase/serverless';
 import { Message } from '@/lib/playground-types';
+import { validateApiKey, checkAndTrackUserUsage, recordApiLog } from '@/lib/api-key-manager';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 export async function POST(req: NextRequest) {
+  const startTime = performance.now();
   try {
     const rawUserId = req.headers.get('x-user-id');
     const userId = rawUserId ? decodeURIComponent(rawUserId) : null;
@@ -13,33 +14,44 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { model, messages, temperature, maxTokens, systemPrompt } = body;
+    const { model, messages, temperature, maxTokens, systemPrompt, apiKey: bodyApiKey } = body;
 
     if (!model) {
       return NextResponse.json({ error: 'Le modèle est requis.' }, { status: 400 });
     }
 
-    const databaseUrl = process.env.DATABASE_URL;
-    if (!databaseUrl) {
-      return NextResponse.json({ error: 'Erreur de configuration serveur (DB).' }, { status: 500 });
+    // Déterminer la clé API à utiliser (custom key ou clé automatique du compte)
+    const authHeader = req.headers.get('authorization') || req.headers.get('Authorization') || '';
+    const customKey = (authHeader.startsWith('Bearer ') ? authHeader.substring(7).trim() : '') || (bodyApiKey ? String(bodyApiKey).trim() : '');
+
+    let effectiveApiKey = '';
+
+    if (customKey) {
+      const validation = await validateApiKey(customKey);
+      if (!validation.valid) {
+        const isQuota = validation.error?.toLowerCase().includes('limit') || validation.error?.toLowerCase().includes('quota');
+        return NextResponse.json(
+          { error: validation.error || 'Clé API invalide ou limite atteinte.' },
+          { status: isQuota ? 429 : 403 }
+        );
+      }
+      effectiveApiKey = customKey;
+    } else {
+      // Vérifier et incrémenter le quota global pour l'utilisateur
+      const usageCheck = await checkAndTrackUserUsage({
+        userId,
+        endpoint: '/api/playground/chat',
+        method: 'POST',
+      });
+
+      if (!usageCheck.allowed) {
+        return NextResponse.json(
+          { error: usageCheck.error || 'Limite de requêtes API atteinte pour votre forfait.' },
+          { status: 429 }
+        );
+      }
+      effectiveApiKey = usageCheck.apiKey || '';
     }
-    const sql = neon(databaseUrl);
-
-    // Trouver une clé API valide pour l'utilisateur
-    const keys = await sql`
-      SELECT api_key, request_count, max_limit, is_active
-      FROM mprojects_api_keys
-      WHERE user_id = ${userId} AND is_active = true
-    `;
-
-    // Filtre des clés dont la limite max n'est pas atteinte (si max_limit est défini)
-    const validKeys = keys.filter(k => k.max_limit === null || k.request_count < k.max_limit);
-
-    if (validKeys.length === 0) {
-      return NextResponse.json({ error: 'Aucune clé API valide trouvée ou quota atteint. Veuillez vérifier vos clés dans la section Compte.' }, { status: 403 });
-    }
-
-    const apiKey = validKeys[0].api_key;
 
     // Préparer les messages au format OpenAI
     const formattedMessages: any[] = [];
@@ -53,7 +65,6 @@ export async function POST(req: NextRequest) {
     if (Array.isArray(messages)) {
       messages.forEach((msg: Message) => {
         if (msg.role && (msg.content || (msg.images && msg.images.length > 0))) {
-          // Si on gérait la vision, on devrait parser l'image en base64 pour OpenAI
           formattedMessages.push({
             role: msg.role,
             content: msg.content || '',
@@ -75,7 +86,8 @@ export async function POST(req: NextRequest) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
+        'Authorization': `Bearer ${effectiveApiKey}`,
+        'x-user-id': encodeURIComponent(userId)
       },
       body: JSON.stringify(payload)
     });
@@ -131,6 +143,15 @@ export async function POST(req: NextRequest) {
             }
           }
           controller.close();
+          if (customKey && effectiveApiKey) {
+            recordApiLog({
+              apiKey: effectiveApiKey,
+              endpoint: '/api/playground/chat',
+              method: 'POST',
+              statusCode: 200,
+              latencyMs: Math.round(performance.now() - startTime),
+            }).catch(() => {});
+          }
         } catch (err) {
           controller.error(err);
         }

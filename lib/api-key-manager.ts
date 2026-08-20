@@ -272,6 +272,139 @@ export async function updateApiKey(userId: string, keyId: string, updates: { nam
   return success;
 }
 
+// Quotas par forfait (Free: 500, Plus: 1000, Pro: 2000, Max: 5000)
+export const TIER_REQUEST_LIMITS: Record<string, number> = {
+  Free: 500,
+  Gratuit: 500,
+  Plus: 1000,
+  Pro: 2000,
+  Max: 5000,
+};
+
+export function getTierQuotaLimit(tier?: string | null): number {
+  const t = (tier || 'Free').toLowerCase().trim();
+  if (t === 'plus') return 1000;
+  if (t === 'pro') return 2000;
+  if (t === 'max') return 5000;
+  return 500;
+}
+
+/**
+ * Enregistrer un log d'appel API dans mprojects_api_logs.
+ */
+export async function recordApiLog(params: {
+  apiKey: string;
+  endpoint: string;
+  method?: string;
+  statusCode?: number;
+  latencyMs?: number;
+}): Promise<void> {
+  const db = getDb();
+  if (!db) return;
+  try {
+    const cleanKey = params.apiKey ? params.apiKey.trim() : 'anonymous';
+    const method = params.method || 'POST';
+    const statusCode = params.statusCode || 200;
+    const latencyMs = params.latencyMs || 0;
+
+    await db`
+      INSERT INTO mprojects_api_logs (api_key, endpoint, method, status_code, latency_ms, created_at)
+      VALUES (${cleanKey}::text, ${params.endpoint}::text, ${method}::text, ${statusCode}::integer, ${latencyMs}::integer, NOW())
+    `;
+  } catch (err) {
+    console.error('Erreur insertion mprojects_api_logs:', err);
+  }
+}
+
+/**
+ * Vérifier et consommer le quota pour un utilisateur (web app session / playground).
+ */
+export async function checkAndTrackUserUsage(params: {
+  userId: string;
+  endpoint: string;
+  method?: string;
+  statusCode?: number;
+  latencyMs?: number;
+}): Promise<{ allowed: boolean; error?: string; apiKey?: string }> {
+  const db = getDb();
+  if (!db) {
+    return { allowed: true };
+  }
+
+  try {
+    const { userId, endpoint, method = 'POST', statusCode = 200, latencyMs = 0 } = params;
+
+    // 1. Obtenir les infos de l'utilisateur et son forfait
+    const userRows = await db`
+      SELECT id, username, email, tier
+      FROM users
+      WHERE id::text = ${userId}::text OR username = ${userId}::text OR email = ${userId}::text
+      LIMIT 1
+    `;
+
+    const userTier = userRows[0]?.tier || 'Free';
+    const tierLimit = getTierQuotaLimit(userTier);
+
+    // 2. Récupérer les clés de l'utilisateur
+    let keys = await db`
+      SELECT api_key, plan, request_count, max_limit, is_active
+      FROM mprojects_api_keys
+      WHERE user_id = ${userId}::text
+         OR user_id = ${userRows[0]?.id ? String(userRows[0].id) : userId}::text
+         OR user_id = ${userRows[0]?.username || userId}::text
+         OR user_id = ${userRows[0]?.email || userId}::text
+      ORDER BY created_at DESC
+    `;
+
+    if (keys.length === 0) {
+      const { secretKey } = generateSecretKey();
+      const now = new Date().toISOString();
+      await db`
+        INSERT INTO mprojects_api_keys (user_id, api_key, plan, request_count, created_at, is_active)
+        VALUES (${userId}::text, ${secretKey}, 'Clé Principale', 0, ${now}, true)
+      `;
+      keys = [{ api_key: secretKey, plan: 'Clé Principale', request_count: 0, max_limit: null, is_active: true }];
+    }
+
+    // 3. Calculer la consommation totale
+    const totalRequests = keys.reduce((acc: number, k: any) => acc + (parseInt(k.request_count, 10) || 0), 0);
+
+    if (totalRequests >= tierLimit) {
+      return {
+        allowed: false,
+        error: `Limite globale de requêtes API atteinte pour votre forfait (${userTier} : ${tierLimit} requêtes max/mois). Veuillez mettre à niveau votre forfait.`,
+      };
+    }
+
+    // 4. Trouver une clé active
+    const activeKey = keys.find((k: any) => k.is_active !== false && (k.max_limit === null || k.request_count < k.max_limit)) || keys[0];
+
+    // 5. Incrémenter le compteur de requêtes
+    await db`
+      UPDATE mprojects_api_keys
+      SET request_count = request_count + 1, last_used_at = NOW()
+      WHERE api_key = ${activeKey.api_key}
+    `;
+
+    // 6. Enregistrer dans les logs API
+    await recordApiLog({
+      apiKey: activeKey.api_key,
+      endpoint,
+      method,
+      statusCode,
+      latencyMs,
+    });
+
+    return {
+      allowed: true,
+      apiKey: activeKey.api_key,
+    };
+  } catch (err) {
+    console.error('Erreur checkAndTrackUserUsage:', err);
+    return { allowed: true };
+  }
+}
+
 /**
  * Valider une clé secrète fournie (Bearer token).
  * Valide les formats mp-*, mai_live*, mai-* et MAI_API_KEY.
@@ -301,14 +434,14 @@ export async function validateApiKey(secretKey: string): Promise<{ valid: boolea
     };
   }
 
-  // Valider les formats mp-*, mai_live* et mai-*
+  // Valider les formats mp-*, mai_live*, mai-* et sk_mp_*
   const isValidFormat = cleanedKey.startsWith('mp-') || 
                         cleanedKey.startsWith('mai_live') || 
                         cleanedKey.startsWith('mai-') ||
                         cleanedKey.startsWith('sk_mp_');
 
   if (!isValidFormat) {
-    return { valid: false, error: 'Format de clé API invalide (doit commencer par mp-).' };
+    return { valid: false, error: 'Format de clé API invalide (doit commencer par mp- ou mai-).' };
   }
 
   const hash = hashSecretKey(cleanedKey);
@@ -343,7 +476,7 @@ export async function validateApiKey(secretKey: string): Promise<{ valid: boolea
     try {
       const prefixCandidate = cleanedKey.substring(0, 11);
       const rows = await db`
-        SELECT k.user_id, k.plan, k.request_count, k.created_at, k.last_used_at, k.max_limit, k.is_active, u.tier as user_tier
+        SELECT k.user_id, k.api_key, k.plan, k.request_count, k.created_at, k.last_used_at, k.max_limit, k.is_active, u.tier as user_tier
         FROM mprojects_api_keys k
         LEFT JOIN users u ON k.user_id = u.id::text OR k.user_id = u.username OR k.user_id = u.email
         WHERE k.api_key = ${hash} 
@@ -361,18 +494,37 @@ export async function validateApiKey(secretKey: string): Promise<{ valid: boolea
         if (row.is_active === false) {
            return { valid: false, error: 'Clé API désactivée.' };
         }
+
+        // Vérification de la limite individuelle de la clé
         if (row.max_limit !== null && row.request_count >= row.max_limit) {
            return { valid: false, error: 'Limite de la clé API atteinte.' };
         }
 
+        // Vérification de la limite globale du forfait du compte
+        const userTier = row.user_tier || row.plan || 'Free';
+        const tierLimit = getTierQuotaLimit(userTier);
+
+        const countRows = await db`
+          SELECT SUM(request_count) as total_requests
+          FROM mprojects_api_keys
+          WHERE user_id = ${row.user_id}::text
+        `;
+        const globalRequestCount = parseInt(countRows[0]?.total_requests || '0', 10);
+
+        if (globalRequestCount >= tierLimit) {
+          return {
+            valid: false,
+            error: `Limite globale de requêtes API atteinte pour votre compte (${userTier} : ${tierLimit} requêtes max/mois). Veuillez mettre à niveau votre forfait.`
+          };
+        }
+
+        // Incrémenter le compteur de requêtes sur la clé identifiée
         await db`
           UPDATE mprojects_api_keys
           SET request_count = request_count + 1, last_used_at = NOW()
-          WHERE api_key = ${hash} 
-             OR api_key = ${cleanedKey} 
-             OR api_key = ${prefixCandidate}
-             OR api_key LIKE ${prefixCandidate + '%'}
-             OR ${cleanedKey} LIKE (api_key || '%')
+          WHERE api_key = ${row.api_key} 
+             OR api_key = ${hash} 
+             OR api_key = ${cleanedKey}
         `;
 
         const resolvedPlan = row.plan || row.user_tier || 'Free';
@@ -396,18 +548,9 @@ export async function validateApiKey(secretKey: string): Promise<{ valid: boolea
     }
   }
 
-  // Si la clé commence par mp- ou mai-, on autorise son exécution pour la démo si elle est active
+  // Clé introuvable dans la base de données
   return {
-    valid: true,
-    keyInfo: {
-      id: `session_key_${cleanedKey.substring(0, 8)}`,
-      name: 'Clé API Active',
-      prefix: `${cleanedKey.substring(0, 11)}_••••••••`,
-      createdAt: new Date().toISOString(),
-      lastUsedAt: new Date().toISOString(),
-      usageCount: 1,
-      maxLimit: null,
-      isActive: true,
-    }
+    valid: false,
+    error: 'Clé API invalide ou introuvable. Veuillez vérifier vos clés dans la section Compte.',
   };
 }

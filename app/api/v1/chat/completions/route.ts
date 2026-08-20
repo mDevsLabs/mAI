@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateOpenAIRequest } from '@/lib/openai-auth';
 import { resolveOllamaModel } from '@/lib/openai-model-mapper';
+import { recordApiLog } from '@/lib/api-key-manager';
 import {
   OpenAIChatCompletionRequest,
   OpenAIChatCompletionResponse,
@@ -11,6 +12,7 @@ import {
 export const runtime = 'nodejs';
 
 export async function POST(req: NextRequest) {
+  const startTime = performance.now();
   // 1. Authentification & Rate limiting
   const auth = await authenticateOpenAIRequest(req);
   if (!auth.valid) {
@@ -285,6 +287,14 @@ export async function POST(req: NextRequest) {
             // Signal de fin SSE standard OpenAI
             controller.enqueue(encoder.encode('data: [DONE]\n\n'));
             controller.close();
+            // Logging dans mprojects_api_logs
+            recordApiLog({
+              apiKey: auth.apiKeyToken,
+              endpoint: '/v1/chat/completions',
+              method: 'POST',
+              statusCode: 200,
+              latencyMs: Math.round(performance.now() - startTime),
+            }).catch(() => {});
           }
         },
       });
@@ -325,6 +335,15 @@ export async function POST(req: NextRequest) {
         total_tokens: promptTokens + completionTokens,
       },
     };
+
+    // Logging dans mprojects_api_logs
+    await recordApiLog({
+      apiKey: auth.apiKeyToken,
+      endpoint: '/v1/chat/completions',
+      method: 'POST',
+      statusCode: 200,
+      latencyMs: Math.round(performance.now() - startTime),
+    });
 
     return NextResponse.json(response);
   } catch (err: any) {

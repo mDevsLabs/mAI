@@ -1,11 +1,12 @@
 "use client";
 
-import { Github, Menu, X, ChevronDown, UserRound, LogOut, Gauge,  Activity} from "lucide-react";
+import { Github, Menu, X, ChevronDown, UserRound, LogOut, Gauge, Activity, Cloud } from "lucide-react";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { CommandMenu } from "@/components/command-menu";
 import type { ChangelogsByProject } from "@/lib/changelog";
 import type { NewsArticle } from "@/lib/news";
+import { formatStorageBytes, CLOUD_STORAGE_LIMITS } from "@/lib/mai-api";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Sheet } from "@/components/sheet";
@@ -102,12 +103,16 @@ function checkLinkActive(link: NavItem, pathname: string): boolean {
 
 export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject; news?: NewsArticle[] }) {
   const pathname = usePathname();
-  const { user, isAuthenticated, loading: authLoading, logout } = useAuth();
+  const { user, isAuthenticated, loading: authLoading, logout, cloudStorage } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeMobileSubmenu, setActiveMobileSubmenu] = useState<string | null>(null);
   const [activeMobileNestedSubmenu, setActiveMobileNestedSubmenu] = useState<string | null>(null);
   const [isCommandOpen, setIsCommandOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  const storageLimit = CLOUD_STORAGE_LIMITS[user?.tier || "Free"] || CLOUD_STORAGE_LIMITS["Free"];
+  const storageUsed = cloudStorage?.bytes_used ?? 0;
+  const storagePercent = cloudStorage?.percent_used ?? (storageLimit > 0 ? Math.min(100, Math.round((storageUsed / storageLimit) * 100)) : 0);
 
   const accountHref = isAuthenticated ? "/account" : "/account/login";
   const accountLabel = isAuthenticated
@@ -314,6 +319,36 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
                         >
                           <Activity className="w-4 h-4 text-purple-600" />
                           Usage API
+                        </Link>
+                        <Link
+                          href="/account#usage-cloud"
+                          className="w-full px-3.5 py-2.5 rounded-2xl text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-700 transition-colors flex flex-col gap-1.5 group/storage"
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2.5">
+                              <Cloud className="w-4 h-4 text-purple-600 shrink-0" />
+                              <span>Stockage Cloud</span>
+                            </div>
+                            <span className="text-[10px] font-extrabold text-slate-500 group-hover/storage:text-purple-700">
+                              {storagePercent}%
+                            </span>
+                          </div>
+                          <div className="w-full bg-slate-200/80 rounded-full h-1.5 overflow-hidden">
+                            <div
+                              className={`h-full rounded-full transition-all ${
+                                storagePercent >= 90
+                                  ? "bg-red-500"
+                                  : storagePercent >= 70
+                                    ? "bg-amber-500"
+                                    : "bg-gradient-to-r from-purple-500 to-blue-500"
+                              }`}
+                              style={{ width: `${Math.min(100, Math.max(0, storagePercent))}%` }}
+                            />
+                          </div>
+                          <div className="flex items-center justify-between text-[10px] text-slate-400 font-medium">
+                            <span>{formatStorageBytes(storageUsed)}</span>
+                            <span>{formatStorageBytes(storageLimit)}</span>
+                          </div>
                         </Link>
                       </div>
 
@@ -535,6 +570,38 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
                 )}
               </span>
             </Link>
+
+            {isAuthenticated && (
+              <Link
+                href="/account#usage-cloud"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="px-4 py-2.5 mx-1 rounded-2xl bg-purple-50/50 border border-purple-100/60 space-y-1.5 hover:bg-purple-50 transition-colors block"
+              >
+                <div className="flex items-center justify-between text-xs font-bold text-slate-700">
+                  <div className="flex items-center gap-2">
+                    <Cloud className="w-3.5 h-3.5 text-purple-600" />
+                    <span>Stockage Cloud</span>
+                  </div>
+                  <span className="text-[11px] font-extrabold text-purple-700">{storagePercent}%</span>
+                </div>
+                <div className="w-full bg-slate-200/80 rounded-full h-1.5 overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all ${
+                      storagePercent >= 90
+                        ? "bg-red-500"
+                        : storagePercent >= 70
+                          ? "bg-amber-500"
+                          : "bg-gradient-to-r from-purple-500 to-blue-500"
+                    }`}
+                    style={{ width: `${Math.min(100, Math.max(0, storagePercent))}%` }}
+                  />
+                </div>
+                <div className="flex items-center justify-between text-[10px] text-slate-500 font-medium">
+                  <span>{formatStorageBytes(storageUsed)}</span>
+                  <span>{formatStorageBytes(storageLimit)}</span>
+                </div>
+              </Link>
+            )}
 
             <div className="flex gap-2 mt-3 pt-3 border-t border-black/5 justify-center">
               <a

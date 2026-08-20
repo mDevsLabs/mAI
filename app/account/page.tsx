@@ -18,9 +18,10 @@ import {
   Phone,
   Lock,
   Monitor,
+  Cloud,
 } from "lucide-react";
 import { useAuth } from "@/components/auth-provider";
-import { MaiApiError } from "@/lib/mai-api";
+import { MaiApiError, formatStorageBytes, CLOUD_STORAGE_LIMITS } from "@/lib/mai-api";
 import { getUserApiUsage } from "@/app/actions/api-keys";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
@@ -62,10 +63,12 @@ export default function AccountPage() {
   const {
     user,
     usage,
+    cloudStorage,
     loading,
     isAuthenticated,
     logout,
     refreshUsage,
+    refreshCloudStorage,
     verifyUpgradeCode,
     updateProfile,
     uploadAvatar,
@@ -76,6 +79,7 @@ export default function AccountPage() {
   const [upgrading, setUpgrading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [refreshingApi, setRefreshingApi] = useState(false);
+  const [refreshingStorage, setRefreshingStorage] = useState(false);
 
   // Formulaires d'édition du profil
   const [newUsername, setNewUsername] = useState("");
@@ -102,7 +106,7 @@ export default function AccountPage() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ["profil", "usage-api", "usage-mai", "upgrade-code", "appareils"];
+      const sections = ["profil", "usage-api", "usage-mai", "usage-cloud", "appareils", "upgrade-code"];
       let current = sections[0];
       for (const section of sections) {
         const element = document.getElementById(section);
@@ -187,10 +191,24 @@ export default function AccountPage() {
     try {
       const data = await refreshUsage();
       await loadApiUsage(); // Refresh API keys usage too
-      if (data) toast.success("Quota actualisé");
+      await refreshCloudStorage();
+      if (data) toast.success("Quotas actualisés");
       else toast.error("Session expirée");
     } finally {
       setRefreshing(false);
+    }
+  };
+
+  const handleRefreshStorage = async () => {
+    setRefreshingStorage(true);
+    try {
+      const data = await refreshCloudStorage();
+      if (data) toast.success("Quota de stockage actualisé");
+      else toast.error("Erreur lors de l'actualisation du stockage");
+    } catch {
+      toast.error("Erreur serveur lors du rafraîchissement.");
+    } finally {
+      setRefreshingStorage(false);
     }
   };
 
@@ -367,6 +385,7 @@ export default function AccountPage() {
               { id: "profil", label: "Profil & Paramètres", icon: User },
               { id: "usage-api", label: "Usage API", icon: KeyRound },
               { id: "usage-mai", label: "Usage mAI", icon: Gauge },
+              { id: "usage-cloud", label: "Stockage Cloud", icon: Cloud },
               { id: "appareils", label: "Appareils Connectés", icon: Monitor },
               { id: "upgrade-code", label: "Activer un Code", icon: Sparkles },
             ].map((item) => (
@@ -749,7 +768,126 @@ export default function AccountPage() {
         )}
       </section>
 
+      {/* Stockage Cloud */}
+      <section id="usage-cloud" className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-6">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+              <Cloud className="w-5 h-5 text-purple-600" />
+              Stockage Cloud
+            </h2>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Consommation de votre espace de stockage Cloud mAI et fichiers hébergés.
+            </p>
+          </div>
+          <button
+            onClick={handleRefreshStorage}
+            disabled={refreshingStorage}
+            className="p-2 rounded-xl border border-slate-200 hover:bg-white/80 text-slate-600 transition-colors disabled:opacity-50 cursor-pointer"
+            title="Actualiser le stockage"
+          >
+            <RefreshCw className={`w-4 h-4 ${refreshingStorage ? "animate-spin" : ""}`} />
+          </button>
+        </div>
 
+        {(() => {
+          const tier = user?.tier || "Free";
+          const storageLimit = CLOUD_STORAGE_LIMITS[tier] || CLOUD_STORAGE_LIMITS["Free"];
+          const storageUsed = cloudStorage?.bytes_used ?? 0;
+          const storagePercent = cloudStorage?.percent_used ?? (storageLimit > 0 ? Math.min(100, Math.round((storageUsed / storageLimit) * 100)) : 0);
+          const filesCount = cloudStorage?.files_count ?? 0;
+          const isOver = cloudStorage?.over_limit || storageUsed >= storageLimit;
+
+          return (
+            <div className="space-y-6 pt-1">
+              {/* Barre de progression */}
+              <div className="space-y-2">
+                <div className="flex items-end justify-between text-sm">
+                  <p className="text-slate-600">
+                    <span className="font-bold text-slate-900">
+                      {formatStorageBytes(storageUsed)}
+                    </span>{" "}
+                    / {formatStorageBytes(storageLimit)} consommés
+                  </p>
+                  <p className={`font-semibold ${isOver || storagePercent >= 90 ? "text-red-600 font-bold" : "text-slate-900"}`}>
+                    {storagePercent}%
+                  </p>
+                </div>
+                <div className="w-full bg-slate-200/80 rounded-full h-3 overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${storagePercent}%` }}
+                    transition={{ duration: 1, ease: "easeOut" }}
+                    className={`h-full rounded-full ${
+                      isOver || storagePercent >= 90
+                        ? "bg-red-500"
+                        : storagePercent >= 70
+                          ? "bg-amber-500"
+                          : "bg-gradient-to-r from-purple-500 to-blue-500"
+                    }`}
+                  />
+                </div>
+              </div>
+
+              {/* Cartes de statistiques clés */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div className="rounded-2xl bg-white/60 border border-slate-200/80 p-3.5 shadow-sm">
+                  <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Espace Utilisé</p>
+                  <p className="text-base font-black text-slate-900">{formatStorageBytes(storageUsed)}</p>
+                </div>
+                <div className="rounded-2xl bg-white/60 border border-slate-200/80 p-3.5 shadow-sm">
+                  <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Limite du Forfait</p>
+                  <p className="text-base font-black text-slate-900">{formatStorageBytes(storageLimit)}</p>
+                </div>
+                <div className="rounded-2xl bg-white/60 border border-slate-200/80 p-3.5 shadow-sm">
+                  <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Fichiers Stockés</p>
+                  <p className="text-base font-black text-slate-900">{filesCount}</p>
+                </div>
+                <div className="rounded-2xl bg-white/60 border border-slate-200/80 p-3.5 shadow-sm">
+                  <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Forfait Actuel</p>
+                  <p className="text-base font-black text-purple-700">{tier}</p>
+                </div>
+              </div>
+
+              {/* Limites officielles par forfait */}
+              <div className="rounded-2xl bg-purple-50/60 border border-purple-100 p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-purple-900 uppercase tracking-wider flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-purple-600" />
+                    Quotas de Stockage par Forfait
+                  </span>
+                  <Link href="/pricing" className="text-xs font-bold text-purple-600 hover:text-purple-700 hover:underline">
+                    Augmenter mon quota →
+                  </Link>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                  {[
+                    { tierName: "Free", limitText: "500 MO" },
+                    { tierName: "Plus", limitText: "1 GB" },
+                    { tierName: "Pro", limitText: "2 GB" },
+                    { tierName: "Max", limitText: "5 GB" },
+                  ].map((p) => {
+                    const isUserPlan = tier.toLowerCase() === p.tierName.toLowerCase();
+                    return (
+                      <div
+                        key={p.tierName}
+                        className={`p-2.5 rounded-xl border text-center transition-all ${
+                          isUserPlan
+                            ? "bg-purple-600 text-white font-bold border-purple-600 shadow-sm ring-2 ring-purple-400/50"
+                            : "bg-white/70 text-slate-700 border-slate-200/70"
+                        }`}
+                      >
+                        <p className={`text-[10px] uppercase font-black ${isUserPlan ? "text-purple-100" : "text-slate-500"}`}>{p.tierName}</p>
+                        <p className="text-sm font-extrabold mt-0.5">{p.limitText}</p>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+      </section>
 
       {/* Appareils Connectés */}
       <section 
