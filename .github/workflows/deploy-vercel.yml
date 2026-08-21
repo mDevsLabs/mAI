@@ -67,7 +67,7 @@ jobs:
       - name: 🌐 Deploy Project Artifacts to Vercel
         run: |
           if [ "${{ github.ref }}" = "refs/heads/main" ]; then
-            vercel deploy --prebuilt --prod --token=${{ env.VERCEL_TOKEN }}
+            vercel deploy --prebuilt --prod --token=${{ env.VERCEL_TOKEN }} --archive=tgz
           else
-            vercel deploy --prebuilt --token=${{ env.VERCEL_TOKEN }}
+            vercel deploy --prebuilt --token=${{ env.VERCEL_TOKEN }} --archive=tgz
           fi
