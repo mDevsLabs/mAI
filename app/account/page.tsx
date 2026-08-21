@@ -131,6 +131,29 @@ export default function AccountPage() {
     }
   };
 
+  useEffect(() => {
+    if (!loading && isAuthenticated) {
+      const hash = typeof window !== "undefined" ? window.location.hash.replace("#", "") : "";
+      if (hash) {
+        const timer = setTimeout(() => {
+          scrollTo(hash);
+        }, 150);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [loading, isAuthenticated]);
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace("#", "");
+      if (hash) {
+        scrollTo(hash);
+      }
+    };
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
+  }, []);
+
   // Stats d'utilisation des clés API (Neon)
   const [apiUsageStats, setApiUsageStats] = useState<{key: string, plan: string, requestCount: number, limit: number}[]>([]);
 
@@ -448,7 +471,7 @@ export default function AccountPage() {
           )}
 
           {/* Section Profil unifiée : présentation + modification */}
-          <section id="profil" className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-6">
+          <section id="profil" className="scroll-mt-28 bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-6">
 
         {/* --- Présentation du profil (en haut) --- */}
         <div className="flex items-center gap-4">
@@ -649,7 +672,7 @@ export default function AccountPage() {
       </section>
 
       {/* Usage API */}
-      <section id="usage-api" className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-4">
+      <section id="usage-api" className="scroll-mt-28 bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-4">
         <div className="flex items-center justify-between gap-3">
           <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
             <KeyRound className="w-5 h-5 text-purple-600" />
@@ -718,7 +741,7 @@ export default function AccountPage() {
       
 
       {/* Usage mAI */}
-      <section id="usage-mai" className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-4">
+      <section id="usage-mai" className="scroll-mt-28 bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-4">
         <div className="flex items-center justify-between gap-3">
           <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
             <Gauge className="w-5 h-5 text-purple-600" />
@@ -769,7 +792,7 @@ export default function AccountPage() {
       </section>
 
       {/* Stockage Cloud */}
-      <section id="usage-cloud" className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-6">
+      <section id="usage-cloud" className="scroll-mt-28 bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-6">
         <div className="flex items-center justify-between gap-3">
           <div>
             <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
@@ -892,7 +915,7 @@ export default function AccountPage() {
       {/* Appareils Connectés */}
       <section 
         id="appareils" 
-        className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-4"
+        className="scroll-mt-28 bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-4"
       >
         <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
           <Monitor className="w-5 h-5 text-purple-600" />
@@ -905,7 +928,7 @@ export default function AccountPage() {
       </section>
 
       {/* Upgrade code */}
-      <section id="upgrade-code" className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-4">
+      <section id="upgrade-code" className="scroll-mt-28 bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-4">
         <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
           <KeyRound className="w-5 h-5 text-purple-600" />
           Activer un Code d&apos;Upgrade

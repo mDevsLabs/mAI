@@ -59,14 +59,14 @@ export function HeroSection() {
             </motion.button>
           </Link>
 
-          <Link href="/playground" className="w-full sm:w-auto">
+          <Link href="/models" className="w-full sm:w-auto">
             <motion.button
               whileHover={{ scale: 1.04, y: -2 }}
               whileTap={{ scale: 0.96 }}
               className="w-full sm:w-auto px-8 py-4 rounded-2xl md:rounded-full bg-white/60 backdrop-blur-md border border-slate-200 text-slate-900 font-bold flex items-center justify-center gap-2.5 hover:bg-white/90 hover:border-purple-300 transition-all shadow-sm"
             >
               <Sparkles className="w-5 h-5 text-purple-600" />
-              Tester le Playground
+              Découvrir les Modèles
             </motion.button>
           </Link>
 

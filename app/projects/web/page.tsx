@@ -87,14 +87,6 @@ export default function WebProjectPage() {
               Voir le dépôt GitHub
               <ExternalLink className="w-4 h-4" />
             </a>
-
-            <Link
-              href="/playground"
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white/80 border border-slate-200 text-slate-900 font-bold hover:bg-white transition-all shadow-xs"
-            >
-              <Sparkles className="w-4 h-4 text-purple-600" />
-              Tester dans le Playground
-            </Link>
           </div>
         </div>
       </motion.div>

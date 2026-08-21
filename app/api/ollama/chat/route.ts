@@ -1,6 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { Message } from '@/lib/playground-types';
 import { validateApiKey, checkAndTrackUserUsage, recordApiLog } from '@/lib/api-key-manager';
+
+export type Role = 'user' | 'assistant' | 'system';
+
+export interface Message {
+  id?: string;
+  role: Role;
+  content: string;
+  images?: string[];
+  timestamp?: number;
+}
 
 export const runtime = 'nodejs';
 

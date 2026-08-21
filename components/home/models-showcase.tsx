@@ -122,16 +122,9 @@ export function ModelsShowcase() {
               <div className="flex items-center gap-2">
                 <Link
                   href={`/models/${model.id}`}
-                  className="flex-1 text-center py-2.5 rounded-xl bg-slate-900 text-white font-bold text-xs hover:bg-purple-600 transition-colors"
+                  className="w-full text-center py-2.5 rounded-xl bg-slate-900 text-white font-bold text-xs hover:bg-purple-600 transition-colors"
                 >
                   Fiche Technique
-                </Link>
-                <Link
-                  href="/playground"
-                  className="px-4 py-2.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-slate-900 font-bold text-xs transition-colors flex items-center gap-1.5"
-                >
-                  <Sparkles className="w-3.5 h-3.5 text-purple-600" />
-                  Tester
                 </Link>
               </div>
             </div>

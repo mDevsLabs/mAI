@@ -31,7 +31,7 @@ export default function TermsPage() {
         </h1>
 
         <p className="text-slate-500 font-light mb-10 text-base md:text-lg">
-          Dernière mise à jour : 1er août 2026. Bienvenue sur mAI. Les présentes Conditions Générales d'Utilisation (CGU) régissent votre accès et l'utilisation de nos plateformes, de nos services mAI, de notre Playground et des points de terminaison de l'API mAI.
+          Dernière mise à jour : 1er août 2026. Bienvenue sur mAI. Les présentes Conditions Générales d'Utilisation (CGU) régissent votre accès et l'utilisation de nos plateformes, de nos services mAI et des points de terminaison de l'API mAI.
         </p>
 
         <div className="space-y-8 text-slate-600">

@@ -117,7 +117,7 @@ export function CommunitySection() {
         </h3>
 
         <p className="text-slate-300 text-xs sm:text-sm max-w-lg mb-6 font-light">
-          Obtenez votre clé API, testez nos modèles multimodaux dans le Playground ou installez mAI CLI en quelques secondes.
+          Obtenez votre clé API, explorez nos modèles multimodaux ou installez mAI CLI en quelques secondes.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
@@ -132,13 +132,13 @@ export function CommunitySection() {
             </motion.button>
           </Link>
 
-          <Link href="/playground" className="w-full sm:w-auto">
+          <Link href="/docs" className="w-full sm:w-auto">
             <motion.button
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.96 }}
               className="w-full sm:w-auto px-7 py-3.5 rounded-full bg-white/10 border border-white/20 hover:bg-white/20 font-bold text-xs sm:text-sm text-white flex items-center justify-center gap-2 transition-all"
             >
-              Accéder au Playground
+              Consulter la Documentation
             </motion.button>
           </Link>
         </div>

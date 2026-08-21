@@ -317,7 +317,7 @@ export async function recordApiLog(params: {
 }
 
 /**
- * Vérifier et consommer le quota pour un utilisateur (web app session / playground).
+ * Vérifier et consommer le quota pour un utilisateur (session web app / API).
  */
 export async function checkAndTrackUserUsage(params: {
   userId: string;

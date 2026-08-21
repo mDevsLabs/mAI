@@ -75,7 +75,6 @@ const navLinks: NavItem[] = [
       { name: "Requêtes", href: "/account/requests" },
       { name: "Usage", href: "/account/usage" },
       { name: "Configuration", href: "/account/config" },
-      { name: "Terrain de jeu", href: "/playground" },
     ]},
   {
     name: "Plus",
@@ -137,6 +136,16 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
 
   const toggleMobileNestedSubmenu = (name: string) => {
     setActiveMobileNestedSubmenu(activeMobileNestedSubmenu === name ? null : name);
+  };
+
+  const handleAnchorClick = (id: string) => {
+    if (pathname === "/account") {
+      const element = document.getElementById(id);
+      if (element) {
+        const y = element.getBoundingClientRect().top + window.scrollY - 100;
+        window.scrollTo({ top: y, behavior: "smooth" });
+      }
+    }
   };
 
   return (
@@ -308,6 +317,7 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
                       <div className="pt-1 space-y-0.5">
                         <Link
                           href="/account#usage-mai"
+                          onClick={() => handleAnchorClick("usage-mai")}
                           className="w-full px-3.5 py-2.5 rounded-2xl text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-700 transition-colors flex items-center gap-2.5"
                         >
                           <Gauge className="w-4 h-4 text-purple-600" />
@@ -315,6 +325,7 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
                         </Link>
                         <Link
                           href="/account#usage-api"
+                          onClick={() => handleAnchorClick("usage-api")}
                           className="w-full px-3.5 py-2.5 rounded-2xl text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-700 transition-colors flex items-center gap-2.5"
                         >
                           <Activity className="w-4 h-4 text-purple-600" />
@@ -322,6 +333,7 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
                         </Link>
                         <Link
                           href="/account#usage-cloud"
+                          onClick={() => handleAnchorClick("usage-cloud")}
                           className="w-full px-3.5 py-2.5 rounded-2xl text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-700 transition-colors flex flex-col gap-1.5 group/storage"
                         >
                           <div className="flex items-center justify-between">
@@ -572,35 +584,62 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
             </Link>
 
             {isAuthenticated && (
-              <Link
-                href="/account#usage-cloud"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="px-4 py-2.5 mx-1 rounded-2xl bg-purple-50/50 border border-purple-100/60 space-y-1.5 hover:bg-purple-50 transition-colors block"
-              >
-                <div className="flex items-center justify-between text-xs font-bold text-slate-700">
-                  <div className="flex items-center gap-2">
-                    <Cloud className="w-3.5 h-3.5 text-purple-600" />
-                    <span>Stockage Cloud</span>
+              <div className="flex flex-col gap-1.5 mt-1">
+                <Link
+                  href="/account#usage-mai"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    handleAnchorClick("usage-mai");
+                  }}
+                  className="px-4 py-2.5 mx-1 rounded-2xl text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-700 transition-colors flex items-center gap-2.5 bg-black/[0.02]"
+                >
+                  <Gauge className="w-4 h-4 text-purple-600" />
+                  <span>Usage mAI</span>
+                </Link>
+                <Link
+                  href="/account#usage-api"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    handleAnchorClick("usage-api");
+                  }}
+                  className="px-4 py-2.5 mx-1 rounded-2xl text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-700 transition-colors flex items-center gap-2.5 bg-black/[0.02]"
+                >
+                  <Activity className="w-4 h-4 text-purple-600" />
+                  <span>Usage API</span>
+                </Link>
+                <Link
+                  href="/account#usage-cloud"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    handleAnchorClick("usage-cloud");
+                  }}
+                  className="px-4 py-2.5 mx-1 rounded-2xl bg-purple-50/50 border border-purple-100/60 space-y-1.5 hover:bg-purple-50 transition-colors block"
+                >
+                  <div className="flex items-center justify-between text-xs font-bold text-slate-700">
+                    <div className="flex items-center gap-2">
+                      <Cloud className="w-3.5 h-3.5 text-purple-600" />
+                      <span>Stockage Cloud</span>
+                    </div>
+                    <span className="text-[11px] font-extrabold text-purple-700">{storagePercent}%</span>
                   </div>
-                  <span className="text-[11px] font-extrabold text-purple-700">{storagePercent}%</span>
-                </div>
-                <div className="w-full bg-slate-200/80 rounded-full h-1.5 overflow-hidden">
-                  <div
-                    className={`h-full rounded-full transition-all ${
-                      storagePercent >= 90
-                        ? "bg-red-500"
-                        : storagePercent >= 70
-                          ? "bg-amber-500"
-                          : "bg-gradient-to-r from-purple-500 to-blue-500"
-                    }`}
-                    style={{ width: `${Math.min(100, Math.max(0, storagePercent))}%` }}
-                  />
-                </div>
-                <div className="flex items-center justify-between text-[10px] text-slate-500 font-medium">
-                  <span>{formatStorageBytes(storageUsed)}</span>
-                  <span>{formatStorageBytes(storageLimit)}</span>
-                </div>
-              </Link>
+                  <div className="w-full bg-slate-200/80 rounded-full h-1.5 overflow-hidden">
+                    <div
+                      className={`h-full rounded-full transition-all ${
+                        storagePercent >= 90
+                          ? "bg-red-500"
+                          : storagePercent >= 70
+                            ? "bg-amber-500"
+                            : "bg-gradient-to-r from-purple-500 to-blue-500"
+                      }`}
+                      style={{ width: `${Math.min(100, Math.max(0, storagePercent))}%` }}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between text-[10px] text-slate-500 font-medium">
+                    <span>{formatStorageBytes(storageUsed)}</span>
+                    <span>{formatStorageBytes(storageLimit)}</span>
+                  </div>
+                </Link>
+              </div>
             )}
 
             <div className="flex gap-2 mt-3 pt-3 border-t border-black/5 justify-center">

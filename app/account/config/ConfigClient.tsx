@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import {
-  Copy, Check, Terminal, Code2, Cpu, Key, Sparkles, RefreshCcw, Layers, Settings2, Sliders, Play
+  Copy, Check, Terminal, Code2, Cpu, Key, Sparkles, RefreshCcw, Layers, Settings2, Sliders
 } from 'lucide-react';
 import { maiModelsList } from '@/maiModels';
 import { AIModel, openRouterModels } from '@/lib/ai-models';
@@ -294,14 +294,6 @@ runAnthropic();`;
             Générez dynamiquement du code prêt à l&apos;emploi pour intégrer les modèles <code className="bg-purple-50 text-purple-700 px-1.5 py-0.5 rounded font-mono font-bold">v1/models</code> dans vos projets Node.js, Python ou cURL.
           </p>
         </div>
-
-        <Link
-          href="/playground"
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-purple-600 hover:bg-purple-500 text-white font-extrabold text-xs transition-all shadow-md shadow-purple-500/20 self-start md:self-auto"
-        >
-          <Play className="w-4 h-4 fill-white" />
-          Tester dans le Playground
-        </Link>
       </div>
 
       {/* ─── PANNEAU DE CONFIGURATION DYNAMIQUE ─── */}
