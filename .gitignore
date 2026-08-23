@@ -12,3 +12,11 @@ main-projects.ts
 aiModels.ts
 maiModels.ts
 .neon
+
+# AI Agent Docs
+docs/AI_AGENTS_API.md
+docs/llms-api.md
+*.agent-doc.md
+
+# Admin / DB Scripts
+scripts/create-subscription-code.ts

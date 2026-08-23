@@ -192,7 +192,7 @@ function LoginForm() {
           Se connecter
         </h1>
         <p className="text-slate-600 text-sm">
-          Accédez à votre compte mAI unifié (Web, Pulse, CLI, Office).
+          Accédez à votre compte mAI unifié (Web, Pulse, CLI, Coder).
         </p>
       </div>
 

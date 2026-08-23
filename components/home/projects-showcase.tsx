@@ -38,15 +38,15 @@ export function ProjectsShowcase() {
       platforms: ["macOS", "Linux", "Windows"],
       highlightColor: "hover:border-emerald-500/40 hover:shadow-[0_12px_32px_rgba(16,185,129,0.15)]"},
     {
-      id: "office",
-      title: "Office",
-      label: "Bêta",
-      tagline: "Création de documents et présentations assistée par l'IA.",
-      description: "Création de documents et présentations avec mAI.",
-      link: "/projects/office",
-      repo: "mDevsLabs/Office",
-      platforms: ["macOS", "Windows", "Export PDF/PPT"],
-      highlightColor: "hover:border-blue-500/40 hover:shadow-[0_12px_32px_rgba(59,130,246,0.15)]"},
+      id: "coder",
+      title: "Coder",
+      label: "Alpha",
+      tagline: "L'IDE IA pensé pour les agents autonomes et les outils MCP.",
+      description: "IDE IA de nouvelle génération avec agents IA autonomes, orchestration multi-modèles et support natif des outils MCP.",
+      link: "/projects/coder",
+      repo: "mDevsLabs/Coder",
+      platforms: ["macOS", "Windows", "Linux"],
+      highlightColor: "hover:border-purple-500/40 hover:shadow-[0_12px_32px_rgba(168,85,247,0.15)]"},
   ];
 
   return (

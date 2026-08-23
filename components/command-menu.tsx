@@ -96,11 +96,11 @@ export function CommandMenu({
                     <span>CLI (Bêta) - Discussions & Code Terminal</span>
                   </Command.Item>
                   <Command.Item
-                    onSelect={() => runCommand(() => router.push("/projects/office"))}
+                    onSelect={() => runCommand(() => router.push("/projects/coder"))}
                     className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer aria-selected:bg-black/5 aria-selected:text-slate-900 transition-colors"
                   >
-                    <Folder className="w-4 h-4 text-blue-500" />
-                    <span>Office (Bêta) - Documents & Présentations</span>
+                    <Folder className="w-4 h-4 text-purple-500" />
+                    <span>Coder (Alpha) - IDE IA & Agents MCP</span>
                   </Command.Item>
                 </Command.Group>
 

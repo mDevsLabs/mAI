@@ -303,18 +303,20 @@ export default function AccountPage() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-4 rounded-xl shadow-lg"
+            className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-4 rounded-2xl shadow-2xl border border-white/20"
           >
             <div className="flex items-center gap-3">
-              <Sparkles className="w-5 h-5" />
+              <Sparkles className="w-6 h-6 text-yellow-300" />
               <div>
-                <p className="font-bold">🎉 Félicitations !</p>
-                <p className="text-sm">Forfait <span className="font-black">{tier}</span> activé ! ✨</p>
+                <p className="font-black text-base">Merci d&apos;avoir souscrit au forfait {tier} ! 🎉</p>
+                <p className="text-xs text-purple-100 mt-0.5">
+                  Nous vous remercions chaleureusement pour votre confiance. Vos quotas étendus sont immédiatement disponibles ! ✨
+                </p>
               </div>
             </div>
           </motion.div>
         ),
-        { duration: 5000 }
+        { duration: 6000 }
       );
 
       // Arrêt des animations après 5s

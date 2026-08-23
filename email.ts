@@ -34,6 +34,15 @@ export async function sendVerificationEmail(
       title = "Suppression du compte";
       textContent = "Vous avez demandé la suppression de votre compte. Voici votre code à 8 chiffres :";
       break;
+    case "subscription_unlocked":
+      const tierUnlocked = extraInfo?.tier || "Pro";
+      subject = `Merci d'avoir souscrit au forfait ${tierUnlocked} ! - mAI`;
+      title = `Merci d'avoir souscrit au forfait ${tierUnlocked} !`;
+      showCode = false;
+      textContent = `Nous vous remercions chaleureusement pour votre souscription au forfait <strong>${tierUnlocked}</strong> sur <strong>mAI</strong> ! 🎉<br><br>
+        Votre compte bénéficie dès maintenant de vos nouveaux quotas étendus pour l'ensemble de vos applications et clés d'API (tokens mAI, requêtes API et stockage Cloud).<br><br>
+        Toute l'équipe mDevsLabs vous remercie pour votre confiance et vous souhaite une excellente expérience créative et productive avec mAI.`;
+      break;
     case "new_login":
       subject = "Nouvelle connexion détectée - mAI";
       title = "Alerte de sécurité";

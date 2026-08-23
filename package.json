@@ -12,7 +12,8 @@
     "setup": "npm install",
     "reset:api": "node --env-file=.env scripts/reset-api-usage.js",
     "reset:mai": "node --env-file=.env scripts/reset-mai-usage.js",
-    "newsletter:send": "bun run scripts/newsletter-send.ts"
+    "newsletter:send": "bun run scripts/newsletter-send.ts",
+    "code:create": "bun run scripts/create-subscription-code.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

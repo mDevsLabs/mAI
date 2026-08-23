@@ -273,43 +273,127 @@ export function registerAuthRoutes(app: Hono) {
       }
 
       const inputCode = String(rawCode).trim().toUpperCase();
+      const sql = getDb();
 
-      // Les codes sont définis dans les variables d'environnement de Val Town
-      const upgradeCodes: Record<string, string> = {};
+      let newTier: string | null = null;
+      let dbCodeId: number | null = null;
 
-      const plusCode = Deno.env.get("MAI_PLUS_CODE") || Deno.env.get("PLUS_CODE");
-      if (plusCode) {
-        upgradeCodes[plusCode.trim().toUpperCase()] = "Plus";
+      // 1. Recherche dans la table subscription_codes de la base de données
+      try {
+        const codeRows = await sql`
+          SELECT id, code, tier, max_uses, uses_count, is_active, expires_at 
+          FROM subscription_codes 
+          WHERE UPPER(code) = UPPER(${inputCode}) 
+          LIMIT 1
+        `;
+
+        if (codeRows.length > 0) {
+          const row = codeRows[0];
+
+          if (!row.is_active) {
+            return c.json({ error: "Ce code d'abonnement est désactivé." }, 400);
+          }
+
+          if (row.expires_at && new Date(row.expires_at) < new Date()) {
+            return c.json({ error: "Ce code d'abonnement a expiré." }, 400);
+          }
+
+          if (row.max_uses > 0 && Number(row.uses_count) >= Number(row.max_uses)) {
+            return c.json(
+              { error: "Ce code a atteint son quota maximal d'utilisations." },
+              400
+            );
+          }
+
+          // Vérifier si l'utilisateur a déjà activé ce code spécifique
+          try {
+            const redemptions = await sql`
+              SELECT id FROM subscription_code_redemptions 
+              WHERE code_id = ${row.id} AND user_id = ${userId}::text 
+              LIMIT 1
+            `;
+            if (redemptions.length > 0) {
+              return c.json(
+                { error: "Vous avez déjà débloqué votre forfait avec ce code." },
+                400
+              );
+            }
+          } catch (_redErr) {
+            // Ignorer si la table de redemptions n'est pas encore créée
+          }
+
+          newTier = row.tier;
+          dbCodeId = row.id;
+        }
+      } catch (dbErr) {
+        console.warn("Table subscription_codes non accessible, vérification fallback ENV:", dbErr);
       }
 
-      const proCode = Deno.env.get("MAI_PRO_CODE") || Deno.env.get("PRO_CODE");
-      if (proCode) {
-        upgradeCodes[proCode.trim().toUpperCase()] = "Pro";
-      }
+      // 2. Fallback vers les variables d'environnement si non trouvé en base
+      if (!newTier) {
+        const upgradeCodes: Record<string, string> = {};
 
-      const maxCode = Deno.env.get("MAI_MAX_CODE") || Deno.env.get("MAX_CODE");
-      if (maxCode) {
-        upgradeCodes[maxCode.trim().toUpperCase()] = "Max";
-      }
+        const plusCode = Deno.env.get("MAI_PLUS_CODE") || Deno.env.get("PLUS_CODE");
+        if (plusCode) upgradeCodes[plusCode.trim().toUpperCase()] = "Plus";
 
-      const newTier = upgradeCodes[inputCode];
+        const proCode = Deno.env.get("MAI_PRO_CODE") || Deno.env.get("PRO_CODE");
+        if (proCode) upgradeCodes[proCode.trim().toUpperCase()] = "Pro";
+
+        const maxCode = Deno.env.get("MAI_MAX_CODE") || Deno.env.get("MAX_CODE");
+        if (maxCode) upgradeCodes[maxCode.trim().toUpperCase()] = "Max";
+
+        newTier = upgradeCodes[inputCode] || null;
+      }
 
       if (!newTier) {
-        console.log(
-          `[Verify-Code] Code soumis: "${inputCode}", Codes reconnus en ENV:`,
-          Object.keys(upgradeCodes)
-        );
+        console.log(`[Verify-Code] Code inconnu ou invalide soumis: "${inputCode}"`);
         return c.json({ error: "Code invalide ou expiré." }, 400);
       }
 
-      const sql = getDb();
+      // 3. Mise à jour de l'utilisateur et de ses clés API
       await sql`UPDATE users SET tier = ${newTier} WHERE id::text = ${userId}::text`;
       await sql`UPDATE mprojects_api_keys SET plan = ${newTier} WHERE user_id = ${userId}::text`;
 
-      // On regénère le token pour inclure le nouveau tier
+      // 4. Incrémentation du compteur et log de l'utilisation en base
+      if (dbCodeId) {
+        try {
+          await sql`
+            UPDATE subscription_codes 
+            SET uses_count = uses_count + 1,
+                is_active = CASE WHEN max_uses > 0 AND (uses_count + 1) >= max_uses THEN FALSE ELSE is_active END
+            WHERE id = ${dbCodeId}
+          `;
+          await sql`
+            INSERT INTO subscription_code_redemptions (code_id, user_id)
+            VALUES (${dbCodeId}, ${userId}::text)
+          `;
+        } catch (updateErr) {
+          console.error("Erreur mise à jour usage code:", updateErr);
+        }
+      }
+
+      // 5. Envoi d'un e-mail de remerciements pour la souscription
+      try {
+        const userRows = await sql`SELECT email, username FROM users WHERE id::text = ${userId}::text LIMIT 1`;
+        if (userRows.length > 0 && userRows[0].email) {
+          await sendVerificationEmail(userRows[0].email, "", "subscription_unlocked", {
+            tier: newTier,
+            username: userRows[0].username,
+          });
+        }
+      } catch (mailErr) {
+        console.error("Erreur envoi email remerciements souscription:", mailErr);
+      }
+
+      // 6. Nouveau token JWT avec le tier débloqué
       const newToken = await signToken({ sub: userId, tier: newTier });
 
-      return c.json({ success: true, tier: newTier, token: newToken });
+      return c.json({
+        message: `Merci d'avoir souscrit au forfait ${newTier} !`,
+        success: true,
+        tier: newTier,
+        token: newToken,
+      });
     } catch (err: any) {
       console.error("Verify-Code error:", err);
       return c.json({ error: "Erreur serveur." }, 500);

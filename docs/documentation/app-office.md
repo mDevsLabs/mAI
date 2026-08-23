@@ -1,15 +1,16 @@
 ---
-title: "Office (Bêta)"
-description: "Création de documents et présentations avec mAI."
-category: "Applications"
-order: 4
+title: "Office (Archivé)"
+description: "Création de documents et présentations avec mAI (Projet Archivé)."
+category: "Archives"
+order: 99
 ---
 
-# Office - Suite Bureautique IA 📄✨
+# Office - Suite Bureautique IA (Archivé) 📄📦
 
-**Office** est l'outil de productivité bureautique de la suite **mAI**. Il permet de générer, formater et peaufiner des documents complexes, des rapports techniques et des présentations interactives à l'aide de l'intelligence artificielle.
+> [!NOTE]
+> Ce projet est désormais **archivé** et ne reçoit plus de développements actifs. Ses fonctionnalités ont vocation à être intégrées au sein de l'écosystème mAI.
 
-- **Statut** : **Bêta**
+- **Statut** : **Archivé**
 - **Plateformes** : macOS, Windows
 - **Dépôt GitHub** : [https://github.com/mDevsLabs/Office](https://github.com/mDevsLabs/Office)
 

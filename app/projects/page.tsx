@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { ExternalLink, Terminal, Globe, Cpu, FileText, Archive, Search, Layers, Gamepad2 } from "lucide-react";
+import { ExternalLink, Terminal, Globe, Cpu, FileText, Archive, Search, Layers, Gamepad2, Code2 } from "lucide-react";
 import Link from "next/link";
 import { GithubRepoStats } from "@/components/github-repo-stats";
 import Image from "next/image";
@@ -54,23 +54,32 @@ export default function ProjectsPage() {
       borderHover: "hover:border-purple-500/30 hover:shadow-[0_8px_32px_0_rgba(168,85,247,0.15)]",
     },
     {
-      id: "office",
+      id: "coder",
       number: "04",
-      name: "Office",
-      label: "Bêta",
-      labelColor: "bg-emerald-500/10 border-emerald-500/30 text-emerald-600",
-      icon: FileText,
-      iconColor: "text-blue-400",
-      tagline: "Création assistée de documents et présentations dynamiques.",
-      description: "Création de documents et présentations avec mAI.",
-      link: "/projects/office",
-      repo: "mDevsLabs/Office",
-      platforms: ["macOS", "Windows", "Export PDF/PPT"],
-      borderHover: "hover:border-blue-500/30 hover:shadow-[0_8px_32px_0_rgba(59,130,246,0.15)]",
+      name: "Coder",
+      label: "Alpha",
+      labelColor: "bg-purple-500/10 border-purple-500/30 text-purple-600",
+      icon: Code2,
+      iconColor: "text-purple-400",
+      tagline: "L'IDE IA pensé pour les agents autonomes et les outils MCP.",
+      description: "IDE IA de nouvelle génération avec agents IA autonomes, orchestration multi-modèles et support natif des outils MCP.",
+      link: "/projects/coder",
+      repo: "mDevsLabs/Coder",
+      platforms: ["macOS", "Windows", "Linux"],
+      borderHover: "hover:border-purple-500/30 hover:shadow-[0_8px_32px_0_rgba(168,85,247,0.15)]",
     },
   ];
 
   const archivedProjects = [
+    {
+      id: "office",
+      name: "Office",
+      icon: FileText,
+      description: "Création de documents et présentations assistée par l'IA.",
+      link: "/projects/office",
+      repo: "mDevsLabs/Office",
+      platforms: ["macOS", "Windows"],
+    },
     {
       id: "mai-legacy",
       name: "mAI Web (Legacy)",

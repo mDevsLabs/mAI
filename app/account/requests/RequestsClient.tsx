@@ -38,7 +38,7 @@ const ROUTE_DEFINITIONS: RouteDefinition[] = [
     category: "Projets",
     method: "GET",
     path: "v1/projects",
-    description: "Récupère la liste globale de tous les projets de la plateforme mAI (Web, Pulse, CLI, Office).",
+    description: "Récupère la liste globale de tous les projets de la plateforme mAI (Web, Pulse, CLI, Coder).",
     requiresAuth: true,
     defaultHeaders: {
       "Content-Type": "application/json"
@@ -81,12 +81,12 @@ const ROUTE_DEFINITIONS: RouteDefinition[] = [
     }
   },
   {
-    id: "projects-office",
-    name: "Projet Office",
+    id: "projects-coder",
+    name: "Projet Coder",
     category: "Projets",
     method: "GET",
-    path: "v1/projects/office",
-    description: "Obtient les détails de la suite de productivité mAI Office.",
+    path: "v1/projects/coder",
+    description: "Obtient les détails de l'IDE IA mAI Coder avec agents et outils MCP.",
     requiresAuth: true,
     defaultHeaders: {
       "Content-Type": "application/json"

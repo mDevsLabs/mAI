@@ -36,7 +36,7 @@ const navLinks: NavItem[] = [
       { name: "Web", href: "/projects/web" },
       { name: "Pulse", href: "/projects/pulse" },
       { name: "CLI", href: "/projects/cli" },
-      { name: "Office", href: "/projects/office" },
+      { name: "Coder", href: "/projects/coder" },
     ]},
   {
     name: "Modèles",
@@ -71,6 +71,7 @@ const navLinks: NavItem[] = [
     name: "API",
     href: "/account/keys",
     subitems: [
+      { name: "Modèles", href: "/account/models" },
       { name: "Clés API", href: "/account/keys" },
       { name: "Requêtes", href: "/account/requests" },
       { name: "Usage", href: "/account/usage" },

@@ -200,11 +200,22 @@ export function registerModelRoutes(app: Hono) {
         })
         .map((m) => ({
           created: m.created || Math.floor(Date.now() / 1000),
+          description: m.description || "",
           id: m.id,
           maxContext: m.context_length || 128_000,
           maxOutput: m.top_provider?.max_completion_tokens || 4096,
+          name: m.name || m.id,
           object: "model",
           owned_by: m.id.split("/")[0] || "openrouter",
+          supported_parameters: m.supported_parameters || [
+            "temperature",
+            "top_p",
+            "max_tokens",
+            "stream",
+            "stop",
+            "tools",
+            "response_format"
+          ],
         }));
 
       if (shouldFilterFreeOnly) {
@@ -216,27 +227,47 @@ export function registerModelRoutes(app: Hono) {
       let fallback = [
         {
           created: 0,
+          description: "Modèle multimodal ultra-rapide de Google conçu pour des tâches à haut débit et de raisonnement avec un très grand contexte.",
           id: "google/gemini-2.5-flash:free",
+          maxContext: 1_048_576,
+          maxOutput: 65_535,
+          name: "Google: Gemini 2.5 Flash",
           object: "model",
           owned_by: "google",
+          supported_parameters: ["temperature", "top_p", "top_k", "max_tokens", "tools", "response_format", "seed"],
         },
         {
           created: 0,
+          description: "Modèle phare de Meta Llama 3.3 70B offrant des compétences avancées de programmation, logique et résolution de problèmes complexes.",
           id: "meta-llama/llama-3.3-70b-instruct:free",
+          maxContext: 131_072,
+          maxOutput: 128_000,
+          name: "Meta: Llama 3.3 70B Instruct",
           object: "model",
           owned_by: "meta-llama",
+          supported_parameters: ["temperature", "top_p", "max_tokens", "tools", "response_format", "frequency_penalty"],
         },
         {
           created: 0,
+          description: "Modèle de code spécialisé de haute précision par Alibaba Cloud, optimisé pour la synthèse de code, le refactoring et le debug.",
           id: "qwen/qwen-2.5-coder-32b-instruct:free",
+          maxContext: 32_768,
+          maxOutput: 8192,
+          name: "Qwen: Qwen 2.5 Coder 32B Instruct",
           object: "model",
           owned_by: "qwen",
+          supported_parameters: ["temperature", "top_p", "max_tokens", "stop", "tools"],
         },
         {
           created: 0,
+          description: "Modèle de raisonnement logique étape par étape de premier ordre par DeepSeek pour les mathématiques et la logique complexe.",
           id: "deepseek/deepseek-r1:free",
+          maxContext: 163_840,
+          maxOutput: 16_000,
+          name: "DeepSeek: DeepSeek R1",
           object: "model",
           owned_by: "deepseek",
+          supported_parameters: ["temperature", "top_p", "max_tokens", "stream"],
         },
       ];
 
@@ -253,21 +284,36 @@ export function registerModelRoutes(app: Hono) {
     const maiModelsList = [
       {
         created: Math.floor(Date.now() / 1000),
-        id: "mDevsLabs/mAI-1.2-Light",
+        description: "Assistant IA local 4B ultra-rapide et multimodal. Vision intégrée, thinking & tools pour une agilité quotidienne maximale.",
+        id: "mDevsLabs/mAI-1.5-Light",
+        maxContext: 262_144,
+        maxOutput: 32_768,
+        name: "mAI-1.5-Light",
         object: "model",
         owned_by: "mDevsLabs",
+        supported_parameters: ["temperature", "top_p", "max_tokens", "stream", "tools", "thinking"],
       },
       {
         created: Math.floor(Date.now() / 1000),
-        id: "mDevsLabs/mAI-1.2-Apex",
+        description: "Le haut de gamme absolu 9B de la famille mAI. Puissance maximale, vision multimodale, raisonnement complexe et tools.",
+        id: "mDevsLabs/mAI-1.5-Apex",
+        maxContext: 262_144,
+        maxOutput: 32_768,
+        name: "mAI-1.5-Apex",
         object: "model",
         owned_by: "mDevsLabs",
+        supported_parameters: ["temperature", "top_p", "max_tokens", "stream", "tools", "thinking", "response_format"],
       },
       {
         created: Math.floor(Date.now() / 1000),
-        id: "mDevsLabs/mAI-1.2-Opal",
+        description: "Le sweet spot parfait 27B entre vélocité et haute intelligence. Multimodal avec vision, thinking et tools 100% local.",
+        id: "mDevsLabs/mAI-1.5-Opal",
+        maxContext: 262_144,
+        maxOutput: 32_768,
+        name: "mAI-1.5-Opal",
         object: "model",
         owned_by: "mDevsLabs",
+        supported_parameters: ["temperature", "top_p", "max_tokens", "stream", "tools", "thinking"],
       },
     ];
     return c.json({ data: maiModelsList, object: "list" });

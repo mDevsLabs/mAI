@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Globe, Cpu, Terminal, FileText } from "lucide-react";
+import { Globe, Cpu, Terminal, Code2 } from "lucide-react";
 
 export function FeaturesSection() {
   const features = [
@@ -30,12 +30,12 @@ export function FeaturesSection() {
       accent: "from-blue-500 to-cyan-500",
     },
     {
-      icon: FileText,
-      title: "Création de Documents Office",
-      description: "Concevez des documents structurés et des présentations dynamiques assistés par l'IA mAI pour tous vos besoins de productivité.",
-      color: "text-amber-600",
-      bg: "bg-amber-500/10 border-amber-500/20",
-      accent: "from-amber-500 to-orange-500",
+      icon: Code2,
+      title: "IDE IA & Agents Coder",
+      description: "Développez avec un environnement complet alimenté par des agents autonomes et le protocole standardisé MCP.",
+      color: "text-purple-600",
+      bg: "bg-purple-500/10 border-purple-500/20",
+      accent: "from-purple-500 to-indigo-500",
     },
   ];
 
