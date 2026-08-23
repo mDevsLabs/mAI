@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { UserPlus, Loader2 } from "lucide-react";
+import { UserPlus, Loader2, Globe } from "lucide-react";
 import { useAuth } from "@/components/auth-provider";
 import { MaiApiError } from "@/lib/mai-api";
 import toast from "react-hot-toast";
@@ -18,6 +18,7 @@ function RegisterForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
+  const [acceptTerms, setAcceptTerms] = useState(false);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -48,6 +49,12 @@ function RegisterForm() {
     }
     if (password !== confirm) {
       setError("Les mots de passe ne correspondent pas.");
+      return;
+    }
+    if (!acceptTerms) {
+      const msg = "Vous devez accepter les Conditions Générales d'Utilisation et la Politique de Confidentialité pour continuer.";
+      setError(msg);
+      toast.error(msg);
       return;
     }
 
@@ -279,6 +286,43 @@ function RegisterForm() {
             className="w-full px-4 py-2.5 rounded-xl bg-white/60 border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/30 text-slate-900 placeholder-slate-400"
             required
           />
+        </div>
+
+        <div className="p-3.5 rounded-2xl bg-white/50 border border-slate-200/80 space-y-2">
+          <label className="flex items-start gap-2.5 cursor-pointer select-none group">
+            <input
+              type="checkbox"
+              checked={acceptTerms}
+              onChange={(e) => setAcceptTerms(e.target.checked)}
+              className="mt-0.5 w-4 h-4 rounded-md border-slate-300 text-purple-600 focus:ring-purple-500/30 focus:ring-2 cursor-pointer transition-all shrink-0 accent-purple-600"
+              required
+            />
+            <span className="text-xs text-slate-700 leading-relaxed font-normal">
+              J'ai lu et j'accepte les{" "}
+              <Link
+                href="/legal/terms"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-purple-600 hover:text-purple-700 underline underline-offset-2 transition-colors"
+              >
+                Conditions Générales d'Utilisation
+              </Link>{" "}
+              et la{" "}
+              <Link
+                href="/legal/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-purple-600 hover:text-purple-700 underline underline-offset-2 transition-colors"
+              >
+                Politique de Confidentialité
+              </Link>
+              . <span className="text-purple-600 font-bold">*</span>
+            </span>
+          </label>
+          <div className="flex items-center gap-1.5 text-[11px] text-slate-500 pl-6.5 font-light">
+            <Globe className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+            <span>Stockage 100% dans l'UE 🇪🇺 &amp; requêtes d'API protégées (zéro réentraînement).</span>
+          </div>
         </div>
 
         <button

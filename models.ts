@@ -279,46 +279,6 @@ export function registerModelRoutes(app: Hono) {
     }
   });
 
-  // GET /v1/mai/models
-  app.get("/v1/mai/models", async (c) => {
-    const maiModelsList = [
-      {
-        created: Math.floor(Date.now() / 1000),
-        description: "Assistant IA local 4B ultra-rapide et multimodal. Vision intégrée, thinking & tools pour une agilité quotidienne maximale.",
-        id: "mDevsLabs/mAI-1.5-Light",
-        maxContext: 262_144,
-        maxOutput: 32_768,
-        name: "mAI-1.5-Light",
-        object: "model",
-        owned_by: "mDevsLabs",
-        supported_parameters: ["temperature", "top_p", "max_tokens", "stream", "tools", "thinking"],
-      },
-      {
-        created: Math.floor(Date.now() / 1000),
-        description: "Le haut de gamme absolu 9B de la famille mAI. Puissance maximale, vision multimodale, raisonnement complexe et tools.",
-        id: "mDevsLabs/mAI-1.5-Apex",
-        maxContext: 262_144,
-        maxOutput: 32_768,
-        name: "mAI-1.5-Apex",
-        object: "model",
-        owned_by: "mDevsLabs",
-        supported_parameters: ["temperature", "top_p", "max_tokens", "stream", "tools", "thinking", "response_format"],
-      },
-      {
-        created: Math.floor(Date.now() / 1000),
-        description: "Le sweet spot parfait 27B entre vélocité et haute intelligence. Multimodal avec vision, thinking et tools 100% local.",
-        id: "mDevsLabs/mAI-1.5-Opal",
-        maxContext: 262_144,
-        maxOutput: 32_768,
-        name: "mAI-1.5-Opal",
-        object: "model",
-        owned_by: "mDevsLabs",
-        supported_parameters: ["temperature", "top_p", "max_tokens", "stream", "tools", "thinking"],
-      },
-    ];
-    return c.json({ data: maiModelsList, object: "list" });
-  });
-
   // GET /v1/status
   app.get("/v1/status", async (c) => {
     try {

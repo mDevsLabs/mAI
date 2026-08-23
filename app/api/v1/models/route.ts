@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateOpenAIRequest } from '@/lib/openai-auth';
 import { OpenAIModelListResponse } from '@/lib/openai-types';
-import { maiModelsList } from '@/maiModels';
 import { openRouterModels } from '@/lib/ai-models';
 
 export const runtime = 'nodejs';
@@ -40,46 +39,14 @@ export async function GET(req: NextRequest) {
       }));
     }
 
-    // Tous les modèles locaux (mDevsLabs)
-    const localModels = maiModelsList.map(m => ({
-      created: Math.floor(Date.now() / 1000),
-      description: m.description,
-      id: m.ollamaTag || m.id,
-      maxContext: m.contextWindow || 262_144,
-      maxOutput: m.maxOutputTokens || 32_768,
-      name: m.name,
-      object: 'model',
-      owned_by: 'mDevsLabs',
-      supported_parameters: [
-        'temperature',
-        'top_p',
-        'max_tokens',
-        'stream',
-        'tools',
-        'thinking',
-        'response_format'
-      ]
-    }));
-
     const response: OpenAIModelListResponse = {
       object: 'list',
-      data: [...localModels, ...cloudModels],
+      data: cloudModels,
     };
 
     return NextResponse.json(response);
   } catch {
     const fallbackList = [
-      ...maiModelsList.map(m => ({
-        created: 0,
-        description: m.description,
-        id: m.ollamaTag || m.id,
-        maxContext: m.contextWindow,
-        maxOutput: m.maxOutputTokens,
-        name: m.name,
-        object: 'model',
-        owned_by: 'mDevsLabs',
-        supported_parameters: ['temperature', 'top_p', 'max_tokens', 'stream', 'tools']
-      })),
       ...openRouterModels.map(m => ({
         created: 0,
         description: `${m.name} via ${m.provider || 'OpenRouter'}`,
