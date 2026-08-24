@@ -1,12 +1,23 @@
 import nodemailer from "npm:nodemailer";
 
+function escapeHtml(str: string): string {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 export async function sendVerificationEmail(
   email: string,
   code: string,
   action: string,
   extraInfo?: any
 ) {
-  console.log(`🔑 [CODE/ALERT] (${action}) pour ${email} : ${code || 'Aucun (Alerte)'}`);
+  // Ne jamais logger le code OTP en clair — seulement l'action et l'email hashé partiel
+  const maskedEmail = email.replace(/(.{2}).*(@.*)/, "$1***$2");
+  console.log(`[EMAIL] action=${action} to=${maskedEmail} hasCode=${Boolean(code)}`);
 
   let subject = "Notification - mAI";
   let title = "Notification";
@@ -35,7 +46,7 @@ export async function sendVerificationEmail(
       textContent = "Vous avez demandé la suppression de votre compte. Voici votre code à 8 chiffres :";
       break;
     case "subscription_unlocked":
-      const tierUnlocked = extraInfo?.tier || "Pro";
+      const tierUnlocked = escapeHtml(extraInfo?.tier || "Pro");
       subject = `Merci d'avoir souscrit au forfait ${tierUnlocked} ! - mAI`;
       title = `Merci d'avoir souscrit au forfait ${tierUnlocked} !`;
       showCode = false;
@@ -47,8 +58,8 @@ export async function sendVerificationEmail(
       subject = "Nouvelle connexion détectée - mAI";
       title = "Alerte de sécurité";
       showCode = false;
-      const device = extraInfo?.device || 'Appareil inconnu';
-      const location = extraInfo?.location || 'Lieu inconnu';
+      const device = escapeHtml(extraInfo?.device || 'Appareil inconnu');
+      const location = escapeHtml(extraInfo?.location || 'Lieu inconnu');
       textContent = `Une nouvelle connexion à votre compte <strong>mAI</strong> a été détectée depuis :<br><br>
         <strong>Appareil :</strong> ${device}<br>
         <strong>Localisation :</strong> ${location}<br><br>
@@ -81,7 +92,7 @@ export async function sendVerificationEmail(
           <!-- Styled Code Container -->
           <div style="background:#1e293b; border:1px solid #334155; border-radius:12px; padding:24px; text-align:center; margin:28px 0;">
             <div style="font-size:34px; font-weight:800; letter-spacing:8px; color:#a855f7; font-family:Consolas, Monaco, monospace; margin-bottom:12px; user-select:all;">
-              ${code}
+              ${escapeHtml(code)}
             </div>
             <p style="font-size:12px; color:#94a3b8; margin:0;">Code unique • Expire dans 10 minutes</p>
           </div>
@@ -101,11 +112,11 @@ export async function sendVerificationEmail(
     </html>
   `;
 
-  // 1. Gmail SMTP via Nodemailer
-  const gmailUser = Deno.env.get("GMAIL_USER") || "tusseaumathias85@gmail.com";
+  // 1. Gmail SMTP via Nodemailer — exige conf env, plus de fallback hardcodé
+  const gmailUser = Deno.env.get("GMAIL_USER");
   const gmailAppPass = Deno.env.get("GMAIL_APP_PASSWORD");
 
-  if (gmailAppPass) {
+  if (gmailUser && gmailAppPass) {
     try {
       const transporter = nodemailer.createTransport({
         auth: {
@@ -122,11 +133,14 @@ export async function sendVerificationEmail(
         to: email,
       });
 
-      console.log(`✉️ E-mail envoyé avec succès via Gmail SMTP à ${email}`);
+      const maskedTo = email.replace(/(.{2}).*(@.*)/, "$1***$2");
+      console.log(`[EMAIL] Gmail OK to=${maskedTo}`);
       return;
     } catch (err: any) {
-      console.error("❌ Erreur d'envoi Gmail SMTP :", err?.message || err);
+      console.error("Erreur envoi Gmail SMTP :", err?.message || err);
     }
+  } else if (!gmailUser || !gmailAppPass) {
+    console.warn("[EMAIL] GMAIL_USER/GMAIL_APP_PASSWORD non configurés — fallback Resend");
   }
 
   // 2. Resend Fallback

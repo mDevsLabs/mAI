@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import { neon } from '@neondatabase/serverless';
+import { TIER_REQUEST_LIMITS, getTierQuotaLimit } from './tiers';
 
 export interface ApiKeyMetadata {
   id: string;
@@ -187,28 +188,25 @@ export async function revokeApiKey(userId: string, keyId: string): Promise<boole
     }
   }
 
-  // 1. Révoquer de la mémoire
+  // 1. Révoquer de la mémoire — match exact uniquement
   for (const [mId, record] of memoryKeysStore.entries()) {
-    if (record.userId === userId && (mId === keyId || mId === cleanId || record.prefix.includes(cleanId) || cleanId.includes(record.prefix))) {
+    if (record.userId === userId && (mId === keyId || mId === cleanId || record.prefix === cleanId)) {
       memoryKeysStore.delete(mId);
       success = true;
     }
   }
 
-  // 2. Révoquer de la DB
+  // 2. Révoquer de la DB — prefix exact (pas de LIKE inversé)
   const db = getDb();
   if (db) {
     try {
       const cleanPrefix = cleanId.replace(/_•+$/, '').trim();
+      // Nombre minimal de caractères pour éviter suppression massive par préfixe trop court
+      if (cleanPrefix.length < 8) throw new Error('Préfixe trop court');
       await db`
         DELETE FROM mprojects_api_keys
         WHERE user_id = ${userId} 
-          AND (
-            plan = ${keyId} 
-            OR plan = ${cleanId} 
-            OR api_key LIKE ${cleanPrefix + '%'} 
-            OR ${cleanPrefix} LIKE api_key || '%'
-          )
+          AND api_key LIKE ${cleanPrefix + '%'}
       `;
       success = true;
     } catch (err) {
@@ -233,9 +231,9 @@ export async function updateApiKey(userId: string, keyId: string, updates: { nam
     }
   }
 
-  // Mémoire
+  // Mémoire — match exact
   for (const [mId, record] of memoryKeysStore.entries()) {
-    if (record.userId === userId && (mId === keyId || mId === cleanId || record.prefix.includes(cleanId) || cleanId.includes(record.prefix))) {
+    if (record.userId === userId && (mId === keyId || mId === cleanId || record.prefix === cleanId)) {
       if (updates.name !== undefined) record.name = updates.name;
       if (updates.maxLimit !== undefined) record.maxLimit = updates.maxLimit;
       if (updates.isActive !== undefined) record.isActive = updates.isActive;
@@ -247,6 +245,7 @@ export async function updateApiKey(userId: string, keyId: string, updates: { nam
   if (db) {
     try {
       const cleanPrefix = cleanId.replace(/_•+$/, '').trim();
+      if (cleanPrefix.length < 8) throw new Error('Préfixe trop court');
       if (updates.name !== undefined || updates.maxLimit !== undefined || updates.isActive !== undefined) {
         await db`
           UPDATE mprojects_api_keys
@@ -255,12 +254,7 @@ export async function updateApiKey(userId: string, keyId: string, updates: { nam
             max_limit = ${updates.maxLimit !== undefined ? updates.maxLimit : null},
             is_active = COALESCE(${updates.isActive !== undefined ? updates.isActive : null}, is_active)
           WHERE user_id = ${userId} 
-            AND (
-              plan = ${keyId} 
-              OR plan = ${cleanId} 
-              OR api_key LIKE ${cleanPrefix + '%'} 
-              OR ${cleanPrefix} LIKE api_key || '%'
-            )
+            AND api_key LIKE ${cleanPrefix + '%'}
         `;
         success = true;
       }
@@ -272,22 +266,8 @@ export async function updateApiKey(userId: string, keyId: string, updates: { nam
   return success;
 }
 
-// Quotas par forfait (Free: 500, Plus: 1000, Pro: 2000, Max: 5000)
-export const TIER_REQUEST_LIMITS: Record<string, number> = {
-  Free: 500,
-  Gratuit: 500,
-  Plus: 1000,
-  Pro: 2000,
-  Max: 5000,
-};
-
-export function getTierQuotaLimit(tier?: string | null): number {
-  const t = (tier || 'Free').toLowerCase().trim();
-  if (t === 'plus') return 1000;
-  if (t === 'pro') return 2000;
-  if (t === 'max') return 5000;
-  return 500;
-}
+// Ré-export pour compatibilité (source unique = lib/tiers.ts)
+export { TIER_REQUEST_LIMITS, getTierQuotaLimit };
 
 /**
  * Enregistrer un log d'appel API dans mprojects_api_logs.
@@ -446,9 +426,9 @@ export async function validateApiKey(secretKey: string): Promise<{ valid: boolea
 
   const hash = hashSecretKey(cleanedKey);
 
-  // 1. Vérifier en mémoire
+  // 1. Vérifier en mémoire — match exact sur hash uniquement
   for (const record of memoryKeysStore.values()) {
-    if (record.hash === hash || cleanedKey.startsWith(record.prefix)) {
+    if (record.hash === hash) {
       if (!record.isActive) return { valid: false, error: 'Clé API désactivée.' };
       if (record.maxLimit !== null && record.usageCount >= record.maxLimit) return { valid: false, error: 'Limite de la clé API atteinte.' };
 
@@ -470,20 +450,16 @@ export async function validateApiKey(secretKey: string): Promise<{ valid: boolea
     }
   }
 
-  // 2. Vérifier en DB
+  // 2. Vérifier en DB — comparaison exacte uniquement (pas de LIKE fuzzy)
   const db = getDb();
   if (db) {
     try {
-      const prefixCandidate = cleanedKey.substring(0, 11);
       const rows = await db`
         SELECT k.user_id, k.api_key, k.plan, k.request_count, k.created_at, k.last_used_at, k.max_limit, k.is_active, u.tier as user_tier
         FROM mprojects_api_keys k
         LEFT JOIN users u ON k.user_id = u.id::text OR k.user_id = u.username OR k.user_id = u.email
         WHERE k.api_key = ${hash} 
            OR k.api_key = ${cleanedKey} 
-           OR k.api_key = ${prefixCandidate}
-           OR k.api_key LIKE ${prefixCandidate + '%'}
-           OR ${cleanedKey} LIKE (k.api_key || '%')
         LIMIT 1
       `;
 
@@ -518,13 +494,11 @@ export async function validateApiKey(secretKey: string): Promise<{ valid: boolea
           };
         }
 
-        // Incrémenter le compteur de requêtes sur la clé identifiée
+        // Incrémenter le compteur de requêtes sur la clé identifiée — exact match
         await db`
           UPDATE mprojects_api_keys
           SET request_count = request_count + 1, last_used_at = NOW()
-          WHERE api_key = ${row.api_key} 
-             OR api_key = ${hash} 
-             OR api_key = ${cleanedKey}
+          WHERE api_key = ${row.api_key}
         `;
 
         const resolvedPlan = row.plan || row.user_tier || 'Free';

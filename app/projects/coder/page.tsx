@@ -7,8 +7,6 @@ import {
   Bot,
   Wrench,
   Terminal,
-  Layers,
-  Sparkles,
   Github,
   Cpu,
 } from "lucide-react";

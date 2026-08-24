@@ -163,7 +163,10 @@ export function registerAuthRoutes(app: Hono) {
       let locationStr = "Lieu inconnu";
       let countryStr = "Pays inconnu";
       try {
-        const geoRes = await fetch(`http://ip-api.com/json/${ip}`);
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 3000);
+        const geoRes = await fetch(`https://ip-api.com/json/${ip}`, { signal: controller.signal, headers: { "User-Agent": "mAI/1.0" } });
+        clearTimeout(timeout);
         if (geoRes.ok) {
           const geoData = await geoRes.json();
           if (geoData.status === "success") {
@@ -346,7 +349,7 @@ export function registerAuthRoutes(app: Hono) {
       }
 
       if (!newTier) {
-        console.log(`[Verify-Code] Code inconnu ou invalide soumis: "${inputCode}"`);
+        console.log(`[Verify-Code] Code invalide soumis par user=${userId}`);
         return c.json({ error: "Code invalide ou expiré." }, 400);
       }
 
@@ -411,6 +414,7 @@ export function registerAuthRoutes(app: Hono) {
       const payload = await verifyToken(token);
       const userId = payload.sub as string;
 
+      const body = await c.req.json();
       const {
         username,
         email,
@@ -419,7 +423,8 @@ export function registerAuthRoutes(app: Hono) {
         currentPassword,
         newsletter,
         notify_limits,
-      } = await c.req.json();
+        auto_logout_minutes,
+      } = body;
       const sql = getDb();
 
       // Vérification obligatoire du mot de passe actuel
@@ -501,7 +506,6 @@ export function registerAuthRoutes(app: Hono) {
         await sql`UPDATE users SET notify_limits = ${Boolean(notify_limits)} WHERE id::text = ${userId}::text`;
       }
 
-      const { auto_logout_minutes } = await c.req.json();
       if (auto_logout_minutes !== undefined) {
         const mins = parseInt(auto_logout_minutes, 10);
         if (!isNaN(mins)) {

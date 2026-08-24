@@ -95,14 +95,50 @@ export function registerStorageRoutes(app: Hono) {
     }
   });
 
-  // POST /upload-file
+  // POST /upload-file (sécurisé: auth + validation 10MB + allowlist)
   app.post("/upload-file", async (c) => {
     try {
+      const token = extractToken(c.req.raw);
+      if (!token) return c.json({ error: "Non authentifié." }, 401);
+      try {
+        await verifyToken(token);
+      } catch {
+        return c.json({ error: "Token invalide." }, 401);
+      }
+
       const body = await c.req.parseBody();
       const file = body["file"];
 
       if (!(file instanceof File)) {
         return c.json({ error: "Fichier invalide ou non fourni." }, 400);
+      }
+
+      const MAX_FILE_SIZE = 10 * 1024 * 1024;
+      if (file.size > MAX_FILE_SIZE) {
+        return c.json({ error: "Fichier trop volumineux (max 10 MB)." }, 413);
+      }
+      if (file.size === 0) {
+        return c.json({ error: "Fichier vide." }, 400);
+      }
+      const ALLOWED = [
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "image/gif",
+        "application/pdf",
+        "text/plain",
+        "text/markdown",
+        "text/csv",
+        "application/json",
+      ];
+      const isAllowed =
+        ALLOWED.includes(file.type) ||
+        file.type.startsWith("image/") ||
+        file.type.startsWith("text/") ||
+        file.type === "application/pdf" ||
+        file.type === "application/json";
+      if (file.type && !isAllowed) {
+        return c.json({ error: "Type de fichier non autorisé." }, 400);
       }
 
       const { AwsClient } = await import("npm:aws4fetch");
@@ -170,10 +206,15 @@ export function registerStorageRoutes(app: Hono) {
         sql`SELECT bytes_used, files_count FROM cloud_storage_usage WHERE user_id = ${userId}::text LIMIT 1`,
       ]);
 
-      const tier = userRes[0]?.tier || "Free";
+      const rawTier2 = userRes[0]?.tier || "Free";
+      const tier = String(rawTier2).trim();
       const bytesUsed = Number(usageRes[0]?.bytes_used || 0);
       const filesCount = Number(usageRes[0]?.files_count || 0);
-      const bytesLimit = STORAGE_LIMITS_BYTES[tier] || STORAGE_LIMITS_BYTES["Free"];
+      const bytesLimit =
+        STORAGE_LIMITS_BYTES[tier] ||
+        STORAGE_LIMITS_BYTES[tier.toLowerCase()] ||
+        STORAGE_LIMITS_BYTES[tier.charAt(0).toUpperCase() + tier.slice(1).toLowerCase()] ||
+        STORAGE_LIMITS_BYTES["Free"];
       const percentUsed = bytesLimit > 0 ? Math.min(100, (bytesUsed / bytesLimit) * 100) : 0;
 
       return c.json({
@@ -236,16 +277,46 @@ export function registerStorageRoutes(app: Hono) {
       if (fileSize === 0) {
         return c.json({ error: "Le fichier est vide." }, 400);
       }
+      const MAX_FILE_SIZE = 10 * 1024 * 1024;
+      if (fileSize > MAX_FILE_SIZE) {
+        return c.json({ error: "Fichier trop volumineux (max 10 MB)." }, 413);
+      }
+      const ALLOWED_CLOUD_TYPES = [
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "image/gif",
+        "application/pdf",
+        "text/plain",
+        "text/markdown",
+        "text/csv",
+        "application/json",
+      ];
+      const isCloudAllowed =
+        !file.type ||
+        ALLOWED_CLOUD_TYPES.includes(file.type) ||
+        file.type.startsWith("image/") ||
+        file.type.startsWith("text/") ||
+        file.type === "application/pdf" ||
+        file.type === "application/json";
+      if (file.type && !isCloudAllowed) {
+        return c.json({ error: "Type de fichier non autorisé." }, 400);
+      }
 
-      // Vérifier le quota AVANT d'uploader
+      // Vérifier le quota AVANT d'uploader (SSOT 500/1/2/5Go)
       const [userRes, usageRes] = await Promise.all([
         sql`SELECT tier FROM users WHERE id::text = ${userId}::text LIMIT 1`,
         sql`SELECT bytes_used FROM cloud_storage_usage WHERE user_id = ${userId}::text LIMIT 1`,
       ]);
 
-      const tier = userRes[0]?.tier || "Free";
-      const bytesUsed = Number(usageRes[0]?.bytes_used || 0);
-      const bytesLimit = STORAGE_LIMITS_BYTES[tier] || STORAGE_LIMITS_BYTES["Free"];
+      const rawTier = userRes[0]?.tier || "Free";
+      const tier = String(rawTier).trim();
+      // lookup case-insensitive (config a désormais clés lower)
+      const bytesLimit =
+        STORAGE_LIMITS_BYTES[tier] ||
+        STORAGE_LIMITS_BYTES[tier.toLowerCase()] ||
+        STORAGE_LIMITS_BYTES[tier.charAt(0).toUpperCase() + tier.slice(1).toLowerCase()] ||
+        STORAGE_LIMITS_BYTES["Free"];
 
       if (bytesUsed + fileSize > bytesLimit) {
         const limitMB = Math.round(bytesLimit / (1024 * 1024));

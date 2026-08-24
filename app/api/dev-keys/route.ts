@@ -3,10 +3,18 @@ import { createApiKey, listApiKeys } from '@/lib/api-key-manager';
 
 export const runtime = 'nodejs';
 
-// GET /api/dev-keys - Lister les clés API de l'utilisateur
+// GET /api/dev-keys - Lister les clés API de l'utilisateur (auth requise)
 export async function GET(req: NextRequest) {
   try {
-    const userId = decodeURIComponent(req.headers.get('x-user-id') || 'dev_user');
+    const raw = req.headers.get('x-user-id');
+    if (!raw) {
+      return NextResponse.json({ error: { code: 'unauthorized', message: 'Auth requise (x-user-id manquant).' } }, { status: 401 });
+    }
+    let userId: string;
+    try { userId = decodeURIComponent(raw); } catch { return NextResponse.json({ error: { code: 'bad_request', message: 'x-user-id invalide.' } }, { status: 400 }); }
+    if (!userId || userId === 'dev_user') {
+      return NextResponse.json({ error: { code: 'unauthorized', message: 'Auth requise.' } }, { status: 401 });
+    }
     const keys = await listApiKeys(userId);
     return NextResponse.json({ success: true, keys });
   } catch (err: any) {
@@ -18,13 +26,17 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// POST /api/dev-keys - Générer une nouvelle clé API
+// POST /api/dev-keys - Générer une nouvelle clé API (auth requise)
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}));
     const name = (body.name || 'Clé sans nom').trim();
     const maxLimit = body.maxLimit ? parseInt(body.maxLimit, 10) : null;
-    const userId = decodeURIComponent(req.headers.get('x-user-id') || 'dev_user');
+    const raw = req.headers.get('x-user-id');
+    if (!raw) return NextResponse.json({ error: { code: 'unauthorized', message: 'Auth requise.' } }, { status: 401 });
+    let userId: string;
+    try { userId = decodeURIComponent(raw); } catch { return NextResponse.json({ error: { code: 'bad_request', message: 'x-user-id invalide.' } }, { status: 400 }); }
+    if (!userId || userId === 'dev_user') return NextResponse.json({ error: { code: 'unauthorized', message: 'Auth requise.' } }, { status: 401 });
 
     if (!name) {
       return NextResponse.json(

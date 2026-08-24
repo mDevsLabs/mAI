@@ -1,7 +1,5 @@
 import type { Hono } from "npm:hono@4";
-import { sqlite } from "https://esm.town/v/std/sqlite";
-import { jwtVerify } from "npm:jose";
-import { getDb, getJwtSecret, TIER_REQUEST_LIMITS } from "./config.ts";
+import { getDb, TIER_REQUEST_LIMITS, verifyToken } from "./config.ts";
 
 export function registerMiddleware(app: Hono) {
   // Middleware /v1/* pour Auth & Logging
@@ -22,23 +20,26 @@ export function registerMiddleware(app: Hono) {
     const currentApiKey: string | null = apiKey;
     let matchedApiKey: string | null = apiKey;
 
-    // 1. Clé système MAI_API_KEY (accès complet aux modèles Plus/Max)
-    if (systemMaiApiKey && apiKey === systemMaiApiKey) {
+    function timingSafeEqual(a: string, b: string): boolean {
+      if (a.length !== b.length) return false;
+      let diff = 0;
+      for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+      return diff === 0;
+    }
+
+    // 1. Clé système MAI_API_KEY (accès complet aux modèles Plus/Max) — comparaison constant-time
+    if (systemMaiApiKey && apiKey && timingSafeEqual(apiKey, systemMaiApiKey)) {
       userPlan = "Plus";
       currentUserId = "system-mai";
     }
-    // 2. Clé API utilisateur enregistrée
+    // 2. Clé API utilisateur enregistrée — comparaison exacte uniquement (pas de LIKE fuzzy)
     else if (apiKey) {
       const sql = getDb();
-      const prefixCandidate = apiKey.substring(0, 11);
       const rows = await sql`
         SELECT k.*, u.tier as user_tier
         FROM mprojects_api_keys k
         LEFT JOIN users u ON k.user_id = u.id::text OR k.user_id = u.username OR k.user_id = u.email
-        WHERE k.api_key = ${apiKey}::text 
-           OR k.api_key = ${prefixCandidate}::text
-           OR ${apiKey}::text LIKE (k.api_key || '%')
-           OR k.api_key LIKE (${prefixCandidate} || '%')
+        WHERE k.api_key = ${apiKey}::text
         LIMIT 1
       `;
 
@@ -52,14 +53,10 @@ export function registerMiddleware(app: Hono) {
       } else if (isJwtRoute && apiKey) {
         // Routes de compte : accepter un token JWT de session (pas une API Key)
         try {
-          const blacklisted = await sqlite.execute({ args: [apiKey], sql: "SELECT 1 FROM token_blacklist WHERE token = ?" });
-          if (blacklisted.rows.length > 0) {
-            return c.json({ error: "Token révoqué." }, 401);
-          }
-          const { payload } = await jwtVerify(apiKey, getJwtSecret());
+          const payload = await verifyToken(apiKey);
           currentUserId = String(payload.sub);
           userPlan = String(payload.tier || "Free");
-        } catch (_jwtErr) {
+        } catch {
           return c.json({ error: "Invalid API Key." }, 403);
         }
       } else if (!isPublicRoute) {
@@ -67,20 +64,34 @@ export function registerMiddleware(app: Hono) {
       }
     }
 
-    // 3. En-tête x-user-id (requêtes web app / internes) : prévaut pour le forfait du compte
+    // 3. En-tête x-user-id (requêtes web app / internes) : uniquement si déjà authentifié
     if (reqUserId && reqUserId !== "system-mai") {
-      try {
-        const sql = getDb();
-        const uRows = await sql`
-          SELECT tier FROM users 
-          WHERE id::text = ${reqUserId}::text OR username = ${reqUserId}::text OR email = ${reqUserId}::text 
-          LIMIT 1
-        `;
-        if (uRows.length > 0 && uRows[0].tier) {
-          userPlan = uRows[0].tier;
+      if (currentUserId) {
+        // Déjà authentifié via clé API ou JWT : x-user-id doit correspondre, sinon on l'ignore
+        if (reqUserId !== currentUserId) {
+          console.warn(`[Auth] x-user-id mismatch: header=${reqUserId} vs auth=${currentUserId} — header ignoré`);
         }
-        currentUserId = reqUserId;
-      } catch (_err) {}
+      } else if (apiKey) {
+        // apiKey présent mais non reconnu (route publique) : ne pas promouvoir via x-user-id seul
+      } else {
+        // Aucune auth vérifiée
+        try {
+          const sql = getDb();
+          const uRows = await sql`
+            SELECT tier FROM users 
+            WHERE id::text = ${reqUserId}::text OR username = ${reqUserId}::text OR email = ${reqUserId}::text 
+            LIMIT 1
+          `;
+          if (uRows.length > 0) {
+            if (isPublicRoute) {
+              if (uRows[0].tier) userPlan = uRows[0].tier;
+              currentUserId = reqUserId;
+            } else {
+              console.warn(`[Auth] x-user-id sans JWT sur route privée ${path} — ignoré`);
+            }
+          }
+        } catch {}
+      }
     }
 
     // 4. Aucun identifiant et route privée
@@ -100,14 +111,16 @@ export function registerMiddleware(app: Hono) {
       const limit = TIER_REQUEST_LIMITS?.[userPlan] || tierMap[userPlan] || 500;
       const sql = getDb();
 
-      // Réinitialisation mensuelle automatique si le mois a changé
-      await sql`
-        UPDATE mprojects_api_keys
-        SET request_count = 0
-        WHERE user_id = ${currentUserId}::text
-          AND last_used_at IS NOT NULL
-          AND last_used_at < DATE_TRUNC('month', NOW())
-      `;
+      // Réinitialisation mensuelle automatique si le mois a changé (idempotent)
+      try {
+        await sql`
+          UPDATE mprojects_api_keys
+          SET request_count = 0
+          WHERE user_id = ${currentUserId}::text
+            AND last_used_at IS NOT NULL
+            AND last_used_at < DATE_TRUNC('month', NOW())
+        `;
+      } catch {}
 
       // Calculer l'usage global pour l'utilisateur
       const countRows = await sql`
@@ -143,7 +156,6 @@ export function registerMiddleware(app: Hono) {
       try {
         const sql = getDb();
         const effectiveKeyToLog = matchedApiKey || apiKey;
-        const prefixCandidate = apiKey.substring(0, 11);
 
         await sql`
           INSERT INTO mprojects_api_logs (api_key, endpoint, method, status_code, latency_ms)
@@ -154,10 +166,6 @@ export function registerMiddleware(app: Hono) {
           UPDATE mprojects_api_keys
           SET request_count = request_count + 1, last_used_at = NOW()
           WHERE api_key = ${effectiveKeyToLog}::text
-             OR api_key = ${apiKey}::text
-             OR api_key = ${prefixCandidate}::text
-             OR ${apiKey}::text LIKE (api_key || '%')
-             OR api_key LIKE (${prefixCandidate} || '%')
         `;
       } catch (err) {
         console.error("Erreur logging API:", err);

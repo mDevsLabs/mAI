@@ -477,7 +477,7 @@ async function main() {
           html,
         });
         successCount++;
-      } catch (err: any) {
+      } catch (_err: any) {
         errorCount++;
       }
 

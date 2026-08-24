@@ -199,6 +199,7 @@ export function registerModelRoutes(app: Hono) {
           );
         })
         .map((m) => ({
+          architecture: m.architecture,
           created: m.created || Math.floor(Date.now() / 1000),
           description: m.description || "",
           id: m.id,
@@ -226,6 +227,11 @@ export function registerModelRoutes(app: Hono) {
     } catch (_err) {
       let fallback = [
         {
+          architecture: {
+            input_modalities: ["text", "image", "file"],
+            modality: "text+image->text",
+            output_modalities: ["text"],
+          },
           created: 0,
           description: "Modèle multimodal ultra-rapide de Google conçu pour des tâches à haut débit et de raisonnement avec un très grand contexte.",
           id: "google/gemini-2.5-flash:free",
@@ -237,6 +243,11 @@ export function registerModelRoutes(app: Hono) {
           supported_parameters: ["temperature", "top_p", "top_k", "max_tokens", "tools", "response_format", "seed"],
         },
         {
+          architecture: {
+            input_modalities: ["text"],
+            modality: "text->text",
+            output_modalities: ["text"],
+          },
           created: 0,
           description: "Modèle phare de Meta Llama 3.3 70B offrant des compétences avancées de programmation, logique et résolution de problèmes complexes.",
           id: "meta-llama/llama-3.3-70b-instruct:free",
@@ -248,6 +259,11 @@ export function registerModelRoutes(app: Hono) {
           supported_parameters: ["temperature", "top_p", "max_tokens", "tools", "response_format", "frequency_penalty"],
         },
         {
+          architecture: {
+            input_modalities: ["text"],
+            modality: "text->text",
+            output_modalities: ["text"],
+          },
           created: 0,
           description: "Modèle de code spécialisé de haute précision par Alibaba Cloud, optimisé pour la synthèse de code, le refactoring et le debug.",
           id: "qwen/qwen-2.5-coder-32b-instruct:free",
@@ -259,6 +275,11 @@ export function registerModelRoutes(app: Hono) {
           supported_parameters: ["temperature", "top_p", "max_tokens", "stop", "tools"],
         },
         {
+          architecture: {
+            input_modalities: ["text"],
+            modality: "text->text",
+            output_modalities: ["text"],
+          },
           created: 0,
           description: "Modèle de raisonnement logique étape par étape de premier ordre par DeepSeek pour les mathématiques et la logique complexe.",
           id: "deepseek/deepseek-r1:free",
@@ -267,7 +288,7 @@ export function registerModelRoutes(app: Hono) {
           name: "DeepSeek: DeepSeek R1",
           object: "model",
           owned_by: "deepseek",
-          supported_parameters: ["temperature", "top_p", "max_tokens", "stream"],
+          supported_parameters: ["temperature", "top_p", "max_tokens", "stream", "thinking", "reasoning"],
         },
       ];
 
@@ -277,6 +298,61 @@ export function registerModelRoutes(app: Hono) {
 
       return c.json({ data: fallback, object: "list" });
     }
+  });
+
+  // GET /v1/mai/models
+  app.get("/v1/mai/models", async (c) => {
+    const maiModelsList = [
+      {
+        architecture: {
+          input_modalities: ["text", "image", "file"],
+          modality: "text+image->text",
+          output_modalities: ["text"],
+        },
+        created: Math.floor(Date.now() / 1000),
+        description: "Assistant IA local 4B ultra-rapide et multimodal. Vision intégrée, thinking & tools pour une agilité quotidienne maximale.",
+        id: "mDevsLabs/mAI-1.5-Light",
+        maxContext: 262_144,
+        maxOutput: 32_768,
+        name: "mAI-1.5-Light",
+        object: "model",
+        owned_by: "mDevsLabs",
+        supported_parameters: ["temperature", "top_p", "max_tokens", "stream", "tools", "thinking"],
+      },
+      {
+        architecture: {
+          input_modalities: ["text", "image", "file"],
+          modality: "text+image->text",
+          output_modalities: ["text"],
+        },
+        created: Math.floor(Date.now() / 1000),
+        description: "Le haut de gamme absolu 9B de la famille mAI. Puissance maximale, vision multimodale, raisonnement complexe et tools.",
+        id: "mDevsLabs/mAI-1.5-Apex",
+        maxContext: 262_144,
+        maxOutput: 32_768,
+        name: "mAI-1.5-Apex",
+        object: "model",
+        owned_by: "mDevsLabs",
+        supported_parameters: ["temperature", "top_p", "max_tokens", "stream", "tools", "thinking", "response_format"],
+      },
+      {
+        architecture: {
+          input_modalities: ["text", "image", "file"],
+          modality: "text+image->text",
+          output_modalities: ["text"],
+        },
+        created: Math.floor(Date.now() / 1000),
+        description: "Le sweet spot parfait 27B entre vélocité et haute intelligence. Multimodal avec vision, thinking et tools 100% local.",
+        id: "mDevsLabs/mAI-1.5-Opal",
+        maxContext: 262_144,
+        maxOutput: 32_768,
+        name: "mAI-1.5-Opal",
+        object: "model",
+        owned_by: "mDevsLabs",
+        supported_parameters: ["temperature", "top_p", "max_tokens", "stream", "tools", "thinking"],
+      },
+    ];
+    return c.json({ data: maiModelsList, object: "list" });
   });
 
   // GET /v1/status

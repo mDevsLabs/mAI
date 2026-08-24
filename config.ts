@@ -23,13 +23,19 @@ export const TIER_REQUEST_LIMITS: Record<string, number> = {
   Pro: 2000,
 };
 
-// Limites de stockage Cloud par tier (en bytes)
+// Limites de stockage Cloud par tier (en bytes) — SSOT: Free 500Mo / Plus 1Go / Pro 2Go / Max 5Go
 export const STORAGE_LIMITS_BYTES: Record<string, number> = {
   Free: 500 * 1024 * 1024,           // 500 MB
-  Max: 100 * 1024 * 1024 * 1024,     // 100 GB
-  Plus: 5 * 1024 * 1024 * 1024,      // 5 GB
-  Pro: 20 * 1024 * 1024 * 1024,      // 20 GB
-};
+  Plus: 1 * 1024 * 1024 * 1024,      // 1 GB
+  Pro: 2 * 1024 * 1024 * 1024,       // 2 GB
+  Max: 5 * 1024 * 1024 * 1024,       // 5 GB
+  // alias lowercase pour lookup case-insensitive côté Val Town
+  free: 500 * 1024 * 1024,
+  plus: 1 * 1024 * 1024 * 1024,
+  pro: 2 * 1024 * 1024 * 1024,
+  max: 5 * 1024 * 1024 * 1024,
+  gratuit: 500 * 1024 * 1024,
+} as Record<string, number>;
 
 export function getDb() {
   const url = Deno.env.get("DATABASE_URL");
@@ -59,15 +65,49 @@ export async function signToken(payload: Record<string, unknown>): Promise<strin
 }
 
 export async function verifyToken(token: string): Promise<Record<string, unknown>> {
-  const result = await sqlite.execute({
+  // Vérif SQLite (legacy Val Town) + Postgres (nouveau)
+  const sqliteResult = await sqlite.execute({
     args: [token],
     sql: "SELECT 1 FROM token_blacklist WHERE token = ?",
   });
-  if (result.rows.length > 0) {
+  if (sqliteResult.rows.length > 0) {
     throw new Error("Token révoqué.");
+  }
+  // Vérif Postgres token_blacklist avec TTL 14j
+  try {
+    const sql = getDb();
+    const pgResult = await sql`SELECT 1 FROM token_blacklist WHERE token = ${token} LIMIT 1`;
+    if (pgResult.length > 0) {
+      throw new Error("Token révoqué.");
+    }
+  } catch (e: any) {
+    if (e?.message === "Token révoqué.") throw e;
+    // ignore DB errors (table not yet exists)
   }
   const { payload } = await jwtVerify(token, getJwtSecret());
   return payload as Record<string, unknown>;
+}
+
+export async function blacklistToken(token: string) {
+  const expiresAt = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString();
+  try {
+    await sqlite.execute({
+      args: [token],
+      sql: "INSERT OR IGNORE INTO token_blacklist (token) VALUES (?)",
+    });
+  } catch {}
+  try {
+    const sql = getDb();
+    await sql`INSERT INTO token_blacklist (token, revoked_at, expires_at) VALUES (${token}, NOW(), ${expiresAt}::timestamp) ON CONFLICT (token) DO NOTHING`;
+  } catch {}
+  // Nettoyage opportuniste des vieux tokens
+  try {
+    const sql = getDb();
+    await sql`DELETE FROM token_blacklist WHERE expires_at < NOW() OR revoked_at < NOW() - INTERVAL '14 days'`;
+  } catch {}
+  try {
+    await sqlite.execute({ sql: "DELETE FROM token_blacklist WHERE revoked_at < datetime('now', '-14 days')" });
+  } catch {}
 }
 
 export function extractToken(req: Request): string | null {
@@ -196,7 +236,10 @@ export async function generateVerificationCode(
   const length = isDeletion ? 8 : 6;
   const min = Math.pow(10, length - 1);
   const max = Math.pow(10, length) - 1;
-  const code = Math.floor(min + Math.random() * (max - min)).toString();
+  // Crypto PRNG (corrige Math.random prévisible)
+  const range = max - min;
+  const randomValue = crypto.getRandomValues(new Uint32Array(1))[0] / 0xffffffff;
+  const code = Math.floor(min + randomValue * range).toString().padStart(length, "0");
   const expiresAt = new Date(Date.now() + 10 * 60_000).toISOString(); // 10 minutes
 
   await sqlite.execute({

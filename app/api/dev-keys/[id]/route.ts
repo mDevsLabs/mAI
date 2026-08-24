@@ -3,14 +3,18 @@ import { revokeApiKey, updateApiKey } from '@/lib/api-key-manager';
 
 export const runtime = 'nodejs';
 
-// DELETE /api/dev-keys/[id] - Révoquer une clé API
+// DELETE /api/dev-keys/[id] - Révoquer une clé API (auth requise)
 export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
-    const userId = decodeURIComponent(req.headers.get('x-user-id') || 'dev_user');
+    const raw = req.headers.get('x-user-id');
+    if (!raw) return NextResponse.json({ error: { code: 'unauthorized', message: 'Auth requise.' } }, { status: 401 });
+    let userId: string;
+    try { userId = decodeURIComponent(raw); } catch { return NextResponse.json({ error: { code: 'bad_request', message: 'x-user-id invalide.' } }, { status: 400 }); }
+    if (!userId || userId === 'dev_user') return NextResponse.json({ error: { code: 'unauthorized', message: 'Auth requise.' } }, { status: 401 });
 
     if (!id) {
       return NextResponse.json(
@@ -41,14 +45,18 @@ export async function DELETE(
   }
 }
 
-// PUT /api/dev-keys/[id] - Mettre à jour une clé API (limite, activation, nom)
+// PUT /api/dev-keys/[id] - Mettre à jour une clé API (auth requise)
 export async function PUT(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
-    const userId = decodeURIComponent(req.headers.get('x-user-id') || 'dev_user');
+    const raw = req.headers.get('x-user-id');
+    if (!raw) return NextResponse.json({ error: { code: 'unauthorized', message: 'Auth requise.' } }, { status: 401 });
+    let userId: string;
+    try { userId = decodeURIComponent(raw); } catch { return NextResponse.json({ error: { code: 'bad_request', message: 'x-user-id invalide.' } }, { status: 400 }); }
+    if (!userId || userId === 'dev_user') return NextResponse.json({ error: { code: 'unauthorized', message: 'Auth requise.' } }, { status: 401 });
     const body = await req.json().catch(() => ({}));
 
     if (!id) {

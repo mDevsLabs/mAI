@@ -5,8 +5,11 @@ export const runtime = 'nodejs';
 // POST /api/v1/messages - Anthropic Messages SDK Proxy
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
     const authHeader = req.headers.get('authorization') || req.headers.get('Authorization') || '';
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json({ error: { message: 'Auth requise : Bearer token manquant.', type: 'authentication_error' } }, { status: 401 });
+    }
+    const body = await req.json();
     
     const res = await fetch('https://mai.val.run/v1/messages', {
       method: 'POST',

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "motion/react";
-import { Cpu, Eye, Wrench, ArrowRight, Copy, Check, Sparkles, Terminal } from "lucide-react";
+import { Cpu, Eye, Wrench, ArrowRight, Copy, Check, Terminal } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { modelsData } from "@/lib/models-data";

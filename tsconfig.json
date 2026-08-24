@@ -38,6 +38,7 @@
   "exclude": [
     "node_modules",
     "main.ts",
+    "main-projects.ts",
     "api-middleware.ts",
     "auth.ts",
     "config.ts",
@@ -45,6 +46,8 @@
     "email.ts",
     "models.ts",
     "projects.ts",
-    "storage.ts"
+    "storage.ts",
+    "maiModels.ts",
+    "aiModels.ts"
   ]
 }

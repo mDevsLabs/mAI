@@ -7,7 +7,6 @@ import {
   ExternalLink,
   Copy,
   Check,
-  Sparkles,
   Monitor,
   Globe,
   Terminal,
@@ -25,7 +24,7 @@ interface AppDownload {
   iconColor: string;
   borderHover: string;
   releaseUrl: string;
-  platforms: {
+  platforms?: {
     label: string;
     url: string;
   }[];
@@ -88,11 +87,6 @@ const OFFICIAL_APPS: AppDownload[] = [
       command: "brew install mDevsLabs/mAI-CLI/mai",
       key: "cli-brew",
     },
-    platforms: [
-      { label: "Windows", url: "https://github.com/mDevsLabs/CLI/releases/latest" },
-      { label: "macOS", url: "https://github.com/mDevsLabs/CLI/releases/latest" },
-      { label: "Linux", url: "https://github.com/mDevsLabs/CLI/releases/latest" },
-    ],
   },
   {
     id: "pulse",
@@ -223,21 +217,23 @@ export default function DownloadPage() {
                     </div>
 
                     {/* Boutons par plateforme avec lien releases/latest */}
-                    <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto mt-2 lg:mt-0">
-                      {app.platforms.map((plat) => (
-                        <a
-                          key={plat.label}
-                          href={plat.url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-2xl bg-white text-slate-900 border border-slate-200 hover:bg-slate-900 hover:text-white font-bold transition-all shadow-xs text-xs"
-                        >
-                          <Download className="w-3.5 h-3.5 opacity-70" />
-                          <span>{plat.label}</span>
-                          <ExternalLink className="w-3 h-3 opacity-50" />
-                        </a>
-                      ))}
-                    </div>
+                    {app.platforms && app.platforms.length > 0 && (
+                      <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto mt-2 lg:mt-0">
+                        {app.platforms.map((plat) => (
+                          <a
+                            key={plat.label}
+                            href={plat.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-2xl bg-white text-slate-900 border border-slate-200 hover:bg-slate-900 hover:text-white font-bold transition-all shadow-xs text-xs"
+                          >
+                            <Download className="w-3.5 h-3.5 opacity-70" />
+                            <span>{plat.label}</span>
+                            <ExternalLink className="w-3 h-3 opacity-50" />
+                          </a>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </motion.section>
               );

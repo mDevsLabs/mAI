@@ -17,7 +17,11 @@ export async function POST(req: NextRequest) {
   const startTime = performance.now();
   try {
     const rawUserId = req.headers.get('x-user-id');
-    const userId = rawUserId ? decodeURIComponent(rawUserId) : null;
+    let userId: string | null = null;
+    if (rawUserId) {
+      try { userId = decodeURIComponent(rawUserId); } catch { userId = null; }
+      if (userId === 'dev_user') userId = null;
+    }
     const authHeader = req.headers.get('authorization') || req.headers.get('Authorization') || '';
 
     const body = await req.json();
@@ -48,6 +52,7 @@ export async function POST(req: NextRequest) {
       }
       effectiveKey = customKey;
     } else if (userId) {
+      // Auth via x-user-id requiert trace, mais on limite l'auto-création : checkAndTrack fait déjà quota
       const usageCheck = await checkAndTrackUserUsage({
         userId,
         endpoint: '/api/ollama/chat',
@@ -61,6 +66,8 @@ export async function POST(req: NextRequest) {
         );
       }
       effectiveKey = usageCheck.apiKey || '';
+    } else {
+      return NextResponse.json({ error: 'Auth requise : fournissez une clé API (Bearer) ou un identifiant utilisateur.' }, { status: 401 });
     }
 
     const ollamaHost = process.env.OLLAMA_BASE_URL || 'http://localhost:11434';

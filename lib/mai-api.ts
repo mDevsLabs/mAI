@@ -39,25 +39,9 @@ export type MaiCloudStorageUsage = {
   tier: string;
 };
 
-// Limites de stockage Cloud par tier (en octets)
-export const CLOUD_STORAGE_LIMITS: Record<string, number> = {
-  Free: 500 * 1024 * 1024,       // 500 MO
-  Plus: 1 * 1024 * 1024 * 1024,  // 1 GB
-  Pro: 2 * 1024 * 1024 * 1024,   // 2 GB
-  Max: 5 * 1024 * 1024 * 1024,   // 5 GB
-};
-
-export function formatStorageBytes(bytes: number): string {
-  if (!bytes || bytes <= 0) return "0 Mo";
-  const gb = 1024 * 1024 * 1024;
-  const mb = 1024 * 1024;
-  if (bytes >= gb) {
-    const val = bytes / gb;
-    return `${val % 1 === 0 ? val.toFixed(0) : val.toFixed(1)} Go`;
-  }
-  const val = bytes / mb;
-  return `${val % 1 === 0 ? val.toFixed(0) : val.toFixed(1)} Mo`;
-}
+import { CLOUD_STORAGE_LIMITS } from "./tiers";
+// Ré-export depuis la source unique lib/tiers.ts (évite divergence frontend/backend)
+export { CLOUD_STORAGE_LIMITS, STORAGE_LIMITS_BYTES, TIER_REQUEST_LIMITS, TIER_TOKEN_LIMITS, TIER_LIMITS, getTierQuotaLimit, formatStorageBytes } from "./tiers";
 
 export type MaiVerifyCodeResponse = {
   success: boolean;
@@ -184,7 +168,7 @@ export async function getCloudStorage(token: string): Promise<MaiCloudStorageUsa
     token,
   });
   
-  // Appliquer les limites officielles par forfait : Free 500MO, Plus 1GB, Pro 2GB, Max 5GB
+  // Limites canoniques depuis lib/tiers.ts (Free 500MB, Plus 5GB, Pro 20GB, Max 100GB)
   const tier = data.tier || "Free";
   const limit = CLOUD_STORAGE_LIMITS[tier] || CLOUD_STORAGE_LIMITS["Free"];
   const bytesUsed = Number(data.bytes_used || 0);

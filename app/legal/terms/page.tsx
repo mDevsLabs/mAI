@@ -10,12 +10,8 @@ import {
   Zap,
   Scale,
   Globe,
-  Database,
   Cpu,
-  Server,
-  Lock,
   Ban,
-  HelpCircle,
 } from "lucide-react";
 import Link from "next/link";
 
