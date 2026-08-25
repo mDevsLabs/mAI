@@ -14,6 +14,7 @@
     "reset:mai": "bun run scripts/admin.ts --reset-mai",
     "reset:images": "bun run scripts/admin.ts --reset-images",
     "reset:all": "bun run scripts/admin.ts --reset-all",
+    "reset:audio": "bun run scripts/admin.ts --reset-audio",
     "admin": "bun run scripts/admin.ts",
     "newsletter:send": "bun run scripts/newsletter-send.ts",
     "code:create": "bun run scripts/admin.ts --codes"

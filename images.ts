@@ -415,13 +415,14 @@ export function registerImageRoutes(app: Hono) {
       const planStr = effectiveTier.toLowerCase().trim();
       const isPaidPlan = ["plus", "pro", "max"].includes(planStr);
 
-      // Vérification des droits sur le modèle
-      if (!isPaidPlan && !model.toLowerCase().includes("flux")) {
+      // Bloquer les utilisateurs du forfait Free pour la génération d'images via clé API
+      if (!isPaidPlan) {
         return c.json(
           {
             error: {
-              code: "image_model_access_denied",
-              message: `Le modèle d'image '${model}' nécessite un forfait payant (Plus, Pro ou Max). Votre forfait actuel (${effectiveTier}) autorise les modèles Flux (ex: 'black-forest-labs/flux-1-schnell').`,
+              code: "image_generation_tier_restricted",
+              message: `La génération d'images via l'API est réservée aux abonnements payants (Plus, Pro, Max). Les clés API issues d'un compte Free ne sont pas autorisées à effectuer de requêtes de génération d'images.`,
+              param: null,
               type: "permission_error",
             },
           },
@@ -429,7 +430,7 @@ export function registerImageRoutes(app: Hono) {
         );
       }
 
-      // Vérification du quota journalier (Free: 3/j, Plus: 5/j, Pro: 10/j, Max: 20/j)
+      // Vérification du quota journalier (Plus: 5/j, Pro: 10/j, Max: 20/j)
       const dailyLimit = getTierDailyImageLimit(effectiveTier);
 
       const usageRows = await sql`

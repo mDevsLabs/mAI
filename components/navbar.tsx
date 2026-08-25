@@ -77,6 +77,7 @@ const navLinks: NavItem[] = [
         subitems: [
           { name: "Modèles Texte", href: "/account/models" },
           { name: "Modèles Images", href: "/account/models/images" },
+          { name: "Modèles Audio", href: "/account/models/audio" },
           { name: "Modèles mAI", href: "/account/models/mai" },
         ],
       },

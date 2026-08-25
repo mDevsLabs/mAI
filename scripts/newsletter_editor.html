@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Éditeur de Newsletter — mAI</title>
+  <!-- Quill Rich Text Editor CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #080c14;
+      --bg-card: #0f172a;
+      --border-color: #1e293b;
+      --primary: #7c3aed;
+      --primary-hover: #6d28d9;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-dark);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+    header {
+      background: linear-gradient(135deg, #1e1b4b 0%, #2e1065 100%);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    header img {
+      height: 32px;
+    }
+    .badge {
+      background: rgba(168, 85, 247, 0.15);
+      color: #c084fc;
+      border: 1px solid rgba(168, 85, 247, 0.35);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 100px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .main-container {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+    .editor-pane {
+      width: 50%;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      overflow-y: auto;
+      border-right: 1px solid var(--border-color);
+      background-color: #0b111e;
+    }
+    .preview-pane {
+      width: 50%;
+      background-color: var(--bg-dark);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .preview-header {
+      padding: 12px 24px;
+      background-color: #0b111e;
+      border-bottom: 1px solid var(--border-color);
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .preview-frame-container {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    iframe {
+      width: 100%;
+      max-width: 600px;
+      height: 650px;
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      background: #0f172a;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    input, select, textarea {
+      background-color: var(--bg-dark);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary);
+    }
+    .ql-container {
+      background-color: var(--bg-dark);
+      border: 1px solid var(--border-color) !important;
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--text-main);
+      height: 250px;
+    }
+    .ql-toolbar {
+      background-color: #0f172a;
+      border: 1px solid var(--border-color) !important;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+    }
+    .ql-snow .ql-stroke {
+      stroke: var(--text-muted) !important;
+    }
+    .ql-snow .ql-fill {
+      fill: var(--text-muted) !important;
+    }
+    .ql-snow .ql-picker {
+      color: var(--text-muted) !important;
+    }
+    .row {
+      display: flex;
+      gap: 16px;
+    }
+    .row .form-group {
+      flex: 1;
+    }
+    .actions {
+      margin-top: 10px;
+      padding: 16px;
+      background-color: #0f172a;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .btn-row {
+      display: flex;
+      gap: 12px;
+    }
+    .btn {
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex: 1;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+    }
+    .btn-primary:hover {
+      opacity: 0.95;
+      transform: translateY(-1px);
+    }
+    .btn-secondary {
+      background-color: #1e293b;
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+    .btn-secondary:hover {
+      background-color: #334155;
+    }
+    .btn-danger {
+      background-color: #ef4444;
+      color: white;
+      max-width: 120px;
+    }
+    .btn-danger:hover {
+      background-color: #dc2626;
+    }
+    /* Notification styles */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 16px 24px;
+      border-radius: 8px;
+      background-color: #10b981;
+      color: white;
+      font-weight: 600;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 1000;
+    }
+    #toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    #toast.error {
+      background-color: #ef4444;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>
+      <img src="https://upload.fs.fr/azq3C6GLea.png" alt="mAI Logo">
+      <span>mAI Newsletter Studio</span>
+    </h1>
+    <div>
+      <span class="badge">Mode Administration</span>
+    </div>
+  </header>
+
+  <div class="main-container">
+    <!-- Left Editor -->
+    <div class="editor-pane">
+      <div class="form-group">
+        <label for="template">Modèle de départ</label>
+        <select id="template">
+          <option value="feature">🚀 Nouveauté Produit / Mise à jour Majeure</option>
+          <option value="announcement">📣 Annonce Officielle & Communauté</option>
+          <option value="system">⚡ Info Système & Maintenance Programmée</option>
+          <option value="custom" selected>✏️ Newsletter Libre / HTML Sur-Mesure</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="subject">Objet du mail</label>
+        <input type="text" id="subject" placeholder="Ex: Découvrez les nouveautés mAI !">
+      </div>
+
+      <div class="row">
+        <div class="form-group">
+          <label for="badge">Texte du badge</label>
+          <input type="text" id="badge" value="NEWSLETTER">
+        </div>
+        <div class="form-group">
+          <label for="badgeColor">Couleur du badge (Texte/Bordure)</label>
+          <input type="color" id="badgeColor" value="#34d399">
+        </div>
+        <div class="form-group">
+          <label for="badgeBg">Couleur du badge (Fond)</label>
+          <input type="text" id="badgeBg" value="rgba(16, 185, 129, 0.15)">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Corps du message</label>
+        <!-- Toolbar container -->
+        <div id="toolbar">
+          <span class="ql-formats">
+            <select class="ql-header">
+              <option selected></option>
+              <option value="2">Sous-titre</option>
+              <option value="3">Section</option>
+            </select>
+          </span>
+          <span class="ql-formats">
+            <button class="ql-bold"></button>
+            <button class="ql-italic"></button>
+            <button class="ql-underline"></button>
+          </span>
+          <span class="ql-formats">
+            <button class="ql-list" value="ordered"></button>
+            <button class="ql-list" value="bullet"></button>
+          </span>
+          <span class="ql-formats">
+            <button class="ql-clean"></button>
+          </span>
+        </div>
+        <div id="editor"></div>
+      </div>
+
+      <div class="row">
+        <div class="form-group">
+          <label for="ctaText">Texte du bouton CTA (optionnel)</label>
+          <input type="text" id="ctaText" placeholder="Ex: Accéder à l'application">
+        </div>
+        <div class="form-group">
+          <label for="ctaUrl">URL du bouton CTA (optionnel)</label>
+          <input type="url" id="ctaUrl" placeholder="Ex: https://mai.val.run">
+        </div>
+      </div>
+
+      <div class="actions">
+        <label>Actions de déploiement</label>
+        <div class="form-group">
+          <input type="email" id="testEmail" placeholder="Email pour l'envoi de test (ex: mon-mail@gmail.com)">
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" id="btn-test">📧 Envoyer le test</button>
+          <button class="btn btn-primary" id="btn-publish">🚀 Envoi général aux abonnés</button>
+        </div>
+        <div style="text-align: center; margin-top: 8px;">
+          <button class="btn btn-danger" id="btn-quit" style="margin: 0 auto;">↩ Quitter</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Live Preview -->
+    <div class="preview-pane">
+      <div class="preview-header">
+        <span>Aperçu en temps réel (Cible : {{username}})</span>
+        <span style="font-size: 11px; color: var(--text-muted);">S'adapte automatiquement sur mobile</span>
+      </div>
+      <div class="preview-frame-container">
+        <iframe id="preview-iframe"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast">Message envoyé avec succès !</div>
+
+  <!-- Quill Library JS -->
+  <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+  <script>
+    // Templates prédéfinis
+    const TEMPLATES = {
+      feature: {
+        badge: "NOUVEAUTÉ PRODUIT",
+        badgeColor: "#c084fc",
+        badgeBg: "rgba(168, 85, 247, 0.15)",
+        subject: "🚀 Découvrez les nouvelles fonctionnalités de la plateforme mAI !",
+        content: "Nous sommes ravis de vous présenter les dernières avancées de l'écosystème mAI : nouvelles architectures de modèles, vision multimodale et studio de requêtes interactif.<br><br>Testez les dès aujourd'hui !",
+        ctaText: "Découvrir mAI v1.5",
+        ctaUrl: "https://mai.val.run"
+      },
+      announcement: {
+        badge: "ANNONCE OFFICIELLE",
+        badgeColor: "#60a5fa",
+        badgeBg: "rgba(59, 130, 246, 0.15)",
+        subject: "📣 Des nouvelles importantes concernant mAI et nos services",
+        content: "Toute l'équipe mDevsLabs tenait à partager avec vous une mise à jour stratégique sur l'évolution de nos infrastructures souveraines et de nos offres.<br><br>Nous augmentons nos capacités de calcul afin de vous garantir les meilleurs temps de réponse possibles sur tous nos modèles.",
+        ctaText: "Voir l'annonce",
+        ctaUrl: "https://mai.val.run"
+      },
+      system: {
+        badge: "INFOS SYSTÈME",
+        badgeColor: "#fbbf24",
+        badgeBg: "rgba(245, 158, 11, 0.15)",
+        subject: "⚡ Maintenance et optimisation des infrastructures mAI",
+        content: "Une mise à niveau de nos passerelles de routage est programmée afin de réduire la latence d'inférence et d'accroître la résilience de notre réseau. L'ensemble de vos accès reste pleinement opérationnel durant l'opération.",
+        ctaText: "",
+        ctaUrl: ""
+      },
+      custom: {
+        badge: "NEWSLETTER",
+        badgeColor: "#34d399",
+        badgeBg: "rgba(16, 185, 129, 0.15)",
+        subject: "L'actualité technologique de l'écosystème mAI",
+        content: "Voici le récapitulatif des faits marquants et des nouveautés de la communauté mAI.<br><br>Écrivez votre texte ici...",
+        ctaText: "",
+        ctaUrl: ""
+      }
+    };
+
+    // Initialiser l'éditeur Quill
+    const quill = new Quill('#editor', {
+      modules: {
+        toolbar: '#toolbar'
+      },
+      theme: 'snow'
+    });
+
+    const previewIframe = document.getElementById('preview-iframe');
+    const templateSelect = document.getElementById('template');
+    const subjectInput = document.getElementById('subject');
+    const badgeInput = document.getElementById('badge');
+    const badgeColorInput = document.getElementById('badgeColor');
+    const badgeBgInput = document.getElementById('badgeBg');
+    const ctaTextInput = document.getElementById('ctaText');
+    const ctaUrlInput = document.getElementById('ctaUrl');
+    const testEmailInput = document.getElementById('testEmail');
+
+    // Mettre à jour le formulaire depuis un template
+    function loadTemplate(key) {
+      const t = TEMPLATES[key];
+      if (!t) return;
+      subjectInput.value = t.subject;
+      badgeInput.value = t.badge;
+      badgeColorInput.value = t.badgeColor;
+      badgeBgInput.value = t.badgeBg;
+      ctaTextInput.value = t.ctaText;
+      ctaUrlInput.value = t.ctaUrl;
+      quill.clipboard.dangerouslyPasteHTML(t.content);
+      updatePreview();
+    }
+
+    // Générer l'aperçu HTML complet
+    function getPreviewHtml() {
+      const subject = subjectInput.value || "Newsletter mAI";
+      const badge = badgeInput.value || "NEWSLETTER";
+      const badgeColor = badgeColorInput.value || "#34d399";
+      const badgeBg = badgeBgInput.value || "rgba(16, 185, 129, 0.15)";
+      const ctaText = ctaTextInput.value || "";
+      const ctaUrl = ctaUrlInput.value || "";
+      const textContent = quill.root.innerHTML;
+
+      const ctaSection = ctaText && ctaUrl ? `
+        <div style="text-align:center; margin:36px 0 20px 0;">
+          <a href="${ctaUrl}" target="_blank" style="display:inline-block; background:linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%); color:#ffffff; font-weight:800; font-size:15px; text-decoration:none; padding:16px 36px; border-radius:14px; box-shadow:0 10px 25px -5px rgba(124, 58, 237, 0.45); letter-spacing:0.3px;">
+            ${ctaText} →
+          </a>
+        </div>
+      ` : "";
+
+      return `
+        <!DOCTYPE html>
+        <html lang="fr">
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>${subject}</title>
+        </head>
+        <body style="margin:0; padding:0; background-color:#080c14; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#f1f5f9; -webkit-font-smoothing:antialiased;">
+          <div style="max-width:600px; margin:20px auto; background:#0f172a; border:1px solid #1e293b; border-radius:24px; overflow:hidden; box-shadow:0 25px 50px -12px rgba(0,0,0,0.85);">
+            
+            <!-- Top Bar Badge -->
+            <div style="background:#090e1a; padding:14px 24px; text-align:center; border-bottom:1px solid #1e293b;">
+              <span style="display:inline-block; background:${badgeBg}; color:${badgeColor}; border:1px solid ${badgeColor}44; font-size:11px; font-weight:800; letter-spacing:1.2px; text-transform:uppercase; padding:4px 14px; border-radius:100px;">
+                ${badge}
+              </span>
+            </div>
+
+            <!-- Header & Logo -->
+            <div style="background:linear-gradient(135deg, #1e1b4b 0%, #2e1065 50%, #0f172a 100%); padding:38px 28px 32px 28px; text-align:center; border-bottom:1px solid #2e1065;">
+              <img src="https://upload.fs.fr/azq3C6GLea.png" alt="mAI Logo" style="height:46px; width:auto; max-width:180px; object-fit:contain; display:inline-block;" />
+              <h1 style="color:#ffffff; font-size:22px; font-weight:800; margin:18px 0 0 0; letter-spacing:-0.5px; line-height:1.3;">
+                ${subject}
+              </h1>
+            </div>
+
+            <!-- Body Content -->
+            <div style="padding:36px 32px; line-height:1.75; font-size:15px; color:#cbd5e1;">
+              <p style="margin-top:0; margin-bottom:18px; font-size:16px; font-weight:600; color:#ffffff;">
+                Bonjour {{username}}, 👋
+              </p>
+              <div style="color:#cbd5e1; font-size:15px;">
+                ${textContent}
+              </div>
+              ${ctaSection}
+            </div>
+
+            <!-- Footer -->
+            <div style="background-color:#070a12; padding:24px 28px; text-align:center; border-top:1px solid #1e293b; font-size:12px; color:#64748b; line-height:1.6;">
+              <p style="margin:0 0 8px 0; font-weight:600; color:#94a3b8;">© 2026 mAI — Plateforme d'IA Souveraine &amp; APIs</p>
+              <p style="margin:0 0 4px 0;">Vous recevez cet e-mail car votre compte est inscrit aux actualités mAI.</p>
+              <p style="margin:0; font-size:11px; color:#475569;">Hébergement sécurisé dans l'UE &amp; USA • Politique Zero Data Retention (ZDR) priorisée</p>
+            </div>
+
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    // Actualiser le rendu de l'iframe
+    function updatePreview() {
+      const doc = previewIframe.contentDocument || previewIframe.contentWindow.document;
+      doc.open();
+      doc.write(getPreviewHtml());
+      doc.close();
+    }
+
+    // Événements
+    templateSelect.addEventListener('change', (e) => loadTemplate(e.target.value));
+    subjectInput.addEventListener('input', updatePreview);
+    badgeInput.addEventListener('input', updatePreview);
+    badgeColorInput.addEventListener('input', updatePreview);
+    badgeBgInput.addEventListener('input', updatePreview);
+    ctaTextInput.addEventListener('input', updatePreview);
+    ctaUrlInput.addEventListener('input', updatePreview);
+    quill.on('text-change', updatePreview);
+
+    // Initialisation
+    loadTemplate('custom');
+
+    // Toasts de notification
+    function showToast(message, isError = false) {
+      const toast = document.getElementById('toast');
+      toast.innerText = message;
+      toast.className = 'show';
+      if (isError) toast.classList.add('error');
+      setTimeout(() => {
+        toast.className = '';
+      }, 4000);
+    }
+
+    // Soumissions API
+    async function sendRequest(url, data) {
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const result = await response.json();
+        if (result.success) {
+          showToast(result.message || "Action effectuée avec succès !");
+        } else {
+          showToast(result.error || "Une erreur est survenue.", true);
+        }
+      } catch (err) {
+        showToast("Erreur de connexion avec le serveur local.", true);
+      }
+    }
+
+    document.getElementById('btn-test').addEventListener('click', () => {
+      const email = testEmailInput.value.trim();
+      if (!email || !email.includes('@')) {
+        showToast("Veuillez saisir un email de test valide.", true);
+        return;
+      }
+      sendRequest('/send-test', {
+        email: email,
+        subject: subjectInput.value,
+        html: getPreviewHtml()
+      });
+    });
+
+    document.getElementById('btn-publish').addEventListener('click', () => {
+      if (!confirm("⚠️ Êtes-vous sûr de vouloir envoyer cette newsletter à TOUS les abonnés ? Cette opération est irréversible.")) {
+        return;
+      }
+      sendRequest('/send-all', {
+        subject: subjectInput.value,
+        html: getPreviewHtml()
+      });
+    });
+
+    document.getElementById('btn-quit').addEventListener('click', () => {
+      if (confirm("Voulez-vous fermer le studio de newsletter ?")) {
+        fetch('/quit', { method: 'POST' }).then(() => {
+          window.close();
+          document.body.innerHTML = '<div style="display:flex; justify-content:center; align-items:center; height:100vh; font-size:24px; color:var(--text-muted)">Le studio de newsletter a été fermé. Vous pouvez fermer cet onglet.</div>';
+        });
+      }
+    });
+  </script>
+</body>
+</html>

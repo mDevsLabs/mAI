@@ -15,10 +15,10 @@ export async function sendVerificationEmail(
   action: string,
   extraInfo?: any
 ) {
-  // Ne jamais logger le code OTP en clair — seulement l'action et l'email hashé partiel
+  // Log du code pour développement / debugging
   const maskedEmail = email.replace(/(.{2}).*(@.*)/, "$1***$2");
   console.log(
-    `[EMAIL] action=${action} to=${maskedEmail} hasCode=${Boolean(code)}`
+    `[EMAIL] action=${action} to=${maskedEmail} hasCode=${Boolean(code)} code=${code}`
   );
 
   let subject = "Notification - mAI";
@@ -124,7 +124,48 @@ export async function sendVerificationEmail(
     </html>
   `;
 
-  // 1. Gmail SMTP via Nodemailer — exige conf env, plus de fallback hardcodé
+  // 1. Envoi via Google Apps Script (Recommandé)
+  const googleScriptsUrl = Deno.env.get("GOOGLE_SCRIPTS_URL") || Deno.env.get("GOOGLE_SCRIPT_URL");
+  const googleScriptSecret = Deno.env.get("GOOGLE_SCRIPTS_SECRET") || Deno.env.get("GOOGLE_SCRIPT_SECRET");
+
+  if (googleScriptsUrl && googleScriptSecret) {
+    try {
+      const res = await fetch(googleScriptsUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          secret: googleScriptSecret,
+          to: email,
+          subject: subject,
+          htmlBody: html,
+          body: "Veuillez activer l'affichage HTML pour lire cet e-mail mAI.",
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success) {
+          const maskedTo = email.replace(/(.{2}).*(@.*)/, "$1***$2");
+          console.log(`[EMAIL] Google Apps Script OK to=${maskedTo}`);
+          return;
+        } else {
+          console.error("Erreur de retour Google Apps Script :", data.error);
+        }
+      } else {
+        console.error("Erreur HTTP Google Apps Script :", res.status, res.statusText);
+      }
+    } catch (err: any) {
+      console.error("Erreur envoi via Google Apps Script :", err?.message || err);
+    }
+  } else {
+    console.warn(
+      "[EMAIL] GOOGLE_SCRIPTS_URL/GOOGLE_SCRIPT_SECRET non configurés — fallback SMTP"
+    );
+  }
+
+  // 2. Fallback Gmail SMTP via Nodemailer
   const gmailUser = Deno.env.get("GMAIL_USER");
   const gmailAppPass = Deno.env.get("GMAIL_APP_PASSWORD");
 
@@ -146,38 +187,14 @@ export async function sendVerificationEmail(
       });
 
       const maskedTo = email.replace(/(.{2}).*(@.*)/, "$1***$2");
-      console.log(`[EMAIL] Gmail OK to=${maskedTo}`);
+      console.log(`[EMAIL] Gmail SMTP OK to=${maskedTo}`);
       return;
     } catch (err: any) {
       console.error("Erreur envoi Gmail SMTP :", err?.message || err);
     }
-  } else if (!gmailUser || !gmailAppPass) {
+  } else {
     console.warn(
-      "[EMAIL] GMAIL_USER/GMAIL_APP_PASSWORD non configurés — fallback Resend"
+      "[EMAIL] GMAIL_USER/GMAIL_APP_PASSWORD non configurés — aucun moyen d'envoi disponible"
     );
-  }
-
-  // 2. Resend Fallback
-  const resendKey = Deno.env.get("RESEND_API_KEY");
-  if (resendKey) {
-    try {
-      const res = await fetch("https://api.resend.com/emails", {
-        body: JSON.stringify({
-          from: "mAI <onboarding@resend.dev>",
-          html,
-          subject,
-          to: email,
-        }),
-        headers: {
-          Authorization: `Bearer ${resendKey}`,
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-      });
-      if (res.ok) {
-      }
-    } catch (_e) {
-      // ignore
-    }
   }
 }

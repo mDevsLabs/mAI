@@ -49,17 +49,17 @@ export async function POST(req: NextRequest) {
     const userId = auth.apiKeyId || "api_user";
     const userPlan = auth.plan || "Free";
 
-    // 2. Vérification des droits sur le modèle
+    // 2. Vérification des droits selon le forfait
     const planStr = userPlan.toLowerCase().trim();
     const isPaidPlan = ["plus", "pro", "max"].includes(planStr);
 
-    if (!isPaidPlan && !model.toLowerCase().includes("flux")) {
+    if (!isPaidPlan) {
       return NextResponse.json(
         {
           error: {
-            code: "image_model_access_denied",
-            message: `Le modèle d'image '${model}' nécessite un forfait payant (Plus, Pro ou Max). Votre forfait actuel (${userPlan}) autorise les modèles Flux gratuits (ex: 'black-forest-labs/flux-1-schnell').`,
-            param: "model",
+            code: "image_generation_tier_restricted",
+            message: `La génération d'images via l'API est réservée aux forfaits payants (Plus, Pro, Max). Votre forfait actuel (${userPlan}) ne permet pas d'utiliser l'API de génération d'images.`,
+            param: null,
             type: "permission_error",
           },
         },
@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 3. Vérification des quotas journaliers (Free: 3/j, Plus: 5/j, Pro: 10/j, Max: 20/j)
+    // 3. Vérification des quotas journaliers (Plus: 5/j, Pro: 10/j, Max: 20/j)
     const dailyLimit = getTierDailyImageLimit(userPlan);
     const requestCost = getTierImageRequestCost(userPlan);
 

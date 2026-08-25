@@ -303,7 +303,7 @@ export default function ApiImageModelsPage() {
   return (
     <main className="min-h-screen bg-slate-50/50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto space-y-8">
-        {/* Onglets de navigation : Modèles Texte vs Modèles Images vs Modèles mAI */}
+        {/* Onglets de navigation : Modèles Texte vs Modèles Images vs Modèles Audio vs Modèles mAI */}
         <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-slate-200/60 w-fit overflow-x-auto">
           <Link
             href="/account/models"
@@ -317,6 +317,12 @@ export default function ApiImageModelsPage() {
           >
             <ImageIcon className="w-3.5 h-3.5 text-purple-600" />
             Modèles Images
+          </Link>
+          <Link
+            href="/account/models/audio"
+            className="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-slate-900 transition-all flex items-center gap-1.5 whitespace-nowrap"
+          >
+            Modèles Audio
           </Link>
           <Link
             href="/account/models/mai"

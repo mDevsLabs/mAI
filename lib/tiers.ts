@@ -14,6 +14,28 @@ export const TIER_TOKEN_LIMITS: Record<string, number> = {
 // Compat: ancien nom utilisé dans config.ts / models.ts
 export const TIER_LIMITS = TIER_TOKEN_LIMITS;
 
+// Limites de tokens Speech hebdomadaires — utilisées pour weekly_speech_usage
+export const TIER_SPEECH_LIMITS: Record<string, number> = {
+  Free: 20_000_000,
+  Gratuit: 20_000_000,
+  free: 20_000_000,
+  gratuit: 20_000_000,
+  Plus: 50_000_000,
+  plus: 50_000_000,
+  Pro: 100_000_000,
+  pro: 100_000_000,
+  Max: 200_000_000,
+  max: 200_000_000,
+};
+
+export function getTierSpeechLimit(tier?: string | null): number {
+  const t = (tier || "Free").toLowerCase().trim();
+  if (t === "max") return 200_000_000;
+  if (t === "pro") return 100_000_000;
+  if (t === "plus") return 50_000_000;
+  return 20_000_000;
+}
+
 // Limites de requêtes API mensuelles — utilisées pour mprojects_api_keys
 export const TIER_REQUEST_LIMITS: Record<string, number> = {
   Free: 500,

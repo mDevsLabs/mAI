@@ -23,11 +23,11 @@ const PLANS: PlanItem[] = [
     id: "free",
     name: "Free",
     subtitle: "Découvrez ce que l'IA peut faire",
-    maiTokens: "1 000 000 tokens / semaine",
+    maiTokens: "2 000 000 tokens / semaine",
     apiRequests: "500 requêtes / mois",
     cloudStorage: "500 MO Cloud",
     dailyImages: "3 images / jour",
-    audioTokens: "50 000 tokens / semaine",
+    audioTokens: "20 000 000 tokens / semaine",
   },
   {
     id: "plus",
@@ -37,7 +37,7 @@ const PLANS: PlanItem[] = [
     apiRequests: "1 000 requêtes / mois",
     cloudStorage: "1 GB Cloud",
     dailyImages: "5 images / jour",
-    audioTokens: "150 000 tokens / semaine",
+    audioTokens: "50 000 000 tokens / semaine",
   },
   {
     id: "pro",
@@ -49,7 +49,7 @@ const PLANS: PlanItem[] = [
     apiRequests: "2 000 requêtes / mois",
     cloudStorage: "2 GB Cloud",
     dailyImages: "10 images / jour",
-    audioTokens: "500 000 tokens / semaine",
+    audioTokens: "100 000 000 tokens / semaine",
   },
   {
     id: "max",
@@ -59,7 +59,7 @@ const PLANS: PlanItem[] = [
     apiRequests: "5 000 requêtes / mois",
     cloudStorage: "5 GB Cloud",
     dailyImages: "20 images / jour",
-    audioTokens: "2 000 000 tokens / semaine",
+    audioTokens: "200 000 000 tokens / semaine",
   },
 ];
 

@@ -41,7 +41,7 @@ export type MaiCloudStorageUsage = {
 
 import { CLOUD_STORAGE_LIMITS } from "./tiers";
 // Ré-export depuis la source unique lib/tiers.ts (évite divergence frontend/backend)
-export { CLOUD_STORAGE_LIMITS, STORAGE_LIMITS_BYTES, TIER_REQUEST_LIMITS, TIER_TOKEN_LIMITS, TIER_LIMITS, TIER_DAILY_IMAGE_LIMITS, TIER_IMAGE_REQUEST_COST, getTierQuotaLimit, getTierDailyImageLimit, getTierImageRequestCost, getTierStorageLimit, formatStorageBytes } from "./tiers";
+export { CLOUD_STORAGE_LIMITS, STORAGE_LIMITS_BYTES, TIER_REQUEST_LIMITS, TIER_TOKEN_LIMITS, TIER_SPEECH_LIMITS, TIER_LIMITS, TIER_DAILY_IMAGE_LIMITS, TIER_IMAGE_REQUEST_COST, getTierQuotaLimit, getTierSpeechLimit, getTierDailyImageLimit, getTierImageRequestCost, getTierStorageLimit, formatStorageBytes } from "./tiers";
 
 export type MaiVerifyCodeResponse = {
   success: boolean;
@@ -232,3 +232,21 @@ export async function uploadAvatar(
     throw new MaiApiError(err.message, res.status);
   }
 }
+
+export type MaiAudioUsage = {
+  plan: string;
+  requestsCount: number;
+  resetAt: string;
+  tokensUsed: number;
+  userId: string;
+  weekStart: string;
+  weeklyLimit: number;
+};
+
+export async function getAudioUsage(token: string): Promise<MaiAudioUsage> {
+  return request<MaiAudioUsage>("/v1/audio/usage", {
+    method: "GET",
+    token,
+  });
+}
+

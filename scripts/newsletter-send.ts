@@ -5,6 +5,7 @@ import nodemailer from "nodemailer";
 import { exec } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
+import http from "node:http";
 
 const sql = neon(process.env.DATABASE_URL!);
 
@@ -145,7 +146,189 @@ function printProgressBar(current: number, total: number, label: string) {
 }
 
 // ─────────────────────────────────────────────
-// Générateur HTML Moderne & Luxueux
+// Fonction Générale d'envoi d'e-mail (Google Apps Script + SMTP Fallback)
+// ─────────────────────────────────────────────
+export async function sendEmail({ to, subject, html }: { to: string; subject: string; html: string }): Promise<boolean> {
+  const googleScriptsUrl = process.env.GOOGLE_SCRIPTS_URL || process.env.GOOGLE_SCRIPT_URL;
+  const googleScriptSecret = process.env.GOOGLE_SCRIPTS_SECRET || process.env.GOOGLE_SCRIPT_SECRET;
+
+  // 1. Google Apps Script
+  if (googleScriptsUrl && googleScriptSecret) {
+    try {
+      const res = await fetch(googleScriptsUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          secret: googleScriptSecret,
+          to,
+          subject,
+          htmlBody: html,
+          body: "Veuillez activer l'affichage HTML pour lire cet e-mail mAI.",
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success) {
+          return true;
+        } else {
+          console.error(`[EMAIL] Google Apps Script error for ${to}:`, data.error);
+        }
+      } else {
+        console.error(`[EMAIL] Google Apps Script HTTP ${res.status} for ${to}`);
+      }
+    } catch (err: any) {
+      console.error(`[EMAIL] Google Apps Script exception for ${to}:`, err?.message || err);
+    }
+  }
+
+  // 2. SMTP Gmail Fallback
+  const gmailUser = process.env.GMAIL_USER || "tusseaumathias85@gmail.com";
+  const gmailAppPass = process.env.GMAIL_APP_PASSWORD;
+
+  if (gmailUser && gmailAppPass) {
+    try {
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: { user: gmailUser, pass: gmailAppPass },
+      });
+
+      await transporter.sendMail({
+        from: `"mAI" <${gmailUser}>`,
+        to,
+        subject,
+        html,
+      });
+      return true;
+    } catch (err: any) {
+      console.error(`[EMAIL] SMTP error for ${to}:`, err?.message || err);
+    }
+  }
+
+  return false;
+}
+
+// ─────────────────────────────────────────────
+// Serveur pour l'éditeur HTML dans le navigateur
+// ─────────────────────────────────────────────
+export async function runVisualEditorServer() {
+  const port = 3333;
+  const server = http.createServer(async (req, res) => {
+    const htmlPath = path.join(process.cwd(), "scripts", "newsletter_editor.html");
+
+    if (req.method === "GET" && req.url === "/") {
+      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+      if (fs.existsSync(htmlPath)) {
+        res.end(fs.readFileSync(htmlPath, "utf-8"));
+      } else {
+        res.end("<h3>Erreur : newsletter_editor.html introuvable dans le dossier scripts.</h3>");
+      }
+    } else if (req.method === "POST" && req.url === "/send-test") {
+      let body = "";
+      req.on("data", chunk => body += chunk);
+      req.on("end", async () => {
+        try {
+          const { email, subject, html } = JSON.parse(body);
+          console.log(`\n[STUDIO] Envoi d'un mail de test à ${email}...`);
+          const success = await sendEmail({ to: email, subject: `[TEST] ${subject}`, html });
+          if (success) {
+            res.writeHead(200, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ success: true, message: `Mail de test envoyé à ${email} !` }));
+          } else {
+            res.writeHead(200, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ success: false, error: "L'envoi a échoué. Vérifiez vos variables d'environnement." }));
+          }
+        } catch (e: any) {
+          res.writeHead(400, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ success: false, error: e.message }));
+        }
+      });
+    } else if (req.method === "POST" && req.url === "/send-all") {
+      let body = "";
+      req.on("data", chunk => body += chunk);
+      req.on("end", async () => {
+        try {
+          const { subject, html } = JSON.parse(body);
+          console.log(`\n[STUDIO] Début de la newsletter globale pour le sujet : "${subject}"`);
+          
+          const targetUsers = (await sql`
+            SELECT email, username 
+            FROM users 
+            WHERE newsletter = TRUE
+          `) as unknown as { email: string; username: string }[];
+
+          if (targetUsers.length === 0) {
+            res.writeHead(200, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ success: false, error: "Aucun abonné trouvé dans la base de données." }));
+            return;
+          }
+
+          console.log(`[STUDIO] Envoi en cours à ${targetUsers.length} destinataire(s)...`);
+          let successCount = 0;
+          let errorCount = 0;
+
+          for (const u of targetUsers) {
+            const personalizedHtml = html.replace(/{{username}}/g, u.username).replace(/Bonjour Administrateur/g, `Bonjour ${u.username}`);
+            const success = await sendEmail({ to: u.email, subject, html: personalizedHtml });
+            if (success) {
+              successCount++;
+            } else {
+              errorCount++;
+            }
+            await new Promise((resolve) => setTimeout(resolve, 100));
+          }
+
+          console.log(`[STUDIO] Newsletter envoyée. Succès : ${successCount}, Échecs : ${errorCount}`);
+          res.writeHead(200, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ 
+            success: true, 
+            message: `Newsletter envoyée avec succès à ${successCount} abonnés ! (${errorCount} échec(s))` 
+          }));
+        } catch (e: any) {
+          res.writeHead(400, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ success: false, error: e.message }));
+        }
+      });
+    } else if (req.method === "POST" && req.url === "/quit") {
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ success: true }));
+      console.log("\n[STUDIO] Arrêt du serveur de l'éditeur de newsletter.");
+      setTimeout(() => {
+        server.close();
+      }, 500);
+    } else {
+      res.writeHead(404, { "Content-Type": "text/plain" });
+      res.end("Non trouvé");
+    }
+  });
+
+  server.listen(port, () => {
+    console.log(`\n${c.brightGreen}✔ Éditeur visuel démarré sur http://localhost:${port}/${c.reset}`);
+    
+    // Ouvrir le navigateur
+    const platform = process.platform;
+    let command = "";
+    if (platform === "win32") {
+      command = `start http://localhost:${port}/`;
+    } else if (platform === "darwin") {
+      command = `open http://localhost:${port}/`;
+    } else {
+      command = `xdg-open http://localhost:${port}/`;
+    }
+    exec(command);
+  });
+
+  return new Promise<void>((resolve) => {
+    server.on("close", () => {
+      resolve();
+    });
+  });
+}
+
+// ─────────────────────────────────────────────
+// Générateur HTML Moderne & Luxueux (Console CLI)
 // ─────────────────────────────────────────────
 function buildNewsletterHtml(
   subject: string,
@@ -259,6 +442,19 @@ export async function runNewsletterStudio() {
   const rl = readline.createInterface({ input, output });
 
   try {
+    printStep(1, "Menu de démarrage du Studio");
+    console.log(`  ${c.cyan}[1]${c.reset} ${c.bold}Lancer l'Éditeur Visuel (Navigateur Web)${c.reset} ${c.brightGreen}[Recommandé]${c.reset}`);
+    console.log(`  ${c.cyan}[2]${c.reset} ${c.bold}Continuer dans le Terminal (CLI)${c.reset}`);
+    console.log("");
+    
+    const studioChoice = (await rl.question(`  ${c.brightYellow}➔ Choix [1-2] (défaut: 1) : ${c.reset}`)).trim() || "1";
+
+    if (studioChoice === "1") {
+      rl.close();
+      await runVisualEditorServer();
+      return;
+    }
+
     // ──────── ÉTAPE 1: Choix de la cible ────────
     printStep(1, "Sélection des destinataires");
     console.log(`  ${c.cyan}1.${c.reset} ${c.bold}Tous les abonnés Newsletter${c.reset} ${c.dim}(newsletter = TRUE dans la DB)${c.reset}`);
@@ -381,8 +577,7 @@ export async function runNewsletterStudio() {
     printDivider();
 
     // ──────── ÉTAPE 4: Dashboard d'actions interactif ────────
-    const gmailUser = process.env.GMAIL_USER || "tusseaumathias85@gmail.com";
-    const gmailAppPass = process.env.GMAIL_APP_PASSWORD;
+    const defaultEmail = process.env.GMAIL_USER || "tusseaumathias85@gmail.com";
 
     while (true) {
       clearConsole();
@@ -390,7 +585,6 @@ export async function runNewsletterStudio() {
       printStep(4, "Récapitulatif & Actions");
 
       console.log(`  ${c.bold}📌 Objet :${c.reset} ${c.brightCyan}${subject}${c.reset}`);
-      console.log(`  ${c.bold}📧 Expéditeur :${c.reset} "mAI" <${gmailUser}>`);
       console.log(`  ${c.bold}👥 Destinataires :${c.reset} ${c.brightGreen}${targetUsers.length} personne(s)${c.reset}`);
       console.log(`  ${c.bold}🎨 Modèle :${c.reset} ${selectedTemplate.name}`);
       if (ctaText && ctaUrl) {
@@ -415,29 +609,15 @@ export async function runNewsletterStudio() {
         openPreviewInBrowser(html);
         await rl.question(`\n  ${c.dim}Appuyez sur Entrée pour revenir au menu...${c.reset}`);
       } else if (action === "2") {
-        const testTarget = (await rl.question(`\n  ${c.brightYellow}➔ Saisissez l'adresse e-mail pour le test (défaut: ${gmailUser}) : ${c.reset}`)).trim() || gmailUser;
+        const testTarget = (await rl.question(`\n  ${c.brightYellow}➔ Saisissez l'adresse e-mail pour le test (défaut: ${defaultEmail}) : ${c.reset}`)).trim() || defaultEmail;
         printInfo(`Envoi du mail de test à ${testTarget}...`);
 
-        if (!gmailAppPass) {
-          printError("VARIABLE GMAIL_APP_PASSWORD non configurée ! Impossible d'envoyer.");
+        const html = buildNewsletterHtml(`[TEST] ${subject}`, "TestUser", textContent, selectedTemplate, customHtml, ctaText, ctaUrl);
+        const success = await sendEmail({ to: testTarget, subject: `[TEST] ${subject}`, html });
+        if (success) {
+          printSuccess(`E-mail de test envoyé avec succès à ${testTarget} !`);
         } else {
-          const transporter = nodemailer.createTransport({
-            service: "gmail",
-            auth: { user: gmailUser, pass: gmailAppPass },
-          });
-          const html = buildNewsletterHtml(`[TEST] ${subject}`, "TestUser", textContent, selectedTemplate, customHtml, ctaText, ctaUrl);
-
-          try {
-            await transporter.sendMail({
-              from: `"mAI (TEST)" <${gmailUser}>`,
-              to: testTarget,
-              subject: `[TEST] ${subject}`,
-              html,
-            });
-            printSuccess(`E-mail de test envoyé avec succès à ${testTarget} !`);
-          } catch (e: any) {
-            printError(`Échec de l'envoi de test : ${e.message}`);
-          }
+          printError(`Échec de l'envoi de test à ${testTarget}.`);
         }
         await rl.question(`\n  ${c.dim}Appuyez sur Entrée pour revenir au menu...${c.reset}`);
       } else if (action === "1") {
@@ -456,16 +636,6 @@ export async function runNewsletterStudio() {
     printHeader();
     printStep(5, "Envoi en cours...");
 
-    if (!gmailAppPass) {
-      printError("Erreur : GMAIL_APP_PASSWORD n'est pas défini dans l'environnement !");
-      return;
-    }
-
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: { user: gmailUser, pass: gmailAppPass },
-    });
-
     let successCount = 0;
     let errorCount = 0;
     const startTime = Date.now();
@@ -476,16 +646,10 @@ export async function runNewsletterStudio() {
       printProgressBar(i + 1, targetUsers.length, u.email);
 
       const html = buildNewsletterHtml(subject, u.username, textContent, selectedTemplate, customHtml, ctaText, ctaUrl);
-
-      try {
-        await transporter.sendMail({
-          from: `"mAI" <${gmailUser}>`,
-          to: u.email,
-          subject,
-          html,
-        });
+      const success = await sendEmail({ to: u.email, subject, html });
+      if (success) {
         successCount++;
-      } catch (_err: any) {
+      } else {
         errorCount++;
       }
 

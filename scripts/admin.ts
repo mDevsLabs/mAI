@@ -5,6 +5,7 @@ import * as readline from 'readline/promises';
 import { stdin as input, stdout as output } from 'process';
 import fs from 'fs';
 import path from 'path';
+import { sendEmail, runNewsletterStudio } from './newsletter-send.ts';
 
 // ─────────────────────────────────────────────
 // Chargement automatique des variables d'environnement
@@ -133,19 +134,6 @@ export async function resetApiUsage(notifyUsers = true) {
   }
 
   console.log(`  ${c.brightYellow}➔ Envoi des e-mails de notification à ${users.length} utilisateur(s)...${c.reset}`);
-  const gmailUser = process.env.GMAIL_USER || "tusseaumathias85@gmail.com";
-  const gmailAppPass = process.env.GMAIL_APP_PASSWORD;
-
-  if (!gmailAppPass) {
-    console.log(`  ${c.dim}ℹ GMAIL_APP_PASSWORD non configuré. Notification par mail ignorée.${c.reset}`);
-    return;
-  }
-
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: { user: gmailUser, pass: gmailAppPass },
-  });
-
   let success = 0;
   for (const user of users) {
     const html = buildQuotaEmailHtml(
@@ -156,13 +144,12 @@ export async function resetApiUsage(notifyUsers = true) {
     );
 
     try {
-      await transporter.sendMail({
-        from: `"mAI" <${gmailUser}>`,
+      const sent = await sendEmail({
         to: user.email,
         subject: "Vos quotas API mAI ont été réinitialisés",
         html,
       });
-      success++;
+      if (sent) success++;
       await new Promise((r) => setTimeout(r, 100));
     } catch (err: any) {
       console.error(`  ${c.red}✖ Erreur d'envoi pour ${user.email} : ${err?.message || err}${c.reset}`);
@@ -189,19 +176,6 @@ export async function resetMaiUsage(notifyUsers = true) {
   }
 
   console.log(`  ${c.brightYellow}➔ Envoi des e-mails de notification à ${users.length} utilisateur(s)...${c.reset}`);
-  const gmailUser = process.env.GMAIL_USER || "tusseaumathias85@gmail.com";
-  const gmailAppPass = process.env.GMAIL_APP_PASSWORD;
-
-  if (!gmailAppPass) {
-    console.log(`  ${c.dim}ℹ GMAIL_APP_PASSWORD non configuré. Notification par mail ignorée.${c.reset}`);
-    return;
-  }
-
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: { user: gmailUser, pass: gmailAppPass },
-  });
-
   let success = 0;
   for (const user of users) {
     const html = buildQuotaEmailHtml(
@@ -212,13 +186,12 @@ export async function resetMaiUsage(notifyUsers = true) {
     );
 
     try {
-      await transporter.sendMail({
-        from: `"mAI" <${gmailUser}>`,
+      const sent = await sendEmail({
         to: user.email,
         subject: "Vos quotas mAI ont été réinitialisés",
         html,
       });
-      success++;
+      if (sent) success++;
       await new Promise((r) => setTimeout(r, 100));
     } catch (err: any) {
       console.error(`  ${c.red}✖ Erreur d'envoi pour ${user.email} : ${err?.message || err}${c.reset}`);
@@ -238,51 +211,83 @@ export async function resetImageUsage() {
 }
 
 // ─────────────────────────────────────────────
-// 4. RÉINITIALISATION GLOBALE (API + mAI + IMAGES)
+// 3b. RÉINITIALISATION DES USAGES AUDIO
+// ─────────────────────────────────────────────
+export async function resetAudioUsage(notifyUsers = true) {
+  console.log(`\n${c.cyan}⏳ Réinitialisation des quotas audio (weekly_speech_usage)...${c.reset}`);
+  await sql`UPDATE weekly_speech_usage SET tokens_used = 0, requests_count = 0`;
+  console.log(`${c.brightGreen}✔ Succès : Tous les compteurs de quotas audio ont été remis à 0 !${c.reset}`);
+
+  if (!notifyUsers) return;
+
+  const users = (await sql`SELECT email, username FROM users WHERE notify_limits = TRUE`) as unknown as { email: string; username: string }[];
+  if (users.length === 0) {
+    console.log(`  ${c.dim}ℹ Aucun utilisateur inscrit aux notifications de limites.${c.reset}`);
+    return;
+  }
+
+  console.log(`  ${c.brightYellow}➔ Envoi des e-mails de notification à ${users.length} utilisateur(s)...${c.reset}`);
+  let success = 0;
+  for (const user of users) {
+    const html = buildQuotaEmailHtml(
+      "Réinitialisation de vos quotas Audio",
+      user.username,
+      "Vos quotas de synthèse vocale et d'audio mAI ont été réinitialisés pour la nouvelle période.",
+      "Quotas Audio réinitialisés à 100%"
+    );
+
+    try {
+      const sent = await sendEmail({
+        to: user.email,
+        subject: "Vos quotas Audio mAI ont été réinitialisés",
+        html,
+      });
+      if (sent) success++;
+      await new Promise((r) => setTimeout(r, 100));
+    } catch (err: any) {
+      console.error(`  ${c.red}✖ Erreur d'envoi pour ${user.email} : ${err?.message || err}${c.reset}`);
+    }
+  }
+
+  console.log(`  ${c.brightGreen}✔ ${success} notification(s) e-mail envoyée(s) avec succès !${c.reset}`);
+}
+
+// ─────────────────────────────────────────────
+// 4. RÉINITIALISATION GLOBALE (API + mAI + IMAGES + AUDIO)
 // ─────────────────────────────────────────────
 export async function resetAllUsage(notifyUsers = true) {
-  console.log(`\n${c.bgPurple}${c.bold}${c.brightWhite} ⚡ RÉINITIALISATION GLOBALE DE TOUS LES QUOTAS (API + mAI + IMAGES) ⚡ ${c.reset}`);
+  console.log(`\n${c.bgPurple}${c.bold}${c.brightWhite} ⚡ RÉINITIALISATION GLOBALE DE TOUS LES QUOTAS (API + mAI + IMAGES + AUDIO) ⚡ ${c.reset}`);
   await resetApiUsage(false);
   await resetMaiUsage(false);
   await resetImageUsage();
+  await resetAudioUsage(false);
 
   if (notifyUsers) {
     const users = (await sql`SELECT email, username FROM users WHERE notify_limits = TRUE`) as unknown as { email: string; username: string }[];
     if (users.length > 0) {
       console.log(`\n  ${c.brightYellow}➔ Envoi d'une notification globale unifiée à ${users.length} utilisateur(s)...${c.reset}`);
-      const gmailUser = process.env.GMAIL_USER || "tusseaumathias85@gmail.com";
-      const gmailAppPass = process.env.GMAIL_APP_PASSWORD;
+      let success = 0;
+      for (const user of users) {
+        const html = buildQuotaEmailHtml(
+          "Réinitialisation globale de vos quotas mAI",
+          user.username,
+          "L'ensemble de vos quotas de requêtes API, de tokens mAI, de génération d'images et de synthèse vocale/audio ont été réinitialisés à 100%.",
+          "Tous les quotas réinitialisés à 100%"
+        );
 
-      if (gmailAppPass) {
-        const transporter = nodemailer.createTransport({
-          service: 'gmail',
-          auth: { user: gmailUser, pass: gmailAppPass },
-        });
-
-        let success = 0;
-        for (const user of users) {
-          const html = buildQuotaEmailHtml(
-            "Réinitialisation globale de vos quotas mAI",
-            user.username,
-            "L'ensemble de vos quotas de requêtes API, de tokens mAI et de génération d'images ont été réinitialisés à 100%.",
-            "Tous les quotas réinitialisés à 100%"
-          );
-
-          try {
-            await transporter.sendMail({
-              from: `"mAI" <${gmailUser}>`,
-              to: user.email,
-              subject: "Tous vos quotas mAI ont été réinitialisés",
-              html,
-            });
-            success++;
-            await new Promise((r) => setTimeout(r, 100));
-          } catch (err: any) {
-            console.error(`  ${c.red}✖ Erreur pour ${user.email} : ${err?.message || err}${c.reset}`);
-          }
+        try {
+          const sent = await sendEmail({
+            to: user.email,
+            subject: "Tous vos quotas mAI ont été réinitialisés",
+            html,
+          });
+          if (sent) success++;
+          await new Promise((r) => setTimeout(r, 100));
+        } catch (err: any) {
+          console.error(`  ${c.red}✖ Erreur pour ${user.email} : ${err?.message || err}${c.reset}`);
         }
-        console.log(`  ${c.brightGreen}✔ ${success} e-mail(s) de réinitialisation globale envoyé(s) !${c.reset}`);
       }
+      console.log(`  ${c.brightGreen}✔ ${success} e-mail(s) de réinitialisation globale envoyé(s) !${c.reset}`);
     }
   }
 
@@ -584,12 +589,20 @@ export async function runAdminCli() {
     await resetImageUsage();
     process.exit(0);
   }
+  if (args.includes('--reset-audio')) {
+    await resetAudioUsage(true);
+    process.exit(0);
+  }
   if (args.includes('--reset-all')) {
     await resetAllUsage(true);
     process.exit(0);
   }
   if (args.includes('--codes')) {
     await runSubscriptionCodeManager();
+    process.exit(0);
+  }
+  if (args.includes('--newsletter')) {
+    await runNewsletterStudio();
     process.exit(0);
   }
 
@@ -607,12 +620,14 @@ export async function runAdminCli() {
     console.log(`  ${c.brightCyan}[1]${c.reset} 🔄 Réinitialiser les quotas d'usage API (mprojects_api_keys)`);
     console.log(`  ${c.brightCyan}[2]${c.reset} 🔄 Réinitialiser les quotas d'usage mAI (weekly_usage)`);
     console.log(`  ${c.brightCyan}[3]${c.reset} 🔄 Réinitialiser les quotas journaliers d'Images`);
-    console.log(`  ${c.brightGreen}[4]${c.reset} ⚡ ${c.bold}Réinitialiser TOUS les quotas en 1 clic (API + mAI + Images)${c.reset}`);
-    console.log(`  ${c.brightMagenta}[5]${c.reset} 🎟️  Gérer les codes d'abonnement (Créer, Lister, Activer, Modifier)`);
+    console.log(`  ${c.brightCyan}[4]${c.reset} 🔄 Réinitialiser les quotas de synthèse vocale Audio (weekly_speech_usage)`);
+    console.log(`  ${c.brightGreen}[5]${c.reset} ⚡ ${c.bold}Réinitialiser TOUS les quotas en 1 clic (API + mAI + Images + Audio)${c.reset}`);
+    console.log(`  ${c.brightMagenta}[6]${c.reset} 🎟️  Gérer les codes d'abonnement (Créer, Lister, Activer, Modifier)`);
+    console.log(`  ${c.brightYellow}[7]${c.reset} 📧 Lancer le Studio de Newsletter (Éditeur HTML & CLI)`);
     console.log(`  ${c.white}[0]${c.reset} 🚪 Quitter`);
     console.log("");
 
-    const choice = (await rl.question(`  ${c.brightYellow}➔ Votre choix [0-5] : ${c.reset}`)).trim();
+    const choice = (await rl.question(`  ${c.brightYellow}➔ Votre choix [0-7] : ${c.reset}`)).trim();
 
     switch (choice) {
       case '1':
@@ -625,11 +640,18 @@ export async function runAdminCli() {
         await resetImageUsage();
         break;
       case '4':
-        await resetAllUsage(true);
+        await resetAudioUsage(true);
         break;
       case '5':
+        await resetAllUsage(true);
+        break;
+      case '6':
         rl.close();
         await runSubscriptionCodeManager();
+        return;
+      case '7':
+        rl.close();
+        await runNewsletterStudio();
         return;
       case '0':
       case 'exit':

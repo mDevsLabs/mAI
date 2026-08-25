@@ -23,7 +23,8 @@ import {
   Volume2,
 } from "lucide-react";
 import { useAuth } from "@/components/auth-provider";
-import { MaiApiError, formatStorageBytes, CLOUD_STORAGE_LIMITS } from "@/lib/mai-api";
+import { MaiApiError, formatStorageBytes, CLOUD_STORAGE_LIMITS, getAudioUsage, getTierSpeechLimit } from "@/lib/mai-api";
+import { getSession } from "@/lib/auth-storage";
 import { getUserApiUsage } from "@/app/actions/api-keys";
 import { getUserImageUsage, type UserImageUsageData } from "@/app/actions/image-usage";
 import toast from "react-hot-toast";
@@ -233,6 +234,7 @@ export default function AccountPage() {
       const data = await refreshUsage();
       await loadApiUsage(); // Refresh API keys usage too
       await loadImagesUsage(); // Refresh Image usage too
+      await loadAudioUsage(); // Refresh Audio usage too
       await refreshCloudStorage();
       if (data) toast.success("Quotas actualisés");
       else toast.error("Session expirée");
@@ -282,25 +284,39 @@ export default function AccountPage() {
   const loadAudioUsage = async () => {
     if (!user) return;
     try {
-      const token = typeof window !== "undefined" ? localStorage.getItem("mai_token") || sessionStorage.getItem("mai_token") : null;
-      const res = await fetch("https://mai.val.run/v1/audio/usage", {
-        headers: {
-          Authorization: `Bearer ${token || ""}`,
-          "Content-Type": "application/json",
-        },
-      });
-      if (res.ok) {
-        const data = await res.json();
+      const session = getSession();
+      const tok = session?.token;
+      const defaultLimit = getTierSpeechLimit(user.tier);
+
+      if (!tok) {
         setAudioUsage({
-          tokensUsed: data.tokensUsed ?? 0,
-          requestsCount: data.requestsCount ?? 0,
-          weeklyLimit: data.weeklyLimit ?? 50000,
-          resetAt: data.resetAt ?? "",
-          plan: data.plan ?? "Free",
+          tokensUsed: 0,
+          requestsCount: 0,
+          weeklyLimit: defaultLimit,
+          resetAt: "",
+          plan: user.tier || "Free",
         });
+        return;
       }
+
+      const data = await getAudioUsage(tok);
+      setAudioUsage({
+        tokensUsed: Number(data.tokensUsed ?? 0),
+        requestsCount: Number(data.requestsCount ?? 0),
+        weeklyLimit: Number(data.weeklyLimit ?? defaultLimit),
+        resetAt: data.resetAt ?? "",
+        plan: data.plan ?? user.tier ?? "Free",
+      });
     } catch {
-      // ignore
+      // Fallback gracieux basé sur le forfait utilisateur
+      const defaultLimit = getTierSpeechLimit(user?.tier);
+      setAudioUsage((prev) => prev || {
+        tokensUsed: 0,
+        requestsCount: 0,
+        weeklyLimit: defaultLimit,
+        resetAt: "",
+        plan: user?.tier || "Free",
+      });
     }
   };
 
@@ -363,6 +379,8 @@ export default function AccountPage() {
       audio.play().catch(() => {});
 
       await loadApiUsage();
+      await loadImagesUsage();
+      await loadAudioUsage();
 
       // Toast personnalisé
       toast.custom(
