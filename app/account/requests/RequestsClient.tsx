@@ -21,7 +21,7 @@ import { useAuth } from "@/components/auth-provider";
 export interface RouteDefinition {
   id: string;
   name: string;
-  category: "Projets" | "LLM & Modèles" | "Images & Web Search" | "SDK Google & Anthropic" | "Clés & Quotas" | "Système";
+  category: "Projets" | "LLM & Modèles" | "Images & Web Search" | "Audio & Speech" | "SDK Google & Anthropic" | "Clés & Quotas" | "Système";
   method: "GET" | "POST" | "PUT" | "DELETE";
   path: string;
   description: string;
@@ -220,6 +220,63 @@ const ROUTE_DEFINITIONS: RouteDefinition[] = [
     defaultBody: {
       query: "dernières actualités intelligence artificielle et modèles souverains 2026",
       count: 5
+    }
+  },
+
+  // 🔊 AUDIO & SPEECH
+  {
+    id: "audio-models-list",
+    name: "Catalogue Modèles Audio (Speech)",
+    category: "Audio & Speech",
+    method: "GET",
+    path: "v1/audio/models",
+    description: "Liste les modèles de synthèse vocale (TTS) disponibles via OpenRouter (Deepgram Flux TTS).",
+    requiresAuth: false,
+    defaultHeaders: {
+      "Content-Type": "application/json"
+    }
+  },
+  {
+    id: "audio-voices-list",
+    name: "Catalogue des Voix TTS",
+    category: "Audio & Speech",
+    method: "GET",
+    path: "v1/audio/voices",
+    description: "Liste toutes les voix disponibles pour la synthèse vocale (Alexis, Michael, Stacy, Sam, Asteria, Orion).",
+    requiresAuth: false,
+    defaultHeaders: {
+      "Content-Type": "application/json"
+    }
+  },
+  {
+    id: "audio-speech-generate",
+    name: "Générer une Synthèse Vocale (TTS)",
+    category: "Audio & Speech",
+    method: "POST",
+    path: "v1/audio/speech",
+    description: "Convertit du texte en audio avec Deepgram Flux TTS. Retourne un fichier MP3/audio binaire.",
+    requiresAuth: true,
+    defaultHeaders: {
+      "Content-Type": "application/json"
+    },
+    defaultBody: {
+      model: "deepgram/flux-tts:free",
+      input: "Bonjour, je suis mAI, votre assistant vocal souverain.",
+      voice: "flux-alexis-en",
+      response_format: "mp3",
+      speed: 1.0
+    }
+  },
+  {
+    id: "audio-usage-quota",
+    name: "Quota & Consommation Audio",
+    category: "Audio & Speech",
+    method: "GET",
+    path: "v1/audio/usage",
+    description: "Consulte le quota hebdomadaire de tokens TTS et le nombre de requêtes vocales effectuées.",
+    requiresAuth: true,
+    defaultHeaders: {
+      "Content-Type": "application/json"
     }
   },
 
@@ -624,7 +681,7 @@ axios(config)
 
         {/* Liste groupée des routes */}
         <div className="space-y-5 max-h-[550px] overflow-y-auto pr-1">
-          {["Projets", "LLM & Modèles", "Images & Web Search", "SDK Google & Anthropic", "Clés & Quotas", "Système"].map((cat) => {
+          {["Projets", "LLM & Modèles", "Images & Web Search", "Audio & Speech", "SDK Google & Anthropic", "Clés & Quotas", "Système"].map((cat) => {
             const routesInCat = ROUTE_DEFINITIONS.filter((r) => r.category === cat);
             if (routesInCat.length === 0) return null;
 

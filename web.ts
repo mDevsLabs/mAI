@@ -32,25 +32,139 @@ function getYouApiKeys(): string[] {
     }
   };
 
-  const k1 = getEnv("YOU_API_KEY") || getEnv("YOU_API_KEY_1");
-  const k2 = getEnv("YOU_API_KEY_2");
-  const k3 = getEnv("YOU_API_KEY_3");
+  const candidateKeys = [
+    getEnv("YOU_API_KEY"),
+    getEnv("YOU_API_KEY_1"),
+    getEnv("YOU_API_KEY_2"),
+    getEnv("YOU_API_KEY_3"),
+    getEnv("YDC_API_KEY"),
+  ];
 
-  if (k1) {
-    keys.push(k1.trim());
-  }
-  if (k2) {
-    keys.push(k2.trim());
-  }
-  if (k3) {
-    keys.push(k3.trim());
+  for (const k of candidateKeys) {
+    if (k && k.trim() && !keys.includes(k.trim())) {
+      keys.push(k.trim());
+    }
   }
 
   return keys;
 }
 
 /**
- * Exécute une recherche Web via l'API You.com avec triple fallback automatique.
+ * Fallback Web Universel (Google News RSS, Bing News RSS, Wikipedia & DDG)
+ */
+async function fallbackWebSearch(query: string, count = 5): Promise<Array<{ title: string; url: string; snippet: string }>> {
+  const results: Array<{ title: string; url: string; snippet: string }> = [];
+
+  // 1. Essai Google News RSS (Ultra-rapide, mondial, temps réel, aucune clé requise)
+  try {
+    const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(query)}&hl=fr&gl=FR&ceid=FR:fr`;
+    const res = await fetch(rssUrl, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+        "Accept": "application/rss+xml, text/xml, */*",
+      },
+    });
+
+    if (res.ok) {
+      const xml = await res.text();
+      const items = xml.split("<item>");
+      for (let i = 1; i < items.length && results.length < count; i++) {
+        const block = items[i].split("</item>")[0];
+        const titleMatch = block.match(/<title>([\s\S]*?)<\/title>/i);
+        const linkMatch = block.match(/<link>([\s\S]*?)<\/link>/i) || block.match(/<guid[^>]*>([\s\S]*?)<\/guid>/i);
+        const descMatch = block.match(/<description>([\s\S]*?)<\/description>/i);
+
+        let title = titleMatch ? titleMatch[1].replace(/<!\[CDATA\[(.*?)\]\]>/gi, "$1").replace(/<[^>]+>/g, "").trim() : "";
+        let link = linkMatch ? linkMatch[1].replace(/<!\[CDATA\[(.*?)\]\]>/gi, "$1").trim() : "";
+        let snippet = descMatch ? descMatch[1].replace(/<!\[CDATA\[(.*?)\]\]>/gi, "$1").replace(/<[^>]+>/g, "").trim() : title;
+
+        if (title && link) {
+          results.push({
+            title,
+            url: link,
+            snippet: snippet || title,
+          });
+        }
+      }
+
+      if (results.length > 0) return results;
+    }
+  } catch (err) {
+    console.warn("[WebSearch] Fallback Google News RSS failed:", err);
+  }
+
+  // 2. Essai Bing News RSS (Fallback de secours)
+  try {
+    const bingRssUrl = `https://www.bing.com/news/search?q=${encodeURIComponent(query)}&format=rss`;
+    const res = await fetch(bingRssUrl, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        "Accept": "application/rss+xml, text/xml, */*",
+      },
+    });
+
+    if (res.ok) {
+      const xml = await res.text();
+      const items = xml.split("<item>");
+      for (let i = 1; i < items.length && results.length < count; i++) {
+        const block = items[i].split("</item>")[0];
+        const titleMatch = block.match(/<title>([\s\S]*?)<\/title>/i);
+        const linkMatch = block.match(/<link>([\s\S]*?)<\/link>/i);
+        const descMatch = block.match(/<description>([\s\S]*?)<\/description>/i);
+
+        const title = titleMatch ? titleMatch[1].replace(/<[^>]+>/g, "").trim() : "";
+        const link = linkMatch ? linkMatch[1].trim() : "";
+        const snippet = descMatch ? descMatch[1].replace(/<[^>]+>/g, "").trim() : title;
+
+        if (title && link) {
+          results.push({
+            title,
+            url: link,
+            snippet: snippet || title,
+          });
+        }
+      }
+
+      if (results.length > 0) return results;
+    }
+  } catch (err) {
+    console.warn("[WebSearch] Fallback Bing RSS failed:", err);
+  }
+
+  // 3. Essai Wikipedia API
+  try {
+    const lang = /[éèàùçâêîôû]/i.test(query) ? "fr" : "en";
+    const wikiUrl = `https://${lang}.wikipedia.org/w/api.php?action=opensearch&search=${encodeURIComponent(query)}&limit=${count}&namespace=0&format=json`;
+    const res = await fetch(wikiUrl, {
+      headers: {
+        "User-Agent": "mAI-WebSearch-Agent/1.0 (https://m-ai.fr; contact@m-ai.fr)",
+      },
+    });
+    if (res.ok) {
+      const data = await res.json();
+      const titles = data[1] || [];
+      const descriptions = data[2] || [];
+      const urls = data[3] || [];
+      for (let i = 0; i < titles.length && results.length < count; i++) {
+        if (urls[i]) {
+          results.push({
+            title: titles[i],
+            url: urls[i],
+            snippet: descriptions[i] || `Article Wikipedia sur ${titles[i]}`,
+          });
+        }
+      }
+      if (results.length > 0) return results;
+    }
+  } catch (err) {
+    console.warn("[WebSearch] Fallback Wikipedia failed:", err);
+  }
+
+  return results;
+}
+
+/**
+ * Exécute une recherche Web via l'API You.com avec triple fallback automatique et fallback multi-sources.
  */
 export async function executeWebSearch(
   query: string,
@@ -74,70 +188,110 @@ export async function executeWebSearch(
   }
 
   const keys = getYouApiKeys();
-  if (keys.length === 0) {
-    console.warn("[WebSearch] Aucune clé YOU_API_KEY configurée.");
-    return {
-      error:
-        "Service de recherche temporairement non configuré (clés API You.com manquantes).",
-      provider: "you.com",
-      query: trimmedQuery,
-      results: [],
-      success: false,
-    };
-  }
-
   let lastError: any = null;
 
-  // Tentative avec triple fallback séquentiel
-  for (let i = 0; i < keys.length; i++) {
-    const key = keys[i];
-    const keyLabel = `YOU_API_KEY_${i + 1}`;
+  // 1. Tentative avec les clés You.com (POST https://ydc-index.io/v1/search conforme à l'API You.com)
+  if (keys.length > 0) {
+    const endpoints = [
+      "https://ydc-index.io/v1/search",
+      "https://api.ydc-index.io/v1/search",
+      "https://api.ydc-index.io/search",
+    ];
 
-    try {
-      // Endpoint standard You.com Search API (ydc-index ou api.you.com)
-      const url = `https://api.ydc-index.io/search?query=${encodeURIComponent(trimmedQuery)}&count=${count}`;
-      const res = await fetch(url, {
-        headers: {
-          Accept: "application/json",
-          "X-API-Key": key,
-        },
-        method: "GET",
-      });
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      const keyLabel = `YOU_API_KEY_${i + 1}`;
 
-      if (res.ok) {
-        const data: YouSearchResponse = await res.json();
-        const rawHits = data.hits || data.results || [];
-        const formattedResults = rawHits.map((hit) => ({
-          snippet:
-            hit.snippets && hit.snippets.length > 0
-              ? hit.snippets.join(" ... ")
-              : hit.description || "",
-          title: hit.title || "Sans titre",
-          url: hit.url || "",
-        }));
+      for (const endpointUrl of endpoints) {
+        try {
+          const res = await fetch(endpointUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-API-Key": key,
+              "Accept": "application/json",
+              "User-Agent": "mAI-WebSearch/1.0",
+            },
+            body: JSON.stringify({
+              query: trimmedQuery,
+              count,
+            }),
+          });
 
-        return {
-          provider: "you.com",
-          query: trimmedQuery,
-          results: formattedResults,
-          success: true,
-        };
+          if (res.ok) {
+            const data: any = await res.json().catch(() => null);
+            if (data) {
+              // Support complet des structures You.com v1 :
+              // 1. data.results.web & data.results.news (Format officiel v1)
+              // 2. data.results (Array direct)
+              // 3. data.hits / data.web.results
+              let rawHits: any[] = [];
+              if (data.results && typeof data.results === "object") {
+                if (Array.isArray(data.results)) {
+                  rawHits = data.results;
+                } else {
+                  if (Array.isArray(data.results.web)) rawHits.push(...data.results.web);
+                  if (Array.isArray(data.results.news)) rawHits.push(...data.results.news);
+                }
+              } else if (Array.isArray(data.hits)) {
+                rawHits = data.hits;
+              } else if (Array.isArray(data.web?.results)) {
+                rawHits = data.web.results;
+              }
+
+              const formattedResults = rawHits.map((hit: any) => {
+                let snippet = "";
+                if (hit.contents?.markdown) {
+                  snippet = hit.contents.markdown.slice(0, 300);
+                } else if (hit.snippets && Array.isArray(hit.snippets) && hit.snippets.length > 0) {
+                  snippet = hit.snippets.join(" ... ");
+                } else {
+                  snippet = hit.description || hit.snippet || hit.text || "";
+                }
+
+                return {
+                  snippet: snippet.trim(),
+                  title: hit.title || hit.name || "Sans titre",
+                  url: hit.url || hit.link || "",
+                };
+              }).filter((item: any) => item.title && item.url);
+
+              if (formattedResults.length > 0) {
+                return {
+                  provider: "you.com",
+                  query: trimmedQuery,
+                  results: formattedResults,
+                  success: true,
+                };
+              }
+            }
+          }
+
+          const status = res.status;
+          const errBody = await res.text().catch(() => "");
+          lastError = new Error(`HTTP ${status}: ${errBody}`);
+        } catch (err: any) {
+          lastError = err;
+        }
       }
-
-      const status = res.status;
-      const errBody = await res.text().catch(() => "");
-      console.warn(
-        `[WebSearch] Échec ${keyLabel} (HTTP ${status}): ${errBody.slice(0, 150)}`
-      );
-      lastError = new Error(`HTTP ${status}: ${errBody}`);
-    } catch (err: any) {
-      console.warn(`[WebSearch] Erreur réseau avec ${keyLabel}:`, err.message);
-      lastError = err;
     }
   }
 
+  // 2. Fallback automatique multi-moteurs (DDG Lite / Instant / Wikipedia)
+  const fallbackResults = await fallbackWebSearch(trimmedQuery, count);
+  if (fallbackResults.length > 0) {
+    return {
+      provider: "duckduckgo (fallback)",
+      query: trimmedQuery,
+      results: fallbackResults,
+      success: true,
+    };
+  }
+
   return {
-    error: `Échec de la recherche après tentative sur toutes les clés You.com (${lastError?.message || "Erreur inconnue"}).`,
+    error: keys.length === 0
+      ? "Aucune clé You.com configurée et les services de fallback sont temporairement inaccessibles."
+      : `Échec de la recherche (${lastError?.message || "Erreur"}).`,
     provider: "you.com",
     query: trimmedQuery,
     results: [],
@@ -169,8 +323,6 @@ export const WEB_SEARCH_TOOL = {
 
 /**
  * Vérifie si la recherche web doit être activée ou désactivée sur un appel API.
- * Activée par défaut, désactivable via { "web_search": false } dans le body
- * ou via l'en-tête HTTP 'x-web-search: false' / 'x-disable-web-search: true'.
  */
 export function isWebSearchEnabled(body: any, reqHeaders?: Headers): boolean {
   if (body && (body.web_search === false || body.enable_web_search === false)) {
@@ -211,26 +363,31 @@ export function registerWebRoutes(app: Hono) {
       }
 
       const searchResult = await executeWebSearch(query, count);
-      return c.json(searchResult, searchResult.success ? 200 : 502);
-    } catch {
-      return c.json({ error: "Erreur serveur lors de la recherche Web." }, 500);
+      return c.json(searchResult, 200);
+    } catch (err: any) {
+      return c.json({ error: "Erreur serveur lors de la recherche Web.", details: err?.message }, 500);
     }
   });
 
   // GET /v1/web/search
   app.get("/v1/web/search", async (c) => {
-    const query = c.req.query("q") || c.req.query("query");
-    const countParam = c.req.query("count");
-    const count = countParam ? Number.parseInt(countParam, 10) : 5;
+    try {
+      const query = c.req.query("q") || c.req.query("query");
+      const countParam = c.req.query("count");
+      const count = countParam ? Number.parseInt(countParam, 10) : 5;
 
-    if (!query) {
-      return c.json({ error: "Paramètre 'q' ou 'query' manquant." }, 400);
+      if (!query) {
+        return c.json({ error: "Paramètre 'q' ou 'query' manquant." }, 400);
+      }
+
+      const searchResult = await executeWebSearch(
+        query,
+        isNaN(count) ? 5 : count
+      );
+      return c.json(searchResult, 200);
+    } catch (err: any) {
+      return c.json({ error: "Erreur serveur lors de la recherche Web.", details: err?.message }, 500);
     }
-
-    const searchResult = await executeWebSearch(
-      query,
-      isNaN(count) ? 5 : count
-    );
-    return c.json(searchResult, searchResult.success ? 200 : 502);
   });
 }
+

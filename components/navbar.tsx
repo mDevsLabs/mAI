@@ -1,6 +1,6 @@
 "use client";
 
-import { Github, Menu, X, ChevronDown, UserRound, LogOut, Gauge, Activity, Cloud, Image as ImageIcon } from "lucide-react";
+import { Github, Menu, X, ChevronDown, UserRound, LogOut, Gauge, Activity, Cloud, Image as ImageIcon, Volume2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { CommandMenu } from "@/components/command-menu";
@@ -347,6 +347,14 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
                         >
                           <ImageIcon className="w-4 h-4 text-purple-600" />
                           Usage Images
+                        </Link>
+                        <Link
+                          href="/account#usage-audio"
+                          onClick={() => handleAnchorClick("usage-audio")}
+                          className="w-full px-3.5 py-2.5 rounded-2xl text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-700 transition-colors flex items-center gap-2.5"
+                        >
+                          <Volume2 className="w-4 h-4 text-purple-600" />
+                          Usage Audio
                         </Link>
                         <Link
                           href="/account#usage-cloud"

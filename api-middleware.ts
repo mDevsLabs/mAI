@@ -55,7 +55,9 @@ export function registerMiddleware(app: Hono) {
       path === "/models/mai" ||
       path === "/mai/models" ||
       path === "/v1/status" ||
-      path === "/status";
+      path === "/status" ||
+      path === "/v1/web/search" ||
+      path.startsWith("/v1/web/");
 
     const authHeader =
       c.req.header("Authorization") || c.req.header("authorization");
@@ -250,18 +252,14 @@ export function registerMiddleware(app: Hono) {
 
     await next();
 
-    if (isPublicRoute) {
-      return; // Ne pas logger les requêtes vers les routes publiques
-    }
-
     const latency = Date.now() - startTime;
     const status = c.res.status;
     const endpoint = c.req.path;
     const method = c.req.method;
 
-    // Logging & Mise à jour quota (uniquement pour les clés API utilisateur réelles)
-    const isJwtRoute = path.startsWith("/v1/devices");
-    if (!isJwtRoute && apiKey && apiKey !== systemMaiApiKey) {
+    // Logging & Décompte de 1 crédit API (pour toutes les requêtes avec clé API valide incluant audio, images, web search et chat)
+    const isExcludedRoute = path.startsWith("/v1/devices") || path === "/v1/status" || path === "/status";
+    if (!isExcludedRoute && apiKey && apiKey !== systemMaiApiKey) {
       try {
         const sql = getDb();
         const effectiveKeyToLog = matchedApiKey || apiKey;
@@ -277,7 +275,7 @@ export function registerMiddleware(app: Hono) {
           WHERE api_key = ${effectiveKeyToLog}::text
         `;
       } catch (err) {
-        console.error("Erreur logging API:", err);
+        console.error("Erreur logging API & mise à jour quota:", err);
       }
     }
   });

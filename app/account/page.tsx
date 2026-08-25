@@ -20,8 +20,7 @@ import {
   Monitor,
   Cloud,
   Image as ImageIcon,
-  Download,
-  X,
+  Volume2,
 } from "lucide-react";
 import { useAuth } from "@/components/auth-provider";
 import { MaiApiError, formatStorageBytes, CLOUD_STORAGE_LIMITS } from "@/lib/mai-api";
@@ -86,7 +85,8 @@ export default function AccountPage() {
   const [refreshingStorage, setRefreshingStorage] = useState(false);
   const [refreshingImages, setRefreshingImages] = useState(false);
   const [imageUsage, setImageUsage] = useState<UserImageUsageData | null>(null);
-  const [selectedImageModal, setSelectedImageModal] = useState<any | null>(null);
+  const [refreshingAudio, setRefreshingAudio] = useState(false);
+  const [audioUsage, setAudioUsage] = useState<{tokensUsed: number; requestsCount: number; weeklyLimit: number; resetAt: string; plan: string} | null>(null);
 
   // Formulaires d'édition du profil
   const [newUsername, setNewUsername] = useState("");
@@ -113,7 +113,7 @@ export default function AccountPage() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ["profil", "usage-api", "usage-images", "usage-mai", "usage-cloud", "appareils", "upgrade-code"];
+      const sections = ["profil", "usage-api", "usage-images", "usage-audio", "usage-mai", "usage-cloud", "appareils", "upgrade-code"];
       let current = sections[0];
       for (const section of sections) {
         const element = document.getElementById(section);
@@ -217,6 +217,7 @@ export default function AccountPage() {
     if (user) {
       loadApiUsage();
       loadImagesUsage();
+      loadAudioUsage();
     }
   }, [user]);
 
@@ -275,6 +276,43 @@ export default function AccountPage() {
       toast.error("Erreur lors de l'actualisation des images.");
     } finally {
       setRefreshingImages(false);
+    }
+  };
+
+  const loadAudioUsage = async () => {
+    if (!user) return;
+    try {
+      const token = typeof window !== "undefined" ? localStorage.getItem("mai_token") || sessionStorage.getItem("mai_token") : null;
+      const res = await fetch("https://mai.val.run/v1/audio/usage", {
+        headers: {
+          Authorization: `Bearer ${token || ""}`,
+          "Content-Type": "application/json",
+        },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setAudioUsage({
+          tokensUsed: data.tokensUsed ?? 0,
+          requestsCount: data.requestsCount ?? 0,
+          weeklyLimit: data.weeklyLimit ?? 50000,
+          resetAt: data.resetAt ?? "",
+          plan: data.plan ?? "Free",
+        });
+      }
+    } catch {
+      // ignore
+    }
+  };
+
+  const handleRefreshAudio = async () => {
+    setRefreshingAudio(true);
+    try {
+      await loadAudioUsage();
+      toast.success("Usage Audio actualisé !");
+    } catch {
+      toast.error("Erreur lors de l'actualisation de l'audio.");
+    } finally {
+      setRefreshingAudio(false);
     }
   };
 
@@ -440,6 +478,7 @@ export default function AccountPage() {
               { id: "profil", label: "Profil & Paramètres", icon: User },
               { id: "usage-api", label: "Usage API", icon: KeyRound },
               { id: "usage-images", label: "Usage Images", icon: ImageIcon },
+              { id: "usage-audio", label: "Usage Audio", icon: Volume2 },
               { id: "usage-mai", label: "Usage mAI", icon: Gauge },
               { id: "usage-cloud", label: "Stockage Cloud", icon: Cloud },
               { id: "appareils", label: "Appareils Connectés", icon: Monitor },
@@ -830,120 +869,85 @@ export default function AccountPage() {
                 </p>
               </div>
 
-              {/* Historique des générations d'images */}
-              <div className="space-y-3 pt-2">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-                    <ImageIcon className="w-3.5 h-3.5 text-purple-600" />
-                    Historique des Images Générées ({imageUsage?.history?.length ?? 0})
-                  </h3>
-                  <Link
-                    href="/account/models/images"
-                    className="text-xs font-bold text-purple-600 hover:underline"
-                  >
-                    Générer une image →
-                  </Link>
-                </div>
-
-                {imageUsage?.history && imageUsage.history.length > 0 ? (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 max-h-[380px] overflow-y-auto pr-1">
-                    {imageUsage.history.map((img) => (
-                      <div
-                        key={img.id}
-                        onClick={() => setSelectedImageModal(img)}
-                        className="group relative rounded-2xl bg-slate-100 border border-slate-200/80 overflow-hidden shadow-xs hover:shadow-md transition-all cursor-pointer aspect-square"
-                      >
-                        {img.imageUrl ? (
-                          <img
-                            src={img.imageUrl}
-                            alt={img.prompt}
-                            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                            loading="lazy"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex flex-col items-center justify-center p-2 text-center text-slate-400">
-                            <ImageIcon className="w-6 h-6 mb-1" />
-                            <span className="text-[10px] font-mono">Image générée</span>
-                          </div>
-                        )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-2.5 flex flex-col justify-end text-white">
-                          <p className="text-[11px] font-bold line-clamp-2">{img.prompt}</p>
-                          <div className="flex items-center justify-between mt-1 text-[9px] text-slate-300">
-                            <span className="truncate max-w-[70px]">{img.model.split("/").pop()}</span>
-                            <span>{new Date(img.createdAt).toLocaleDateString("fr-FR")}</span>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-8 rounded-2xl bg-white/50 border border-slate-200/60">
-                    <ImageIcon className="w-8 h-8 mx-auto text-slate-300 mb-2" />
-                    <p className="text-sm font-medium text-slate-600">Aucune image générée pour le moment</p>
-                    <p className="text-xs text-slate-400 mt-0.5">Vos créations apparaîtront ici automatiquement.</p>
-                  </div>
-                )}
-              </div>
             </div>
           );
         })()}
 
-        {/* Modal de prévisualisation d'image */}
-        {selectedImageModal && (
-          <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl space-y-4 p-5 animate-in fade-in zoom-in-95 duration-200">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-mono font-bold px-2 py-0.5 rounded-full bg-purple-100 text-purple-700">
-                  {selectedImageModal.model}
-                </span>
-                <button
-                  onClick={() => setSelectedImageModal(null)}
-                  className="p-1 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-700 cursor-pointer"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
+      </section>
 
-              {selectedImageModal.imageUrl && (
-                <div className="rounded-2xl overflow-hidden bg-slate-950 aspect-square max-h-[340px] flex items-center justify-center">
-                  <img
-                    src={selectedImageModal.imageUrl}
-                    alt={selectedImageModal.prompt}
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-              )}
+      {/* Usage Audio */}
+      <section id="usage-audio" className="scroll-mt-28 bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-4">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+              <Volume2 className="w-5 h-5 text-purple-600" />
+              Usage Audio (Speech)
+            </h2>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Consommation hebdomadaire de tokens de synthèse vocale (TTS).
+            </p>
+          </div>
+          <button
+            onClick={handleRefreshAudio}
+            disabled={refreshingAudio}
+            className="p-2 rounded-xl border border-slate-200 hover:bg-white/80 text-slate-600 transition-colors disabled:opacity-50 cursor-pointer"
+            title="Actualiser l'usage audio"
+          >
+            <RefreshCw className={`w-4 h-4 ${refreshingAudio ? "animate-spin" : ""}`} />
+          </button>
+        </div>
 
-              <div className="space-y-1.5">
-                <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Prompt</p>
-                <p className="text-sm font-medium text-slate-800 bg-slate-50 p-3 rounded-xl border border-slate-100 max-h-24 overflow-y-auto">
-                  {selectedImageModal.prompt}
+        {audioUsage ? (
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <div className="flex items-end justify-between text-sm">
+                <p className="text-slate-600">
+                  <span className="font-bold text-slate-900">{audioUsage.tokensUsed.toLocaleString()}</span>{" "}
+                  / {audioUsage.weeklyLimit.toLocaleString()} tokens
+                </p>
+                <p className={`font-semibold ${
+                  Math.round((audioUsage.tokensUsed / (audioUsage.weeklyLimit || 1)) * 100) >= 90
+                    ? "text-red-600 font-bold"
+                    : "text-slate-900"
+                }`}>
+                  {Math.min(100, Math.round((audioUsage.tokensUsed / (audioUsage.weeklyLimit || 1)) * 100))}%
                 </p>
               </div>
-
-              <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
-                <span className="text-slate-400">
-                  {new Date(selectedImageModal.createdAt).toLocaleString("fr-FR")}
-                </span>
-                {selectedImageModal.imageUrl && (
-                  <a
-                    href={selectedImageModal.imageUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    download="generation.png"
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs transition-colors"
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                    Ouvrir / Télécharger
-                  </a>
-                )}
+              <div className="w-full bg-slate-200/80 rounded-full h-3 overflow-hidden">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${Math.min(100, Math.round((audioUsage.tokensUsed / (audioUsage.weeklyLimit || 1)) * 100))}%` }}
+                  transition={{ duration: 1, ease: "easeOut" }}
+                  className={`h-full rounded-full ${
+                    Math.round((audioUsage.tokensUsed / (audioUsage.weeklyLimit || 1)) * 100) >= 90
+                      ? "bg-red-500"
+                      : "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
+                  }`}
+                />
+              </div>
+              <p className="text-xs text-slate-500">
+                Réinitialisation hebdomadaire : {formatResetDate(audioUsage.resetAt)}
+              </p>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <div className="rounded-2xl bg-white/60 border border-slate-200/80 p-3.5 shadow-sm">
+                <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Requêtes</p>
+                <p className="text-base font-black text-slate-900">{audioUsage.requestsCount}</p>
+              </div>
+              <div className="rounded-2xl bg-white/60 border border-slate-200/80 p-3.5 shadow-sm">
+                <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Tokens Utilisés</p>
+                <p className="text-base font-black text-slate-900">{audioUsage.tokensUsed.toLocaleString()}</p>
+              </div>
+              <div className="rounded-2xl bg-white/60 border border-slate-200/80 p-3.5 shadow-sm">
+                <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Limite Hebdo</p>
+                <p className="text-base font-black text-purple-700">{audioUsage.weeklyLimit.toLocaleString()}</p>
               </div>
             </div>
           </div>
+        ) : (
+          <p className="text-sm text-slate-500">Impossible de charger l&apos;usage audio. Réessayez.</p>
         )}
       </section>
-
-      
 
       {/* Usage mAI */}
       <section id="usage-mai" className="scroll-mt-28 bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-4">

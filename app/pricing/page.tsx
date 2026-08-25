@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Sparkles, Gauge, KeyRound, Zap, ArrowRight, ShieldCheck, Cloud } from "lucide-react";
+import { Sparkles, Gauge, KeyRound, Zap, ArrowRight, ShieldCheck, Cloud, Image as ImageIcon, Volume2 } from "lucide-react";
 import { useAuth } from "@/components/auth-provider";
 
 interface PlanItem {
@@ -14,6 +14,8 @@ interface PlanItem {
   maiTokens: string;
   apiRequests: string;
   cloudStorage: string;
+  dailyImages: string;
+  audioTokens: string;
 }
 
 const PLANS: PlanItem[] = [
@@ -24,6 +26,8 @@ const PLANS: PlanItem[] = [
     maiTokens: "1 000 000 tokens / semaine",
     apiRequests: "500 requêtes / mois",
     cloudStorage: "500 MO Cloud",
+    dailyImages: "3 images / jour",
+    audioTokens: "50 000 tokens / semaine",
   },
   {
     id: "plus",
@@ -32,6 +36,8 @@ const PLANS: PlanItem[] = [
     maiTokens: "5 000 000 tokens / semaine",
     apiRequests: "1 000 requêtes / mois",
     cloudStorage: "1 GB Cloud",
+    dailyImages: "5 images / jour",
+    audioTokens: "150 000 tokens / semaine",
   },
   {
     id: "pro",
@@ -42,6 +48,8 @@ const PLANS: PlanItem[] = [
     maiTokens: "10 000 000 tokens / semaine",
     apiRequests: "2 000 requêtes / mois",
     cloudStorage: "2 GB Cloud",
+    dailyImages: "10 images / jour",
+    audioTokens: "500 000 tokens / semaine",
   },
   {
     id: "max",
@@ -50,6 +58,8 @@ const PLANS: PlanItem[] = [
     maiTokens: "20 000 000 tokens / semaine",
     apiRequests: "5 000 requêtes / mois",
     cloudStorage: "5 GB Cloud",
+    dailyImages: "20 images / jour",
+    audioTokens: "2 000 000 tokens / semaine",
   },
 ];
 
@@ -169,6 +179,26 @@ export default function PricingPage() {
                     <div>
                       <p className="text-xs font-bold text-slate-900">Stockage Cloud</p>
                       <p className="text-xs text-slate-600 font-medium">{plan.cloudStorage}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-2.5">
+                    <div className="p-1 rounded-lg bg-pink-100 text-pink-600 mt-0.5">
+                      <ImageIcon className="w-3.5 h-3.5" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-slate-900">Quota Images</p>
+                      <p className="text-xs text-slate-600 font-medium">{plan.dailyImages}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-2.5">
+                    <div className="p-1 rounded-lg bg-indigo-100 text-indigo-600 mt-0.5">
+                      <Volume2 className="w-3.5 h-3.5" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-slate-900">Quota Audio (TTS)</p>
+                      <p className="text-xs text-slate-600 font-medium">{plan.audioTokens}</p>
                     </div>
                   </div>
                 </div>
