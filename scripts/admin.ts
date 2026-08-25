@@ -5,7 +5,7 @@ import * as readline from 'readline/promises';
 import { stdin as input, stdout as output } from 'process';
 import fs from 'fs';
 import path from 'path';
-import { sendEmail, runNewsletterStudio } from './newsletter-send.ts';
+import { sendEmail, runNewsletterStudio } from './newsletter-send';
 
 // ─────────────────────────────────────────────
 // Chargement automatique des variables d'environnement
