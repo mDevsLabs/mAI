@@ -1,5 +1,5 @@
-import type { Hono } from "npm:hono@4";
 import { sqlite } from "https://esm.town/v/std/sqlite";
+import type { Hono } from "npm:hono@4";
 import { extractToken, getDb, parseUserAgent } from "./config.ts";
 
 export function registerDeviceRoutes(app: Hono) {
@@ -9,11 +9,16 @@ export function registerDeviceRoutes(app: Hono) {
     const token = extractToken(c.req.raw);
     const sql = getDb();
 
-    const existing = await sql`SELECT id FROM connected_devices WHERE token = ${token}`;
+    const existing =
+      await sql`SELECT id FROM connected_devices WHERE token = ${token}`;
     if (existing.length === 0) {
       const userAgent = c.req.header("user-agent") || "";
-      const ip = c.req.header("cf-connecting-ip") || c.req.header("x-forwarded-for") || "Inconnue";
-      const { os, device_model, device_version, device_name } = parseUserAgent(userAgent);
+      const ip =
+        c.req.header("cf-connecting-ip") ||
+        c.req.header("x-forwarded-for") ||
+        "Inconnue";
+      const { os, device_model, device_version, device_name } =
+        parseUserAgent(userAgent);
       try {
         await sql`
           INSERT INTO connected_devices (user_id, token, os, device_model, device_version, ip_address, device_name)
@@ -36,18 +41,18 @@ export function registerDeviceRoutes(app: Hono) {
     `;
 
     const devices = rawDevices.map((d: any) => ({
-      id: d.id,
-      os: d.os,
-      device_model: d.device_model,
-      device_version: d.device_version || "",
-      ip_address: d.ip_address,
-      device_name: d.device_name,
-      last_active: d.last_active,
       created_at: d.created_at,
+      device_model: d.device_model,
+      device_name: d.device_name,
+      device_version: d.device_version || "",
+      id: d.id,
+      ip_address: d.ip_address,
       is_current: d.token === token,
+      last_active: d.last_active,
+      os: d.os,
     }));
 
-    return c.json({ success: true, devices });
+    return c.json({ devices, success: true });
   });
 
   // DELETE /v1/devices/others
@@ -77,7 +82,10 @@ export function registerDeviceRoutes(app: Hono) {
       WHERE user_id = ${userId}::text AND token != ${token}
     `;
 
-    return c.json({ success: true, message: "Tous les autres appareils ont été déconnectés." });
+    return c.json({
+      message: "Tous les autres appareils ont été déconnectés.",
+      success: true,
+    });
   });
 
   // DELETE /v1/devices/all
@@ -106,7 +114,10 @@ export function registerDeviceRoutes(app: Hono) {
       WHERE user_id = ${userId}::text
     `;
 
-    return c.json({ success: true, message: "Tous les appareils ont été déconnectés." });
+    return c.json({
+      message: "Tous les appareils ont été déconnectés.",
+      success: true,
+    });
   });
 
   // PUT /v1/devices/:id
@@ -124,8 +135,9 @@ export function registerDeviceRoutes(app: Hono) {
     const userId = c.get("userId");
     const deviceId = c.req.param("id");
     const sql = getDb();
-    
-    const devices = await sql`SELECT token FROM connected_devices WHERE id = ${deviceId} AND user_id = ${userId}::text LIMIT 1`;
+
+    const devices =
+      await sql`SELECT token FROM connected_devices WHERE id = ${deviceId} AND user_id = ${userId}::text LIMIT 1`;
     if (devices.length > 0) {
       const token = devices[0].token;
       if (token) {

@@ -19,10 +19,15 @@ import {
   Lock,
   Monitor,
   Cloud,
+  Image as ImageIcon,
+  Download,
+  ExternalLink,
+  X,
 } from "lucide-react";
 import { useAuth } from "@/components/auth-provider";
 import { MaiApiError, formatStorageBytes, CLOUD_STORAGE_LIMITS } from "@/lib/mai-api";
 import { getUserApiUsage } from "@/app/actions/api-keys";
+import { getUserImageUsage, type UserImageUsageData } from "@/app/actions/image-usage";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import Confetti from "react-confetti";
@@ -80,6 +85,9 @@ export default function AccountPage() {
   const [refreshing, setRefreshing] = useState(false);
   const [refreshingApi, setRefreshingApi] = useState(false);
   const [refreshingStorage, setRefreshingStorage] = useState(false);
+  const [refreshingImages, setRefreshingImages] = useState(false);
+  const [imageUsage, setImageUsage] = useState<UserImageUsageData | null>(null);
+  const [selectedImageModal, setSelectedImageModal] = useState<any | null>(null);
 
   // Formulaires d'édition du profil
   const [newUsername, setNewUsername] = useState("");
@@ -106,7 +114,7 @@ export default function AccountPage() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ["profil", "usage-api", "usage-mai", "usage-cloud", "appareils", "upgrade-code"];
+      const sections = ["profil", "usage-api", "usage-images", "usage-mai", "usage-cloud", "appareils", "upgrade-code"];
       let current = sections[0];
       for (const section of sections) {
         const element = document.getElementById(section);
@@ -197,9 +205,19 @@ export default function AccountPage() {
     }
   };
 
+  const loadImagesUsage = async () => {
+    if (!user) return;
+    const userId = user.username || user.email || String(user.id || "dev_user");
+    const res = await getUserImageUsage(userId);
+    if (res.success && res.data) {
+      setImageUsage(res.data);
+    }
+  };
+
   useEffect(() => {
     if (user) {
       loadApiUsage();
+      loadImagesUsage();
     }
   }, [user]);
 
@@ -214,6 +232,7 @@ export default function AccountPage() {
     try {
       const data = await refreshUsage();
       await loadApiUsage(); // Refresh API keys usage too
+      await loadImagesUsage(); // Refresh Image usage too
       await refreshCloudStorage();
       if (data) toast.success("Quotas actualisés");
       else toast.error("Session expirée");
@@ -245,6 +264,18 @@ export default function AccountPage() {
       toast.error("Erreur lors de l'actualisation de l'usage API.");
     } finally {
       setRefreshingApi(false);
+    }
+  };
+
+  const handleRefreshImages = async () => {
+    setRefreshingImages(true);
+    try {
+      await loadImagesUsage();
+      toast.success("Usage Images actualisé !");
+    } catch {
+      toast.error("Erreur lors de l'actualisation des images.");
+    } finally {
+      setRefreshingImages(false);
     }
   };
 
@@ -409,6 +440,7 @@ export default function AccountPage() {
             {[
               { id: "profil", label: "Profil & Paramètres", icon: User },
               { id: "usage-api", label: "Usage API", icon: KeyRound },
+              { id: "usage-images", label: "Usage Images", icon: ImageIcon },
               { id: "usage-mai", label: "Usage mAI", icon: Gauge },
               { id: "usage-cloud", label: "Stockage Cloud", icon: Cloud },
               { id: "appareils", label: "Appareils Connectés", icon: Monitor },
@@ -740,6 +772,178 @@ export default function AccountPage() {
         )}
       </section>
 
+      {/* Usage Images (Comet API & Flux) */}
+      <section id="usage-images" className="scroll-mt-28 bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-6">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+              <ImageIcon className="w-5 h-5 text-purple-600" />
+              Usage Images (Génération Quotidienne)
+            </h2>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Consommation de vos générations d&apos;images quotidiennes via Comet API & Flux.
+            </p>
+          </div>
+          <button
+            onClick={handleRefreshImages}
+            disabled={refreshingImages}
+            className="p-2 rounded-xl border border-slate-200 hover:bg-white/80 text-slate-600 transition-colors disabled:opacity-50 cursor-pointer"
+            title="Actualiser l'usage images"
+          >
+            <RefreshCw className={`w-4 h-4 ${refreshingImages ? "animate-spin" : ""}`} />
+          </button>
+        </div>
+
+        {(() => {
+          const usedToday = imageUsage?.usedToday ?? 0;
+          const dailyLimit = imageUsage?.dailyLimit ?? (user?.tier === "Max" ? 20 : user?.tier === "Pro" ? 10 : user?.tier === "Plus" ? 5 : 3);
+          const percentUsed = Math.min(100, Math.round((usedToday / (dailyLimit || 1)) * 100));
+          const isAtLimit = usedToday >= dailyLimit;
+
+          return (
+            <div className="space-y-6 pt-1">
+              {/* Barre de progression journalière */}
+              <div className="space-y-2">
+                <div className="flex items-end justify-between text-sm">
+                  <p className="text-slate-600">
+                    <span className="font-bold text-slate-900">{usedToday}</span> / {dailyLimit} images générées aujourd&apos;hui
+                  </p>
+                  <p className={`font-semibold ${isAtLimit ? "text-red-600 font-bold" : "text-slate-900"}`}>
+                    {percentUsed}%
+                  </p>
+                </div>
+                <div className="w-full bg-slate-200/80 rounded-full h-3 overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${percentUsed}%` }}
+                    transition={{ duration: 1, ease: "easeOut" }}
+                    className={`h-full rounded-full ${
+                      isAtLimit
+                        ? "bg-red-500"
+                        : percentUsed >= 70
+                          ? "bg-amber-500"
+                          : "bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500"
+                    }`}
+                  />
+                </div>
+                <p className="text-xs text-slate-500">
+                  Réinitialisation automatique : chaque jour à minuit UTC (00:00 UTC).
+                </p>
+              </div>
+
+              {/* Historique des générations d'images */}
+              <div className="space-y-3 pt-2">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                    <ImageIcon className="w-3.5 h-3.5 text-purple-600" />
+                    Historique des Images Générées ({imageUsage?.history?.length ?? 0})
+                  </h3>
+                  <Link
+                    href="/account/models/images"
+                    className="text-xs font-bold text-purple-600 hover:underline"
+                  >
+                    Générer une image →
+                  </Link>
+                </div>
+
+                {imageUsage?.history && imageUsage.history.length > 0 ? (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 max-h-[380px] overflow-y-auto pr-1">
+                    {imageUsage.history.map((img) => (
+                      <div
+                        key={img.id}
+                        onClick={() => setSelectedImageModal(img)}
+                        className="group relative rounded-2xl bg-slate-100 border border-slate-200/80 overflow-hidden shadow-xs hover:shadow-md transition-all cursor-pointer aspect-square"
+                      >
+                        {img.imageUrl ? (
+                          <img
+                            src={img.imageUrl}
+                            alt={img.prompt}
+                            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex flex-col items-center justify-center p-2 text-center text-slate-400">
+                            <ImageIcon className="w-6 h-6 mb-1" />
+                            <span className="text-[10px] font-mono">Image générée</span>
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-2.5 flex flex-col justify-end text-white">
+                          <p className="text-[11px] font-bold line-clamp-2">{img.prompt}</p>
+                          <div className="flex items-center justify-between mt-1 text-[9px] text-slate-300">
+                            <span className="truncate max-w-[70px]">{img.model.split("/").pop()}</span>
+                            <span>{new Date(img.createdAt).toLocaleDateString("fr-FR")}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8 rounded-2xl bg-white/50 border border-slate-200/60">
+                    <ImageIcon className="w-8 h-8 mx-auto text-slate-300 mb-2" />
+                    <p className="text-sm font-medium text-slate-600">Aucune image générée pour le moment</p>
+                    <p className="text-xs text-slate-400 mt-0.5">Vos créations apparaîtront ici automatiquement.</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* Modal de prévisualisation d'image */}
+        {selectedImageModal && (
+          <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+            <div className="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl space-y-4 p-5 animate-in fade-in zoom-in-95 duration-200">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-mono font-bold px-2 py-0.5 rounded-full bg-purple-100 text-purple-700">
+                  {selectedImageModal.model}
+                </span>
+                <button
+                  onClick={() => setSelectedImageModal(null)}
+                  className="p-1 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-700 cursor-pointer"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {selectedImageModal.imageUrl && (
+                <div className="rounded-2xl overflow-hidden bg-slate-950 aspect-square max-h-[340px] flex items-center justify-center">
+                  <img
+                    src={selectedImageModal.imageUrl}
+                    alt={selectedImageModal.prompt}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+              )}
+
+              <div className="space-y-1.5">
+                <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Prompt</p>
+                <p className="text-sm font-medium text-slate-800 bg-slate-50 p-3 rounded-xl border border-slate-100 max-h-24 overflow-y-auto">
+                  {selectedImageModal.prompt}
+                </p>
+              </div>
+
+              <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
+                <span className="text-slate-400">
+                  {new Date(selectedImageModal.createdAt).toLocaleString("fr-FR")}
+                </span>
+                {selectedImageModal.imageUrl && (
+                  <a
+                    href={selectedImageModal.imageUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    download="generation.png"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs transition-colors"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    Ouvrir / Télécharger
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </section>
+
       
 
       {/* Usage mAI */}
@@ -770,16 +974,18 @@ export default function AccountPage() {
               </p>
               <p className="font-semibold text-slate-900">{percent}%</p>
             </div>
-            <div className="h-3 rounded-full bg-slate-200/80 overflow-hidden">
-              <div
-                className={`h-full rounded-full transition-all ${
+            <div className="w-full bg-slate-200/80 rounded-full h-3 overflow-hidden">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${percent}%` }}
+                transition={{ duration: 1, ease: "easeOut" }}
+                className={`h-full rounded-full ${
                   percent >= 90
                     ? "bg-red-500"
                     : percent >= 70
                       ? "bg-amber-500"
                       : "bg-gradient-to-r from-purple-500 to-blue-500"
                 }`}
-                style={{ width: `${percent}%` }}
               />
             </div>
             <p className="text-xs text-slate-500">
@@ -852,6 +1058,9 @@ export default function AccountPage() {
                     }`}
                   />
                 </div>
+                <p className="text-xs text-slate-500">
+                  Espace persistant : calculé en temps réel selon vos fichiers hébergés et libéré dès suppression.
+                </p>
               </div>
 
               {/* Cartes de statistiques clés */}
@@ -871,42 +1080,6 @@ export default function AccountPage() {
                 <div className="rounded-2xl bg-white/60 border border-slate-200/80 p-3.5 shadow-sm">
                   <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Forfait Actuel</p>
                   <p className="text-base font-black text-purple-700">{tier}</p>
-                </div>
-              </div>
-
-              {/* Limites officielles par forfait */}
-              <div className="rounded-2xl bg-purple-50/60 border border-purple-100 p-4 space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-purple-900 uppercase tracking-wider flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-purple-600" />
-                    Quotas de Stockage par Forfait
-                  </span>
-                  <Link href="/pricing" className="text-xs font-bold text-purple-600 hover:text-purple-700 hover:underline">
-                    Augmenter mon quota →
-                  </Link>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-                  {[
-                    { tierName: "Free", limitText: "500 MO" },
-                    { tierName: "Plus", limitText: "1 GB" },
-                    { tierName: "Pro", limitText: "2 GB" },
-                    { tierName: "Max", limitText: "5 GB" },
-                  ].map((p) => {
-                    const isUserPlan = tier.toLowerCase() === p.tierName.toLowerCase();
-                    return (
-                      <div
-                        key={p.tierName}
-                        className={`p-2.5 rounded-xl border text-center transition-all ${
-                          isUserPlan
-                            ? "bg-purple-600 text-white font-bold border-purple-600 shadow-sm ring-2 ring-purple-400/50"
-                            : "bg-white/70 text-slate-700 border-slate-200/70"
-                        }`}
-                      >
-                        <p className={`text-[10px] uppercase font-black ${isUserPlan ? "text-purple-100" : "text-slate-500"}`}>{p.tierName}</p>
-                        <p className="text-sm font-extrabold mt-0.5">{p.limitText}</p>
-                      </div>
-                    );
-                  })}
                 </div>
               </div>
             </div>

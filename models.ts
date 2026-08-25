@@ -1,5 +1,19 @@
 import type { Hono } from "npm:hono@4";
-import { extractToken, getDb, getWeekData, TIER_LIMITS, verifyToken } from "./config.ts";
+import {
+  extractToken,
+  getDb,
+  getWeekData,
+  TIER_LIMITS,
+  verifyToken,
+} from "./config.ts";
+import { maiModelsList } from "./maiModels.ts";
+
+function getOpenRouterApiKey(userCustomKey?: string | null): string {
+  if (userCustomKey && userCustomKey.trim().startsWith("sk-or-")) {
+    return userCustomKey.trim();
+  }
+  return Deno.env.get("OPENROUTER_API_KEY") || "";
+}
 
 export function registerModelRoutes(app: Hono) {
   // GET /usage
@@ -27,6 +41,7 @@ export function registerModelRoutes(app: Hono) {
       return c.json({
         avatarUrl: user?.avatar_url,
         email: user?.email,
+        id: userId,
         limit,
         phone: user?.phone,
         resetAt: nextResetIso,
@@ -123,14 +138,16 @@ export function registerModelRoutes(app: Hono) {
 
       // Le corps de la requête du CLI
       const body = await c.req.json();
-      
+
       const keyRows = await sql`
         SELECT api_key FROM mprojects_api_keys WHERE user_id = ${userId}::text LIMIT 1
       `;
-      const apiKey = keyRows.length > 0 ? keyRows[0].api_key : Deno.env.get("OPENROUTER_API_KEY");
+      const apiKey = getOpenRouterApiKey(
+        keyRows.length > 0 ? keyRows[0].api_key : null
+      );
 
       if (!apiKey) {
-        return c.json({ error: "Clé fournisseur manquante." }, 500);
+        return c.json({ error: "Clé fournisseur OpenRouter manquante." }, 500);
       }
 
       try {
@@ -140,7 +157,7 @@ export function registerModelRoutes(app: Hono) {
           ON CONFLICT (user_id, week_start)
           DO UPDATE SET tokens_used = weekly_usage.tokens_used + 1
         `;
-      } catch(e) {}
+      } catch (e) {}
 
       // Redirection de la requête vers OpenRouter
       const response = await fetch(
@@ -174,10 +191,11 @@ export function registerModelRoutes(app: Hono) {
   // GET /v1/models
   app.get("/v1/models", async (c) => {
     const userPlan = c.get("userPlan");
-    const apiKey = c.get("apiKey");
-    const planStr = String(userPlan || "Free").toLowerCase().trim();
+    const planStr = String(userPlan || "Free")
+      .toLowerCase()
+      .trim();
     const isPaidPlan = ["plus", "pro", "max"].includes(planStr);
-    const shouldFilterFreeOnly = !isPaidPlan || !apiKey;
+    const shouldFilterFreeOnly = !isPaidPlan;
 
     try {
       const res = await fetch("https://openrouter.ai/api/v1/models");
@@ -215,12 +233,16 @@ export function registerModelRoutes(app: Hono) {
             "stream",
             "stop",
             "tools",
-            "response_format"
+            "response_format",
           ],
         }));
 
       if (shouldFilterFreeOnly) {
-        filtered = filtered.filter((m) => m.id.toLowerCase().includes("free"));
+        filtered = filtered.filter(
+          (m) =>
+            (m.id || "").toLowerCase().endsWith(":free") ||
+            (m.id || "").toLowerCase().includes(":free")
+        );
       }
 
       return c.json({ data: filtered, object: "list" });
@@ -233,14 +255,23 @@ export function registerModelRoutes(app: Hono) {
             output_modalities: ["text"],
           },
           created: 0,
-          description: "Modèle multimodal ultra-rapide de Google conçu pour des tâches à haut débit et de raisonnement avec un très grand contexte.",
+          description:
+            "Modèle multimodal ultra-rapide de Google conçu pour des tâches à haut débit et de raisonnement avec un très grand contexte.",
           id: "google/gemini-2.5-flash:free",
           maxContext: 1_048_576,
           maxOutput: 65_535,
           name: "Google: Gemini 2.5 Flash",
           object: "model",
           owned_by: "google",
-          supported_parameters: ["temperature", "top_p", "top_k", "max_tokens", "tools", "response_format", "seed"],
+          supported_parameters: [
+            "temperature",
+            "top_p",
+            "top_k",
+            "max_tokens",
+            "tools",
+            "response_format",
+            "seed",
+          ],
         },
         {
           architecture: {
@@ -249,14 +280,22 @@ export function registerModelRoutes(app: Hono) {
             output_modalities: ["text"],
           },
           created: 0,
-          description: "Modèle phare de Meta Llama 3.3 70B offrant des compétences avancées de programmation, logique et résolution de problèmes complexes.",
+          description:
+            "Modèle phare de Meta Llama 3.3 70B offrant des compétences avancées de programmation, logique et résolution de problèmes complexes.",
           id: "meta-llama/llama-3.3-70b-instruct:free",
           maxContext: 131_072,
           maxOutput: 128_000,
           name: "Meta: Llama 3.3 70B Instruct",
           object: "model",
           owned_by: "meta-llama",
-          supported_parameters: ["temperature", "top_p", "max_tokens", "tools", "response_format", "frequency_penalty"],
+          supported_parameters: [
+            "temperature",
+            "top_p",
+            "max_tokens",
+            "tools",
+            "response_format",
+            "frequency_penalty",
+          ],
         },
         {
           architecture: {
@@ -265,14 +304,21 @@ export function registerModelRoutes(app: Hono) {
             output_modalities: ["text"],
           },
           created: 0,
-          description: "Modèle de code spécialisé de haute précision par Alibaba Cloud, optimisé pour la synthèse de code, le refactoring et le debug.",
+          description:
+            "Modèle de code spécialisé de haute précision par Alibaba Cloud, optimisé pour la synthèse de code, le refactoring et le debug.",
           id: "qwen/qwen-2.5-coder-32b-instruct:free",
           maxContext: 32_768,
           maxOutput: 8192,
           name: "Qwen: Qwen 2.5 Coder 32B Instruct",
           object: "model",
           owned_by: "qwen",
-          supported_parameters: ["temperature", "top_p", "max_tokens", "stop", "tools"],
+          supported_parameters: [
+            "temperature",
+            "top_p",
+            "max_tokens",
+            "stop",
+            "tools",
+          ],
         },
         {
           architecture: {
@@ -281,79 +327,66 @@ export function registerModelRoutes(app: Hono) {
             output_modalities: ["text"],
           },
           created: 0,
-          description: "Modèle de raisonnement logique étape par étape de premier ordre par DeepSeek pour les mathématiques et la logique complexe.",
+          description:
+            "Modèle de raisonnement logique étape par étape de premier ordre par DeepSeek pour les mathématiques et la logique complexe.",
           id: "deepseek/deepseek-r1:free",
           maxContext: 163_840,
           maxOutput: 16_000,
           name: "DeepSeek: DeepSeek R1",
           object: "model",
           owned_by: "deepseek",
-          supported_parameters: ["temperature", "top_p", "max_tokens", "stream", "thinking", "reasoning"],
+          supported_parameters: [
+            "temperature",
+            "top_p",
+            "max_tokens",
+            "stream",
+            "thinking",
+            "reasoning",
+          ],
         },
       ];
 
       if (shouldFilterFreeOnly) {
-        fallback = fallback.filter((m) => m.id.toLowerCase().includes("free"));
+        fallback = fallback.filter(
+          (m) =>
+            (m.id || "").toLowerCase().endsWith(":free") ||
+            (m.id || "").toLowerCase().includes(":free")
+        );
       }
 
       return c.json({ data: fallback, object: "list" });
     }
   });
 
-  // GET /v1/mai/models
-  app.get("/v1/mai/models", async (c) => {
-    const maiModelsList = [
-      {
-        architecture: {
-          input_modalities: ["text", "image", "file"],
-          modality: "text+image->text",
-          output_modalities: ["text"],
-        },
-        created: Math.floor(Date.now() / 1000),
-        description: "Assistant IA local 4B ultra-rapide et multimodal. Vision intégrée, thinking & tools pour une agilité quotidienne maximale.",
-        id: "mDevsLabs/mAI-1.5-Light",
-        maxContext: 262_144,
-        maxOutput: 32_768,
-        name: "mAI-1.5-Light",
-        object: "model",
-        owned_by: "mDevsLabs",
-        supported_parameters: ["temperature", "top_p", "max_tokens", "stream", "tools", "thinking"],
-      },
-      {
-        architecture: {
-          input_modalities: ["text", "image", "file"],
-          modality: "text+image->text",
-          output_modalities: ["text"],
-        },
-        created: Math.floor(Date.now() / 1000),
-        description: "Le haut de gamme absolu 9B de la famille mAI. Puissance maximale, vision multimodale, raisonnement complexe et tools.",
-        id: "mDevsLabs/mAI-1.5-Apex",
-        maxContext: 262_144,
-        maxOutput: 32_768,
-        name: "mAI-1.5-Apex",
-        object: "model",
-        owned_by: "mDevsLabs",
-        supported_parameters: ["temperature", "top_p", "max_tokens", "stream", "tools", "thinking", "response_format"],
-      },
-      {
-        architecture: {
-          input_modalities: ["text", "image", "file"],
-          modality: "text+image->text",
-          output_modalities: ["text"],
-        },
-        created: Math.floor(Date.now() / 1000),
-        description: "Le sweet spot parfait 27B entre vélocité et haute intelligence. Multimodal avec vision, thinking et tools 100% local.",
-        id: "mDevsLabs/mAI-1.5-Opal",
-        maxContext: 262_144,
-        maxOutput: 32_768,
-        name: "mAI-1.5-Opal",
-        object: "model",
-        owned_by: "mDevsLabs",
-        supported_parameters: ["temperature", "top_p", "max_tokens", "stream", "tools", "thinking"],
-      },
-    ];
-    return c.json({ data: maiModelsList, object: "list" });
-  });
+  // GET /v1/models/mai & GET /v1/mai/models
+  const handleGetMaiModels = (c: any) => {
+    const formatted = maiModelsList.map((m) => ({
+      capabilities: m.capabilities,
+      context_length: m.contextWindow,
+      created:
+        Math.floor(new Date(m.releaseDate).getTime() / 1000) ||
+        Math.floor(Date.now() / 1000),
+      description: m.description,
+      huggingface_tag: m.huggingFaceTag,
+      id: m.id,
+      license: m.license,
+      max_output_tokens: m.maxOutputTokens,
+      name: m.name,
+      object: "model",
+      ollama_tag: m.ollamaTag,
+      owned_by: "mDevsLabs",
+      parameters: m.parameters,
+      recommended_hardware: m.recommendedHardware,
+      status: m.status,
+      tagline: m.tagline,
+      usable_in_cloud_chat: false,
+      version: m.version,
+    }));
+    return c.json({ data: formatted, object: "list" });
+  };
+
+  app.get("/v1/models/mai", handleGetMaiModels);
+  app.get("/v1/mai/models", handleGetMaiModels);
 
   // GET /v1/status
   app.get("/v1/status", async (c) => {
@@ -373,13 +406,35 @@ export function registerModelRoutes(app: Hono) {
       const body = await c.req.json();
       const modelRequested = body.model;
 
+      const modelStr = String(modelRequested || "").toLowerCase();
+
+      // Vérifier si c'est un modèle mAI (local uniquement)
+      const isMaiLocal =
+        modelStr.startsWith("mai-") ||
+        modelStr.startsWith("mdevslabs/") ||
+        modelStr.includes("mai-1.") ||
+        modelStr === "mai-1" ||
+        modelStr === "mai-1-light";
+
+      if (isMaiLocal) {
+        return c.json(
+          {
+            error: {
+              code: "mai_model_not_supported_for_cloud_chat",
+              message: `Le modèle '${modelRequested}' est un modèle mAI destiné à une exécution locale (via Ollama / HuggingFace) et n'est pas directement utilisable en chat completions cloud.`,
+              param: "model",
+              type: "invalid_request_error",
+            },
+          },
+          400
+        );
+      }
+
       const planStr = String(userPlan || "Free")
         .toLowerCase()
         .trim();
       const isPaidPlan = ["plus", "pro", "max"].includes(planStr);
       const isFreePlan = !isPaidPlan;
-
-      const modelStr = String(modelRequested || "").toLowerCase();
       const isFreeModel = modelStr.includes("free");
 
       if (isFreePlan && !isFreeModel) {
@@ -409,19 +464,25 @@ export function registerModelRoutes(app: Hono) {
         LIMIT 1
       `;
       const currentUsage = usageResult[0]?.tokens_used || 0;
-      const limit = TIER_LIMITS[String(userPlan || "Free")] || TIER_LIMITS["Free"];
+      const limit =
+        TIER_LIMITS[String(userPlan || "Free")] || TIER_LIMITS["Free"];
 
       if (currentUsage >= limit) {
-        return c.json({ error: "Votre limite hebdomadaire est épuisée. Quota atteint." }, 429);
+        return c.json(
+          { error: "Votre limite hebdomadaire est épuisée. Quota atteint." },
+          429
+        );
       }
 
       const keyRows = await sql`
         SELECT api_key FROM mprojects_api_keys WHERE user_id = ${userId}::text LIMIT 1
       `;
-      const apiKey = keyRows.length > 0 ? keyRows[0].api_key : Deno.env.get("OPENROUTER_API_KEY");
+      const apiKey = getOpenRouterApiKey(
+        keyRows.length > 0 ? keyRows[0].api_key : null
+      );
 
       if (!apiKey) {
-        return c.json({ error: "Clé fournisseur manquante." }, 500);
+        return c.json({ error: "Clé fournisseur OpenRouter manquante." }, 500);
       }
 
       try {
@@ -431,7 +492,7 @@ export function registerModelRoutes(app: Hono) {
           ON CONFLICT (user_id, week_start)
           DO UPDATE SET tokens_used = weekly_usage.tokens_used + 1
         `;
-      } catch(e) {}
+      } catch (e) {}
 
       const openRouterRes = await fetch(
         "https://openrouter.ai/api/v1/chat/completions",
@@ -502,19 +563,25 @@ export function registerModelRoutes(app: Hono) {
         LIMIT 1
       `;
       const currentUsage = usageResult[0]?.tokens_used || 0;
-      const limit = TIER_LIMITS[String(userPlan || "Free")] || TIER_LIMITS["Free"];
+      const limit =
+        TIER_LIMITS[String(userPlan || "Free")] || TIER_LIMITS["Free"];
 
       if (currentUsage >= limit) {
-        return c.json({ error: "Votre limite hebdomadaire est épuisée. Quota atteint." }, 429);
+        return c.json(
+          { error: "Votre limite hebdomadaire est épuisée. Quota atteint." },
+          429
+        );
       }
 
       const keyRows = await sql`
         SELECT api_key FROM mprojects_api_keys WHERE user_id = ${userId}::text LIMIT 1
       `;
-      const apiKey = keyRows.length > 0 ? keyRows[0].api_key : Deno.env.get("OPENROUTER_API_KEY");
+      const apiKey = getOpenRouterApiKey(
+        keyRows.length > 0 ? keyRows[0].api_key : null
+      );
 
       if (!apiKey) {
-        return c.json({ error: "Clé fournisseur manquante." }, 500);
+        return c.json({ error: "Clé fournisseur OpenRouter manquante." }, 500);
       }
 
       try {
@@ -524,7 +591,7 @@ export function registerModelRoutes(app: Hono) {
           ON CONFLICT (user_id, week_start)
           DO UPDATE SET tokens_used = weekly_usage.tokens_used + 1
         `;
-      } catch(e) {}
+      } catch (e) {}
 
       const openRouterRes = await fetch(
         "https://openrouter.ai/api/v1/chat/completions",
@@ -595,19 +662,25 @@ export function registerModelRoutes(app: Hono) {
         LIMIT 1
       `;
       const currentUsage = usageResult[0]?.tokens_used || 0;
-      const limit = TIER_LIMITS[String(userPlan || "Free")] || TIER_LIMITS["Free"];
+      const limit =
+        TIER_LIMITS[String(userPlan || "Free")] || TIER_LIMITS["Free"];
 
       if (currentUsage >= limit) {
-        return c.json({ error: "Votre limite hebdomadaire est épuisée. Quota atteint." }, 429);
+        return c.json(
+          { error: "Votre limite hebdomadaire est épuisée. Quota atteint." },
+          429
+        );
       }
 
       const keyRows = await sql`
         SELECT api_key FROM mprojects_api_keys WHERE user_id = ${userId}::text LIMIT 1
       `;
-      const apiKey = keyRows.length > 0 ? keyRows[0].api_key : Deno.env.get("OPENROUTER_API_KEY");
+      const apiKey = getOpenRouterApiKey(
+        keyRows.length > 0 ? keyRows[0].api_key : null
+      );
 
       if (!apiKey) {
-        return c.json({ error: "Clé fournisseur manquante." }, 500);
+        return c.json({ error: "Clé fournisseur OpenRouter manquante." }, 500);
       }
 
       try {
@@ -617,7 +690,7 @@ export function registerModelRoutes(app: Hono) {
           ON CONFLICT (user_id, week_start)
           DO UPDATE SET tokens_used = weekly_usage.tokens_used + 1
         `;
-      } catch(e) {}
+      } catch (e) {}
 
       // Google payload is different, we send it to OpenRouter's endpoint.
       const openRouterRes = await fetch(

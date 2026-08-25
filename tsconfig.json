@@ -48,6 +48,8 @@
     "projects.ts",
     "storage.ts",
     "maiModels.ts",
-    "aiModels.ts"
+    "aiModels.ts",
+    "images.ts",
+    "web.ts"
   ]
 }

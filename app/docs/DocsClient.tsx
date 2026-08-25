@@ -75,11 +75,11 @@ export function DocsClient({ initialDocs, titleSpan }: DocsClientProps) {
   const categoriesMap = useMemo(() => {
     const map: Record<string, DocMetadata[]> = {};
     const defaultCategories = [
+      "API",
       "Applications",
       "Modèles d'IA",
       "Guides",
       "Architecture",
-      "API",
     ];
 
     // Initialize default categories to preserve order

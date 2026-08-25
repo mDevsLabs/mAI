@@ -1,79 +1,74 @@
-# API des Projets
+---
+title: "API Projets & Écosystème"
+description: "Gestion programmatique des applications et espaces de travail mAI (Web, Pulse, CLI, Coder)."
+category: "API"
+order: 8
+---
 
-L'API des projets vous permet de créer et de lister les projets IA liés à votre compte utilisateur de manière programmatique.
+# API des Projets & de l'Écosystème 📁🚀
 
-## Lister vos projets
+L'API des projets permet d'administrer, d'inspecter et de synchroniser programmatiquement vos environnements de développement, vos configurations d'agents et les applications de la suite mAI (mAI Web, mAI Pulse, mAI CLI, mAI Coder).
 
-Renvoie la liste des 20 derniers projets que vous avez créés.
+---
 
-**Endpoint**
-\`\`\`http
-GET /v1/projects
-\`\`\`
+## 📋 1. Lister l'Ensemble des Projets
 
-**Exemple de réponse**
-\`\`\`json
+Renvoie la liste détaillée de tous les projets de la plateforme mAI rattachés à votre compte.
+
+```http
+GET https://mai.val.run/v1/projects
+Authorization: Bearer mp-votre_cle_complete
+```
+
+### Exemple de Réponse
+```json
 {
-  "projects": [
+  "object": "list",
+  "data": [
     {
-      "id": 1,
-      "user_id": "votre-uuid",
-      "project_id": "proj-123abc456",
-      "name": "Mon Projet IA",
-      "description": "Description du projet",
-      "is_public": false,
-      "created_at": "2024-01-01T10:00:00Z"
+      "id": "web",
+      "name": "mAI Web",
+      "status": "Alpha",
+      "description": "Application web d'intelligence artificielle souveraine accessible directement dans le navigateur.",
+      "github_url": "https://github.com/mDevsLabs/Web"
+    },
+    {
+      "id": "pulse",
+      "name": "mAI Pulse",
+      "status": "Bêta",
+      "description": "Suite d'extensions et d'outils intelligents pour la productivité au quotidien.",
+      "github_url": "https://github.com/mDevsLabs/Pulse"
+    },
+    {
+      "id": "cli",
+      "name": "mAI CLI",
+      "status": "Bêta",
+      "description": "Assistant de terminal interactif et scriptable pour développeurs et sysadmins.",
+      "github_url": "https://github.com/mDevsLabs/CLI"
+    },
+    {
+      "id": "coder",
+      "name": "mAI Coder",
+      "status": "Alpha",
+      "description": "Environnement de développement assisté par agents d'IA autonomes et protocole MCP.",
+      "github_url": "https://github.com/mDevsLabs/Coder"
     }
   ]
 }
-\`\`\`
+```
 
-## Créer un projet
+---
 
-Permet de créer un nouveau projet dans votre espace de travail.
+## 🔍 2. Obtenir les Détails d'un Projet Ciblé
 
-**Endpoint**
-\`\`\`http
-POST /v1/projects
-\`\`\`
+```http
+GET https://mai.val.run/v1/projects/:project_id
+```
 
-**Corps de la requête (JSON)**
-\`\`\`json
-{
-  "name": "Nouveau Projet",
-  "description": "Créé via API",
-  "isPublic": false
-}
-\`\`\`
+*(Identifiants acceptés : `web`, `pulse`, `cli`, `coder`)*
 
-**Exemple de réponse**
-\`\`\`json
-{
-  "success": true,
-  "project_id": "proj-a1b2c3d4e"
-}
-\`\`\`
-
-## Récupérer un projet spécifique
-
-Renvoie les détails d'un projet ciblé en spécifiant son ID.
-
-**Endpoint**
-\`\`\`http
-GET /v1/projects/:id
-\`\`\`
-*(Remplacez `:id` par l'identifiant du projet, ex: `proj-a1b2c3d4e`)*
-
-**Exemple de réponse**
-\`\`\`json
-{
-  "project": {
-    "id": 2,
-    "project_id": "proj-a1b2c3d4e",
-    "name": "Nouveau Projet",
-    "description": "Créé via API",
-    "is_public": false,
-    "created_at": "2024-01-02T15:30:00Z"
-  }
-}
-\`\`\`
+### Exemple cURL
+```bash
+curl -X GET "https://mai.val.run/v1/projects/coder" \
+  -H "Authorization: Bearer mp-votre_cle_complete"
+```

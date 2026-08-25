@@ -31,16 +31,75 @@ export function getTierQuotaLimit(tier?: string | null): number {
   return 500;
 }
 
-// Limites de stockage Cloud par tier (en bytes) — source backend config.ts
-// Free 500 MB, Plus 5 GB, Pro 20 GB, Max 100 GB
+// Limites quotidiennes de génération d'images — utilisées pour mprojects_daily_image_usage
+export const TIER_DAILY_IMAGE_LIMITS: Record<string, number> = {
+  Free: 3,
+  Gratuit: 3,
+  free: 3,
+  gratuit: 3,
+  Plus: 5,
+  plus: 5,
+  Pro: 10,
+  pro: 10,
+  Max: 20,
+  max: 20,
+};
+
+export function getTierDailyImageLimit(tier?: string | null): number {
+  const t = (tier || "Free").toLowerCase().trim();
+  if (t === "max") return 20;
+  if (t === "pro") return 10;
+  if (t === "plus") return 5;
+  return 3;
+}
+
+// Coût en nombre de requêtes API par génération d'image
+// Free = 100 requêtes, Plus = 50 requêtes, Pro = 25 requêtes, Max = 10 requêtes
+export const TIER_IMAGE_REQUEST_COST: Record<string, number> = {
+  Free: 100,
+  Gratuit: 100,
+  free: 100,
+  gratuit: 100,
+  Plus: 50,
+  plus: 50,
+  Pro: 25,
+  pro: 25,
+  Max: 10,
+  max: 10,
+};
+
+export function getTierImageRequestCost(tier?: string | null): number {
+  const t = (tier || "Free").toLowerCase().trim();
+  if (t === "max") return 10;
+  if (t === "pro") return 25;
+  if (t === "plus") return 50;
+  return 100;
+}
+
+// Limites de stockage Cloud par tier (en bytes) — SSOT: Free 500Mo / Plus 1Go / Pro 2Go / Max 5Go
 export const STORAGE_LIMITS_BYTES: Record<string, number> = {
-  Free: 500 * 1024 * 1024,
-  Plus: 5 * 1024 * 1024 * 1024,
-  Pro: 20 * 1024 * 1024 * 1024,
-  Max: 100 * 1024 * 1024 * 1024,
+  Free: 500 * 1024 * 1024,           // 500 MB
+  Plus: 1 * 1024 * 1024 * 1024,      // 1 GB
+  Pro: 2 * 1024 * 1024 * 1024,       // 2 GB
+  Max: 5 * 1024 * 1024 * 1024,       // 5 GB
+  // Aliases
+  free: 500 * 1024 * 1024,
+  gratuit: 500 * 1024 * 1024,
+  Gratuit: 500 * 1024 * 1024,
+  plus: 1 * 1024 * 1024 * 1024,
+  pro: 2 * 1024 * 1024 * 1024,
+  max: 5 * 1024 * 1024 * 1024,
 };
 // Alias pour compat frontend (ancien CLOUD_STORAGE_LIMITS de mai-api.ts)
 export const CLOUD_STORAGE_LIMITS = STORAGE_LIMITS_BYTES;
+
+export function getTierStorageLimit(tier?: string | null): number {
+  const t = (tier || "Free").toLowerCase().trim();
+  if (t === "max") return 5 * 1024 * 1024 * 1024;
+  if (t === "pro") return 2 * 1024 * 1024 * 1024;
+  if (t === "plus") return 1 * 1024 * 1024 * 1024;
+  return 500 * 1024 * 1024;
+}
 
 export function formatStorageBytes(bytes: number): string {
   if (!bytes || bytes <= 0) return "0 Mo";

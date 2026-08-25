@@ -56,7 +56,12 @@ export const STATIC_PROJECTS_LIST = [
     created_at: "2026-08-20T00:00:00.000Z",
     description:
       "IDE IA de nouvelle génération avec agents IA autonomes, orchestration multi-modèles et support natif des outils MCP.",
-    features: ["IDE IA Intelligent", "Agents Autonomes", "Outils MCP", "Multi-Modèles"],
+    features: [
+      "IDE IA Intelligent",
+      "Agents Autonomes",
+      "Outils MCP",
+      "Multi-Modèles",
+    ],
     id: "proj_coder",
     is_public: true,
     label: "Alpha",
@@ -71,7 +76,11 @@ export const STATIC_PROJECTS_LIST = [
     created_at: "2026-08-15T00:00:00.000Z",
     description:
       "Stockage cloud de documents et intégration d'mAI pour des résumés.",
-    features: ["Stockage sécurisé", "Résumés automatiques", "Indexation de documents"],
+    features: [
+      "Stockage sécurisé",
+      "Résumés automatiques",
+      "Indexation de documents",
+    ],
     id: "proj_cloud",
     is_public: true,
     label: "Réflexion",
@@ -84,9 +93,12 @@ export const STATIC_PROJECTS_LIST = [
   {
     category: "Productivity",
     created_at: "2026-08-12T00:00:00.000Z",
-    description:
-      "Création de documents et présentations assistée par mAI.",
-    features: ["Génération de documents", "Présentations interactives", "Export multi-format"],
+    description: "Création de documents et présentations assistée par mAI.",
+    features: [
+      "Génération de documents",
+      "Présentations interactives",
+      "Export multi-format",
+    ],
     id: "proj_office",
     is_public: true,
     label: "Archivé",
@@ -143,8 +155,7 @@ export const STATIC_PROJECTS_LIST = [
   {
     category: "AI Suite",
     created_at: "2026-01-15T00:00:00.000Z",
-    description:
-      "Ancienne interface web de mAI.",
+    description: "Ancienne interface web de mAI.",
     features: ["Chat Completions", "Embeddings"],
     id: "proj_mai_legacy",
     is_public: true,
@@ -158,30 +169,6 @@ export const STATIC_PROJECTS_LIST = [
 ];
 
 export const STATIC_PROJECTS_MAP: Record<string, any> = {
-  web: {
-    category: "Web Application",
-    created_at: "2026-08-01T00:00:00.000Z",
-    description:
-      "Application d'IA en ligne web directement et simplement pour discuter avec l'IA mAI.",
-    is_public: true,
-    label: "Alpha",
-    name: "Web",
-    project_id: "web",
-    repository: "https://github.com/mDevsLabs/Web",
-    status: "alpha",
-  },
-  pulse: {
-    category: "Extensions",
-    created_at: "2026-08-05T00:00:00.000Z",
-    description:
-      "Ensemble d'extensions pour diverses applications pour discuter avec mAI directement (navigateur, VS Code...).",
-    is_public: true,
-    label: "Bêta",
-    name: "Pulse",
-    project_id: "pulse",
-    repository: "https://github.com/mDevsLabs/Pulse",
-    status: "beta",
-  },
   cli: {
     category: "Developer Tools",
     created_at: "2026-08-10T00:00:00.000Z",
@@ -193,30 +180,6 @@ export const STATIC_PROJECTS_MAP: Record<string, any> = {
     project_id: "cli",
     repository: "https://github.com/mDevsLabs/CLI",
     status: "beta",
-  },
-  coder: {
-    category: "Developer Tools",
-    created_at: "2026-08-20T00:00:00.000Z",
-    description:
-      "IDE IA de nouvelle génération avec agents IA autonomes, orchestration multi-modèles et support natif des outils MCP.",
-    is_public: true,
-    label: "Alpha",
-    name: "Coder",
-    project_id: "coder",
-    repository: "https://github.com/mDevsLabs/Coder",
-    status: "alpha",
-  },
-  office: {
-    category: "Productivity",
-    created_at: "2026-08-12T00:00:00.000Z",
-    description:
-      "Création de documents et présentations avec mAI.",
-    is_public: true,
-    label: "Archivé",
-    name: "Office",
-    project_id: "office",
-    repository: "https://github.com/mDevsLabs/Office",
-    status: "archived",
   },
   cloud: {
     category: "Cloud & Storage",
@@ -230,11 +193,22 @@ export const STATIC_PROJECTS_MAP: Record<string, any> = {
     repository: "",
     status: "conception",
   },
+  coder: {
+    category: "Developer Tools",
+    created_at: "2026-08-20T00:00:00.000Z",
+    description:
+      "IDE IA de nouvelle génération avec agents IA autonomes, orchestration multi-modèles et support natif des outils MCP.",
+    is_public: true,
+    label: "Alpha",
+    name: "Coder",
+    project_id: "coder",
+    repository: "https://github.com/mDevsLabs/Coder",
+    status: "alpha",
+  },
   mai: {
     category: "AI Suite",
     created_at: "2026-01-15T00:00:00.000Z",
-    description:
-      "Ancienne interface web de mAI.",
+    description: "Ancienne interface web de mAI.",
     is_public: true,
     label: "Archivé",
     name: "mAI Web (Legacy)",
@@ -257,13 +231,23 @@ export const STATIC_PROJECTS_MAP: Record<string, any> = {
   msearch: {
     category: "Search Engine",
     created_at: "2026-02-01T00:00:00.000Z",
-    description:
-      "Moteur de recherche sémantique et d'indexation vectorielle.",
+    description: "Moteur de recherche sémantique et d'indexation vectorielle.",
     is_public: true,
     label: "Archivé",
     name: "mSearch",
     project_id: "msearch",
     repository: "https://github.com/mDevsLabs/mSearch",
+    status: "archived",
+  },
+  office: {
+    category: "Productivity",
+    created_at: "2026-08-12T00:00:00.000Z",
+    description: "Création de documents et présentations avec mAI.",
+    is_public: true,
+    label: "Archivé",
+    name: "Office",
+    project_id: "office",
+    repository: "https://github.com/mDevsLabs/Office",
     status: "archived",
   },
   openprovider: {
@@ -278,17 +262,40 @@ export const STATIC_PROJECTS_MAP: Record<string, any> = {
     repository: "https://github.com/mDevsLabs/OpenProvider",
     status: "archived",
   },
+  pulse: {
+    category: "Extensions",
+    created_at: "2026-08-05T00:00:00.000Z",
+    description:
+      "Ensemble d'extensions pour diverses applications pour discuter avec mAI directement (navigateur, VS Code...).",
+    is_public: true,
+    label: "Bêta",
+    name: "Pulse",
+    project_id: "pulse",
+    repository: "https://github.com/mDevsLabs/Pulse",
+    status: "beta",
+  },
   snob: {
     category: "Games",
     created_at: "2026-03-15T00:00:00.000Z",
-    description:
-      "Jeu vidéo du style Block Blast.",
+    description: "Jeu vidéo du style Block Blast.",
     is_public: true,
     label: "Archivé",
     name: "Snob",
     project_id: "snob",
     repository: "https://github.com/mDevsLabs/Snob",
     status: "archived",
+  },
+  web: {
+    category: "Web Application",
+    created_at: "2026-08-01T00:00:00.000Z",
+    description:
+      "Application d'IA en ligne web directement et simplement pour discuter avec l'IA mAI.",
+    is_public: true,
+    label: "Alpha",
+    name: "Web",
+    project_id: "web",
+    repository: "https://github.com/mDevsLabs/Web",
+    status: "alpha",
   },
 };
 
@@ -300,7 +307,10 @@ export function registerProjectRoutes(app: Hono) {
       const userId = c.get("userId");
       const dbProjects =
         await sql`SELECT * FROM mprojects_projects WHERE user_id = ${userId} ORDER BY created_at DESC LIMIT 50`;
-      return c.json({ data: [...STATIC_PROJECTS_LIST, ...dbProjects], object: "list" });
+      return c.json({
+        data: [...STATIC_PROJECTS_LIST, ...dbProjects],
+        object: "list",
+      });
     } catch (_err) {
       return c.json({ data: STATIC_PROJECTS_LIST, object: "list" });
     }

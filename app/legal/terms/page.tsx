@@ -56,11 +56,11 @@ export default function TermsPage() {
           </div>
           <div className="p-3.5 bg-emerald-50 rounded-2xl border border-emerald-200/80 text-emerald-950 font-medium flex items-center gap-2.5">
             <Globe className="w-5 h-5 text-emerald-600 shrink-0" />
-            <span>Stockage 100% dans l'Union Européenne (UE)</span>
+            <span>Données en UE 🇪🇺 / Fichiers aux USA 🇺🇸</span>
           </div>
           <div className="p-3.5 bg-blue-50 rounded-2xl border border-blue-200/80 text-blue-950 font-medium flex items-center gap-2.5">
             <Cpu className="w-5 h-5 text-blue-600 shrink-0" />
-            <span>API mAI transparente et zéro réentraînement</span>
+            <span>ZDR Priorisée &amp; Zéro Réentraînement IA</span>
           </div>
         </div>
 
@@ -72,43 +72,43 @@ export default function TermsPage() {
               1. Acceptation des Conditions &amp; Création de Compte
             </h2>
             <p className="leading-relaxed font-light">
-              La création d'un compte utilisateur sur mAI, l'obtention d'une clé API ou l'interaction avec nos services implique l'acceptation expresse et sans réserve des présentes conditions. L'utilisateur confirme être âgé d'au moins 15 ans ou détenir l'autorisation légale nécessaire. Si vous n'acceptez pas l'ensemble de ces termes, vous devez vous abstenir d'utiliser notre plateforme et nos API.
+              La création d&apos;un compte utilisateur sur mAI, l&apos;obtention d&apos;une clé API ou l&apos;interaction avec nos services implique l&apos;acceptation expresse et sans réserve des présentes conditions. L&apos;utilisateur confirme être âgé d&apos;au moins 15 ans ou détenir l&apos;autorisation légale nécessaire. Si vous n&apos;acceptez pas l&apos;ensemble de ces termes, vous devez vous abstenir d&apos;utiliser notre plateforme et nos API.
             </p>
           </section>
 
-          {/* Section 2 : Stockage et Traitement dans l'Union Européenne */}
+          {/* Section 2 : Stockage et Traitement dans l'Union Européenne et USA */}
           <section className="space-y-4">
             <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2.5">
               <Globe className="w-5 h-5 text-emerald-600" />
-              2. Stockage des Données dans l'Union Européenne (UE) 🇪🇺
+              2. Hébergement des Données (UE) &amp; Stockage des Fichiers (USA)
             </h2>
             <p className="leading-relaxed font-light">
-              mDevsLabs s'engage contractuellement à respecter les normes européennes les plus strictes en matière de protection des données :
+              mDevsLabs s&apos;engage contractuellement sur la transparence et la sécurité de l&apos;hébergement :
             </p>
             <div className="space-y-2.5 pt-1 text-sm font-light">
               <div className="p-3.5 bg-white/70 rounded-2xl border border-slate-200 space-y-1">
-                <strong className="text-slate-900 text-xs uppercase tracking-wider block">📍 Localisation des Datacenters :</strong>
+                <strong className="text-slate-900 text-xs uppercase tracking-wider block">📍 Données Structurées dans l&apos;Union Européenne (UE) :</strong>
                 <p className="text-slate-600 text-xs leading-relaxed">
-                  L'ensemble des bases de données relationnelles, métadonnées, clés de chiffrement et fichiers hébergés sur le service de Cloud Storage mAI sont situés dans des centres de données physiques implantés au sein de l'Union Européenne (région EU, notamment Francfort, Allemagne).
+                  L&apos;ensemble des bases de données relationnelles (PostgreSQL Neon), comptes utilisateurs, clés d&apos;API, métadonnées et journaux de requêtes sont situés dans des datacenters au sein de l&apos;Union Européenne (Francfort, Allemagne), sous conformité intégrale avec le RGPD (Règlement 2016/679).
                 </p>
               </div>
               <div className="p-3.5 bg-white/70 rounded-2xl border border-slate-200 space-y-1">
-                <strong className="text-slate-900 text-xs uppercase tracking-wider block">⚖️ Souveraineté &amp; Conformité RGPD :</strong>
+                <strong className="text-slate-900 text-xs uppercase tracking-wider block">📁 Fichiers et Stockage d&apos;Objets aux États-Unis (USA) :</strong>
                 <p className="text-slate-600 text-xs leading-relaxed">
-                  Vos données sont régies par le Règlement Général sur la Protection des Données (RGPD 2016/679). Aucun transfert non autorisé vers des juridictions tierces ne sera opéré sans votre accord préalable explicite.
+                  Les fichiers téléversés, images et artefacts volumineux (mAI Cloud Storage) sont stockés aux États-Unis sur des infrastructures chiffrées au repos (AES-256) et en transit (TLS 1.3) avec clauses contractuelles conformes.
                 </p>
               </div>
             </div>
           </section>
 
-          {/* Section 3 : Utilisation des Clés API & Quotas */}
+          {/* Section 3 : Utilisation des Clés API, Quotas & ZDR */}
           <section className="space-y-4">
             <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2.5">
               <Key className="w-5 h-5 text-blue-500" />
-              3. Utilisation de l'API mAI, Clés d'Accès &amp; Quotas
+              3. Utilisation de l&apos;API mAI, Clés d&apos;Accès &amp; Priorité Zero Data Retention (ZDR)
             </h2>
             <p className="leading-relaxed font-light">
-              <strong>Clés API Sécurisées</strong> : Chaque clé API (format <code className="bg-purple-50 px-1.5 py-0.5 rounded text-purple-700 font-mono text-xs">mai-...</code> / <code className="bg-purple-50 px-1.5 py-0.5 rounded text-purple-700 font-mono text-xs">mp-...</code>) est strictement confidentielle. Vous êtes juridiquement responsable de l'ensemble des requêtes effectuées avec vos identifiants d'API. En cas de compromission, vous devez révoquer votre clé immédiatement depuis votre espace client.
+              <strong>Clés API Sécurisées</strong> : Chaque clé API (format <code className="bg-purple-50 px-1.5 py-0.5 rounded text-purple-700 font-mono text-xs">mp-...</code>) est strictement confidentielle. Vous êtes juridiquement responsable de l&apos;ensemble des requêtes effectuées avec vos identifiants d&apos;API. En cas de compromission, vous devez révoquer votre clé immédiatement depuis votre espace client.
             </p>
 
             <div className="space-y-3 pt-2">
@@ -116,19 +116,19 @@ export default function TermsPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                 <div className="p-3 bg-white/70 rounded-2xl border border-slate-200">
                   <span className="font-bold text-slate-900 block">Compte Free (Gratuit)</span>
-                  <span className="text-slate-600 mt-1 block">1 000 requêtes / mois. Les appels à l'API <code className="bg-slate-100 px-1 rounded font-mono text-[11px]">/v1/chat/completions</code> sont autorisés exclusivement sur les modèles comportant l'extension <code className="text-purple-600 font-bold">:free</code>. Toute tentative d'appel d'un modèle restreint renvoie une réponse <strong>403 Forbidden</strong>.</span>
+                  <span className="text-slate-600 mt-1 block">1 000 requêtes / mois. Les appels à l&apos;API <code className="bg-slate-100 px-1 rounded font-mono text-[11px]">/v1/chat/completions</code> sont autorisés sur les modèles gratuits <code className="text-purple-600 font-bold">:free</code> et les modèles Flux pour les images.</span>
                 </div>
                 <div className="p-3 bg-white/70 rounded-2xl border border-slate-200">
                   <span className="font-bold text-purple-700 block">Comptes Plus, Pro &amp; Max</span>
-                  <span className="text-slate-600 mt-1 block">Accès complet à tous les modèles (locaux mAI et modèles Cloud partenaires) dans la limite des quotas alloués (5 000, 25 000 et 100 000 requêtes/mois). Débits de requêtes prioritaires et bande passante dédiée.</span>
+                  <span className="text-slate-600 mt-1 block">Accès complet à tous les modèles (locaux mAI et modèles Cloud partenaires) dans la limite des quotas alloués (5 000, 25 000 et 100 000 requêtes/mois). Débits prioritaires et bande passante dédiée.</span>
                 </div>
               </div>
             </div>
 
             <div className="p-4 rounded-2xl bg-purple-50/60 border border-purple-200 text-slate-700 text-xs space-y-1.5 font-light">
-              <strong className="text-purple-900 block font-bold">🔒 Politique Zéro Réentraînement API :</strong>
+              <strong className="text-purple-900 block font-bold">🔒 Priorité Zero Data Retention (ZDR) sur l&apos;IA :</strong>
               <p>
-                mDevsLabs garantit que vos invites (prompts), données métier, documents injectés et résultats générés via l'API mAI <strong>ne sont jamais utilisés pour entraîner nos modèles d'IA</strong>. Vos données restent strictement confidentielles et vous appartiennent.
+                mDevsLabs priorise et garantit une politique absolue de <strong>Zero Data Retention (ZDR)</strong> : vos invites (prompts), documents injectés et résultats générés via l&apos;API mAI sont traités en mémoire volatile éphémère et <strong>ne sont jamais stockés de manière persistante ni utilisés pour réentraîner des modèles d&apos;intelligence artificielle</strong>. Vos données restent votre propriété exclusive.
               </p>
             </div>
           </section>

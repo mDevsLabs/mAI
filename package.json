@@ -10,10 +10,13 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "setup": "npm install",
-    "reset:api": "node --env-file=.env scripts/reset-api-usage.js",
-    "reset:mai": "node --env-file=.env scripts/reset-mai-usage.js",
+    "reset:api": "bun run scripts/admin.ts --reset-api",
+    "reset:mai": "bun run scripts/admin.ts --reset-mai",
+    "reset:images": "bun run scripts/admin.ts --reset-images",
+    "reset:all": "bun run scripts/admin.ts --reset-all",
+    "admin": "bun run scripts/admin.ts",
     "newsletter:send": "bun run scripts/newsletter-send.ts",
-    "code:create": "bun run scripts/create-subscription-code.ts"
+    "code:create": "bun run scripts/admin.ts --codes"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

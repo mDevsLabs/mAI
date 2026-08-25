@@ -1,67 +1,113 @@
-# API des Modèles
+---
+title: "Catalogue des Modèles d'IA"
+description: "Consultation des modèles d'intelligence artificielle, modèles souverains mAI locaux, modèles cloud et modèles de génération d'images."
+category: "API"
+order: 4
+---
 
-Les endpoints des modèles vous permettent de lister les modèles disponibles avec votre compte et de récupérer leurs métadonnées. L'accès aux modèles dépend de votre forfait. Le forfait *Free* donne uniquement accès aux modèles se terminant par `:free`.
+# API du Catalogue des Modèles 🤖📚
 
-## Lister tous les modèles IA
-Renvoie la liste des modèles IA standards compatibles (fournis via l'intégration).
+Les points de terminaison des modèles vous permettent d'inspecter par voie logicielle la liste exhaustive des architectures d'IA disponibles, leurs capacités multi-modales, fenêtres de contexte et compatibilités selon votre formule d'abonnement.
 
-**Endpoint**
-\`\`\`http
-GET /v1/models
-\`\`\`
+---
 
-**Exemple de réponse**
-\`\`\`json
+## 🌐 1. Catalogue Global des Modèles d'IA
+
+Renvoie la liste des modèles de langage et d'analyse compatibles avec votre clé API.
+
+```http
+GET https://mai.val.run/v1/models
+```
+
+### Exemple de Réponse
+```json
 {
   "object": "list",
   "data": [
     {
-      "id": "meta-llama/llama-3-8b-instruct:free",
-      "name": "Llama 3 8B (Free)",
-      "description": "Modèle libre d'accès pour les forfaits gratuits.",
-      "context_length": 8192
+      "id": "poolside/laguna-xs-2.1:free",
+      "name": "Laguna XS 2.1 (Free)",
+      "description": "Modèle d'inférence ultra-rapide optimisé pour le dialogue et le code.",
+      "context_length": 32768,
+      "pricing": { "prompt": "0", "completion": "0" }
     },
     {
-      "id": "anthropic/claude-3-opus",
-      "name": "Claude 3 Opus",
-      "description": "Le modèle le plus performant d'Anthropic.",
+      "id": "anthropic/claude-3.5-sonnet",
+      "name": "Claude 3.5 Sonnet",
+      "description": "Modèle de pointe pour le raisonnement logique complexe et le codage avancé.",
       "context_length": 200000
     }
   ]
 }
-\`\`\`
+```
 
-## Lister les modèles mAI exclusifs
-Renvoie la liste des modèles spécifiques à mAI, tels que `mai-1.5-apex`, `mai-1.5-opal`, `mai-1.5-light`, ainsi que les séries mAI-1.2 et mAI-1.
+---
 
-**Endpoint**
-\`\`\`http
-GET /v1/mai/models
-\`\`\`
+## 🇫🇷 2. Catalogue des Modèles Souverains mAI (Locaux)
 
-**Exemple de réponse**
-\`\`\`json
+Renvoie les spécifications complètes de la famille des modèles propriétaires **mAI** (conçus pour l'exécution locale via Ollama / GGUF ou inférence hébergée).
+
+```http
+GET https://mai.val.run/v1/models/mai
+```
+
+### Modèles Principaux de la Gamme
+- **`mai-1.5-light`** (4B Multimodal) : Fenêtre de 262k tokens, vision native, thinking et appels d'outils.
+- **`mai-1.5-apex`** (9B Raisonnement) : Modèle d'élite pour la programmation et l'analyse logique avancée.
+- **`mai-1.5-opal`** (27B Expert) : L'équilibre parfait entre vélocité et puissance cognitive pour entreprises.
+
+---
+
+## 🎨 3. Catalogue des Modèles de Génération d'Images
+
+Renvoie la liste des architectures de synthèse d'images (Black Forest Labs FLUX, Stability AI, Midjourney, Recraft) selon votre forfait.
+
+```http
+GET https://mai.val.run/v1/models/images
+```
+
+### Exemple de Réponse
+```json
 {
   "object": "list",
   "data": [
     {
-      "id": "mai-1.5-apex",
-      "name": "mAI 1.5 Apex",
-      "description": "Le modèle mAI haut de gamme Flagship avec vision, thinking et tools.",
-      "context_length": 262144
+      "id": "black-forest-labs/flux-1-schnell",
+      "name": "FLUX.1 Schnell",
+      "description": "Modèle de génération d'images ultra-rapide en 4 étapes par Black Forest Labs (Text-to-Image).",
+      "features": ["text-to-image"],
+      "created": 1740000000
     },
     {
-      "id": "mai-1.5-opal",
-      "name": "mAI 1.5 Opal",
-      "description": "Modèle 27B ultra-équilibré pour l'intelligence élevée et la vélocité.",
-      "context_length": 262144
+      "id": "black-forest-labs/flux-1-dev",
+      "name": "FLUX.1 Dev",
+      "description": "Modèle phare de haute précision pour la synthèse d'images photoréalistes et artistiques.",
+      "features": ["text-to-image"],
+      "created": 1740000000
     },
     {
-      "id": "mai-1.5-light",
-      "name": "mAI 1.5 Light",
-      "description": "Modèle 4B ultra-rapide et multimodal pour les machines personnelles.",
-      "context_length": 262144
+      "id": "black-forest-labs/flux-1.1-pro",
+      "name": "FLUX 1.1 Pro",
+      "description": "Qualité visuelle maximale, typographie fidèle et détails photoréalistes d'élite.",
+      "features": ["text-to-image"],
+      "created": 1740000000
     }
   ]
 }
-\`\`\`
+```
+
+---
+
+## 🔍 4. Détails d'un Modèle Spécifique
+
+Récupère les informations techniques et les contraintes matérielles recommandées pour un modèle précis.
+
+```http
+GET https://mai.val.run/v1/models/:model_id
+```
+
+### Exemple de Requête
+```bash
+curl -X GET "https://mai.val.run/v1/models/mai-1.5-light" \
+  -H "Authorization: Bearer mp-votre_cle_api"
+```

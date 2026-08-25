@@ -1,6 +1,6 @@
 "use client";
 
-import { Github, Menu, X, ChevronDown, UserRound, LogOut, Gauge, Activity, Cloud } from "lucide-react";
+import { Github, Menu, X, ChevronDown, UserRound, LogOut, Gauge, Activity, Cloud, Image as ImageIcon } from "lucide-react";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { CommandMenu } from "@/components/command-menu";
@@ -71,17 +71,25 @@ const navLinks: NavItem[] = [
     name: "API",
     href: "/account/keys",
     subitems: [
-      { name: "Modèles", href: "/account/models" },
+      {
+        name: "Modèles",
+        href: "/account/models",
+        subitems: [
+          { name: "Modèles Texte", href: "/account/models" },
+          { name: "Modèles Images", href: "/account/models/images" },
+          { name: "Modèles mAI", href: "/account/models/mai" },
+        ],
+      },
       { name: "Clés API", href: "/account/keys" },
       { name: "Requêtes", href: "/account/requests" },
       { name: "Usage", href: "/account/usage" },
       { name: "Configuration", href: "/account/config" },
     ]},
+  { name: "Abonnements", href: "/pricing" },
   {
     name: "Plus",
     href: "#",
     subitems: [
-      { name: "Abonnements", href: "/pricing" },
       { name: "Télécharger", href: "/downloads" },
       { 
         name: "Documentation", 
@@ -152,7 +160,7 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
   return (
     <>
       <header
-        className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 w-[94%] max-w-5xl rounded-3xl md:rounded-full border px-4 md:px-8 py-2 md:py-3 ${
+        className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 w-[96%] max-w-6xl xl:max-w-7xl rounded-3xl md:rounded-full border px-4 md:px-8 py-2 md:py-3 ${
           scrolled
             ? "bg-white/70 backdrop-blur-2xl border-black/10 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)]"
             : "bg-white/30 backdrop-blur-md border-black/10 shadow-sm"
@@ -173,7 +181,7 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-500">
+          <nav className="hidden md:flex items-center gap-4 lg:gap-6 text-sm font-medium text-slate-500">
             {navLinks.map((link) => {
               const isActive = checkLinkActive(link, pathname);
 
@@ -331,6 +339,14 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
                         >
                           <Activity className="w-4 h-4 text-purple-600" />
                           Usage API
+                        </Link>
+                        <Link
+                          href="/account#usage-images"
+                          onClick={() => handleAnchorClick("usage-images")}
+                          className="w-full px-3.5 py-2.5 rounded-2xl text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-700 transition-colors flex items-center gap-2.5"
+                        >
+                          <ImageIcon className="w-4 h-4 text-purple-600" />
+                          Usage Images
                         </Link>
                         <Link
                           href="/account#usage-cloud"
@@ -607,6 +623,17 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
                 >
                   <Activity className="w-4 h-4 text-purple-600" />
                   <span>Usage API</span>
+                </Link>
+                <Link
+                  href="/account#usage-images"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    handleAnchorClick("usage-images");
+                  }}
+                  className="px-4 py-2.5 mx-1 rounded-2xl text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-700 transition-colors flex items-center gap-2.5 bg-black/[0.02]"
+                >
+                  <ImageIcon className="w-4 h-4 text-purple-600" />
+                  <span>Usage Images</span>
                 </Link>
                 <Link
                   href="/account#usage-cloud"

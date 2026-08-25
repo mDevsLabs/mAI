@@ -6,11 +6,22 @@ export function registerMiddleware(app: Hono) {
   app.use("/v1/*", async (c, next) => {
     const path = c.req.path;
     const isPublicRoute =
-      path === "/v1/models" || path === "/v1/mai/models" || path === "/v1/status";
+      path === "/v1/models" ||
+      path === "/v1/models/images" ||
+      path === "/v1/models/mai" ||
+      path === "/v1/mai/models" ||
+      path === "/v1/status";
 
     const authHeader = c.req.header("Authorization");
-    const apiKey = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null;
-    const reqUserId = c.req.header("x-user-id");
+    const headerApiKey = c.req.header("x-api-key") || c.req.header("X-API-Key");
+    const queryApiKey = c.req.query("api_key") || c.req.query("key");
+    const rawApiKey =
+      (authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : authHeader) ||
+      headerApiKey ||
+      queryApiKey ||
+      null;
+    const apiKey = rawApiKey ? rawApiKey.trim() : null;
+    const reqUserId = c.req.header("x-user-id") || c.req.header("X-User-Id");
     const startTime = Date.now();
 
     const systemMaiApiKey = Deno.env.get("MAI_API_KEY");
@@ -21,9 +32,13 @@ export function registerMiddleware(app: Hono) {
     let matchedApiKey: string | null = apiKey;
 
     function timingSafeEqual(a: string, b: string): boolean {
-      if (a.length !== b.length) return false;
+      if (a.length !== b.length) {
+        return false;
+      }
       let diff = 0;
-      for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+      for (let i = 0; i < a.length; i++) {
+        diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+      }
       return diff === 0;
     }
 
@@ -32,7 +47,7 @@ export function registerMiddleware(app: Hono) {
       userPlan = "Plus";
       currentUserId = "system-mai";
     }
-    // 2. Clé API utilisateur enregistrée — comparaison exacte uniquement (pas de LIKE fuzzy)
+    // 2. Clé API utilisateur enregistrée ou Token JWT
     else if (apiKey) {
       const sql = getDb();
       const rows = await sql`
@@ -43,24 +58,34 @@ export function registerMiddleware(app: Hono) {
         LIMIT 1
       `;
 
-      const isJwtRoute = path.startsWith("/v1/devices");
-
       if (rows.length > 0) {
         const apiKeyData = rows[0];
         userPlan = apiKeyData.user_tier || apiKeyData.plan || "Free";
         currentUserId = apiKeyData.user_id;
         matchedApiKey = apiKeyData.api_key || apiKey;
-      } else if (isJwtRoute && apiKey) {
-        // Routes de compte : accepter un token JWT de session (pas une API Key)
+      } else {
+        // Tenter de valider le token comme un JWT de session
         try {
           const payload = await verifyToken(apiKey);
-          currentUserId = String(payload.sub);
+          currentUserId = String(payload.sub || "");
           userPlan = String(payload.tier || "Free");
+
+          // Vérifier dans la table users si le forfait a changé
+          if (currentUserId) {
+            const uRows = await sql`
+              SELECT tier FROM users
+              WHERE id::text = ${currentUserId}::text OR username = ${currentUserId}::text OR email = ${currentUserId}::text
+              LIMIT 1
+            `;
+            if (uRows.length > 0 && uRows[0].tier) {
+              userPlan = uRows[0].tier;
+            }
+          }
         } catch {
-          return c.json({ error: "Invalid API Key." }, 403);
+          if (!isPublicRoute) {
+            return c.json({ error: "Invalid API Key." }, 403);
+          }
         }
-      } else if (!isPublicRoute) {
-        return c.json({ error: "Invalid API Key." }, 403);
       }
     }
 
@@ -69,7 +94,9 @@ export function registerMiddleware(app: Hono) {
       if (currentUserId) {
         // Déjà authentifié via clé API ou JWT : x-user-id doit correspondre, sinon on l'ignore
         if (reqUserId !== currentUserId) {
-          console.warn(`[Auth] x-user-id mismatch: header=${reqUserId} vs auth=${currentUserId} — header ignoré`);
+          console.warn(
+            `[Auth] x-user-id mismatch: header=${reqUserId} vs auth=${currentUserId} — header ignoré`
+          );
         }
       } else if (apiKey) {
         // apiKey présent mais non reconnu (route publique) : ne pas promouvoir via x-user-id seul
@@ -84,10 +111,14 @@ export function registerMiddleware(app: Hono) {
           `;
           if (uRows.length > 0) {
             if (isPublicRoute) {
-              if (uRows[0].tier) userPlan = uRows[0].tier;
+              if (uRows[0].tier) {
+                userPlan = uRows[0].tier;
+              }
               currentUserId = reqUserId;
             } else {
-              console.warn(`[Auth] x-user-id sans JWT sur route privée ${path} — ignoré`);
+              console.warn(
+                `[Auth] x-user-id sans JWT sur route privée ${path} — ignoré`
+              );
             }
           }
         } catch {}
@@ -107,7 +138,13 @@ export function registerMiddleware(app: Hono) {
 
     // Vérification des quotas pour les clés API enregistrées
     if (apiKey && currentUserId && currentUserId !== "system-mai") {
-      const tierMap: Record<string, number> = { Free: 500, Gratuit: 500, Plus: 1000, Pro: 2000, Max: 5000 };
+      const tierMap: Record<string, number> = {
+        Free: 500,
+        Gratuit: 500,
+        Max: 5000,
+        Plus: 1000,
+        Pro: 2000,
+      };
       const limit = TIER_REQUEST_LIMITS?.[userPlan] || tierMap[userPlan] || 500;
       const sql = getDb();
 

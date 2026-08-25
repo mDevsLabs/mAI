@@ -23,18 +23,75 @@ export const TIER_REQUEST_LIMITS: Record<string, number> = {
   Pro: 2000,
 };
 
+// Limites quotidiennes de génération d'images (Free: 3/j, Plus: 5/j, Pro: 10/j, Max: 20/j)
+export const TIER_DAILY_IMAGE_LIMITS: Record<string, number> = {
+  Free: 3,
+  free: 3,
+  Gratuit: 3,
+  gratuit: 3,
+  Max: 20,
+  max: 20,
+  Plus: 5,
+  Pro: 10,
+  plus: 5,
+  pro: 10,
+};
+
+export function getTierDailyImageLimit(tier?: string | null): number {
+  const t = (tier || "Free").toLowerCase().trim();
+  if (t === "max") {
+    return 20;
+  }
+  if (t === "pro") {
+    return 10;
+  }
+  if (t === "plus") {
+    return 5;
+  }
+  return 3;
+}
+
+// Coût en requêtes API par génération d'image
+// Free = 100 requêtes, Plus = 50 requêtes, Pro = 25 requêtes, Max = 10 requêtes
+export const TIER_IMAGE_REQUEST_COST: Record<string, number> = {
+  Free: 100,
+  free: 100,
+  Gratuit: 100,
+  gratuit: 100,
+  Max: 10,
+  max: 10,
+  Plus: 50,
+  Pro: 25,
+  plus: 50,
+  pro: 25,
+};
+
+export function getTierImageRequestCost(tier?: string | null): number {
+  const t = (tier || "Free").toLowerCase().trim();
+  if (t === "max") {
+    return 10;
+  }
+  if (t === "pro") {
+    return 25;
+  }
+  if (t === "plus") {
+    return 50;
+  }
+  return 100;
+}
+
 // Limites de stockage Cloud par tier (en bytes) — SSOT: Free 500Mo / Plus 1Go / Pro 2Go / Max 5Go
 export const STORAGE_LIMITS_BYTES: Record<string, number> = {
-  Free: 500 * 1024 * 1024,           // 500 MB
-  Plus: 1 * 1024 * 1024 * 1024,      // 1 GB
-  Pro: 2 * 1024 * 1024 * 1024,       // 2 GB
-  Max: 5 * 1024 * 1024 * 1024,       // 5 GB
+  Free: 500 * 1024 * 1024, // 500 MB
   // alias lowercase pour lookup case-insensitive côté Val Town
   free: 500 * 1024 * 1024,
+  gratuit: 500 * 1024 * 1024,
+  Max: 5 * 1024 * 1024 * 1024, // 5 GB
+  max: 5 * 1024 * 1024 * 1024,
+  Plus: 1 * 1024 * 1024 * 1024, // 1 GB
+  Pro: 2 * 1024 * 1024 * 1024, // 2 GB
   plus: 1 * 1024 * 1024 * 1024,
   pro: 2 * 1024 * 1024 * 1024,
-  max: 5 * 1024 * 1024 * 1024,
-  gratuit: 500 * 1024 * 1024,
 } as Record<string, number>;
 
 export function getDb() {
@@ -56,7 +113,9 @@ export function getJwtSecret(): Uint8Array {
 // ─────────────────────────────────────────────
 // Helpers d'authentification & Utilitaires
 // ─────────────────────────────────────────────
-export async function signToken(payload: Record<string, unknown>): Promise<string> {
+export async function signToken(
+  payload: Record<string, unknown>
+): Promise<string> {
   return new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
@@ -64,7 +123,9 @@ export async function signToken(payload: Record<string, unknown>): Promise<strin
     .sign(getJwtSecret());
 }
 
-export async function verifyToken(token: string): Promise<Record<string, unknown>> {
+export async function verifyToken(
+  token: string
+): Promise<Record<string, unknown>> {
   // Vérif SQLite (legacy Val Town) + Postgres (nouveau)
   const sqliteResult = await sqlite.execute({
     args: [token],
@@ -76,12 +137,15 @@ export async function verifyToken(token: string): Promise<Record<string, unknown
   // Vérif Postgres token_blacklist avec TTL 14j
   try {
     const sql = getDb();
-    const pgResult = await sql`SELECT 1 FROM token_blacklist WHERE token = ${token} LIMIT 1`;
+    const pgResult =
+      await sql`SELECT 1 FROM token_blacklist WHERE token = ${token} LIMIT 1`;
     if (pgResult.length > 0) {
       throw new Error("Token révoqué.");
     }
   } catch (e: any) {
-    if (e?.message === "Token révoqué.") throw e;
+    if (e?.message === "Token révoqué.") {
+      throw e;
+    }
     // ignore DB errors (table not yet exists)
   }
   const { payload } = await jwtVerify(token, getJwtSecret());
@@ -89,7 +153,9 @@ export async function verifyToken(token: string): Promise<Record<string, unknown
 }
 
 export async function blacklistToken(token: string) {
-  const expiresAt = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString();
+  const expiresAt = new Date(
+    Date.now() + 14 * 24 * 60 * 60 * 1000
+  ).toISOString();
   try {
     await sqlite.execute({
       args: [token],
@@ -106,7 +172,9 @@ export async function blacklistToken(token: string) {
     await sql`DELETE FROM token_blacklist WHERE expires_at < NOW() OR revoked_at < NOW() - INTERVAL '14 days'`;
   } catch {}
   try {
-    await sqlite.execute({ sql: "DELETE FROM token_blacklist WHERE revoked_at < datetime('now', '-14 days')" });
+    await sqlite.execute({
+      sql: "DELETE FROM token_blacklist WHERE revoked_at < datetime('now', '-14 days')",
+    });
   } catch {}
 }
 
@@ -132,7 +200,11 @@ export function parseUserAgent(ua: string) {
   } else if (uaLower.includes("mac os") || uaLower.includes("macintosh")) {
     os = "apple";
     osVersion = "macOS";
-  } else if (uaLower.includes("windows nt 10.0") || uaLower.includes("windows 11") || uaLower.includes("windows 10")) {
+  } else if (
+    uaLower.includes("windows nt 10.0") ||
+    uaLower.includes("windows 11") ||
+    uaLower.includes("windows 10")
+  ) {
     os = "microsoft";
     osVersion = "Windows 10/11";
   } else if (uaLower.includes("win")) {
@@ -164,30 +236,52 @@ export function parseUserAgent(ua: string) {
   } else if (uaLower.includes("edg/")) {
     model = "Microsoft Edge";
     const match = ua.match(/Edg\/([0-9.]+)/i);
-    if (match) version = `v${match[1].split('.')[0]}`;
+    if (match) {
+      version = `v${match[1].split(".")[0]}`;
+    }
   } else if (uaLower.includes("opr/") || uaLower.includes("opera/")) {
     model = "Opera";
     const match = ua.match(/(?:OPR|Opera)\/([0-9.]+)/i);
-    if (match) version = `v${match[1].split('.')[0]}`;
+    if (match) {
+      version = `v${match[1].split(".")[0]}`;
+    }
   } else if (uaLower.includes("chrome/")) {
     model = "Google Chrome";
     const match = ua.match(/Chrome\/([0-9.]+)/i);
-    if (match) version = `v${match[1].split('.')[0]}`;
+    if (match) {
+      version = `v${match[1].split(".")[0]}`;
+    }
   } else if (uaLower.includes("firefox/")) {
     model = "Mozilla Firefox";
     const match = ua.match(/Firefox\/([0-9.]+)/i);
-    if (match) version = `v${match[1].split('.')[0]}`;
+    if (match) {
+      version = `v${match[1].split(".")[0]}`;
+    }
   } else if (uaLower.includes("safari/") && !uaLower.includes("chrome")) {
     model = "Apple Safari";
     const match = ua.match(/Version\/([0-9.]+)/i);
-    if (match) version = `v${match[1].split('.')[0]}`;
+    if (match) {
+      version = `v${match[1].split(".")[0]}`;
+    }
   }
 
   const fullVersion = version ? `${osVersion} • ${version}` : osVersion;
-  const osLabel = os === "apple" ? "Apple" : os === "microsoft" ? "Windows" : os === "google" ? "Google" : "Linux";
+  const osLabel =
+    os === "apple"
+      ? "Apple"
+      : os === "microsoft"
+        ? "Windows"
+        : os === "google"
+          ? "Google"
+          : "Linux";
   const deviceName = `${model} (${osLabel})`;
 
-  return { os, device_model: model, device_version: fullVersion, device_name: deviceName };
+  return {
+    device_model: model,
+    device_name: deviceName,
+    device_version: fullVersion,
+    os,
+  };
 }
 
 export function getWeekData() {
@@ -234,12 +328,15 @@ export async function generateVerificationCode(
 ): Promise<string> {
   const isDeletion = action === "delete_account";
   const length = isDeletion ? 8 : 6;
-  const min = Math.pow(10, length - 1);
-  const max = Math.pow(10, length) - 1;
+  const min = 10 ** (length - 1);
+  const max = 10 ** length - 1;
   // Crypto PRNG (corrige Math.random prévisible)
   const range = max - min;
-  const randomValue = crypto.getRandomValues(new Uint32Array(1))[0] / 0xffffffff;
-  const code = Math.floor(min + randomValue * range).toString().padStart(length, "0");
+  const randomValue =
+    crypto.getRandomValues(new Uint32Array(1))[0] / 0xff_ff_ff_ff;
+  const code = Math.floor(min + randomValue * range)
+    .toString()
+    .padStart(length, "0");
   const expiresAt = new Date(Date.now() + 10 * 60_000).toISOString(); // 10 minutes
 
   await sqlite.execute({

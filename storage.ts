@@ -1,5 +1,10 @@
 import type { Hono } from "npm:hono@4";
-import { extractToken, getDb, STORAGE_LIMITS_BYTES, verifyToken } from "./config.ts";
+import {
+  extractToken,
+  getDb,
+  STORAGE_LIMITS_BYTES,
+  verifyToken,
+} from "./config.ts";
 
 // Helper : retourne le client S3/R2 (réutilise les variables S3_* existantes)
 export async function buildR2Client() {
@@ -23,7 +28,9 @@ export function getR2Bucket(): string {
 
 export function getR2PublicBase(): string {
   const pub = Deno.env.get("S3_PUBLIC_URL");
-  if (pub) return pub.endsWith("/") ? pub.slice(0, -1) : pub;
+  if (pub) {
+    return pub.endsWith("/") ? pub.slice(0, -1) : pub;
+  }
   return `${getR2Endpoint()}/${getR2Bucket()}`;
 }
 
@@ -99,7 +106,9 @@ export function registerStorageRoutes(app: Hono) {
   app.post("/upload-file", async (c) => {
     try {
       const token = extractToken(c.req.raw);
-      if (!token) return c.json({ error: "Non authentifié." }, 401);
+      if (!token) {
+        return c.json({ error: "Non authentifié." }, 401);
+      }
       try {
         await verifyToken(token);
       } catch {
@@ -195,7 +204,9 @@ export function registerStorageRoutes(app: Hono) {
   app.get("/cloud/storage", async (c) => {
     try {
       const token = extractToken(c.req.raw);
-      if (!token) return c.json({ error: "Non authentifié." }, 401);
+      if (!token) {
+        return c.json({ error: "Non authentifié." }, 401);
+      }
 
       const payload = await verifyToken(token);
       const userId = payload.sub as string;
@@ -213,9 +224,12 @@ export function registerStorageRoutes(app: Hono) {
       const bytesLimit =
         STORAGE_LIMITS_BYTES[tier] ||
         STORAGE_LIMITS_BYTES[tier.toLowerCase()] ||
-        STORAGE_LIMITS_BYTES[tier.charAt(0).toUpperCase() + tier.slice(1).toLowerCase()] ||
+        STORAGE_LIMITS_BYTES[
+          tier.charAt(0).toUpperCase() + tier.slice(1).toLowerCase()
+        ] ||
         STORAGE_LIMITS_BYTES["Free"];
-      const percentUsed = bytesLimit > 0 ? Math.min(100, (bytesUsed / bytesLimit) * 100) : 0;
+      const percentUsed =
+        bytesLimit > 0 ? Math.min(100, (bytesUsed / bytesLimit) * 100) : 0;
 
       return c.json({
         bytes_limit: bytesLimit,
@@ -235,7 +249,9 @@ export function registerStorageRoutes(app: Hono) {
   app.get("/cloud/files", async (c) => {
     try {
       const token = extractToken(c.req.raw);
-      if (!token) return c.json({ error: "Non authentifié." }, 401);
+      if (!token) {
+        return c.json({ error: "Non authentifié." }, 401);
+      }
 
       const payload = await verifyToken(token);
       const userId = payload.sub as string;
@@ -260,7 +276,9 @@ export function registerStorageRoutes(app: Hono) {
   app.post("/cloud/upload", async (c) => {
     try {
       const token = extractToken(c.req.raw);
-      if (!token) return c.json({ error: "Non authentifié." }, 401);
+      if (!token) {
+        return c.json({ error: "Non authentifié." }, 401);
+      }
 
       const payload = await verifyToken(token);
       const userId = payload.sub as string;
@@ -315,22 +333,31 @@ export function registerStorageRoutes(app: Hono) {
       const bytesLimit =
         STORAGE_LIMITS_BYTES[tier] ||
         STORAGE_LIMITS_BYTES[tier.toLowerCase()] ||
-        STORAGE_LIMITS_BYTES[tier.charAt(0).toUpperCase() + tier.slice(1).toLowerCase()] ||
+        STORAGE_LIMITS_BYTES[
+          tier.charAt(0).toUpperCase() + tier.slice(1).toLowerCase()
+        ] ||
         STORAGE_LIMITS_BYTES["Free"];
 
       if (bytesUsed + fileSize > bytesLimit) {
         const limitMB = Math.round(bytesLimit / (1024 * 1024));
         const usedMB = Math.round(bytesUsed / (1024 * 1024));
-        return c.json({
-          bytes_limit: bytesLimit,
-          bytes_used: bytesUsed,
-          error: `Quota de stockage dépassé. Vous utilisez ${usedMB} MB sur ${limitMB} MB (tier ${tier}).`,
-          over_limit: true,
-        }, 413);
+        return c.json(
+          {
+            bytes_limit: bytesLimit,
+            bytes_used: bytesUsed,
+            error: `Quota de stockage dépassé. Vous utilisez ${usedMB} MB sur ${limitMB} MB (tier ${tier}).`,
+            over_limit: true,
+          },
+          413
+        );
       }
 
       // Générer une clé R2 unique
-      const ext = file.name.split(".").pop()?.replace(/[^a-zA-Z0-9]/g, "") || "bin";
+      const ext =
+        file.name
+          .split(".")
+          .pop()
+          ?.replace(/[^a-zA-Z0-9]/g, "") || "bin";
       const uniqueId = crypto.randomUUID();
       const r2Key = `cloud/${userId}/${uniqueId}.${ext}`;
       const cleanOriginal = file.name;
@@ -375,7 +402,8 @@ export function registerStorageRoutes(app: Hono) {
       `;
 
       const newBytesUsed = bytesUsed + fileSize;
-      const percentUsed = Math.round((newBytesUsed / bytesLimit) * 10000) / 100;
+      const percentUsed =
+        Math.round((newBytesUsed / bytesLimit) * 10_000) / 100;
 
       return c.json({
         file: inserted[0],
@@ -399,7 +427,9 @@ export function registerStorageRoutes(app: Hono) {
   app.delete("/cloud/files/:id", async (c) => {
     try {
       const token = extractToken(c.req.raw);
-      if (!token) return c.json({ error: "Non authentifié." }, 401);
+      if (!token) {
+        return c.json({ error: "Non authentifié." }, 401);
+      }
 
       const payload = await verifyToken(token);
       const userId = payload.sub as string;

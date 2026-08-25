@@ -41,7 +41,7 @@ export type MaiCloudStorageUsage = {
 
 import { CLOUD_STORAGE_LIMITS } from "./tiers";
 // Ré-export depuis la source unique lib/tiers.ts (évite divergence frontend/backend)
-export { CLOUD_STORAGE_LIMITS, STORAGE_LIMITS_BYTES, TIER_REQUEST_LIMITS, TIER_TOKEN_LIMITS, TIER_LIMITS, getTierQuotaLimit, formatStorageBytes } from "./tiers";
+export { CLOUD_STORAGE_LIMITS, STORAGE_LIMITS_BYTES, TIER_REQUEST_LIMITS, TIER_TOKEN_LIMITS, TIER_LIMITS, TIER_DAILY_IMAGE_LIMITS, TIER_IMAGE_REQUEST_COST, getTierQuotaLimit, getTierDailyImageLimit, getTierImageRequestCost, getTierStorageLimit, formatStorageBytes } from "./tiers";
 
 export type MaiVerifyCodeResponse = {
   success: boolean;

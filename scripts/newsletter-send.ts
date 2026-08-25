@@ -9,7 +9,7 @@ import path from "node:path";
 const sql = neon(process.env.DATABASE_URL!);
 
 // ─────────────────────────────────────────────
-// Styles & Palette ANSI
+// Styles & Palette ANSI CLI
 // ─────────────────────────────────────────────
 const c = {
   reset: "\x1b[0m",
@@ -39,13 +39,14 @@ const c = {
 };
 
 // ─────────────────────────────────────────────
-// Templates HTML pré-conçus
+// Modèles HTML Pré-conçus
 // ─────────────────────────────────────────────
 interface EmailTemplate {
   id: string;
   name: string;
   badge: string;
   badgeColor: string;
+  badgeBg: string;
   defaultSubject: string;
   defaultContent: string;
   hasCta?: boolean;
@@ -54,38 +55,42 @@ interface EmailTemplate {
 const TEMPLATES: Record<string, EmailTemplate> = {
   "1": {
     id: "feature",
-    name: "🚀 Nouveauté Produit / Mise à jour",
-    badge: "NOUVEAUTÉ",
-    badgeColor: "#7c3aed",
-    defaultSubject: "🚀 Découvrez les nouvelles fonctionnalités de mAI !",
-    defaultContent: "Nous sommes ravis de vous présenter les dernières améliorations apportées à la plateforme mAI. Découvrez dès maintenant nos nouveaux outils et optimisations conçus pour vous simplifier la vie.",
+    name: "🚀 Nouveauté Produit / Mise à jour Majeure",
+    badge: "NOUVEAUTÉ PRODUIT",
+    badgeColor: "#c084fc",
+    badgeBg: "rgba(168, 85, 247, 0.15)",
+    defaultSubject: "🚀 Découvrez les nouvelles fonctionnalités de la plateforme mAI !",
+    defaultContent: "Nous sommes ravis de vous présenter les dernières avancées de l'écosystème mAI : nouvelles architectures de modèles, vision multimodale et studio de requêtes interactif.",
     hasCta: true,
   },
   "2": {
     id: "announcement",
-    name: "📣 Annonce Générale",
-    badge: "ANNONCE",
-    badgeColor: "#2563eb",
-    defaultSubject: "📣 Des nouvelles importantes concernant mAI",
-    defaultContent: "Bonjour {{username}},\n\nNous tenions à partager avec vous une mise à jour importante concernant l'écosystème mAI.",
+    name: "📣 Annonce Officielle & Communauté",
+    badge: "ANNONCE OFFICIELLE",
+    badgeColor: "#60a5fa",
+    badgeBg: "rgba(59, 130, 246, 0.15)",
+    defaultSubject: "📣 Des nouvelles importantes concernant mAI et nos services",
+    defaultContent: "Bonjour {{username}},\n\nToute l'équipe mDevsLabs tenait à partager avec vous une mise à jour stratégique sur l'évolution de nos infrastructures souveraines et de nos offres.",
     hasCta: false,
   },
   "3": {
     id: "system",
-    name: "⚡ Maintenance & Système",
+    name: "⚡ Info Système & Maintenance Programmée",
     badge: "INFOS SYSTÈME",
-    badgeColor: "#d97706",
-    defaultSubject: "⚡ Maintenance programmée sur les services mAI",
-    defaultContent: "Une intervention technique de maintenance est programmée afin d'améliorer les performances et la stabilité de nos infrastructures. Nos services resteront accessibles avec de possibles micro-coupures.",
+    badgeColor: "#fbbf24",
+    badgeBg: "rgba(245, 158, 11, 0.15)",
+    defaultSubject: "⚡ Maintenance et optimisation des infrastructures mAI",
+    defaultContent: "Une mise à niveau de nos passerelles de routage est programmée afin de réduire la latence d'inférence et d'accroître la résilience de notre réseau. L'ensemble de vos accès reste opérationnel.",
     hasCta: false,
   },
   "4": {
     id: "custom",
-    name: "✏️ Contenu Libre / HTML Sur-Mesure",
+    name: "✏️ Newsletter Libre / HTML Sur-Mesure",
     badge: "NEWSLETTER",
-    badgeColor: "#059669",
-    defaultSubject: "L'actualité mAI du moment",
-    defaultContent: "Bonjour {{username}},\n\nVoici les dernières actualités mAI.",
+    badgeColor: "#34d399",
+    badgeBg: "rgba(16, 185, 129, 0.15)",
+    defaultSubject: "L'actualité technologique de l'écosystème mAI",
+    defaultContent: "Bonjour {{username}},\n\nVoici le récapitulatif des faits marquants et des nouveautés de la communauté mAI.",
     hasCta: false,
   },
 };
@@ -140,7 +145,7 @@ function printProgressBar(current: number, total: number, label: string) {
 }
 
 // ─────────────────────────────────────────────
-// Générateur HTML Moderne
+// Générateur HTML Moderne & Luxueux
 // ─────────────────────────────────────────────
 function buildNewsletterHtml(
   subject: string,
@@ -157,12 +162,12 @@ function buildNewsletterHtml(
 
   const formattedContent = textContent
     .replace(/{{username}}/g, username)
-    .replace(/\n\n/g, "</p><p style='margin-bottom:16px;'>")
+    .replace(/\n\n/g, "</p><p style='margin-bottom:18px;'>")
     .replace(/\n/g, "<br>");
 
   const ctaSection = ctaText && ctaUrl ? `
-    <div style="text-align:center; margin:32px 0 16px 0;">
-      <a href="${ctaUrl}" target="_blank" style="display:inline-block; background:linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); color:#ffffff; font-weight:700; font-size:15px; text-decoration:none; padding:14px 32px; border-radius:12px; box-shadow:0 10px 15px -3px rgba(124, 58, 237, 0.4);">
+    <div style="text-align:center; margin:36px 0 20px 0;">
+      <a href="${ctaUrl}" target="_blank" style="display:inline-block; background:linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%); color:#ffffff; font-weight:800; font-size:15px; text-decoration:none; padding:16px 36px; border-radius:14px; box-shadow:0 10px 25px -5px rgba(124, 58, 237, 0.45); letter-spacing:0.3px;">
         ${ctaText} →
       </a>
     </div>
@@ -176,37 +181,40 @@ function buildNewsletterHtml(
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>${subject}</title>
     </head>
-    <body style="margin:0; padding:0; background-color:#090d16; font-family:'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif; color:#f8fafc;">
-      <div style="max-width:600px; margin:40px auto; background:#111827; border:1px solid #1e293b; border-radius:20px; overflow:hidden; box-shadow:0 25px 50px -12px rgba(0,0,0,0.7);">
+    <body style="margin:0; padding:0; background-color:#080c14; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#f1f5f9; -webkit-font-smoothing:antialiased;">
+      <div style="max-width:600px; margin:40px auto; background:#0f172a; border:1px solid #1e293b; border-radius:24px; overflow:hidden; box-shadow:0 25px 50px -12px rgba(0,0,0,0.85);">
         
         <!-- Top Bar Badge -->
-        <div style="background:#0f172a; padding:12px 24px; text-align:center; border-bottom:1px solid #1e293b;">
-          <span style="display:inline-block; background:${templateInfo.badgeColor}22; color:${templateInfo.badgeColor}; border:1px solid ${templateInfo.badgeColor}44; font-size:11px; font-weight:800; letter-spacing:1px; text-transform:uppercase; padding:4px 12px; border-radius:100px;">
+        <div style="background:#090e1a; padding:14px 24px; text-align:center; border-bottom:1px solid #1e293b;">
+          <span style="display:inline-block; background:${templateInfo.badgeBg}; color:${templateInfo.badgeColor}; border:1px solid ${templateInfo.badgeColor}44; font-size:11px; font-weight:800; letter-spacing:1.2px; text-transform:uppercase; padding:4px 14px; border-radius:100px;">
             ${templateInfo.badge}
           </span>
         </div>
 
         <!-- Header & Logo -->
-        <div style="background:linear-gradient(135deg, #1e1b4b 0%, #2e1065 50%, #0f172a 100%); padding:36px 28px; text-align:center; border-bottom:1px solid #2e1065;">
-          <img src="https://upload.fs.fr/azq3C6GLea.png" alt="mAI Logo" style="height:44px; width:auto; max-width:180px; object-fit:contain; display:inline-block;" />
-          <h1 style="color:#ffffff; font-size:22px; font-weight:800; margin:20px 0 0 0; letter-spacing:-0.5px; line-height:1.3;">${subject}</h1>
+        <div style="background:linear-gradient(135deg, #1e1b4b 0%, #2e1065 50%, #0f172a 100%); padding:38px 28px 32px 28px; text-align:center; border-bottom:1px solid #2e1065;">
+          <img src="https://upload.fs.fr/azq3C6GLea.png" alt="mAI Logo" style="height:46px; width:auto; max-width:180px; object-fit:contain; display:inline-block;" />
+          <h1 style="color:#ffffff; font-size:22px; font-weight:800; margin:18px 0 0 0; letter-spacing:-0.5px; line-height:1.3;">
+            ${subject}
+          </h1>
         </div>
 
         <!-- Body Content -->
-        <div style="padding:36px 32px; line-height:1.7; font-size:15px; color:#cbd5e1;">
-          <p style="margin-top:0; margin-bottom:16px; font-size:16px; font-weight:600; color:#ffffff;">
+        <div style="padding:36px 32px; line-height:1.75; font-size:15px; color:#cbd5e1;">
+          <p style="margin-top:0; margin-bottom:18px; font-size:16px; font-weight:600; color:#ffffff;">
             Bonjour ${username}, 👋
           </p>
-          <div style="color:#cbd5e1;">
-            <p style="margin-bottom:16px;">${formattedContent}</p>
+          <div style="color:#cbd5e1; font-size:15px;">
+            <p style="margin-bottom:18px;">${formattedContent}</p>
           </div>
           ${ctaSection}
         </div>
 
         <!-- Footer -->
-        <div style="background-color:#0b0f19; padding:24px; text-align:center; border-top:1px solid #1e293b; font-size:12px; color:#64748b; line-height:1.5;">
-          <p style="margin:0 0 8px 0; font-weight:600; color:#94a3b8;">© 2026 mAI — Plateforme mAI & APIs</p>
-          <p style="margin:0;">Vous recevez cet e-mail car votre compte est inscrit aux mises à jour mAI.</p>
+        <div style="background-color:#070a12; padding:24px 28px; text-align:center; border-top:1px solid #1e293b; font-size:12px; color:#64748b; line-height:1.6;">
+          <p style="margin:0 0 8px 0; font-weight:600; color:#94a3b8;">© 2026 mAI — Plateforme d'IA Souveraine &amp; APIs</p>
+          <p style="margin:0 0 4px 0;">Vous recevez cet e-mail car votre compte est inscrit aux actualités mAI.</p>
+          <p style="margin:0; font-size:11px; color:#475569;">Hébergement sécurisé dans l'UE &amp; USA • Politique Zero Data Retention (ZDR) priorisée</p>
         </div>
 
       </div>
@@ -242,9 +250,9 @@ function openPreviewInBrowser(htmlContent: string) {
 }
 
 // ─────────────────────────────────────────────
-// Core App
+// Core CLI Runner
 // ─────────────────────────────────────────────
-async function main() {
+export async function runNewsletterStudio() {
   clearConsole();
   printHeader();
 
@@ -266,7 +274,7 @@ async function main() {
       const testEmail = (await rl.question(`  ${c.brightYellow}➔ Saisissez l'adresse e-mail de test : ${c.reset}`)).trim();
       if (!testEmail || !testEmail.includes("@")) {
         printError("Adresse e-mail invalide.");
-        process.exit(1);
+        return;
       }
       targetUsers = [{ email: testEmail, username: testEmail.split("@")[0] }];
     } else if (targetChoice === "3") {
@@ -288,7 +296,7 @@ async function main() {
 
     if (targetUsers.length === 0) {
       printError("Aucun destinataire trouvé pour cette cible.");
-      process.exit(0);
+      return;
     }
 
     printSuccess(`${targetUsers.length} destinataire(s) sélectionné(s) !`);
@@ -362,8 +370,8 @@ async function main() {
         console.log("");
         const wantCta = await rl.question(`  ${c.brightYellow}➔ Ajouter un bouton d'action (CTA) ? (O/n) : ${c.reset}`);
         if (wantCta.toLowerCase() !== "n") {
-          ctaText = (await rl.question(`  ${c.cyan}→${c.reset} Texte du bouton (ex: Essayer mAI 1.2) : `)).trim() || "Découvrir mAI";
-          ctaUrl = (await rl.question(`  ${c.cyan}→${c.reset} Lien URL du bouton (ex: https://mai-devs.vercel.app) : `)).trim() || "https://mai-devs.vercel.app";
+          ctaText = (await rl.question(`  ${c.cyan}→${c.reset} Texte du bouton (ex: Découvrir mAI 1.5) : `)).trim() || "Découvrir mAI";
+          ctaUrl = (await rl.question(`  ${c.cyan}→${c.reset} Lien URL du bouton (ex: https://mai.val.run) : `)).trim() || "https://mai.val.run";
         }
       }
     }
@@ -402,7 +410,7 @@ async function main() {
       const action = (await rl.question(`  ${c.brightYellow}➔ Votre choix [1-4] : ${c.reset}`)).trim();
 
       if (action === "3") {
-        const sampleUsername = targetUsers[0]?.username || "Mathias";
+        const sampleUsername = targetUsers[0]?.username || "Développeur";
         const html = buildNewsletterHtml(subject, sampleUsername, textContent, selectedTemplate, customHtml, ctaText, ctaUrl);
         openPreviewInBrowser(html);
         await rl.question(`\n  ${c.dim}Appuyez sur Entrée pour revenir au menu...${c.reset}`);
@@ -439,7 +447,7 @@ async function main() {
         }
       } else if (action === "4") {
         printInfo("Envoi annulé.");
-        process.exit(0);
+        return;
       }
     }
 
@@ -450,7 +458,7 @@ async function main() {
 
     if (!gmailAppPass) {
       printError("Erreur : GMAIL_APP_PASSWORD n'est pas défini dans l'environnement !");
-      process.exit(1);
+      return;
     }
 
     const transporter = nodemailer.createTransport({
@@ -490,7 +498,7 @@ async function main() {
     console.log("");
     console.log("");
     printDivider();
-    console.log(`  ${c.bold}${c.brightWhite}📊 RÉSULTAT DU DEPLOIEMENT${c.reset}`);
+    console.log(`  ${c.bold}${c.brightWhite}📊 RÉSULTAT DU DÉPLOIEMENT${c.reset}`);
     printDivider();
     console.log(`  ${c.brightGreen}✔ ${successCount} mail(s) envoyé(s) avec succès${c.reset}`);
     if (errorCount > 0) {
@@ -505,7 +513,10 @@ async function main() {
   }
 }
 
-main().catch((err) => {
-  printError(`Erreur fatale : ${err.message || err}`);
-  process.exit(1);
-});
+// Permettre l'exécution directe si appelé en script
+if (import.meta.url === `file://${process.argv[1]}` || process.argv[1]?.endsWith('newsletter-send.ts')) {
+  runNewsletterStudio().catch((err) => {
+    printError(`Erreur fatale : ${err.message || err}`);
+    process.exit(1);
+  });
+}

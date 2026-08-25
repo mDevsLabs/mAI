@@ -6,6 +6,7 @@ export interface ApiKeyMetadata {
   id: string;
   name: string;
   prefix: string; // Les premiers caractères visibles (ex: mp-126c6e6c)
+  apiKey?: string; // Clé complète pour exécution dans le studio
   createdAt: string;
   lastUsedAt: string | null;
   usageCount: number;
@@ -27,6 +28,7 @@ const memoryKeysStore: Map<string, {
   userId: string;
   name: string;
   prefix: string;
+  secretKey: string;
   hash: string;
   createdAt: string;
   lastUsedAt: string | null;
@@ -88,6 +90,7 @@ export async function createApiKey(userId: string, name: string, maxLimit: numbe
       userId,
       name,
       prefix,
+      secretKey,
       hash,
       createdAt: now,
       lastUsedAt: null,
@@ -139,6 +142,7 @@ export async function listApiKeys(userId: string): Promise<ApiKeyMetadata[]> {
             id: `db_key_${idx}_${prefix}`,
             name: row.plan || 'Clé API',
             prefix: `${prefix}_••••••••`,
+            apiKey: keyVal,
             createdAt: row.created_at ? new Date(row.created_at).toISOString() : new Date().toISOString(),
             lastUsedAt: row.last_used_at ? new Date(row.last_used_at).toISOString() : null,
             usageCount: row.request_count || 0,
@@ -161,6 +165,7 @@ export async function listApiKeys(userId: string): Promise<ApiKeyMetadata[]> {
           id: k.id,
           name: k.name,
           prefix: `${k.prefix}_••••••••`,
+          apiKey: k.secretKey,
           createdAt: k.createdAt,
           lastUsedAt: k.lastUsedAt,
           usageCount: k.usageCount,

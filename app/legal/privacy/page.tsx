@@ -48,27 +48,27 @@ export default function PrivacyPage() {
         </h1>
 
         <p className="text-slate-500 font-light mb-8 text-base md:text-lg">
-          Dernière mise à jour : 23 août 2026. Chez <strong>mDevsLabs</strong>, la protection de vos données personnelles, la souveraineté européenne et la transparence de notre plateforme <strong>mAI</strong> sont au cœur de nos engagements. Cette politique détaille l'hébergement de vos données dans l'Union Européenne (UE), le traitement des requêtes via l'API mAI, l'absence de réentraînement sur vos données et la gestion sécurisée de vos clés d'API.
+          Dernière mise à jour : 25 août 2026. Chez <strong>mDevsLabs</strong>, la protection de vos données personnelles, la conformité réglementaire internationale et la transparence de notre plateforme <strong>mAI</strong> sont au cœur de nos engagements. Cette politique détaille la répartition de l&apos;hébergement de vos données (données structurées et comptes stockés dans l&apos;Union Européenne, stockage d&apos;objets et fichiers aux États-Unis), le traitement des requêtes via l&apos;API mAI avec notre politique prioritaire de <strong>Zero Data Retention (ZDR)</strong> sur l&apos;IA, et la gestion sécurisée de vos clés d&apos;API.
         </p>
 
-        {/* Badge Résumé de Souveraineté UE & API */}
+        {/* Badge Résumé de Souveraineté UE & ZDR */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
           <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-900">
             <div className="flex items-center gap-2 font-bold text-sm mb-1 text-emerald-800">
               <Globe className="w-4 h-4 text-emerald-600" />
-              Stockage 100% UE 🇪🇺
+              Données dans l&apos;UE 🇪🇺 / Fichiers USA 🇺🇸
             </div>
             <p className="text-xs text-emerald-700 leading-relaxed font-light">
-              Bases de données et fichiers hébergés exclusivement dans des datacenters européens (RGPD).
+              Bases de données, comptes et clés API hébergés dans l&apos;UE (RGPD). Fichiers et stockage d&apos;objets sécurisés aux USA.
             </p>
           </div>
           <div className="p-4 rounded-2xl bg-purple-500/10 border border-purple-500/20 text-purple-900">
             <div className="flex items-center gap-2 font-bold text-sm mb-1 text-purple-800">
               <EyeOff className="w-4 h-4 text-purple-600" />
-              Zéro Réentraînement 🔒
+              Priorité ZDR (Zero Data Retention) 🔒
             </div>
             <p className="text-xs text-purple-700 leading-relaxed font-light">
-              Vos prompts et requêtes API ne sont jamais utilisés pour entraîner ou affiner des modèles d'IA.
+              Politique ZDR priorisée : vos prompts et requêtes d&apos;IA ne sont jamais enregistrés ni réutilisés pour l&apos;entraînement.
             </p>
           </div>
           <div className="p-4 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-900">
@@ -77,49 +77,49 @@ export default function PrivacyPage() {
               Clés API Sécurisées 🔑
             </div>
             <p className="text-xs text-blue-700 leading-relaxed font-light">
-              Génération cryptographique, contrôle granulaire des quotas et révocation immédiate.
+              Génération cryptographique (mp-...), contrôle granulaire des quotas et révocation immédiate.
             </p>
           </div>
         </div>
 
         <div className="space-y-10 text-slate-600">
-          {/* Section 1 : Stockage dans l'Union Européenne */}
+          {/* Section 1 : Stockage UE & USA */}
           <section className="space-y-4">
             <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2.5">
               <Globe className="w-5 h-5 text-emerald-600" />
-              1. Hébergement et Stockage des Données dans l'Union Européenne (UE) 🇪🇺
+              1. Hébergement des Données (Union Européenne) &amp; Stockage Fichiers (États-Unis)
             </h2>
             <p className="leading-relaxed font-light">
-              Nous appliquons le principe de souveraineté et de localisation stricte des données au sein du territoire de l'<strong>Union Européenne</strong>. Vos données ne sont ni vendues, ni transférées vers des pays tiers sans garanties juridiques conformes aux exigences de la CNIL et du RGPD :
+              Nous appliquons une politique claire et transparente de localisation et de chiffrement des données :
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1 text-xs">
               <div className="p-4 bg-white/70 rounded-2xl border border-slate-200/90 shadow-sm space-y-1.5">
                 <div className="flex items-center gap-2 font-bold text-slate-900">
                   <Database className="w-4 h-4 text-emerald-600" />
-                  Bases de données relationnelles
+                  Données Structurées &amp; Comptes (Union Européenne 🇪🇺)
                 </div>
                 <p className="text-slate-600 leading-relaxed font-light">
-                  Nos bases de données PostgreSQL managées (Neon DB) sont déployées dans la région <strong>EU (Europe centrale / Francfort)</strong> avec réplication et sauvegardes chiffrées.
+                  Nos bases de données relationnelles PostgreSQL managées (Neon DB), données de comptes, profils, clés d&apos;API et quotas sont hébergées exclusivement dans l&apos;<strong>Union Européenne (région EU - Francfort, Allemagne)</strong> en conformité stricte avec le RGPD.
                 </p>
               </div>
 
               <div className="p-4 bg-white/70 rounded-2xl border border-slate-200/90 shadow-sm space-y-1.5">
                 <div className="flex items-center gap-2 font-bold text-slate-900">
                   <HardDrive className="w-4 h-4 text-blue-600" />
-                  Stockage Fichiers (mAI Cloud Storage)
+                  Stockage d&apos;Objets &amp; Fichiers (États-Unis 🇺🇸)
                 </div>
                 <p className="text-slate-600 leading-relaxed font-light">
-                  Tous les fichiers, jeux de données et documents téléversés dans votre espace de stockage cloud sont stockés sur des infrastructures situées au sein de l'<strong>Espace Économique Européen</strong>.
+                  Les fichiers téléversés, images générées et artefacts volumineux de mAI Cloud Storage sont hébergés sur des serveurs haute performance situés aux <strong>États-Unis (USA)</strong>, avec chiffrement au repos AES-256 et clauses contractuelles types (SCC) garantissant un haut niveau de protection.
                 </p>
               </div>
 
               <div className="p-4 bg-white/70 rounded-2xl border border-slate-200/90 shadow-sm space-y-1.5">
                 <div className="flex items-center gap-2 font-bold text-slate-900">
                   <Server className="w-4 h-4 text-purple-600" />
-                  Serveurs d'Applications &amp; API
+                  Passerelles d&apos;API &amp; Routage Sécurisé
                 </div>
                 <p className="text-slate-600 leading-relaxed font-light">
-                  Les passerelles de routage de l'API mAI et les moteurs d'orchestration s'exécutent sur des nœuds réseau européens sécurisés avec chiffrement de bout en bout.
+                  Les passerelles de routage de l&apos;API mAI et les moteurs d&apos;orchestration répartissent les requêtes de manière optimale avec chiffrement de bout en bout.
                 </p>
               </div>
 
@@ -129,7 +129,7 @@ export default function PrivacyPage() {
                   Chiffrement Intégral (AES-256 &amp; TLS 1.3)
                 </div>
                 <p className="text-slate-600 leading-relaxed font-light">
-                  Toutes les communications transitent via HTTPS/TLS 1.3 et les données stockées sont protégées au repos par un chiffrement conforme aux standards bancaires.
+                  Toutes les communications transitent via HTTPS / TLS 1.3 et les données au repos sont chiffrées selon les standards industriels et bancaires les plus rigoureux.
                 </p>
               </div>
             </div>
@@ -164,23 +164,23 @@ export default function PrivacyPage() {
             </ul>
           </section>
 
-          {/* Section 3 : Fonctionnement de l'API & Traitement des Requêtes IA */}
+          {/* Section 3 : Fonctionnement de l'API & Traitement des Requêtes IA (Politique ZDR) */}
           <section className="space-y-4">
             <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2.5">
               <Cpu className="w-5 h-5 text-blue-500" />
-              3. Traitement des Requêtes d'API &amp; Non-Entraînement des Modèles
+              3. Traitement des Requêtes d&apos;API &amp; Priorité Absolue au ZDR (Zero Data Retention)
             </h2>
             <div className="p-4 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-slate-800 text-sm leading-relaxed space-y-2">
               <p className="font-bold flex items-center gap-2 text-blue-900">
                 <CheckCircle2 className="w-4 h-4 text-blue-600" />
-                Garantie de Non-Utilisation de vos Requêtes pour l'Entraînement :
+                Politique Prioritaire de Zero Data Retention (ZDR) &amp; Non-Entraînement :
               </p>
               <p className="font-light text-slate-700">
-                Les invites (prompts), documents, messages, données de contexte et réponses générées transitant par l'API mAI ou l'interface web <strong>ne sont JAMAIS réutilisés pour entraîner, réentraîner ou améliorer nos modèles fondamentaux ou des modèles tiers</strong>.
+                mDevsLabs priorise et applique une politique stricte de <strong>Zero Data Retention (ZDR)</strong> sur l&apos;ensemble des inférences d&apos;intelligence artificielle. Les invites (prompts), documents joints, messages, données de contexte et réponses générées transitant par l&apos;API mAI ou l&apos;interface web <strong>ne sont JAMAIS stockés de manière persistante, ni réutilisés pour entraîner, réentraîner ou affiner des modèles d&apos;IA</strong>.
               </p>
             </div>
             <p className="leading-relaxed font-light text-sm">
-              <strong>Traitement Éphémère (Stateless)</strong> : Lorsque vous soumettez une requête à l'API, les données sont traitées en mémoire vive volatile par le moteur d'inférence afin de générer la complétion demandée. Dès l'envoi de la réponse à votre client ou application, le contenu textuel est immédiatement purgé de la mémoire active des serveurs d'inférence.
+              <strong>Traitement Éphémère en Mémoire Volatile (Stateless In-Memory)</strong> : Lorsque vous soumettez une requête à l&apos;API, les données sont traitées uniquement en mémoire vive volatile (RAM) par le moteur d&apos;inférence afin de générer la réponse demandée. Dès la transmission des tokens ou de l&apos;image à votre application, le contenu textuel et binaire est instantanément purgé de la mémoire active des serveurs.
             </p>
           </section>
 

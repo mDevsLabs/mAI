@@ -21,7 +21,7 @@ import { useAuth } from "@/components/auth-provider";
 export interface RouteDefinition {
   id: string;
   name: string;
-  category: "Projets" | "LLM & Modèles" | "SDK Google & Anthropic" | "Clés & Quotas" | "Système";
+  category: "Projets" | "LLM & Modèles" | "Images & Web Search" | "SDK Google & Anthropic" | "Clés & Quotas" | "Système";
   method: "GET" | "POST" | "PUT" | "DELETE";
   path: string;
   description: string;
@@ -100,7 +100,7 @@ const ROUTE_DEFINITIONS: RouteDefinition[] = [
     category: "LLM & Modèles",
     method: "POST",
     path: "v1/chat/completions",
-    description: "Génère une réponse LLM mAI / OpenRouter compatible OpenAI.",
+    description: "Génère une réponse LLM mAI / OpenRouter compatible OpenAI avec streaming ou JSON.",
     requiresAuth: true,
     defaultHeaders: {
       "Content-Type": "application/json"
@@ -108,22 +108,118 @@ const ROUTE_DEFINITIONS: RouteDefinition[] = [
     defaultBody: {
       model: "poolside/laguna-xs-2.1:free",
       messages: [
-        { role: "system", content: "Tu es un assistant IA serviable et précis." },
-        { role: "user", content: "Explique l'écosystème mAI en une phrase !" }
+        { role: "system", content: "Tu es un assistant IA précis, souverain et hautement qualifié." },
+        { role: "user", content: "Présente l'écosystème mAI et ses avantages en deux phrases !" }
       ],
       temperature: 0.7
     }
   },
   {
     id: "models-list-public",
-    name: "Catalogue des modèles",
+    name: "Catalogue global des modèles",
     category: "LLM & Modèles",
     method: "GET",
     path: "v1/models",
-    description: "Liste les modèles d'IA disponibles via l'API publique.",
+    description: "Liste tous les modèles d'intelligence artificielle disponibles sur l'API publique.",
     requiresAuth: false,
     defaultHeaders: {
       "Content-Type": "application/json"
+    }
+  },
+  {
+    id: "models-mai-list",
+    name: "Catalogue Modèles mAI (Locaux)",
+    category: "LLM & Modèles",
+    method: "GET",
+    path: "v1/models/mai",
+    description: "Liste les modèles d'IA souverains de la famille mAI (série 1.5, 1.2, 1.0) pour Ollama / GGUF.",
+    requiresAuth: false,
+    defaultHeaders: {
+      "Content-Type": "application/json"
+    }
+  },
+  {
+    id: "models-single-detail",
+    name: "Détail d'un Modèle Spécifique",
+    category: "LLM & Modèles",
+    method: "GET",
+    path: "v1/models/mai-1.5-light",
+    description: "Récupère les métadonnées détaillées, le contexte et les capacités d'un modèle précis.",
+    requiresAuth: false,
+    defaultHeaders: {
+      "Content-Type": "application/json"
+    }
+  },
+
+  // 🎨 IMAGES & RECHERCHE WEB
+  {
+    id: "models-images-list",
+    name: "Catalogue Modèles Images",
+    category: "Images & Web Search",
+    method: "GET",
+    path: "v1/models/images",
+    description: "Liste les modèles de génération d'images haute qualité (Comet API & Flux Schnell/Dev/Pro).",
+    requiresAuth: false,
+    defaultHeaders: {
+      "Content-Type": "application/json"
+    }
+  },
+  {
+    id: "images-generations",
+    name: "Générer une Image (Comet & Flux)",
+    category: "Images & Web Search",
+    method: "POST",
+    path: "v1/images/generations",
+    description: "Génère une image par IA avec prompt, négatif, format, dimensions et modèle sélectionné.",
+    requiresAuth: true,
+    defaultHeaders: {
+      "Content-Type": "application/json"
+    },
+    defaultBody: {
+      model: "black-forest-labs/flux-1-schnell",
+      prompt: "Un paysage futuriste avec des néons sous la pluie, photoréaliste, 8k, éclairage cinématographique",
+      size: "1024x1024",
+      response_format: "url"
+    }
+  },
+  {
+    id: "images-usage-quota",
+    name: "Quota & Consommation Images",
+    category: "Images & Web Search",
+    method: "GET",
+    path: "v1/images/usage",
+    description: "Consulte le quota journalier et le nombre d'images générées aujourd'hui selon votre forfait.",
+    requiresAuth: true,
+    defaultHeaders: {
+      "Content-Type": "application/json"
+    }
+  },
+  {
+    id: "images-history-list",
+    name: "Historique des Générations d'Images",
+    category: "Images & Web Search",
+    method: "GET",
+    path: "v1/images/history",
+    description: "Consulte l'historique complet de vos générations d'images avec URLs et prompts associés.",
+    requiresAuth: true,
+    defaultHeaders: {
+      "Content-Type": "application/json"
+    }
+  },
+  {
+    id: "web-search-query",
+    name: "Recherche Web (You.com & Fallback)",
+    category: "Images & Web Search",
+    method: "POST",
+    path: "v1/web/search",
+    description: "Recherche web en temps réel enrichie avec triple fallback automatique pour l'actualité.",
+    requiresAuth: false,
+    defaultHeaders: {
+      "Content-Type": "application/json"
+    },
+    defaultBody: {
+      query: "dernières actualités intelligence artificielle et modèles souverains 2026",
+      count: 5
     }
   },
 
@@ -143,7 +239,7 @@ const ROUTE_DEFINITIONS: RouteDefinition[] = [
       model: "poolside/laguna-xs-2.1:free",
       max_tokens: 1024,
       messages: [
-        { role: "user", content: "Bonjour Claude, résume les capacités de mAI !" }
+        { role: "user", content: "Bonjour Claude, résume les capacités de l'écosystème mAI !" }
       ]
     }
   },
@@ -162,7 +258,7 @@ const ROUTE_DEFINITIONS: RouteDefinition[] = [
       contents: [
         {
           role: "user",
-          parts: [{ text: "Bonjour Gemini, présente-toi brièvement." }]
+          parts: [{ text: "Bonjour Gemini, présente brièvement les fonctionnalités mAI." }]
         }
       ]
     }
@@ -175,7 +271,7 @@ const ROUTE_DEFINITIONS: RouteDefinition[] = [
     category: "Clés & Quotas",
     method: "GET",
     path: "api/dev-keys",
-    description: "Récupère la liste de vos clés API générées.",
+    description: "Récupère la liste de vos clés API créées et leurs métadonnées de consommation.",
     requiresAuth: true,
     defaultHeaders: {
       "Content-Type": "application/json"
@@ -189,7 +285,7 @@ const ROUTE_DEFINITIONS: RouteDefinition[] = [
     category: "Système",
     method: "GET",
     path: "v1/status",
-    description: "Vérifie l'état et la santé globale de l'infrastucture mAI.",
+    description: "Vérifie l'état de santé, la latence et la disponibilité globale de l'infrastucture mAI.",
     requiresAuth: false,
     defaultHeaders: {
       "Content-Type": "application/json"
@@ -200,9 +296,9 @@ const ROUTE_DEFINITIONS: RouteDefinition[] = [
 export default function RequestsClient() {
   const { user } = useAuth();
   
-  // Clés API de l'utilisateur
-  const [createdKeys, setCreatedKeys] = useState<{ id: string; name: string; prefix: string }[]>([]);
-  const [selectedKeyPrefix, setSelectedKeyPrefix] = useState<string>("");
+  // Clés API de l'utilisateur avec conservation de la clé complète
+  const [createdKeys, setCreatedKeys] = useState<{ id: string; name: string; prefix: string; apiKey?: string }[]>([]);
+  const [selectedFullApiKey, setSelectedFullApiKey] = useState<string>("");
   const [customKeyInput, setCustomKeyInput] = useState<string>("");
 
   // Route sélectionnée
@@ -240,7 +336,9 @@ export default function RequestsClient() {
           if (data.success && Array.isArray(data.keys)) {
             setCreatedKeys(data.keys);
             if (data.keys.length > 0) {
-              setSelectedKeyPrefix(data.keys[0].prefix || data.keys[0].id);
+              const firstKey = data.keys[0];
+              // Stocker la clé complète si disponible, sinon le préfixe propre
+              setSelectedFullApiKey(firstKey.apiKey || firstKey.prefix.replace(/_•+$/, ''));
             }
           }
         }
@@ -263,11 +361,14 @@ export default function RequestsClient() {
     }
   }, [selectedRoute]);
 
-  // Obtenir la clé active (qui commence par mp-)
+  // Obtenir la clé active complète (qui commence par mp-)
   const getActiveApiKey = () => {
     if (customKeyInput.trim()) return customKeyInput.trim();
-    if (selectedKeyPrefix) return selectedKeyPrefix.replace(/_•+$/, "");
-    return "mp-live_sample123456";
+    if (selectedFullApiKey.trim()) return selectedFullApiKey.trim();
+    if (createdKeys.length > 0) {
+      return createdKeys[0].apiKey || createdKeys[0].prefix.replace(/_•+$/, '');
+    }
+    return "mp-live_sample1234567890abcdef1234567890abcdef";
   };
 
   // URL cible sur Val Town
@@ -489,18 +590,21 @@ axios(config)
 
           {createdKeys.length > 0 ? (
             <select
-              value={selectedKeyPrefix}
+              value={selectedFullApiKey}
               onChange={(e) => {
-                setSelectedKeyPrefix(e.target.value);
+                setSelectedFullApiKey(e.target.value);
                 setCustomKeyInput("");
               }}
               className="w-full text-xs font-mono bg-white border border-purple-200 rounded-lg px-2.5 py-1.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm"
             >
-              {createdKeys.map((k) => (
-                <option key={k.id} value={k.prefix}>
-                  🔑 {k.name} ({k.prefix})
-                </option>
-              ))}
+              {createdKeys.map((k) => {
+                const fullKeyVal = k.apiKey || k.prefix.replace(/_•+$/, '');
+                return (
+                  <option key={k.id} value={fullKeyVal}>
+                    🔑 {k.name} ({k.prefix})
+                  </option>
+                );
+              })}
             </select>
           ) : (
             <p className="text-[11px] text-purple-700 italic">
@@ -520,7 +624,7 @@ axios(config)
 
         {/* Liste groupée des routes */}
         <div className="space-y-5 max-h-[550px] overflow-y-auto pr-1">
-          {["Projets", "LLM & Modèles", "SDK Google & Anthropic", "Clés & Quotas", "Système"].map((cat) => {
+          {["Projets", "LLM & Modèles", "Images & Web Search", "SDK Google & Anthropic", "Clés & Quotas", "Système"].map((cat) => {
             const routesInCat = ROUTE_DEFINITIONS.filter((r) => r.category === cat);
             if (routesInCat.length === 0) return null;
 

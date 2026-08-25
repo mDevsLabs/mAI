@@ -53,11 +53,12 @@ export function getAllDocs(): DocMetadata[] {
 
   // Ordre canonique des catégories
   const categoryOrderMap: Record<string, number> = {
-    'Applications': 1,
-    "Modèles d'IA": 2,
-    'Guides': 3,
-    'Architecture': 4,
-    'API': 5};
+    'API': 1,
+    'Applications': 2,
+    "Modèles d'IA": 3,
+    'Guides': 4,
+    'Architecture': 5,
+  };
 
   docs.sort((a, b) => {
     const catOrderA = categoryOrderMap[a.category] ?? 99;
