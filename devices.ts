@@ -30,7 +30,7 @@ export function registerDeviceRoutes(app: Hono) {
     } else {
       try {
         await sql`UPDATE connected_devices SET last_active = NOW() WHERE token = ${token}`;
-      } catch (err) {}
+      } catch (_err) {}
     }
 
     const rawDevices = await sql`

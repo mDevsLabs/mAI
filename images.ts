@@ -90,7 +90,7 @@ export function registerImageRoutes(app: Hono) {
   // ─────────────────────────────────────────────
   app.get("/v1/models/images", async (c) => {
     const userPlan = c.get("userPlan");
-    const apiKey = c.get("apiKey");
+    const _apiKey = c.get("apiKey");
     const planStr = String(userPlan || "Free")
       .toLowerCase()
       .trim();
@@ -190,9 +190,10 @@ export function registerImageRoutes(app: Hono) {
     try {
       const token = extractToken(c.req.raw);
       const authHeader = c.req.header("Authorization");
-      const apiKey = authHeader?.startsWith("Bearer ")
+      const _apiKey = authHeader?.startsWith("Bearer ")
         ? authHeader.slice(7)
         : null;
+      void _apiKey;
       let userId = c.get("userId");
       let userPlan = c.get("userPlan") || "Free";
 
@@ -292,15 +293,21 @@ export function registerImageRoutes(app: Hono) {
   });
 
   // ─────────────────────────────────────────────
-  // POST /v1/images/generations
+  // POST /v1/images/generations, /v1beta/models/*:generateImages (OpenAI, Google & Anthropic SDK)
   // ─────────────────────────────────────────────
-  app.post("/v1/images/generations", async (c) => {
+  const handleImageGeneration = async (c: any) => {
     try {
       const token = extractToken(c.req.raw);
       const authHeader = c.req.header("Authorization");
+      const headerApiKey =
+        c.req.header("x-api-key") ||
+        c.req.header("X-API-Key") ||
+        c.req.header("x-goog-api-key") ||
+        c.req.header("X-Goog-Api-Key");
       const apiKey = authHeader?.startsWith("Bearer ")
         ? authHeader.slice(7)
-        : null;
+        : headerApiKey || null;
+
       let userId = c.get("userId");
       let userPlan = c.get("userPlan") || "Free";
 
@@ -320,18 +327,80 @@ export function registerImageRoutes(app: Hono) {
       }
 
       const body = await c.req.json().catch(() => ({}));
-      const prompt = body.prompt;
-      const model = body.model || "black-forest-labs/flux-1-schnell";
-      const width =
-        body.width ||
-        (body.size ? Number.parseInt(body.size.split("x")[0], 10) : 1024);
-      const height =
-        body.height ||
-        (body.size ? Number.parseInt(body.size.split("x")[1], 10) : 1024);
+      const reqPath = c.req.path || "";
+      const isGoogleFormat =
+        reqPath.includes(":generateImages") ||
+        reqPath.includes(":predict") ||
+        Boolean(body.instances || body.numberOfImages || body.aspectRatio);
+
+      // Support des paramètres OpenAI & Google GenAI
+      const rawPrompt =
+        body.prompt ||
+        body.instances?.[0]?.prompt ||
+        body.parameters?.prompt ||
+        "";
+      const prompt = typeof rawPrompt === "string" ? rawPrompt.trim() : "";
+
+      // Extraction du modèle demandé
+      const pathModel = reqPath
+        .replace(/^\/(v1beta|v1)\/models\//, "")
+        .replace(/:(generateImages|predict).*$/, "");
+      const requestedModel =
+        body.model || pathModel || "black-forest-labs/flux-1-schnell";
+
+      // Mapping des alias OpenAI (ex: dall-e-3, dall-e-2) et Google (imagen-3)
+      let model = requestedModel;
+      if (
+        model.toLowerCase().includes("dall-e") ||
+        model.toLowerCase().includes("imagen")
+      ) {
+        model = "black-forest-labs/flux-1-schnell";
+      }
+
+      // Résolution des dimensions (support aspectRatio Google et size OpenAI)
+      let width = 1024;
+      let height = 1024;
+
+      if (body.aspectRatio) {
+        const ar = String(body.aspectRatio).trim();
+        if (ar === "16:9") {
+          width = 1280;
+          height = 720;
+        } else if (ar === "9:16") {
+          width = 720;
+          height = 1280;
+        } else if (ar === "4:3") {
+          width = 1024;
+          height = 768;
+        } else if (ar === "3:4") {
+          width = 768;
+          height = 1024;
+        }
+      } else if (body.size) {
+        const parts = String(body.size).split("x");
+        if (parts.length === 2) {
+          width = Number.parseInt(parts[0], 10) || 1024;
+          height = Number.parseInt(parts[1], 10) || 1024;
+        }
+      } else {
+        if (body.width) width = Number(body.width);
+        if (body.height) height = Number(body.height);
+      }
+
       const negativePrompt = body.negative_prompt || "";
 
-      if (!prompt || typeof prompt !== "string") {
-        return c.json({ error: "Le paramètre 'prompt' est obligatoire." }, 400);
+      if (!prompt) {
+        return c.json(
+          {
+            error: {
+              code: "missing_prompt",
+              message: "Le paramètre 'prompt' est obligatoire pour la génération d'images.",
+              param: "prompt",
+              type: "invalid_request_error",
+            },
+          },
+          400
+        );
       }
 
       const sql = getDb();
@@ -394,7 +463,7 @@ export function registerImageRoutes(app: Hono) {
       if (cometApiKey) {
         const imagePayload: Record<string, any> = {
           model,
-          n: 1,
+          n: body.n || body.numberOfImages || 1,
           prompt,
           response_format: body.response_format || "url",
           size: `${width}x${height}`,
@@ -480,10 +549,24 @@ export function registerImageRoutes(app: Hono) {
       try {
         await sql`
           INSERT INTO mprojects_api_logs (api_key, endpoint, method, status_code, latency_ms, created_at)
-          VALUES (${apiKey || "anonymous"}::text, '/v1/images/generations', 'POST', 200, 1500, NOW())
+          VALUES (${apiKey || "anonymous"}::text, ${reqPath || "/v1/images/generations"}::text, 'POST', 200, 1500, NOW())
         `;
       } catch {}
 
+      // Formatage de la réponse selon le SDK appelant (Google GenAI vs OpenAI / Anthropic)
+      if (isGoogleFormat) {
+        return c.json({
+          generatedImages: cometResultData.map((img) => ({
+            image: {
+              imageBytes: img.b64_json || "",
+              mimeType: "image/jpeg",
+              uri: img.url || generatedImageUrl,
+            },
+          })),
+        });
+      }
+
+      // Format OpenAI par défaut (utilisé par OpenAI SDK & Anthropic proxy)
       return c.json({
         created: Math.floor(Date.now() / 1000),
         data: cometResultData,
@@ -505,5 +588,21 @@ export function registerImageRoutes(app: Hono) {
         500
       );
     }
-  });
+  };
+
+  // Routes OpenAI & Anthropic SDK
+  app.post("/v1/images/generations", handleImageGeneration);
+  app.post("/images/generations", handleImageGeneration);
+  app.post("/v1/images", handleImageGeneration);
+  app.post("/images", handleImageGeneration);
+  app.post("/v1/images/edits", handleImageGeneration);
+  app.post("/images/edits", handleImageGeneration);
+  app.post("/v1/images/variations", handleImageGeneration);
+  app.post("/images/variations", handleImageGeneration);
+
+  // Routes Google GenAI / Gemini / Vertex SDK
+  app.post("/v1beta/models/*:generateImages", handleImageGeneration);
+  app.post("/v1/models/*:generateImages", handleImageGeneration);
+  app.post("/v1beta/models/*:predict", handleImageGeneration);
+  app.post("/v1/models/*:predict", handleImageGeneration);
 }

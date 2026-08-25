@@ -17,11 +17,7 @@ import {
   SlidersHorizontal,
   Building2,
   X,
-  Sparkles,
-  Layers,
   ArrowUpDown,
-  FileCode,
-  Palette,
   Ratio,
   Filter,
   Wrench,
@@ -292,8 +288,6 @@ export default function ApiImageModelsPage() {
 
     return filtered;
   }, [models, searchQuery, selectedProvider, minWidth, minHeight, selectedFeatures, sortBy]);
-
-  const userPlan = user?.tier || "Free";
 
   if (authLoading || !isAuthenticated) {
     return (

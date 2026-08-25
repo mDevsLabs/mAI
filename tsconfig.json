@@ -41,6 +41,7 @@
     "main-projects.ts",
     "api-middleware.ts",
     "auth.ts",
+    "audio.ts",
     "config.ts",
     "devices.ts",
     "email.ts",

@@ -16,6 +16,34 @@ export const TIER_LIMITS: Record<string, number> = {
   Pro: 10_000_000,
 };
 
+// Limites de tokens Speech hebdomadaires (Free: 20M, Plus: 50M, Pro: 100M, Max: 200M)
+export const TIER_SPEECH_LIMITS: Record<string, number> = {
+  Free: 20_000_000,
+  free: 20_000_000,
+  Gratuit: 20_000_000,
+  gratuit: 20_000_000,
+  Max: 200_000_000,
+  max: 200_000_000,
+  Plus: 50_000_000,
+  plus: 50_000_000,
+  Pro: 100_000_000,
+  pro: 100_000_000,
+};
+
+export function getTierSpeechLimit(tier?: string | null): number {
+  const t = (tier || "Free").toLowerCase().trim();
+  if (t === "max") {
+    return 200_000_000;
+  }
+  if (t === "pro") {
+    return 100_000_000;
+  }
+  if (t === "plus") {
+    return 50_000_000;
+  }
+  return 20_000_000;
+}
+
 export const TIER_REQUEST_LIMITS: Record<string, number> = {
   Free: 500,
   Max: 5000,

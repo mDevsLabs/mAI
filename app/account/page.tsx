@@ -21,7 +21,6 @@ import {
   Cloud,
   Image as ImageIcon,
   Download,
-  ExternalLink,
   X,
 } from "lucide-react";
 import { useAuth } from "@/components/auth-provider";

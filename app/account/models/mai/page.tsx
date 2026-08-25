@@ -9,7 +9,6 @@ import {
   Copy,
   Check,
   Search,
-  KeyRound,
   Loader2,
   Cpu,
   RefreshCw,
@@ -18,8 +17,6 @@ import {
   Sparkles,
   Layers,
   ArrowUpDown,
-  FileCode,
-  Terminal,
   Download,
   Eye,
   Brain,
@@ -81,7 +78,7 @@ const PARAM_PRESETS: ParamPreset[] = [
 ];
 
 export default function ApiMaiModelsPage() {
-  const { user, isAuthenticated, loading: authLoading } = useAuth();
+  const { isAuthenticated, loading: authLoading } = useAuth();
   const router = useRouter();
 
   const [models, setModels] = useState<MAIModelAPIItem[]>([]);

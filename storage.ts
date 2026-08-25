@@ -330,6 +330,7 @@ export function registerStorageRoutes(app: Hono) {
       const rawTier = userRes[0]?.tier || "Free";
       const tier = String(rawTier).trim();
       // lookup case-insensitive (config a désormais clés lower)
+      const bytesUsed = Number(usageRes[0]?.bytes_used || 0);
       const bytesLimit =
         STORAGE_LIMITS_BYTES[tier] ||
         STORAGE_LIMITS_BYTES[tier.toLowerCase()] ||
