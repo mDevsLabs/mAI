@@ -156,6 +156,60 @@ async function fallbackWebSearch(query: string, count = 5): Promise<Array<{ titl
   return results;
 }
 
+/**
+ * Fallback DuckDuckGo (HTML), puis repli sur fallbackWebSearch.
+ */
+async function fallbackDuckDuckGoSearch(query: string, count = 5): Promise<Array<{ title: string; url: string; snippet: string }>> {
+  const results: Array<{ title: string; url: string; snippet: string }> = [];
+  const clean = (s: string) => s.replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, "\"").replace(/&#x27;|&#39;/g, "'").trim();
+
+  try {
+    const res = await fetch(`https://html.duckduckgo.com/html/?q=${encodeURIComponent(query)}`, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "fr-FR,fr;q=0.9,en;q=0.8",
+      },
+    });
+
+    if (res.ok) {
+      const html = await res.text();
+      const blocks = html.split(/class="[^"]*result\b[^"]*"/i).slice(1);
+
+      for (const block of blocks) {
+        if (results.length >= count) break;
+
+        const linkMatch = block.match(/<a[^>]*class="[^"]*result__a[^"]*"[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/i);
+        if (!linkMatch) continue;
+
+        let url = linkMatch[1];
+        const uddgMatch = url.match(/[?&]uddg=([^&]+)/);
+        if (uddgMatch) {
+          try {
+            url = decodeURIComponent(uddgMatch[1]);
+          } catch {
+            continue;
+          }
+        }
+        if (!url.startsWith("http")) url = `https:${url}`;
+
+        const title = clean(linkMatch[2]);
+        if (!title || !url.startsWith("http")) continue;
+
+        const snippetMatch = block.match(/class="[^"]*result__snippet[^"]*"[^>]*>([\s\S]*?)<\/a>/i);
+        const snippet = snippetMatch ? clean(snippetMatch[1]) : title;
+
+        results.push({ title, url, snippet });
+      }
+    }
+  } catch (err) {
+    console.warn("[WebSearch] Fallback DuckDuckGo failed:", err);
+  }
+
+  if (results.length > 0) return results;
+  return fallbackWebSearch(query, count);
+}
+
 export async function executeWebSearch(query: string, count: number = 5): Promise<{
   success: boolean;
   query: string;
