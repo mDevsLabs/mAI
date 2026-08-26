@@ -862,7 +862,7 @@ export default function AccountPage() {
               <div className="space-y-2">
                 <div className="flex items-end justify-between text-sm">
                   <p className="text-slate-600">
-                    <span className="font-bold text-slate-900">{usedToday}</span> / {dailyLimit} images générées aujourd&apos;hui
+                    <span className="font-bold text-slate-900">{usedToday}</span>{" "}/{" "}{dailyLimit}{" "}images générées aujourd&apos;hui
                   </p>
                   <p className={`font-semibold ${isAtLimit ? "text-red-600 font-bold" : "text-slate-900"}`}>
                     {percentUsed}%
@@ -946,20 +946,6 @@ export default function AccountPage() {
               <p className="text-xs text-slate-500">
                 Réinitialisation hebdomadaire : {formatResetDate(audioUsage.resetAt)}
               </p>
-            </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              <div className="rounded-2xl bg-white/60 border border-slate-200/80 p-3.5 shadow-sm">
-                <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Requêtes</p>
-                <p className="text-base font-black text-slate-900">{audioUsage.requestsCount}</p>
-              </div>
-              <div className="rounded-2xl bg-white/60 border border-slate-200/80 p-3.5 shadow-sm">
-                <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Tokens Utilisés</p>
-                <p className="text-base font-black text-slate-900">{audioUsage.tokensUsed.toLocaleString()}</p>
-              </div>
-              <div className="rounded-2xl bg-white/60 border border-slate-200/80 p-3.5 shadow-sm">
-                <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Limite Hebdo</p>
-                <p className="text-base font-black text-purple-700">{audioUsage.weeklyLimit.toLocaleString()}</p>
-              </div>
             </div>
           </div>
         ) : (

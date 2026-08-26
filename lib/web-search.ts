@@ -241,7 +241,6 @@ export async function executeWebSearch(query: string, count: number = 5): Promis
 
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i];
-      const keyLabel = `YOU_API_KEY_${i + 1}`;
 
       for (const endpointUrl of endpoints) {
         try {

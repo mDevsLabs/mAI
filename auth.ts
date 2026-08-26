@@ -722,19 +722,47 @@ export function registerAuthRoutes(app: Hono) {
   app.get("/api-keys", async (c) => {
     try {
       const token = extractToken(c.req.raw);
-      if (!token) {
+      let userId = c.get("userId");
+
+      if (token) {
+        try {
+          const payload = await verifyToken(token);
+          userId = (payload.sub as string) || userId;
+        } catch {}
+      }
+
+      const sql = getDb();
+
+      // Résolution du user_id réel via mprojects_api_keys si clé API transmise
+      if (token) {
+        try {
+          const keyRows = await sql`
+            SELECT k.user_id, u.tier, u.email, u.username
+            FROM mprojects_api_keys k
+            LEFT JOIN users u ON k.user_id = u.id::text OR k.user_id = u.username OR k.user_id = u.email
+            WHERE k.api_key = ${token}::text
+            LIMIT 1
+          `;
+          if (keyRows.length > 0) {
+            userId = keyRows[0].user_id;
+          }
+        } catch {}
+      }
+
+      if (!userId) {
         return c.json({ error: "Non authentifié." }, 401);
       }
 
-      const payload = await verifyToken(token);
-      const userId = payload.sub as string;
-
-      const sql = getDb();
       const keys = await sql`
         SELECT api_key, plan, request_count, created_at, last_used_at 
         FROM mprojects_api_keys 
-        WHERE user_id = ${userId}::text
-      `;
+        WHERE (
+          user_id = ${userId}::text 
+          OR user_id IN (SELECT id::text FROM users WHERE id::text = ${userId}::text OR email = ${userId}::text OR username = ${userId}::text)
+          OR user_id IN (SELECT email FROM users WHERE id::text = ${userId}::text OR email = ${userId}::text OR username = ${userId}::text)
+          OR user_id IN (SELECT username FROM users WHERE id::text = ${userId}::text OR email = ${userId}::text OR username = ${userId}::text)
+        )
+      `.catch(() => []);
 
       return c.json({ keys, success: true });
     } catch (err: any) {

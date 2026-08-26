@@ -110,17 +110,12 @@ export function registerMiddleware(app: Hono) {
       return diff === 0;
     }
 
-    // 1. Clé système MAI_API_KEY (accès complet aux modèles Plus/Max) — comparaison constant-time
-    if (systemMaiApiKey && apiKey && timingSafeEqual(apiKey, systemMaiApiKey)) {
-      userPlan = "Plus";
-      currentUserId = "system-mai";
-    }
-    // 2. Clé API utilisateur enregistrée ou Token JWT
-    else if (apiKey) {
+    // Résolution de l'authentification : Clé API utilisateur enregistrée, Clé système, ou Token JWT
+    if (apiKey) {
       const sql = getDb();
       try {
         const rows = await sql`
-          SELECT k.*, u.tier as user_tier
+          SELECT k.*, u.tier as user_tier, u.id as u_id
           FROM mprojects_api_keys k
           LEFT JOIN users u ON k.user_id = u.id::text OR k.user_id = u.username OR k.user_id = u.email
           WHERE k.api_key = ${apiKey}::text
@@ -132,6 +127,9 @@ export function registerMiddleware(app: Hono) {
           userPlan = apiKeyData.user_tier || apiKeyData.plan || "Free";
           currentUserId = apiKeyData.user_id;
           matchedApiKey = apiKeyData.api_key || apiKey;
+        } else if (systemMaiApiKey && timingSafeEqual(apiKey, systemMaiApiKey)) {
+          userPlan = "Plus";
+          currentUserId = "system-mai";
         } else {
           // Tenter de valider le token comme un JWT de session
           try {

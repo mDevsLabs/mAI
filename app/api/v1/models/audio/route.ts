@@ -37,13 +37,9 @@ function cleanModelName(name: string): string {
 
 export async function GET(req: NextRequest) {
   const authHeader = req.headers.get("authorization") || req.headers.get("Authorization");
-  let userPlan = "Free";
 
   if (authHeader && authHeader.startsWith("Bearer ")) {
-    const authResult = await authenticateOpenAIRequest(req);
-    if (authResult.valid) {
-      userPlan = authResult.plan || "Free";
-    }
+    await authenticateOpenAIRequest(req);
   }
 
   try {
@@ -98,7 +94,7 @@ export async function GET(req: NextRequest) {
     }
 
     return NextResponse.json({ data: FALLBACK_AUDIO_MODELS, object: "list" });
-  } catch (err: any) {
+  } catch (_err: any) {
     return NextResponse.json({ data: FALLBACK_AUDIO_MODELS, object: "list" });
   }
 }

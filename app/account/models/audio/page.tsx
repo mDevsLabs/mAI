@@ -16,12 +16,9 @@ import {
   RefreshCw,
   Building2,
   ArrowUpDown,
-  Filter,
   Wrench,
   Mic,
   AudioWaveform,
-  Play,
-  Layers,
 } from "lucide-react";
 import { useAuth } from "@/components/auth-provider";
 import { getUserApiUsage } from "@/app/actions/api-keys";

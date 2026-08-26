@@ -21,19 +21,61 @@ export function registerModelRoutes(app: Hono) {
   app.get("/usage", async (c) => {
     try {
       const token = extractToken(c.req.raw);
-      if (!token) {
+      let userId = c.get("userId");
+
+      if (token) {
+        try {
+          const payload = await verifyToken(token);
+          userId = (payload.sub as string) || userId;
+        } catch {}
+      }
+
+      const sql = getDb();
+
+      // Résolution de l'identifiant via mprojects_api_keys si clé API fournie
+      if (token) {
+        try {
+          const keyRows = await sql`
+            SELECT k.user_id, u.tier, u.email, u.username
+            FROM mprojects_api_keys k
+            LEFT JOIN users u ON k.user_id = u.id::text OR k.user_id = u.username OR k.user_id = u.email
+            WHERE k.api_key = ${token}::text
+            LIMIT 1
+          `;
+          if (keyRows.length > 0) {
+            userId = keyRows[0].user_id;
+          }
+        } catch {}
+      }
+
+      if (!userId) {
         return c.json({ error: "Non authentifié." }, 401);
       }
 
-      const payload = await verifyToken(token);
-      const userId = payload.sub as string;
       const { weekStartStr, nextResetIso } = getWeekData();
 
-      const sql = getDb();
       const [usageResult, userResult, speechResult] = await Promise.all([
-        sql`SELECT tokens_used FROM weekly_usage WHERE user_id = ${userId} AND week_start = ${weekStartStr}`,
-        sql`SELECT tier, email, username, phone, avatar_url FROM users WHERE id = ${userId} LIMIT 1`,
-        sql`SELECT tokens_used FROM weekly_speech_usage WHERE user_id = ${userId}::text AND week_start = ${weekStartStr}::date LIMIT 1`.catch(() => []),
+        sql`
+          SELECT COALESCE(SUM(tokens_used::numeric), 0) as tokens_used 
+          FROM weekly_usage 
+          WHERE (
+            user_id = ${userId}::text 
+            OR user_id IN (SELECT id::text FROM users WHERE id::text = ${userId}::text OR email = ${userId}::text OR username = ${userId}::text)
+            OR user_id IN (SELECT email FROM users WHERE id::text = ${userId}::text OR email = ${userId}::text OR username = ${userId}::text)
+            OR user_id IN (SELECT username FROM users WHERE id::text = ${userId}::text OR email = ${userId}::text OR username = ${userId}::text)
+          ) AND week_start = ${weekStartStr}
+        `.catch(() => []),
+        sql`SELECT tier, email, username, phone, avatar_url FROM users WHERE id::text = ${userId}::text OR username = ${userId}::text OR email = ${userId}::text LIMIT 1`,
+        sql`
+          SELECT COALESCE(SUM(tokens_used::numeric), 0) as tokens_used 
+          FROM weekly_speech_usage 
+          WHERE (
+            user_id = ${userId}::text 
+            OR user_id IN (SELECT id::text FROM users WHERE id::text = ${userId}::text OR email = ${userId}::text OR username = ${userId}::text)
+            OR user_id IN (SELECT email FROM users WHERE id::text = ${userId}::text OR email = ${userId}::text OR username = ${userId}::text)
+            OR user_id IN (SELECT username FROM users WHERE id::text = ${userId}::text OR email = ${userId}::text OR username = ${userId}::text)
+          ) AND week_start = ${weekStartStr}::date
+        `.catch(() => []),
       ]);
 
       const user = userResult[0];
@@ -66,46 +108,55 @@ export function registerModelRoutes(app: Hono) {
   app.post("/log-usage", async (c) => {
     try {
       const token = extractToken(c.req.raw);
-      if (!token) {
+      let userId = c.get("userId");
+
+      if (token) {
+        try {
+          const payload = await verifyToken(token);
+          userId = (payload.sub as string) || userId;
+        } catch {}
+      }
+
+      if (!userId) {
         return c.json({ error: "Non authentifié." }, 401);
       }
 
-      const payload = await verifyToken(token);
-      const userId = payload.sub as string;
-
-      const { tokensUsed = 0 } = await c.req.json();
+      const body = await c.req.json().catch(() => ({}));
+      const inputTokens = Number(body.inputTokens || body.promptTokens || 0);
+      const outputTokens = Number(
+        body.outputTokens || body.completionTokens || 0
+      );
+      const tokensUsed = Number(
+        body.tokensUsed || inputTokens + outputTokens || 0
+      );
       const { weekStartStr } = getWeekData();
 
       const sql = getDb();
       const userRes =
-        await sql`SELECT tier FROM users WHERE id = ${userId} LIMIT 1`;
+        await sql`SELECT tier FROM users WHERE id::text = ${userId}::text OR email = ${userId}::text OR username = ${userId}::text LIMIT 1`;
       const tier = userRes.length > 0 ? userRes[0].tier : "Free";
       const limit = TIER_LIMITS[tier] || TIER_LIMITS["Free"];
 
       const usageResult = await sql`
         SELECT tokens_used FROM weekly_usage
-        WHERE user_id = ${userId} AND week_start = ${weekStartStr}
+        WHERE user_id = ${userId}::text AND week_start = ${weekStartStr}::date
         LIMIT 1
       `;
       const currentUsage = usageResult[0]?.tokens_used || 0;
 
-      if (currentUsage + tokensUsed > limit) {
-        return c.json(
-          { error: "Limite atteinte.", limit, used: currentUsage },
-          429
-        );
-      }
-
       await sql`
         INSERT INTO weekly_usage (user_id, week_start, tokens_used)
-        VALUES (${userId}, ${weekStartStr}, ${tokensUsed})
+        VALUES (${userId}::text, ${weekStartStr}::date, ${tokensUsed})
         ON CONFLICT (user_id, week_start)
         DO UPDATE SET tokens_used = weekly_usage.tokens_used + ${tokensUsed}
       `;
 
       return c.json({
+        inputTokens,
         limit,
+        outputTokens,
         success: true,
+        tokensUsed,
         weeklyUsed: currentUsage + tokensUsed,
       });
     } catch {

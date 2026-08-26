@@ -24,6 +24,39 @@ export function getCometApiKey(): string {
   return "";
 }
 
+export function normalizeImageSrc(url?: string | null): string {
+  if (!url || typeof url !== "string") {
+    return "";
+  }
+  const clean = url.trim().replace(/^["']|["']$/g, "");
+  if (!clean) {
+    return "";
+  }
+
+  if (
+    clean.startsWith("http://") ||
+    clean.startsWith("https://") ||
+    clean.startsWith("data:") ||
+    clean.startsWith("blob:") ||
+    clean.startsWith("/")
+  ) {
+    return clean;
+  }
+
+  let mime = "image/png";
+  if (clean.startsWith("/9j/")) {
+    mime = "image/jpeg";
+  } else if (clean.startsWith("R0lGOD")) {
+    mime = "image/gif";
+  } else if (clean.startsWith("UklGR")) {
+    mime = "image/webp";
+  } else if (clean.startsWith("PHN2Zy") || clean.startsWith("PD94bWw")) {
+    mime = "image/svg+xml";
+  }
+
+  return `data:${mime};base64,${clean}`;
+}
+
 /**
  * Modèles de repli d'image de haute qualité
  */
@@ -189,19 +222,33 @@ export function registerImageRoutes(app: Hono) {
   app.get("/v1/images/usage", async (c) => {
     try {
       const token = extractToken(c.req.raw);
-      const authHeader = c.req.header("Authorization");
-      const _apiKey = authHeader?.startsWith("Bearer ")
-        ? authHeader.slice(7)
-        : null;
-      void _apiKey;
       let userId = c.get("userId");
       let userPlan = c.get("userPlan") || "Free";
 
       if (token) {
         try {
           const payload = await verifyToken(token);
-          userId = payload.sub as string;
+          userId = (payload.sub as string) || userId;
           userPlan = (payload.tier as string) || userPlan;
+        } catch {}
+      }
+
+      const sql = getDb();
+
+      // Résolution du user_id réel via mprojects_api_keys si clé API transmise
+      if (token) {
+        try {
+          const keyRows = await sql`
+            SELECT k.user_id, u.tier, u.email, u.username
+            FROM mprojects_api_keys k
+            LEFT JOIN users u ON k.user_id = u.id::text OR k.user_id = u.username OR k.user_id = u.email
+            WHERE k.api_key = ${token}::text
+            LIMIT 1
+          `;
+          if (keyRows.length > 0) {
+            userId = keyRows[0].user_id;
+            userPlan = keyRows[0].tier || userPlan;
+          }
         } catch {}
       }
 
@@ -209,19 +256,23 @@ export function registerImageRoutes(app: Hono) {
         return c.json({ error: "Non authentifié." }, 401);
       }
 
-      const sql = getDb();
       const [uRows, countRows] = await Promise.all([
-        sql`SELECT tier FROM users WHERE id::text = ${userId}::text OR username = ${userId}::text LIMIT 1`,
+        sql`SELECT tier FROM users WHERE id::text = ${userId}::text OR username = ${userId}::text OR email = ${userId}::text LIMIT 1`,
         sql`
-          SELECT images_generated 
+          SELECT COALESCE(SUM(images_generated::numeric), 0) as images_generated 
           FROM mprojects_daily_image_usage 
-          WHERE user_id = ${userId}::text AND usage_date = CURRENT_DATE 
+          WHERE (
+            user_id = ${userId}::text 
+            OR user_id IN (SELECT id::text FROM users WHERE id::text = ${userId}::text OR email = ${userId}::text OR username = ${userId}::text)
+            OR user_id IN (SELECT email FROM users WHERE id::text = ${userId}::text OR email = ${userId}::text OR username = ${userId}::text)
+            OR user_id IN (SELECT username FROM users WHERE id::text = ${userId}::text OR email = ${userId}::text OR username = ${userId}::text)
+          ) AND usage_date = CURRENT_DATE 
           LIMIT 1
-        `,
+        `.catch(() => []),
       ]);
 
       const effectiveTier = uRows[0]?.tier || userPlan || "Free";
-      const usedToday = countRows[0]?.images_generated || 0;
+      const usedToday = Number(countRows[0]?.images_generated || 0);
       const dailyLimit = getTierDailyImageLimit(effectiveTier);
 
       // Calculer la prochaine réinitialisation (minuit UTC)
@@ -283,7 +334,12 @@ export function registerImageRoutes(app: Hono) {
         LIMIT 50
       `;
 
-      return c.json({ data: history, success: true });
+      const formattedHistory = history.map((item: any) => ({
+        ...item,
+        image_url: normalizeImageSrc(item.image_url),
+      }));
+
+      return c.json({ data: formattedHistory, success: true });
     } catch (err: any) {
       return c.json(
         { details: err.message, error: "Erreur historique images." },
@@ -498,10 +554,18 @@ export function registerImageRoutes(app: Hono) {
         }
 
         const cometJson = await cometRes.json();
-        cometResultData = cometJson.data || [];
+        cometResultData = (cometJson.data || []).map((img: any) => {
+          const rawUrl = img.url || "";
+          const b64 = img.b64_json || "";
+          const resolved = normalizeImageSrc(rawUrl || b64);
+          return {
+            ...img,
+            b64_json: b64,
+            url: resolved || rawUrl,
+          };
+        });
         if (cometResultData.length > 0) {
-          generatedImageUrl =
-            cometResultData[0].url || cometResultData[0].b64_json || "";
+          generatedImageUrl = cometResultData[0].url || "";
         }
       } else {
         // Mode simulation / fallback si la clé Comet n'est pas encore renseignée
@@ -557,7 +621,7 @@ export function registerImageRoutes(app: Hono) {
       // Formatage de la réponse selon le SDK appelant (Google GenAI vs OpenAI / Anthropic)
       if (isGoogleFormat) {
         return c.json({
-          generatedImages: cometResultData.map((img) => ({
+          generatedImages: cometResultData.map((img: any) => ({
             image: {
               imageBytes: img.b64_json || "",
               mimeType: "image/jpeg",
@@ -571,6 +635,7 @@ export function registerImageRoutes(app: Hono) {
       return c.json({
         created: Math.floor(Date.now() / 1000),
         data: cometResultData,
+        image_url: generatedImageUrl,
         usage: {
           daily_limit: dailyLimit,
           daily_used: currentDailyUsage + 1,

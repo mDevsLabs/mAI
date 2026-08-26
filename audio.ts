@@ -246,8 +246,27 @@ export function registerAudioRoutes(app: Hono) {
       if (token) {
         try {
           const payload = await verifyToken(token);
-          userId = payload.sub as string;
+          userId = (payload.sub as string) || userId;
           userPlan = (payload.tier as string) || userPlan;
+        } catch {}
+      }
+
+      const sql = getDb();
+
+      // Résolution du user_id réel via mprojects_api_keys si token ou userId transmis
+      if (token) {
+        try {
+          const keyRows = await sql`
+            SELECT k.user_id, u.tier, u.email, u.username
+            FROM mprojects_api_keys k
+            LEFT JOIN users u ON k.user_id = u.id::text OR k.user_id = u.username OR k.user_id = u.email
+            WHERE k.api_key = ${token}::text
+            LIMIT 1
+          `;
+          if (keyRows.length > 0) {
+            userId = keyRows[0].user_id;
+            userPlan = keyRows[0].tier || userPlan;
+          }
         } catch {}
       }
 
@@ -255,16 +274,19 @@ export function registerAudioRoutes(app: Hono) {
         return c.json({ error: "Non authentifié." }, 401);
       }
 
-      const sql = getDb();
       const { weekStartStr, nextResetIso } = getWeekData();
 
       const [uRows, usageRows] = await Promise.all([
-        sql`SELECT tier FROM users WHERE id::text = ${userId}::text OR username = ${userId}::text LIMIT 1`,
+        sql`SELECT id, email, username, tier FROM users WHERE id::text = ${userId}::text OR username = ${userId}::text OR email = ${userId}::text LIMIT 1`,
         sql`
-          SELECT tokens_used, requests_count 
+          SELECT COALESCE(SUM(tokens_used::numeric), 0) as tokens_used, COALESCE(SUM(requests_count::numeric), 0) as requests_count 
           FROM weekly_speech_usage 
-          WHERE user_id = ${userId}::text AND week_start = ${weekStartStr}::date 
-          LIMIT 1
+          WHERE (
+            user_id = ${userId}::text 
+            OR user_id IN (SELECT id::text FROM users WHERE id::text = ${userId}::text OR email = ${userId}::text OR username = ${userId}::text)
+            OR user_id IN (SELECT email FROM users WHERE id::text = ${userId}::text OR email = ${userId}::text OR username = ${userId}::text)
+            OR user_id IN (SELECT username FROM users WHERE id::text = ${userId}::text OR email = ${userId}::text OR username = ${userId}::text)
+          ) AND week_start = ${weekStartStr}::date
         `.catch(() => []),
       ]);
 

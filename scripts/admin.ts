@@ -1,5 +1,4 @@
 import { neon } from '@neondatabase/serverless';
-import nodemailer from 'nodemailer';
 import crypto from 'crypto';
 import * as readline from 'readline/promises';
 import { stdin as input, stdout as output } from 'process';
