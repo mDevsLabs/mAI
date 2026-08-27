@@ -1,7 +1,7 @@
 {
-  "title": "Lancement des extensions mAI pour VS Code et navigateurs web",
-  "description": "Intégrez l'assistant mAI directement au sein de votre environnement Visual Studio Code et de vos navigateurs web.",
-  "author": "Équipe mAI",
+  "title": "Extensions mAI pour VS Code",
+  "description": "IntÃ©grez l'assistant mAI directement au sein de votre environnement Visual Studio Code et de vos navigateurs web.",
+  "author": "Ãquipe mAI",
   "date": "2026-07-11",
   "label": "Extensions",
   "image": "https://upload.fs.fr/5kYnBgdh3z.png"

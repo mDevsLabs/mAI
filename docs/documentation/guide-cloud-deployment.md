@@ -1,17 +1,17 @@
 ---
-title: "Déploiement"
-description: "Guide de mise en production de clusters mAI avec mise à l'échelle automatique."
+title: "DÃ©ploiement"
+description: "Guide de mise en production de clusters mAI avec mise Ã  l'Ã©chelle automatique."
 category: "Guides"
 order: 3
 ---
 
-# Déploiement sur Kubernetes & Clusters Dédiés ☸️🚀
+# DÃ©ploiement sur Kubernetes & Clusters DÃ©diÃ©s â¸ï¸ð
 
-Ce guide fournit les étapes d'architecture et de déploiement pour héberger les services **mAI** sur un cluster Kubernetes d'entreprise (EKS, GKE, AKS ou Kubernetes sur site).
+Ce guide fournit les Ã©tapes d'architecture et de dÃ©ploiement pour hÃ©berger les services **mAI** sur un cluster Kubernetes d'entreprise (EKS, GKE, AKS ou Kubernetes sur site).
 
 ---
 
-## ☸️ Manifeste Helm / Kubernetes (`mai-deployment.yaml`)
+## â¸ï¸ Manifeste Helm / Kubernetes (`mai-deployment.yaml`)
 
 ```yaml
 apiVersion: apps/v1
@@ -55,9 +55,9 @@ spec:
 
 ---
 
-## 📈 Auto-scaling avec KEDA (Kubernetes Event-driven Autoscaling)
+## ð Auto-scaling avec KEDA (Kubernetes Event-driven Autoscaling)
 
-Vous pouvez configurer l'auto-scaling basé sur la longueur de la file d'attente de requêtes HTTP ou l'utilisation VRAM du GPU.
+Il est possible de configurer l'auto-scaling basÃ© sur la longueur de la file d'attente de requÃªtes HTTP ou l'utilisation VRAM du GPU.
 
 ```yaml
 apiVersion: keda.sh/v1alpha1
@@ -81,7 +81,7 @@ spec:
 
 ---
 
-## 📦 Déploiement avec Helm
+## ð¦ DÃ©ploiement avec Helm
 
 ### Installation du Chart
 
@@ -99,7 +99,7 @@ helm install mai-release mdevslabs/mai-inference \
   --set resources.limits.memory=32Gi
 ```
 
-### Configuration Personnalisée
+### Configuration PersonnalisÃ©e
 
 ```yaml
 # values.yaml
@@ -132,7 +132,7 @@ service:
 
 ---
 
-## 🔧 Configuration GPU NVIDIA
+## ð§ Configuration GPU NVIDIA
 
 ### Device Plugin
 
@@ -190,7 +190,7 @@ spec:
 
 ---
 
-## 🌐 Service Mesh (Istio)
+## ð Service Mesh (Istio)
 
 ### VirtualService
 
@@ -238,7 +238,7 @@ spec:
 
 ---
 
-## 📊 Monitoring & Alerting
+## ð Monitoring & Alerting
 
 ### Prometheus Metrics
 
@@ -281,7 +281,7 @@ spec:
 
 ---
 
-## 🚀 CI/CD Pipeline (GitHub Actions)
+## ð CI/CD Pipeline (GitHub Actions)
 
 ```yaml
 name: Deploy mAI to Kubernetes
@@ -316,8 +316,8 @@ jobs:
 
 ---
 
-## 📚 Ressources
+## ð Ressources
 
 - **Architecture** : [Vue d'ensemble](/docs?doc=arch-system-architecture)
-- **Sécurité** : [Guide Privacy](/docs?doc=guide-security-privacy)
+- **SÃ©curitÃ©** : [Guide Privacy](/docs?doc=guide-security-privacy)
 - **Ollama** : [Installation Guide](/docs?doc=guide-installation-ollama)

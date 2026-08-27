@@ -1,6 +1,6 @@
 ---
 title: "Intro mAI Web"
-description: "Découvrez la genèse et l'architecture de mAI Web."
+description: "Présentation de la genèse et l'architecture de mAI Web."
 category: "Guides"
 order: 11
 ---

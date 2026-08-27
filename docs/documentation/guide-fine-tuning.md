@@ -5,13 +5,13 @@ category: "Guides"
 order: 4
 ---
 
-# Fine-Tuning de Modèles avec LoRA et QLoRA 🎯🧬
+# Fine-Tuning de Modèles avec LoRA et QLoRA 
 
 Ce guide explique comment réentraîner et adapter le modèle **mAI-1** sur vos propres jeux de données spécialisés en utilisant les méthodes d'adaptation à bas rang **LoRA (Low-Rank Adaptation)** et **QLoRA (Quantized LoRA)**.
 
 ---
 
-## 🛠️ Outils & Bibliothèques Requis
+## Outils & Bibliothèques Requis
 
 - Python 3.10+
 - `unsloth`, `peft`, `transformers`, `bitsandbytes`, `trl`
@@ -25,7 +25,7 @@ pip install unsloth peft transformers bitsandbytes trl
 
 ---
 
-## 💻 Script d'Entraînement avec Unsloth & PEFT
+## Script d'Entraînement avec Unsloth & PEFT
 
 ```python
 from unsloth import FastLanguageModel
@@ -75,7 +75,7 @@ model.save_pretrained_gguf("mai-1-custom-lora", tokenizer, quantization_method="
 
 ---
 
-## 📊 Préparation des Données
+## Préparation des Données
 
 ### Format JSON Lines
 
@@ -94,7 +94,7 @@ dataset = load_dataset("json", data_files="training_data.jsonl")["train"]
 
 ---
 
-## ⚙️ Hyperparamètres Recommandés
+## Hyperparamètres Recommandés
 
 | Paramètre | Valeur | Description |
 |-----------|--------|-------------|
@@ -107,7 +107,7 @@ dataset = load_dataset("json", data_files="training_data.jsonl")["train"]
 
 ---
 
-## 🚀 Déploiement du Modèle Fine-Tuned
+## Déploiement du Modèle Fine-Tuned
 
 ### Sauvegarde Local
 
@@ -140,7 +140,7 @@ ollama run mai-custom
 
 ---
 
-## 📈 Évaluation du Fine-Tuning
+## Évaluation du Fine-Tuning
 
 ### Métriques
 
@@ -172,7 +172,7 @@ for prompt in prompts:
 
 ---
 
-## 🔧 Conseils Avancés
+## Conseils Avancés
 
 ### 1. Early Stopping
 
@@ -215,7 +215,7 @@ for task_name, task_data in dataset.items():
 
 ---
 
-## 📚 Ressources
+## Ressources
 
 - **Guide d'installation** : [Ollama Guide](/docs?doc=guide-installation-ollama)
 - **Prompt Engineering** : [Meilleures pratiques](/docs?doc=guide-prompt-engineering)

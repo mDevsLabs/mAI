@@ -5,36 +5,36 @@ category: "Architecture"
 order: 1
 ---
 
-# Architecture Système globale de mDevsLabs 🏛️🔄
+# Architecture Système globale de mDevsLabs 
 
 L'architecture globale de l'écosystème **mDevsLabs** repose sur une découpe modulable en microservices isolés garantissant flexibilité, scalabilité et résilience.
 
 ---
 
-## 📐 Vue d'Ensemble des Composants
+## Vue d'Ensemble des Composants
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                     Front-end & User Layer                      │
-│      mAI Web (Next.js)        │  mAI Pulse / Office │  mAI CLI  │
-└────────────────────────────────┬────────────────────────────────┘
-                                 │
-┌────────────────────────────────▼────────────────────────────────┐
-│                     API Gateway & Auth Layer                    │
-│            JWT Verification / Rate Limiting / CORS              │
-└────────────────────────────────┬────────────────────────────────┘
-                                 │
-         ┌────────────────────────┴────────────────────────┐
-         │                                                 │
-┌───────▼────────────────────────┐      ┌─────────────────▼───────────────┐
-│     Inference Engine (mAI)     │      │     Vector & RAG Storage        │
-│   Ollama / Llama.cpp backend   │      │   HNSW Dense Vector Store       │
-└────────────────────────────────┘      └─────────────────────────────────┘
+
+                     Front-end & User Layer                      
+      mAI Web (Next.js)          mAI Pulse / Office   mAI CLI  
+
+                                 
+
+                     API Gateway & Auth Layer                    
+            JWT Verification / Rate Limiting / CORS              
+
+                                 
+         
+                                                          
+      
+     Inference Engine (mAI)                Vector & RAG Storage        
+   Ollama / Llama.cpp backend            HNSW Dense Vector Store       
+      
 ```
 
 ---
 
-## 🛠️ Microservices Principaux
+## Microservices Principaux
 
 1. **mAI Inference Core** : Serveur d'inférence de modèles LLM et multimodaux.
 2. **mAI Storage & Indexing Service** : Moteur de stockage et recherche sémantique documentaire.
@@ -43,7 +43,7 @@ L'architecture globale de l'écosystème **mDevsLabs** repose sur une découpe m
 
 ---
 
-## 🔄 Flux de Données
+## Flux de Données
 
 ### Scénario Chat Standard
 
@@ -65,7 +65,7 @@ User Query → mAI Reasoning → Tool Selection → Agent Execution → Result P
 
 ---
 
-## 📦 Stack Technologique
+## Stack Technologique
 
 | Couche | Technologie | Usage |
 |--------|-------------|-------|
@@ -80,7 +80,7 @@ User Query → mAI Reasoning → Tool Selection → Agent Execution → Result P
 
 ---
 
-## 🔐 Sécurité & Conformité
+## Sécurité & Conformité
 
 - **Chiffrement TLS 1.3** : Toutes les communications sont chiffrées.
 - **Isolation des données** : Aucune donnée utilisateur n'est persistée sans consentement.
@@ -88,7 +88,7 @@ User Query → mAI Reasoning → Tool Selection → Agent Execution → Result P
 
 ---
 
-## 📈 Monitoring & Observabilité
+## Monitoring & Observabilité
 
 - **Metrics** : Prometheus + Grafana pour les métriques d'inférence.
 - **Logs** : Loki pour la journalisation centralisée.
@@ -96,7 +96,7 @@ User Query → mAI Reasoning → Tool Selection → Agent Execution → Result P
 
 ---
 
-## 🚀 Déploiement
+## Déploiement
 
 ### Production (Kubernetes)
 
@@ -128,7 +128,7 @@ spec:
 
 ---
 
-## 📚 Ressources
+## Ressources
 
 - **RAG Pipeline** : [Guide détaillé](/docs?doc=arch-rag-pipeline)
 - **Indexation Vectorielle** : [HNSW Documentation](/docs?doc=arch-vector-indexing)

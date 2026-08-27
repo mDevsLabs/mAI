@@ -5,13 +5,13 @@ category: "API"
 order: 4
 ---
 
-# mDevsLabs Agent Framework 🤖🤝
+# mDevsLabs Agent Framework 
 
 Le **mDevsLabs Agent Framework** est la bibliothèque d'orchestration permettant de créer des équipes d'agents IA autonomes coopérant pour résoudre des tâches complexes.
 
 ---
 
-## 🏗️ Modèle d'Agent Autonome
+## Modèle d'Agent Autonome
 
 Un agent dans le framework est défini par :
 1. **Un Rôle & Une Persona** (`system_prompt`).
@@ -21,7 +21,7 @@ Un agent dans le framework est défini par :
 
 ---
 
-## 💻 Exemple de Code d'un Agent Multi-Outils
+## Exemple de Code d'un Agent Multi-Outils
 
 ```python
 from mdevslabs.agents import Agent, Tool, Runner
@@ -44,7 +44,7 @@ print(result.final_output)
 
 ---
 
-## 🧰 Types d'Outils Disponibles
+## Types d'Outils Disponibles
 
 | Type | Description | Exemple |
 |------|-------------|---------|
@@ -56,7 +56,7 @@ print(result.final_output)
 
 ---
 
-## 🔧 Définition d'un Outil Personnalisé
+## Définition d'un Outil Personnalisé
 
 ### En Python
 
@@ -104,7 +104,7 @@ const databaseTool = new Tool({
 
 ---
 
-## 🔄 Orchestration d'Équipe d'Agents
+## Orchestration d'Équipe d'Agents
 
 ```python
 from mdevslabs.agents import Team, Agent, Runner
@@ -137,7 +137,7 @@ print(result.final_output)
 
 ---
 
-## 📊 Gestion de l'État
+## Gestion de l'État
 
 ### Mémoire Court Terme
 
@@ -179,7 +179,7 @@ facts = await semantic_memory.search("langue préférée", top_k=3)
 
 ---
 
-## 🛡️ Sécurité des Agents
+## Sécurité des Agents
 
 ### Sandbox d'Exécution
 
@@ -204,7 +204,7 @@ agent = Agent(
 
 ---
 
-## 📈 Monitoring & Debugging
+## Monitoring & Debugging
 
 ```python
 from mdevslabs.debugging import Debugger
@@ -227,7 +227,7 @@ print(debugger.get_reasoning_trace())
 
 ---
 
-## 🚀 Déploiement
+## Déploiement
 
 ### Docker
 
@@ -270,7 +270,7 @@ spec:
 
 ---
 
-## 📚 Ressources
+## Ressources
 
 - **Architecture système** : [Vue d'ensemble](/docs?doc=arch-system-architecture)
 - **RAG Pipeline** : [Recherche augmentée](/docs?doc=arch-rag-pipeline)

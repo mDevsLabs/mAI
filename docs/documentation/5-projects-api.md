@@ -5,13 +5,13 @@ category: "API"
 order: 8
 ---
 
-# API des Projets & de l'Écosystème 📁🚀
+# API des Projets & de l'Écosystème 
 
 L'API des projets permet d'administrer, d'inspecter et de synchroniser programmatiquement vos environnements de développement, vos configurations d'agents et les applications de la suite mAI (mAI Web, mAI Pulse, mAI CLI, mAI Coder).
 
 ---
 
-## 📋 1. Lister l'Ensemble des Projets
+## 1. Lister l'Ensemble des Projets
 
 Renvoie la liste détaillée de tous les projets de la plateforme mAI rattachés à votre compte.
 
@@ -59,7 +59,7 @@ Authorization: Bearer mp-votre_cle_complete
 
 ---
 
-## 🔍 2. Obtenir les Détails d'un Projet Ciblé
+## 2. Obtenir les Détails d'un Projet Ciblé
 
 ```http
 GET https://mai.val.run/v1/projects/:project_id

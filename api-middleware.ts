@@ -23,11 +23,17 @@ export function registerMiddleware(app: Hono) {
       path === "/images" ||
       path.startsWith("/images/") ||
       path === "/images/generations" ||
+      path === "/mj" ||
+      path.startsWith("/mj/") ||
+      path.startsWith("/v1/mj/") ||
       path === "/audio/speech" ||
       path.startsWith("/audio/") ||
       path === "/usage/speech" ||
+      path === "/v1/usage/speech" ||
       path === "/usage" ||
+      path === "/v1/usage" ||
       path === "/log-usage" ||
+      path === "/v1/log-usage" ||
       path === "/v1/status" ||
       path === "/status";
 
@@ -42,6 +48,10 @@ export function registerMiddleware(app: Hono) {
       path === "/v1beta/models" ||
       path === "/v1/models/images" ||
       path === "/models/images" ||
+      path === "/v1/images/models" ||
+      path === "/images/models" ||
+      path.startsWith("/v1/models/images/") ||
+      path.startsWith("/models/images/") ||
       path === "/v1/models/speech" ||
       path === "/models/speech" ||
       path === "/v1/speech/models" ||
@@ -124,7 +134,9 @@ export function registerMiddleware(app: Hono) {
 
         if (rows.length > 0) {
           const apiKeyData = rows[0];
-          userPlan = apiKeyData.user_tier || apiKeyData.plan || "Free";
+          const rawPlan = String(apiKeyData.plan || "").trim().toLowerCase();
+          const validTiers = ["free", "plus", "pro", "max"];
+          userPlan = apiKeyData.user_tier || (validTiers.includes(rawPlan) ? apiKeyData.plan : "Plus");
           currentUserId = apiKeyData.user_id;
           matchedApiKey = apiKeyData.api_key || apiKey;
         } else if (systemMaiApiKey && timingSafeEqual(apiKey, systemMaiApiKey)) {
@@ -223,7 +235,7 @@ export function registerMiddleware(app: Hono) {
         await sql`
           UPDATE mprojects_api_keys
           SET request_count = 0
-          WHERE user_id = ${currentUserId}::text
+          WHERE user_id::text = ${currentUserId}::text
             AND last_used_at IS NOT NULL
             AND last_used_at < DATE_TRUNC('month', NOW())
         `;
@@ -234,7 +246,7 @@ export function registerMiddleware(app: Hono) {
         const countRows = await sql`
           SELECT SUM(request_count) as total_requests
           FROM mprojects_api_keys
-          WHERE user_id = ${currentUserId}::text
+          WHERE user_id::text = ${currentUserId}::text
         `;
         const globalRequestCount = countRows[0]?.total_requests || 0;
 
@@ -267,11 +279,13 @@ export function registerMiddleware(app: Hono) {
           VALUES (${effectiveKeyToLog}::text, ${endpoint}::text, ${method}::text, ${status}::integer, ${latency}::integer)
         `;
 
-        await sql`
-          UPDATE mprojects_api_keys
-          SET request_count = request_count + 1, last_used_at = NOW()
-          WHERE api_key = ${effectiveKeyToLog}::text
-        `;
+        if (status === 200) {
+          await sql`
+            UPDATE mprojects_api_keys
+            SET request_count = request_count + 1, last_used_at = NOW()
+            WHERE api_key = ${effectiveKeyToLog}::text
+          `;
+        }
       } catch (err) {
         console.error("Erreur logging API & mise à jour quota:", err);
       }

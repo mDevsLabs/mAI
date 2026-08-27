@@ -1,6 +1,6 @@
 {
-  "title": "Lancement officiel de mAI API v2",
-  "description": "Déploiement de l'API v2 de mAI : clés d'accès avec hachage SHA-256, gestion des projets, contrôle de débit et inférence en temps réel.",
+  "title": "Lancement mAI API v2",
+  "description": "DÃ©ploiement de l'API v2 de mAI : clÃ©s d'accÃ¨s avec hachage SHA-256, gestion des projets, contrÃ´le de dÃ©bit et infÃ©rence en temps rÃ©el.",
   "author": "Architecture mAI",
   "date": "2026-08-28",
   "label": "API & Infras",

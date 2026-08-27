@@ -5,13 +5,13 @@ category: "API"
 order: 7
 ---
 
-# Génération d'Images (Comet API & Flux) 🎨
+# Génération d'Images (Comet API & Flux) 
 
 L'API mAI intègre la génération d'images par intelligence artificielle via **Comet API** et la suite de modèles **Black Forest Labs FLUX.1**, Stable Diffusion et Recraft.
 
 ---
 
-## 📊 Quotas Quotidiens d'Images par Forfait
+## Quotas Quotidiens d'Images par Forfait
 
 Les générations d'images sont soumises à un quota quotidien réinitialisé chaque jour à **minuit UTC (00:00 UTC)** :
 
@@ -24,7 +24,7 @@ Les générations d'images sont soumises à un quota quotidien réinitialisé ch
 
 ---
 
-## 🖼️ 1. Lister les Modèles d'Images Disponibles
+## 1. Lister les Modèles d'Images Disponibles
 
 Renvoie la liste des modèles d'images autorisés selon votre forfait. Pour les utilisateurs *Free*, seuls les modèles avec la feature `text-to-image` et contenant `flux` sont affichés.
 
@@ -67,7 +67,7 @@ Authorization: Bearer VOTRE_CLE_API
 
 ---
 
-## ✨ 2. Générer une Image
+## 2. Générer une Image
 
 Génère une image à partir d'une description textuelle (Prompt).
 
@@ -121,7 +121,7 @@ curl -X POST https://mai.val.run/v1/images/generations \
 
 ---
 
-## 📈 3. Consulter son Quota et son Historique
+## 3. Consulter son Quota et son Historique
 
 **Endpoint Usage**
 \`\`\`http

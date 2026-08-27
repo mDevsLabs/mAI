@@ -72,6 +72,18 @@ export default function KeysClient() {
     fetchKeys();
   }, [user]);
 
+  // Deep-link onboarding : auto-ouvrir la création après tuto (sans useSearchParams pour éviter Suspense)
+  useEffect(() => {
+    if (!isAuthenticated || typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("onboarding") === "create") {
+      setIsCreateOpen(true);
+      const url = new URL(window.location.href);
+      url.searchParams.delete("onboarding");
+      window.history.replaceState({}, "", url.toString());
+    }
+  }, [isAuthenticated]);
+
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newKeyName.trim() || creating) return;

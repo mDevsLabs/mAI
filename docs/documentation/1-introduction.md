@@ -5,13 +5,13 @@ category: "API"
 order: 1
 ---
 
-# Introduction à l'API REST mAI 🌐⚡
+# Introduction à l'API REST mAI 
 
 L'API REST **mAI** offre une interface unifiée, robuste et hautement performante pour interagir par voie logicielle avec l'ensemble des modèles d'intelligence artificielle de la suite **mDevsLabs** (séries `mAI-1.5`, `mAI-1.2`, `mAI-1.0` et modèles partenaires) ainsi que nos services de vision, de génération d'images et de recherche web.
 
 ---
 
-## 🎯 1. Caractéristiques & Architecture
+## 1. Caractéristiques & Architecture
 
 - **Compatibilité Universelle** : Les points de terminaison d'inférence (notamment `/v1/chat/completions`) respectent rigoureusement les spécifications standards de l'API OpenAI, facilitant l'intégration avec les SDK officiels (*Python*, *TypeScript/Node.js*, *Go*, *LangChain*, *LlamaIndex*).
 - **Politique Prioritaire Zero Data Retention (ZDR)** : Traitement éphémère et stateless en mémoire vive, sans stockage persistant de vos invites ni réentraînement.
@@ -20,7 +20,7 @@ L'API REST **mAI** offre une interface unifiée, robuste et hautement performant
 
 ---
 
-## 🔗 2. Point d'Accès & URL de Base
+## 2. Point d'Accès & URL de Base
 
 Toutes les requêtes adressées à l'API mAI doivent cibler l'URL de base sécurisée suivante :
 
@@ -33,7 +33,7 @@ https://mai.val.run/v1
 
 ---
 
-## 📦 3. Formats de Données & En-têtes
+## 3. Formats de Données & En-têtes
 
 - **Format des Requêtes** : Corps au format `application/json` valide pour les requêtes `POST` et `PUT`.
 - **Format des Réponses** : Réponses systématiquement encodées en JSON (`Content-Type: application/json; charset=utf-8`).
@@ -47,7 +47,7 @@ https://mai.val.run/v1
 
 ---
 
-## 🚀 4. Démarrage Rapide (Quickstart)
+## 4. Démarrage Rapide (Quickstart)
 
 ```bash
 # Exemple de requête cURL pour lister les modèles disponibles
@@ -58,7 +58,7 @@ curl -X GET "https://mai.val.run/v1/models" \
 
 ---
 
-## 🗺️ 5. Parcours de la Documentation
+## 5. Parcours de la Documentation
 
 1. [Authentification & Clés d'API](/docs?doc=2-authentification) : Génération, formats et gestion de la sécurité.
 2. [Catalogue des Modèles](/docs?doc=3-models-api) : Modèles souverains mAI, modèles cloud et modèles d'images.

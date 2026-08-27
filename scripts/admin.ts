@@ -571,6 +571,171 @@ export async function runSubscriptionCodeManager() {
 }
 
 // ─────────────────────────────────────────────
+// 6. GESTION DES COMPTES CLIENTS
+// ─────────────────────────────────────────────
+export async function initCustomersTable() {
+  try {
+    await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS is_blocked BOOLEAN DEFAULT FALSE;`;
+  } catch (err: any) {
+    console.error("ℹ Note lors de la vérification de la colonne is_blocked dans users :", err.message || err);
+  }
+}
+
+function renderCustomersTable(customers: any[]) {
+  if (customers.length === 0) {
+    console.log(`\n${c.brightYellow}⚠️  Aucun compte client trouvé en base de données.${c.reset}\n`);
+    return;
+  }
+
+  console.log("\n" + "═".repeat(110));
+  console.log(
+    `║ ${"ID/UUID".padEnd(36)} ║ ${"USERNAME".padEnd(20)} ║ ${"EMAIL".padEnd(25)} ║ ${"TIER".padEnd(6)} ║ ${"STATUT".padEnd(10)} ║`
+  );
+  console.log("═".repeat(110));
+
+  for (const user of customers) {
+    const id = String(user.id || "").padEnd(36);
+    const username = String(user.username || "").padEnd(20);
+    const email = String(user.email || "").padEnd(25);
+    const tier = String(user.tier || "Free").padEnd(6);
+    const status = (user.is_blocked ? "🔴 Bloqué" : "🟢 Actif").padEnd(10);
+
+    console.log(`║ ${id} ║ ${username} ║ ${email} ║ ${tier} ║ ${status} ║`);
+  }
+  console.log("═".repeat(110) + "\n");
+}
+
+async function handleListCustomers() {
+  console.log(`\n${c.bold}--- 📋 LISTE DES COMPTES CLIENTS ---${c.reset}`);
+  try {
+    const customers = await sql`
+      SELECT id, username, email, tier, is_blocked 
+      FROM users 
+      ORDER BY created_at DESC;
+    `;
+    renderCustomersTable(customers);
+  } catch (err: any) {
+    console.error("❌ Erreur lors de la récupération des clients :", err.message || err);
+  }
+}
+
+async function handleToggleBlockCustomer(rl: readline.Interface) {
+  console.log(`\n${c.bold}--- 🚫 BLOQUER / DÉBLOQUER UN COMPTE CLIENT ---${c.reset}`);
+  const search = (await rl.question("👉 Entrez l'E-mail, le Username ou l'ID du client à bloquer/débloquer : ")).trim();
+  if (!search) return;
+
+  try {
+    const found = await sql`
+      SELECT id, username, email, is_blocked FROM users 
+      WHERE email ILIKE ${search} OR username ILIKE ${search} OR id::text = ${search}
+      LIMIT 1;
+    `;
+
+    if (found.length === 0) {
+      console.log("❌ Aucun compte client correspondant trouvé.");
+      return;
+    }
+
+    const current = found[0];
+    const newStatus = !current.is_blocked;
+
+    await sql`
+      UPDATE users 
+      SET is_blocked = ${newStatus}
+      WHERE id = ${current.id};
+    `;
+
+    if (newStatus) {
+      await sql`
+        DELETE FROM connected_devices 
+        WHERE user_id = ${current.id}::text;
+      `;
+      console.log(`\n${c.brightGreen}✔ Le client ${c.bold}${current.username}${c.reset} (${current.email}) a été ${c.bold}🚫 BLOQUÉ${c.reset} et toutes ses sessions actives ont été révoquées.\n`);
+    } else {
+      console.log(`\n${c.brightGreen}✔ Le client ${c.bold}${current.username}${c.reset} (${current.email}) a été ${c.bold}🟢 DÉBLOQUÉ${c.reset}.\n`);
+    }
+  } catch (err: any) {
+    console.error("❌ Erreur lors de la modification du statut :", err.message || err);
+  }
+}
+
+async function handleDeleteCustomer(rl: readline.Interface) {
+  console.log(`\n${c.bold}--- 🗑️ SUPPRESSION D'UN COMPTE CLIENT ---${c.reset}`);
+  const search = (await rl.question("👉 Entrez l'E-mail, le Username ou l'ID du client à supprimer : ")).trim();
+  if (!search) return;
+
+  try {
+    const found = await sql`
+      SELECT id, username, email FROM users 
+      WHERE email ILIKE ${search} OR username ILIKE ${search} OR id::text = ${search}
+      LIMIT 1;
+    `;
+
+    if (found.length === 0) {
+      console.log("❌ Aucun compte client correspondant trouvé.");
+      return;
+    }
+
+    const current = found[0];
+    const confirm = (await rl.question(`⚠️ Êtes-vous sûr de vouloir supprimer définitivement le client "${current.username}" (${current.email}) ?\nToutes ses clés API, appareils et données associés seront impactés. (o/N) : `)).trim().toLowerCase();
+
+    if (confirm === 'o' || confirm === 'oui' || confirm === 'y') {
+      await sql`DELETE FROM connected_devices WHERE user_id = ${current.id}::text;`;
+      await sql`DELETE FROM mprojects_api_keys WHERE user_id = ${current.id}::text OR user_id = ${current.username} OR user_id = ${current.email};`;
+      await sql`DELETE FROM weekly_usage WHERE user_id = ${current.id}::text;`;
+      await sql`DELETE FROM users WHERE id = ${current.id};`;
+
+      console.log(`\n${c.brightGreen}🗑️ Le compte de ${current.username} (${current.email}) a été supprimé définitivement.${c.reset}\n`);
+    } else {
+      console.log("\n❌ Suppression annulée.\n");
+    }
+  } catch (err: any) {
+    console.error("❌ Erreur lors de la suppression :", err.message || err);
+  }
+}
+
+export async function runCustomerAccountManager() {
+  await initCustomersTable();
+  const rl = readline.createInterface({ input, output });
+
+  console.log("\n=======================================================");
+  console.log("👥  GESTIONNAIRE INTERACTIF DES COMPTES CLIENTS mAI");
+  console.log("=======================================================");
+
+  let running = true;
+  while (running) {
+    console.log("\n--- MENU DES COMPTES CLIENTS ---");
+    console.log("  1. 📋 Lister tous les comptes clients");
+    console.log("  2. 🚫 Bloquer / Débloquer un compte");
+    console.log("  3. 🗑️  Supprimer un compte client");
+    console.log("  0. ↩️  Retour / Quitter");
+
+    const choice = (await rl.question("\n👉 Entrez votre choix [0-3] : ")).trim();
+
+    switch (choice) {
+      case '1':
+        await handleListCustomers();
+        break;
+      case '2':
+        await handleToggleBlockCustomer(rl);
+        break;
+      case '3':
+        await handleDeleteCustomer(rl);
+        break;
+      case '0':
+      case 'exit':
+      case 'quit':
+        running = false;
+        break;
+      default:
+        console.log("⚠️ Option invalide.");
+    }
+  }
+
+  rl.close();
+}
+
+// ─────────────────────────────────────────────
 // MENU PRINCIPAL DE LA SUITE ADMINISTRATIVE
 // ─────────────────────────────────────────────
 export async function runAdminCli() {
@@ -600,6 +765,10 @@ export async function runAdminCli() {
     await runSubscriptionCodeManager();
     process.exit(0);
   }
+  if (args.includes('--customers')) {
+    await runCustomerAccountManager();
+    process.exit(0);
+  }
   if (args.includes('--newsletter')) {
     await runNewsletterStudio();
     process.exit(0);
@@ -623,10 +792,11 @@ export async function runAdminCli() {
     console.log(`  ${c.brightGreen}[5]${c.reset} ⚡ ${c.bold}Réinitialiser TOUS les quotas en 1 clic (API + mAI + Images + Audio)${c.reset}`);
     console.log(`  ${c.brightMagenta}[6]${c.reset} 🎟️  Gérer les codes d'abonnement (Créer, Lister, Activer, Modifier)`);
     console.log(`  ${c.brightYellow}[7]${c.reset} 📧 Lancer le Studio de Newsletter (Éditeur HTML & CLI)`);
+    console.log(`  ${c.brightWhite}[8]${c.reset} 👥 Gérer les comptes clients (Lister, Bloquer, Supprimer)`);
     console.log(`  ${c.white}[0]${c.reset} 🚪 Quitter`);
     console.log("");
 
-    const choice = (await rl.question(`  ${c.brightYellow}➔ Votre choix [0-7] : ${c.reset}`)).trim();
+    const choice = (await rl.question(`  ${c.brightYellow}➔ Votre choix [0-8] : ${c.reset}`)).trim();
 
     switch (choice) {
       case '1':
@@ -651,6 +821,10 @@ export async function runAdminCli() {
       case '7':
         rl.close();
         await runNewsletterStudio();
+        return;
+      case '8':
+        rl.close();
+        await runCustomerAccountManager();
         return;
       case '0':
       case 'exit':

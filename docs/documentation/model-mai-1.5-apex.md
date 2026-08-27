@@ -5,13 +5,13 @@ category: "Modèles d'IA"
 order: 2
 ---
 
-# mAI-1.5-Apex - Modèle Flagship de Performance (9B) 🏔️
+# mAI-1.5-Apex - Modèle Flagship de Performance (9B) 
 
 **mAI-1.5-Apex** est le modèle Flagship de la série mAI-1.5. Avec ses 9 milliards de paramètres, il est conçu pour fournir des capacités de raisonnement logique de premier plan, de développement logiciel avancé, de traitement visuel précis et d'exécution d'outils complexes, le tout 100% en local.
 
 ---
 
-## 🚀 Spécifications Techniques
+## Spécifications Techniques
 
 - **Nombre de Paramètres** : 9 Milliards (9B)
 - **Architecture** : Transformer multimodal avec attention GQA optimisée et encodeur visuel haute précision.
@@ -24,7 +24,7 @@ order: 2
 
 ---
 
-## 💡 Cas d'Usage Recommandés
+## Cas d'Usage Recommandés
 
 - **Raisonnement logique et mathématique** : Résolution de problèmes complexes et planification d'étapes.
 - **Développement avancé** : Génération d'algorithmes complexes, audit de code, refactoring et débogage.
@@ -33,7 +33,7 @@ order: 2
 
 ---
 
-## 🛠️ Commande d'exécution Ollama
+## Commande d'exécution Ollama
 
 Exécutez le modèle localement dans votre terminal :
 

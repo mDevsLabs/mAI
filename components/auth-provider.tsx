@@ -220,6 +220,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       ]);
       applyUsage(res.token, data);
       if (storageData) setCloudStorage(storageData);
+      // ── Onboarding principal : forcer tuto après 1ère inscription (localStorage only) ──
+      try {
+        const { initMainIfMissing } = await import("@/lib/onboarding-storage");
+        initMainIfMissing();
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new CustomEvent("mai:onboarding:open", { detail: { flow: "main" } } as unknown as Event));
+        }
+      } catch {}
     },
     [applyUsage]
   );

@@ -342,17 +342,76 @@ export function registerAudioRoutes(app: Hono) {
 
       const sql = getDb();
       const history = await sql`
-        SELECT id, model, voice, input_text, audio_url, tokens_count, character_count, status, created_at
+        SELECT id, title, pinned, model, voice, input_text, audio_url, tokens_count, character_count, status, created_at
         FROM mprojects_speech_generations
         WHERE user_id = ${userId}::text
-        ORDER BY created_at DESC
+        ORDER BY pinned DESC, created_at DESC
         LIMIT 50
       `.catch(() => []);
 
-      return c.json({ data: history, success: true });
+      const formattedHistory = history.map((item: any) => ({
+        ...item,
+        pinned: Boolean(item.pinned),
+        title: item.title || null,
+      }));
+
+      return c.json({ data: formattedHistory, success: true });
     } catch (err: any) {
       return c.json(
         { details: err.message, error: "Erreur historique audio." },
+        500
+      );
+    }
+  };
+
+  const handleUpdateSpeechHistory = async (c: any) => {
+    try {
+      const token = extractToken(c.req.raw);
+      let userId = c.get("userId");
+
+      if (token) {
+        try {
+          const payload = await verifyToken(token);
+          userId = payload.sub as string;
+        } catch {}
+      }
+
+      if (!userId) {
+        return c.json({ error: "Non authentifié." }, 401);
+      }
+
+      const id = c.req.param("id") || c.req.query("id");
+      if (!id) {
+        return c.json({ error: "ID manquant." }, 400);
+      }
+
+      const body = await c.req.json().catch(() => ({}));
+      const sql = getDb();
+      const sets: string[] = [];
+      const values: any[] = [];
+      let idx = 1;
+
+      if (body.title !== undefined) {
+        sets.push(`title = $${idx++}`);
+        values.push(body.title ? String(body.title).trim().slice(0, 200) : null);
+      }
+      if (body.pinned !== undefined) {
+        sets.push(`pinned = $${idx++}`);
+        values.push(Boolean(body.pinned));
+      }
+
+      if (sets.length === 0) {
+        return c.json({ success: true });
+      }
+
+      values.push(id, userId);
+      const query = `UPDATE mprojects_speech_generations SET ${sets.join(", ")} WHERE id::text = $${idx++}::text AND user_id = $${idx}::text RETURNING id, title, pinned`;
+      const result = await sql.unsafe(query, values);
+
+      return c.json({ data: result[0] || null, success: true });
+    } catch (err: any) {
+      return c.json(
+        { details: err.message, error: "Erreur mise à jour audio." },
         500
       );
     }
@@ -362,6 +421,14 @@ export function registerAudioRoutes(app: Hono) {
   app.get("/v1/speech/history", handleGetSpeechHistory);
   app.get("/audio/history", handleGetSpeechHistory);
   app.get("/speech/history", handleGetSpeechHistory);
+  app.patch("/v1/audio/history/:id", handleUpdateSpeechHistory);
+  app.patch("/v1/audio/history", handleUpdateSpeechHistory);
+  app.patch("/v1/speech/history/:id", handleUpdateSpeechHistory);
+  app.patch("/v1/speech/history", handleUpdateSpeechHistory);
+  app.patch("/audio/history/:id", handleUpdateSpeechHistory);
+  app.patch("/audio/history", handleUpdateSpeechHistory);
+  app.patch("/speech/history/:id", handleUpdateSpeechHistory);
+  app.patch("/speech/history", handleUpdateSpeechHistory);
 
   // ─────────────────────────────────────────────
   // DELETE /v1/audio/history/:id & /v1/speech/history/:id
@@ -575,7 +642,7 @@ export function registerAudioRoutes(app: Hono) {
 
       // Récupération de la clé OpenRouter
       const keyRows = await sql`
-        SELECT api_key FROM mprojects_api_keys WHERE user_id = ${userId}::text LIMIT 1
+        SELECT api_key FROM mprojects_api_keys WHERE user_id::text = ${userId}::text LIMIT 1
       `.catch(() => []);
       const openRouterApiKey = getOpenRouterApiKey(
         keyRows.length > 0 ? keyRows[0].api_key : null
@@ -675,7 +742,7 @@ export function registerAudioRoutes(app: Hono) {
         if (insertRes.length > 0 && insertRes[0].id) {
           savedId = insertRes[0].id;
         }
-      } catch (e) {}
+      } catch {}
 
       // Log dans mprojects_api_logs
       try {
@@ -683,7 +750,7 @@ export function registerAudioRoutes(app: Hono) {
           INSERT INTO mprojects_api_logs (api_key, endpoint, method, status_code, latency_ms, created_at)
           VALUES (${apiKey || "jwt"}::text, ${reqPath || "/v1/speech"}::text, 'POST', 200, 500, NOW())
         `;
-      } catch (e) {}
+      } catch {}
 
       // Vérifier si le client attend du JSON (outil IA, studio web, ou Google TTS)
       const acceptsJson =

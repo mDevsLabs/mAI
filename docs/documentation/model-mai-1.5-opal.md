@@ -5,13 +5,13 @@ category: "Modèles d'IA"
 order: 3
 ---
 
-# mAI-1.5-Opal - Modèle d'Équilibre et d'Intelligence Élevée (27B) 💎
+# mAI-1.5-Opal - Modèle d'Équilibre et d'Intelligence Élevée (27B) 
 
 **mAI-1.5-Opal** est le modèle très haute performance de la série mAI-1.5. Avec ses 27 milliards de paramètres, il offre un équilibre exceptionnel entre raisonnement analytique, compréhension visuelle, réflexion structurée (thinking) et intégration d'outils externes (tools).
 
 ---
 
-## 🚀 Spécifications Techniques
+## Spécifications Techniques
 
 - **Nombre de Paramètres** : 27 Milliards (27B)
 - **Architecture** : Transformer multimodal à large échelle avec attention de groupe optimisée.
@@ -24,7 +24,7 @@ order: 3
 
 ---
 
-## 💡 Cas d'Usage Recommandés
+## Cas d'Usage Recommandés
 
 - **Analyse et rédaction technique** : Synthèse de documents très longs et rédaction spécialisée.
 - **Programmation complexe & Architecture** : Audit complet de bases de code, refactoring et architecture logicielle.
@@ -33,7 +33,7 @@ order: 3
 
 ---
 
-## 🛠️ Commande d'exécution Ollama
+## Commande d'exécution Ollama
 
 Exécutez le modèle localement dans votre terminal :
 

@@ -5,13 +5,13 @@ category: "API"
 order: 1
 ---
 
-# Spécifications de l'API REST v1 🌐🔌
+# Spécifications de l'API REST v1 
 
 L'API REST de **mDevsLabs** est entièrement compatible avec le standard OpenAI API v1 tout en offrant des extensions spécifiques pour les modèles mAI.
 
 ---
 
-## 📌 Endpoints Principaux
+## Endpoints Principaux
 
 ### 1. `POST /v1/chat/completions`
 

@@ -1,46 +1,46 @@
 ---
 title: "mAI Web"
-description: "Présentation complète et architecture de l'assistant mAI Web."
+description: "PrÃ©sentation complÃ¨te et architecture de l'assistant mAI Web."
 category: "Applications"
 order: 1
 ---
 
-# mAI Web - Assistant IA Web & Multimodal 🧠✨
+# mAI Web - Assistant IA Web & Multimodal ð§ â¨
 
-**mAI Web** est l'assistant IA web de l'écosystème **mDevsLabs**. Il s'agit d'un assistant IA hautement sécurisé, capable de traiter du texte, du code, des documents complexes et des données visuelles directement depuis votre navigateur.
-
----
-
-## 🌟 Caractéristiques Principales
-
-- **Conception Web Moderne** : Une interface d'IA réactive et fluide accessible sur le Web.
-- **Moteur Multimodal** : Capacité native d'analyse d'images, de diagrammes et d'images techniques grâce aux encodeurs visuels mAI-Vision.
-- **Intégration Ollama & Llama.cpp** : Moteur d'inférence basé sur `ollama` avec quantification automatique (GGUF Q4_K_M et Q8_0).
-- **Agent Framework Intégré** : Support natif du *tool calling* pour exécuter des fonctions Python, interroger des bases de données ou exécuter du code isolé.
+**mAI Web** est l'assistant IA web de l'Ã©cosystÃ¨me **mDevsLabs**. Il s'agit d'un assistant IA hautement sÃ©curisÃ©, capable de traiter du texte, du code, des documents complexes et des donnÃ©es visuelles directement depuis votre navigateur.
 
 ---
 
-## 🏗️ Architecture Technique
+## ð CaractÃ©ristiques Principales
+
+- **Conception Web Moderne** : Une interface d'IA rÃ©active et fluide accessible sur le Web.
+- **Moteur Multimodal** : CapacitÃ© native d'analyse d'images, de diagrammes et d'images techniques grÃ¢ce aux encodeurs visuels mAI-Vision.
+- **IntÃ©gration Ollama & Llama.cpp** : Moteur d'infÃ©rence basÃ© sur `ollama` avec quantification automatique (GGUF Q4_K_M et Q8_0).
+- **Agent Framework IntÃ©grÃ©** : Support natif du *tool calling* pour exÃ©cuter des fonctions Python, interroger des bases de donnÃ©es ou exÃ©cuter du code isolÃ©.
+
+---
+
+## ðï¸ Architecture Technique
 
 ```
-┌───────────────────────────────────────────────────────────┐
-│                    mAI Web Interface                      │
-└─────────────────────────────┬─────────────────────────────┘
-                              │ API REST / WebSockets
-┌─────────────────────────────▼─────────────────────────────┐
-│                   mDevsLabs Agent Core                    │
-├─────────────────────────────┬─────────────────────────────┤
-│   Inference Controller      │     Memory & RAG Pipeline   │
-└──────────────┬──────────────┴──────────────┬──────────────┘
-               │                             │
-┌──────────────▼──────────────┐┌─────────────▼──────────────┐
-│       Ollama Engine         ││     Vector Store (HNSW)    │
-└─────────────────────────────┘└──────────────────────────────┘
+âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+â                    mAI Web Interface                      â
+âââââââââââââââââââââââââââââââ¬ââââââââââââââââââââââââââââââ
+                              â API REST / WebSockets
+âââââââââââââââââââââââââââââââ¼ââââââââââââââââââââââââââââââ
+â                   mDevsLabs Agent Core                    â
+âââââââââââââââââââââââââââââââ¬ââââââââââââââââââââââââââââââ¤
+â   Inference Controller      â     Memory & RAG Pipeline   â
+ââââââââââââââââ¬âââââââââââââââ´âââââââââââââââ¬âââââââââââââââ
+               â                             â
+ââââââââââââââââ¼ââââââââââââââââââââââââââââââ¼âââââââââââââââ
+â       Ollama Engine         ââ     Vector Store (HNSW)    â
+âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 ```
 
 ---
 
-## 🔧 Intégration Programmatique
+## ð§ IntÃ©gration Programmatique
 
 ### En Python (SDK)
 
@@ -79,12 +79,12 @@ for await (const chunk of result) {
 
 ---
 
-## 🚀 Exemple de Lancement Rapide
+## ð Exemple de Lancement Rapide
 
-Vous pouvez démarrer mAI directement depuis le terminal via Ollama :
+Il est possible de dÃ©marrer mAI directement depuis le terminal via Ollama :
 
 ```bash
-# Télécharger et lancer l'assistant mAI
+# TÃ©lÃ©charger et lancer l'assistant mAI
 ollama run mdevslabs/mai-1:latest
 
 # Exemple de prompt
@@ -93,24 +93,24 @@ ollama run mdevslabs/mai-1:latest
 
 ---
 
-## ⚙️ Configuration Recommandée
+## âï¸ Configuration RecommandÃ©e
 
-- **RAM** : 16 Go DDR4 (minimale) / 32 Go DDR5 (recommandée)
-- **GPU** : NVIDIA RTX 3060 (8 Go VRAM) (minimale) / NVIDIA RTX 4080/4090 (16+ Go VRAM) (recommandée)
-- **Stockage** : 20 Go SSD NVMe (minimale) / 50 Go SSD NVMe PCIe 4.0 (recommandée)
-- **OS** : Linux / macOS / Windows WSL2 (minimale) / Ubuntu 22.04 LTS / macOS Sonoma (recommandée)
-
----
-
-## 🔒 Confidentialité & Alignement
-
-mAI intègre un garde-fou éthique local sans censurer les usages scientifiques et techniques. Toutes les requêtes sont filtrées par un module d'audit local pour prévenir l'injection de prompts non désirée.
+- **RAM** : 16 Go DDR4 (minimale) / 32 Go DDR5 (recommandÃ©e)
+- **GPU** : NVIDIA RTX 3060 (8 Go VRAM) (minimale) / NVIDIA RTX 4080/4090 (16+ Go VRAM) (recommandÃ©e)
+- **Stockage** : 20 Go SSD NVMe (minimale) / 50 Go SSD NVMe PCIe 4.0 (recommandÃ©e)
+- **OS** : Linux / macOS / Windows WSL2 (minimale) / Ubuntu 22.04 LTS / macOS Sonoma (recommandÃ©e)
 
 ---
 
-## 📚 Ressources Supplémentaires
+## ð ConfidentialitÃ© & Alignement
 
-- **Documentation complète** : [Guide Installation Ollama](/docs?doc=guide-installation-ollama)
+mAI intÃ¨gre un garde-fou Ã©thique local sans censurer les usages scientifiques et techniques. Toutes les requÃªtes sont filtrÃ©es par un module d'audit local pour prÃ©venir l'injection de prompts non dÃ©sirÃ©e.
+
+---
+
+## ð Ressources SupplÃ©mentaires
+
+- **Documentation complÃ¨te** : [Guide Installation Ollama](/docs?doc=guide-installation-ollama)
 - **Prompt Engineering** : [Meilleures pratiques](/docs?doc=guide-prompt-engineering)
-- **Sécurité** : [Guide Confidentialité](/docs?doc=guide-security-privacy)
-- **Fine-Tuning** : [Adapter le modèle](/docs?doc=guide-fine-tuning)
+- **SÃ©curitÃ©** : [Guide ConfidentialitÃ©](/docs?doc=guide-security-privacy)
+- **Fine-Tuning** : [Adapter le modÃ¨le](/docs?doc=guide-fine-tuning)

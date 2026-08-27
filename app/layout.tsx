@@ -4,6 +4,7 @@ import { Navbar } from "@/components/navbar";
 import { BackToTop } from "@/components/back-to-top";
 import { StatusWidget } from "@/components/status-widget";
 import { AuthProvider } from "@/components/auth-provider";
+import { OnboardingProvider } from "@/components/onboarding/onboarding-provider";
 import { ToastProvider, CookieBanner } from "@/components/ui/index";
 import { getChangelogs } from "@/lib/changelog";
 import { getNewsArticles } from "@/lib/news";
@@ -47,6 +48,7 @@ export default async function RootLayout({
       >
           <ToastProvider>
             <AuthProvider>
+              <OnboardingProvider>
               <Navbar changelogs={changelogs} news={news} />
               <CookieBanner />
               {/* Background Orbs */}
@@ -91,6 +93,7 @@ export default async function RootLayout({
 
               {/* Footer Decorative */}
               <footer className="fixed bottom-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 via-blue-500 to-emerald-400 z-50"></footer>
+              </OnboardingProvider>
             </AuthProvider>
           </ToastProvider>
           <BackToTop />

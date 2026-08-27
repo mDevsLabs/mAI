@@ -5,13 +5,13 @@ category: "Guides"
 order: 11
 ---
 
-# Contribuer à mAI 🤝🌱
+# Contribuer à mAI 
 
 Nous encourageons la communauté à s'impliquer dans le développement des applications et modèles de la suite **mAI**. Que ce soit pour signaler un bug, proposer une nouvelle fonctionnalité, ou améliorer la documentation, votre aide est précieuse !
 
 ---
 
-## 🛠️ Processus de Développement
+## Processus de Développement
 
 1. **Fork & Clone** : Créez un fork du dépôt officiel (par exemple, `mDevsLabs/mAI` ou `mDevsLabs/Web`) et clonez-le sur votre machine locale.
 2. **Créer une branche** : Utilisez un nom de branche descriptif, par exemple : `git checkout -b feature/nouveau-composant`.
@@ -21,6 +21,6 @@ Nous encourageons la communauté à s'impliquer dans le développement des appli
 
 ---
 
-## 💬 Code de Conduite
+## Code de Conduite
 
 Nous tenons à maintenir une communauté accueillante et respectueuse. Tous les contributeurs sont invités à faire preuve de bienveillance et de professionnalisme dans leurs échanges sur GitHub et sur notre serveur Discord.

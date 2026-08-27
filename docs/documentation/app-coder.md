@@ -5,7 +5,7 @@ category: "Applications"
 order: 4
 ---
 
-# mAI Coder - IDE IA & Agents MCP 💻🤖
+# mAI Coder - IDE IA & Agents MCP 
 
 **mAI Coder** est l'environnement de développement intégré (IDE) nouvelle génération propulsé par l'intelligence artificielle. Il réunit des capacités d'édition de code modernes avec des agents autonomes capables d'analyser vos projets, de concevoir des architectures, de modifier des fichiers en rafale et d'exécuter des actions sécurisées via le standard ouvert **Model Context Protocol (MCP)**.
 
@@ -15,7 +15,7 @@ order: 4
 
 ---
 
-## 🌟 Fonctionnalités Principales
+## Fonctionnalités Principales
 
 - **Agents IA Autonomes & Pair-Programming** : Orchestration d'agents capables de planifier, coder, déboguer et vérifier des fonctionnalités complètes.
 - **Support Natif des Serveurs MCP** : Connexion instantanée à vos outils externes, bases de données et services tiers selon le protocole Model Context Protocol.

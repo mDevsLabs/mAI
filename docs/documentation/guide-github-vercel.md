@@ -5,13 +5,13 @@ category: "Guides"
 order: 13
 ---
 
-# Déploiement GitHub & Vercel 🌐🚀
+# Déploiement GitHub & Vercel 
 
 Le portail **mAI** est conçu pour être hébergé de manière continue et automatisée grâce à l'intégration de **GitHub** et **Vercel**.
 
 ---
 
-## 📦 1. Publier sur GitHub
+## 1. Publier sur GitHub
 
 1. **Créer un dépôt** sur votre compte GitHub (ex: `mAI`).
 2. **Lier votre projet local** :
@@ -26,7 +26,7 @@ Le portail **mAI** est conçu pour être hébergé de manière continue et autom
 
 ---
 
-## ⚡ 2. Déploiement Continu sur Vercel
+## 2. Déploiement Continu sur Vercel
 
 1. Rendez-vous sur votre console **Vercel** et cliquez sur **Add New > Project**.
 2. Importez le dépôt GitHub de votre projet.

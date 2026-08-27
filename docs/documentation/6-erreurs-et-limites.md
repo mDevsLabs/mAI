@@ -5,13 +5,13 @@ category: "API"
 order: 14
 ---
 
-# Codes d'Erreurs, Quotas & Rate Limiting ⚠️🚦
+# Codes d'Erreurs, Quotas & Rate Limiting 
 
 L'API mAI intègre une gouvernance stricte de gestion des erreurs et de protection des infrastructures pour garantir une haute disponibilité et une équité d'accès aux ressources de calcul.
 
 ---
 
-## 📊 1. Quotas Mensuels et Journaliers par Forfait
+## 1. Quotas Mensuels et Journaliers par Forfait
 
 | Forfait | Quota Requêtes API (Mensuel) | Modèles Textes Accessibles | Quota Images (Journalier) | Modèles d'Images |
 | :--- | :--- | :--- | :--- | :--- |
@@ -25,7 +25,7 @@ L'API mAI intègre une gouvernance stricte de gestion des erreurs et de protecti
 
 ---
 
-## 🚨 2. Codes de Statut HTTP Standards
+## 2. Codes de Statut HTTP Standards
 
 | Code HTTP | Statut | Cause Fréquente | Résolution Recommandée |
 | :--- | :--- | :--- | :--- |
@@ -39,7 +39,7 @@ L'API mAI intègre une gouvernance stricte de gestion des erreurs et de protecti
 
 ---
 
-## 🛠️ 3. Format Standard des Réponses d'Erreur
+## 3. Format Standard des Réponses d'Erreur
 
 Toutes les erreurs sont retournées avec une structure JSON normalisée :
 
@@ -56,7 +56,7 @@ Toutes les erreurs sont retournées avec une structure JSON normalisée :
 
 ---
 
-## 🔁 4. Stratégie de Résilience & Retry (Backoff Exponentiel)
+## 4. Stratégie de Résilience & Retry (Backoff Exponentiel)
 
 Il est fortement recommandé d'implémenter une stratégie de réessai avec temporisation exponentielle (*Exponential Backoff with Jitter*) pour absorber les éventuelles variations de charge :
 

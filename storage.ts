@@ -30,45 +30,100 @@ function cleanUrl(url: string, removeDefaultPort = true): string {
 }
 
 /**
+ * 10 buckets Z1 Storage par défaut en fallback (mai-storage-1 à mai-storage-10)
+ */
+export const DEFAULT_Z1_FALLBACK_BUCKETS = [
+  "mai-storage-1",
+  "mai-storage-2",
+  "mai-storage-3",
+  "mai-storage-4",
+  "mai-storage-5",
+  "mai-storage-6",
+  "mai-storage-7",
+  "mai-storage-8",
+  "mai-storage-9",
+  "mai-storage-10",
+];
+
+export const TOTAL_STORAGE_NODES_COUNT = 10;
+
+/**
  * Récupère la liste des nœuds de stockage Z1 Storage / S3 configurés.
- * Supporte jusqu'à 5 comptes/buckets distincts (S3_BUCKET_1..5) pour multiplier l'espace gratuit,
- * ou une liste séparée par des virgules (S3_BUCKETS), ou la configuration classique (S3_BUCKET).
+ * Supporte jusqu'à 10 comptes/buckets distincts (S3_BUCKET_1..10 / Z1_BUCKET_1..10) pour multiplier l'espace,
+ * ou une liste séparée par des virgules (S3_BUCKETS / Z1_BUCKETS),
+ * ou un pool de 10 buckets Z1 Storage (mai-storage-1 à mai-storage-10) en fallback automatique.
  */
 export function getStorageNodes(): StorageNode[] {
   const nodes: StorageNode[] = [];
 
-  // 1. Détection des configurations individuelles S3_BUCKET_1 à S3_BUCKET_5 (5 comptes Z1 distincts)
-  for (let i = 1; i <= 5; i++) {
+  const baseAccessKey =
+    Deno.env.get("S3_ACCESS_KEY_ID") ||
+    Deno.env.get("Z1_ACCESS_KEY_ID") ||
+    "";
+  const baseSecretKey =
+    Deno.env.get("S3_SECRET_ACCESS_KEY") ||
+    Deno.env.get("Z1_SECRET_ACCESS_KEY") ||
+    "";
+  const baseRawEndpoint =
+    Deno.env.get("S3_ENDPOINT") ||
+    Deno.env.get("Z1_ENDPOINT") ||
+    "https://s3.z1storage.com";
+  const baseEndpoint = cleanUrl(baseRawEndpoint);
+  const baseRegion =
+    Deno.env.get("S3_REGION") ||
+    Deno.env.get("Z1_REGION") ||
+    "auto";
+  const baseBucket =
+    Deno.env.get("S3_BUCKET") ||
+    Deno.env.get("Z1_BUCKET") ||
+    "mai-storage-1";
+  const basePublicUrl =
+    Deno.env.get("S3_PUBLIC_URL") ||
+    Deno.env.get("Z1_PUBLIC_URL");
+
+  // 1. Détection des configurations individuelles S3_BUCKET_1 à S3_BUCKET_10 (ou Z1_BUCKET_1 à 10)
+  for (let i = 1; i <= TOTAL_STORAGE_NODES_COUNT; i++) {
     const bucket =
-      Deno.env.get(`S3_BUCKET_${i}`) || Deno.env.get(`S3_BUCKET${i}`);
+      Deno.env.get(`S3_BUCKET_${i}`) ||
+      Deno.env.get(`S3_BUCKET${i}`) ||
+      Deno.env.get(`Z1_BUCKET_${i}`) ||
+      Deno.env.get(`Z1_BUCKET${i}`);
     const accessKeyId =
       Deno.env.get(`S3_ACCESS_KEY_ID_${i}`) ||
       Deno.env.get(`S3_ACCESS_KEY_ID${i}`) ||
-      Deno.env.get("S3_ACCESS_KEY_ID") ||
-      "";
+      Deno.env.get(`Z1_ACCESS_KEY_ID_${i}`) ||
+      Deno.env.get(`Z1_ACCESS_KEY_ID${i}`) ||
+      baseAccessKey;
     const secretAccessKey =
       Deno.env.get(`S3_SECRET_ACCESS_KEY_${i}`) ||
       Deno.env.get(`S3_SECRET_ACCESS_KEY${i}`) ||
-      Deno.env.get("S3_SECRET_ACCESS_KEY") ||
-      "";
+      Deno.env.get(`Z1_SECRET_ACCESS_KEY_${i}`) ||
+      Deno.env.get(`Z1_SECRET_ACCESS_KEY${i}`) ||
+      baseSecretKey;
     const rawEndpoint =
       Deno.env.get(`S3_ENDPOINT_${i}`) ||
       Deno.env.get(`S3_ENDPOINT${i}`) ||
-      Deno.env.get("S3_ENDPOINT") ||
-      "https://s3.z1storage.com";
+      Deno.env.get(`Z1_ENDPOINT_${i}`) ||
+      Deno.env.get(`Z1_ENDPOINT${i}`) ||
+      baseEndpoint;
     const endpoint = cleanUrl(rawEndpoint);
     const region =
       Deno.env.get(`S3_REGION_${i}`) ||
       Deno.env.get(`S3_REGION${i}`) ||
-      Deno.env.get("S3_REGION") ||
-      "auto";
+      Deno.env.get(`Z1_REGION_${i}`) ||
+      Deno.env.get(`Z1_REGION${i}`) ||
+      baseRegion;
     const rawPublicUrl =
       Deno.env.get(`S3_PUBLIC_URL_${i}`) ||
-      Deno.env.get(`S3_PUBLIC_URL${i}`);
+      Deno.env.get(`S3_PUBLIC_URL${i}`) ||
+      Deno.env.get(`Z1_PUBLIC_URL_${i}`) ||
+      Deno.env.get(`Z1_PUBLIC_URL${i}`);
 
     let publicUrl = "";
     if (rawPublicUrl) {
       publicUrl = cleanUrl(rawPublicUrl);
+    } else if (basePublicUrl) {
+      publicUrl = `${cleanUrl(basePublicUrl)}/${bucket}`;
     } else if (bucket) {
       publicUrl = `${endpoint}/${bucket}`;
     }
@@ -86,67 +141,205 @@ export function getStorageNodes(): StorageNode[] {
     }
   }
 
-  // 2. Si S3_BUCKETS (liste séparée par des virgules) est configuré avec un compte unique
+  // 2. Si S3_BUCKETS ou Z1_BUCKETS (liste séparée par des virgules) est configuré
   if (nodes.length === 0) {
-    const bucketsList = Deno.env.get("S3_BUCKETS");
+    const bucketsList =
+      Deno.env.get("S3_BUCKETS") ||
+      Deno.env.get("Z1_BUCKETS");
     if (bucketsList) {
       const bucketNames = bucketsList
         .split(",")
         .map((b) => b.trim())
         .filter(Boolean);
-      const accessKeyId = Deno.env.get("S3_ACCESS_KEY_ID") || "";
-      const secretAccessKey = Deno.env.get("S3_SECRET_ACCESS_KEY") || "";
-      const rawEndpoint =
-        Deno.env.get("S3_ENDPOINT") || "https://s3.z1storage.com";
-      const endpoint = rawEndpoint.endsWith("/")
-        ? rawEndpoint.slice(0, -1)
-        : rawEndpoint;
-      const region = Deno.env.get("S3_REGION") || "auto";
 
       bucketNames.forEach((bucket, idx) => {
+        const id = idx + 1;
+        let publicUrl = "";
+        if (basePublicUrl) {
+          publicUrl = `${cleanUrl(basePublicUrl)}/${bucket}`;
+        } else {
+          publicUrl = `${baseEndpoint}/${bucket}`;
+        }
+
         nodes.push({
-          id: idx + 1,
-          endpoint,
-          region,
-          accessKeyId,
-          secretAccessKey,
+          id,
+          endpoint: baseEndpoint,
+          region: baseRegion,
+          accessKeyId: baseAccessKey,
+          secretAccessKey: baseSecretKey,
           bucket,
-          publicUrl: `${endpoint}/${bucket}`,
+          publicUrl,
         });
       });
     }
   }
 
-  // 3. Fallback mono-bucket standard (S3_BUCKET)
-  if (nodes.length === 0) {
-    const bucket = Deno.env.get("S3_BUCKET") || "mai";
-    const accessKeyId = Deno.env.get("S3_ACCESS_KEY_ID") || "";
-    const secretAccessKey = Deno.env.get("S3_SECRET_ACCESS_KEY") || "";
-    const rawEndpoint =
-      Deno.env.get("S3_ENDPOINT") || "https://s3.z1storage.com";
-    const endpoint = rawEndpoint.endsWith("/")
-      ? rawEndpoint.slice(0, -1)
-      : rawEndpoint;
-    const region = Deno.env.get("S3_REGION") || "auto";
-    const rawPublicUrl = Deno.env.get("S3_PUBLIC_URL");
-    const publicUrl = rawPublicUrl
-      ? rawPublicUrl.endsWith("/")
-        ? rawPublicUrl.slice(0, -1)
-        : rawPublicUrl
-      : `${endpoint}/${bucket}`;
+  // 3. Fallback automatique : 10 buckets Z1 Storage (mai-storage-1 à mai-storage-10)
+  // Si moins de 10 nœuds sont configurés, on complète avec les 10 buckets Z1 Storage en fallback
+  if (nodes.length < TOTAL_STORAGE_NODES_COUNT) {
+    const fallbackEnvList = (
+      Deno.env.get("Z1_FALLBACK_BUCKETS") ||
+      Deno.env.get("S3_FALLBACK_BUCKETS") ||
+      ""
+    )
+      .split(",")
+      .map((b) => b.trim())
+      .filter(Boolean);
 
-    nodes.push({
-      id: 1,
-      endpoint,
-      region,
-      accessKeyId,
-      secretAccessKey,
-      bucket,
-      publicUrl,
-    });
+    for (let i = 1; i <= TOTAL_STORAGE_NODES_COUNT; i++) {
+      const exists = nodes.some((n) => n.id === i);
+      if (!exists) {
+        let fallbackBucketName = "";
+        if (fallbackEnvList[i - 1]) {
+          fallbackBucketName = fallbackEnvList[i - 1];
+        } else if (i === 1 && baseBucket) {
+          fallbackBucketName = baseBucket;
+        } else if (DEFAULT_Z1_FALLBACK_BUCKETS[i - 1]) {
+          fallbackBucketName = DEFAULT_Z1_FALLBACK_BUCKETS[i - 1];
+        } else {
+          fallbackBucketName = `mai-storage-${i}`;
+        }
+
+        const bucket =
+          Deno.env.get(`S3_BUCKET_${i}`) ||
+          Deno.env.get(`S3_BUCKET${i}`) ||
+          Deno.env.get(`Z1_BUCKET_${i}`) ||
+          Deno.env.get(`Z1_BUCKET${i}`) ||
+          fallbackBucketName;
+
+        const accessKeyId =
+          Deno.env.get(`S3_ACCESS_KEY_ID_${i}`) ||
+          Deno.env.get(`S3_ACCESS_KEY_ID${i}`) ||
+          Deno.env.get(`Z1_ACCESS_KEY_ID_${i}`) ||
+          Deno.env.get(`Z1_ACCESS_KEY_ID${i}`) ||
+          baseAccessKey;
+
+        const secretAccessKey =
+          Deno.env.get(`S3_SECRET_ACCESS_KEY_${i}`) ||
+          Deno.env.get(`S3_SECRET_ACCESS_KEY${i}`) ||
+          Deno.env.get(`Z1_SECRET_ACCESS_KEY_${i}`) ||
+          Deno.env.get(`Z1_SECRET_ACCESS_KEY${i}`) ||
+          baseSecretKey;
+
+        const rawEndpoint =
+          Deno.env.get(`S3_ENDPOINT_${i}`) ||
+          Deno.env.get(`S3_ENDPOINT${i}`) ||
+          Deno.env.get(`Z1_ENDPOINT_${i}`) ||
+          Deno.env.get(`Z1_ENDPOINT${i}`) ||
+          baseEndpoint;
+        const endpoint = cleanUrl(rawEndpoint);
+
+        const region =
+          Deno.env.get(`S3_REGION_${i}`) ||
+          Deno.env.get(`S3_REGION${i}`) ||
+          Deno.env.get(`Z1_REGION_${i}`) ||
+          Deno.env.get(`Z1_REGION${i}`) ||
+          baseRegion;
+
+        const rawPublicUrl =
+          Deno.env.get(`S3_PUBLIC_URL_${i}`) ||
+          Deno.env.get(`S3_PUBLIC_URL${i}`) ||
+          Deno.env.get(`Z1_PUBLIC_URL_${i}`) ||
+          Deno.env.get(`Z1_PUBLIC_URL${i}`);
+
+        let publicUrl = "";
+        if (rawPublicUrl) {
+          publicUrl = cleanUrl(rawPublicUrl);
+        } else if (basePublicUrl) {
+          publicUrl = `${cleanUrl(basePublicUrl)}/${bucket}`;
+        } else {
+          publicUrl = `${endpoint}/${bucket}`;
+        }
+
+        nodes.push({
+          id: i,
+          endpoint,
+          region,
+          accessKeyId,
+          secretAccessKey,
+          bucket,
+          publicUrl,
+        });
+      }
+    }
   }
 
+  // Tri par ID croissant pour ordre déterministe
+  nodes.sort((a, b) => a.id - b.id);
   return nodes;
+}
+
+/**
+ * Retourne la liste ordonnée des nœuds de stockage pour le fallback.
+ * Le nœud principal est placé en premier, suivi des autres buckets Z1 Storage en réserve (fallback).
+ */
+export function getFallbackNodes(primaryNode?: StorageNode): StorageNode[] {
+  const allNodes = getStorageNodes();
+  if (!primaryNode) return allNodes;
+  const others = allNodes.filter((n) => n.id !== primaryNode.id);
+  return [primaryNode, ...others];
+}
+
+/**
+ * Effectue un upload S3 avec bascule automatique (fallback) sur les 10 nœuds/buckets
+ * Z1 Storage configurés si le nœud principal échoue (erreur HTTP 4xx/5xx ou exception réseau).
+ */
+export async function uploadWithFallback(
+  primaryNode: StorageNode,
+  filePath: string,
+  body: any,
+  options: {
+    contentType: string;
+    acl?: string;
+  }
+): Promise<{
+  success: boolean;
+  activeNode: StorageNode;
+  publicUrl: string;
+  error?: string;
+}> {
+  const candidateNodes = getFallbackNodes(primaryNode);
+  let lastError = "";
+
+  for (const node of candidateNodes) {
+    try {
+      const s3Client = await buildS3Client(node);
+      const uploadUrl = `${node.endpoint}/${node.bucket}/${filePath}`;
+      const res = await s3Client.fetch(uploadUrl, {
+        body,
+        headers: {
+          "Content-Type": options.contentType || "application/octet-stream",
+          "x-amz-acl": options.acl || "public-read",
+        },
+        method: "PUT",
+      });
+
+      if (res.ok) {
+        return {
+          activeNode: node,
+          publicUrl: `${node.publicUrl}/${filePath}`,
+          success: true,
+        };
+      }
+
+      lastError = await res.text().catch(() => `HTTP ${res.status}`);
+      console.warn(
+        `[Z1 Storage Fallback] Échec upload sur le bucket "${node.bucket}" (node ${node.id}, status ${res.status}): ${lastError}. Bascule sur le bucket suivant...`
+      );
+    } catch (err: any) {
+      lastError = err?.message || String(err);
+      console.warn(
+        `[Z1 Storage Fallback] Exception réseau sur le bucket "${node.bucket}" (node ${node.id}): ${lastError}. Bascule sur le bucket suivant...`
+      );
+    }
+  }
+
+  return {
+    activeNode: primaryNode,
+    error: lastError,
+    publicUrl: `${primaryNode.publicUrl}/${filePath}`,
+    success: false,
+  };
 }
 
 /**
@@ -231,8 +424,8 @@ export function getR2PublicBase(): string {
 }
 
 export function registerStorageRoutes(app: Hono) {
-  // POST /upload-avatar
-  app.post("/upload-avatar", async (c) => {
+  // POST /upload-avatar & /v1/upload-avatar
+  const handleUploadAvatar = async (c: any) => {
     try {
       const token = extractToken(c.req.raw);
       if (!token) {
@@ -249,31 +442,31 @@ export function registerStorageRoutes(app: Hono) {
         return c.json({ error: "Fichier invalide ou non fourni." }, 400);
       }
 
-      const node = selectStorageNode(`avatar-${userId}`);
-      const s3Client = await buildS3Client(node);
-
+      const primaryNode = selectStorageNode(`avatar-${userId}`);
       const ext =
         file.name.split(".").pop()?.replace(/[^a-zA-Z0-9]/g, "") || "jpg";
       const filename = `avatars/${userId}-${Date.now()}.${ext}`;
-
-      const uploadUrl = `${node.endpoint}/${node.bucket}/${filename}`;
       const arrayBuffer = await file.arrayBuffer();
 
-      const uploadRes = await s3Client.fetch(uploadUrl, {
-        body: arrayBuffer,
-        headers: {
-          "Content-Type": file.type || "image/jpeg",
-          "x-amz-acl": "public-read",
-        },
-        method: "PUT",
-      });
+      const uploadResult = await uploadWithFallback(
+        primaryNode,
+        filename,
+        arrayBuffer,
+        {
+          contentType: file.type || "image/jpeg",
+          acl: "public-read",
+        }
+      );
 
-      if (!uploadRes.ok) {
-        console.error("Erreur Z1 Storage S3 (avatar):", await uploadRes.text());
+      if (!uploadResult.success) {
+        console.error(
+          "Erreur Z1 Storage S3 (avatar fallback épuisé):",
+          uploadResult.error
+        );
         return c.json({ error: "Erreur lors de l'upload de l'image." }, 500);
       }
 
-      const publicUrl = `${node.publicUrl}/${filename}`;
+      const publicUrl = uploadResult.publicUrl;
 
       const sql = getDb();
       await sql`UPDATE users SET avatar_url = ${publicUrl} WHERE id = ${userId}`;
@@ -283,10 +476,15 @@ export function registerStorageRoutes(app: Hono) {
       console.error("Upload Avatar Error:", err);
       return c.json({ error: "Erreur serveur lors de l'upload." }, 500);
     }
-  });
+  };
 
-  // POST /upload-file (sécurisé: auth + validation 10MB + allowlist)
-  app.post("/upload-file", async (c) => {
+  app.post("/upload-avatar", handleUploadAvatar);
+  app.post("/v1/upload-avatar", handleUploadAvatar);
+  app.post("/upload-avatar/", handleUploadAvatar);
+  app.post("/v1/upload-avatar/", handleUploadAvatar);
+
+  // POST /upload-file & /v1/upload-file (sécurisé: auth + validation 10MB + allowlist)
+  const handleUploadFile = async (c: any) => {
     try {
       const token = extractToken(c.req.raw);
       if (!token) {
@@ -336,27 +534,28 @@ export function registerStorageRoutes(app: Hono) {
       const cleanFilename = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
       const filename = `uploads/${Date.now()}-${cleanFilename}`;
 
-      const node = selectStorageNode(cleanFilename);
-      const s3Client = await buildS3Client(node);
-
-      const uploadUrl = `${node.endpoint}/${node.bucket}/${filename}`;
+      const primaryNode = selectStorageNode(cleanFilename);
       const arrayBuffer = await file.arrayBuffer();
 
-      const uploadRes = await s3Client.fetch(uploadUrl, {
-        body: arrayBuffer,
-        headers: {
-          "Content-Type": file.type || "application/octet-stream",
-          "x-amz-acl": "public-read",
-        },
-        method: "PUT",
-      });
+      const uploadResult = await uploadWithFallback(
+        primaryNode,
+        filename,
+        arrayBuffer,
+        {
+          contentType: file.type || "application/octet-stream",
+          acl: "public-read",
+        }
+      );
 
-      if (!uploadRes.ok) {
-        console.error("Erreur Z1 Storage S3 (file):", await uploadRes.text());
+      if (!uploadResult.success) {
+        console.error(
+          "Erreur Z1 Storage S3 (file fallback épuisé):",
+          uploadResult.error
+        );
         return c.json({ error: "Erreur lors de l'upload vers S3." }, 500);
       }
 
-      const publicUrl = `${node.publicUrl}/${filename}`;
+      const publicUrl = uploadResult.publicUrl;
 
       return c.json({
         contentType: file.type || "application/octet-stream",
@@ -367,7 +566,12 @@ export function registerStorageRoutes(app: Hono) {
       console.error("Upload File S3 Error:", err);
       return c.json({ error: "Erreur serveur lors de l'upload S3." }, 500);
     }
-  });
+  };
+
+  app.post("/upload-file", handleUploadFile);
+  app.post("/v1/upload-file", handleUploadFile);
+  app.post("/upload-file/", handleUploadFile);
+  app.post("/v1/upload-file/", handleUploadFile);
 
   // ─────────────────────────────────────────────
   // GET /cloud/storage — Consommation actuelle de stockage
@@ -518,8 +722,8 @@ export function registerStorageRoutes(app: Hono) {
   app.get("/files", handleGetFiles);
   app.get("/v1/files", handleGetFiles);
 
-  // POST /cloud/upload — Upload d'un fichier vers Z1 Storage + mise à jour quota
-  app.post("/cloud/upload", async (c) => {
+  // POST /cloud/upload & /v1/cloud/upload — Upload d'un fichier vers Z1 Storage avec fallback multi-buckets + mise à jour quota
+  const handleCloudUpload = async (c: any) => {
     try {
       const token = extractToken(c.req.raw);
       if (!token) {
@@ -609,34 +813,35 @@ export function registerStorageRoutes(app: Hono) {
       const cleanOriginal = file.name;
       const cleanFilename = `${uniqueId}.${ext}`;
 
-      // Sélectionner un nœud de stockage dans le pool à 5 buckets
-      const node = selectStorageNode(`${userId}-${uniqueId}`);
-      const storedKey = `node-${node.id}:${node.bucket}:${fileKey}`;
-
-      // Uploader vers Z1 Storage
-      const s3Client = await buildS3Client(node);
-      const uploadUrl = `${node.endpoint}/${node.bucket}/${fileKey}`;
+      // Sélectionner un nœud de stockage dans le pool à 10 buckets
+      const primaryNode = selectStorageNode(`${userId}-${uniqueId}`);
       const arrayBuffer = await file.arrayBuffer();
 
-      const uploadRes = await s3Client.fetch(uploadUrl, {
-        body: arrayBuffer,
-        headers: {
-          "Content-Type": file.type || "application/octet-stream",
-          "x-amz-acl": "public-read",
-        },
-        method: "PUT",
-      });
+      // Upload avec bascule automatique (fallback) sur les autres buckets du pool Z1 Storage
+      const uploadResult = await uploadWithFallback(
+        primaryNode,
+        fileKey,
+        arrayBuffer,
+        {
+          contentType: file.type || "application/octet-stream",
+          acl: "public-read",
+        }
+      );
 
-      if (!uploadRes.ok) {
-        const errText = await uploadRes.text();
-        console.error("Z1 Storage Upload Error:", errText);
+      if (!uploadResult.success) {
+        console.error(
+          "Z1 Storage Upload Error (fallback épuisé):",
+          uploadResult.error
+        );
         return c.json(
-          { error: "Erreur lors de l'upload vers le stockage." },
+          { error: "Erreur lors de l'upload vers le stockage (tous les buckets en échec)." },
           500
         );
       }
 
-      const publicUrl = `${node.publicUrl}/${fileKey}`;
+      const activeNode = uploadResult.activeNode;
+      const storedKey = `node-${activeNode.id}:${activeNode.bucket}:${fileKey}`;
+      const publicUrl = uploadResult.publicUrl;
       const mimeType = file.type || "application/octet-stream";
 
       // Insérer dans cloud_files
@@ -677,10 +882,15 @@ export function registerStorageRoutes(app: Hono) {
       console.error("Cloud Upload Error:", err);
       return c.json({ error: "Erreur serveur lors de l'upload Cloud." }, 500);
     }
-  });
+  };
 
-  // DELETE /cloud/files/:id — Suppression définitive d'un fichier
-  app.delete("/cloud/files/:id", async (c) => {
+  app.post("/cloud/upload", handleCloudUpload);
+  app.post("/v1/cloud/upload", handleCloudUpload);
+  app.post("/cloud/upload/", handleCloudUpload);
+  app.post("/v1/cloud/upload/", handleCloudUpload);
+
+  // DELETE /cloud/files/:id & /v1/cloud/files/:id — Suppression définitive d'un fichier
+  const handleDeleteFile = async (c: any) => {
     try {
       const token = extractToken(c.req.raw);
       if (!token) {
@@ -712,7 +922,17 @@ export function registerStorageRoutes(app: Hono) {
       const deleteUrl = `${node.endpoint}/${node.bucket}/${rawKey}`;
 
       try {
-        await s3Client.fetch(deleteUrl, { method: "DELETE" });
+        const delRes = await s3Client.fetch(deleteUrl, { method: "DELETE" });
+        if (!delRes.ok && (!r2_key || !r2_key.startsWith("node-"))) {
+          // Si suppression échoue sur nœud par défaut pour un ancien fichier, tenter sur les autres nœuds du pool
+          for (const fallbackNode of getFallbackNodes(node).slice(1)) {
+            try {
+              const fbClient = await buildS3Client(fallbackNode);
+              const fbUrl = `${fallbackNode.endpoint}/${fallbackNode.bucket}/${rawKey}`;
+              await fbClient.fetch(fbUrl, { method: "DELETE" });
+            } catch {}
+          }
+        }
       } catch (s3Err) {
         console.error("Z1 Delete Error (continuing anyway):", s3Err);
       }
@@ -735,5 +955,8 @@ export function registerStorageRoutes(app: Hono) {
       console.error("Cloud Delete Error:", err);
       return c.json({ error: "Erreur serveur lors de la suppression." }, 500);
     }
-  });
+  };
+
+  app.delete("/cloud/files/:id", handleDeleteFile);
+  app.delete("/v1/cloud/files/:id", handleDeleteFile);
 }

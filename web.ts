@@ -200,7 +200,6 @@ export async function executeWebSearch(
 
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i];
-      const keyLabel = `YOU_API_KEY_${i + 1}`;
 
       for (const endpointUrl of endpoints) {
         try {

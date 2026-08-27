@@ -5,13 +5,13 @@ category: "API"
 order: 5
 ---
 
-# Génération de Texte & Chat Completions 💬⚡
+# Génération de Texte & Chat Completions 
 
 Le point de terminaison `/v1/chat/completions` constitue le cœur de l'inférence conversationnelle de l'écosystème mAI. Conçu dans le respect strict des standards de l'industrie, il est 100% compatible avec les SDK officiels OpenAI, LangChain et Semantic Kernel.
 
 ---
 
-## 📡 1. Spécification de l'Endpoint
+## 1. Spécification de l'Endpoint
 
 ```http
 POST https://mai.val.run/v1/chat/completions
@@ -21,7 +21,7 @@ Authorization: Bearer mp-votre_cle_secrete_complete
 
 ---
 
-## 📝 2. Paramètres de la Requête (JSON Body)
+## 2. Paramètres de la Requête (JSON Body)
 
 | Paramètre | Type | Requis | Description |
 | :--- | :--- | :--- | :--- |
@@ -34,7 +34,7 @@ Authorization: Bearer mp-votre_cle_secrete_complete
 
 ---
 
-## 💻 3. Exemples d'Intégration
+## 3. Exemples d'Intégration
 
 ### Exemple Standard (cURL)
 ```bash
@@ -100,7 +100,7 @@ main();
 
 ---
 
-## 📊 4. Format de la Réponse Standard
+## 4. Format de la Réponse Standard
 
 ```json
 {

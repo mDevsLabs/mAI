@@ -5,13 +5,13 @@ category: "API"
 order: 2
 ---
 
-# SDK Python mDevsLabs (`mdevslabs-python`) 🐍⚡
+# SDK Python mDevsLabs (`mdevslabs-python`) 
 
 Le SDK officiel Python pour l'écosystème **mDevsLabs** fournit un wrapper moderne, fortement typé avec Pydantic v2 et compatible `asyncio`.
 
 ---
 
-## 📦 Installation
+## Installation
 
 ```bash
 pip install mdevslabs-python
@@ -25,7 +25,7 @@ pip install "mdevslabs-python[gpu]"
 
 ---
 
-## 💡 Exemple d'Utilisation Synchrone & Asynchrone
+## Exemple d'Utilisation Synchrone & Asynchrone
 
 ### Mode Synchrone
 
@@ -62,7 +62,7 @@ asyncio.run(main())
 
 ---
 
-## 📚 API Reference
+## API Reference
 
 ### Client Principaux
 
@@ -121,7 +121,7 @@ response = client.chat.completions.create(
 
 ---
 
-## 🛡️ Gestion des Erreurs
+## Gestion des Erreurs
 
 ```python
 from mdevslabs import mDevsClient
@@ -145,7 +145,7 @@ except InvalidRequestError as e:
 
 ---
 
-## 🔧 Configuration Avancée
+## Configuration Avancée
 
 ### Timeout et Retry
 
@@ -169,7 +169,7 @@ client = mDevsClient(
 
 ---
 
-## 📖 Exemples Avancés
+## Exemples Avancés
 
 ### Chat avec Historique
 
@@ -231,7 +231,7 @@ response = client.chat.completions.create(
 
 ---
 
-## 📚 Ressources
+## Ressources
 
 - **Documentation API** : [Endpoints REST](/docs?doc=api-rest-endpoints)
 - **Sécurité** : [Authentification](/docs?doc=api-security-authentication)

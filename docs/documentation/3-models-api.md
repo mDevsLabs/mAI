@@ -5,13 +5,13 @@ category: "API"
 order: 4
 ---
 
-# API du Catalogue des Modèles 🤖📚
+# API du Catalogue des Modèles 
 
 Les points de terminaison des modèles vous permettent d'inspecter par voie logicielle la liste exhaustive des architectures d'IA disponibles, leurs capacités multi-modales, fenêtres de contexte et compatibilités selon votre formule d'abonnement.
 
 ---
 
-## 🌐 1. Catalogue Global des Modèles d'IA
+## 1. Catalogue Global des Modèles d'IA
 
 Renvoie la liste des modèles de langage et d'analyse compatibles avec votre clé API.
 
@@ -43,7 +43,7 @@ GET https://mai.val.run/v1/models
 
 ---
 
-## 🇫🇷 2. Catalogue des Modèles Souverains mAI (Locaux)
+## 2. Catalogue des Modèles Souverains mAI (Locaux)
 
 Renvoie les spécifications complètes de la famille des modèles propriétaires **mAI** (conçus pour l'exécution locale via Ollama / GGUF ou inférence hébergée).
 
@@ -58,7 +58,7 @@ GET https://mai.val.run/v1/models/mai
 
 ---
 
-## 🎨 3. Catalogue des Modèles de Génération d'Images
+## 3. Catalogue des Modèles de Génération d'Images
 
 Renvoie la liste des architectures de synthèse d'images (Black Forest Labs FLUX, Stability AI, Midjourney, Recraft) selon votre forfait.
 
@@ -98,7 +98,7 @@ GET https://mai.val.run/v1/models/images
 
 ---
 
-## 🔍 4. Détails d'un Modèle Spécifique
+## 4. Détails d'un Modèle Spécifique
 
 Récupère les informations techniques et les contraintes matérielles recommandées pour un modèle précis.
 

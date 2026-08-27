@@ -8,9 +8,9 @@ Bienvenue sur le portail officiel de **mAI** par **mDevsLabs**. Ce projet est un
 
 La suite **mAI** regroupe 4 piliers complémentaires :
 
-1. 🌐 **Web** *(Alpha)* : Application d'IA en ligne web directement et simplement pour discuter avec l'IA mAI.
+1. 🌐 **Web** *(Bêta)* : Application d'IA en ligne web directement et simplement pour discuter avec l'IA mAI.
 2. ⚡ **Pulse** *(Bêta)* : Ensemble d'extensions pour diverses applications pour discuter avec mAI directement (navigateur, VS Code...).
-3. 💻 **CLI** *(Bêta)* : Discussions et séances de codage dans le terminal CLI via mAI.
+3. 💻 **CLI** *(Release Candidate)* : Discussions et séances de codage dans le terminal CLI via mAI.
 4. 📄 **Office** *(Bêta)* : Création de documents et présentations avec mAI.
 
 ---

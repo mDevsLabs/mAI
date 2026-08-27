@@ -5,13 +5,13 @@ category: "Modèles d'IA"
 order: 1
 ---
 
-# mAI-1 - Modèle Multimodal Flagship (12B) 🚀
+# mAI-1 - Modèle Multimodal Flagship (12B) 
 
 **mAI-1** est le modèle phare développé par **mDevsLabs**. Basé sur l'architecture Google Gemma 4 12B Unified, il offre une combinaison idéale entre puissance de raisonnement, compréhension contextuelle et efficacité d'inférence en local.
 
 ---
 
-## 📊 Fiche Technique
+## Fiche Technique
 
 - **Nombre de Paramètres** : 12 Milliards (12B)
 - **Fenêtre de Contexte Native** : 128 000 tokens (extensible à 256K via YaRN FlashAttention)
@@ -23,7 +23,7 @@ order: 1
 
 ---
 
-## 🎯 Domaines d'Excellence
+## Domaines d'Excellence
 
 1. **Raisonnement Complexe & Multi-Hop** : Élaboration de plans d'action structurés étape par étape.
 2. **Génération & Audit de Code** : Python, TypeScript, Rust, C++, SQL, Go.
@@ -32,7 +32,7 @@ order: 1
 
 ---
 
-## ⚡ Exemple d'Utilisation en Python SDK
+## Exemple d'Utilisation en Python SDK
 
 ```python
 from mdevslabs import Client
@@ -53,7 +53,7 @@ print(response.choices[0].message.content)
 
 ---
 
-## 📊 Benchmarks de Performance
+## Benchmarks de Performance
 
 Voici les résultats de mAI-1 par rapport aux modèles de référence de sa catégorie sur plusieurs tâches d'évaluation courantes :
 

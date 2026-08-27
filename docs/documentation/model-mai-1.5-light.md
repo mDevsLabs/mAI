@@ -5,13 +5,13 @@ category: "Modèles d'IA"
 order: 1
 ---
 
-# mAI-1.5-Light - Modèle Ultra-Rapide (4B) ⚡
+# mAI-1.5-Light - Modèle Ultra-Rapide (4B) 
 
 **mAI-1.5-Light** est le modèle ultra-léger de la série mAI-1.5. Avec ses 4 milliards de paramètres, il est spécialement conçu pour offrir une réactivité maximale sur laptops et machines personnelles tout en intégrant la **vision multimodale**, la capacité de **raisonnement (thinking)** et les **appels d'outils (tools)**.
 
 ---
 
-## 🚀 Spécifications Techniques
+## Spécifications Techniques
 
 - **Nombre de Paramètres** : 4 Milliards (4B)
 - **Architecture** : Transformer multimodal avec attention optimisée et module de vision.
@@ -24,7 +24,7 @@ order: 1
 
 ---
 
-## 💡 Cas d'Usage Recommandés
+## Cas d'Usage Recommandés
 
 - **Assistance quotidienne rapide** : Réponses instantanées aux requêtes, rédaction et résumés.
 - **Analyse d'images & documents** : Extraction et interprétation de graphiques, captations et visuels.
@@ -33,7 +33,7 @@ order: 1
 
 ---
 
-## 🛠️ Commande d'exécution Ollama
+## Commande d'exécution Ollama
 
 Exécutez le modèle localement dans votre terminal :
 

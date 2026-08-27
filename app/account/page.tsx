@@ -366,6 +366,7 @@ export default function AccountPage() {
       setCodeError("Saisissez un code.");
       return;
     }
+    const prevTier = user?.tier || usage?.tier || "Free";
     setUpgrading(true);
     try {
       const tier = await verifyUpgradeCode(code.trim());
@@ -404,6 +405,17 @@ export default function AccountPage() {
         ),
         { duration: 6000 }
       );
+
+      // ── Onboarding upgrade express : mini tuto forcé montrant nouveaux quotas ──
+      try {
+        const { initUpgradeForTier } = await import("@/lib/onboarding-storage");
+        initUpgradeForTier(tier);
+        window.dispatchEvent(
+          new CustomEvent("mai:onboarding:open", {
+            detail: { flow: "upgrade", tier, prevTier },
+          } as unknown as Event)
+        );
+      } catch {}
 
       // Arrêt des animations après 5s
       setTimeout(() => {

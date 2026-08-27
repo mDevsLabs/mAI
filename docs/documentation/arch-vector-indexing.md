@@ -5,13 +5,13 @@ category: "Architecture"
 order: 3
 ---
 
-# Indexation Vectorielle & Graphes HNSW 🕸️⚡
+# Indexation Vectorielle & Graphes HNSW 
 
 L'indexation vectorielle dans **mSearch** repose sur des structures de données de graphes hiérarchiques de petits mondes navigateurs : **HNSW (Hierarchical Navigable Small World)**.
 
 ---
 
-## 📐 Paramètres de Performance HNSW
+## Paramètres de Performance HNSW
 
 - `M` (Nombre maximal de connexions par nœud) : Défini par défaut à `16` pour un bon compromis mémoire/vitesse.
 - `ef_construction` (Profondeur de recherche lors de l'indexation) : `200` pour garantir un graphe très interconnecté.
@@ -19,7 +19,7 @@ L'indexation vectorielle dans **mSearch** repose sur des structures de données 
 
 ---
 
-## ⚡ Formule de Distance Cosinus
+## Formule de Distance Cosinus
 
 La similarité sémantique entre deux vecteurs $\mathbf{u}$ et $\mathbf{v}$ est calculée par :
 

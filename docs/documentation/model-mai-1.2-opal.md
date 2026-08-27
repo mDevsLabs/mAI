@@ -5,13 +5,13 @@ category: "Modèles d'IA"
 order: 5
 ---
 
-# mAI-1.2-Opal - Modèle Équilibré & Enterprise-ready (33B) 💎
+# mAI-1.2-Opal - Modèle Équilibré & Enterprise-ready (33B) 
 
 **mAI-1.2-Opal** est un modèle intermédiaire robuste de 33 milliards de paramètres, combinant l'intelligence de niveau entreprise avec une fluidité remarquable. Il gère avec aisance de grands volumes de données textuelles et visuelles, ce qui en fait le compagnon idéal pour les flux de travail professionnels en local.
 
 ---
 
-## 🚀 Spécifications Techniques
+## Spécifications Techniques
 
 - **Nombre de Paramètres** : 33 Milliards (33B)
 - **Architecture** : Transformer multimodal à haute capacité.
@@ -22,7 +22,7 @@ order: 5
 
 ---
 
-## 💡 Cas d'Usage Recommandés
+## Cas d'Usage Recommandés
 
 - **Analyse financière et commerciale** : Interprétation de graphiques, de tableaux complexes et rédaction de synthèses d'activité.
 - **Développement d'applications complexes** : Codage système, écriture de tests unitaires et intégration d'API tierces.
@@ -31,7 +31,7 @@ order: 5
 
 ---
 
-## 🛠️ Commande d'exécution Ollama
+## Commande d'exécution Ollama
 
 Lancez le modèle directement en local :
 
@@ -41,7 +41,7 @@ ollama run mDevsLabs/mAI-1.2-Opal
 
 ---
 
-## 📊 Benchmarks de Performance
+## Benchmarks de Performance
 
 Performance globale de mAI-1.2-Opal :
 

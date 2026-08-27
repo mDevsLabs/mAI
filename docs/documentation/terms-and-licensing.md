@@ -5,13 +5,13 @@ category: "Guides"
 order: 8
 ---
 
-# Licences, Propriété Intellectuelle & Conformité Légale ⚖️📜
+# Licences, Propriété Intellectuelle & Conformité Légale 
 
 La suite technologique **mDevsLabs** s'appuie sur des principes stricts de souveraineté numérique, de transparence contractuelle et de respect rigoureux de la vie privée de ses utilisateurs et développeurs.
 
 ---
 
-## 📄 1. Licences des Modèles & Logiciels
+## 1. Licences des Modèles & Logiciels
 
 ### Modèles Fondamentaux Open-Weights
 Nos modèles d'intelligence artificielle souverains (séries `mAI-1.5`, `mAI-1.2`, `mAI-1.0` en déclinaisons *Light*, *Apex* et *Opal*) sont distribués sous licence **Open-Weights** permissive (MIT / Apache 2.0). Cette licence vous accorde le droit :
@@ -24,19 +24,19 @@ Les applications client (mAI Web, mAI Pulse, mAI CLI, mAI Coder) et leurs SDK as
 
 ---
 
-## 🌍 2. Hébergement & Répartition Géographique des Données
+## 2. Hébergement & Répartition Géographique des Données
 
 mDevsLabs applique une gouvernance claire et auditable concernant la localisation et le stockage des informations :
 
 | Type de Données | Localisation Principale | Chiffrement & Conformité |
 | :--- | :--- | :--- |
-| **Bases de Données & Comptes** | **Union Européenne (UE)** 🇪🇺 *(Francfort, Allemagne)* | Chiffrement AES-256 au repos, conformité RGPD intégrale |
-| **Clés d'API & Métadonnées d'Usage** | **Union Européenne (UE)** 🇪🇺 *(Francfort, Allemagne)* | Hachage SHA-256 irréversible, partitionnement isolé |
-| **Fichiers & Cloud Storage (Objets)** | **États-Unis (USA)** 🇺🇸 *(Infrastructures Cloud S3/Objets)* | Chiffrement AES-256, TLS 1.3, Clauses Contractuelles Types |
+| **Bases de Données & Comptes** | **Union Européenne (UE)**  *(Francfort, Allemagne)* | Chiffrement AES-256 au repos, conformité RGPD intégrale |
+| **Clés d'API & Métadonnées d'Usage** | **Union Européenne (UE)**  *(Francfort, Allemagne)* | Hachage SHA-256 irréversible, partitionnement isolé |
+| **Fichiers & Cloud Storage (Objets)** | **États-Unis (USA)**  *(Infrastructures Cloud S3/Objets)* | Chiffrement AES-256, TLS 1.3, Clauses Contractuelles Types |
 
 ---
 
-## 🔒 3. Priorité Absolue au ZDR (Zero Data Retention) sur l'IA
+## 3. Priorité Absolue au ZDR (Zero Data Retention) sur l'IA
 
 La politique **Zero Data Retention (ZDR)** constitue le pilier fondamental de notre engagement en matière d'intelligence artificielle :
 
@@ -46,7 +46,7 @@ La politique **Zero Data Retention (ZDR)** constitue le pilier fondamental de no
 
 ---
 
-## 📋 4. Conditions d'Accès à l'API & Responsabilité
+## 4. Conditions d'Accès à l'API & Responsabilité
 
 - **Secret des Clés d'API** : Les clés API (`mp-...`) sont personnelles et strictement confidentielles. L'utilisateur est seul responsable des appels effectués avec ses identifiants.
 - **Respect de l'Usage Raisonnable (AUP)** : Tout usage malveillant (attaques par déni de service, tentatives de jailbreak agressif, génération de contenus illégaux) entraîne la révocation immédiate de l'accès API.

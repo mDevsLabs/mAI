@@ -5,13 +5,13 @@ category: "Guides"
 order: 5
 ---
 
-# Prompt Engineering & Structuration de Contextes ✍️⚡
+# Prompt Engineering & Structuration de Contextes 
 
 Ce guide résume les meilleures pratiques pour tirer le meilleur parti des modèles **mAI** grâce à des techniques modernes dePrompt Engineering.
 
 ---
 
-## 🎯 Principes Fondamentaux
+## Principes Fondamentaux
 
 1. **Rôle & Contexte Système Explicit** : Définissez toujours un rôle clair dans le champ system message.
 2. **Exemples Few-Shot** : Fournissez 2 ou 3 exemples d'entrées et de sorties attendues.
@@ -20,7 +20,7 @@ Ce guide résume les meilleures pratiques pour tirer le meilleur parti des modè
 
 ---
 
-## 📄 Exemple de Prompt Optimisé
+## Exemple de Prompt Optimisé
 
 ```markdown
 <system>
@@ -43,14 +43,14 @@ export function parseInput(raw: any) {
 
 ---
 
-## ❌ Mauvaise Pratique vs ✅ Bonne Pratique
+## Mauvaise Pratique vs  Bonne Pratique
 
-- ❌ *Mauvais* : "Refais ce code en mieux."
-- ✅ *Bon* : "Refactorise la fonction `parseInput` en supprimant l'usage de `eval()` et en sécurisant le typage TypeScript avec un schéma Zod."
+-  *Mauvais* : "Refais ce code en mieux."
+-  *Bon* : "Refactorise la fonction `parseInput` en supprimant l'usage de `eval()` et en sécurisant le typage TypeScript avec un schéma Zod."
 
 ---
 
-## 📐 Structure des Prompts
+## Structure des Prompts
 
 ### Format XML pour Complexité Élevée
 
@@ -107,7 +107,7 @@ Optimise ce pipeline d'entraînement pour réduire le temps d'entraînement de 3
 
 ---
 
-## 🧠 Techniques Avancées
+## Techniques Avancées
 
 ### 1. Chain of Thought (Raisonnement Étape par Étape)
 
@@ -144,7 +144,7 @@ Utilise des analogies simples et évite le jargon technique excessif.
 
 ---
 
-## 📊 Formats de Sortie Structurés
+## Formats de Sortie Structurés
 
 ### JSON Schema Strict
 
@@ -178,13 +178,13 @@ Texte à analyser : [VOTRE_TEXTE_ICI]
 
 ---
 
-## ⚡ Optimisation des Prompts
+## Optimisation des Prompts
 
 ### Astuce 1: Constraints Explicites
 
 ```markdown
-❌ "Résume ce document."
-✅ "Résume ce document en 3 phrases maximum, en conservant les 5 points clés."
+ "Résume ce document."
+ "Résume ce document en 3 phrases maximum, en conservant les 5 points clés."
 ```
 
 ### Astuce 2: Exemples Contrôlés
@@ -212,7 +212,7 @@ Maintenant, analyse ceci : "[NOUVEAU_TEXTE]"
 
 ---
 
-## 🛠️ Outils de Prompt Management
+## Outils de Prompt Management
 
 ### Bibliothèque de Prompts
 
@@ -246,7 +246,7 @@ PROMPT_TEMPLATES = {
 
 ---
 
-## 📚 Ressources
+## Ressources
 
 - **Fine-Tuning** : [Guide d'adaptation](/docs?doc=guide-fine-tuning)
 - **Sécurité** : [Guide Privacy](/docs?doc=guide-security-privacy)

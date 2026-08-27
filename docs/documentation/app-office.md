@@ -5,7 +5,7 @@ category: "Archives"
 order: 99
 ---
 
-# Office - Suite Bureautique IA (Archivé) 📄📦
+# Office - Suite Bureautique IA (Archivé) 
 
 > [!NOTE]
 > Ce projet est désormais **archivé** et ne reçoit plus de développements actifs. Ses fonctionnalités ont vocation à être intégrées au sein de l'écosystème mAI.
@@ -16,7 +16,7 @@ order: 99
 
 ---
 
-## 🌟 Fonctionnalités Principales
+## Fonctionnalités Principales
 
 - **Génération de Rapports & Documents** : Transformez des notes brutes en documents structurés, rédigés avec rigueur et mis en page de façon professionnelle.
 - **Création de Présentations (Slides)** : Générez des diapositives percutantes avec plans visuels, résumés et argumentaires structurés.

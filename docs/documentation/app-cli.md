@@ -5,7 +5,7 @@ category: "Applications"
 order: 3
 ---
 
-# CLI - Discussions & Codage dans le Terminal 💻✨
+# CLI - Discussions & Codage dans le Terminal 
 
 **CLI** est l'assistant en ligne de commande de l'écosystème **mAI**. Conçu pour les développeurs, DevOps et administrateurs système, il apporte un copilote d'intelligence artificielle au cœur de votre shell.
 
@@ -14,7 +14,7 @@ order: 3
 
 ---
 
-## 📦 Installation Rapide
+## Installation Rapide
 
 ```bash
 # Via npm
@@ -26,7 +26,7 @@ brew install mDevsLabs/CLI/mai
 
 ---
 
-## 🌟 Fonctionnalités Clés
+## Fonctionnalités Clés
 
 - **Chat Terminal Interactif** : Discutez avec mAI directement depuis votre session bash, zsh ou PowerShell.
 - **Génération & Diagnostic de Commandes** : Expliquez ce que vous souhaitez accomplir, mAI génère la commande appropriée.

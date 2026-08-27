@@ -5,13 +5,13 @@ category: "API"
 order: 10
 ---
 
-# Bonnes Pratiques de l'API 💡🛠️
+# Bonnes Pratiques de l'API 
 
 Pour exploiter au mieux les capacités de la suite **mAI** et de nos modèles (mAI-1.5, mAI-1.2, mAI-1), voici les recommandations techniques à suivre.
 
 ---
 
-## 🔒 Gestion Sécurisée des Clés API
+## Gestion Sécurisée des Clés API
 
 - **Ne jamais exposer vos clés côté client** : N'utilisez pas de clés d'accès directement dans du code Javascript exécuté sur le navigateur. Utilisez toujours un serveur intermédiaire (Backend / proxy) pour masquer vos clés.
 - **Principe du moindre privilège** : Si possible, utilisez des clés d'accès distinctes pour le développement et la production.
@@ -19,7 +19,7 @@ Pour exploiter au mieux les capacités de la suite **mAI** et de nos modèles (m
 
 ---
 
-## ⚡ Optimisation des Performances & Latence
+## Optimisation des Performances & Latence
 
 - **Sélection du modèle approprié** :
   - Utilisez **mAI-1.5-Light** pour les tâches de classification, d'extraction rapide, d'autocomplétion.
@@ -28,7 +28,7 @@ Pour exploiter au mieux les capacités de la suite **mAI** et de nos modèles (m
 
 ---
 
-## 🔄 Gestion des Limites d'Utilisation
+## Gestion des Limites d'Utilisation
 
 L'API mAI est soumise à des limites d'appels configurées sur chaque clé.
 - **Surveillez les limites** : Gérez l'erreur `429 Usage Limit Exceeded` de façon robuste dans votre application avec une stratégie de retry exponentiel (*exponential backoff*).

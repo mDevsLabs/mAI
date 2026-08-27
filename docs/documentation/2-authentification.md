@@ -5,13 +5,13 @@ category: "API"
 order: 2
 ---
 
-# Authentification & Gestion des Clés d'API 🔐🔑
+# Authentification & Gestion des Clés d'API 
 
 L'accès à l'API mAI nécessite une authentification sécurisée basée sur des jetons d'accès chiffrés (*API Keys*). Chaque clé associe vos requêtes à votre compte et applique dynamiquement les quotas de votre forfait d'abonnement (*Free*, *Plus*, *Pro*, *Max*).
 
 ---
 
-## 🔑 1. Structure & Format des Clés
+## 1. Structure & Format des Clés
 
 Toutes les clés d'API délivrées par la plateforme mAI répondent au format suivant :
 
@@ -25,7 +25,7 @@ Exemple : mp-a1b2c3d4e5f678901234567890abcdef1234567890abcdef
 
 ---
 
-## 🛠️ 2. Génération & Révocation d'une Clé
+## 2. Génération & Révocation d'une Clé
 
 1. Rendez-vous sur votre tableau de bord dans la section [Clés API](/account/keys).
 2. Cliquez sur **Créer une clé API**, attribuez-lui un nom explicite (ex: `Backend Production`, `Bot Discord`) et définissez une limite maximale optionnelle.
@@ -33,7 +33,7 @@ Exemple : mp-a1b2c3d4e5f678901234567890abcdef1234567890abcdef
 
 ---
 
-## 💻 3. Utilisation dans vos Requêtes HTTP
+## 3. Utilisation dans vos Requêtes HTTP
 
 Chaque appel vers un point de terminaison sécurisé doit intégrer l'en-tête HTTP `Authorization` avec le schéma `Bearer` :
 
@@ -82,7 +82,7 @@ print(res.json())
 
 ---
 
-## 🛡️ 4. Bonnes Pratiques de Sécurité Développeur
+## 4. Bonnes Pratiques de Sécurité Développeur
 
 - **Variables d'Environnement** : Stockez systématiquement vos clés dans des variables d'environnement (`.env`, Vault, GitHub Secrets, Vercel Environment Variables).
 - **Zéro Clé Côté Client** : Ne compilez jamais vos clés API au sein de frameworks frontend ou d'applications mobiles sans passer par un serveur intermédiaire (backend proxy).
