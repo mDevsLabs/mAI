@@ -5,13 +5,13 @@ category: "API"
 order: 3
 ---
 
-# SDK TypeScript / JavaScript (`@mdevslabs/sdk`) 🟨⚡
+# SDK TypeScript / JavaScript (`@mdevslabs/sdk`) 🟨
 
 Le SDK officiel `@mdevslabs/sdk` permet d'intégrer facilement les services **mAI** et **mSearch** dans vos applications Web (Next.js, React, Vue, Svelte) et serveurs (Node.js, Bun, Deno).
 
 ---
 
-## 📦 Installation
+## Installation
 
 ```bash
 npm install @mdevslabs/sdk
@@ -23,14 +23,14 @@ yarn add @mdevslabs/sdk
 
 ---
 
-## 💻 Exemple d'Usage dans Next.js Server Action
+## Exemple d'Usage dans Next.js Server Action
 
 ```typescript
 import { mDevsClient } from '@mdevslabs/sdk';
 
 const client = new mDevsClient({
   apiKey: process.env.MDEVS_API_KEY,
-  baseUrl: 'https://mprojects-officiel.vercel.app/api/v1/',
+  baseUrl: 'https://mai-devs.vercel.app/api/v1/',
 });
 
 export async function askAssistant(question: string) {
@@ -46,7 +46,7 @@ export async function askAssistant(question: string) {
 
 ---
 
-## 🌊 Streaming Web API Exemple
+## Streaming Web API Exemple
 
 ```typescript
 import { mDevsClient } from '@mdevslabs/sdk';
@@ -72,7 +72,7 @@ async function streamResponse() {
 
 ---
 
-## 📚 Types & Interfaces
+## Types & Interfaces
 
 ### Principaux Types
 
@@ -116,7 +116,7 @@ interface ClientOptions {
 
 ---
 
-## 🔧 Fonctionnalités Avancées
+## Fonctionnalités Avancées
 
 ### Recherche Hybride avec mSearch
 
@@ -175,7 +175,7 @@ if (response.choices[0].message.tool_calls) {
 
 ---
 
-## 🛡️ Gestion des Erreurs
+## Gestion des Erreurs
 
 ```typescript
 import { mDevsClient, APIError } from '@mdevslabs/sdk';
@@ -199,7 +199,7 @@ try {
 
 ---
 
-## 🌐 Utilisation côté Navigateur (Browser)
+## Utilisation côté Navigateur (Browser)
 
 ```typescript
 import { mDevsClient } from '@mdevslabs/sdk';
@@ -207,7 +207,7 @@ import { mDevsClient } from '@mdevslabs/sdk';
 // Le SDK détecte automatiquement l'environnement
 const client = new mDevsClient({
   apiKey: process.env.NEXT_PUBLIC_MDEVS_API_KEY,
-  baseUrl: 'https://mprojects-officiel.vercel.app/api/v1/',
+  baseUrl: 'https://mai-devs.vercel.app/api/v1/',
 });
 
 // Utilisation dans un composant React
@@ -233,7 +233,7 @@ function ChatComponent() {
 
 ---
 
-## 📚 Ressources
+## Ressources
 
 - **Documentation Python** : [SDK Python](/docs?doc=api-python-sdk)
 - **Sécurité** : [Authentification](/docs?doc=api-security-authentication)

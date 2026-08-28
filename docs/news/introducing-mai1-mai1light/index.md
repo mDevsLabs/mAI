@@ -1,1 +1,47 @@
-# L'IA repensée pour vous : Découvrez mAI-1 et mAI-1-LightL'intelligence artificielle transforme notre façon de travailler, mais elle soulève souvent une question cruciale : où vont nos données ? Aujourd'hui, nous changeons la donne en vous redonnant le contrôle total de vos informations.Voici la nouvelle génération de notre assistant IA orienté productivité, conçue pour s'intégrer parfaitement à votre flux de travail. L'objectif est simple : vous offrir un outil surpuissant tournant directement sur votre machine, sans jamais avoir besoin d'envoyer vos données dans le cloud. C'est ce qu'on appelle le "Local-first" : une approche qui garantit une confidentialité absolue et un environnement sécurisé.Pour s'adapter à toutes les exigences et à toutes les configurations matérielles, cet assistant se décline en deux versions distinctes, toutes deux propulsées par le moteur Ollama.\---!\[mAI-1](https://upload.fs.fr/YdirFBxLxC.png)## mAI-1 : Le moteur de puissance et de raisonnement complexemAI-1 est la version complète et sans compromis de la famille mAI. Conçu spécifiquement pour les stations de travail et les ordinateurs portables puissants, il est propulsé par le modèle Google Gemma 4 12B Unified. C'est l'outil ultime pour les professionnels et les développeurs faisant face à des défis techniques ardus.* Raisonnement avancé : Il ne se contente pas de répondre, il analyse. Il est capable de gérer des tâches complexes, d'établir des planifications détaillées et d'effectuer du raisonnement en plusieurs étapes (multi-step reasoning).* Assistant de développement complet : C'est votre binôme pour le code. Il gère la génération de code, le refactoring, le débogage complexe, la création de scripts, l'intégration d'API et la rédaction de documentations techniques approfondies.* Analyse Multimodale : Ne vous limitez plus au texte, mAI-1 est capable d'analyser des images directement via Ollama, idéal pour décortiquer des schémas, des architectures ou des maquettes.* Contexte ultra-large : Il possède une capacité de rétention allant jusqu'à 256 000 tokens (en fonction de la mémoire de votre machine), ce qui le rend parfait pour ingérer, synthétiser et interroger de très longs documents ou des bases de code entières sans perdre le fil.* Prêt pour l'écosystème : Totalement "Agent-ready" (compatible avec le tool/function calling selon l'intégration) et "RAG-ready", il est taillé sur mesure pour s'intégrer dans des pipelines de recherche documentaire avancée et d'extraction de données.\---!\[mAI-1-Light](https://upload.fs.fr/8P7ceTZ0wf.png)## mAI-1-Light : L'efficacité et la vitesse au quotidienSi vous recherchez un assistant IA ultra-réactif ou si vous travaillez sur une machine aux caractéristiques matérielles plus modestes, mAI-1-Light est la solution idéale. Propulsé par le modèle IBM Granite 4.1 3B, il est optimisé pour la rapidité sans pour autant sacrifier son utilité au quotidien.* Légèreté et fluidité : Conçu pour s'exécuter avec une grande rapidité, c'est un modèle "Local-first" avec une approche épurée, idéal pour offrir d'excellentes performances sur des configurations standards.* Assistant généraliste tout-terrain : Votre copilote pour toutes les tâches quotidiennes telles que les questions/réponses, la rédaction de contenus, la reformulation claire ou encore les sessions de brainstorming.* Synthèse éclair : Il excelle dans le résumé et l'extraction d'informations clés à partir de documents massifs, de notes de réunion, d'articles web ou même de fichiers logs complexes.* Support au code ciblé : Il reste une aide précieuse pour les développeurs, toujours disponible pour générer des fonctions, expliquer des blocs de code, vous aider au refactoring ou vous assister dans le débogage.* Connectivité et Polyvalence : Tout comme son grand frère, il est "RAG-ready" et préparé pour l'appel de fonctions. De plus, c'est un véritable polyglotte qui maîtrise couramment le français, l'anglais, l'espagnol, l'allemand, le japonais, le portugais, l'arabe, l'italien, le coréen, le chinois, et bien d'autres langues.\---## Pourquoi intégrer la famille mAI à votre workflow ?L'avantage majeur de mAI-1 et mAI-1-Light réside dans leur fonctionnement "Local-first"\[cite: 1, 2]. Vos codes sources, vos documents internes et vos requêtes restent confinés sur votre ordinateur\[cite: 1, 2]. Aucune donnée ne transite vers des serveurs externes. C'est l'équilibre parfait entre la performance d'une intelligence artificielle de pointe et la sécurité absolue de vos données.### Prêt à transformer votre productivité ?Le déploiement est immédiat. Il vous suffit de [télécharger l'outil Ollama](https://ollama.com/download) sur votre machine pour lancer le modèle de votre choix en quelques secondes et bénéficier de toute la puissance de l'IA en local.
+# Présentation des modèles mAI-1 et mAI-1-Light
+
+L'intégration de l'intelligence artificielle au sein des organisations soulève des enjeux cruciaux de gouvernance et de confidentialité des données. Les modèles **mAI-1** et **mAI-1-Light** répondent à ces exigences en s'appuyant sur une architecture strictement locale (*Local-first*).
+
+Cette approche garantit que l'ensemble des données traitées, des requêtes et du code source reste confiné à votre environnement matériel, sans transit vers des serveurs tiers.
+
+Pour couvrir l'ensemble des cas d'usage et s'adapter aux différentes capacités matérielles, cette génération se décline en deux modèles complémentaires, optimisés pour le moteur d'inférence Ollama.
+
+---
+
+![mAI-1](https://upload.fs.fr/YdirFBxLxC.png)
+
+## mAI-1 : Puissance de calcul et raisonnement complexe
+
+Le modèle **mAI-1** constitue la version haute capacité de la gamme. Conçu pour les stations de travail et postes de développement avancés, il s'appuie sur une base Google Gemma 4 12B Unified.
+
+### Points clés :
+- **Raisonnement logique structuré** : Analyse approfondie des requêtes, décomposition en étapes logiques et résolution de problématiques techniques complexes.
+- **Assistance au développement logiciel** : Génération de code, refactoring d'architecture, analyse d'erreurs, création de scripts et documentation technique.
+- **Analyse multimodale** : Prise en charge native des images et schémas techniques pour l'interprétation d'architectures système et de diagrammes.
+- **Contexte étendu** : Capacité de rétention jusqu'à 256 000 tokens selon les ressources matérielles allouées, adaptée à l'analyse de dépôts de code complets et de documentations volumineuses.
+- **Compatibilité écosystème** : Prise en charge des pipelines de recherche documentaire augmentée (RAG) et de l'appel d'outils externes (*function calling*).
+
+---
+
+![mAI-1-Light](https://upload.fs.fr/8P7ceTZ0wf.png)
+
+## mAI-1-Light : Efficacité et réactivité au quotidien
+
+Optimisé pour les postes de travail standards et les environnements nécessitant une latence minimale, **mAI-1-Light** repose sur une architecture IBM Granite 4.1 3B.
+
+### Points clés :
+- **Légèreté et rapidité** : Inférence fluide sur des configurations matérielles sans GPU dédié lourd.
+- **Assistance rédactionnelle et synthèse** : Résumé rapide de documents, reformulation de spécifications et structuration d'idées.
+- **Support au code ciblé** : Génération de fonctions unitaires, explications de code et assistance au débogage quotidien.
+- **Support multilingue étendu** : Prise en charge native de nombreuses langues dont le français, l'anglais, l'espagnol, l'allemand et l'italien.
+- **Intégration RAG** : Capacité d'interrogation documentaire légère et d'extraction de données structurées.
+
+---
+
+## Pourquoi intégrer la gamme mAI à vos processus ?
+
+Le principal atout de la gamme réside dans son modèle d'exécution local. Vos actifs stratégiques, bases documentaires et codes sources ne quittent jamais votre infrastructure. Ce dispositif garantit une conformité totale avec les politiques de sécurité internes et les exigences réglementaires.
+
+### Déploiement
+
+Le déploiement s'effectue directement via Ollama. Rendez-vous sur le [guide de téléchargement Ollama](https://ollama.com/download) pour initialiser l'environnement et lancer le modèle adapté à vos besoins.

@@ -1,0 +1,17 @@
+android-mobile-app | DESC: L'assistant d'intelligence artificielle locale mAI est désormais disponible sur Android, garantissant confidentialité et continuité d'usage.
+api-v2 | DESC: Déploiement de l'API v2 de mAI : clés d'accès avec hachage SHA-256, gestion des projets, contrôle de débit et inférence en temps réel.
+avenir | DESC: Rétrospective sur le parcours d'ingénierie et l'évolution technologique ayant mené à la conception de mAI Web.
+bienvenue | DESC: Découvrez notre portail unifié regroupant l'ensemble de nos projets logiciels, actualités et notes de version.
+end-of-mai | DESC: Point d'étape sur le cycle de vie du projet mAI et orientations de maintenance.
+extensions-mai | DESC: Intégrez l'assistant mAI directement au sein de votre environnement Visual Studio Code et de vos navigateurs web.
+introducing-mai | DESC: Découvrez l'architecture, l'interopérabilité et les fondations techniques de mAI Web.
+introducing-mai-1.5 | DESC: Disponibilité officielle de la famille mAI-1.5 : mAI-1.5-Light, mAI-1.5-Apex et mAI-1.5-Opal, combinant vision multimodale, raisonnement logique et exécution d'outils en environnement local.
+introducing-mai-cli | DESC: L'interface en ligne de commande officielle pour l'intégration de modèles d'IA en terminal, avec support multi-modèles et fonctionnalités de productivité.
+introducing-mai1-mai1light | DESC: Introduction des modèles mAI-1 et mAI-1 Light, conçus pour l'analyse, le développement et la productivité en environnement local souverain.
+introducing-mai1.2s | DESC: Découvrez la gamme mAI-1.2 intégrant la vision multimodale en environnement local : Light, Apex et Opal.
+introducing-msearch | DESC: Navigateur web axé sur la confidentialité et l'efficacité, intégrant nativement un bloqueur de traqueurs et l'assistant mAI en barre latérale.
+nouveau-logo | DESC: Présentation de l'évolution graphique de mAI, symbolisant la modularité et l'excellence de nos modèles d'IA locaux.
+quotas-compte-mai | DESC: Suivi de la consommation hebdomadaire, gestion des forfaits et administration centralisée depuis votre compte mAI unifié.
+recherche-web-you-com | DESC: mAI fait évoluer son infrastructure de recherche web en intégrant la technologie de You.com pour offrir des réponses plus rapides, précises et enrichies en temps réel.
+renommage-mai | DESC: Présentation de la nouvelle suite logicielle mAI regroupant les déclinaisons Web, Pulse, CLI et Office, et archivage des versions précédentes.
+snob-android-apk | DESC: Le projet Snob est désormais accessible sur Android sous la forme d'un paquet d'installation APK.

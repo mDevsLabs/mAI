@@ -5,13 +5,13 @@ category: "API"
 order: 1
 ---
 
-# Spécifications de l'API REST v1 🌐🔌
+# Spécifications de l'API REST v1 
 
 L'API REST de **mDevsLabs** est entièrement compatible avec le standard OpenAI API v1 tout en offrant des extensions spécifiques pour les modèles mAI.
 
 ---
 
-## 📌 Endpoints Principaux
+## Endpoints Principaux
 
 ### 1. `POST /v1/chat/completions`
 
@@ -20,7 +20,7 @@ Génère une réponse textuelle ou un flux de tokens (Server-Sent Events) à par
 #### Requête Exemple
 
 ```bash
-curl -X POST https://mprojects-officiel.vercel.app/api/v1/chat/completions \
+curl -X POST https://mai-devs.vercel.app/api/v1/chat/completions \
   -H "Authorization: Bearer $MAI_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{

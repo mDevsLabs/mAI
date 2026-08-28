@@ -65,3 +65,10 @@ body {
   background-size: 200% 200%;
   animation: gradient 8s ease infinite;
 }
+
+/* Utilitaires globaux pour les menus déroulants (Glassmorphism) */
+@layer utilities {
+  .glass-dropdown {
+    @apply bg-white/95 backdrop-blur-2xl border border-slate-200/80 shadow-[0_16px_40px_rgba(0,0,0,0.12)] rounded-3xl p-3;
+  }
+}

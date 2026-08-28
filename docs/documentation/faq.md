@@ -1,25 +1,25 @@
 ---
 title: "FAQ"
-description: "Réponses aux questions les plus fréquentes concernant nos produits."
+description: "RÃ©ponses aux questions les plus frÃ©quentes concernant nos produits."
 category: "Guides"
 order: 14
 ---
 
-# FAQ - Questions Fréquentes ❓💡
+# FAQ - Questions FrÃ©quentes âð¡
 
-Retrouvez les réponses aux questions les plus fréquemment posées au sujet des outils mDevsLabs et mProjects.
-
----
-
-### 1. Les modèles mAI tournent-ils entièrement en local ?
-Oui ! Les modèles de la famille `mAI-1` et `mAI-1-Light` s'exécutent entièrement en local sur votre machine via Ollama, garantissant ainsi le respect absolu de la confidentialité de vos données.
+Retrouvez les rÃ©ponses aux questions les plus frÃ©quemment posÃ©es au sujet des outils mDevsLabs et de la suite mAI.
 
 ---
 
-### 2. Comment obtenir une clé pour l'API mProjects ?
-Vous pouvez générer des clés d'accès directement depuis la console développeur de la page API en créant un compte.
+### 1. Les modÃ¨les mAI tournent-ils en local et sur le cloud ?
+Oui ! Les modÃ¨les de la famille `mAI` peuvent s'exÃ©cuter Ã  la fois en local sur votre machine (via Ollama) ou Ãªtre interrogÃ©s via notre API cloud haute performance.
 
 ---
 
-### 3. Quel est le format de clé utilisé ?
-Toutes nos clés respectent le format strict suivant : `mp-[10 caractères alphanumériques]-[5 chiffres]`.
+### 2. Comment obtenir une clÃ© pour l'API mAI ?
+Il est possible de gÃ©nÃ©rer des clÃ©s d'accÃ¨s directement depuis la console dÃ©veloppeur de la page API en crÃ©ant un compte.
+
+---
+
+### 3. Quels sont les projets de la suite mAI ?
+La suite mAI regroupe **Web** (Alpha), **Pulse** (BÃªta), **CLI** (BÃªta) et **Office** (BÃªta).

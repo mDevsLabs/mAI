@@ -1,7 +1,21 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Shield, ArrowLeft, Lock, Eye, FileText, Globe } from "lucide-react";
+import {
+  Shield,
+  ArrowLeft,
+  Lock,
+  Key,
+  Database,
+  Cookie,
+  Globe,
+  Server,
+  Cpu,
+  EyeOff,
+  UserCheck,
+  HardDrive,
+  CheckCircle2,
+} from "lucide-react";
 import Link from "next/link";
 
 export default function PrivacyPage() {
@@ -27,188 +41,238 @@ export default function PrivacyPage() {
 
         <h1 className="text-4xl sm:text-5xl md:text-7xl font-black italic tracking-tighter leading-[0.9] md:leading-[0.85] uppercase text-slate-900 mb-6">
           Politique de <br className="hidden sm:block" />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-blue-500 to-emerald-500">Confidentialité</span> 🛡️
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-blue-500 to-emerald-500">
+            Confidentialité
+          </span>{" "}
+          🛡️
         </h1>
 
-        <p className="text-slate-500 font-light mb-10 text-base md:text-lg">
-          Dernière mise à jour : 1er juillet 2026. Chez mDevsLabs, nous accordons une importance capitale à la protection de vos données personnelles et au respect de votre vie privée. Cette Politique de Confidentialité décrit comment nous collectons, utilisons, stockons et protégeons vos informations lorsque vous utilisez nos services mAI et mSearch.
+        <p className="text-slate-500 font-light mb-8 text-base md:text-lg">
+          Dernière mise à jour : 25 août 2026. Chez <strong>mDevsLabs</strong>, la protection de vos données personnelles, la conformité réglementaire internationale et la transparence de notre plateforme <strong>mAI</strong> sont au cœur de nos engagements. Cette politique détaille la répartition de l&apos;hébergement de vos données (données structurées et comptes stockés dans l&apos;Union Européenne, stockage d&apos;objets et fichiers aux États-Unis), le traitement des requêtes via l&apos;API mAI avec notre politique prioritaire de <strong>Zero Data Retention (ZDR)</strong> sur l&apos;IA, et la gestion sécurisée de vos clés d&apos;API.
         </p>
 
-        <div className="space-y-8 text-slate-600">
+        {/* Badge Résumé de Souveraineté UE & ZDR */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+          <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-900">
+            <div className="flex items-center gap-2 font-bold text-sm mb-1 text-emerald-800">
+              <Globe className="w-4 h-4 text-emerald-600" />
+              Données dans l&apos;UE 🇪🇺 / Fichiers USA 🇺🇸
+            </div>
+            <p className="text-xs text-emerald-700 leading-relaxed font-light">
+              Bases de données, comptes et clés API hébergés dans l&apos;UE (RGPD). Fichiers et stockage d&apos;objets sécurisés aux USA.
+            </p>
+          </div>
+          <div className="p-4 rounded-2xl bg-purple-500/10 border border-purple-500/20 text-purple-900">
+            <div className="flex items-center gap-2 font-bold text-sm mb-1 text-purple-800">
+              <EyeOff className="w-4 h-4 text-purple-600" />
+              Priorité ZDR (Zero Data Retention) 🔒
+            </div>
+            <p className="text-xs text-purple-700 leading-relaxed font-light">
+              Politique ZDR priorisée : vos prompts et requêtes d&apos;IA ne sont jamais enregistrés ni réutilisés pour l&apos;entraînement.
+            </p>
+          </div>
+          <div className="p-4 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-900">
+            <div className="flex items-center gap-2 font-bold text-sm mb-1 text-blue-800">
+              <Key className="w-4 h-4 text-blue-600" />
+              Clés API Sécurisées 🔑
+            </div>
+            <p className="text-xs text-blue-700 leading-relaxed font-light">
+              Génération cryptographique (mp-...), contrôle granulaire des quotas et révocation immédiate.
+            </p>
+          </div>
+        </div>
+
+        <div className="space-y-10 text-slate-600">
+          {/* Section 1 : Stockage UE & USA */}
           <section className="space-y-4">
-            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2.5">
+              <Globe className="w-5 h-5 text-emerald-600" />
+              1. Hébergement des Données (Union Européenne) &amp; Stockage Fichiers (États-Unis)
+            </h2>
+            <p className="leading-relaxed font-light">
+              Nous appliquons une politique claire et transparente de localisation et de chiffrement des données :
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1 text-xs">
+              <div className="p-4 bg-white/70 rounded-2xl border border-slate-200/90 shadow-sm space-y-1.5">
+                <div className="flex items-center gap-2 font-bold text-slate-900">
+                  <Database className="w-4 h-4 text-emerald-600" />
+                  Données Structurées &amp; Comptes (Union Européenne 🇪🇺)
+                </div>
+                <p className="text-slate-600 leading-relaxed font-light">
+                  Nos bases de données relationnelles PostgreSQL managées (Neon DB), données de comptes, profils, clés d&apos;API et quotas sont hébergées exclusivement dans l&apos;<strong>Union Européenne (région EU - Francfort, Allemagne)</strong> en conformité stricte avec le RGPD.
+                </p>
+              </div>
+
+              <div className="p-4 bg-white/70 rounded-2xl border border-slate-200/90 shadow-sm space-y-1.5">
+                <div className="flex items-center gap-2 font-bold text-slate-900">
+                  <HardDrive className="w-4 h-4 text-blue-600" />
+                  Stockage d&apos;Objets &amp; Fichiers (États-Unis 🇺🇸)
+                </div>
+                <p className="text-slate-600 leading-relaxed font-light">
+                  Les fichiers téléversés, images générées et artefacts volumineux de mAI Cloud Storage sont hébergés sur des serveurs haute performance situés aux <strong>États-Unis (USA)</strong>, avec chiffrement au repos AES-256 et clauses contractuelles types (SCC) garantissant un haut niveau de protection.
+                </p>
+              </div>
+
+              <div className="p-4 bg-white/70 rounded-2xl border border-slate-200/90 shadow-sm space-y-1.5">
+                <div className="flex items-center gap-2 font-bold text-slate-900">
+                  <Server className="w-4 h-4 text-purple-600" />
+                  Passerelles d&apos;API &amp; Routage Sécurisé
+                </div>
+                <p className="text-slate-600 leading-relaxed font-light">
+                  Les passerelles de routage de l&apos;API mAI et les moteurs d&apos;orchestration répartissent les requêtes de manière optimale avec chiffrement de bout en bout.
+                </p>
+              </div>
+
+              <div className="p-4 bg-white/70 rounded-2xl border border-slate-200/90 shadow-sm space-y-1.5">
+                <div className="flex items-center gap-2 font-bold text-slate-900">
+                  <Lock className="w-4 h-4 text-amber-600" />
+                  Chiffrement Intégral (AES-256 &amp; TLS 1.3)
+                </div>
+                <p className="text-slate-600 leading-relaxed font-light">
+                  Toutes les communications transitent via HTTPS / TLS 1.3 et les données au repos sont chiffrées selon les standards industriels et bancaires les plus rigoureux.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* Section 2 : Données Collectées & Clés API mAI */}
+          <section className="space-y-4">
+            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2.5">
               <Lock className="w-5 h-5 text-purple-500" />
-              1. données Collectées
+              2. Données Collectées &amp; Clés API mAI
             </h2>
             <p className="leading-relaxed font-light">
-              <strong>Informations Personnellement Indentifiables</strong> : Lorsque vous interagissez avec nos services, nous pouvons collecter des informations qui vous identifient personnellement, telles que votre nom, votre adresse e-mail (si vous nous contactez), et tout contenu que vous soumettez via nos services (messages de discussion, favoris, paramètres, etc.). Ces informations sont fournies par vous directement lorsque vous utilisez activement nos services.
+              Nous appliquons le principe de minimisation des données : seules les données strictement nécessaires à la fourniture de nos services d'IA sont traitées :
             </p>
-            <p className="leading-relaxed font-light mt-2">
-              <strong>Données d'Utilisation et Métriques</strong> : Nous collectons automatiquement certaines données lorsque vous utilisez nos services, y compris votre adresse IP, le type de navigateur, le système d'exploitation, la durée de votre session, les pages que vous visitez, et le contenu des requêtes que vous effectuez auprès de nos API. Ces données nous aident à améliorer la stabilité des services, à diagnostiquer les problèmes et à comprendre les tendances d'utilisation.
-            </p>
-            <p className="leading-relaxed font-light mt-2">
-              <strong>Données Techniques et de Performance</strong> : Les services mAI et mSearch collectent des métadonnées techniques telles que les paramètres de configuration du système, les versions des applications, et les journaux d'erreurs pour aider au débogage et à l'optimisation des performances.
-            </p>
-          </section>
-
-          <section className="space-y-4">
-            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-              <Eye className="w-5 h-5 text-blue-500" />
-              2. Utilisation des Données
-            </h2>
-            <p className="leading-relaxed font-light">
-              Les données collectées sont utilisées exclusivement pour améliorer la fonctionnalité des services, assurer leur stabilité et répondre à vos demandes de support. Plus précisément, nous utilisons vos informations pour :
-            </p>
-            <ul className="list-disc list-inside space-y-2 ml-4 mt-2 text-sm font-light">
-              <li>Fournir et maintenir les fonctionnalités de base des services</li>
-              <li>Personnaliser votre expérience (historique de discussion, paramètres de prédiction)</li>
-              <li>Optimiser les performances et améliorer la stabilité du système</li>
-              <li>Détecter, prévenir et résoudre les problèmes techniques</li>
-              <li>Améliorer les modèles et fonctionnalités d'IA en utilisant des données d'entraînement anonymisées</li>
-              <li>Répondre à vos questions et fournir un support client</li>
-              <li>Surveiller la conformité aux conditions d'utilisation et aux réglementations applicables</li>
-            </ul>
-          </section>
-
-          <section className="space-y-4">
-            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-              <FileText className="w-5 h-5 text-emerald-500" />
-              3. Partage et Divulgation des Données
-            </h2>
-            <p className="leading-relaxed font-light">
-              Nous ne vendons pas et ne louons pas vos données personnelles à des tiers à des fins publicitaires. Cependant, nous pouvons partager vos informations dans les situations suivantes :
-            </p>
-            <ul className="list-disc list-inside space-y-2 ml-4 mt-2 text-sm font-light">
+            <ul className="list-disc list-inside space-y-2 ml-2 text-sm font-light">
               <li>
-                <strong>Avec votre consentement explicite</strong> : Nous partageons vos données uniquement lorsque vous nous avez donné une autorisation claire et spécifique pour ce faire.
+                <strong>Données d'Identité &amp; Profil</strong> : Adresse e-mail valide, nom d'utilisateur unique, numéro de téléphone (optionnel), mot de passe sécurisé (haché de manière irréversible) et formule d'abonnement (Free, Plus, Pro, Max).
               </li>
               <li>
-                <strong>Prestataires de services</strong> : Nous engageons des entreprises tierces pour nous aider à fournir et à exploiter les services (telles que des services d'hébergement cloud, des outils de surveillance des applications, et des services d'intégration API), mais uniquement dans la mesure nécessaire pour qu'ils effectuent ces services en notre nom, et nous exigeons de ces tiers qu'ils protègent vos données conformément à notre politique.
+                <strong>Clés API &amp; Authentification</strong> : Les clés secrètes d'API générées (format <code className="bg-purple-50 px-1.5 py-0.5 rounded text-purple-700 font-mono text-xs">mai-...</code> ou <code className="bg-purple-50 px-1.5 py-0.5 rounded text-purple-700 font-mono text-xs">mp-...</code>) sont conservées de façon chiffrée et associées exclusivement à votre identifiant utilisateur. Vous pouvez les révoquer à tout moment.
               </li>
               <li>
-                <strong>Conformité légale</strong> : Nous divulguerons vos informations si cela est nécessaire pour nous conformer à une obligation légale, réglementaire, ou à une demande gouvernementale valide, ou pour protéger nos droits, notre propriété ou notre sécurité.
-              </li>
-              <li>
-                <strong>Transferts d'entreprise</strong> : En cas de fusion, d'acquisition ou de vente d'actifs, vos données personnelles peuvent être transférées à la nouvelle entité, sous réserve de maintenir le même niveau de protection que celui décrit dans cette politique.
+                <strong>Journaux d'Exécution API (<code className="bg-slate-100 px-1 py-0.5 rounded font-mono text-xs">mprojects_api_logs</code>)</strong> : À chaque appel sur nos points de terminaison (<code className="bg-slate-100 px-1 py-0.5 rounded font-mono text-xs">/v1/chat/completions</code>, <code className="bg-slate-100 px-1 py-0.5 rounded font-mono text-xs">/v1/models</code>, <code className="bg-slate-100 px-1 py-0.5 rounded font-mono text-xs">/v1/messages</code>), nous enregistrons uniquement les métadonnées techniques suivantes :
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2 ml-4">
+                  <span className="p-2 rounded-xl bg-white/60 border border-slate-200 text-xs">🔹 Préfixe sécurisé de la clé API</span>
+                  <span className="p-2 rounded-xl bg-white/60 border border-slate-200 text-xs">🔹 Point d'accès (endpoint) &amp; méthode HTTP</span>
+                  <span className="p-2 rounded-xl bg-white/60 border border-slate-200 text-xs">🔹 Code de statut HTTP (200, 401, 403, 429)</span>
+                  <span className="p-2 rounded-xl bg-white/60 border border-slate-200 text-xs">🔹 Latence en millisecondes &amp; tokens consommés</span>
+                  <span className="p-2 rounded-xl bg-white/60 border border-slate-200 text-xs">🔹 Horodatage exact de la requête</span>
+                </div>
               </li>
             </ul>
           </section>
 
+          {/* Section 3 : Fonctionnement de l'API & Traitement des Requêtes IA (Politique ZDR) */}
           <section className="space-y-4">
-            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-              <Shield className="w-5 h-5 text-blue-500" />
-              4. Sécurité des Données
+            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2.5">
+              <Cpu className="w-5 h-5 text-blue-500" />
+              3. Traitement des Requêtes d&apos;API &amp; Priorité Absolue au ZDR (Zero Data Retention)
             </h2>
-            <p className="leading-relaxed font-light">
-              mDevsLabs s'engage à protéger la sécurité de vos informations personnelles. Nous mettons en œuvre des mesures de sécurité techniques et organisationnelles appropriées pour protéger vos données contre l'accès, la modification, la divulgation ou la destruction non autorisés, y compris :
-            </p>
-            <ul className="list-disc list-inside space-y-2 ml-4 mt-2 text-sm font-light">
-              <li>Le chiffrement des données en transit via TLS/SSL</li>
-              <li>Le stockage sécurisé et le contrôle d'accès aux données</li>
-              <li>Des analyses régulières de la sécurité des applications</li>
-              <li>Des procédures de réponse aux incidents et de gestion des violations</li>
-              <li>Des formations régulières en matière de sécurité pour le personnel</li>
-            </ul>
-            <p className="leading-relaxed font-light mt-2">
-              Cependant, aucune méthode de transmission sur Internet ou de stockage électronique n'est 100 % sûre. Bien que nous nous efforcions de protéger vos informations personnelles, nous ne pouvons garantir leur sécurité absolue.
+            <div className="p-4 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-slate-800 text-sm leading-relaxed space-y-2">
+              <p className="font-bold flex items-center gap-2 text-blue-900">
+                <CheckCircle2 className="w-4 h-4 text-blue-600" />
+                Politique Prioritaire de Zero Data Retention (ZDR) &amp; Non-Entraînement :
+              </p>
+              <p className="font-light text-slate-700">
+                mDevsLabs priorise et applique une politique stricte de <strong>Zero Data Retention (ZDR)</strong> sur l&apos;ensemble des inférences d&apos;intelligence artificielle. Les invites (prompts), documents joints, messages, données de contexte et réponses générées transitant par l&apos;API mAI ou l&apos;interface web <strong>ne sont JAMAIS stockés de manière persistante, ni réutilisés pour entraîner, réentraîner ou affiner des modèles d&apos;IA</strong>.
+              </p>
+            </div>
+            <p className="leading-relaxed font-light text-sm">
+              <strong>Traitement Éphémère en Mémoire Volatile (Stateless In-Memory)</strong> : Lorsque vous soumettez une requête à l&apos;API, les données sont traitées uniquement en mémoire vive volatile (RAM) par le moteur d&apos;inférence afin de générer la réponse demandée. Dès la transmission des tokens ou de l&apos;image à votre application, le contenu textuel et binaire est instantanément purgé de la mémoire active des serveurs.
             </p>
           </section>
 
+          {/* Section 4 : Forfaits & Quotas d'Usage API */}
           <section className="space-y-4">
-            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-              <ArrowLeft className="w-5 h-5 text-orange-500" />
-              5. Vos Droits (Conformément au RGPD)
+            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2.5">
+              <Key className="w-5 h-5 text-purple-500" />
+              4. Forfaits, Quotas &amp; Gestion des Débits API
             </h2>
             <p className="leading-relaxed font-light">
-              Conformément au Règlement général sur la protection des données (RGPD), vous disposez des droits suivants concernant vos données personnelles :
+              L'utilisation des ressources d'intelligence artificielle et des serveurs est équilibrée par un système de quotas mensuels selon votre formule :
             </p>
-            <ul className="list-disc list-inside space-y-2 ml-4 mt-2 text-sm font-light">
-              <li>
-                <strong>Droit d'accès</strong> : Vous pouvez nous demander une copie de vos données personnelles.
-              </li>
-              <li>
-                <strong>Droit de rectification</strong> : Vous pouvez demander la correction de toute information personnelle inexacte ou incomplète.
-              </li>
-              <li>
-                <strong>Droit à la portabilité</strong> : Vous pouvez demander une version structurée et lisible par machine de vos données personnelles pour les transférer à un autre contrôleur.
-              </li>
-              <li>
-                <strong>Droit de suppression</strong> : Vous pouvez demander que vos données personnelles soient effacées, sous réserve des exceptions applicables.
-              </li>
-              <li>
-                <strong>Droit de retirer le consentement</strong> : Si nous nous appuyons sur votre consentement pour traiter vos données, vous pouvez retirer votre consentement à tout moment.
-              </li>
-              <li>
-                <strong>Droit d'opposition</strong> : Vous pouvez vous opposer au traitement de vos données personnelles pour certaines finalités.
-              </li>
-              <li>
-                <strong>Droit de déposer une réclamation</strong> : Si vous estimez que notre traitement de vos données personnelles viole le RGPD, vous avez le droit de déposer une réclamation auprès d'une autorité de contrôle.
-              </li>
-            </ul>
-            <p className="leading-relaxed font-light mt-2">
-              Pour exercer ces droits, veuillez nous contacter via notre serveur Discord (mDevsLabs) ou en utilisant les coordonnées fournies ci-dessous. Nous répondrons à votre demande dans un délai d'un mois, sauf si votre demande est complexe ou nombreuse, auquel cas nous vous informerons et étendrons le délai.
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 text-xs">
+              <div className="p-3.5 bg-white/70 rounded-2xl border border-slate-200">
+                <p className="font-bold text-slate-900">Forfait Free (Gratuit)</p>
+                <p className="text-slate-600 mt-1">1 000 requêtes / mois. Accès exclusif aux modèles étiquetés <code className="text-purple-600 font-mono">:free</code>.</p>
+              </div>
+              <div className="p-3.5 bg-white/70 rounded-2xl border border-slate-200">
+                <p className="font-bold text-purple-700">Forfait Plus</p>
+                <p className="text-slate-600 mt-1">5 000 requêtes / mois. Accès à tous les modèles Cloud &amp; Locaux mAI.</p>
+              </div>
+              <div className="p-3.5 bg-white/70 rounded-2xl border border-slate-200">
+                <p className="font-bold text-blue-700">Forfait Pro</p>
+                <p className="text-slate-600 mt-1">25 000 requêtes / mois. Priorité de calcul et limites de débit accrues.</p>
+              </div>
+              <div className="p-3.5 bg-white/70 rounded-2xl border border-slate-200">
+                <p className="font-bold text-emerald-700">Forfait Max</p>
+                <p className="text-slate-600 mt-1">100 000 requêtes / mois. Quotas ultra-larges et support technique dédié.</p>
+              </div>
+            </div>
+            <p className="leading-relaxed font-light text-xs text-slate-500 mt-1">
+              Chaque requête valide vers l'API incrémente votre quota d'usage de +1. La réinitialisation des compteurs s'effectue automatiquement le premier jour de chaque mois calendaire à 00:00 UTC.
             </p>
           </section>
 
+          {/* Section 5 : Cookies et Stockage Navigateur */}
           <section className="space-y-4">
-            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-              <FileText className="w-5 h-5 text-purple-500" />
-              6. Conservation des Données
+            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2.5">
+              <Cookie className="w-5 h-5 text-amber-500" />
+              5. Cookies et Stockage Local
             </h2>
             <p className="leading-relaxed font-light">
-              Nous ne conserverons vos données personnelles que pendant la durée nécessaire à la finalité pour laquelle elles ont été collectées, sauf si la loi nous oblige à les conserver plus longtemps. Plus précisément :
+              Nous n'utilisons aucun traceur publicitaire tiers. Nous exploitons uniquement des cookies strictement nécessaires au fonctionnement et à la sécurité de l'application :
             </p>
-            <ul className="list-disc list-inside space-y-2 ml-4 mt-2 text-sm font-light">
+            <ul className="list-disc list-inside space-y-2 ml-4 text-sm font-light">
               <li>
-                <strong>Historique de discussion et messages</strong> : Conservés jusqu'à ce que vous supprimiez votre compte et pendant une période de 30 jours après la suppression pour permettre la récupération en cas d'erreur.
+                <strong className="text-slate-800">mai_token &amp; mai_user</strong> : Cookies de session sécurisés avec attributs <code className="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-xs">SameSite=Lax</code> et <code className="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-xs">Secure</code> permettant de préserver votre authentification.
               </li>
               <li>
-                <strong>Données d'utilisation et analytiques</strong> : Conservées sous forme anonymisée pour une période allant jusqu'à 24 mois pour l'analyse des tendances et l'amélioration des services.
-              </li>
-              <li>
-                <strong>Données techniques et de performance</strong> : Généralement conservées pendant une durée ne dépassant pas 6 mois après votre dernière interaction avec les services.
+                <strong className="text-slate-800">mai_cookie_consent</strong> : Enregistre vos préférences de consentement conformément à la directive ePrivacy.
               </li>
             </ul>
           </section>
 
+          {/* Section 6 : Conservation et Sécurité */}
           <section className="space-y-4">
-            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-              <Globe className="w-5 h-5 text-emerald-500" />
-              7. International Transfert de Données
+            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2.5">
+              <Database className="w-5 h-5 text-emerald-500" />
+              6. Durée de Conservation &amp; Mesures de Sécurité
             </h2>
-            <p className="leading-relaxed font-light">
-              Les services sont principalement hébergés en Europe. Cependant, vos données peuvent être transférées vers, stockées et traitées dans des pays autres que le vôtre. Ces pays peuvent avoir des réglementations différentes en matière de protection des données et de protection de la vie privée. En utilisant nos services, vous consentez au transfert de vos données vers et depuis ces pays, sous réserve de maintenir un niveau approprié de protection comme décrit dans cette politique.
+            <p className="leading-relaxed font-light text-sm">
+              Vos données de compte sont conservées aussi longtemps que votre compte mAI demeure actif. En cas d'inactivité prolongée ou sur demande expresse de résiliation, vos données personnelles et clés API associées sont définitivement purgées de nos serveurs sous 30 jours. Les journaux techniques d'API sont automatiquement archivés puis détruits au terme d'une période de rotation glissante de 30 jours.
             </p>
           </section>
 
+          {/* Section 7 : Vos Droits RGPD */}
           <section className="space-y-4">
-            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-              <Eye className="w-5 h-5 text-blue-500" />
-              8. Cookies et Technologies Similaires
+            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2.5">
+              <UserCheck className="w-5 h-5 text-purple-500" />
+              7. Vos Droits sous le RGPD
             </h2>
-            <p className="leading-relaxed font-light">
-              Nos services peuvent utiliser des cookies, des balises web et d'autres technologies similaires pour améliorer l'expérience de navigation et collecter des données sur l'utilisation. Vous pouvez gérer vos préférences en matière de cookies via notre bannière de cookies et via les paramètres de votre navigateur.
+            <p className="leading-relaxed font-light text-sm">
+              Conformément à la réglementation européenne (articles 15 à 22 du RGPD), vous disposez des droits suivants concernant vos données :
             </p>
-          </section>
-
-          <section className="space-y-4">
-            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-              <FileText className="w-5 h-5 text-purple-500" />
-              9. Modifications de Cette Politique de Confidentialité
-            </h2>
-            <p className="leading-relaxed font-light">
-              mDevsLabs se réserve le droit de mettre à jour cette Politique de Confidentialité périodiquement pour refléter les changements dans nos pratiques de protection de la vie privée, les évolutions technologiques, les mises à jour réglementaires, ou pour d'autres raisons commerciales légitimes. En cas de modifications significatives, nous vous en informerons via une notification dans les services ou par e-mail (si vous nous en avez fourni un), et mettrons à jour la date de "Dernière mise à jour". Votre utilisation continue des services après une telle modification constitue votre acceptation de la Politique mise à jour.
-            </p>
-          </section>
-
-          <section className="space-y-4">
-            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-              <Lock className="w-5 h-5 text-purple-500" />
-              10. Coordonnées pour les Demandes de Confidentialité
-            </h2>
-            <p className="leading-relaxed font-light">
-              Si vous avez des questions, des préoccupations ou des demandes concernant cette Politique de Confidentialité, nos pratiques de protection de la vie privée, ou si vous souhaitez exercer l'un de vos droits RGPD, veuillez nous contacter via notre serveur Discord officiel (mDevsLabs) ou en utilisant les coordonnées fournies sur notre site web. Notre responsable de la protection de la vie privée répondra à toutes les demandes conformément à cette politique et aux réglementations applicables.
-            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+              <div className="p-3 bg-white/60 rounded-xl border border-slate-200 font-light">
+                <strong className="text-slate-800 block mb-1">Droit d'accès &amp; Portabilité</strong>
+                Consulter et exporter l'ensemble de vos données de profil et d'usage API à tout moment.
+              </div>
+              <div className="p-3 bg-white/60 rounded-xl border border-slate-200 font-light">
+                <strong className="text-slate-800 block mb-1">Droit de Rectification &amp; Effacement</strong>
+                Modifier vos informations de compte ou demander la suppression intégrale ("droit à l'oubli").
+              </div>
+              <div className="p-3 bg-white/60 rounded-xl border border-slate-200 font-light">
+                <strong className="text-slate-800 block mb-1">Révocation des Clés d'API</strong>
+                Désactiver ou régénérer instantanément vos identifiants d'API depuis votre console de gestion.
+              </div>
+              <div className="p-3 bg-white/60 rounded-xl border border-slate-200 font-light">
+                <strong className="text-slate-800 block mb-1">Contact &amp; Réclamations</strong>
+                Pour toute demande relative à vos données, contactez notre équipe via votre espace mAI ou déposez une réclamation auprès de l'autorité compétente (CNIL).
+              </div>
+            </div>
           </section>
         </div>
       </motion.div>

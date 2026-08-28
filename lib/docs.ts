@@ -48,17 +48,16 @@ export function getAllDocs(): DocMetadata[] {
       description: data.description || '',
       category: data.category || 'Général',
       order: typeof data.order === 'number' ? data.order : 999,
-      content,
-    });
+      content});
   }
 
   // Ordre canonique des catégories
   const categoryOrderMap: Record<string, number> = {
-    'Applications': 1,
-    "Modèles d'IA": 2,
-    'Guides': 3,
-    'Architecture': 4,
-    'API': 5,
+    'API': 1,
+    'Applications': 2,
+    "Modèles d'IA": 3,
+    'Guides': 4,
+    'Architecture': 5,
   };
 
   docs.sort((a, b) => {
@@ -106,8 +105,7 @@ export function getDocBySlug(slug: string): DocMetadata | null {
     description: data.description || '',
     category: data.category || 'Général',
     order: typeof data.order === 'number' ? data.order : 999,
-    content,
-  };
+    content};
 }
 
 /**
@@ -144,3 +142,39 @@ export function searchDocs(query: string): DocMetadata[] {
     );
   });
 }
+
+export function walkDocs(dir: string, baseDir: string): DocMetadata[] {
+  let docs: DocMetadata[] = [];
+  if (!fs.existsSync(dir)) return docs;
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  for (const entry of entries) {
+    if (entry.isDirectory()) {
+      docs = docs.concat(walkDocs(path.join(dir, entry.name), baseDir));
+    } else if (entry.isFile() && entry.name.endsWith('.md')) {
+      const fullPath = path.join(dir, entry.name);
+      const fileContents = fs.readFileSync(fullPath, 'utf8');
+      const { data, content } = matter(fileContents);
+
+      const relativePath = path.relative(baseDir, fullPath);
+      let category = data.category;
+      if (!category) {
+        const dirname = path.dirname(relativePath);
+        if (dirname === '.') {
+          category = 'Général';
+        } else {
+          category = dirname.replace(/\\/g, '/').split('/').map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' - ');
+        }
+      }
+
+      docs.push({
+        slug: relativePath.replace(/\\/g, '/').replace(/\.md$/, ''),
+        title: data.title || entry.name.replace(/\.md$/, ''),
+        description: data.description || '',
+        category,
+        order: typeof data.order === 'number' ? data.order : 999,
+        content});
+    }
+  }
+  return docs;
+}
+

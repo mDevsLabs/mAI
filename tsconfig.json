@@ -36,6 +36,21 @@
     ".next/dev/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "main.ts",
+    "main-projects.ts",
+    "api-middleware.ts",
+    "auth.ts",
+    "audio.ts",
+    "config.ts",
+    "devices.ts",
+    "email.ts",
+    "models.ts",
+    "projects.ts",
+    "storage.ts",
+    "maiModels.ts",
+    "aiModels.ts",
+    "images.ts",
+    "web.ts"
   ]
 }

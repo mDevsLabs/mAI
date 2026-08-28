@@ -5,13 +5,13 @@ category: "Architecture"
 order: 5
 ---
 
-# Benchmarks de Performance & Latence ⏱️🏎️
+# Benchmarks de Performance & Latence ⏱
 
 Cette page compile les résultats de tests de performance effectués sur les différentes déclinaisons des modèles **mAI** dans divers environnements matériels.
 
 ---
 
-## ⏱️ Débit d'Inférence (Tokens par Seconde - tk/s)
+## ⏱ Débit d'Inférence (Tokens par Seconde - tk/s)
 
 - **mAI-1-Light (2B)** - Apple M2 Mac Studio, Q4_K_M, TTFT 45 ms, Débit 112 tk/s
 - **mAI-1-Light (2B)** - NVIDIA RTX 4060 Ti, Q8_0, TTFT 28 ms, Débit 145 tk/s
@@ -20,7 +20,7 @@ Cette page compile les résultats de tests de performance effectués sur les dif
 
 ---
 
-## 💡 Métriques Clés Expliquées
+## Métriques Clés Expliquées
 
 - **TTFT (Time-To-First-Token)** : Temps écoulé entre la réception de la requête HTTP et l'émission du tout premier token généré.
 - **Débit de Génération (tk/s)** : Nombre de tokens générés par seconde lors de la phase de décodage.
@@ -28,7 +28,7 @@ Cette page compile les résultats de tests de performance effectués sur les dif
 
 ---
 
-## 📊 Graphiques Comparatifs des Benchmarks
+## Graphiques Comparatifs des Benchmarks
 
 Retrouvez ci-dessous les scores d'évaluation des modèles mAI-1 et mAI-1-Light face aux modèles de référence du marché sur plusieurs tâches standards de raisonnement, de code et de multilinguisme :
 

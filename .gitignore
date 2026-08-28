@@ -1,9 +1,29 @@
-.vercel/*
 .vercel
-node_modules*
+node_modules
 .next
-.next/*
 .agents
-.agents/*
 .env*
 !.env.example
+# Val Town backend — versionné localement, déployé via Val Town (historique hors Git)
+main.ts
+main-projects.ts
+aiModels.ts
+maiModels.ts
+.neon
+
+# Build / caches
+.turbo
+.temp_newsletter_preview.html
+tsconfig.tsbuildinfo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# AI Agent Docs
+docs/AI_AGENTS_API.md
+docs/llms-api.md
+*.agent-doc.md
+
+# Admin / DB Scripts (gardé en Git, sauf génération sensible)
+# scripts/create-subscription-code.ts — versionner, secret via env

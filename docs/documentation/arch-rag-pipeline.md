@@ -5,16 +5,16 @@ category: "Architecture"
 order: 2
 ---
 
-# Pipeline RAG & Retrieval-Augmented Generation 📑🔍
+# Pipeline RAG & Retrieval-Augmented Generation 
 
 Le pipeline RAG (Retrieval-Augmented Generation) de **mDevsLabs** permet d'augmenter les connaissances des modèles mAI avec des données d'entreprise fraîches sans ré-entraînement lourd.
 
 ---
 
-## 🔄 Étapes du Pipeline
+## Étapes du Pipeline
 
 ```
-1. Ingestion ──> 2. Chunking ──> 3. Embedding ──> 4. Hybrid Search ──> 5. Reranking ──> 6. Generation
+1. Ingestion > 2. Chunking > 3. Embedding > 4. Hybrid Search > 5. Reranking > 6. Generation
 ```
 
 ### 1. Chunking Intelligent (Semantic Chunking)
@@ -31,7 +31,7 @@ Les 50 premiers résultats trouvés par mSearch sont ré-évalués par un modèl
 
 ---
 
-## 💻 Structure du Contexte Injecté dans le Prompt
+## Structure du Contexte Injecté dans le Prompt
 
 ```markdown
 <context_documents>

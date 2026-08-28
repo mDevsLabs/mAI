@@ -1,32 +1,32 @@
-Nous avons le plaisir de vous annoncer la sortie officielle de **mAI pour Android** ! L'assistant IA local le plus performant franchit une nouvelle frontière pour s'installer directement dans votre poche.
+# Disponibilité de mAI sur Android
+
+Nous annonçons la publication officielle de **mAI pour Android**. Cette déclinaison mobile étend l'usage de notre assistant d'intelligence artificielle locale aux smartphones et tablettes compatibles.
 
 ---
 
-## 📱 Toute la puissance de mAI sur votre smartphone
+## Fonctionnalités principales
 
-Avec cette première version mobile, emportez votre assistant partout avec vous sans compromis sur la confidentialité de vos données.
+Cette version mobile permet d'accéder à votre assistant tout en préservant l'intégrité et la confidentialité de vos données.
 
-### Caractéristiques principales :
-- **Intégration mobile complète** : Interface fluide, réactive et conçue pour les écrans tactiles.
-- **Respect absolu de la vie privée** : Tout comme nos versions Desktop et CLI, vos conversations restent locales et sécurisées.
-- **Connexion simplifiée** : Connectez l'application en un clic à votre instance locale mAI (ou Ollama) tournant sur votre ordinateur au sein du même réseau Wi-Fi.
-- **Réponses instantanées** : Bénéficiez des performances de notre modèle optimisé lors de vos déplacements ou sur votre canapé.
-
----
-
-## 📥 Comment l'installer ?
-
-L'application est distribuée sous forme d'archive contenant l'APK d'installation.
-
-1. 📥 **Télécharger l'application mobile** : [mAI-Android.zip](https://upload.fs.fr/i4Bw0kQXk7.zip)
-2. 📖 **Consulter le guide complet d'installation** : [Documentation Android](/docs?doc=guide-application-android)
-
-Pour l'installer, il vous suffira de décompresser l'archive et de lancer le fichier APK sur votre appareil Android après avoir autorisé les sources inconnues dans vos paramètres système.
+### Caractéristiques :
+- **Interface mobile dédiée** : Expérience fluide, optimisée pour la navigation tactile.
+- **Confidentialité des données** : À l'instar des versions Desktop et CLI, vos données et sessions demeurent locales et sécurisées.
+- **Connectivité locale** : Connexion directe à votre instance locale mAI (ou serveur Ollama) hébergée sur votre réseau local.
+- **Performances et réactivité** : Inférence optimisée pour les requêtes quotidiennes.
 
 ---
 
-## 🔮 Prochaines étapes
+## Procédure d'installation
 
-Nous travaillons déjà sur des fonctionnalités exclusives pour la version mobile, notamment la saisie vocale hors ligne et le support de modèles de vision encore plus légers pour les processeurs de smartphones de dernière génération.
+L'application est distribuée sous la forme d'un paquet d'installation APK au sein d'une archive compressée.
 
-N'hésitez pas à tester l'application et à nous partager vos retours d'expérience !
+1. **Télécharger l'application mobile** : [mAI-Android.zip](https://upload.fs.fr/i4Bw0kQXk7.zip)
+2. **Consulter le guide complet d'installation** : [Documentation Android](/docs?doc=guide-application-android)
+
+Pour procéder à l'installation, décompressez l'archive puis ouvrez le fichier APK sur votre appareil Android, après avoir activé l'autorisation d'installation depuis des sources externes dans vos paramètres système.
+
+---
+
+## Évolutions à venir
+
+Les travaux d'ingénierie portent actuellement sur l'intégration de la saisie vocale hors ligne ainsi que sur la prise en charge de modèles de vision compacts adaptés aux processeurs mobiles de dernière génération.

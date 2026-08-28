@@ -1,22 +1,53 @@
 ---
-title: "Licence"
-description: "Conditions d'utilisation légale et licences de distribution de nos outils."
+title: "Licences & Conformité Légale"
+description: "Conditions d'utilisation, licences de distribution open-weights et architecture de confidentialité des données."
 category: "Guides"
-order: 15
+order: 8
 ---
 
-# Licences & Conditions Légales ⚖️📄
+# Licences, Propriété Intellectuelle & Conformité Légale 
 
-La suite technologique **mDevsLabs** s'engage sur l'ouverture et le respect de la vie privée.
-
----
-
-## 📄 Licence Open-Weights
-
-Nos modèles (comme `mAI-1` et `mAI-1-Light`) sont distribués sous licence de poids ouverts (Open-Weights), vous autorisant à les déployer en local, à les modifier ou à les intégrer à vos propres workflows commerciaux sans frais de licence.
+La suite technologique **mDevsLabs** s'appuie sur des principes stricts de souveraineté numérique, de transparence contractuelle et de respect rigoureux de la vie privée de ses utilisateurs et développeurs.
 
 ---
 
-## 🔒 Confidentialité par défaut
+## 1. Licences des Modèles & Logiciels
 
-Nous ne collectons aucune de vos données de discussion ou requêtes de modèles locaux. Vos données restent sur vos serveurs et ordinateurs personnels.
+### Modèles Fondamentaux Open-Weights
+Nos modèles d'intelligence artificielle souverains (séries `mAI-1.5`, `mAI-1.2`, `mAI-1.0` en déclinaisons *Light*, *Apex* et *Opal*) sont distribués sous licence **Open-Weights** permissive (MIT / Apache 2.0). Cette licence vous accorde le droit :
+- D'exécuter et déployer les modèles localement sur vos propres infrastructures physiques ou virtuelles.
+- D'intégrer les modèles dans des applications commerciales ou internes sans redevance (*royalty-free*).
+- De réaliser des opérations de fine-tuning et d'adaptation de poids sans obligation de divulgation de vos jeux de données propriétaires.
+
+### Outils & Applications de la Suite mAI
+Les applications client (mAI Web, mAI Pulse, mAI CLI, mAI Coder) et leurs SDK associés sont protégés par le droit de la propriété intellectuelle et distribués selon les conditions générales de service de **mDevsLabs**.
+
+---
+
+## 2. Hébergement & Répartition Géographique des Données
+
+mDevsLabs applique une gouvernance claire et auditable concernant la localisation et le stockage des informations :
+
+| Type de Données | Localisation Principale | Chiffrement & Conformité |
+| :--- | :--- | :--- |
+| **Bases de Données & Comptes** | **Union Européenne (UE)**  *(Francfort, Allemagne)* | Chiffrement AES-256 au repos, conformité RGPD intégrale |
+| **Clés d'API & Métadonnées d'Usage** | **Union Européenne (UE)**  *(Francfort, Allemagne)* | Hachage SHA-256 irréversible, partitionnement isolé |
+| **Fichiers & Cloud Storage (Objets)** | **États-Unis (USA)**  *(Infrastructures Cloud S3/Objets)* | Chiffrement AES-256, TLS 1.3, Clauses Contractuelles Types |
+
+---
+
+## 3. Priorité Absolue au ZDR (Zero Data Retention) sur l'IA
+
+La politique **Zero Data Retention (ZDR)** constitue le pilier fondamental de notre engagement en matière d'intelligence artificielle :
+
+1. **Aucun Réentraînement sur vos Données** : Les requêtes (prompts), pièces jointes, codes sources et réponses générées ne sont **jamais** utilisés pour entraîner, évaluer ou affiner des modèles d'IA, qu'ils soient internes à mDevsLabs ou fournis par des partenaires tiers.
+2. **Inférence Stateless en Mémoire Volatile** : Le traitement des requêtes s'effectue exclusivement en mémoire vive (RAM). Dès la restitution du flux de données au client, les vecteurs et mémoires de contexte sont immédiatement et définitivement purgés.
+3. **Contrôle et Droit à l'Oubli** : Vous conservez la pleine propriété de l'ensemble de vos contenus générés et disposez d'un droit permanent de suppression de compte et d'historique.
+
+---
+
+## 4. Conditions d'Accès à l'API & Responsabilité
+
+- **Secret des Clés d'API** : Les clés API (`mp-...`) sont personnelles et strictement confidentielles. L'utilisateur est seul responsable des appels effectués avec ses identifiants.
+- **Respect de l'Usage Raisonnable (AUP)** : Tout usage malveillant (attaques par déni de service, tentatives de jailbreak agressif, génération de contenus illégaux) entraîne la révocation immédiate de l'accès API.
+- **Garanties de Service** : Les quotas et débits sont alloués selon les forfaits souscrits (Free, Plus, Pro, Max).

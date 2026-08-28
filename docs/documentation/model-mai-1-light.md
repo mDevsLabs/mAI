@@ -5,13 +5,13 @@ category: "Modèles d'IA"
 order: 2
 ---
 
-# mAI-1-Light - Modèle Ultra-Léger (2B) ⚡
+# mAI-1-Light - Modèle Ultra-Léger (2B) 
 
 **mAI-1-Light** est la version condensée et ultra-rapide du modèle mAI-1. Avec seulement 2 milliards de paramètres, il est conçu spécifiquement pour s'exécuter avec une latence quasi-nulle sur des machines grand public, des téléphones portables ou des puces embarquées (Edge Computing).
 
 ---
 
-## 🚀 Spécifications Techniques
+## Spécifications Techniques
 
 - **Taille des Paramètres** : 2 Milliards (2B)
 - **Vitesse d'Inférence** : > 80 tokens/sec sur M1/M2/M3 Mac & RTX 3050.
@@ -20,7 +20,7 @@ order: 2
 
 ---
 
-## 💡 Cas d'Usage Recommandés
+## Cas d'Usage Recommandés
 
 - **Triage Rapide de Messages** : Classification de courriels et détection d'intention.
 - **Autocomplétion Inline** : Assistance d'écriture en temps réel dans des éditeurs de texte ou IDE.
@@ -29,7 +29,7 @@ order: 2
 
 ---
 
-## 🛠️ Commande Ollama
+## Commande Ollama
 
 ```bash
 ollama run mdevslabs/mai-1-light:latest
@@ -37,7 +37,7 @@ ollama run mdevslabs/mai-1-light:latest
 
 ---
 
-## 📊 Benchmarks de Performance
+## Benchmarks de Performance
 
 Voici les résultats de mAI-1-Light par rapport aux modèles ultra-légers de référence sur plusieurs tâches d'évaluation courantes :
 

@@ -1,0 +1,17 @@
+android-mobile-app | Disponibilité de mAI sur Android | Length:32
+api-v2 | Lancement officiel de mAI API v2 | Length:32
+avenir | Historique et vision de développement de mAI | Length:44
+bienvenue | Bienvenue sur le portail mAI | Length:28
+end-of-mai | Évolution du cycle de vie du projet mAI | Length:39
+extensions-mai | Lancement des extensions mAI pour VS Code et navigateurs web | Length:60
+introducing-mai | Présentation de mAI Web | Length:23
+introducing-mai-1.5 | Présentation de la série mAI-1.5 : Vision, Raisonnement et Outils en Local | Length:74
+introducing-mai-cli | Présentation de mAI CLI : L'assistant de développement en terminal | Length:66
+introducing-mai1-mai1light | Présentation des modèles mAI-1 et mAI-1 Light | Length:45
+introducing-mai1.2s | Présentation de la série de modèles mAI-1.2 | Length:43
+introducing-msearch | Présentation de mSearch : Navigateur sécurisé et épuré | Length:54
+nouveau-logo | Nouvelle identité visuelle : Logo officiel mAI | Length:46
+quotas-compte-mai | Disponibilité du suivi des quotas et du compte mAI | Length:50
+recherche-web-you-com | Optimisation de la recherche web sur mAI : intégration du moteur You.com | Length:72
+renommage-mai | Évolution stratégique : Transition de mProjects vers mAI | Length:56
+snob-android-apk | Disponibilité du projet Snob sur Android | Length:40

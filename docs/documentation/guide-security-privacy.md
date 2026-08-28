@@ -1,177 +1,96 @@
 ---
-title: "Confidentialité"
-description: "Protection des données locales, anonymisation et isolation du réseau."
+title: "Sécurité, Confidentialité & RGPD"
+description: "Architecture de sécurité, conformité RGPD, répartition du stockage UE/USA et politique prioritaire Zero Data Retention (ZDR)."
 category: "Guides"
 order: 7
 ---
 
-# Sécurité, Confidentialité & Conformité RGPD 🔐🛡️
+# Sécurité, Confidentialité & Conformité RGPD 
 
-La sécurité et le respect de la vie privée des utilisateurs constituent la première priorité de l'architecture **mDevsLabs**.
-
----
-
-## 🔒 Principes de Confidentialité mDevsLabs
-
-1. **Isolation Réseau Complète (Air-Gapped Ready)** : Les modèles mAI s'exécutent intégralement hors-ligne sans dépendance à des requêtes API distantes.
-2. **Aucun Entraînement sur vos Données** : Vos prompts, documents joints et interactions ne sont jamais enregistrés ni utilisés pour de futurs ré-entraînements.
-3. **Anonymisation Dynamique des PII (Personally Identifiable Information)** : Masquage automatique des adresses emails, numéros de sécurité sociale et clés d'API avant l'envoi au moteur de calcul.
+La sécurité des infrastructures et la confidentialité absolue des données de nos utilisateurs et développeurs sont les priorités fondamentales de l'architecture logicielle **mDevsLabs**.
 
 ---
 
-## 🛡️ Prévention des Attaque Prompt Injection
+## 1. Piliers Fondamentaux de la Sécurité mAI
 
-Le module `mAI-Guard` inspecte les entrées pour neutraliser les tentatives de contournement (*jailbreak*) et les injections indirectes issues de documents scannés ou de pages web externes.
+1. **Priorité Absolue au Zero Data Retention (ZDR)** : Vos invites (prompts), données métier, code source et contenus générés ne sont jamais persistés ni exploités pour réentraîner des modèles d'IA.
+2. **Isolation & Inférence Stateless** : Traitement éphémère en mémoire vive (RAM) volatile, avec purge automatique dès la fin de la diffusion de tokens (*token streaming*).
+3. **Chiffrement de Bout en Bout** : Communications protégées par TLS 1.3 / HTTPS et données au repos sécurisées par chiffrement de niveau bancaire (AES-256).
+4. **Anonymisation Dynamique des PII** : Masquage en temps réel des données personnelles sensibles (adresses e-mail, identifiants, tokens, coordonnées financières).
 
-```bash
-# Activation de l'audit de sécurité local
-export MDEVS_SECURITY_GUARD=strict
+---
+
+## 2. Répartition du Stockage & Souveraineté des Données
+
+mDevsLabs applique une stricte politique de gouvernance des données :
+
+```text
+
+               RÉPARTITION DU STOCKAGE DES DONNÉES mAI                  
+
+   DONNÉES STRUCTURÉES (UE )          FICHIERS & OBJETS (USA )     
+
+ • Comptes utilisateurs & profils   • Stockage mAI Cloud Storage       
+ • Bases relationnelles PostgreSQL  • Images générées & exports médias 
+ • Clés d'API & quotas de forfaits  • Chiffrement AES-256 au repos     
+ • Journaux techniques sécurisés    • Clauses Contractuelles Types     
+ • Hébergement Francfort (RGPD)     • Transport sécurisé TLS 1.3       
+
 ```
 
 ---
 
-## 🔐 Authentification & Gestion des Clés API
+## 3. Protection & Prévention des Attaques
 
-### Format de Clé Sécurisée
+### Module mAI-Guard
+Le sous-système de sécurité **mAI-Guard** analyse les flux entrants et sortants pour neutraliser :
+- Les tentatives d'injection de directives (*Prompt Injection*).
+- Les contournements de contraintes de sécurité (*Jailbreak*).
+- L'exfiltration non sollicitée d'instructions système (*System Prompt Extraction*).
 
-Toutes les clés API respectent le format : `mp-[10 caractères alphanumériques]-[5 chiffres]`
-
-Exemple : `mp-k9x2m7p1qa-84920`
-
-### Sécurité des Clés
-
-- **Masquage automatique** : Les clés sont masquées après une première affichage
-- **Limites de rate** : 60 RPM (requêtes/minute) pour les comptes gratuits
-- **IP Restriction** : Possible de restreindre l'utilisation à une adresse IP
+```bash
+# Configuration de la politique de sécurité mAI-Guard
+export MDEVS_SECURITY_GUARD="strict"
+export MDEVS_ZDR_ENFORCED="true"
+```
 
 ---
 
-## 🧹 Gestion des Données Locaux
+## 4. Gestion Cryptographique des Clés API
 
-### Nettoyage Automatique
+### Format Standardisé
+Toutes les clés d'API délivrées par mAI adoptent le format cryptographique suivant :
+`mp-[48 caractères hexadécimaux]` *(ex: `mp-a1b2c3d4e5f678901234567890abcdef1234567890abcdef`)*.
+
+### Règles de Gestion des Clés
+- **Stockage Cryptographique** : Les clés sont stockées sous forme de hachage SHA-256 en base de données.
+- **Révocation Instantanée** : Tout identifiant compromis peut être révoqué et régénéré en un clic depuis la console `/account/keys`.
+- **Limitation de Débit & Quotas** : Protection proactive contre les abus par limitation granulaire de requêtes et surveillance des latences.
+
+---
+
+## 5. Assainissement & Nettoyage des Données (PII)
 
 ```python
 from mdevslabs.security import DataCleaner
 
 cleaner = DataCleaner(
     pii_patterns=[
-        r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b',  # Email
-        r'\b\d{15,16}\b',  # Carte de crédit
-        r'\b\d{2}:\d{2}:\d{2}\b',  # Horaires
+        r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b',  # E-mails
+        r'\b\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}\b',             # Cartes bancaires
+        r'\b(?:mp-|mai_)[a-zA-Z0-9_-]{16,}\b',                  # Clés d'API
     ],
-    action="mask"  # "remove" ou "mask"
+    action="mask"  # "mask" ou "remove"
 )
 
-cleaned_data = cleaner.process(document)
-```
-
-### Chiffrement des Fichiers
-
-```bash
-# Chiffrer un fichier avant stockage
-openssl enc -aes-256-cbc -salt -in sensitive_data.txt -out sensitive_data.enc
-
-# Déchiffrer pour traitement
-openssl enc -d -aes-256-cbc -in sensitive_data.enc -out sensitive_data.txt
+sanitized_prompt = cleaner.process(raw_user_input)
 ```
 
 ---
 
-## 🕵️‍♂️ Détection d'Anomalies
+## 6. Conformité RGPD & Droits des Utilisateurs
 
-### Surveillance des Requêtes
-
-```python
-from mdevslabs.monitoring import RequestMonitor
-
-monitor = RequestMonitor(
-    suspicious_patterns=[
-        r'ignore.*previous.*instructions',
-        r'jailbreak',
-        r'system\s+prompt',
-    ]
-)
-
-if monitor.is_suspicious(user_input):
-    log_security_event(user_input)
-    return "Entrée rejetée pour raisons de sécurité"
-```
-
----
-
-## 📋 Conformité RGPD
-
-### Droit à l'Oubli
-
-```python
-from mdevslabs.compliance import GDPRCompliance
-
-gdpr = GDPRCompliance(user_id="user_123")
-
-# Supprimer toutes les données utilisateur
-gdpr.right_to_be_forgotten()
-
-# Obtenir un rapport de données
-gdpr.export_user_data()
-```
-
-### Consentement & Transparence
-
-```markdown
-<consent>
-J'accepte que mes interactions avec mAI soient utilisées pour améliorer le modèle.
-Je comprends que je peux retirer ce consentement à tout moment.
-</consent>
-```
-
----
-
-## 🔒 Bonnes Pratiques de Sécurité
-
-### 1. Environnements de Déploiement
-
-```bash
-# Ne jamais exposer les modèles en direct sur internet
-# Utiliser un reverse proxy avec authentification
-
-nginx {
-    location /api {
-        proxy_pass http://localhost:11434;
-        auth_basic "Accès restreint";
-        auth_basic_user_file /etc/nginx/.htpasswd;
-    }
-}
-```
-
-### 2. Mots de Passe & Secrets
-
-```bash
-# Utiliser un gestionnaire de secrets
-export OLLAMA_MODELS_PATH="/secure/models"
-export MDEVS_API_KEYS_PATH="/secure/keys"
-
-# Ne jamais commit les clés dans le code source
-# Utiliser .env ou secrets manager
-```
-
-### 3. Journalisation Sécurisée
-
-```python
-import logging
-
-# Ne jamais logger les données sensibles
-logger = logging.getLogger("mAI")
-logger.setLevel(logging.INFO)
-
-# Masquer les clés avant logging
-def sanitize_for_log(text):
-    return text.replace("mp-", "[API_KEY_REDACTED]-")
-```
-
----
-
-## 📚 Ressources
-
-- **Authentification API** : [Guide Auth](/docs?doc=api-security-authentication)
-- **Prompt Security** : [Guide Prompts](/docs?doc=guide-prompt-engineering)
-- **Déploiement** : [Kubernetes Guide](/docs?doc=guide-cloud-deployment)
+Conformément au Règlement Général sur la Protection des Données (RGPD UE 2016/679) :
+- **Droit d'accès et d'export** : Téléchargez l'intégralité de vos métadonnées de compte en format JSON standard.
+- **Droit à l'effacement** : Procédez à la suppression immédiate et irréversible de votre compte et de toutes les données associées.
+- **Délégué à la Protection des Données** : Contactez notre équipe dédiée via le portail de support ou par ticket technique.

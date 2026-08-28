@@ -226,11 +226,10 @@ En s’appuyant sur la base technique de Min Browser, mSearch bénéficie d’un
 
 Il devient un espace de navigation sécurisé, intelligent et accessible.
 
-mSearch ne cherche pas à complexifier l’expérience. Il cherche au contraire à la simplifier, à la protéger et à la rendre plus productive.
+mSearch apporte une réponse ciblée pour une navigation web sécurisée, sobre et performante.
 
-Avec mSearch, naviguez en toute sécurité !
-
-**Mathias Tusseau**
+**Mathias Tusseau**  
+*Fondateur mDevsLabs*
 
 ---
 

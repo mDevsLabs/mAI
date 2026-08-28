@@ -5,13 +5,13 @@ category: "Architecture"
 order: 4
 ---
 
-# Formats de Stockage : GGUF, Safetensors & Quantification 💾📦
+# Formats de Stockage : GGUF, Safetensors & Quantification 
 
 Les modèles d'IA développés par **mDevsLabs** sont distribués dans des formats de stockage binaires hautement optimisés pour la distribution et l'inférence locale.
 
 ---
 
-## 📦 Safetensors vs GGUF
+## Safetensors vs GGUF
 
 ### Safetensors
 
@@ -25,7 +25,7 @@ Format universel extensible développé pour `llama.cpp` et `ollama`. Il contien
 
 ---
 
-## 📊 Matrice des Quantifications mDevsLabs
+## Matrice des Quantifications mDevsLabs
 
 - **Q4_K_M** : Précision Perplexité de 98.2% du FP16, Taille Fichier de 7.2 Go, Usage général local (Laptops/Desktops)
 - **Q5_K_M** : Précision Perplexité de 99.1% du FP16, Taille Fichier de 8.6 Go, Bon équilibre qualité/vitesse

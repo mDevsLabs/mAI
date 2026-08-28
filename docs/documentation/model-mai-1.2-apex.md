@@ -5,13 +5,13 @@ category: "Modèles d'IA"
 order: 4
 ---
 
-# mAI-1.2-Apex - Modèle de Performance Supérieure (9B) 🏔️
+# mAI-1.2-Apex - Modèle de Performance Supérieure (9B) 
 
 **mAI-1.2-Apex** est le modèle haut de gamme de la série mAI-1.2. Avec ses 9 milliards de paramètres, il est conçu pour fournir des capacités de raisonnement logique de premier plan, de développement logiciel avancé et de traitement d'images complexes, le tout s'exécutant entièrement en local.
 
 ---
 
-## 🚀 Spécifications Techniques
+## Spécifications Techniques
 
 - **Nombre de Paramètres** : 9 Milliards (9B)
 - **Architecture** : Transformer multimodal avec attention de groupe (GQA) optimisée.
@@ -22,7 +22,7 @@ order: 4
 
 ---
 
-## 💡 Cas d'Usage Recommandés
+## Cas d'Usage Recommandés
 
 - **Raisonnement logique et mathématique** : Résolution de problèmes complexes et planification d'étapes.
 - **Développement avancé** : Génération d'algorithmes complexes, audit de code, refactoring et assistance au débogage profond.
@@ -31,7 +31,7 @@ order: 4
 
 ---
 
-## 🛠️ Commande d'exécution Ollama
+## Commande d'exécution Ollama
 
 Exécutez le modèle localement dans votre terminal :
 
@@ -41,7 +41,7 @@ ollama run mDevsLabs/mAI-1.2-Apex
 
 ---
 
-## 📊 Benchmarks de Performance
+## Benchmarks de Performance
 
 Les performances mesurées pour mAI-1.2-Apex par rapport aux standards de sa catégorie :
 

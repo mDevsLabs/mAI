@@ -1,0 +1,8 @@
+{
+  "title": "Lancement mAI API v2",
+  "description": "DÃ©ploiement de l'API v2 de mAI : clÃ©s d'accÃ¨s avec hachage SHA-256, gestion des projets, contrÃ´le de dÃ©bit et infÃ©rence en temps rÃ©el.",
+  "author": "Architecture mAI",
+  "date": "2026-08-28",
+  "label": "API & Infras",
+  "image": "https://upload.fs.fr/adVkoKHg04.png"
+}

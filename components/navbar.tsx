@@ -1,14 +1,16 @@
 "use client";
 
-import { Github, Menu, X, ChevronDown } from "lucide-react";
+import { Github, Menu, X, ChevronDown, UserRound, LogOut, Gauge, Activity, Cloud, Image as ImageIcon, Volume2 } from "lucide-react";
 import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import { CommandMenu } from "@/components/command-menu";
 import type { ChangelogsByProject } from "@/lib/changelog";
 import type { NewsArticle } from "@/lib/news";
-import Image from "next/image";
+import { formatStorageBytes, CLOUD_STORAGE_LIMITS } from "@/lib/mai-api";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Sheet } from "@/components/sheet";
+import { useAuth } from "@/components/auth-provider";
 
 interface NavSubItem {
   name: string;
@@ -30,34 +32,70 @@ const navLinks: NavItem[] = [
     name: "Projets",
     href: "/projects",
     subitems: [
-      { name: "Tout", href: "/projects" },
-      { name: "mAI CLI", href: "/projects/mai-cli" },
-      { name: "mSearch", href: "/projects/msearch" },
-      { name: "Snob", href: "/projects/snob" },
-      { name: "mAI", href: "/projects/mai" },
-    ],
-  },
+      { name: "Tous les projets", href: "/projects" },
+      { name: "Web", href: "/projects/web" },
+      { name: "Pulse", href: "/projects/pulse" },
+      { name: "CLI", href: "/projects/cli" },
+      { name: "Coder", href: "/projects/coder" },
+    ]},
   {
     name: "Modèles",
     href: "/models",
     subitems: [
-      { name: "Tout", href: "/models" },
-      { name: "mAI-1.2-Light", href: "/models/mai-1.2-light" },
-      { name: "mAI-1.2-Apex", href: "/models/mai-1.2-apex" },
-      { name: "mAI-1.2-Opal", href: "/models/mai-1.2-opal" },
-      { name: "mAI-1", href: "/models/mai-1" },
-      { name: "mAI-1-Light", href: "/models/mai-1-light" },
-    ],
-  },
+      { name: "Tous les modèles", href: "/models" },
+      {
+        name: "mAI-1.5",
+        href: "/models#mai-1.5",
+        subitems: [
+          { name: "mAI-1.5-Light", href: "/models/mai-1.5-light" },
+          { name: "mAI-1.5-Apex", href: "/models/mai-1.5-apex" },
+          { name: "mAI-1.5-Opal", href: "/models/mai-1.5-opal" },
+        ]},
+      {
+        name: "mAI-1.2",
+        href: "/models#mai-1.2",
+        subitems: [
+          { name: "mAI-1.2-Light", href: "/models/mai-1.2-light" },
+          { name: "mAI-1.2-Apex", href: "/models/mai-1.2-apex" },
+          { name: "mAI-1.2-Opal", href: "/models/mai-1.2-opal" },
+        ]},
+      {
+        name: "mAI-1",
+        href: "/models#mai-1",
+        subitems: [
+          { name: "mAI-1", href: "/models/mai-1" },
+          { name: "mAI-1-Light", href: "/models/mai-1-light" },
+        ]},
+    ]},
+  {
+    name: "API",
+    href: "/account/keys",
+    subitems: [
+      {
+        name: "Modèles",
+        href: "/account/models",
+        subitems: [
+          { name: "Modèles Texte", href: "/account/models" },
+          { name: "Modèles Images", href: "/account/models/images" },
+          { name: "Modèles Audio", href: "/account/models/audio" },
+          { name: "Modèles mAI", href: "/account/models/mai" },
+        ],
+      },
+      { name: "Clés API", href: "/account/keys" },
+      { name: "Requêtes", href: "/account/requests" },
+      { name: "Usage", href: "/account/usage" },
+      { name: "Configuration", href: "/account/config" },
+    ]},
+  { name: "Abonnements", href: "/pricing" },
   {
     name: "Plus",
     href: "#",
     subitems: [
       { name: "Télécharger", href: "/downloads" },
-      { name: "API", href: "/api" },
-      { name: "Documentation", href: "/docs" },
-    ],
-  },
+      { 
+        name: "Documentation", 
+        href: "/docs"},
+    ]},
 ];
 
 function checkSubActive(sub: NavSubItem, pathname: string): boolean {
@@ -74,11 +112,24 @@ function checkLinkActive(link: NavItem, pathname: string): boolean {
 
 export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject; news?: NewsArticle[] }) {
   const pathname = usePathname();
+  const { user, isAuthenticated, loading: authLoading, logout, cloudStorage } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeMobileSubmenu, setActiveMobileSubmenu] = useState<string | null>(null);
   const [activeMobileNestedSubmenu, setActiveMobileNestedSubmenu] = useState<string | null>(null);
   const [isCommandOpen, setIsCommandOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  const storageLimit = CLOUD_STORAGE_LIMITS[user?.tier || "Free"] || CLOUD_STORAGE_LIMITS["Free"];
+  const storageUsed = cloudStorage?.bytes_used ?? 0;
+  const storagePercent = cloudStorage?.percent_used ?? (storageLimit > 0 ? Math.min(100, Math.round((storageUsed / storageLimit) * 100)) : 0);
+
+  const accountHref = isAuthenticated ? "/account" : "/account/login";
+  const accountLabel = isAuthenticated
+    ? user?.username || "Compte"
+    : "Compte";
+  const accountInitials = isAuthenticated
+    ? (user?.username || user?.email || "U").slice(0, 2).toUpperCase()
+    : null;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -97,10 +148,20 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
     setActiveMobileNestedSubmenu(activeMobileNestedSubmenu === name ? null : name);
   };
 
+  const handleAnchorClick = (id: string) => {
+    if (pathname === "/account") {
+      const element = document.getElementById(id);
+      if (element) {
+        const y = element.getBoundingClientRect().top + window.scrollY - 100;
+        window.scrollTo({ top: y, behavior: "smooth" });
+      }
+    }
+  };
+
   return (
     <>
       <header
-        className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 w-[95%] max-w-5xl rounded-3xl md:rounded-full border px-4 md:px-8 py-2 md:py-3 ${
+        className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 w-[96%] max-w-6xl xl:max-w-7xl rounded-3xl md:rounded-full border px-4 md:px-8 py-2 md:py-3 ${
           scrolled
             ? "bg-white/70 backdrop-blur-2xl border-black/10 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)]"
             : "bg-white/30 backdrop-blur-md border-black/10 shadow-sm"
@@ -110,20 +171,18 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
           {/* Logo */}
           <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>
             <div className="flex items-center">
-              <Image
-                src="/mprojects.png"
-                alt="mProjects"
-                width={140}
-                height={56}
-                sizes="(max-width: 768px) 100px, 140px"
-                className="h-10 md:h-14 w-auto object-contain drop-shadow-sm"
-                priority
+              <img
+                src="/logo.png"
+                alt="mAI"
+                width={160}
+                height={48}
+                style={{ height: '40px', width: 'auto', objectFit: 'contain' }}
               />
             </div>
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-500">
+          <nav className="hidden md:flex items-center gap-4 lg:gap-6 text-sm font-medium text-slate-500">
             {navLinks.map((link) => {
               const isActive = checkLinkActive(link, pathname);
 
@@ -144,7 +203,7 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
 
                     {/* Premier niveau de Dropdown */}
                     <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 opacity-0 translate-y-2 invisible group-hover:opacity-100 group-hover:translate-y-0 group-hover:visible transition-all duration-200 z-50">
-                      <div className="bg-white/98 backdrop-blur-xl border border-black/10 shadow-xl rounded-3xl p-1.5 min-w-[140px] flex flex-col gap-0.5">
+                      <div className="glass-dropdown min-w-[170px] flex flex-col gap-1">
                         {link.subitems.map((subitem) => {
                           const isSubActive = checkSubActive(subitem, pathname);
                           const hasNested = !!subitem.subitems;
@@ -154,10 +213,10 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
                               <div key={subitem.name} className="relative group/nested flex flex-col">
                                 <Link
                                   href={subitem.href}
-                                  className={`px-3 py-2 rounded-full text-xs font-medium transition-colors flex items-center justify-between gap-2 ${
+                                  className={`px-3.5 py-2.5 rounded-2xl text-xs font-semibold transition-all flex items-center justify-between gap-2 ${
                                     isSubActive
-                                      ? "bg-purple-50 text-purple-600 font-semibold"
-                                      : "text-slate-600 hover:bg-black/5 hover:text-slate-900"
+                                      ? "bg-purple-50 text-purple-600 font-extrabold shadow-2xs"
+                                      : "text-slate-700 hover:bg-purple-50/70 hover:text-purple-700"
                                   }`}
                                 >
                                   <span>{subitem.name}</span>
@@ -165,16 +224,16 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
                                 </Link>
 
                                 {/* Sous-menu flyout à droite */}
-                                <div className="absolute left-full top-0 ml-1.5 opacity-0 translate-x-1 invisible group-hover/nested:opacity-100 group-hover/nested:translate-x-0 group-hover/nested:visible transition-all duration-200 z-50">
-                                  <div className="bg-white/98 backdrop-blur-xl border border-black/10 shadow-xl rounded-3xl p-1.5 min-w-[130px] flex flex-col gap-0.5">
+                                <div className="absolute left-full top-0 ml-2 opacity-0 translate-x-1 invisible group-hover/nested:opacity-100 group-hover/nested:translate-x-0 group-hover/nested:visible transition-all duration-200 z-50">
+                                  <div className="glass-dropdown min-w-[150px] flex flex-col gap-1">
                                     {subitem.subitems?.map((nested) => (
                                       <Link
                                         key={nested.name}
                                         href={nested.href}
-                                        className={`px-3 py-2 rounded-full text-xs font-medium transition-colors ${
+                                        className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all ${
                                           pathname === nested.href
-                                            ? "bg-purple-50 text-purple-600 font-semibold"
-                                            : "text-slate-600 hover:bg-black/5 hover:text-slate-900"
+                                            ? "bg-purple-50 text-purple-600 font-extrabold shadow-2xs"
+                                            : "text-slate-700 hover:bg-purple-50/70 hover:text-purple-700"
                                         }`}
                                       >
                                         {nested.name}
@@ -190,10 +249,10 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
                             <Link
                               key={subitem.name}
                               href={subitem.href}
-                              className={`px-3 py-2 rounded-full text-xs font-medium transition-colors ${
+                              className={`px-3.5 py-2.5 rounded-2xl text-xs font-semibold transition-all ${
                                 isSubActive
-                                  ? "bg-purple-50 text-purple-600 font-semibold"
-                                  : "text-slate-600 hover:bg-black/5 hover:text-slate-900"
+                                  ? "bg-purple-50 text-purple-600 font-extrabold shadow-2xs"
+                                  : "text-slate-700 hover:bg-purple-50/70 hover:text-purple-700"
                               }`}
                             >
                               {subitem.name}
@@ -224,6 +283,146 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
 
           {/* Actions */}
           <div className="flex items-center gap-2 md:gap-4">
+            {/* Compte (desktop) avec Dropdown interactif au survol / clic */}
+            <div className="hidden md:block relative group/account py-2">
+              <Link
+                href={accountHref}
+                className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-sm font-semibold transition-all duration-200 ${
+                  pathname.startsWith("/account")
+                    ? "border-purple-300 bg-purple-50 text-purple-700 shadow-2xs"
+                    : "border-black/10 bg-black/5 text-slate-700 hover:bg-black/10 hover:scale-105"
+                }`}
+                title={isAuthenticated ? `Compte (${user?.tier || "Free"})` : "Se connecter"}
+              >
+                {user?.avatarUrl ? (
+                  <img src={user.avatarUrl} alt="Avatar" className="w-6 h-6 rounded-full object-cover bg-white ring-1 ring-black/10 shadow-2xs" />
+                ) : accountInitials ? (
+                  <span className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 text-white text-[10px] font-bold flex items-center justify-center shadow-2xs">
+                    {accountInitials}
+                  </span>
+                ) : (
+                  <UserRound className="w-4 h-4" />
+                )}
+                <span className="max-w-[100px] truncate">
+                  {authLoading ? "…" : accountLabel}
+                </span>
+                <ChevronDown className="w-3.5 h-3.5 text-slate-400 group-hover/account:rotate-180 transition-transform duration-200" />
+              </Link>
+
+              {/* Menu déroulant Compte */}
+              <div className="absolute right-0 top-full pt-2 opacity-0 translate-y-2 invisible group-hover/account:opacity-100 group-hover/account:translate-y-0 group-hover/account:visible transition-all duration-200 z-50">
+                <div className="glass-dropdown w-64 space-y-1">
+                  {isAuthenticated ? (
+                    <>
+                      <Link href="/account" className="block p-3 rounded-2xl bg-purple-50/70 border border-purple-100 space-y-1 hover:bg-purple-100 transition-colors">
+                        <div className="flex items-center justify-between">
+                          <p className="font-extrabold text-slate-900 text-sm truncate">{user?.username || "Utilisateur"}</p>
+                          <span className="px-2 py-0.5 rounded-full bg-purple-600 text-white text-[10px] font-black uppercase">
+                            {user?.tier || "Free"}
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-500 truncate">{user?.email}</p>
+                      </Link>
+
+                      <div className="pt-1 space-y-0.5">
+                        <Link
+                          href="/account#usage-mai"
+                          onClick={() => handleAnchorClick("usage-mai")}
+                          className="w-full px-3.5 py-2.5 rounded-2xl text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-700 transition-colors flex items-center gap-2.5"
+                        >
+                          <Gauge className="w-4 h-4 text-purple-600" />
+                          Usage mAI
+                        </Link>
+                        <Link
+                          href="/account#usage-api"
+                          onClick={() => handleAnchorClick("usage-api")}
+                          className="w-full px-3.5 py-2.5 rounded-2xl text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-700 transition-colors flex items-center gap-2.5"
+                        >
+                          <Activity className="w-4 h-4 text-purple-600" />
+                          Usage API
+                        </Link>
+                        <Link
+                          href="/account#usage-images"
+                          onClick={() => handleAnchorClick("usage-images")}
+                          className="w-full px-3.5 py-2.5 rounded-2xl text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-700 transition-colors flex items-center gap-2.5"
+                        >
+                          <ImageIcon className="w-4 h-4 text-purple-600" />
+                          Usage Images
+                        </Link>
+                        <Link
+                          href="/account#usage-audio"
+                          onClick={() => handleAnchorClick("usage-audio")}
+                          className="w-full px-3.5 py-2.5 rounded-2xl text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-700 transition-colors flex items-center gap-2.5"
+                        >
+                          <Volume2 className="w-4 h-4 text-purple-600" />
+                          Usage Audio
+                        </Link>
+                        <Link
+                          href="/account#usage-cloud"
+                          onClick={() => handleAnchorClick("usage-cloud")}
+                          className="w-full px-3.5 py-2.5 rounded-2xl text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-700 transition-colors flex flex-col gap-1.5 group/storage"
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2.5">
+                              <Cloud className="w-4 h-4 text-purple-600 shrink-0" />
+                              <span>Stockage Cloud</span>
+                            </div>
+                            <span className="text-[10px] font-extrabold text-slate-500 group-hover/storage:text-purple-700">
+                              {storagePercent}%
+                            </span>
+                          </div>
+                          <div className="w-full bg-slate-200/80 rounded-full h-1.5 overflow-hidden">
+                            <div
+                              className={`h-full rounded-full transition-all ${
+                                storagePercent >= 90
+                                  ? "bg-red-500"
+                                  : storagePercent >= 70
+                                    ? "bg-amber-500"
+                                    : "bg-gradient-to-r from-purple-500 to-blue-500"
+                              }`}
+                              style={{ width: `${Math.min(100, Math.max(0, storagePercent))}%` }}
+                            />
+                          </div>
+                          <div className="flex items-center justify-between text-[10px] text-slate-400 font-medium">
+                            <span>{formatStorageBytes(storageUsed)}</span>
+                            <span>{formatStorageBytes(storageLimit)}</span>
+                          </div>
+                        </Link>
+                      </div>
+
+                      <div className="border-t border-slate-100 pt-1 mt-1">
+                        <button
+                          onClick={() => {
+                            logout();
+                            toast.success("Déconnecté avec succès");
+                          }}
+                          className="w-full px-3.5 py-2.5 rounded-2xl text-xs font-bold text-red-600 hover:bg-red-50 transition-colors flex items-center gap-2.5 cursor-pointer text-left"
+                        >
+                          <LogOut className="w-4 h-4" />
+                          Se déconnecter
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="p-2 space-y-1">
+                      <Link
+                        href="/account/login"
+                        className="w-full px-4 py-2.5 rounded-2xl bg-purple-600 hover:bg-purple-500 text-white font-extrabold text-xs transition-all flex items-center justify-center gap-2 shadow-2xs"
+                      >
+                        Se connecter
+                      </Link>
+                      <Link
+                        href="/account/register"
+                        className="w-full px-4 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition-all flex items-center justify-center gap-2"
+                      >
+                        Créer un compte
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
             {/* Socials */}
             <div className="hidden md:flex gap-2">
               <a
@@ -251,6 +450,26 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
                 </div>
               </a>
             </div>
+
+            {/* Compte (mobile icon) */}
+            <Link
+              href={accountHref}
+              className={`md:hidden p-2 rounded-full border transition-colors ${
+                pathname.startsWith("/account")
+                  ? "border-purple-300 bg-purple-50 text-purple-700"
+                  : "border-black/10 bg-black/5 text-slate-600 hover:bg-black/10"
+              }`}
+              aria-label={accountLabel}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              {accountInitials ? (
+                <span className="w-5 h-5 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 text-white text-[9px] font-bold flex items-center justify-center">
+                  {accountInitials}
+                </span>
+              ) : (
+                <UserRound className="w-5 h-5" />
+              )}
+            </Link>
 
             {/* Mobile Menu Toggle */}
             <button
@@ -363,6 +582,102 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
                 </div>
               );
             })}
+
+            <Link
+              href={accountHref}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={`mt-2 px-4 py-3 rounded-2xl text-sm font-semibold transition-colors flex items-center gap-3 ${
+                pathname.startsWith("/account")
+                  ? "bg-purple-50 text-purple-600"
+                  : "text-slate-700 hover:bg-black/5"
+              }`}
+            >
+              {user?.avatarUrl ? (
+                <img src={user.avatarUrl} alt="Avatar" className="w-8 h-8 rounded-full object-cover bg-white ring-1 ring-black/10 shadow-sm" />
+              ) : accountInitials ? (
+                <span className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 text-white text-xs font-bold flex items-center justify-center shadow-sm">
+                  {accountInitials}
+                </span>
+              ) : (
+                <UserRound className="w-5 h-5" />
+              )}
+              <span className="flex flex-col">
+                <span>{authLoading ? "Compte…" : isAuthenticated ? accountLabel : "Se connecter"}</span>
+                {isAuthenticated && user?.tier && (
+                  <span className="text-[11px] font-medium text-slate-500">Forfait {user.tier}</span>
+                )}
+              </span>
+            </Link>
+
+            {isAuthenticated && (
+              <div className="flex flex-col gap-1.5 mt-1">
+                <Link
+                  href="/account#usage-mai"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    handleAnchorClick("usage-mai");
+                  }}
+                  className="px-4 py-2.5 mx-1 rounded-2xl text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-700 transition-colors flex items-center gap-2.5 bg-black/[0.02]"
+                >
+                  <Gauge className="w-4 h-4 text-purple-600" />
+                  <span>Usage mAI</span>
+                </Link>
+                <Link
+                  href="/account#usage-api"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    handleAnchorClick("usage-api");
+                  }}
+                  className="px-4 py-2.5 mx-1 rounded-2xl text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-700 transition-colors flex items-center gap-2.5 bg-black/[0.02]"
+                >
+                  <Activity className="w-4 h-4 text-purple-600" />
+                  <span>Usage API</span>
+                </Link>
+                <Link
+                  href="/account#usage-images"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    handleAnchorClick("usage-images");
+                  }}
+                  className="px-4 py-2.5 mx-1 rounded-2xl text-xs font-bold text-slate-700 hover:bg-purple-50 hover:text-purple-700 transition-colors flex items-center gap-2.5 bg-black/[0.02]"
+                >
+                  <ImageIcon className="w-4 h-4 text-purple-600" />
+                  <span>Usage Images</span>
+                </Link>
+                <Link
+                  href="/account#usage-cloud"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    handleAnchorClick("usage-cloud");
+                  }}
+                  className="px-4 py-2.5 mx-1 rounded-2xl bg-purple-50/50 border border-purple-100/60 space-y-1.5 hover:bg-purple-50 transition-colors block"
+                >
+                  <div className="flex items-center justify-between text-xs font-bold text-slate-700">
+                    <div className="flex items-center gap-2">
+                      <Cloud className="w-3.5 h-3.5 text-purple-600" />
+                      <span>Stockage Cloud</span>
+                    </div>
+                    <span className="text-[11px] font-extrabold text-purple-700">{storagePercent}%</span>
+                  </div>
+                  <div className="w-full bg-slate-200/80 rounded-full h-1.5 overflow-hidden">
+                    <div
+                      className={`h-full rounded-full transition-all ${
+                        storagePercent >= 90
+                          ? "bg-red-500"
+                          : storagePercent >= 70
+                            ? "bg-amber-500"
+                            : "bg-gradient-to-r from-purple-500 to-blue-500"
+                      }`}
+                      style={{ width: `${Math.min(100, Math.max(0, storagePercent))}%` }}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between text-[10px] text-slate-500 font-medium">
+                    <span>{formatStorageBytes(storageUsed)}</span>
+                    <span>{formatStorageBytes(storageLimit)}</span>
+                  </div>
+                </Link>
+              </div>
+            )}
 
             <div className="flex gap-2 mt-3 pt-3 border-t border-black/5 justify-center">
               <a

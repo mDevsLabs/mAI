@@ -14,11 +14,11 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const model = getModelById(resolvedParams.id);
   if (!model) {
     return {
-      title: "Modèle Introuvable | mProjects",
+      title: "Modèle Introuvable | mAI",
     };
   }
   return {
-    title: `${model.name} - Modèle IA | mProjects`,
+    title: `${model.name} - Modèle IA | mAI`,
     description: model.tagline,
   };
 }

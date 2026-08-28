@@ -1,32 +1,32 @@
 ---
-title: "Bienvenue"
-description: "Découvrez le portail mProjects, son rôle et sa genèse."
+title: "Présentation"
+description: "DÃ©couvrez le portail mAI, son rÃ´le et sa genÃ¨se."
 category: "Guides"
 order: 10
 ---
 
-# Bienvenue sur mProjects 🚀
+# Présentation sur le portail mAI
 
-Nous sommes fiers de vous présenter le tout nouveau portail **mProjects**. 
+Nous prÃ©sentons le portail unifiÃ© **mAI**, conÃ§u pour rassembler l'ensemble de nos initiatives technologiques au sein d'un Ã©cosystÃ¨me cohÃ©rent (Web, Pulse, CLI, Office).
 
-Ce portail réunit désormais toutes nos créations, avec un suivi clair et centralisé des mises à jour (onglet Notes de version) et des annonces importantes (Actualités).
+Cette plateforme centralise le suivi de nos projets logiciels, la documentation des modÃ¨les d'intelligence artificielle et la diffusion des annonces officielles.
 
-### Pourquoi cette plateforme ?
+### Objectifs de la plateforme
 
-Nous voulions offrir une expérience *Liquid Glass* moderne, claire, et surtout accessible. Restez connectés pour de nouvelles fonctionnalités prochainement !
+Le portail adopte une architecture moderne et une ergonomie claire afin de simplifier l'accÃ¨s Ã  nos documentations techniques, outils d'infÃ©rence et interfaces logicielles.
 
-### Mises à jour
+### FrÃ©quence des publications
 
-Nous mettrons à jour l'application tous les mois ou plus régulièrement pour ajouter de nouveaux articles dans Actualités.
+Les actualitÃ©s, Ã©volutions techniques et mises Ã  jour de modÃ¨les sont publiÃ©es de maniÃ¨re continue sur cet espace.
 
-### Application conçue sur Google
+### Conception et technologies
 
-Nous vous informons également que le nouveau site mProjects a été conçu en **moins de 2 heures via Google AI Studio** en utilisant Google Gemini 3.1 Pro Preview en mode de réflexion _High_. Nous avons peaufiné l'architecture et les performances via l'outil CLI de **Google Antigravity**.
+L'architecture initiale du portail a Ã©tÃ© prototypÃ©e Ã  l'aide des modÃ¨les Gemini sur Google AI Studio, puis optimisÃ©e et consolidÃ©e Ã  l'aide de l'outil CLI de Google Antigravity afin d'assurer des standards stricts de performance et de qualitÃ© logicielle.
 
-### Présentation des onglets
+### Organisation du portail
 
-- **Accueil** : Découvrez nos réseaux sociaux de communication.
-- **Equipe** : Présentation de nos valeurs.
-- **Projets** : Découvrez les fonctionnalités principales, les derniers commits/releases sur chaque dépôt GitHub distant.
-- **Actualités** : Lisez nos dernières nouveautés et annonces.
-- **Notes de version** : Suivez l'évolution des nouveautés dans nos projets.
+- **Accueil** : PrÃ©sentation gÃ©nÃ©rale et liens vers les espaces d'Ã©change.
+- **Ãquipe** : PrÃ©sentation de l'organisation et des valeurs fondatrices.
+- **Projets** : DÃ©tails techniques, fonctionnalitÃ©s clÃ©s et flux d'activitÃ© des dÃ©pÃ´ts GitHub associÃ©s.
+- **ActualitÃ©s** : Annonces officielles, analyses techniques et articles de fond.
+- **Notes de version** : Suivi chronologique des dÃ©ploiements et des fonctionnalitÃ©s ajoutÃ©es.

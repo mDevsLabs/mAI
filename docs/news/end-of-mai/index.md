@@ -1,26 +1,21 @@
-# Fin du développement actif de mAI
+# Évolution du cycle de vie du projet mAI
 
-Aujourd'hui marque un tournant important pour notre écosystème. Après des mois d'innovation, d'expérimentations et d'échanges passionnants, nous vous annonçons la fin du développement actif de mAI.
+Dans le cadre de la réorganisation de nos priorités d'ingénierie, nous annonçons la transition de la version historique de mAI vers un statut de maintenance stabilisée.
 
-L'aventure du développement de la plateforme s'arrête ici : il n'y aura plus de nouvelles fonctionnalités, d'interfaces retravaillées ni de mises à jour majeures du système. Cependant, mAI ne disparaît pas pour autant.
+Le développement de nouvelles fonctionnalités sur cette branche spécifique arrive à son terme, laissant place à une politique de pérennité et de support ciblé.
 
-## Ce que cela change (et ce qui reste)
+## Modalités de continuité de service
 
-Pour garantir la meilleure continuité possible et vous permettre de profiter de l'outil en toute sérénité, voici ce qui est mis en place :
+Afin d'assurer la continuité des flux pour les utilisateurs actuels, les dispositions suivantes sont effectives :
 
-- **Maintenance des modèles** : même si le code de l'application n'évoluera plus, mAI continuera d'intégrer les nouveaux modèles d'IA ainsi que les mises à jour des providers. Vous gardez donc accès aux technologies les plus récentes sans interruption.
-- **Stabilité et accès** : la plateforme reste en ligne et opérationnelle pour vos usages quotidiens.
-- **Support technique** : le support en cas de besoin est toujours ouvert mais plus aucuns correctifs ni bugs seront apportés.
+- **Compatibilité des modèles** : La prise en charge des nouveaux modèles d'inférence et les mises à jour des connecteurs d'API continuent d'être assurées.
+- **Disponibilité de la plateforme** : L'infrastructure demeure en ligne et accessible pour l'ensemble des usages existants.
+- **Maintenance opérationnelle** : Le support technique reste ouvert pour les questions d'infrastructure et d'accès.
 
-## Alternatives
+## Solutions recommandées
 
-Si vous cherchez à remplacer mAI, nous vous conseillons l'application sur laquelle nous nous sommes basés : **LobeHub**. Open source, performante et en développent actif, c'est la _meilleure alterntive_.
+Pour les utilisateurs souhaitant une solution open source alternative activement maintenue sur des cas d'usage similaires, l'écosystème **LobeHub** constitue une option robuste et recommandée.
 
-## Merci pour cette aventure
+## Remerciements et perspectives
 
-Créer et faire évoluer mAI a été un projet incroyable. Un immense merci à toutes celles et ceux qui ont utilisé la plateforme, partagé leurs retours et fait vivre cette expérience au quotidien.
-
-L'outil reste à votre disposition, toujours propulsé par les meilleurs modèles du moment. La suite s'écrira sur de nouveaux projets.
-
-
-Merci pour votre compréhension.
+Nous remercions l'ensemble des utilisateurs et contributeurs ayant participé aux retours d'expérience sur cette version. Les enseignements tirés de ce projet sont directement intégrés dans nos futurs développements.
