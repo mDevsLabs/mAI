@@ -17,6 +17,13 @@ export default function CookieBanner() {
     }
   }, []);
 
+  // Prévient les widgets fixed du bas qu'un bandeau occupe l'espace
+  useEffect(() => {
+    window.dispatchEvent(
+      new CustomEvent("mai:cookie-banner", { detail: { open: showBanner } })
+    );
+  }, [showBanner]);
+
   const acceptAll = () => {
     localStorage.setItem('mai_cookie_consent', 'accepted');
     document.cookie = "mai_cookie_consent=accepted; path=/; max-age=31536000; SameSite=Lax";

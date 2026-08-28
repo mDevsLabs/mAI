@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Sparkles, Gauge, KeyRound, Zap, ArrowRight, ShieldCheck, Cloud, Image as ImageIcon, Volume2 } from "lucide-react";
+import { Sparkles, Gauge, KeyRound, Zap, ArrowRight, ShieldCheck, Cloud, Image as ImageIcon, Volume2, Bot, Wrench } from "lucide-react";
 import { useAuth } from "@/components/auth-provider";
 
 interface PlanItem {
@@ -16,6 +16,8 @@ interface PlanItem {
   cloudStorage: string;
   dailyImages: string;
   audioTokens: string;
+  skillsMCP?: string;
+  agentsWeb?: string;
 }
 
 const PLANS: PlanItem[] = [
@@ -38,6 +40,8 @@ const PLANS: PlanItem[] = [
     cloudStorage: "1 GB Cloud",
     dailyImages: "5 images / jour",
     audioTokens: "50 000 000 tokens / semaine",
+    skillsMCP: "Skills & MCP",
+    agentsWeb: "10 Agents dans mAI Web",
   },
   {
     id: "pro",
@@ -50,6 +54,8 @@ const PLANS: PlanItem[] = [
     cloudStorage: "2 GB Cloud",
     dailyImages: "10 images / jour",
     audioTokens: "100 000 000 tokens / semaine",
+    skillsMCP: "Skills & MCP",
+    agentsWeb: "10 Agents dans mAI Web",
   },
   {
     id: "max",
@@ -60,6 +66,8 @@ const PLANS: PlanItem[] = [
     cloudStorage: "5 GB Cloud",
     dailyImages: "20 images / jour",
     audioTokens: "200 000 000 tokens / semaine",
+    skillsMCP: "Skills & MCP",
+    agentsWeb: "10 Agents dans mAI Web",
   },
 ];
 
@@ -68,7 +76,7 @@ export default function PricingPage() {
   const currentTier = (user?.tier || "Free").toLowerCase().trim();
 
   return (
-    <main className="min-h-screen pt-20 pb-12 px-4 md:px-8 max-w-7xl mx-auto space-y-10">
+    <main className="min-h-[100dvh] pt-20 pb-12 px-4 md:px-8 max-w-7xl mx-auto space-y-10">
       {/* Header */}
       <div className="text-center space-y-4 max-w-2xl mx-auto">
         <motion.div
@@ -201,6 +209,30 @@ export default function PricingPage() {
                       <p className="text-xs text-slate-600 font-medium">{plan.audioTokens}</p>
                     </div>
                   </div>
+
+                  {plan.skillsMCP && (
+                    <div className="flex items-start gap-2.5">
+                      <div className="p-1 rounded-lg bg-amber-100 text-amber-600 mt-0.5">
+                        <Wrench className="w-3.5 h-3.5" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-slate-900">Compétences</p>
+                        <p className="text-xs text-slate-600 font-medium">{plan.skillsMCP}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {plan.agentsWeb && (
+                    <div className="flex items-start gap-2.5">
+                      <div className="p-1 rounded-lg bg-rose-100 text-rose-600 mt-0.5">
+                        <Bot className="w-3.5 h-3.5" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-slate-900">Agents</p>
+                        <p className="text-xs text-slate-600 font-medium">{plan.agentsWeb}</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </motion.div>

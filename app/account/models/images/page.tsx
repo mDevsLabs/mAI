@@ -291,7 +291,7 @@ export default function ApiImageModelsPage() {
 
   if (authLoading || !isAuthenticated) {
     return (
-      <div className="flex justify-center items-center py-40 min-h-screen">
+      <div className="flex justify-center items-center py-40 min-h-[100dvh]">
         <div className="flex items-center gap-3 text-slate-500 font-medium">
           <Loader2 className="w-6 h-6 animate-spin text-purple-600" />
           <span>Vérification de la session...</span>
@@ -301,7 +301,7 @@ export default function ApiImageModelsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50/50 py-12 px-4 sm:px-6 lg:px-8">
+    <main className="min-h-[100dvh] bg-slate-50/50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto space-y-8">
         {/* Onglets de navigation : Modèles Texte vs Modèles Images vs Modèles Audio vs Modèles mAI */}
         <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-slate-200/60 w-fit overflow-x-auto">

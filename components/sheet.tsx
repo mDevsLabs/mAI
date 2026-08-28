@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { X } from "lucide-react";
 
@@ -11,6 +12,15 @@ interface SheetProps {
 }
 
 export function Sheet({ open, onOpenChange, children, className = "" }: SheetProps) {
+  useEffect(() => {
+    if (!open) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [open]);
+
   return (
     <AnimatePresence>
       {open && (
@@ -28,7 +38,7 @@ export function Sheet({ open, onOpenChange, children, className = "" }: SheetPro
             animate={{ y: "0%" }}
             exit={{ y: "100%" }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className={`relative w-full max-h-[90vh] rounded-t-3xl bg-white/95 backdrop-blur-3xl border border-black/10 shadow-[0_20px_50px_rgba(0,0,0,0.15)] p-6 overflow-y-auto ${className}`}
+            className={`relative w-full max-h-[90dvh] rounded-t-3xl bg-white/95 backdrop-blur-3xl border border-black/10 shadow-[0_20px_50px_rgba(0,0,0,0.15)] p-6 overflow-y-auto ${className}`}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-end mb-4">

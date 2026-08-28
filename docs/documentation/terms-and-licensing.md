@@ -32,7 +32,9 @@ mDevsLabs applique une gouvernance claire et auditable concernant la localisatio
 | :--- | :--- | :--- |
 | **Bases de Données & Comptes** | **Union Européenne (UE)**  *(Francfort, Allemagne)* | Chiffrement AES-256 au repos, conformité RGPD intégrale |
 | **Clés d'API & Métadonnées d'Usage** | **Union Européenne (UE)**  *(Francfort, Allemagne)* | Hachage SHA-256 irréversible, partitionnement isolé |
-| **Fichiers & Cloud Storage (Objets)** | **États-Unis (USA)**  *(Infrastructures Cloud S3/Objets)* | Chiffrement AES-256, TLS 1.3, Clauses Contractuelles Types |
+| **Fichiers & Cloud Storage (Objets)** | **États-Unis (USA)** & **Afrique du Sud**  *(Infrastructures Cloud S3/Objets)* | Chiffrement AES-256, TLS 1.3, Clauses Contractuelles Types |
+
+> **Clause Obligatoire : Les données et fichiers sont principalement stockés aux États-Unis et en Afrique du Sud, conformément aux dispositions contractuelles et aux politiques de gouvernance des données de mDevsLabs.**
 
 ---
 

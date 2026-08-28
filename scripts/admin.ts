@@ -581,6 +581,23 @@ export async function initCustomersTable() {
   }
 }
 
+export async function initAccountAuditTable() {
+  try {
+    await sql`
+      CREATE TABLE IF NOT EXISTS user_account_actions (
+        id SERIAL PRIMARY KEY,
+        user_id VARCHAR(100) NOT NULL,
+        action VARCHAR(20) NOT NULL CHECK (action IN ('block','unblock','delete','restore')),
+        reason TEXT,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+      )
+    `;
+    await sql`CREATE INDEX IF NOT EXISTS idx_user_account_actions_user_id ON user_account_actions(user_id)`;
+  } catch (err: any) {
+    console.error("ℹ Note lors de la création de la table d audit :", err.message || err);
+  }
+}
+
 function renderCustomersTable(customers: any[]) {
   if (customers.length === 0) {
     console.log(`\n${c.brightYellow}⚠️  Aucun compte client trouvé en base de données.${c.reset}\n`);
@@ -645,11 +662,17 @@ async function handleToggleBlockCustomer(rl: readline.Interface) {
       WHERE id = ${current.id};
     `;
 
+    await sql`
+      INSERT INTO user_account_actions (user_id, action, reason)
+      VALUES (${current.id}::text, ${newStatus ? 'block' : 'unblock'}, 'Action via console admin')
+    `;
+
     if (newStatus) {
-      await sql`
-        DELETE FROM connected_devices 
-        WHERE user_id = ${current.id}::text;
-      `;
+      await sql`DELETE FROM connected_devices WHERE user_id = ${current.id}::text;`;
+      await sql`DELETE FROM mprojects_api_keys WHERE user_id = ${current.id}::text OR user_id = ${current.username} OR user_id = ${current.email};`;
+      await sql`DELETE FROM weekly_usage WHERE user_id = ${current.id}::text;`;
+      await sql`DELETE FROM weekly_speech_usage WHERE user_id = ${current.id}::text;`;
+      await sql`DELETE FROM mprojects_daily_image_usage WHERE user_id = ${current.id}::text;`;
       console.log(`\n${c.brightGreen}✔ Le client ${c.bold}${current.username}${c.reset} (${current.email}) a été ${c.bold}🚫 BLOQUÉ${c.reset} et toutes ses sessions actives ont été révoquées.\n`);
     } else {
       console.log(`\n${c.brightGreen}✔ Le client ${c.bold}${current.username}${c.reset} (${current.email}) a été ${c.bold}🟢 DÉBLOQUÉ${c.reset}.\n`);
@@ -684,6 +707,10 @@ async function handleDeleteCustomer(rl: readline.Interface) {
       await sql`DELETE FROM mprojects_api_keys WHERE user_id = ${current.id}::text OR user_id = ${current.username} OR user_id = ${current.email};`;
       await sql`DELETE FROM weekly_usage WHERE user_id = ${current.id}::text;`;
       await sql`DELETE FROM users WHERE id = ${current.id};`;
+    await sql`
+      INSERT INTO user_account_actions (user_id, action, reason)
+      VALUES (${current.id}::text, 'delete', 'Suppression via console admin')
+    `;
 
       console.log(`\n${c.brightGreen}🗑️ Le compte de ${current.username} (${current.email}) a été supprimé définitivement.${c.reset}\n`);
     } else {
@@ -696,6 +723,7 @@ async function handleDeleteCustomer(rl: readline.Interface) {
 
 export async function runCustomerAccountManager() {
   await initCustomersTable();
+  await initAccountAuditTable();
   const rl = readline.createInterface({ input, output });
 
   console.log("\n=======================================================");
@@ -719,19 +747,182 @@ export async function runCustomerAccountManager() {
       case '2':
         await handleToggleBlockCustomer(rl);
         break;
-      case '3':
+      case '3': 
         await handleDeleteCustomer(rl);
         break;
-      case '0':
-      case 'exit':
-      case 'quit':
+      case '0': 
+      case 'exit': 
+      case 'quit': 
+        running = false;
+        break;
+      default:
+        console.log("?? Option invalide.");
+    }
+  }
+
+  rl.close();
+}
+
+// ─────────────────────────────────────────────
+// 7. GESTIONNAIRE DE NOTIFICATIONS ACTUALITÉS
+// ─────────────────────────────────────────────
+async function ensureNotificationTables() {
+  try {
+    await sql`
+      CREATE TABLE IF NOT EXISTS "Notification" (
+        "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+        "userId" text NOT NULL,
+        "type" varchar NOT NULL,
+        "title" text NOT NULL,
+        "body" text,
+        "link" text,
+        "isRead" boolean DEFAULT false NOT NULL,
+        "createdAt" timestamp DEFAULT now() NOT NULL
+      )
+    `;
+    await sql`CREATE INDEX IF NOT EXISTS "Notification_userId_idx" ON "Notification" USING btree ("userId")`;
+    await sql`CREATE INDEX IF NOT EXISTS "Notification_createdAt_idx" ON "Notification" USING btree ("createdAt" DESC)`;
+    await sql`CREATE INDEX IF NOT EXISTS "Notification_userId_isRead_idx" ON "Notification" USING btree ("userId","isRead")`;
+    await sql`
+      CREATE TABLE IF NOT EXISTS "user_notification_prefs" (
+        "userId" text PRIMARY KEY NOT NULL,
+        "enabled" boolean DEFAULT false NOT NULL,
+        "aiResponse" boolean DEFAULT true NOT NULL,
+        "projectCreated" boolean DEFAULT true NOT NULL,
+        "mcpCreated" boolean DEFAULT true NOT NULL,
+        "mcpAccessRequest" boolean DEFAULT true NOT NULL,
+        "news" boolean DEFAULT true NOT NULL,
+        "regenerateMode" varchar DEFAULT 'truncate' NOT NULL,
+        "createdAt" timestamp DEFAULT now() NOT NULL,
+        "updatedAt" timestamp DEFAULT now() NOT NULL
+      )
+    `;
+  } catch (e: any) {
+    console.error("Erreur création tables notifications", e.message);
+  }
+}
+
+export async function sendNewsNotificationToEligibleUsers(
+  title: string,
+  body: string | null,
+  link: string | null
+) {
+  await ensureNotificationTables();
+  // Récupère les utilisateurs ayant activé les notifications + news
+  const eligible = (await sql`
+    SELECT "userId" FROM "user_notification_prefs"
+    WHERE "enabled" = true AND "news" = true
+  `) as unknown as { userId: string }[];
+  if (eligible.length === 0) {
+    console.log(`  ${c.yellow}⚠ Aucun utilisateur éligible (enabled=true & news=true).${c.reset}`);
+    // Fallback: si aucun prefs, essayer users avec notify_limits? Non, on informe
+    return { sent: 0, eligible: 0 };
+  }
+  console.log(`  ${c.cyan}➔ Envoi à ${eligible.length} utilisateur(s) éligible(s)...${c.reset}`);
+  let sent = 0;
+  for (let i = 0; i < eligible.length; i += 500) {
+    const chunk = eligible.slice(i, i + 500);
+    const values = chunk.map((u) => ({ userId: u.userId }));
+    // Insert par batch via sql template
+    for (const u of chunk) {
+      try {
+        await sql`
+          INSERT INTO "Notification" ("userId", "type", "title", "body", "link")
+          VALUES (${u.userId}, 'news', ${title}, ${body}, ${link})
+        `;
+        sent++;
+      } catch (err: any) {
+        console.error(`  ${c.red}✖ Erreur pour ${u.userId}: ${err.message}${c.reset}`);
+      }
+    }
+  }
+  console.log(`  ${c.brightGreen}✔ ${sent} notification(s) "Actualités" créée(s) en BDD !${c.reset}`);
+  return { sent, eligible: eligible.length };
+}
+
+async function handleSendNewsInteractive(rl: readline.Interface) {
+  console.log(`\n${c.bold}--- 📢 ENVOI NOTIFICATION ACTUALITÉS mAI ---${c.reset}`);
+  console.log(`${c.dim}Cette notification sera enregistrée en BDD pour chaque utilisateur ayant activé Notifications > Actualités d'mAI (activé par défaut à l'acceptation).${c.reset}`);
+  const title = (await rl.question("👉 Titre de la notification (ex: Nouveautés mAI - Juin 2026) : ")).trim();
+  if (!title) {
+    console.log("❌ Titre requis.");
+    return;
+  }
+  const body = (await rl.question("👉 Corps (facultatif, max 500c) : ")).trim();
+  const link = (await rl.question("👉 Lien (facultatif, ex: /settings ou https://mai-devs.vercel.app) : ")).trim();
+  const confirm = (await rl.question(`\n⚠️ Confirmer l'envoi "${title}" ? (o/N) : `)).trim().toLowerCase();
+  if (confirm !== "o" && confirm !== "oui" && confirm !== "y" && confirm !== "yes") {
+    console.log("Annulé.");
+    return;
+  }
+  await sendNewsNotificationToEligibleUsers(title, body || null, link || null);
+}
+
+async function handleListRecentNotifications(rl: readline.Interface) {
+  console.log(`\n${c.bold}--- 📋 NOTIFICATIONS RÉCENTES ---${c.reset}`);
+  const limitIn = (await rl.question("👉 Nombre à afficher (défaut 10) : ")).trim();
+  const limit = Math.min(Math.max(parseInt(limitIn, 10) || 10, 1), 50);
+  try {
+    const rows = await sql`SELECT "id", "userId", "type", "title", "isRead", "createdAt" FROM "Notification" ORDER BY "createdAt" DESC LIMIT ${limit}`;
+    if (rows.length === 0) {
+      console.log(`${c.dim}Aucune notification en BDD.${c.reset}`);
+      return;
+    }
+    console.log("\n" + "─".repeat(110));
+    console.log(`| ${"type".padEnd(18)} | ${"title".padEnd(30)} | ${"userId".padEnd(20)} | ${"lu".padEnd(4)} | ${"date".padEnd(20)} |`);
+    console.log("─".repeat(110));
+    for (const r of rows as any[]) {
+      const t = String(r.type).padEnd(18);
+      const ttl = String(r.title).slice(0, 30).padEnd(30);
+      const uid = String(r.userId).slice(0, 20).padEnd(20);
+      const lu = (r.isRead ? "oui" : "non").padEnd(4);
+      const d = new Date(r.createdAt).toLocaleString("fr-FR").padEnd(20);
+      console.log(`| ${t} | ${ttl} | ${uid} | ${lu} | ${d} |`);
+    }
+    console.log("─".repeat(110) + "\n");
+  } catch (e: any) {
+    console.error("Erreur listing", e.message);
+  }
+}
+
+export async function runNotificationManager() {
+  await ensureNotificationTables();
+  const rl = readline.createInterface({ input, output });
+  console.log("\n=======================================================");
+  console.log("🔔  GESTIONNAIRE NOTIFICATIONS & ACTUALITÉS mAI");
+  console.log("=======================================================");
+  let running = true;
+  while (running) {
+    console.log("\n--- MENU NOTIFICATIONS ---");
+    console.log("  1. 📢 Envoyer une notification Actualités (broadcast)");
+    console.log("  2. 📋 Lister les notifications récentes");
+    console.log("  3. 🗑️ Purger les notifications lues (>30j)");
+    console.log("  0. ↩️ Retour / Quitter");
+    const choice = (await rl.question("\n👉 Votre choix [0-3] : ")).trim();
+    switch (choice) {
+      case "1":
+        await handleSendNewsInteractive(rl);
+        break;
+      case "2":
+        await handleListRecentNotifications(rl);
+        break;
+      case "3": {
+        const confirm = (await rl.question("⚠️ Supprimer les notifications lues de plus de 30 jours ? (o/N) : ")).trim().toLowerCase();
+        if (confirm === "o" || confirm === "oui" || confirm === "y") {
+          const res = await sql`DELETE FROM "Notification" WHERE "isRead" = true AND "createdAt" < NOW() - INTERVAL '30 days' RETURNING "id"`;
+          console.log(`${c.brightGreen}✔ ${res.length} notifications purgées.${c.reset}`);
+        } else console.log("Annulé.");
+        break;
+      }
+      case "0":
+      case "exit":
+      case "quit":
         running = false;
         break;
       default:
         console.log("⚠️ Option invalide.");
     }
   }
-
   rl.close();
 }
 
@@ -773,6 +964,22 @@ export async function runAdminCli() {
     await runNewsletterStudio();
     process.exit(0);
   }
+  if (args.includes('--notify-news')) {
+    const idx = args.indexOf('--notify-news');
+    const title = args[idx + 1];
+    const body = args[idx + 2] || null;
+    const link = args[idx + 3] || null;
+    if (!title) {
+      console.error("Usage: --notify-news \"Titre\" [\"Body\"] [\"Link\"]");
+      process.exit(1);
+    }
+    await sendNewsNotificationToEligibleUsers(title, body, link);
+    process.exit(0);
+  }
+  if (args.includes('--notifications')) {
+    await runNotificationManager();
+    process.exit(0);
+  }
 
   console.log("");
   console.log(`${c.bgPurple}${c.bold}${c.brightWhite}  ╔══════════════════════════════════════════════════════════════════════╗  ${c.reset}`);
@@ -793,10 +1000,11 @@ export async function runAdminCli() {
     console.log(`  ${c.brightMagenta}[6]${c.reset} 🎟️  Gérer les codes d'abonnement (Créer, Lister, Activer, Modifier)`);
     console.log(`  ${c.brightYellow}[7]${c.reset} 📧 Lancer le Studio de Newsletter (Éditeur HTML & CLI)`);
     console.log(`  ${c.brightWhite}[8]${c.reset} 👥 Gérer les comptes clients (Lister, Bloquer, Supprimer)`);
+    console.log(`  ${c.brightCyan}[9]${c.reset} 🔔 Gérer les Notifications & Actualités (Broadcast)`);
     console.log(`  ${c.white}[0]${c.reset} 🚪 Quitter`);
     console.log("");
 
-    const choice = (await rl.question(`  ${c.brightYellow}➔ Votre choix [0-8] : ${c.reset}`)).trim();
+    const choice = (await rl.question(`  ${c.brightYellow}➔ Votre choix [0-9] : ${c.reset}`)).trim();
 
     switch (choice) {
       case '1':
@@ -825,6 +1033,10 @@ export async function runAdminCli() {
       case '8':
         rl.close();
         await runCustomerAccountManager();
+        return;
+      case '9':
+        rl.close();
+        await runNotificationManager();
         return;
       case '0':
       case 'exit':

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
 import { BackToTop } from "@/components/back-to-top";
@@ -8,8 +8,7 @@ import { OnboardingProvider } from "@/components/onboarding/onboarding-provider"
 import { ToastProvider, CookieBanner } from "@/components/ui/index";
 import { getChangelogs } from "@/lib/changelog";
 import { getNewsArticles } from "@/lib/news";
-import Link from "next/link";
-import { ChevronDown } from "lucide-react";
+import { FooterLegal } from "@/components/footer-legal";
 
 const inter = {
   variable: "font-sans inter-variable",
@@ -33,6 +32,13 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#ffffff",
+  viewportFit: "auto",
+};
+
 export default async function RootLayout({
   children,
 }: {
@@ -44,7 +50,7 @@ export default async function RootLayout({
   return (
     <html lang="fr" className={`${inter.variable} ${spaceGrotesk.variable}`} suppressHydrationWarning>
       <body
-        className="antialiased font-sans min-h-screen flex flex-col pt-24 overflow-x-hidden relative bg-white text-slate-900"
+        className="antialiased font-sans min-h-[100dvh] flex flex-col pt-24 overflow-x-hidden relative bg-white text-slate-900"
       >
           <ToastProvider>
             <AuthProvider>
@@ -65,30 +71,7 @@ export default async function RootLayout({
                 </p>
 
                 {/* Menu Déroulant Légal */}
-                <div className="relative group text-xs md:text-sm text-slate-500 font-medium cursor-pointer">
-                  <span className="hover:text-slate-900 transition-colors flex items-center gap-1">
-                    Légal
-                    <ChevronDown className="w-4 h-4 transition-transform duration-200 group-hover:-rotate-180" />
-                  </span>
-
-                  {/* Liste de liens s'ouvrant vers le haut */}
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 translate-y-2 invisible group-hover:opacity-100 group-hover:translate-y-0 group-hover:visible transition-all duration-200 z-50">
-                    <div className="bg-white/95 backdrop-blur-xl border border-black/10 shadow-xl rounded-2xl p-1.5 min-w-[140px] flex flex-col gap-0.5">
-                      <Link
-                        href="/legal/privacy"
-                        className="px-3 py-2 rounded-xl text-xs font-medium transition-colors text-slate-600 hover:bg-black/5 hover:text-slate-900 text-center"
-                      >
-                        Confidentialité
-                      </Link>
-                      <Link
-                        href="/legal/terms"
-                        className="px-3 py-2 rounded-xl text-xs font-medium transition-colors text-slate-600 hover:bg-black/5 hover:text-slate-900 text-center"
-                      >
-                        CGU
-                      </Link>
-                    </div>
-                  </div>
-                </div>
+                <FooterLegal />
               </footer>
 
               {/* Footer Decorative */}

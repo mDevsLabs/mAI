@@ -18,7 +18,7 @@ export default function ApiKeysPage() {
 
   if (authLoading || !isAuthenticated) {
     return (
-      <div className="flex justify-center items-center py-40 min-h-screen">
+      <div className="flex justify-center items-center py-40 min-h-[100dvh]">
         <div className="flex items-center gap-3 text-slate-500 font-medium">
           <Loader2 className="w-6 h-6 animate-spin text-purple-600" />
           <span>Vérification de la session...</span>
@@ -28,7 +28,7 @@ export default function ApiKeysPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50/50 py-12 px-4 sm:px-6 lg:px-8">
+    <main className="min-h-[100dvh] bg-slate-50/50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto space-y-8">
         {/* En-tête de page */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-2">

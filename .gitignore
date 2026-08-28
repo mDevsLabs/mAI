@@ -27,3 +27,4 @@ docs/llms-api.md
 
 # Admin / DB Scripts (gardé en Git, sauf génération sensible)
 # scripts/create-subscription-code.ts — versionner, secret via env
+scripts/test-layerbase.ts
