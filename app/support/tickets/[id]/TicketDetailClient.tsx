@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
   Clock,
@@ -11,7 +10,6 @@ import {
   Zap,
   Send,
   Loader2,
-  User,
   ShieldCheck,
   ExternalLink,
   Laptop,
@@ -23,13 +21,12 @@ import {
 import toast from "react-hot-toast";
 import ReactMarkdown from "react-markdown";
 import { useAuth } from "@/components/auth-provider";
+import { getTicketDetails, addTicketResponse } from "@/app/actions/support";
 import {
-  getTicketDetails,
-  addTicketResponse,
+  isAdminUser,
   type SupportTicket,
   type SupportMessage,
-  isAdminUser,
-} from "@/app/actions/support";
+} from "@/app/actions/support-utils";
 
 const STATUS_CONFIG: Record<
   string,
@@ -50,7 +47,6 @@ const PRIORITY_BADGES: Record<string, { label: string; bg: string }> = {
 };
 
 export default function TicketDetailClient({ ticketId }: { ticketId: string }) {
-  const router = useRouter();
   const { user, isAuthenticated, loading: authLoading } = useAuth();
 
   const [ticket, setTicket] = useState<SupportTicket | null>(null);

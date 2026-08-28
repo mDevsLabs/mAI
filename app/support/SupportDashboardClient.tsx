@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
-  LifeBuoy,
   Bug,
   HelpCircle,
   PlusCircle,
@@ -19,7 +18,8 @@ import {
   MessageSquare,
 } from "lucide-react";
 import { useAuth } from "@/components/auth-provider";
-import { getTicketsList, getSupportStats, type SupportTicket, isAdminUser } from "@/app/actions/support";
+import { getTicketsList, getSupportStats } from "@/app/actions/support";
+import { isAdminUser, type SupportTicket } from "@/app/actions/support-utils";
 
 const STATUS_CONFIG: Record<
   string,

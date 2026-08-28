@@ -4,7 +4,6 @@ import { useState, useEffect, useTransition } from "react";
 import Link from "next/link";
 import {
   Search,
-  Filter,
   PlusCircle,
   Clock,
   CheckCircle2,
@@ -16,10 +15,10 @@ import {
   Loader2,
   FileQuestion,
   User,
-  ShieldCheck,
 } from "lucide-react";
 import { useAuth } from "@/components/auth-provider";
-import { getTicketsList, type SupportTicket, isAdminUser } from "@/app/actions/support";
+import { getTicketsList } from "@/app/actions/support";
+import { isAdminUser, type SupportTicket } from "@/app/actions/support-utils";
 
 const STATUS_TABS = [
   { id: "all", label: "Tous les tickets" },
@@ -57,7 +56,7 @@ export default function TicketsListClient() {
   const [projectFilter, setProjectFilter] = useState("all");
   const [priorityFilter, setPriorityFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
 
   const isAdmin = isAdminUser(user?.email);
 

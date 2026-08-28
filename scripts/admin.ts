@@ -822,7 +822,7 @@ export async function sendNewsNotificationToEligibleUsers(
   let sent = 0;
   for (let i = 0; i < eligible.length; i += 500) {
     const chunk = eligible.slice(i, i + 500);
-    const values = chunk.map((u) => ({ userId: u.userId }));
+    const _values = chunk.map((u) => ({ userId: u.userId }));
     // Insert par batch via sql template
     for (const u of chunk) {
       try {

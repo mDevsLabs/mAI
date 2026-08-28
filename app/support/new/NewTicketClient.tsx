@@ -6,7 +6,6 @@ import Link from "next/link";
 import {
   Bug,
   HelpCircle,
-  AlertTriangle,
   Send,
   Loader2,
   ArrowLeft,

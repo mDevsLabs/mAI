@@ -5,16 +5,12 @@ import Link from "next/link";
 import {
   BarChart3,
   TrendingUp,
-  Clock,
-  CheckCircle2,
   AlertTriangle,
-  Zap,
   PieChart as PieIcon,
   ShieldCheck,
   RefreshCw,
   Loader2,
   ArrowLeft,
-  Calendar,
   Layers,
 } from "lucide-react";
 import {
@@ -33,7 +29,8 @@ import {
   CartesianGrid,
 } from "recharts";
 import { useAuth } from "@/components/auth-provider";
-import { getSupportStats, isAdminUser } from "@/app/actions/support";
+import { getSupportStats } from "@/app/actions/support";
+import { isAdminUser } from "@/app/actions/support-utils";
 
 const DONUT_COLORS = [
   "#9333ea", // violet
