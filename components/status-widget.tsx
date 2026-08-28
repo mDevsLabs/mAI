@@ -15,9 +15,6 @@ export function StatusWidget() {
     return () => window.removeEventListener("mai:cookie-banner", handler);
   }, []);
 
-  // Évite le chevauchement avec le bandeau cookies (pleine largeur, en bas)
-  if (bannerOpen) return null;
-
   useEffect(() => {
     fetch("https://mai.instatus.com/summary.json")
       .then((res) => res.json())
@@ -28,6 +25,9 @@ export function StatusWidget() {
       })
       .catch(() => {});
   }, []);
+
+  // Évite le chevauchement avec le bandeau cookies (pleine largeur, en bas)
+  if (bannerOpen) return null;
 
   let color = "bg-emerald-500";
   let text = "Opérationnel";
