@@ -316,7 +316,7 @@ export default function KeysClient() {
                   Clé API générée pour &quot;{createdSecret.name}&quot;
                 </h4>
                 <p className="text-xs text-amber-700 font-bold">
-                  ⚠️ Sauvegardez cette clé immédiatement. Cette valeur ne sera plus jamais affichée !
+                  <AlertTriangle className="inline w-4 h-4 align-middle" />️ Sauvegardez cette clé immédiatement. Cette valeur ne sera plus jamais affichée !
                 </p>
               </div>
             </div>

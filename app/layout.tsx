@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
 import { BackToTop } from "@/components/back-to-top";
@@ -49,6 +50,12 @@ export default async function RootLayout({
 
   return (
     <html lang="fr" className={`${inter.variable} ${spaceGrotesk.variable}`} suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://upload.fs.fr" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://cdn.botpress.cloud" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://upload.fs.fr" />
+        <link rel="dns-prefetch" href="https://cdn.botpress.cloud" />
+      </head>
       <body
         className="antialiased font-sans min-h-[100dvh] flex flex-col pt-24 overflow-x-hidden relative bg-white text-slate-900"
       >
@@ -81,8 +88,8 @@ export default async function RootLayout({
           </ToastProvider>
           <BackToTop />
           <StatusWidget />
-        <script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js"></script>
-        <script src="https://files.bpcontent.cloud/2026/05/02/11/20260502114920-JBX5UCAM.js" defer></script>
+        <Script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js" strategy="lazyOnload" />
+        <Script src="https://files.bpcontent.cloud/2026/05/02/11/20260502114920-JBX5UCAM.js" strategy="lazyOnload" />
       </body>
     </html>
   );

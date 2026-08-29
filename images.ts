@@ -1,9 +1,11 @@
 import type { Hono } from "npm:hono@4";
 import {
+  extractTierFromApiKey,
   extractToken,
   getDb,
   getTierDailyImageLimit,
   getTierImageRequestCost,
+  getUserQuotaBoost,
   verifyToken,
 } from "./config.ts";
 
@@ -948,9 +950,11 @@ export function registerImageRoutes(app: Hono) {
         `.catch(() => []),
       ]);
 
-      const effectiveTier = uRows[0]?.tier || userPlan || "Free";
+      const keyTier = extractTierFromApiKey(token);
+      const effectiveTier = keyTier || uRows[0]?.tier || userPlan || "Free";
       const usedToday = Number(countRows[0]?.images_generated || 0);
-      const dailyLimit = getTierDailyImageLimit(effectiveTier);
+      const imageBoost = await getUserQuotaBoost(sql, userId, "images");
+      const dailyLimit = getTierDailyImageLimit(effectiveTier) + imageBoost;
 
       const now = new Date();
       const tomorrowMidnight = new Date(
@@ -1219,7 +1223,8 @@ export function registerImageRoutes(app: Hono) {
         WHERE id::text = ${userId}::text OR username = ${userId}::text 
         LIMIT 1
       `;
-      const effectiveTier = uRows[0]?.tier || userPlan || "Free";
+      const keyTier = extractTierFromApiKey(token);
+      const effectiveTier = keyTier || uRows[0]?.tier || userPlan || "Free";
       const planStr = effectiveTier.toLowerCase().trim();
       const isPaidPlan = ["plus", "pro", "max"].includes(planStr);
 
@@ -1237,8 +1242,8 @@ export function registerImageRoutes(app: Hono) {
         );
       }
 
-      // Quota journalier
-      const dailyLimit = getTierDailyImageLimit(effectiveTier);
+      const imageBoost = await getUserQuotaBoost(sql, userId, "images");
+      const dailyLimit = getTierDailyImageLimit(effectiveTier) + imageBoost;
       const usageRows = await sql`
         SELECT images_generated 
         FROM mprojects_daily_image_usage 

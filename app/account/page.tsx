@@ -21,6 +21,7 @@ import {
   Cloud,
   Image as ImageIcon,
   Volume2,
+  PartyPopper,
 } from "lucide-react";
 import { useAuth } from "@/components/auth-provider";
 import { MaiApiError, formatStorageBytes, CLOUD_STORAGE_LIMITS, getAudioUsage, getTierSpeechLimit } from "@/lib/mai-api";
@@ -29,7 +30,9 @@ import { getUserApiUsage } from "@/app/actions/api-keys";
 import { getUserImageUsage, type UserImageUsageData } from "@/app/actions/image-usage";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
-import Confetti from "react-confetti";
+import dynamic from "next/dynamic";
+const Confetti = dynamic(() => import("react-confetti"), { ssr: false });
+import { getUserAvailableResets, claimUserReset, type AvailableResetItem } from "@/app/actions/resets";
 import { useWindowSize } from "react-use";
 import { DevicesList } from "@/components/account/devices-list";
 
@@ -83,11 +86,17 @@ export default function AccountPage() {
   const [upgrading, setUpgrading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [refreshingApi, setRefreshingApi] = useState(false);
+  const [apiBoost, setApiBoost] = useState(0);
   const [refreshingStorage, setRefreshingStorage] = useState(false);
   const [refreshingImages, setRefreshingImages] = useState(false);
   const [imageUsage, setImageUsage] = useState<UserImageUsageData | null>(null);
   const [refreshingAudio, setRefreshingAudio] = useState(false);
   const [audioUsage, setAudioUsage] = useState<{tokensUsed: number; requestsCount: number; weeklyLimit: number; resetAt: string; plan: string} | null>(null);
+
+  // État des réinitialisations de quotas
+  const [availableResets, setAvailableResets] = useState<AvailableResetItem[]>([]);
+  const [loadingResets, setLoadingResets] = useState(false);
+  const [claimingResetId, setClaimingResetId] = useState<number | null>(null);
 
   // Formulaires d'édition du profil
   const [newUsername, setNewUsername] = useState("");
@@ -114,7 +123,7 @@ export default function AccountPage() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ["profil", "usage-api", "usage-images", "usage-audio", "usage-mai", "usage-cloud", "appareils", "upgrade-code"];
+      const sections = ["profil", "usage-api", "usage-images", "usage-audio", "usage-mai", "usage-cloud", "appareils", "resets", "upgrade-code"];
       let current = sections[0];
       for (const section of sections) {
         const element = document.getElementById(section);
@@ -195,13 +204,18 @@ export default function AccountPage() {
     if (!user) return;
     const userId = user.username || user.email || "anonymous";
     const res = await getUserApiUsage(userId);
-    if (res.success && res.keys) {
-      setApiUsageStats(res.keys.map(k => ({
-        key: k.key.substring(0, 8) + "...",
-        plan: k.plan,
-        requestCount: k.requestCount,
-        limit: k.plan === "Max" ? 5000 : k.plan === "Pro" ? 2000 : k.plan === "Plus" ? 1000 : 500
-      })));
+    if (res.success) {
+      if ((res as any).apiBoost !== undefined) {
+        setApiBoost((res as any).apiBoost);
+      }
+      if (res.keys) {
+        setApiUsageStats(res.keys.map(k => ({
+          key: k.key.substring(0, 8) + "...",
+          plan: k.plan,
+          requestCount: k.requestCount,
+          limit: k.plan === "Max" ? 5000 : k.plan === "Pro" ? 2000 : k.plan === "Plus" ? 1000 : 500
+        })));
+      }
     }
   };
 
@@ -214,11 +228,52 @@ export default function AccountPage() {
     }
   };
 
+  const loadResets = async () => {
+    if (!user?.id) return;
+    setLoadingResets(true);
+    try {
+      const res = await getUserAvailableResets(String(user.id));
+      if (res.success) {
+        setAvailableResets(res.resets);
+      }
+    } catch (err) {
+      console.error("Erreur lors du chargement des réinitialisations:", err);
+    } finally {
+      setLoadingResets(false);
+    }
+  };
+
+  const handleClaimReset = async (resetId: number) => {
+    if (!user?.id) return;
+    setClaimingResetId(resetId);
+    try {
+      const res = await claimUserReset(String(user.id), resetId);
+      if (res.success) {
+        toast.success(res.message || "Quota réinitialisé avec succès !");
+        // Suppression immédiate de la ligne du tableau
+        setAvailableResets((prev) => prev.filter((r) => r.id !== resetId));
+        // Rafraîchissement direct de l'ensemble des métriques de la page
+        await refreshUsage();
+        await loadApiUsage();
+        await loadImagesUsage();
+        await loadAudioUsage();
+        await refreshCloudStorage();
+      } else {
+        toast.error(res.error || "Erreur lors de la réinitialisation");
+      }
+    } catch {
+      toast.error("Erreur de connexion au serveur.");
+    } finally {
+      setClaimingResetId(null);
+    }
+  };
+
   useEffect(() => {
     if (user) {
       loadApiUsage();
       loadImagesUsage();
       loadAudioUsage();
+      loadResets();
     }
   }, [user]);
 
@@ -235,6 +290,7 @@ export default function AccountPage() {
       await loadApiUsage(); // Refresh API keys usage too
       await loadImagesUsage(); // Refresh Image usage too
       await loadAudioUsage(); // Refresh Audio usage too
+      await loadResets(); // Refresh pending resets too
       await refreshCloudStorage();
       if (data) toast.success("Quotas actualisés");
       else toast.error("Session expirée");
@@ -351,7 +407,7 @@ export default function AccountPage() {
       });
       setNewPassword("");
       setCurrentPassword("");
-      toast.success("Profil mis à jour avec succès ! ✨");
+      toast.success("Profil mis à jour avec succès ! *");
     } catch (err: any) {
       toast.error(err.message || "Erreur lors de la mise à jour du profil.");
     } finally {
@@ -395,9 +451,9 @@ export default function AccountPage() {
             <div className="flex items-center gap-3">
               <Sparkles className="w-6 h-6 text-yellow-300" />
               <div>
-                <p className="font-black text-base">Merci d&apos;avoir souscrit au forfait {tier} ! 🎉</p>
+                <p className="font-black text-base">Merci d&apos;avoir souscrit au forfait {tier} ! <PartyPopper className="inline w-4 h-4 align-middle" /></p>
                 <p className="text-xs text-purple-100 mt-0.5">
-                  Nous vous remercions chaleureusement pour votre confiance. Vos quotas étendus sont immédiatement disponibles ! ✨
+                  Nous vous remercions chaleureusement pour votre confiance. Vos quotas étendus sont immédiatement disponibles ! <Sparkles className="inline w-4 h-4 align-middle" />
                 </p>
               </div>
             </div>
@@ -512,6 +568,7 @@ export default function AccountPage() {
               { id: "usage-mai", label: "Usage mAI", icon: Gauge },
               { id: "usage-cloud", label: "Stockage Cloud", icon: Cloud },
               { id: "appareils", label: "Appareils Connectés", icon: Monitor },
+              { id: "resets", label: "Réinitialisations", icon: RefreshCw },
               { id: "upgrade-code", label: "Activer un Code", icon: Sparkles },
             ].map((item) => (
               <button
@@ -795,8 +852,9 @@ export default function AccountPage() {
             {(() => {
               // Calcul de l'usage global (toutes les clés confondues)
               const totalRequests = apiUsageStats.reduce((acc, curr) => acc + curr.requestCount, 0);
-              // La limite globale du compte s'appuie directement sur le forfait de l'utilisateur
-              const globalLimit = getTierQuotaLimit(user?.tier);
+              // La limite globale du compte s'appuie directement sur le forfait de l'utilisateur + boosts actifs
+              const baseLimit = getTierQuotaLimit(user?.tier);
+              const globalLimit = baseLimit + apiBoost;
               const percent = Math.min(100, Math.round((totalRequests / globalLimit) * 100));
 
               return (
@@ -807,6 +865,11 @@ export default function AccountPage() {
                         {totalRequests.toLocaleString()}
                       </span>{" "}
                       / {globalLimit.toLocaleString()} requêtes
+                      {apiBoost > 0 && (
+                        <span className="ml-2 inline-flex items-center text-xs font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full border border-purple-200">
+                          +{apiBoost} Boost
+                        </span>
+                      )}
                     </p>
                     <p className="font-semibold text-slate-900">{percent}%</p>
                   </div>
@@ -1119,6 +1182,111 @@ export default function AccountPage() {
           Consultez et gérez les appareils actuellement connectés à votre compte.
         </p>
         <DevicesList />
+      </section>
+
+      {/* Réinitialisations de Quotas */}
+      <section 
+        id="resets" 
+        className="scroll-mt-28 bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-6"
+      >
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2.5">
+              <RefreshCw className="w-5 h-5 text-purple-600" />
+              Réinitialisations de Quotas
+            </h2>
+            <p className="text-sm text-slate-600 mt-1">
+              Consultez et activez les réinitialisations de limites qui vous ont été accordées.
+            </p>
+          </div>
+          <button
+            onClick={loadResets}
+            disabled={loadingResets}
+            className="self-start sm:self-auto px-3.5 py-1.5 rounded-xl bg-white/60 hover:bg-white text-slate-700 border border-slate-200/80 shadow-sm transition-all flex items-center gap-2 text-xs font-bold cursor-pointer disabled:opacity-50"
+            title="Rafraîchir les réinitialisations"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${loadingResets ? "animate-spin" : ""}`} />
+            Actualiser
+          </button>
+        </div>
+
+        {availableResets.length === 0 ? (
+          <div className="text-center py-10 px-4 bg-white/30 rounded-2xl border border-dashed border-slate-200">
+            <div className="w-12 h-12 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center mx-auto mb-3">
+              <RefreshCw className="w-6 h-6 opacity-60" />
+            </div>
+            <h3 className="text-sm font-bold text-slate-800 mb-1">Aucune réinitialisation en attente</h3>
+            <p className="text-xs text-slate-500 max-w-sm mx-auto">
+              Toutes vos réinitialisations disponibles ont été utilisées ou aucune ne vous a été attribuée pour le moment.
+            </p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto rounded-2xl border border-slate-200/80 bg-white/70 shadow-sm">
+            <table className="w-full text-left text-sm border-collapse">
+              <thead>
+                <tr className="border-b border-slate-200 bg-slate-50/70 text-xs font-bold text-slate-500 uppercase tracking-wider">
+                  <th className="px-5 py-3.5">Quota concerné</th>
+                  <th className="px-5 py-3.5">Attribué le</th>
+                  <th className="px-5 py-3.5">Expiration</th>
+                  <th className="px-5 py-3.5 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-200/60 font-medium">
+                {availableResets.map((r) => {
+                  const badgeMap: Record<string, { label: string; bg: string; text: string; border: string }> = {
+                    all: { label: "Tous les Quotas", bg: "bg-purple-50", text: "text-purple-700", border: "border-purple-200" },
+                    api: { label: "Quotas API", bg: "bg-blue-50", text: "text-blue-700", border: "border-blue-200" },
+                    mai: { label: "Tokens mAI", bg: "bg-emerald-50", text: "text-emerald-700", border: "border-emerald-200" },
+                    images: { label: "Images Quotidiennes", bg: "bg-amber-50", text: "text-amber-700", border: "border-amber-200" },
+                    audio: { label: "Synthèse Audio", bg: "bg-pink-50", text: "text-pink-700", border: "border-pink-200" },
+                  };
+                  const badge = badgeMap[r.resetType] || { label: r.resetType, bg: "bg-slate-50", text: "text-slate-700", border: "border-slate-200" };
+
+                  return (
+                    <tr key={r.id} className="hover:bg-white/90 transition-colors">
+                      <td className="px-5 py-4 whitespace-nowrap">
+                        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold border ${badge.bg} ${badge.text} ${badge.border}`}>
+                          {badge.label}
+                        </span>
+                      </td>
+                      <td className="px-5 py-4 text-xs text-slate-500 whitespace-nowrap">
+                        {new Date(r.createdAt).toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" })}
+                      </td>
+                      <td className="px-5 py-4 text-xs font-semibold whitespace-nowrap">
+                        {r.expiresAt ? (
+                          <span className="text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
+                            {new Date(r.expiresAt).toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+                          </span>
+                        ) : (
+                          <span className="text-slate-400 font-normal">Illimitée</span>
+                        )}
+                      </td>
+                      <td className="px-5 py-4 text-right whitespace-nowrap">
+                        <button
+                          onClick={() => handleClaimReset(r.id)}
+                          disabled={claimingResetId === r.id}
+                          className="px-4 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-bold shadow-sm transition-all cursor-pointer disabled:opacity-50 inline-flex items-center gap-1.5"
+                        >
+                          {claimingResetId === r.id ? (
+                            <>
+                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                              Réinitialisation...
+                            </>
+                          ) : (
+                            <>
+                              <RefreshCw className="w-3.5 h-3.5" />
+                              Réinitialiser
+                            </>
+                          )}
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
       </section>
 
       {/* Upgrade code */}

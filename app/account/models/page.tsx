@@ -542,7 +542,7 @@ export default function ApiModelsPage() {
 
             {contextMinK !== null && contextMaxK !== null && contextMinK > contextMaxK && (
               <p className="text-xs font-bold text-amber-600 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
-                ⚠️ Le minimum ({contextMinK}K) est supérieur au maximum ({contextMaxK}K) — aucun modèle ne correspondra.
+                <ShieldAlert className="inline w-4 h-4 align-middle" />️ Le minimum ({contextMinK}K) est supérieur au maximum ({contextMaxK}K) — aucun modèle ne correspondra.
               </p>
             )}
           </div>

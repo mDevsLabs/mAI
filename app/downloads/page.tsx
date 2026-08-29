@@ -11,6 +11,7 @@ import {
   Globe,
   Terminal,
   Cpu,
+  Star,
 } from "lucide-react";
 import Image from "next/image";
 import { toast } from "react-hot-toast";
@@ -261,7 +262,7 @@ export default function DownloadPage() {
             className="group bg-white/40 backdrop-blur-md border border-white/60 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] rounded-3xl p-6 md:p-8 hover:border-cyan-500/30 transition-all duration-300 relative overflow-hidden"
           >
             <div className="absolute top-4 right-4 flex items-center gap-1 px-2.5 py-1 rounded-full bg-cyan-500 text-white text-[10px] font-black uppercase tracking-widest shadow">
-              ✦ NEW
+              <Star className="inline w-4 h-4 align-middle" /> NEW
             </div>
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
               <div className="flex items-start md:items-center gap-5">
@@ -325,7 +326,7 @@ export default function DownloadPage() {
             className="group bg-white/40 backdrop-blur-md border border-white/60 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] rounded-3xl p-6 md:p-8 hover:border-amber-500/30 transition-all duration-300 relative overflow-hidden"
           >
             <div className="absolute top-4 right-4 flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-500 text-white text-[10px] font-black uppercase tracking-widest shadow">
-              ✦ NEW
+              <Star className="inline w-4 h-4 align-middle" /> NEW
             </div>
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
               <div className="flex items-start md:items-center gap-5">
@@ -389,7 +390,7 @@ export default function DownloadPage() {
             className="group bg-white/40 backdrop-blur-md border border-white/60 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] rounded-3xl p-6 md:p-8 hover:border-indigo-500/30 transition-all duration-300 relative overflow-hidden"
           >
             <div className="absolute top-4 right-4 flex items-center gap-1 px-2.5 py-1 rounded-full bg-indigo-500 text-white text-[10px] font-black uppercase tracking-widest shadow">
-              ✦ NEW
+              <Star className="inline w-4 h-4 align-middle" /> NEW
             </div>
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
               <div className="flex items-start md:items-center gap-5">

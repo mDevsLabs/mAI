@@ -2,8 +2,13 @@
 
 import { Github, Menu, X, ChevronDown, UserRound, LogOut, Gauge, Activity, Cloud, Image as ImageIcon, Volume2, Search } from "lucide-react";
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import toast from "react-hot-toast";
-import { CommandMenu } from "@/components/command-menu";
+
+const CommandMenu = dynamic(
+  () => import("@/components/command-menu").then((mod) => mod.CommandMenu),
+  { ssr: false }
+);
 import type { ChangelogsByProject } from "@/lib/changelog";
 import type { NewsArticle } from "@/lib/news";
 import { formatStorageBytes, CLOUD_STORAGE_LIMITS } from "@/lib/mai-api";

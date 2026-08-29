@@ -15,60 +15,61 @@ export default function SupportLayout({
 }) {
   return (
     <div className="w-full min-h-[calc(100vh-140px)] flex flex-col">
-      {/* Bannière d'en-tête du Support */}
-      <section className="relative overflow-hidden rounded-3xl border border-black/10 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white p-6 sm:p-10 mb-8 shadow-xl">
-        {/* Glow orbs en arrière-plan */}
-        <div className="absolute top-0 right-0 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-10 left-1/3 w-60 h-60 bg-blue-500/20 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="relative z-10 max-w-3xl space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/20 border border-purple-400/30 text-purple-300 text-xs font-semibold uppercase tracking-wider">
-            <LifeBuoy className="w-3.5 h-3.5" />
-            Centre d&apos;assistance mAI
+      {/* Header type Requêtes - remplace la grande bannière */}
+      <div className="max-w-7xl mx-auto w-full space-y-6 mb-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-2">
+          <div className="text-left space-y-3">
+            <h1 className="text-4xl sm:text-5xl font-black italic tracking-tighter leading-[0.9] uppercase text-slate-900">
+              Centre de <br className="hidden sm:block" />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600">
+                Support mAI
+              </span>
+            </h1>
+            <p className="text-slate-500 text-sm md:text-base font-light max-w-2xl">
+              Une anomalie sur un modèle, un problème de quota ou une question technique ? Créez un ticket, suivez
+              l&apos;avancement en temps réel et échangez directement avec l&apos;équipe{" "}
+              <span className="font-semibold text-slate-700">mAI</span>.
+            </p>
           </div>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight">
-            Support & Signalement de bugs
-          </h1>
-          <p className="text-slate-300 text-sm sm:text-base font-light leading-relaxed">
-            Une anomalie sur un modèle, un problème de quota ou une question technique ? Notre équipe prend en charge vos demandes avec un suivi en temps réel et des alertes immédiates.
-          </p>
+          <div className="flex items-center gap-2 shrink-0">
+            <Link
+              href="/support/new"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-sm font-bold shadow-md hover:shadow-lg transition-all"
+            >
+              <PlusCircle className="w-4 h-4" />
+              Créer un ticket
+            </Link>
+          </div>
         </div>
 
-        {/* Navigation secondaire du Support */}
-        <nav className="relative z-10 flex flex-wrap gap-2 pt-6 mt-6 border-t border-white/10 text-xs sm:text-sm font-semibold">
+        {/* Navigation secondaire compacte (style épuré, pas de bannière sombre) */}
+        <nav className="flex flex-wrap gap-2 text-xs font-semibold">
           <Link
             href="/support"
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all backdrop-blur-md"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-slate-200 hover:border-purple-200 hover:bg-purple-50 text-slate-700 hover:text-purple-700 transition-all shadow-2xs"
           >
-            <LifeBuoy className="w-4 h-4 text-purple-400" />
+            <LifeBuoy className="w-4 h-4 text-purple-600" />
             Vue d&apos;ensemble
           </Link>
           <Link
-            href="/support/new"
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-md transition-all font-bold"
-          >
-            <PlusCircle className="w-4 h-4" />
-            Créer un ticket
-          </Link>
-          <Link
             href="/support/tickets"
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all backdrop-blur-md"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-slate-200 hover:border-blue-200 hover:bg-blue-50 text-slate-700 hover:text-blue-700 transition-all shadow-2xs"
           >
-            <MessageSquare className="w-4 h-4 text-blue-400" />
+            <MessageSquare className="w-4 h-4 text-blue-600" />
             Mes tickets & Historique
           </Link>
           <Link
             href="/support/stats"
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all backdrop-blur-md"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-slate-200 hover:border-amber-200 hover:bg-amber-50 text-slate-700 hover:text-amber-700 transition-all shadow-2xs"
           >
-            <BarChart3 className="w-4 h-4 text-amber-400" />
+            <BarChart3 className="w-4 h-4 text-amber-600" />
             Statistiques
           </Link>
         </nav>
-      </section>
+      </div>
 
       {/* Contenu principal */}
-      <div className="flex-1 w-full">{children}</div>
+      <div className="flex-1 w-full max-w-7xl mx-auto">{children}</div>
     </div>
   );
 }

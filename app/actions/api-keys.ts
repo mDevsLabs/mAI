@@ -3,11 +3,26 @@
 import { neon } from "@neondatabase/serverless";
 import crypto from "crypto";
 
-// Fonction pour générer une clé API sécurisée
-function generateApiKeyString(): string {
-  const prefix = "mai-";
-  const randomStr = crypto.randomBytes(32).toString("hex");
-  return `${prefix}${randomStr}`;
+import { getTierQuotaLimit, getUserQuotaBoost } from "@/lib/tiers";
+
+// Fonction pour générer une clé API sécurisée au format : mai-TIER_USER-XXXXX-XXXXX
+// 5 caractères majuscules/chiffres avant le -, puis 5 caractères majuscules ou minuscules
+function generateApiKeyString(tier: string = "free"): string {
+  const normalizedTier = ["free", "plus", "pro", "max"].includes(tier.toLowerCase().trim())
+    ? tier.toLowerCase().trim()
+    : "free";
+
+  const part1Charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  const part2Charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+  let part1 = "";
+  let part2 = "";
+  const b1 = crypto.randomBytes(5);
+  const b2 = crypto.randomBytes(5);
+  for (let i = 0; i < 5; i++) part1 += part1Charset[b1[i] % part1Charset.length];
+  for (let i = 0; i < 5; i++) part2 += part2Charset[b2[i] % part2Charset.length];
+
+  return `mai-${normalizedTier}-${part1}-${part2}`;
 }
 
 export async function generateAndSaveApiKey(userId: string, plan: string = "Free") {
@@ -19,7 +34,7 @@ export async function generateAndSaveApiKey(userId: string, plan: string = "Free
     }
     
     const sql = neon(databaseUrl);
-    const apiKey = generateApiKeyString();
+    const apiKey = generateApiKeyString(plan);
     
     // Sauvegarder la clé dans Neon
     await sql`
@@ -62,8 +77,11 @@ export async function getUserApiUsage(userId: string) {
       ORDER BY k.created_at DESC
     `;
 
+    const apiBoost = await getUserQuotaBoost(sql, userId, "api");
+
     return {
       success: true,
+      apiBoost,
       keys: keys.map(k => ({
         key: k.api_key,
         plan: k.plan,

@@ -10,6 +10,7 @@ import {
   Palette,
   Crown,
   Download,
+  Gem,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -85,7 +86,7 @@ export default function SnobProjectPage() {
 
         <div className="relative z-10 max-w-full">
           <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-6">
-            Le Block Blast Tactique de Prestige 💎
+            Le Block Blast Tactique de Prestige <Gem className="inline w-4 h-4 align-middle" />
           </h2>
           <p className="text-slate-600 text-lg leading-relaxed mb-8 max-w-3xl">
             Snob est un jeu de puzzle de blocs alliant un design ultra-fluide et moderne à des mécaniques de jeu profondément revisitées. L&apos;interface élégante est magnifiée par des effets de particules magiques et des coloris sophistiqués.

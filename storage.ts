@@ -1,5 +1,6 @@
 import type { Hono } from "npm:hono@4";
 import {
+  extractTierFromApiKey,
   extractToken,
   getDb,
   STORAGE_LIMITS_BYTES,
@@ -627,7 +628,8 @@ export function registerStorageRoutes(app: Hono) {
         `.catch(() => []),
       ]);
 
-      const rawTier2 = userRes[0]?.tier || userPlan || "Free";
+      const keyTier = extractTierFromApiKey(token);
+      const rawTier2 = keyTier || userRes[0]?.tier || userPlan || "Free";
       const tier = String(rawTier2).trim();
       const bytesUsed = Number(usageRes[0]?.bytes_used || 0);
       const filesCount = Number(usageRes[0]?.files_count || 0);

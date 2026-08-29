@@ -1,5 +1,5 @@
 import type { Hono } from "npm:hono@4";
-import { getDb, TIER_REQUEST_LIMITS, verifyToken } from "./config.ts";
+import { extractTierFromApiKey, getDb, getUserQuotaBoost, TIER_REQUEST_LIMITS, verifyToken } from "./config.ts";
 
 export function registerMiddleware(app: Hono) {
   // Middleware global pour Auth, Rate limiting & Logging sur toutes les routes d'API
@@ -122,6 +122,12 @@ export function registerMiddleware(app: Hono) {
 
     // Résolution de l'authentification : Clé API utilisateur enregistrée, Clé système, ou Token JWT
     if (apiKey) {
+      // Détection prioritaire du forfait directement encodé dans la clé (mai-TIER_USER-XXXXX-XXXXX)
+      const keyTier = extractTierFromApiKey(apiKey);
+      if (keyTier) {
+        userPlan = keyTier;
+      }
+
       const sql = getDb();
       try {
         const rows = await sql`
@@ -134,9 +140,12 @@ export function registerMiddleware(app: Hono) {
 
         if (rows.length > 0) {
           const apiKeyData = rows[0];
-          const rawPlan = String(apiKeyData.plan || "").trim().toLowerCase();
-          const validTiers = ["free", "plus", "pro", "max"];
-          userPlan = apiKeyData.user_tier || (validTiers.includes(rawPlan) ? apiKeyData.plan : "Plus");
+          // Si le TIER_USER a été extrait de la clé fournie, il fait foi en priorité
+          if (!keyTier) {
+            const rawPlan = String(apiKeyData.plan || "").trim().toLowerCase();
+            const validTiers = ["free", "plus", "pro", "max"];
+            userPlan = apiKeyData.user_tier || (validTiers.includes(rawPlan) ? apiKeyData.plan : "Plus");
+          }
           currentUserId = apiKeyData.user_id;
           matchedApiKey = apiKeyData.api_key || apiKey;
         } else if (systemMaiApiKey && timingSafeEqual(apiKey, systemMaiApiKey)) {
@@ -227,8 +236,10 @@ export function registerMiddleware(app: Hono) {
         Plus: 1000,
         Pro: 2000,
       };
-      const limit = TIER_REQUEST_LIMITS?.[userPlan] || tierMap[userPlan] || 500;
       const sql = getDb();
+      const apiBoost = await getUserQuotaBoost(sql, currentUserId, "api");
+      const baseLimit = TIER_REQUEST_LIMITS?.[userPlan] || tierMap[userPlan] || 500;
+      const limit = baseLimit + apiBoost;
 
       // Réinitialisation mensuelle automatique si le mois a changé (idempotent)
       try {

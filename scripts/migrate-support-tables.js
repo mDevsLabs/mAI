@@ -109,6 +109,74 @@ async function main() {
   }
 
   console.log("✅ Tables support_tickets et support_ticket_messages créées avec succès !");
+
+  // ── Migration v2 : exécution de support_v2_upgrade.sql si présent ──
+  try {
+    const v2Path = path.resolve(process.cwd(), "scripts", "support_v2_upgrade.sql");
+    if (fs.existsSync(v2Path)) {
+      console.log("Exécution de la migration v2 (support_v2_upgrade.sql)...");
+      const v2Sql = fs.readFileSync(v2Path, "utf8");
+
+      // Splitter respectant les dollar-quotes $$ pour la fonction plpgsql
+      function splitSqlStatements(sqlText) {
+        const statements = [];
+        let current = "";
+        let inDollar = false;
+        let i = 0;
+        while (i < sqlText.length) {
+          if (sqlText.slice(i, i + 2) === "$$") {
+            inDollar = !inDollar;
+            current += "$$";
+            i += 2;
+            continue;
+          }
+          if (!inDollar && sqlText[i] === ";" ) {
+            current += ";";
+            const trimmed = current.trim();
+            // Extraire sans commentaires -- lignes
+            const withoutComments = trimmed.split("\n").filter(l => !l.trim().startsWith("--")).join("\n").trim();
+            if (withoutComments && withoutComments !== ";") {
+              statements.push(withoutComments);
+            }
+            current = "";
+            i++;
+            continue;
+          }
+          current += sqlText[i];
+          i++;
+        }
+        const leftover = current.trim();
+        if (leftover) {
+          const withoutComments = leftover.split("\n").filter(l => !l.trim().startsWith("--")).join("\n").trim();
+          if (withoutComments) statements.push(withoutComments);
+        }
+        return statements;
+      }
+
+      const stmts = splitSqlStatements(v2Sql);
+      console.log(`  -> ${stmts.length} statements détectés`);
+      for (let idx = 0; idx < stmts.length; idx++) {
+        const stmt = stmts[idx].trim();
+        if (!stmt) continue;
+        // ignorer les commentaires purs
+        if (stmt.startsWith("--")) continue;
+        try {
+          await sql.query(stmt, []);
+        } catch (qe) {
+          // idempotent : ignorer erreurs "already exists" mais logger autres
+          const msg = qe.message || "";
+          if (msg.includes("already exists") || msg.includes("does not exist")) {
+            console.log(`  (info) statement ${idx + 1}: ${msg.slice(0, 80)}`);
+          } else {
+            throw qe;
+          }
+        }
+      }
+      console.log("✅ Migration v2 appliquée avec succès !");
+    }
+  } catch (e) {
+    console.error("⚠️ Erreur migration v2:", e.message);
+  }
 }
 
 main().catch((err) => {

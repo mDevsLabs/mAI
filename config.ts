@@ -51,6 +51,60 @@ export const TIER_REQUEST_LIMITS: Record<string, number> = {
   Pro: 2000,
 };
 
+/**
+ * Extrait le forfait (TIER_USER) encodé directement dans une clé API au format :
+ * mai-TIER_USER-XXXXX-XXXXX (ex: mai-free-ABC12-defgh, mai-plus-..., mai-pro-..., mai-max-...)
+ * Renvoie "Free", "Plus", "Pro", "Max" ou null si non présent.
+ */
+export function extractTierFromApiKey(apiKey: string | null | undefined): "Free" | "Plus" | "Pro" | "Max" | null {
+  if (!apiKey || typeof apiKey !== "string") return null;
+  const match = apiKey.trim().match(/^mai-(free|plus|pro|max)-/i);
+  if (!match) return null;
+  const t = match[1].toLowerCase();
+  if (t === "free") return "Free";
+  if (t === "plus") return "Plus";
+  if (t === "pro") return "Pro";
+  if (t === "max") return "Max";
+  return null;
+}
+
+/**
+ * Calcule l'augmentation temporaire de quota active pour un utilisateur et un type de service.
+ */
+export async function getUserQuotaBoost(
+  sql: any,
+  userId: string | null | undefined,
+  quotaType: "mai" | "api" | "images" | "audio"
+): Promise<number> {
+  if (!sql || !userId) return 0;
+  try {
+    const rows = await sql`
+      SELECT COALESCE(SUM(boost_amount), 0) as total_boost
+      FROM user_quota_boosts
+      WHERE (
+        user_id = 'all'
+        OR user_id = ${userId}::text
+        OR user_id IN (
+          SELECT id::text FROM users WHERE id::text = ${userId}::text OR email = ${userId}::text OR username = ${userId}::text
+        )
+        OR user_id IN (
+          SELECT email FROM users WHERE id::text = ${userId}::text OR email = ${userId}::text OR username = ${userId}::text
+        )
+        OR user_id IN (
+          SELECT username FROM users WHERE id::text = ${userId}::text OR email = ${userId}::text OR username = ${userId}::text
+        )
+      )
+        AND quota_type = ${quotaType}
+        AND is_active = TRUE
+        AND starts_at <= NOW()
+        AND expires_at >= NOW()
+    `;
+    return Number(rows[0]?.total_boost || 0);
+  } catch {
+    return 0;
+  }
+}
+
 // Limites quotidiennes de génération d'images (Free: 3/j, Plus: 5/j, Pro: 10/j, Max: 20/j)
 export const TIER_DAILY_IMAGE_LIMITS: Record<string, number> = {
   Free: 3,

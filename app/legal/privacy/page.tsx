@@ -15,6 +15,7 @@ import {
   UserCheck,
   HardDrive,
   CheckCircle2,
+  CircleDot,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -44,7 +45,7 @@ export default function PrivacyPage() {
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-blue-500 to-emerald-500">
             Confidentialité
           </span>{" "}
-          🛡️
+          <Shield className="inline w-4 h-4 align-middle" />️
         </h1>
 
         <p className="text-slate-500 font-light mb-8 text-base md:text-lg">
@@ -56,7 +57,7 @@ export default function PrivacyPage() {
           <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-900">
             <div className="flex items-center gap-2 font-bold text-sm mb-1 text-emerald-800">
               <Globe className="w-4 h-4 text-emerald-600" />
-              Données dans l&apos;UE 🇪🇺 / Fichiers USA 🇺🇸
+              Données dans l&apos;UE / Fichiers USA
             </div>
             <p className="text-xs text-emerald-700 leading-relaxed font-light">
               Bases de données, comptes et clés API hébergés dans l&apos;UE (RGPD). Fichiers et stockage d&apos;objets sécurisés aux USA.
@@ -65,7 +66,7 @@ export default function PrivacyPage() {
           <div className="p-4 rounded-2xl bg-purple-500/10 border border-purple-500/20 text-purple-900">
             <div className="flex items-center gap-2 font-bold text-sm mb-1 text-purple-800">
               <EyeOff className="w-4 h-4 text-purple-600" />
-              Priorité ZDR (Zero Data Retention) 🔒
+              Priorité ZDR (Zero Data Retention) <Lock className="inline w-4 h-4 align-middle" />
             </div>
             <p className="text-xs text-purple-700 leading-relaxed font-light">
               Politique ZDR priorisée : vos prompts et requêtes d&apos;IA ne sont jamais enregistrés ni réutilisés pour l&apos;entraînement.
@@ -74,7 +75,7 @@ export default function PrivacyPage() {
           <div className="p-4 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-900">
             <div className="flex items-center gap-2 font-bold text-sm mb-1 text-blue-800">
               <Key className="w-4 h-4 text-blue-600" />
-              Clés API Sécurisées 🔑
+              Clés API Sécurisées <Key className="inline w-4 h-4 align-middle" />
             </div>
             <p className="text-xs text-blue-700 leading-relaxed font-light">
               Génération cryptographique (mp-...), contrôle granulaire des quotas et révocation immédiate.
@@ -96,7 +97,7 @@ export default function PrivacyPage() {
               <div className="p-4 bg-white/70 rounded-2xl border border-slate-200/90 shadow-sm space-y-1.5">
                 <div className="flex items-center gap-2 font-bold text-slate-900">
                   <Database className="w-4 h-4 text-emerald-600" />
-                  Données Structurées &amp; Comptes (Union Européenne 🇪🇺)
+                  Données Structurées &amp; Comptes (Union Européenne)
                 </div>
                 <p className="text-slate-600 leading-relaxed font-light">
                   Nos bases de données relationnelles PostgreSQL managées (Neon DB), données de comptes, profils, clés d&apos;API et quotas sont hébergées exclusivement dans l&apos;<strong>Union Européenne (région EU - Francfort, Allemagne)</strong> en conformité stricte avec le RGPD.
@@ -106,7 +107,7 @@ export default function PrivacyPage() {
               <div className="p-4 bg-white/70 rounded-2xl border border-slate-200/90 shadow-sm space-y-1.5">
                 <div className="flex items-center gap-2 font-bold text-slate-900">
                   <HardDrive className="w-4 h-4 text-blue-600" />
-                  Stockage d&apos;Objets &amp; Fichiers (États-Unis 🇺🇸)
+                  Stockage d&apos;Objets &amp; Fichiers (États-Unis)
                 </div>
                 <p className="text-slate-600 leading-relaxed font-light">
                   Les fichiers téléversés, images générées et artefacts volumineux de mAI Cloud Storage sont hébergés sur des serveurs haute performance situés aux <strong>États-Unis (USA)</strong>, avec chiffrement au repos AES-256 et clauses contractuelles types (SCC) garantissant un haut niveau de protection.
@@ -154,11 +155,11 @@ export default function PrivacyPage() {
               <li>
                 <strong>Journaux d'Exécution API (<code className="bg-slate-100 px-1 py-0.5 rounded font-mono text-xs">mprojects_api_logs</code>)</strong> : À chaque appel sur nos points de terminaison (<code className="bg-slate-100 px-1 py-0.5 rounded font-mono text-xs">/v1/chat/completions</code>, <code className="bg-slate-100 px-1 py-0.5 rounded font-mono text-xs">/v1/models</code>, <code className="bg-slate-100 px-1 py-0.5 rounded font-mono text-xs">/v1/messages</code>), nous enregistrons uniquement les métadonnées techniques suivantes :
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2 ml-4">
-                  <span className="p-2 rounded-xl bg-white/60 border border-slate-200 text-xs">🔹 Préfixe sécurisé de la clé API</span>
-                  <span className="p-2 rounded-xl bg-white/60 border border-slate-200 text-xs">🔹 Point d'accès (endpoint) &amp; méthode HTTP</span>
-                  <span className="p-2 rounded-xl bg-white/60 border border-slate-200 text-xs">🔹 Code de statut HTTP (200, 401, 403, 429)</span>
-                  <span className="p-2 rounded-xl bg-white/60 border border-slate-200 text-xs">🔹 Latence en millisecondes &amp; tokens consommés</span>
-                  <span className="p-2 rounded-xl bg-white/60 border border-slate-200 text-xs">🔹 Horodatage exact de la requête</span>
+                  <span className="p-2 rounded-xl bg-white/60 border border-slate-200 text-xs"><CircleDot className="inline w-4 h-4 align-middle" /> Préfixe sécurisé de la clé API</span>
+                  <span className="p-2 rounded-xl bg-white/60 border border-slate-200 text-xs"><CircleDot className="inline w-4 h-4 align-middle" /> Point d'accès (endpoint) &amp; méthode HTTP</span>
+                  <span className="p-2 rounded-xl bg-white/60 border border-slate-200 text-xs"><CircleDot className="inline w-4 h-4 align-middle" /> Code de statut HTTP (200, 401, 403, 429)</span>
+                  <span className="p-2 rounded-xl bg-white/60 border border-slate-200 text-xs"><CircleDot className="inline w-4 h-4 align-middle" /> Latence en millisecondes &amp; tokens consommés</span>
+                  <span className="p-2 rounded-xl bg-white/60 border border-slate-200 text-xs"><CircleDot className="inline w-4 h-4 align-middle" /> Horodatage exact de la requête</span>
                 </div>
               </li>
             </ul>

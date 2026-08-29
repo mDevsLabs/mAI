@@ -321,7 +321,7 @@ function RegisterForm() {
           </label>
           <div className="flex items-center gap-1.5 text-[11px] text-slate-500 pl-6.5 font-light">
             <Globe className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-            <span>Stockage 100% dans l'UE 🇪🇺 &amp; requêtes d'API protégées (zéro réentraînement).</span>
+            <span>Stockage 100% dans l'UE &amp; requêtes d'API protégées (zéro réentraînement).</span>
           </div>
         </div>
 

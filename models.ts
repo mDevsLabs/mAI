@@ -3,6 +3,7 @@ import {
   extractToken,
   getDb,
   getTierSpeechLimit,
+  getUserQuotaBoost,
   getWeekData,
   TIER_LIMITS,
   verifyToken,
@@ -80,9 +81,10 @@ export function registerModelRoutes(app: Hono) {
       ]);
       const tokensUsed = usageResult[0]?.tokens_used || 0;
       const speechTokensUsed = Number(speechResult?.[0]?.tokens_used || 0);
-      const userTier = user?.tier || "Free";
-      const limit = TIER_LIMITS[userTier] || TIER_LIMITS["Free"];
-      const speechLimit = getTierSpeechLimit(userTier);
+      const maiBoost = await getUserQuotaBoost(sql, userId, "mai");
+      const audioBoost = await getUserQuotaBoost(sql, userId, "audio");
+      const limit = (TIER_LIMITS[userTier] || TIER_LIMITS["Free"]) + maiBoost;
+      const speechLimit = getTierSpeechLimit(userTier) + audioBoost;
 
       return c.json({
         avatarUrl: user?.avatar_url,
@@ -142,7 +144,8 @@ export function registerModelRoutes(app: Hono) {
         await sql`SELECT id, tier FROM users WHERE id::text = ${userId}::text OR email = ${userId}::text OR username = ${userId}::text LIMIT 1`;
       const tier = userRes.length > 0 ? userRes[0].tier : "Free";
       const resolvedUserId = userRes.length > 0 ? userRes[0].id : userId;
-      const limit = TIER_LIMITS[tier] || TIER_LIMITS["Free"];
+      const maiBoost = await getUserQuotaBoost(sql, resolvedUserId, "mai");
+      const limit = (TIER_LIMITS[tier] || TIER_LIMITS["Free"]) + maiBoost;
 
       const usageResult = await sql`
         SELECT tokens_used FROM weekly_usage
@@ -505,8 +508,9 @@ export function registerModelRoutes(app: Hono) {
         LIMIT 1
       `;
       const currentUsage = usageResult[0]?.tokens_used || 0;
+      const maiBoost = await getUserQuotaBoost(sql, userId, "mai");
       const limit =
-        TIER_LIMITS[String(userPlan || "Free")] || TIER_LIMITS["Free"];
+        (TIER_LIMITS[String(userPlan || "Free")] || TIER_LIMITS["Free"]) + maiBoost;
 
       if (currentUsage >= limit) {
         return c.json(
@@ -650,8 +654,9 @@ export function registerModelRoutes(app: Hono) {
         LIMIT 1
       `;
       const currentUsage = usageResult[0]?.tokens_used || 0;
+      const maiBoost = await getUserQuotaBoost(sql, userId, "mai");
       const limit =
-        TIER_LIMITS[String(userPlan || "Free")] || TIER_LIMITS["Free"];
+        (TIER_LIMITS[String(userPlan || "Free")] || TIER_LIMITS["Free"]) + maiBoost;
 
       if (currentUsage >= limit) {
         return c.json(
@@ -792,8 +797,9 @@ export function registerModelRoutes(app: Hono) {
         LIMIT 1
       `;
       const currentUsage = usageResult[0]?.tokens_used || 0;
+      const maiBoost = await getUserQuotaBoost(sql, userId, "mai");
       const limit =
-        TIER_LIMITS[String(userPlan || "Free")] || TIER_LIMITS["Free"];
+        (TIER_LIMITS[String(userPlan || "Free")] || TIER_LIMITS["Free"]) + maiBoost;
 
       if (currentUsage >= limit) {
         return c.json(

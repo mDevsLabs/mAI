@@ -1,11 +1,11 @@
 import crypto from 'crypto';
 import { neon } from '@neondatabase/serverless';
-import { TIER_REQUEST_LIMITS, getTierQuotaLimit } from './tiers';
+import { TIER_REQUEST_LIMITS, getTierQuotaLimit, extractTierFromApiKey, getUserQuotaBoost } from './tiers';
 
 export interface ApiKeyMetadata {
   id: string;
   name: string;
-  prefix: string; // Les premiers caractères visibles (ex: mp-126c6e6c)
+  prefix: string; // Les premiers caractères visibles (ex: mai-pro-7TK9W)
   apiKey?: string; // Clé complète pour exécution dans le studio
   createdAt: string;
   lastUsedAt: string | null;
@@ -48,27 +48,59 @@ export function hashSecretKey(secretKey: string): string {
   return crypto.createHash('sha256').update(secretKey).digest('hex');
 }
 
-// Génère un secret sécurisé commençant obligatoirement par mp-
-export function generateSecretKey(): { secretKey: string; prefix: string } {
-  const randomHex = crypto.randomBytes(24).toString('hex'); // 48 caractères hex
-  const secretKey = `mp-${randomHex}`;
+function generateRandomChars(length: number, charset: string): string {
+  let result = '';
+  const bytes = crypto.randomBytes(length);
+  for (let i = 0; i < length; i++) {
+    result += charset[bytes[i] % charset.length];
+  }
+  return result;
+}
+
+// Génère un secret sécurisé respectant le format : mai-TIER_USER-XXXXX-XXXXX
+// 5 caractères majuscules/chiffres avant le -, puis 5 caractères majuscules ou minuscules.
+// TIER_USER = free, plus, pro ou max.
+export function generateSecretKey(tier: string = 'free'): { secretKey: string; prefix: string } {
+  const normalizedTier = ['free', 'plus', 'pro', 'max'].includes(tier.toLowerCase().trim())
+    ? tier.toLowerCase().trim()
+    : 'free';
+
+  const part1Charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const part2Charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+
+  const part1 = generateRandomChars(5, part1Charset);
+  const part2 = generateRandomChars(5, part2Charset);
+
+  const secretKey = `mai-${normalizedTier}-${part1}-${part2}`;
+  const prefix = `mai-${normalizedTier}-${part1}`;
   return {
     secretKey,
-    prefix: `mp-${randomHex.substring(0, 8)}`,
+    prefix,
   };
 }
 
 /**
  * Créer une nouvelle clé API pour un utilisateur.
- * Le secret commence par mp-. Uniquement persistant en DB si disponible, sinon en mémoire.
+ * Le secret respecte le format mai-TIER_USER-XXXXX-XXXXX.
  */
-export async function createApiKey(userId: string, name: string, maxLimit: number | null = null): Promise<CreatedApiKeyResult> {
+export async function createApiKey(userId: string, name: string, maxLimit: number | null = null, tier?: string): Promise<CreatedApiKeyResult> {
+  const db = getDb();
+  let userTier = tier;
+  if (!userTier && db) {
+    try {
+      const uRows = await db`
+        SELECT tier FROM users 
+        WHERE id::text = ${userId}::text OR username = ${userId}::text OR email = ${userId}::text 
+        LIMIT 1
+      `;
+      userTier = uRows[0]?.tier || 'free';
+    } catch {}
+  }
+
   const keyId = `key_${crypto.randomBytes(8).toString('hex')}`;
-  const { secretKey, prefix } = generateSecretKey();
+  const { secretKey, prefix } = generateSecretKey(userTier || 'free');
   const hash = hashSecretKey(secretKey);
   const now = new Date().toISOString();
-
-  const db = getDb();
   let storedInDb = false;
 
   if (db) {
@@ -103,7 +135,7 @@ export async function createApiKey(userId: string, name: string, maxLimit: numbe
   return {
     id: keyId,
     name,
-    prefix: `${prefix}_••••••••`,
+    prefix: `${prefix}-•••••`,
     secretKey,
     createdAt: now,
   };
@@ -481,9 +513,11 @@ export async function validateApiKey(secretKey: string): Promise<{ valid: boolea
            return { valid: false, error: 'Limite de la clé API atteinte.' };
         }
 
-        // Vérification de la limite globale du forfait du compte
-        const userTier = row.user_tier || row.plan || 'Free';
-        const tierLimit = getTierQuotaLimit(userTier);
+        // Détection prioritaire du forfait depuis la clé (mai-TIER_USER-XXXXX-XXXXX)
+        const detectedTier = extractTierFromApiKey(cleanedKey);
+        const userTier = detectedTier || row.user_tier || row.plan || 'Free';
+        const apiBoost = await getUserQuotaBoost(db, row.user_id, 'api');
+        const tierLimit = getTierQuotaLimit(userTier) + apiBoost;
 
         const countRows = await db`
           SELECT SUM(request_count) as total_requests
@@ -506,7 +540,7 @@ export async function validateApiKey(secretKey: string): Promise<{ valid: boolea
           WHERE api_key = ${row.api_key}
         `;
 
-        const resolvedPlan = row.plan || row.user_tier || 'Free';
+        const resolvedPlan = detectedTier || row.plan || row.user_tier || 'Free';
 
         return {
           valid: true,

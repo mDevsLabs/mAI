@@ -141,7 +141,7 @@ export function DevicesList() {
         },
       });
       if (res.ok) {
-        toast.success("Toutes les autres sessions ont été révoquées 🔒");
+        toast.success("Toutes les autres sessions ont été révoquées Verrou");
         setDevices((prev) => prev.filter((d) => d.is_current));
         setConfirmDisconnectOthers(false);
       } else {

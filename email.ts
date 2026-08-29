@@ -233,6 +233,7 @@ export interface SupportTicketEmailPayload {
   priority: string;
   status?: string;
   created_at?: string;
+  isAiGenerated?: boolean;
 }
 
 const PRIORITY_COLORS: Record<string, { label: string; bg: string; text: string; border: string }> = {
@@ -324,7 +325,7 @@ export async function sendSupportTicketCreatedEmail({
           <!-- CTA Button -->
           <div style="text-align:center; margin:36px 0 20px 0;">
             <a href="${directLink}" style="display:inline-block; background:linear-gradient(135deg, #9333ea 0%, #4f46e5 100%); color:#ffffff; text-decoration:none; font-weight:700; font-size:15px; padding:14px 32px; border-radius:14px; box-shadow:0 10px 25px -5px rgba(147,51,234,0.5);">
-              👉 Répondre au ticket #${ticket.ticket_number || ticket.id.slice(0, 6)}
+              → Répondre au ticket #${ticket.ticket_number || ticket.id.slice(0, 6)}
             </a>
           </div>
 
@@ -361,6 +362,7 @@ export async function sendSupportTicketUpdateEmail({
   newStatus,
   authorRole,
   appUrl = "https://m-ai.fr",
+  isAiGenerated,
 }: {
   ticket: SupportTicketEmailPayload;
   recipientEmail: string;
@@ -369,6 +371,7 @@ export async function sendSupportTicketUpdateEmail({
   newStatus?: string;
   authorRole: "admin" | "user" | "system";
   appUrl?: string;
+  isAiGenerated?: boolean;
 }) {
   const ticketRef = ticket.ticket_number ? `#TICK-${ticket.ticket_number}` : `#${ticket.id.slice(0, 8)}`;
   const isFromAdmin = authorRole === "admin";
@@ -413,6 +416,17 @@ export async function sendSupportTicketUpdateEmail({
           <div style="background:#131d31; border:1px solid #1e293b; border-left:4px solid ${isFromAdmin ? '#10b981' : '#a855f7'}; border-radius:14px; padding:20px; margin:24px 0; color:#f1f5f9; font-size:14px; line-height:1.7;">
             ${safeMessage}
           </div>
+
+          ${
+            isAiGenerated || ticket.isAiGenerated
+              ? `
+          <div style="background:rgba(251,191,36,0.12); border:1px solid rgba(251,191,36,0.35); border-radius:12px; padding:12px 16px; margin:16px 0; font-size:12px; color:#fcd34d; display:flex; gap:8px; align-items:center;">
+            <span style="font-size:14px;">IA</span>
+            <span><strong>Contenu créé avec l'assistance de l'IA</strong> — ce message a été généré avec l'aide de l'IA et relu par l'équipe <strong>mAI</strong>.</span>
+          </div>
+          `
+              : ""
+          }
 
           ${
             newStatus
