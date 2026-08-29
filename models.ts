@@ -81,8 +81,9 @@ export function registerModelRoutes(app: Hono) {
       ]);
       const tokensUsed = usageResult[0]?.tokens_used || 0;
       const speechTokensUsed = Number(speechResult?.[0]?.tokens_used || 0);
-      const maiBoost = await getUserQuotaBoost(sql, userId, "mai");
-      const audioBoost = await getUserQuotaBoost(sql, userId, "audio");
+      const userTier = user?.tier || "Free";
+      const maiBoost = await getUserQuotaBoost(sql, resolvedUserId, "mai");
+      const audioBoost = await getUserQuotaBoost(sql, resolvedUserId, "audio");
       const limit = (TIER_LIMITS[userTier] || TIER_LIMITS["Free"]) + maiBoost;
       const speechLimit = getTierSpeechLimit(userTier) + audioBoost;
 

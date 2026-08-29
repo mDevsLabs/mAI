@@ -57,19 +57,19 @@ function generateRandomChars(length: number, charset: string): string {
   return result;
 }
 
-// Génère un secret sécurisé respectant le format : mai-TIER_USER-XXXXX-XXXXX
-// 5 caractères majuscules/chiffres avant le -, puis 5 caractères majuscules ou minuscules.
-// TIER_USER = free, plus, pro ou max.
+// Génère un secret sécurisé respectant le format : mai-TIER-XXXXX-XXXXXXXX
+// 5 caractères majuscules/chiffres (partie 1), puis 8 caractères alphanumériques (partie 2).
+// Rétrocompatibilité : les anciennes clés mp-* / mai-TIER-XXXXX-XXXXX (5 chars) restent valides.
 export function generateSecretKey(tier: string = 'free'): { secretKey: string; prefix: string } {
   const normalizedTier = ['free', 'plus', 'pro', 'max'].includes(tier.toLowerCase().trim())
     ? tier.toLowerCase().trim()
     : 'free';
 
   const part1Charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  const part2Charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+  const part2Charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
   const part1 = generateRandomChars(5, part1Charset);
-  const part2 = generateRandomChars(5, part2Charset);
+  const part2 = generateRandomChars(8, part2Charset);
 
   const secretKey = `mai-${normalizedTier}-${part1}-${part2}`;
   const prefix = `mai-${normalizedTier}-${part1}`;
@@ -81,7 +81,8 @@ export function generateSecretKey(tier: string = 'free'): { secretKey: string; p
 
 /**
  * Créer une nouvelle clé API pour un utilisateur.
- * Le secret respecte le format mai-TIER_USER-XXXXX-XXXXX.
+ * Le secret respecte le format mai-TIER-XXXXX-XXXXXXXX (5 + 8 chars).
+ * Rétrocompatibilité : les anciens formats mp-* / mai-TIER-XXXXX-XXXXX restent valides.
  */
 export async function createApiKey(userId: string, name: string, maxLimit: number | null = null, tier?: string): Promise<CreatedApiKeyResult> {
   const db = getDb();
@@ -164,9 +165,18 @@ export async function listApiKeys(userId: string): Promise<ApiKeyMetadata[]> {
 
       rows.forEach((row: any, idx: number) => {
         const keyVal = row.api_key || 'mp-key';
-        const prefix = keyVal.startsWith('mp-') || keyVal.startsWith('mai-') || keyVal.startsWith('mai_live')
-          ? keyVal.substring(0, 11)
-          : keyVal.substring(0, 8);
+        // Extraire le préfixe visible : pour les clés mai-TIER-XXXXX-*, on coupe après le 3ème tiret
+        // (ex: "mai-free-A1B2C" pour l'ancien et le nouveau format)
+        let prefix: string;
+        if (keyVal.startsWith('mai-')) {
+          const parts = keyVal.split('-');
+          // parts[0]=mai, parts[1]=tier, parts[2]=part1 → prefix = "mai-TIER-XXXXX"
+          prefix = parts.length >= 3 ? `${parts[0]}-${parts[1]}-${parts[2]}` : keyVal.substring(0, 15);
+        } else if (keyVal.startsWith('mp-') || keyVal.startsWith('mai_live')) {
+          prefix = keyVal.substring(0, 11);
+        } else {
+          prefix = keyVal.substring(0, 8);
+        }
 
         if (!seenPrefixes.has(prefix)) {
           seenPrefixes.add(prefix);
@@ -424,7 +434,7 @@ export async function checkAndTrackUserUsage(params: {
 
 /**
  * Valider une clé secrète fournie (Bearer token).
- * Valide les formats mp-*, mai_live*, mai-* et MAI_API_KEY.
+ * Valide les formats mp-*, mai_live*, mai-TIER-XXXXX-XXXXX (5 chars, ancien) et mai-TIER-XXXXX-XXXXXXXX (8 chars, nouveau) et MAI_API_KEY.
  */
 export async function validateApiKey(secretKey: string): Promise<{ valid: boolean; keyInfo?: ApiKeyMetadata; error?: string }> {
   if (!secretKey || typeof secretKey !== 'string') {
@@ -541,13 +551,18 @@ export async function validateApiKey(secretKey: string): Promise<{ valid: boolea
         `;
 
         const resolvedPlan = detectedTier || row.plan || row.user_tier || 'Free';
+        // Extraire le préfixe visible : pour mai-TIER-XXXXX-*, on coupe au 3ème tiret
+        const keyParts = cleanedKey.startsWith('mai-') ? cleanedKey.split('-') : [];
+        const displayPrefix = keyParts.length >= 3
+          ? `${keyParts[0]}-${keyParts[1]}-${keyParts[2]}`
+          : cleanedKey.substring(0, 11);
 
         return {
           valid: true,
           keyInfo: {
             id: `db_key_${resolvedPlan}`,
             name: resolvedPlan,
-            prefix: `${cleanedKey.substring(0, 11)}_••••••••`,
+            prefix: `${displayPrefix}-••••••••`,
             createdAt: row.created_at ? new Date(row.created_at).toISOString() : now,
             lastUsedAt: now,
             usageCount: (row.request_count || 0) + 1,

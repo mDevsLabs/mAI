@@ -303,7 +303,7 @@ export default function TicketsListClient() {
             const dateStr = new Date(t.created_at).toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
             const isEditing = editingId === t.id;
             return (
-              <div key={t.id} className="relative p-5 rounded-2xl bg-white border border-black/5 hover:border-purple-200 hover:shadow-md transition-all group">
+              <div key={t.id} className="relative p-5 rounded-2xl bg-white border border-black/5 hover:border-purple-200 hover:shadow-md transition-all group overflow-visible">
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                   <div className="space-y-2 min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
@@ -361,7 +361,7 @@ export default function TicketsListClient() {
                       </Link>
 
                       {openMenuId === t.id && (
-                        <div className="absolute right-0 top-10 z-20 w-52 p-2 rounded-2xl bg-white border border-slate-200 shadow-xl space-y-1">
+                        <div className="absolute right-0 top-10 z-[9999] w-52 p-2 rounded-2xl bg-white border border-slate-200 shadow-xl space-y-1">
                           <Link href={`/support/tickets/${t.id}`} className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-slate-50 text-xs font-bold text-slate-700" onClick={() => setOpenMenuId(null)}>
                             <MessageSquare className="w-4 h-4 text-blue-600" /> Ouvrir le ticket
                           </Link>
@@ -382,6 +382,7 @@ export default function TicketsListClient() {
                   </div>
                 </div>
               </div>
+
             );
           })}
         </div>
