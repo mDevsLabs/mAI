@@ -1,0 +1,8 @@
+{
+  "title": "Clés API V2",
+  "description": "Nouvelle architecture des clés API mAI : format standardisé mai-[tier]-XXXXX-XXXXXXXX, génération automatique, chiffrement SHA-256 et quotas hebdomadaires.",
+  "author": "Architecture mAI",
+  "date": "2026-08-30",
+  "label": "API & Sécurité",
+  "image": "https://upload.fs.fr/adVkoKHg04.png"
+}
