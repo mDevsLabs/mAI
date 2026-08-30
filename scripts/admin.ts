@@ -218,17 +218,19 @@ export async function performReset(params: {
     // 1. Réinitialisation instantanée directe en DB (ne figure pas dans le tableau de l'utilisateur)
     console.log(`\n${c.cyan}⏳ Application de la réinitialisation instantanée (${targetLabel}) pour ${users.length} utilisateur(s)...${c.reset}`);
     for (const u of users) {
+      // La colonne user_id n'a pas le même type selon les tables (integer / varchar) :
+      // on convertit toujours la COLONNE en text pour éviter "operator does not exist: integer = text".
       if (resetType === 'all' || resetType === 'api') {
-        await sql`UPDATE mprojects_api_keys SET request_count = 0 WHERE user_id = ${u.id}::text OR user_id = ${u.username} OR user_id = ${u.email}`;
+        await sql`UPDATE mprojects_api_keys SET request_count = 0 WHERE user_id::text = ${u.id} OR user_id::text = ${u.username} OR user_id::text = ${u.email}`;
       }
       if (resetType === 'all' || resetType === 'mai') {
-        await sql`UPDATE weekly_usage SET tokens_used = 0 WHERE user_id = ${u.id}::text OR user_id = ${u.username} OR user_id = ${u.email}`;
+        await sql`UPDATE weekly_usage SET tokens_used = 0 WHERE user_id::text = ${u.id} OR user_id::text = ${u.username} OR user_id::text = ${u.email}`;
       }
       if (resetType === 'all' || resetType === 'images') {
-        await sql`UPDATE mprojects_daily_image_usage SET images_generated = 0, updated_at = NOW() WHERE (user_id = ${u.id}::text OR user_id = ${u.username} OR user_id = ${u.email}) AND usage_date = CURRENT_DATE`;
+        await sql`UPDATE mprojects_daily_image_usage SET images_generated = 0, updated_at = NOW() WHERE (user_id::text = ${u.id} OR user_id::text = ${u.username} OR user_id::text = ${u.email}) AND usage_date = CURRENT_DATE`;
       }
       if (resetType === 'all' || resetType === 'audio') {
-        await sql`UPDATE weekly_speech_usage SET tokens_used = 0, requests_count = 0 WHERE user_id = ${u.id}::text OR user_id = ${u.username} OR user_id = ${u.email}`;
+        await sql`UPDATE weekly_speech_usage SET tokens_used = 0, requests_count = 0 WHERE user_id::text = ${u.id} OR user_id::text = ${u.username} OR user_id::text = ${u.email}`;
       }
     }
     console.log(`${c.brightGreen}✔ Succès : Réinitialisation instantanée appliquée avec succès en base de données !${c.reset}`);
@@ -463,12 +465,19 @@ export async function runResetWizard(rl: readline.Interface, defaultType?: Reset
     }
   }
 
+  // 4. Notification e-mail (peut être désactivée)
+  console.log(`\n${c.bold}4. Envoyer une notification e-mail ?${c.reset}`);
+  console.log(`  ${c.brightCyan}[1]${c.reset} ✉️  Envoyer un e-mail à tous les utilisateurs ciblés (défaut)`);
+  console.log(`  ${c.brightCyan}[2]${c.reset} 🔕 Aucun e-mail (réinitialisation silencieuse)`);
+  const notifChoice = (await rl.question(`  ${c.brightYellow}➔ Choix [1-2] (défaut 1) : ${c.reset}`)).trim() || '1';
+  const sendNotifications = notifChoice !== '2';
+
   // Confirmation
   console.log(`\n${c.bold}RÉCAPITULATIF :${c.reset}`);
   console.log(`  - Destinataire(s) : ${selectedUsers.length} utilisateur(s)`);
   console.log(`  - Quota ciblé     : ${targetType.toUpperCase()}`);
   console.log(`  - Mode            : ${isInstant ? '⚡ Instantané (remis à zéro maintenant)' : `📅 Dans le tableau (Expiration: ${expiresAt ? expiresAt.toLocaleDateString('fr-FR') : 'Illimitée'})`}`);
-  console.log(`  - Notifications   : ✉️ E-mail à tous les utilisateurs ciblés`);
+  console.log(`  - Notifications   : ${sendNotifications ? '✉️ E-mail aux utilisateurs ciblés' : '🔕 Aucun e-mail'}`);
 
   const confirm = (await rl.question(`\n  ${c.brightYellow}➔ Confirmer et exécuter ? (o/n) : ${c.reset}`)).trim().toLowerCase();
   if (confirm !== 'o' && confirm !== 'oui' && confirm !== 'y') {
@@ -481,7 +490,7 @@ export async function runResetWizard(rl: readline.Interface, defaultType?: Reset
     resetType: targetType,
     isInstant,
     expiresAt,
-    notify: true,
+    notify: sendNotifications,
   });
 }
 
@@ -674,7 +683,7 @@ export async function createQuotaBoost(params: {
   console.log(`  ${c.brightGreen}✔ ${success}/${recipients.length} e-mail(s) de Boost envoyé(s) avec succès !${c.reset}`);
 }
 
-export async function listActiveQuotaBoosts(rl?: readline.Interface) {
+export async function listActiveQuotaBoosts(_rl?: readline.Interface) {
   await initQuotaBoostsTable();
   const rows = await sql`
     SELECT b.id, b.user_id, b.quota_type, b.boost_amount, b.starts_at, b.expires_at, b.reason, b.is_active,
@@ -1305,11 +1314,11 @@ async function handleToggleBlockCustomer(rl: readline.Interface) {
     `;
 
     if (newStatus) {
-      await sql`DELETE FROM connected_devices WHERE user_id = ${current.id}::text;`;
-      await sql`DELETE FROM mprojects_api_keys WHERE user_id = ${current.id}::text OR user_id = ${current.username} OR user_id = ${current.email};`;
-      await sql`DELETE FROM weekly_usage WHERE user_id = ${current.id}::text;`;
-      await sql`DELETE FROM weekly_speech_usage WHERE user_id = ${current.id}::text;`;
-      await sql`DELETE FROM mprojects_daily_image_usage WHERE user_id = ${current.id}::text;`;
+      await sql`DELETE FROM connected_devices WHERE user_id::text = ${current.id}`;
+      await sql`DELETE FROM mprojects_api_keys WHERE user_id::text = ${current.id} OR user_id::text = ${current.username} OR user_id::text = ${current.email}`;
+      await sql`DELETE FROM weekly_usage WHERE user_id::text = ${current.id}`;
+      await sql`DELETE FROM weekly_speech_usage WHERE user_id::text = ${current.id}`;
+      await sql`DELETE FROM mprojects_daily_image_usage WHERE user_id::text = ${current.id}`;
       console.log(`\n${c.brightGreen}✔ Le client ${c.bold}${current.username}${c.reset} (${current.email}) a été ${c.bold}🚫 BLOQUÉ${c.reset} et toutes ses sessions actives ont été révoquées.\n`);
     } else {
       console.log(`\n${c.brightGreen}✔ Le client ${c.bold}${current.username}${c.reset} (${current.email}) a été ${c.bold}🟢 DÉBLOQUÉ${c.reset}.\n`);
@@ -1340,9 +1349,9 @@ async function handleDeleteCustomer(rl: readline.Interface) {
     const confirm = (await rl.question(`⚠️ Êtes-vous sûr de vouloir supprimer définitivement le client "${current.username}" (${current.email}) ?\nToutes ses clés API, appareils et données associés seront impactés. (o/N) : `)).trim().toLowerCase();
 
     if (confirm === 'o' || confirm === 'oui' || confirm === 'y') {
-      await sql`DELETE FROM connected_devices WHERE user_id = ${current.id}::text;`;
-      await sql`DELETE FROM mprojects_api_keys WHERE user_id = ${current.id}::text OR user_id = ${current.username} OR user_id = ${current.email};`;
-      await sql`DELETE FROM weekly_usage WHERE user_id = ${current.id}::text;`;
+      await sql`DELETE FROM connected_devices WHERE user_id::text = ${current.id}`;
+      await sql`DELETE FROM mprojects_api_keys WHERE user_id::text = ${current.id} OR user_id::text = ${current.username} OR user_id::text = ${current.email}`;
+      await sql`DELETE FROM weekly_usage WHERE user_id::text = ${current.id}`;
       await sql`DELETE FROM users WHERE id = ${current.id};`;
     await sql`
       INSERT INTO user_account_actions (user_id, action, reason)
@@ -1571,24 +1580,25 @@ export async function runAdminCli() {
   await initQuotaBoostsTable().catch(() => {});
   // Support des flags en ligne de commande pour exécution non interactive / crons
   const args = process.argv.slice(2);
+  const noEmail = args.includes('--no-email') || args.includes('--no-notify');
   if (args.includes('--reset-api')) {
-    await resetApiUsage(true);
+    await resetApiUsage(!noEmail);
     process.exit(0);
   }
   if (args.includes('--reset-mai')) {
-    await resetMaiUsage(true);
+    await resetMaiUsage(!noEmail);
     process.exit(0);
   }
   if (args.includes('--reset-images')) {
-    await resetImageUsage();
+    await resetImageUsage(!noEmail);
     process.exit(0);
   }
   if (args.includes('--reset-audio')) {
-    await resetAudioUsage(true);
+    await resetAudioUsage(!noEmail);
     process.exit(0);
   }
   if (args.includes('--reset-all')) {
-    await resetAllUsage(true);
+    await resetAllUsage(!noEmail);
     process.exit(0);
   }
   if (args.includes('--boost-quota')) {

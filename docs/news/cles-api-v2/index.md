@@ -1,12 +1,3 @@
----
-title: "Clés API V2"
-description: "Nouvelle architecture des clés API, génération automatique, chiffrement SHA-256 et quotas hebdomadaires."
-category: "API"
-order: 12
----
-
-# Clés API V2
-
 Le format des clés d\'accès à l\'API mAI évolue vers une structure standardisée, sécurisée et automatiquement générée. Ce document présente les spécifications techniques, les mécanismes de protection cryptographique et les quotas d\'utilisation associés.
 
 ---
