@@ -615,6 +615,7 @@ export function registerAudioRoutes(app: Hono) {
         LIMIT 1
       `.catch(() => []);
       const keyTier = extractTierFromApiKey(token);
+      const effectiveTier = keyTier || uRows[0]?.tier || userPlan || "Free";
       const audioBoost = await getUserQuotaBoost(sql, userId, "audio");
       const weeklyLimit = getTierSpeechLimit(effectiveTier) + audioBoost;
 

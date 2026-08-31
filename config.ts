@@ -8,48 +8,64 @@ import { jwtVerify, SignJWT } from "npm:jose";
 export const JWT_EXPIRY = "14d";
 export const BCRYPT_ROUNDS = 12;
 
-// Limites de tokens hebdomadaires (Input + Output)
-export const TIER_LIMITS: Record<string, number> = {
-  Free: 2_000_000,
-  Max: 20_000_000,
-  Plus: 5_000_000,
-  Pro: 10_000_000,
+export type Tier = "Free" | "Plus" | "Pro" | "Max";
+
+const TIER_ALIASES: Record<string, Tier> = {
+  free: "Free",
+  gratuit: "Free",
+  plus: "Plus",
+  pro: "Pro",
+  max: "Max",
 };
 
-// Limites de tokens Speech hebdomadaires (Free: 20M, Plus: 50M, Pro: 100M, Max: 200M)
-export const TIER_SPEECH_LIMITS: Record<string, number> = {
-  Free: 20_000_000,
-  free: 20_000_000,
-  Gratuit: 20_000_000,
-  gratuit: 20_000_000,
-  Max: 200_000_000,
-  max: 200_000_000,
-  Plus: 50_000_000,
-  plus: 50_000_000,
-  Pro: 100_000_000,
-  pro: 100_000_000,
+/**
+ * Normalise n'importe quelle représentation de forfait venant de la base, d'une clé API
+ * ou d'un JWT ("gratuit", " PRO ", "max") en tier canonique.
+ * Une valeur vide ou inconnue retombe sur "Free", comme l'ancien `MAP[t] || MAP["Free"]`.
+ */
+export function normalizeTier(tier?: string | null): Tier {
+  return TIER_ALIASES[String(tier || "").trim().toLowerCase()] || "Free";
+}
+
+export function isPaidTier(tier?: string | null): boolean {
+  return normalizeTier(tier) !== "Free";
+}
+
+// Limites de tokens mAI hebdomadaires (Input + Output)
+export const TIER_LIMITS: Record<Tier, number> = {
+  Free: 10_000_000,
+  Plus: 20_000_000,
+  Pro: 30_000_000,
+  Max: 50_000_000,
+};
+
+export function getTierMaiTokenLimit(tier?: string | null): number {
+  return TIER_LIMITS[normalizeTier(tier)];
+}
+
+// Limites de tokens Speech hebdomadaires
+export const TIER_SPEECH_LIMITS: Record<Tier, number> = {
+  Free: 30_000_000,
+  Plus: 75_000_000,
+  Pro: 150_000_000,
+  Max: 300_000_000,
 };
 
 export function getTierSpeechLimit(tier?: string | null): number {
-  const t = (tier || "Free").toLowerCase().trim();
-  if (t === "max") {
-    return 200_000_000;
-  }
-  if (t === "pro") {
-    return 100_000_000;
-  }
-  if (t === "plus") {
-    return 50_000_000;
-  }
-  return 20_000_000;
+  return TIER_SPEECH_LIMITS[normalizeTier(tier)];
 }
 
-export const TIER_REQUEST_LIMITS: Record<string, number> = {
+// Limites de requêtes API hebdomadaires (remise à zéro le lundi 00:00 UTC)
+export const TIER_REQUEST_LIMITS: Record<Tier, number> = {
   Free: 500,
-  Max: 5000,
-  Plus: 1000,
-  Pro: 2000,
+  Plus: 1500,
+  Pro: 3000,
+  Max: 7500,
 };
+
+export function getTierRequestLimit(tier?: string | null): number {
+  return TIER_REQUEST_LIMITS[normalizeTier(tier)];
+}
 
 /**
  * Extrait le forfait (TIER_USER) encodé directement dans une clé API au format :
@@ -105,76 +121,43 @@ export async function getUserQuotaBoost(
   }
 }
 
-// Limites quotidiennes de génération d'images (Free: 3/j, Plus: 5/j, Pro: 10/j, Max: 20/j)
-export const TIER_DAILY_IMAGE_LIMITS: Record<string, number> = {
-  Free: 3,
-  free: 3,
-  Gratuit: 3,
-  gratuit: 3,
-  Max: 20,
-  max: 20,
-  Plus: 5,
-  Pro: 10,
-  plus: 5,
-  pro: 10,
+// Limites quotidiennes de génération d'images
+export const TIER_DAILY_IMAGE_LIMITS: Record<Tier, number> = {
+  Free: 5,
+  Plus: 10,
+  Pro: 20,
+  Max: 35,
 };
 
 export function getTierDailyImageLimit(tier?: string | null): number {
-  const t = (tier || "Free").toLowerCase().trim();
-  if (t === "max") {
-    return 20;
-  }
-  if (t === "pro") {
-    return 10;
-  }
-  if (t === "plus") {
-    return 5;
-  }
-  return 3;
+  return TIER_DAILY_IMAGE_LIMITS[normalizeTier(tier)];
 }
 
-// Coût en requêtes API par génération d'image
-// Free = 100 requêtes, Plus = 50 requêtes, Pro = 25 requêtes, Max = 10 requêtes
-export const TIER_IMAGE_REQUEST_COST: Record<string, number> = {
+// Coût en requêtes API par image générée (multiplié par le nombre d'images demandées)
+export const TIER_IMAGE_REQUEST_COST: Record<Tier, number> = {
   Free: 100,
-  free: 100,
-  Gratuit: 100,
-  gratuit: 100,
-  Max: 10,
-  max: 10,
   Plus: 50,
   Pro: 25,
-  plus: 50,
-  pro: 25,
+  Max: 10,
 };
 
 export function getTierImageRequestCost(tier?: string | null): number {
-  const t = (tier || "Free").toLowerCase().trim();
-  if (t === "max") {
-    return 10;
-  }
-  if (t === "pro") {
-    return 25;
-  }
-  if (t === "plus") {
-    return 50;
-  }
-  return 100;
+  return TIER_IMAGE_REQUEST_COST[normalizeTier(tier)];
 }
 
-// Limites de stockage Cloud par tier (en bytes) — SSOT: Free 500Mo / Plus 1Go / Pro 2Go / Max 5Go
-export const STORAGE_LIMITS_BYTES: Record<string, number> = {
-  Free: 500 * 1024 * 1024, // 500 MB
-  // alias lowercase pour lookup case-insensitive côté Val Town
-  free: 500 * 1024 * 1024,
-  gratuit: 500 * 1024 * 1024,
-  Max: 5 * 1024 * 1024 * 1024, // 5 GB
-  max: 5 * 1024 * 1024 * 1024,
-  Plus: 1 * 1024 * 1024 * 1024, // 1 GB
-  Pro: 2 * 1024 * 1024 * 1024, // 2 GB
-  plus: 1 * 1024 * 1024 * 1024,
-  pro: 2 * 1024 * 1024 * 1024,
-} as Record<string, number>;
+// Limites de stockage Cloud par tier (en octets)
+const GIB = 1024 * 1024 * 1024;
+
+export const STORAGE_LIMITS_BYTES: Record<Tier, number> = {
+  Free: 10 * GIB,
+  Plus: 20 * GIB,
+  Pro: 40 * GIB,
+  Max: 60 * GIB,
+};
+
+export function getTierStorageLimitBytes(tier?: string | null): number {
+  return STORAGE_LIMITS_BYTES[normalizeTier(tier)];
+}
 
 export function getDb() {
   const url = Deno.env.get("DATABASE_URL");

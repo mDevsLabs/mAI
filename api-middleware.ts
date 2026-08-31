@@ -1,5 +1,5 @@
 import type { Hono } from "npm:hono@4";
-import { extractTierFromApiKey, getDb, getUserQuotaBoost, TIER_REQUEST_LIMITS, verifyToken } from "./config.ts";
+import { extractTierFromApiKey, getDb, getTierRequestLimit, getUserQuotaBoost, getWeekData, verifyToken } from "./config.ts";
 
 export function registerMiddleware(app: Hono) {
   // Middleware global pour Auth, Rate limiting & Logging sur toutes les routes d'API
@@ -227,46 +227,47 @@ export function registerMiddleware(app: Hono) {
     c.set("apiKey", currentApiKey);
     c.set("matchedApiKey", matchedApiKey);
 
-    // Vérification des quotas pour les clés API enregistrées
+    // Vérification préventive du quota de requêtes pour les clés API enregistrées.
+    // Le solde est global au compte (cumul de toutes ses clés) et la période est hebdomadaire
+    // (lundi 00:00 UTC), marquée par usage_period_start pour un reset idempotent.
     if (apiKey && currentUserId && currentUserId !== "system-mai") {
-      const tierMap: Record<string, number> = {
-        Free: 500,
-        Gratuit: 500,
-        Max: 5000,
-        Plus: 1000,
-        Pro: 2000,
-      };
       const sql = getDb();
+      const { nextResetIso, weekStartStr } = getWeekData();
       const apiBoost = await getUserQuotaBoost(sql, currentUserId, "api");
-      const baseLimit = TIER_REQUEST_LIMITS?.[userPlan] || tierMap[userPlan] || 500;
-      const limit = baseLimit + apiBoost;
+      const limit = getTierRequestLimit(userPlan) + apiBoost;
 
-      // Réinitialisation mensuelle automatique si le mois a changé (idempotent)
       try {
         await sql`
           UPDATE mprojects_api_keys
-          SET request_count = 0
+          SET request_count = 0, usage_period_start = ${weekStartStr}::date
           WHERE user_id::text = ${currentUserId}::text
-            AND last_used_at IS NOT NULL
-            AND last_used_at < DATE_TRUNC('month', NOW())
+            AND usage_period_start IS DISTINCT FROM ${weekStartStr}::date
         `;
-      } catch {}
 
-      // Calculer l'usage global pour l'utilisateur
-      try {
         const countRows = await sql`
           SELECT SUM(request_count) as total_requests
           FROM mprojects_api_keys
           WHERE user_id::text = ${currentUserId}::text
         `;
-        const globalRequestCount = countRows[0]?.total_requests || 0;
+        // Neon renvoie les bigint en chaîne: Number() est obligatoire pour comparer
+        const used = Number(countRows[0]?.total_requests || 0);
+        const remaining = Math.max(0, limit - used);
 
-        if (globalRequestCount >= limit) {
+        (c as any).set("requestQuota", { apiKey: matchedApiKey, limit, remaining, used });
+
+        if (remaining < 1) {
           if (isPublicRoute) {
             await next();
             return;
           }
-          return c.json({ error: "Quota exceeded for your account." }, 429);
+          return c.json({
+            code: "quota_exceeded",
+            error: "Quota exceeded for your account.",
+            limit,
+            remaining,
+            resetAt: nextResetIso,
+            used,
+          }, 429);
         }
       } catch {}
     }
@@ -290,7 +291,9 @@ export function registerMiddleware(app: Hono) {
           VALUES (${effectiveKeyToLog}::text, ${endpoint}::text, ${method}::text, ${status}::integer, ${latency}::integer)
         `;
 
-        if (status === 200) {
+        // Les routes qui débitent elles-mêmes un coût multi-crédits (images) posent le fanion
+        // pour éviter le double débit `cout + 1` sur la même requête.
+        if (status === 200 && !(c as any).get?.("quotaDebitedByHandler")) {
           await sql`
             UPDATE mprojects_api_keys
             SET request_count = request_count + 1, last_used_at = NOW()

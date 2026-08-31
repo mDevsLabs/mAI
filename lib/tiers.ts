@@ -6,50 +6,50 @@
 
 // Limites de tokens hebdomadaires (Input + Output) — utilisées pour weekly_usage
 export const TIER_TOKEN_LIMITS: Record<string, number> = {
-  Free: 2_000_000,
-  Plus: 5_000_000,
-  Pro: 10_000_000,
-  Max: 20_000_000,
+  Free: 10_000_000,
+  Plus: 20_000_000,
+  Pro: 30_000_000,
+  Max: 50_000_000,
 };
 // Compat: ancien nom utilisé dans config.ts / models.ts
 export const TIER_LIMITS = TIER_TOKEN_LIMITS;
 
 // Limites de tokens Speech hebdomadaires — utilisées pour weekly_speech_usage
 export const TIER_SPEECH_LIMITS: Record<string, number> = {
-  Free: 20_000_000,
-  Gratuit: 20_000_000,
-  free: 20_000_000,
-  gratuit: 20_000_000,
-  Plus: 50_000_000,
-  plus: 50_000_000,
-  Pro: 100_000_000,
-  pro: 100_000_000,
-  Max: 200_000_000,
-  max: 200_000_000,
+  Free: 30_000_000,
+  Gratuit: 30_000_000,
+  free: 30_000_000,
+  gratuit: 30_000_000,
+  Plus: 75_000_000,
+  plus: 75_000_000,
+  Pro: 150_000_000,
+  pro: 150_000_000,
+  Max: 300_000_000,
+  max: 300_000_000,
 };
 
 export function getTierSpeechLimit(tier?: string | null): number {
   const t = (tier || "Free").toLowerCase().trim();
-  if (t === "max") return 200_000_000;
-  if (t === "pro") return 100_000_000;
-  if (t === "plus") return 50_000_000;
-  return 20_000_000;
+  if (t === "max") return 300_000_000;
+  if (t === "pro") return 150_000_000;
+  if (t === "plus") return 75_000_000;
+  return 30_000_000;
 }
 
-// Limites de requêtes API mensuelles — utilisées pour mprojects_api_keys
+// Limites de requêtes API hebdomadaires — utilisées pour mprojects_api_keys
 export const TIER_REQUEST_LIMITS: Record<string, number> = {
   Free: 500,
   Gratuit: 500,
-  Plus: 1000,
-  Pro: 2000,
-  Max: 5000,
+  Plus: 1500,
+  Pro: 3000,
+  Max: 7500,
 };
 
 export function getTierQuotaLimit(tier?: string | null): number {
   const t = (tier || "Free").toLowerCase().trim();
-  if (t === "plus") return 1000;
-  if (t === "pro") return 2000;
-  if (t === "max") return 5000;
+  if (t === "max") return 7500;
+  if (t === "pro") return 3000;
+  if (t === "plus") return 1500;
   return 500;
 }
 
@@ -72,24 +72,24 @@ export function extractTierFromApiKey(apiKey: string | null | undefined): "Free"
 
 // Limites quotidiennes de génération d'images — utilisées pour mprojects_daily_image_usage
 export const TIER_DAILY_IMAGE_LIMITS: Record<string, number> = {
-  Free: 3,
-  Gratuit: 3,
-  free: 3,
-  gratuit: 3,
-  Plus: 5,
-  plus: 5,
-  Pro: 10,
-  pro: 10,
-  Max: 20,
-  max: 20,
+  Free: 5,
+  Gratuit: 5,
+  free: 5,
+  gratuit: 5,
+  Plus: 10,
+  plus: 10,
+  Pro: 20,
+  pro: 20,
+  Max: 35,
+  max: 35,
 };
 
 export function getTierDailyImageLimit(tier?: string | null): number {
   const t = (tier || "Free").toLowerCase().trim();
-  if (t === "max") return 20;
-  if (t === "pro") return 10;
-  if (t === "plus") return 5;
-  return 3;
+  if (t === "max") return 35;
+  if (t === "pro") return 20;
+  if (t === "plus") return 10;
+  return 5;
 }
 
 // Coût en nombre de requêtes API par génération d'image
@@ -115,29 +115,31 @@ export function getTierImageRequestCost(tier?: string | null): number {
   return 100;
 }
 
-// Limites de stockage Cloud par tier (en bytes) — SSOT: Free 500Mo / Plus 1Go / Pro 2Go / Max 5Go
+// Limites de stockage Cloud par tier (en bytes) — SSOT: Free 10GiB / Plus 20GiB / Pro 40GiB / Max 60GiB
+const GIB = 1024 * 1024 * 1024;
+
 export const STORAGE_LIMITS_BYTES: Record<string, number> = {
-  Free: 500 * 1024 * 1024,           // 500 MB
-  Plus: 1 * 1024 * 1024 * 1024,      // 1 GB
-  Pro: 2 * 1024 * 1024 * 1024,       // 2 GB
-  Max: 5 * 1024 * 1024 * 1024,       // 5 GB
+  Free: 10 * GIB,
+  Plus: 20 * GIB,
+  Pro: 40 * GIB,
+  Max: 60 * GIB,
   // Aliases
-  free: 500 * 1024 * 1024,
-  gratuit: 500 * 1024 * 1024,
-  Gratuit: 500 * 1024 * 1024,
-  plus: 1 * 1024 * 1024 * 1024,
-  pro: 2 * 1024 * 1024 * 1024,
-  max: 5 * 1024 * 1024 * 1024,
+  free: 10 * GIB,
+  gratuit: 10 * GIB,
+  Gratuit: 10 * GIB,
+  plus: 20 * GIB,
+  pro: 40 * GIB,
+  max: 60 * GIB,
 };
 // Alias pour compat frontend (ancien CLOUD_STORAGE_LIMITS de mai-api.ts)
 export const CLOUD_STORAGE_LIMITS = STORAGE_LIMITS_BYTES;
 
 export function getTierStorageLimit(tier?: string | null): number {
   const t = (tier || "Free").toLowerCase().trim();
-  if (t === "max") return 5 * 1024 * 1024 * 1024;
-  if (t === "pro") return 2 * 1024 * 1024 * 1024;
-  if (t === "plus") return 1 * 1024 * 1024 * 1024;
-  return 500 * 1024 * 1024;
+  if (t === "max") return 60 * GIB;
+  if (t === "pro") return 40 * GIB;
+  if (t === "plus") return 20 * GIB;
+  return 10 * GIB;
 }
 
 export function formatStorageBytes(bytes: number): string {

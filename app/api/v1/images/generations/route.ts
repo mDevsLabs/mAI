@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 3. Vérification des quotas journaliers (Plus: 5/j, Pro: 10/j, Max: 20/j)
+    // 3. Vérification des quotas journaliers (Plus: 10/j, Pro: 20/j, Max: 35/j)
     const dailyLimit = getTierDailyImageLimit(userPlan);
     const requestCost = getTierImageRequestCost(userPlan);
 

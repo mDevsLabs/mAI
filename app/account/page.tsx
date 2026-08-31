@@ -54,15 +54,15 @@ function formatResetDate(iso?: string): string {
   }
 }
 
-function getMonthlyResetDate(): string {
+function getWeeklyResetDate(): string {
   const now = new Date();
-  const nextMonth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1, 0, 0, 0));
-  return nextMonth.toLocaleString("fr-FR", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
+  const day = now.getUTCDay() || 7;
+  const nextMonday = new Date(now);
+  nextMonday.setUTCDate(now.getUTCDate() + (8 - day));
+  nextMonday.setUTCHours(0, 0, 0, 0);
+  return nextMonday.toLocaleString("fr-FR", {
+    dateStyle: "medium",
+    timeStyle: "short",
   });
 }
 
@@ -213,7 +213,7 @@ export default function AccountPage() {
           key: k.key.substring(0, 8) + "...",
           plan: k.plan,
           requestCount: k.requestCount,
-          limit: k.plan === "Max" ? 5000 : k.plan === "Pro" ? 2000 : k.plan === "Plus" ? 1000 : 500
+          limit: k.plan === "Max" ? 7500 : k.plan === "Pro" ? 3000 : k.plan === "Plus" ? 1500 : 500
         })));
       }
     }
@@ -528,12 +528,12 @@ export default function AccountPage() {
     );
   }
 
-  // Quotas selon le forfait utilisateur (Free: 500, Plus: 1000, Pro: 2000, Max: 5000)
+  // Quotas selon le forfait utilisateur (Free: 500, Plus: 1500, Pro: 3000, Max: 7500)
   const getTierQuotaLimit = (tierStr?: string) => {
     const t = (tierStr || "Free").toLowerCase().trim();
-    if (t === "plus") return 1000;
-    if (t === "pro") return 2000;
-    if (t === "max") return 5000;
+    if (t === "max") return 7500;
+    if (t === "pro") return 3000;
+    if (t === "plus") return 1500;
     return 500;
   };
 
@@ -884,7 +884,7 @@ export default function AccountPage() {
                     />
                   </div>
                   <p className="text-xs text-slate-500 mt-2">
-                    Réinitialisation mensuelle : {getMonthlyResetDate()}
+                    Réinitialisation hebdomadaire : {getWeeklyResetDate()}
                   </p>
                 </div>
               );
@@ -927,7 +927,7 @@ export default function AccountPage() {
 
         {(() => {
           const usedToday = imageUsage?.usedToday ?? 0;
-          const dailyLimit = imageUsage?.dailyLimit ?? (user?.tier === "Max" ? 20 : user?.tier === "Pro" ? 10 : user?.tier === "Plus" ? 5 : 3);
+          const dailyLimit = imageUsage?.dailyLimit ?? (user?.tier === "Max" ? 35 : user?.tier === "Pro" ? 20 : user?.tier === "Plus" ? 10 : 5);
           const percentUsed = Math.min(100, Math.round((usedToday / (dailyLimit || 1)) * 100));
           const isAtLimit = usedToday >= dailyLimit;
 
@@ -958,7 +958,7 @@ export default function AccountPage() {
                   />
                 </div>
                 <p className="text-xs text-slate-500">
-                  Réinitialisation automatique : chaque jour à minuit UTC (00:00 UTC).
+                  Réinitialisation automatique : {formatResetDate(imageUsage?.resetAt)}
                 </p>
               </div>
 

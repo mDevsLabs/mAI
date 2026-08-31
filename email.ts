@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer";
+import nodemailer from "npm:nodemailer";
 
 function escapeHtml(str: string): string {
   return String(str)

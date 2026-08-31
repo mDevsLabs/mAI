@@ -105,7 +105,7 @@ export function registerAuthRoutes(app: Hono) {
 
       const sql = getDb();
       const users =
-        await sql`SELECT id, email, password_hash, tier FROM users WHERE email = ${loginId} OR username = ${loginId} OR phone = ${loginId} LIMIT 1`;
+        await sql`SELECT id, email, password_hash, tier, is_blocked FROM users WHERE email = ${loginId} OR username = ${loginId} OR phone = ${loginId} LIMIT 1`;
       if (users.length === 0) {
         return c.json({ error: "Identifiants invalides." }, 401);
       }
@@ -114,6 +114,14 @@ export function registerAuthRoutes(app: Hono) {
       const match = await bcrypt.compare(password, user.password_hash);
       if (!match) {
         return c.json({ error: "Identifiants invalides." }, 401);
+      }
+
+      // Compte bloqué par un administrateur : refus explicite (403)
+      if (user.is_blocked) {
+        return c.json(
+          { error: "Votre compte a été bloqué par un administrateur. Contactez le support pour demander sa réactivation.", blocked: true },
+          403
+        );
       }
 
       const code = await generateVerificationCode(user.email, "login");
@@ -145,12 +153,21 @@ export function registerAuthRoutes(app: Hono) {
 
       const sql = getDb();
       const users =
-        await sql`SELECT id, tier FROM users WHERE email = ${email} LIMIT 1`;
+        await sql`SELECT id, tier, is_blocked FROM users WHERE email = ${email} LIMIT 1`;
       if (users.length === 0) {
         return c.json({ error: "Utilisateur introuvable." }, 404);
       }
 
       const user = users[0];
+
+      // Compte bloqué par un administrateur : refus explicite (403)
+      if (user.is_blocked) {
+        return c.json(
+          { error: "Votre compte a été bloqué par un administrateur. Contactez le support pour demander sa réactivation.", blocked: true },
+          403
+        );
+      }
+
       const token = await signToken({ sub: user.id, tier: user.tier });
 
       const userAgent = c.req.header("user-agent") || "";

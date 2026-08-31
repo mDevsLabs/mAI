@@ -6,6 +6,7 @@ import {
   getTierDailyImageLimit,
   getTierImageRequestCost,
   getUserQuotaBoost,
+  isPaidTier,
   verifyToken,
 } from "./config.ts";
 
@@ -824,11 +825,7 @@ export function registerImageRoutes(app: Hono) {
   // ─────────────────────────────────────────────
   const handleGetImageModels = async (c: any) => {
     const userPlan = c.get("userPlan");
-    const planStr = String(userPlan || "Free")
-      .toLowerCase()
-      .trim();
-    const isPaidPlan = ["plus", "pro", "max"].includes(planStr);
-    const shouldFilterFreeOnly = !isPaidPlan;
+    const shouldFilterFreeOnly = !isPaidTier(userPlan);
 
     try {
       let models = await fetchLiveCometImageModels();
@@ -1225,10 +1222,11 @@ export function registerImageRoutes(app: Hono) {
       `;
       const keyTier = extractTierFromApiKey(token);
       const effectiveTier = keyTier || uRows[0]?.tier || userPlan || "Free";
-      const planStr = effectiveTier.toLowerCase().trim();
-      const isPaidPlan = ["plus", "pro", "max"].includes(planStr);
+      const requestQuota = (c as any).get?.("requestQuota") as
+        | { apiKey: string | null; limit: number; remaining: number; used: number }
+        | undefined;
 
-      if (!isPaidPlan) {
+      if (!isPaidTier(effectiveTier)) {
         return c.json(
           {
             error: {
@@ -1252,15 +1250,37 @@ export function registerImageRoutes(app: Hono) {
       `;
       const currentDailyUsage = Number(usageRows[0]?.images_generated || 0);
 
-      if (currentDailyUsage >= dailyLimit) {
+      if (currentDailyUsage + n > dailyLimit) {
         return c.json(
           {
             error: {
               code: "daily_image_quota_exceeded",
               limit: dailyLimit,
-              message: `Votre quota journalier de génération d'images est épuisé (${currentDailyUsage}/${dailyLimit} par jour pour le forfait ${effectiveTier}). Réinitialisation automatique à minuit UTC.`,
+              message: `Votre quota journalier de génération d'images est épuisé (${currentDailyUsage}/${dailyLimit} par jour pour le forfait ${effectiveTier}, ${n} image(s) demandée(s)). Réinitialisation automatique à minuit UTC.`,
+              requested: n,
               type: "quota_error",
               used: currentDailyUsage,
+            },
+          },
+          429
+        );
+      }
+
+      // Le crédit API débité est le coût du tier multiplié par le nombre d'images demandées:
+      // il doit rester assez pour la requête AVANT d'appeler le fournisseur.
+      const totalRequestCost = getTierImageRequestCost(effectiveTier) * n;
+      if (requestQuota && requestQuota.used + totalRequestCost > requestQuota.limit) {
+        return c.json(
+          {
+            error: {
+              code: "insufficient_api_requests",
+              dailyLimit,
+              limit: requestQuota.limit,
+              message: `Requête refusée : ${totalRequestCost} crédits API sont nécessaires pour générer ${n} image(s) avec le forfait ${effectiveTier}, il n'en reste que ${requestQuota.remaining} sur ${requestQuota.limit} cette semaine.`,
+              remaining: requestQuota.remaining,
+              required: totalRequestCost,
+              type: "quota_error",
+              used: requestQuota.used,
             },
           },
           429
@@ -1310,13 +1330,13 @@ export function registerImageRoutes(app: Hono) {
         cometResultData = [{ revised_prompt: prompt, url: generatedImageUrl }];
       }
 
-      // Incrémentation du quota journalier
+      // Incrémentation du quota journalier (1 par image générée)
       await sql`
         INSERT INTO mprojects_daily_image_usage (user_id, usage_date, images_generated, updated_at)
-        VALUES (${userId}::text, CURRENT_DATE, 1, NOW())
+        VALUES (${userId}::text, CURRENT_DATE, ${n}, NOW())
         ON CONFLICT (user_id, usage_date)
         DO UPDATE SET 
-          images_generated = mprojects_daily_image_usage.images_generated + 1,
+          images_generated = mprojects_daily_image_usage.images_generated + ${n},
           updated_at = NOW()
       `;
 
@@ -1337,14 +1357,15 @@ export function registerImageRoutes(app: Hono) {
         )
       `;
 
-      // Incrémentation du compteur de requêtes de la clé API
-      const requestCost = getTierImageRequestCost(effectiveTier);
-      if (apiKey) {
+      // Débit du compteur de requêtes de la clé API (cout x n verifie avant l'appel)
+      const debitKey = requestQuota?.apiKey || apiKey;
+      if (debitKey) {
         await sql`
           UPDATE mprojects_api_keys
-          SET request_count = request_count + ${requestCost}, last_used_at = NOW()
-          WHERE api_key = ${apiKey}
+          SET request_count = request_count + ${totalRequestCost}, last_used_at = NOW()
+          WHERE api_key = ${debitKey}::text
         `;
+        (c as any).set?.("quotaDebitedByHandler", true);
       }
 
       // Log de requête
@@ -1375,10 +1396,10 @@ export function registerImageRoutes(app: Hono) {
         model: finalUsedModel,
         usage: {
           daily_limit: dailyLimit,
-          daily_used: currentDailyUsage + 1,
+          daily_used: currentDailyUsage + n,
           plan: effectiveTier,
-          request_cost: requestCost,
-          requests_counted: requestCost,
+          request_cost: totalRequestCost,
+          requests_counted: totalRequestCost,
         },
       });
     } catch (err: unknown) {

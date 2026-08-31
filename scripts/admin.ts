@@ -1274,7 +1274,7 @@ async function handleListCustomers() {
     const customers = await sql`
       SELECT id, username, email, tier, is_blocked 
       FROM users 
-      ORDER BY created_at DESC;
+      ORDER BY id ASC;
     `;
     renderCustomersTable(customers);
   } catch (err: any) {
@@ -1282,26 +1282,120 @@ async function handleListCustomers() {
   }
 }
 
-async function handleToggleBlockCustomer(rl: readline.Interface) {
-  console.log(`\n${c.bold}--- 🚫 BLOQUER / DÉBLOQUER UN COMPTE CLIENT ---${c.reset}`);
-  const search = (await rl.question("👉 Entrez l'E-mail, le Username ou l'ID du client à bloquer/débloquer : ")).trim();
-  if (!search) return;
-
-  try {
-    const found = await sql`
-      SELECT id, username, email, is_blocked FROM users 
-      WHERE email ILIKE ${search} OR username ILIKE ${search} OR id::text = ${search}
-      LIMIT 1;
+// Liste numérotée des clients et sélection précise par l'administrateur.
+async function pickCustomer(rl: readline.Interface, actionLabel: string): Promise<any | null> {
+  let filter = "";
+  while (true) {
+    let customers = await sql`
+      SELECT id, username, email, tier, is_blocked FROM users 
+      ORDER BY username ASC;
     `;
-
-    if (found.length === 0) {
-      console.log("❌ Aucun compte client correspondant trouvé.");
-      return;
+    const term = filter.trim().toLowerCase();
+    if (term) {
+      customers = customers.filter(
+        (u: any) =>
+          String(u.username || "").toLowerCase().includes(term) ||
+          String(u.email || "").toLowerCase().includes(term) ||
+          String(u.id || "").toLowerCase().includes(term)
+      );
     }
 
-    const current = found[0];
-    const newStatus = !current.is_blocked;
+    console.log(`\n${c.bold}--- 🚫 ${actionLabel} : SÉLECTION DU CLIENT ---${c.reset}`);
+    if (customers.length === 0) {
+      console.log(`    ${c.brightYellow}⚠️  Aucun client ne correspond au filtre "${filter}".${c.reset}`);
+    } else {
+      console.log("    " + "─".repeat(70));
+      console.log(`    #  | ${c.bold}${"CLIENT".padEnd(42)}${c.reset} | ${c.bold}${"STATUT".padEnd(10)}${c.reset}`);
+      console.log("    " + "─".repeat(70));
+      customers.forEach((u: any, idx: number) => {
+        const label = `${u.username || "?"} <${u.email || "?"}>`;
+        const status = u.is_blocked ? `${c.red}🔴 Bloqué${c.reset}` : `${c.green}🟢 Actif${c.reset}`;
+        console.log(`    ${String(idx + 1).padStart(2)}  | ${label.padEnd(46)} | ${status}`);
+      });
+      console.log("    " + "─".repeat(70));
+    }
 
+    const input = (
+      await rl.question(
+        `👉 Numéro du client à sélectionner (ou texte pour filtrer, ${c.bold}0${c.reset} pour annuler) : `
+      )
+    ).trim();
+    if (!input) continue;
+
+    if (/^\d+$/.test(input)) {
+      const n = parseInt(input, 10);
+      if (n === 0) {
+        console.log(`${c.dim}↩️  Annulé.${c.reset}`);
+        return null;
+      }
+      const chosen = customers[n - 1];
+      if (!chosen) {
+        console.log("❌ Numéro invalide.");
+        continue;
+      }
+      return chosen;
+    }
+
+    filter = input;
+  }
+}
+
+function accountActionEmailHtml(kind: "block" | "unblock" | "delete", username: string) {
+  const title =
+    kind === "block"
+      ? "Votre compte a été bloqué"
+      : kind === "unblock"
+        ? "Votre compte a été réactivé"
+        : "Votre compte a été supprimé";
+  const message =
+    kind === "block"
+      ? `Votre compte mAI (<strong>${username}</strong>) a été <span style="color:#f87171;">bloqué</span> par un administrateur. Vous ne pouvez plus vous connecter pour le moment.`
+      : kind === "unblock"
+        ? `Bonne nouvelle : votre compte mAI (<strong>${username}</strong>) a été réactivé. Vous pouvez vous reconnecter normalement.`
+        : `Votre compte mAI (<strong>${username}</strong>) a été définitivement supprimé ainsi que toutes les données associées.`;
+
+  return `
+    <!DOCTYPE html>
+    <html lang="fr">
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>${title}</title>
+    </head>
+    <body style="margin:0; padding:0; background-color:#080c14; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#f1f5f9; -webkit-font-smoothing:antialiased;">
+      <div style="max-width:600px; margin:40px auto; background:#0f172a; border:1px solid #1e293b; border-radius:24px; overflow:hidden; box-shadow:0 25px 50px -12px rgba(0,0,0,0.85);">
+        <div style="padding:28px 32px; background:linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);">
+          <h1 style="margin:0; color:#ffffff; font-size:22px; letter-spacing:0.3px;">mAI — Statut de votre compte</h1>
+        </div>
+        <div style="padding:32px;">
+          <p style="font-size:15px; line-height:1.7; color:#cbd5e1;">Bonjour <strong>${username}</strong>,</p>
+          <p style="font-size:15px; line-height:1.7; color:#cbd5e1;">${message}</p>
+          <p style="font-size:15px; line-height:1.7; color:#cbd5e1;">Si vous pensez qu'il s'agit d'une erreur, contactez-nous à <a href="mailto:mprojectsofficiel@gmail.com" style="color:#a78bfa;">mprojectsofficiel@gmail.com</a>.</p>
+          <p style="font-size:13px; color:#64748b; margin-top:32px;">Cet e-mail a été envoyé automatiquement par la console d'administration mAI.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+}
+
+async function handleToggleBlockCustomer(rl: readline.Interface) {
+  const current = await pickCustomer(rl, "BLOQUER / DÉBLOQUER UN COMPTE CLIENT");
+  if (!current) return;
+
+  const newStatus = !current.is_blocked;
+  const actionWord = newStatus ? "🚫 BLOQUER" : "🟢 DÉBLOQUER";
+  const confirm = (
+    await rl.question(
+      `⚠️  Confirmer le ${c.bold}${actionWord}${c.reset} de "${c.bold}${current.username}${c.reset}" (${current.email}) ? (o/N) : `
+    )
+  ).trim().toLowerCase();
+  if (!['o', 'oui', 'y', 'yes'].includes(confirm)) {
+    console.log("\n❌ Action annulée.\n");
+    return;
+  }
+
+  try {
     await sql`
       UPDATE users 
       SET is_blocked = ${newStatus}
@@ -1323,45 +1417,66 @@ async function handleToggleBlockCustomer(rl: readline.Interface) {
     } else {
       console.log(`\n${c.brightGreen}✔ Le client ${c.bold}${current.username}${c.reset} (${current.email}) a été ${c.bold}🟢 DÉBLOQUÉ${c.reset}.\n`);
     }
+
+    // Notification par e-mail au client concerné
+    if (current.email) {
+      const kind = newStatus ? "block" : "unblock";
+      const ok = await sendEmail({
+        to: current.email,
+        subject: newStatus ? "Votre compte mAI a été bloqué" : "Votre compte mAI a été réactivé",
+        html: accountActionEmailHtml(kind, current.username || ""),
+      });
+      console.log(
+        ok
+          ? `${c.brightGreen}✉️  E-mail de notification envoyé à ${current.email}.${c.reset}`
+          : `${c.brightRed}⚠️  Échec de l'envoi de l'e-mail à ${current.email} (env manquantes ?).${c.reset}`
+      );
+    }
   } catch (err: any) {
     console.error("❌ Erreur lors de la modification du statut :", err.message || err);
   }
 }
 
 async function handleDeleteCustomer(rl: readline.Interface) {
-  console.log(`\n${c.bold}--- 🗑️ SUPPRESSION D'UN COMPTE CLIENT ---${c.reset}`);
-  const search = (await rl.question("👉 Entrez l'E-mail, le Username ou l'ID du client à supprimer : ")).trim();
-  if (!search) return;
+  const current = await pickCustomer(rl, "SUPPRESSION D'UN COMPTE CLIENT");
+  if (!current) return;
+
+  const confirm = (
+    await rl.question(
+      `⚠️  Êtes-vous sûr de vouloir supprimer définitivement le client "${c.bold}${current.username}${c.reset}" (${current.email}) ?\nToutes ses clés API, appareils et données associés seront impactés. (o/N) : `
+    )
+  ).trim().toLowerCase();
+  if (!['o', 'oui', 'y', 'yes'].includes(confirm)) {
+    console.log("\n❌ Suppression annulée.\n");
+    return;
+  }
 
   try {
-    const found = await sql`
-      SELECT id, username, email FROM users 
-      WHERE email ILIKE ${search} OR username ILIKE ${search} OR id::text = ${search}
-      LIMIT 1;
-    `;
-
-    if (found.length === 0) {
-      console.log("❌ Aucun compte client correspondant trouvé.");
-      return;
+    // Notification par e-mail au client avant suppression définitive
+    let emailSent = false;
+    if (current.email) {
+      emailSent = await sendEmail({
+        to: current.email,
+        subject: "Votre compte mAI a été supprimé",
+        html: accountActionEmailHtml("delete", current.username || ""),
+      });
     }
 
-    const current = found[0];
-    const confirm = (await rl.question(`⚠️ Êtes-vous sûr de vouloir supprimer définitivement le client "${current.username}" (${current.email}) ?\nToutes ses clés API, appareils et données associés seront impactés. (o/N) : `)).trim().toLowerCase();
-
-    if (confirm === 'o' || confirm === 'oui' || confirm === 'y') {
-      await sql`DELETE FROM connected_devices WHERE user_id::text = ${current.id}`;
-      await sql`DELETE FROM mprojects_api_keys WHERE user_id::text = ${current.id} OR user_id::text = ${current.username} OR user_id::text = ${current.email}`;
-      await sql`DELETE FROM weekly_usage WHERE user_id::text = ${current.id}`;
-      await sql`DELETE FROM users WHERE id = ${current.id};`;
+    await sql`DELETE FROM connected_devices WHERE user_id::text = ${current.id}`;
+    await sql`DELETE FROM mprojects_api_keys WHERE user_id::text = ${current.id} OR user_id::text = ${current.username} OR user_id::text = ${current.email}`;
+    await sql`DELETE FROM weekly_usage WHERE user_id::text = ${current.id}`;
+    await sql`DELETE FROM users WHERE id = ${current.id};`;
     await sql`
       INSERT INTO user_account_actions (user_id, action, reason)
       VALUES (${current.id}::text, 'delete', 'Suppression via console admin')
     `;
 
-      console.log(`\n${c.brightGreen}🗑️ Le compte de ${current.username} (${current.email}) a été supprimé définitivement.${c.reset}\n`);
-    } else {
-      console.log("\n❌ Suppression annulée.\n");
-    }
+    console.log(`\n${c.brightGreen}🗑️ Le compte de ${current.username} (${current.email}) a été supprimé définitivement.${c.reset}\n`);
+    console.log(
+      emailSent
+        ? `${c.brightGreen}✉️  E-mail de notification envoyé à ${current.email} avant suppression.${c.reset}`
+        : `${c.brightRed}⚠️  E-mail de notification NON envoyé à ${current.email} (adresse absente ou env manquantes).${c.reset}`
+    );
   } catch (err: any) {
     console.error("❌ Erreur lors de la suppression :", err.message || err);
   }

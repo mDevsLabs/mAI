@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { LogIn, Loader2 } from "lucide-react";
+import { LogIn, Loader2, ShieldBan, Mail } from "lucide-react";
 import { useAuth } from "@/components/auth-provider";
 import { MaiApiError } from "@/lib/mai-api";
 import toast from "react-hot-toast";
@@ -12,12 +12,11 @@ function LoginForm() {
   const { login, verifyLogin, isAuthenticated, loading: authLoading } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const next = searchParams.get("next") || "/account";
-
-  const [email, setEmail] = useState("");
+  const next = searchParams.get("next") || "/account";  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [isBlocked, setIsBlocked] = useState(false);
   
   const [step, setStep] = useState<"login" | "verify">("login");
   const [targetEmail, setTargetEmail] = useState("");
@@ -32,6 +31,7 @@ function LoginForm() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError("");
+    setIsBlocked(false);
     if (!email.trim() || !password) {
       setError("Veuillez renseigner votre identifiant et le mot de passe.");
       return;
@@ -55,6 +55,10 @@ function LoginForm() {
           : err instanceof Error
             ? err.message
             : "Erreur de connexion.";
+      // Compte bloqué par un administrateur (403 + flag blocked)
+      if (err instanceof MaiApiError && err.status === 403) {
+        setIsBlocked(true);
+      }
       setError(message);
       toast.error(message);
     } finally {
@@ -65,6 +69,7 @@ function LoginForm() {
   const handleVerify = async (e: FormEvent) => {
     e.preventDefault();
     setError("");
+    setIsBlocked(false);
     if (!verificationCode.trim()) {
       setError("Veuillez renseigner le code de vérification.");
       return;
@@ -81,6 +86,10 @@ function LoginForm() {
           : err instanceof Error
             ? err.message
             : "Code de vérification invalide.";
+      // Compte bloqué par un administrateur (403 + flag blocked)
+      if (err instanceof MaiApiError && err.status === 403) {
+        setIsBlocked(true);
+      }
       setError(message);
       toast.error(message);
     } finally {
@@ -128,7 +137,31 @@ function LoginForm() {
           onSubmit={handleVerify}
           className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-4"
         >
-          {error && (
+          {isBlocked && (
+            <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-700 space-y-3">
+              <div className="flex items-start gap-2.5">
+                <ShieldBan className="w-5 h-5 shrink-0 mt-0.5" />
+                <div className="text-sm font-medium">
+                  Votre compte est actuellement <strong>bloqué</strong>. Il n'est
+                  donc pas possible de se connecter. Pour demander sa
+                  réactivation, vous pouvez rédiger un mail au support.
+                </div>
+              </div>
+              <a
+                href={`mailto:mprojectsofficiel@gmail.com?subject=${encodeURIComponent(
+                  "Demande de réactivation de compte bloqué"
+                )}&body=${encodeURIComponent(
+                  `Bonjour,\n\nMon compte (${targetEmail}) a été bloqué. Je souhaite demander sa réactivation.\n\nCordialement,`
+                )}`}
+                className="w-full py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-sm transition-all flex items-center justify-center gap-2"
+              >
+                <Mail className="w-4 h-4" />
+                Rédiger un mail de demande
+              </a>
+            </div>
+          )}
+
+          {error && !isBlocked && (
             <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-700 text-sm font-medium">
               {error}
             </div>
@@ -200,7 +233,31 @@ function LoginForm() {
         onSubmit={handleSubmit}
         className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] space-y-4"
       >
-        {error && (
+        {isBlocked && (
+          <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-700 space-y-3">
+            <div className="flex items-start gap-2.5">
+              <ShieldBan className="w-5 h-5 shrink-0 mt-0.5" />
+              <div className="text-sm font-medium">
+                Votre compte est actuellement <strong>bloqué</strong>. Il n'est
+                donc pas possible de se connecter. Pour demander sa
+                réactivation, vous pouvez rédiger un mail au support.
+              </div>
+            </div>
+            <a
+              href={`mailto:mprojectsofficiel@gmail.com?subject=${encodeURIComponent(
+                "Demande de réactivation de compte bloqué"
+              )}&body=${encodeURIComponent(
+                `Bonjour,\n\nMon compte (${email.trim()}) a été bloqué. Je souhaite demander sa réactivation.\n\nCordialement,`
+              )}`}
+              className="w-full py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-sm transition-all flex items-center justify-center gap-2"
+            >
+              <Mail className="w-4 h-4" />
+              Rédiger un mail de demande
+            </a>
+          </div>
+        )}
+
+        {error && !isBlocked && (
           <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-700 text-sm font-medium">
             {error}
           </div>
