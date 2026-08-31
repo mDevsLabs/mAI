@@ -168,7 +168,7 @@ export async function getCloudStorage(token: string): Promise<MaiCloudStorageUsa
     token,
   });
   
-  // Limites canoniques depuis lib/tiers.ts (Free 500MB, Plus 5GB, Pro 20GB, Max 100GB)
+  // Limites canoniques depuis lib/tiers.ts (Free 10GiB, Plus 20GiB, Pro 40GiB, Max 60GiB)
   const tier = data.tier || "Free";
   const limit = CLOUD_STORAGE_LIMITS[tier] || CLOUD_STORAGE_LIMITS["Free"];
   const bytesUsed = Number(data.bytes_used || 0);

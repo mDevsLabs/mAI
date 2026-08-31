@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Target, Rocket, Heart, ArrowRight } from "lucide-react";
+import { Target, Rocket, Heart, ArrowRight, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 export default function AboutPage() {
@@ -26,7 +26,7 @@ export default function AboutPage() {
           transition={{ delay: 0.1 }}
           className="text-slate-500 text-base md:text-lg font-light mt-2 md:mt-4 max-w-2xl"
         >
-          Une équipe passionnée qui développe des outils innovants, transparents et accessibles pour simplifier votre quotidien numérique. 🚀✨
+          Une équipe passionnée qui développe des outils innovants, transparents et accessibles pour simplifier votre quotidien numérique. <Rocket className="inline w-4 h-4 align-middle" /><Sparkles className="inline w-4 h-4 align-middle" />
         </motion.p>
       </div>
 

@@ -18,7 +18,7 @@ export function HeroSection() {
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-5xl sm:text-6xl md:text-8xl font-black italic tracking-tighter mb-4 leading-[0.9] md:leading-[0.85] uppercase text-slate-900 select-none"
+          className="text-4xl sm:text-6xl md:text-8xl font-black italic tracking-tighter mb-4 leading-[0.9] md:leading-[0.85] uppercase text-slate-900 select-none"
         >
           Just <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-blue-600 to-emerald-500">build.</span>
         </motion.h1>

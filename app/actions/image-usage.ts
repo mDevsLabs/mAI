@@ -1,7 +1,7 @@
 "use server";
 
 import { neon } from "@neondatabase/serverless";
-import { getTierDailyImageLimit } from "@/lib/tiers";
+import { getTierDailyImageLimit, getUserQuotaBoost } from "@/lib/tiers";
 
 export interface UserImageUsageData {
   usedToday: number;
@@ -43,7 +43,8 @@ export async function getUserImageUsage(userId: string): Promise<{
       LIMIT 1
     `;
     const tier = userRows[0]?.tier || "Free";
-    const dailyLimit = getTierDailyImageLimit(tier);
+    const imageBoost = await getUserQuotaBoost(sql, userId, "images");
+    const dailyLimit = getTierDailyImageLimit(tier) + imageBoost;
 
     // 2. Récupérer l'usage du jour
     const usageRows = await sql`

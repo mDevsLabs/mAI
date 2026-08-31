@@ -5,9 +5,9 @@ Nous annonçons la disponibilité générale de **mAI API v2**, conçue pour off
 ## Nouveautés majeures de la version 2
 
 ### 1. Clés API Développeurs et hachage SHA-256
-Chaque développeur a désormais la possibilité de générer des clés API personnalisées (`mai_live_...`). Pour garantir un niveau de sécurité optimal :
-- La clé complète en clair n'est retournée qu'une **seule et unique fois** lors de sa création.
-- Seule l'empreinte **SHA-256** est conservée sur nos serveurs.
+Chaque développeur a désormais la possibilité de générer des clés API personnalisées (`mai-[free|plus|pro|max]-XXXXX-XXXXXXXX`). Pour garantir un niveau de sécurité optimal :
+- La clé complète en clair n'est exposée qu'une **seule et unique fois**, au moment de sa génération automatique.
+- Seule l'empreinte **SHA-256** est conservée dans nos bases de données (UE), et non sur les serveurs d'application.
 - L'authentification s'effectue selon le standard `Authorization: Bearer <clé_api>`.
 
 ### 2. Gestion de projets (`/v1/projects`)
@@ -18,9 +18,11 @@ L'organisation des intégrations par projet s'effectue via de nouvelles routes d
 
 ### 3. Contrôle de débit et quotas par forfait
 L'API v2 intègre un contrôle de débit par adresse IP et par compte afin d'assurer la stabilité globale de l'infrastructure :
-- **Free** : 500 requêtes / mois
-- **Plus** : 1 000 requêtes / mois
-- **Pro** : 2 000 requêtes / mois
-- **Max** : 5 000 requêtes / mois
+- **Free** : 500 requêtes / semaine
+- **Plus** : 1 500 requêtes / semaine
+- **Pro** : 3 000 requêtes / semaine
+- **Max** : 7 500 requêtes / semaine
 
-Rendez-vous dans la rubrique [Gestion des Clés API](/api/keys) de la console pour débuter vos intégrations.
+Consultez la rubrique [Gestion des Clés API](/api/keys) de la console pour initier vos intégrations.
+
+

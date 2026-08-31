@@ -7,16 +7,32 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   compress: true,
   reactStrictMode: true,
+  compiler: {
+    removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error", "warn"] } : false,
+  },
   experimental: {
-    optimizePackageImports: ["lucide-react", "recharts", "react-icons", "motion"],
+    optimizePackageImports: [
+      "lucide-react",
+      "recharts",
+      "react-icons",
+      "motion",
+      "clsx",
+      "tailwind-merge",
+      "react-use",
+      "cmdk"
+    ],
   },
   images: {
+    minimumCacheTTL: 2592000, // 30 jours de cache
     remotePatterns: [
       { protocol: "https", hostname: "upload.fs.fr" },
       { protocol: "https", hostname: "files.bpcontent.cloud" },
       { protocol: "https", hostname: "mai.instatus.com" },
       { protocol: "https", hostname: "openrouter.ai" },
       { protocol: "https", hostname: "avatars.githubusercontent.com" },
+      { protocol: "https", hostname: "s3.z1storage.com" },
+      { protocol: "https", hostname: "*.s3.z1storage.com" },
+      { protocol: "https", hostname: "*.z1storage.com" },
     ],
     formats: ["image/avif", "image/webp"],
   },

@@ -12,6 +12,10 @@ import {
   Globe,
   Cpu,
   Ban,
+  ScrollText,
+  MapPin,
+  Folder,
+  Lock,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -41,7 +45,7 @@ export default function TermsPage() {
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-blue-500 to-emerald-500">
             d'Utilisation
           </span>{" "}
-          📜
+          <ScrollText className="inline w-4 h-4 align-middle" />
         </h1>
 
         <p className="text-slate-500 font-light mb-8 text-base md:text-lg">
@@ -56,7 +60,7 @@ export default function TermsPage() {
           </div>
           <div className="p-3.5 bg-emerald-50 rounded-2xl border border-emerald-200/80 text-emerald-950 font-medium flex items-center gap-2.5">
             <Globe className="w-5 h-5 text-emerald-600 shrink-0" />
-            <span>Données en UE 🇪🇺 / Fichiers aux USA 🇺🇸</span>
+            <span>Données en UE / Fichiers aux USA</span>
           </div>
           <div className="p-3.5 bg-blue-50 rounded-2xl border border-blue-200/80 text-blue-950 font-medium flex items-center gap-2.5">
             <Cpu className="w-5 h-5 text-blue-600 shrink-0" />
@@ -87,13 +91,13 @@ export default function TermsPage() {
             </p>
             <div className="space-y-2.5 pt-1 text-sm font-light">
               <div className="p-3.5 bg-white/70 rounded-2xl border border-slate-200 space-y-1">
-                <strong className="text-slate-900 text-xs uppercase tracking-wider block">📍 Données Structurées dans l&apos;Union Européenne (UE) :</strong>
+                <strong className="text-slate-900 text-xs uppercase tracking-wider block"><MapPin className="inline w-4 h-4 align-middle" /> Données Structurées dans l&apos;Union Européenne (UE) :</strong>
                 <p className="text-slate-600 text-xs leading-relaxed">
                   L&apos;ensemble des bases de données relationnelles (PostgreSQL Neon), comptes utilisateurs, clés d&apos;API, métadonnées et journaux de requêtes sont situés dans des datacenters au sein de l&apos;Union Européenne (Francfort, Allemagne), sous conformité intégrale avec le RGPD (Règlement 2016/679).
                 </p>
               </div>
               <div className="p-3.5 bg-white/70 rounded-2xl border border-slate-200 space-y-1">
-                <strong className="text-slate-900 text-xs uppercase tracking-wider block">📁 Fichiers et Stockage d&apos;Objets aux États-Unis (USA) :</strong>
+                <strong className="text-slate-900 text-xs uppercase tracking-wider block"><Folder className="inline w-4 h-4 align-middle" /> Fichiers et Stockage d&apos;Objets aux États-Unis (USA) :</strong>
                 <p className="text-slate-600 text-xs leading-relaxed">
                   Les fichiers téléversés, images et artefacts volumineux (mAI Cloud Storage) sont stockés aux États-Unis sur des infrastructures chiffrées au repos (AES-256) et en transit (TLS 1.3) avec clauses contractuelles conformes.
                 </p>
@@ -126,7 +130,7 @@ export default function TermsPage() {
             </div>
 
             <div className="p-4 rounded-2xl bg-purple-50/60 border border-purple-200 text-slate-700 text-xs space-y-1.5 font-light">
-              <strong className="text-purple-900 block font-bold">🔒 Priorité Zero Data Retention (ZDR) sur l&apos;IA :</strong>
+              <strong className="text-purple-900 block font-bold"><Lock className="inline w-4 h-4 align-middle" /> Priorité Zero Data Retention (ZDR) sur l&apos;IA :</strong>
               <p>
                 mDevsLabs priorise et garantit une politique absolue de <strong>Zero Data Retention (ZDR)</strong> : vos invites (prompts), documents injectés et résultats générés via l&apos;API mAI sont traités en mémoire volatile éphémère et <strong>ne sont jamais stockés de manière persistante ni utilisés pour réentraîner des modèles d&apos;intelligence artificielle</strong>. Vos données restent votre propriété exclusive.
               </p>

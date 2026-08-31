@@ -222,7 +222,7 @@ runAnthropic();`;
   const handleCopy = () => {
     navigator.clipboard.writeText(getCodeSnippet(activeTab));
     setCopied(true);
-    toast.success("Snippet copié dans le presse-papier ! 📋");
+    toast.success("Snippet copié dans le presse-papier ! Copier");
     setTimeout(() => setCopied(false), 2000);
   };
 

@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { Command } from "cmdk";
 import { useRouter } from "next/navigation";
-import { Search, Folder, FileText } from "lucide-react";
+import { Search, Folder, FileText, LifeBuoy, PlusCircle, BarChart3 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import type { ChangelogsByProject } from "@/lib/changelog";
 import type { NewsArticle } from "@/lib/news";
@@ -32,6 +32,15 @@ export function CommandMenu({
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
   }, [setOpen]);
+
+  useEffect(() => {
+    if (!open) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [open]);
 
   const runCommand = (command: () => void) => {
     setOpen(false);
@@ -101,6 +110,40 @@ export function CommandMenu({
                   >
                     <Folder className="w-4 h-4 text-purple-500" />
                     <span>Coder (Alpha) - IDE IA & Agents MCP</span>
+                  </Command.Item>
+                </Command.Group>
+
+                <Command.Group
+                  heading="Support & Assistance"
+                  className="text-xs font-semibold text-slate-500 px-2 pt-4 pb-2"
+                >
+                  <Command.Item
+                    onSelect={() => runCommand(() => router.push("/support"))}
+                    className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer aria-selected:bg-black/5 aria-selected:text-slate-900 transition-colors"
+                  >
+                    <LifeBuoy className="w-4 h-4 text-purple-600" />
+                    <span>Centre de Support & Assistance</span>
+                  </Command.Item>
+                  <Command.Item
+                    onSelect={() => runCommand(() => router.push("/support/new"))}
+                    className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer aria-selected:bg-black/5 aria-selected:text-slate-900 transition-colors"
+                  >
+                    <PlusCircle className="w-4 h-4 text-emerald-600" />
+                    <span>Signaler un bug / Créer un ticket</span>
+                  </Command.Item>
+                  <Command.Item
+                    onSelect={() => runCommand(() => router.push("/support/tickets"))}
+                    className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer aria-selected:bg-black/5 aria-selected:text-slate-900 transition-colors"
+                  >
+                    <LifeBuoy className="w-4 h-4 text-blue-600" />
+                    <span>Mes tickets & Historique</span>
+                  </Command.Item>
+                  <Command.Item
+                    onSelect={() => runCommand(() => router.push("/support/stats"))}
+                    className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer aria-selected:bg-black/5 aria-selected:text-slate-900 transition-colors"
+                  >
+                    <BarChart3 className="w-4 h-4 text-amber-600" />
+                    <span>Statistiques & Analyse du Support</span>
                   </Command.Item>
                 </Command.Group>
 

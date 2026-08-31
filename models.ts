@@ -2,9 +2,11 @@ import type { Hono } from "npm:hono@4";
 import {
   extractToken,
   getDb,
+  getTierMaiTokenLimit,
   getTierSpeechLimit,
+  getUserQuotaBoost,
   getWeekData,
-  TIER_LIMITS,
+  isPaidTier,
   verifyToken,
 } from "./config.ts";
 import { maiModelsList } from "./maiModels.ts";
@@ -72,7 +74,7 @@ export function registerModelRoutes(app: Hono) {
         sql`
           SELECT COALESCE(SUM(tokens_used::numeric), 0) as tokens_used 
           FROM weekly_speech_usage 
-          WHERE user_id = ${resolvedUserId}::integer AND week_start = ${weekStartStr}::date
+          WHERE user_id = ${resolvedUserId}::text AND week_start = ${weekStartStr}::date
         `.catch((e) => {
           console.error("[speechResult] Error:", e);
           return [];
@@ -81,8 +83,10 @@ export function registerModelRoutes(app: Hono) {
       const tokensUsed = usageResult[0]?.tokens_used || 0;
       const speechTokensUsed = Number(speechResult?.[0]?.tokens_used || 0);
       const userTier = user?.tier || "Free";
-      const limit = TIER_LIMITS[userTier] || TIER_LIMITS["Free"];
-      const speechLimit = getTierSpeechLimit(userTier);
+      const maiBoost = await getUserQuotaBoost(sql, resolvedUserId, "mai");
+      const audioBoost = await getUserQuotaBoost(sql, resolvedUserId, "audio");
+      const limit = getTierMaiTokenLimit(userTier) + maiBoost;
+      const speechLimit = getTierSpeechLimit(userTier) + audioBoost;
 
       return c.json({
         avatarUrl: user?.avatar_url,
@@ -142,7 +146,8 @@ export function registerModelRoutes(app: Hono) {
         await sql`SELECT id, tier FROM users WHERE id::text = ${userId}::text OR email = ${userId}::text OR username = ${userId}::text LIMIT 1`;
       const tier = userRes.length > 0 ? userRes[0].tier : "Free";
       const resolvedUserId = userRes.length > 0 ? userRes[0].id : userId;
-      const limit = TIER_LIMITS[tier] || TIER_LIMITS["Free"];
+      const maiBoost = await getUserQuotaBoost(sql, resolvedUserId, "mai");
+      const limit = getTierMaiTokenLimit(tier) + maiBoost;
 
       const usageResult = await sql`
         SELECT tokens_used FROM weekly_usage
@@ -182,11 +187,7 @@ export function registerModelRoutes(app: Hono) {
   // ─────────────────────────────────────────────
   const handleGetModels = async (c: any) => {
     const userPlan = c.get("userPlan");
-    const planStr = String(userPlan || "Free")
-      .toLowerCase()
-      .trim();
-    const isPaidPlan = ["plus", "pro", "max"].includes(planStr);
-    const shouldFilterFreeOnly = !isPaidPlan;
+    const shouldFilterFreeOnly = !isPaidTier(userPlan);
 
     try {
       const res = await fetch("https://openrouter.ai/api/v1/models");
@@ -460,11 +461,7 @@ export function registerModelRoutes(app: Hono) {
         );
       }
 
-      const planStr = String(userPlan || "Free")
-        .toLowerCase()
-        .trim();
-      const isPaidPlan = ["plus", "pro", "max"].includes(planStr);
-      const isFreePlan = !isPaidPlan;
+      const isFreePlan = !isPaidTier(userPlan);
       const isFreeModel = modelStr.includes(":free");
 
       // Bloquer avec 403 les requêtes pour les modèles payants avec une clé ou JWT free
@@ -505,8 +502,8 @@ export function registerModelRoutes(app: Hono) {
         LIMIT 1
       `;
       const currentUsage = usageResult[0]?.tokens_used || 0;
-      const limit =
-        TIER_LIMITS[String(userPlan || "Free")] || TIER_LIMITS["Free"];
+      const maiBoost = await getUserQuotaBoost(sql, userId, "mai");
+      const limit = getTierMaiTokenLimit(userPlan) + maiBoost;
 
       if (currentUsage >= limit) {
         return c.json(
@@ -605,11 +602,7 @@ export function registerModelRoutes(app: Hono) {
       const modelRequested = body.model;
       const modelStr = String(modelRequested || "").toLowerCase().trim();
 
-      const planStr = String(userPlan || "Free")
-        .toLowerCase()
-        .trim();
-      const isPaidPlan = ["plus", "pro", "max"].includes(planStr);
-      const isFreePlan = !isPaidPlan;
+      const isFreePlan = !isPaidTier(userPlan);
       const isFreeModel = modelStr.includes(":free");
 
       // Bloquer avec 403 les requêtes pour les modèles payants avec une clé ou JWT free
@@ -650,8 +643,8 @@ export function registerModelRoutes(app: Hono) {
         LIMIT 1
       `;
       const currentUsage = usageResult[0]?.tokens_used || 0;
-      const limit =
-        TIER_LIMITS[String(userPlan || "Free")] || TIER_LIMITS["Free"];
+      const maiBoost = await getUserQuotaBoost(sql, userId, "mai");
+      const limit = getTierMaiTokenLimit(userPlan) + maiBoost;
 
       if (currentUsage >= limit) {
         return c.json(
@@ -748,11 +741,7 @@ export function registerModelRoutes(app: Hono) {
       const modelRequested = body.model || paramModel || pathModel;
       const modelStr = String(modelRequested || "").toLowerCase().trim();
 
-      const planStr = String(userPlan || "Free")
-        .toLowerCase()
-        .trim();
-      const isPaidPlan = ["plus", "pro", "max"].includes(planStr);
-      const isFreePlan = !isPaidPlan;
+      const isFreePlan = !isPaidTier(userPlan);
       const isFreeModel = modelStr.includes(":free");
 
       // Bloquer avec 403 les requêtes pour les modèles payants avec une clé ou JWT free
@@ -792,8 +781,8 @@ export function registerModelRoutes(app: Hono) {
         LIMIT 1
       `;
       const currentUsage = usageResult[0]?.tokens_used || 0;
-      const limit =
-        TIER_LIMITS[String(userPlan || "Free")] || TIER_LIMITS["Free"];
+      const maiBoost = await getUserQuotaBoost(sql, userId, "mai");
+      const limit = getTierMaiTokenLimit(userPlan) + maiBoost;
 
       if (currentUsage >= limit) {
         return c.json(

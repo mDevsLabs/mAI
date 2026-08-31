@@ -31,7 +31,7 @@ export interface RouteDefinition {
 }
 
 const ROUTE_DEFINITIONS: RouteDefinition[] = [
-  // 📁 PROJETS
+  // Dossier PROJETS
   {
     id: "projects-list",
     name: "Lister les projets",
@@ -93,7 +93,7 @@ const ROUTE_DEFINITIONS: RouteDefinition[] = [
     }
   },
 
-  // 🤖 LLM & MODÈLES
+  // IA LLM & MODÈLES
   {
     id: "chat-completions",
     name: "Chat Completions mAI",
@@ -151,7 +151,7 @@ const ROUTE_DEFINITIONS: RouteDefinition[] = [
     }
   },
 
-  // 🎨 IMAGES & RECHERCHE WEB
+  // Design IMAGES & RECHERCHE WEB
   {
     id: "models-images-list",
     name: "Catalogue Modèles Images",
@@ -223,7 +223,7 @@ const ROUTE_DEFINITIONS: RouteDefinition[] = [
     }
   },
 
-  // 🔊 AUDIO & SPEECH
+  // Audio AUDIO & SPEECH
   {
     id: "audio-models-list",
     name: "Catalogue Modèles Audio (Speech)",
@@ -280,7 +280,7 @@ const ROUTE_DEFINITIONS: RouteDefinition[] = [
     }
   },
 
-  // 🔮 SDK GOOGLE & ANTHROPIC
+  // Magie SDK GOOGLE & ANTHROPIC
   {
     id: "anthropic-messages",
     name: "Anthropic Messages SDK",
@@ -321,7 +321,7 @@ const ROUTE_DEFINITIONS: RouteDefinition[] = [
     }
   },
 
-  // 🔑 CLÉS & QUOTAS
+  // Clé CLÉS & QUOTAS
   {
     id: "dev-keys-list",
     name: "Mes Clés API",
@@ -658,7 +658,7 @@ axios(config)
                 const fullKeyVal = k.apiKey || k.prefix.replace(/_•+$/, '');
                 return (
                   <option key={k.id} value={fullKeyVal}>
-                    🔑 {k.name} ({k.prefix})
+                    <Key className="inline w-4 h-4 align-middle" /> {k.name} ({k.prefix})
                   </option>
                 );
               })}

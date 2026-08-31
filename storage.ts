@@ -1,8 +1,9 @@
 import type { Hono } from "npm:hono@4";
 import {
+  extractTierFromApiKey,
   extractToken,
   getDb,
-  STORAGE_LIMITS_BYTES,
+  getTierStorageLimitBytes,
   verifyToken,
 } from "./config.ts";
 
@@ -423,6 +424,16 @@ export function getR2PublicBase(): string {
   return getStorageNodes()[0].publicUrl;
 }
 
+const GIB = 1024 * 1024 * 1024;
+
+/** Formate un volume de quota: en Go au-delà de 1 GiB, sinon en Mo. */
+export function formatQuotaBytes(bytes: number): string {
+  if (bytes >= GIB) {
+    return `${(Math.round((bytes / GIB) * 10) / 10).toString().replace(".", ",")} Go`;
+  }
+  return `${Math.round(bytes / (1024 * 1024))} Mo`;
+}
+
 export function registerStorageRoutes(app: Hono) {
   // POST /upload-avatar & /v1/upload-avatar
   const handleUploadAvatar = async (c: any) => {
@@ -627,17 +638,12 @@ export function registerStorageRoutes(app: Hono) {
         `.catch(() => []),
       ]);
 
-      const rawTier2 = userRes[0]?.tier || userPlan || "Free";
+      const keyTier = extractTierFromApiKey(token);
+      const rawTier2 = keyTier || userRes[0]?.tier || userPlan || "Free";
       const tier = String(rawTier2).trim();
       const bytesUsed = Number(usageRes[0]?.bytes_used || 0);
       const filesCount = Number(usageRes[0]?.files_count || 0);
-      const bytesLimit =
-        STORAGE_LIMITS_BYTES[tier] ||
-        STORAGE_LIMITS_BYTES[tier.toLowerCase()] ||
-        STORAGE_LIMITS_BYTES[
-          tier.charAt(0).toUpperCase() + tier.slice(1).toLowerCase()
-        ] ||
-        STORAGE_LIMITS_BYTES["Free"];
+      const bytesLimit = getTierStorageLimitBytes(tier);
       const percentUsed =
         bytesLimit > 0 ? Math.min(100, (bytesUsed / bytesLimit) * 100) : 0;
 
@@ -780,22 +786,14 @@ export function registerStorageRoutes(app: Hono) {
       const rawTier = userRes[0]?.tier || "Free";
       const tier = String(rawTier).trim();
       const bytesUsed = Number(usageRes[0]?.bytes_used || 0);
-      const bytesLimit =
-        STORAGE_LIMITS_BYTES[tier] ||
-        STORAGE_LIMITS_BYTES[tier.toLowerCase()] ||
-        STORAGE_LIMITS_BYTES[
-          tier.charAt(0).toUpperCase() + tier.slice(1).toLowerCase()
-        ] ||
-        STORAGE_LIMITS_BYTES["Free"];
+      const bytesLimit = getTierStorageLimitBytes(tier);
 
       if (bytesUsed + fileSize > bytesLimit) {
-        const limitMB = Math.round(bytesLimit / (1024 * 1024));
-        const usedMB = Math.round(bytesUsed / (1024 * 1024));
         return c.json(
           {
             bytes_limit: bytesLimit,
             bytes_used: bytesUsed,
-            error: `Quota de stockage dépassé. Vous utilisez ${usedMB} MB sur ${limitMB} MB (tier ${tier}).`,
+            error: `Quota de stockage dépassé. Vous utilisez ${formatQuotaBytes(bytesUsed)} sur ${formatQuotaBytes(bytesLimit)} (tier ${tier}).`,
             over_limit: true,
           },
           413

@@ -20,7 +20,7 @@ export default function ApiPage() {
   }, [loading, isAuthenticated, router]);
 
   return (
-    <div className="flex justify-center items-center py-40 min-h-screen">
+    <div className="flex justify-center items-center py-40 min-h-[100dvh]">
       <div className="flex items-center gap-3 text-slate-500 font-medium">
         <Loader2 className="w-6 h-6 animate-spin text-purple-600" />
         <span>Redirection vers les Clés API...</span>

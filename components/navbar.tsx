@@ -1,9 +1,14 @@
 "use client";
 
-import { Github, Menu, X, ChevronDown, UserRound, LogOut, Gauge, Activity, Cloud, Image as ImageIcon, Volume2 } from "lucide-react";
+import { Github, Menu, X, ChevronDown, UserRound, LogOut, Gauge, Activity, Cloud, Image as ImageIcon, Volume2, Search } from "lucide-react";
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import toast from "react-hot-toast";
-import { CommandMenu } from "@/components/command-menu";
+
+const CommandMenu = dynamic(
+  () => import("@/components/command-menu").then((mod) => mod.CommandMenu),
+  { ssr: false }
+);
 import type { ChangelogsByProject } from "@/lib/changelog";
 import type { NewsArticle } from "@/lib/news";
 import { formatStorageBytes, CLOUD_STORAGE_LIMITS } from "@/lib/mai-api";
@@ -91,6 +96,7 @@ const navLinks: NavItem[] = [
     name: "Plus",
     href: "#",
     subitems: [
+      { name: "Support", href: "/support" },
       { name: "Télécharger", href: "/downloads" },
       { 
         name: "Documentation", 
@@ -451,6 +457,18 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
               </a>
             </div>
 
+            {/* Recherche (mobile) */}
+            <button
+              className="md:hidden p-2 rounded-full text-slate-600 hover:bg-black/5 transition-colors"
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                setIsCommandOpen(true);
+              }}
+              aria-label="Rechercher"
+            >
+              <Search className="w-5 h-5" />
+            </button>
+
             {/* Compte (mobile icon) */}
             <Link
               href={accountHref}
@@ -488,6 +506,17 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
         {/* Mobile Menu Sheet */}
         <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
           <nav className="flex flex-col gap-2 p-4">
+            <button
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                setIsCommandOpen(true);
+              }}
+              className="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold text-slate-700 bg-black/[0.03] hover:bg-black/5 transition-colors"
+            >
+              <Search className="w-4 h-4 text-purple-600" />
+              Rechercher…
+            </button>
+
             {navLinks.map((link) => {
               const hasSubitems = !!link.subitems;
               const isActive = checkLinkActive(link, pathname);

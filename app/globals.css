@@ -25,6 +25,10 @@ body {
   background-color: #fafafa;
   color: #0f172a;
   overflow-x: hidden;
+  /* Ressenti tactile natif : supprime le flash de surbrillance au tap */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 ::selection {
@@ -34,6 +38,19 @@ body {
 
 .prose p, .prose li {
   white-space: pre-wrap;
+}
+
+/* Les blocs de code doivent défiler horizontalement sur mobile
+   au lieu d'être tronqués par le overflow-x-hidden global du body */
+.prose pre {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.prose img,
+.prose video,
+.prose table {
+  max-width: 100%;
 }
 
 @keyframes float {
