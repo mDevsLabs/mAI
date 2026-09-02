@@ -38,7 +38,7 @@ const ROUTE_DEFINITIONS: RouteDefinition[] = [
     category: "Projets",
     method: "GET",
     path: "v1/projects",
-    description: "Récupère la liste globale de tous les projets de la plateforme mAI (Web, Pulse, CLI, Coder).",
+    description: "Récupère la liste globale de tous les projets de la plateforme mAI (Web, Vibe, Pulse, CLI, Coder).",
     requiresAuth: true,
     defaultHeaders: {
       "Content-Type": "application/json"
@@ -51,6 +51,18 @@ const ROUTE_DEFINITIONS: RouteDefinition[] = [
     method: "GET",
     path: "v1/projects/web",
     description: "Obtient les détails et l'état de l'application mAI Web.",
+    requiresAuth: true,
+    defaultHeaders: {
+      "Content-Type": "application/json"
+    }
+  },
+  {
+    id: "projects-vibe",
+    name: "Projet Vibe",
+    category: "Projets",
+    method: "GET",
+    path: "v1/projects/vibe",
+    description: "Obtient les détails du réseau social Vibe avec IA mAI intégrée.",
     requiresAuth: true,
     defaultHeaders: {
       "Content-Type": "application/json"

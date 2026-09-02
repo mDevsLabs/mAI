@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Terminal, ExternalLink, ArrowRight } from "lucide-react";
+import { Terminal, ExternalLink, ArrowRight, Users, Globe, Cpu, Code2 } from "lucide-react";
 import Link from "next/link";
 import { GithubRepoStats } from "@/components/github-repo-stats";
 
@@ -10,43 +10,63 @@ export function ProjectsShowcase() {
     {
       id: "web",
       title: "Web",
-      label: "Alpha",
+      label: "Release Candidate",
+      icon: Globe,
+      iconColor: "text-amber-400",
       tagline: "L'application d'IA en ligne directe et intuitive.",
       description: "Application d'IA en ligne web directement et simplement pour discuter avec l'IA mAI.",
       link: "/projects/web",
       repo: "mDevsLabs/Web",
       platforms: ["Web", "Multi-plateforme"],
-      highlightColor: "hover:border-purple-500/40 hover:shadow-[0_12px_32px_rgba(168,85,247,0.15)]"},
+      highlightColor: "hover:border-blue-500/40 hover:shadow-[0_12px_32px_rgba(59,130,246,0.15)]"},
+    {
+      id: "vibe",
+      title: "Vibe",
+      label: "Bêta",
+      icon: Users,
+      iconColor: "text-rose-400",
+      tagline: "Le réseau social avec l'IA mAI intégrée.",
+      description: "Réseau social open source où l'IA mAI est intégrée nativement : feed social, conversations et création de contenu assistée.",
+      link: "/projects/vibe",
+      repo: "mDevsLabs/Vibe",
+      platforms: ["Web", "Open Source"],
+      highlightColor: "hover:border-rose-500/40 hover:shadow-[0_12px_32px_rgba(244,63,94,0.15)]"},
     {
       id: "pulse",
       title: "Pulse",
-      label: "Bêta",
+      label: "Release Candidate",
+      icon: Cpu,
+      iconColor: "text-emerald-400",
       tagline: "L'IA partout dans vos outils favoris.",
       description: "Ensemble d'extensions pour diverses applications pour discuter avec mAI directement (navigateur, VS Code...).",
       link: "/projects/pulse",
       repo: "mDevsLabs/Pulse",
       platforms: ["Navigateur", "VS Code", "Extensions"],
-      highlightColor: "hover:border-indigo-500/40 hover:shadow-[0_12px_32px_rgba(99,102,241,0.15)]"},
+      highlightColor: "hover:border-blue-500/40 hover:shadow-[0_12px_32px_rgba(59,130,246,0.15)]"},
     {
       id: "cli",
       title: "CLI",
-      label: "Bêta",
+      label: "Release Candidate",
+      icon: Terminal,
+      iconColor: "text-purple-400",
       tagline: "Discussions et séances de codage dans votre terminal.",
       description: "Discussions et séances de codage dans le terminal CLI via mAI.",
       link: "/projects/cli",
       repo: "mDevsLabs/CLI",
       platforms: ["macOS", "Linux", "Windows"],
-      highlightColor: "hover:border-emerald-500/40 hover:shadow-[0_12px_32px_rgba(16,185,129,0.15)]"},
+      highlightColor: "hover:border-blue-500/40 hover:shadow-[0_12px_32px_rgba(59,130,246,0.15)]"},
     {
       id: "coder",
       title: "Coder",
-      label: "Alpha",
+      label: "Release Candidate",
+      icon: Code2,
+      iconColor: "text-purple-400",
       tagline: "L'IDE IA pensé pour les agents autonomes et les outils MCP.",
       description: "IDE IA de nouvelle génération avec agents IA autonomes, orchestration multi-modèles et support natif des outils MCP.",
       link: "/projects/coder",
       repo: "mDevsLabs/Coder",
       platforms: ["macOS", "Windows", "Linux"],
-      highlightColor: "hover:border-purple-500/40 hover:shadow-[0_12px_32px_rgba(168,85,247,0.15)]"},
+      highlightColor: "hover:border-blue-500/40 hover:shadow-[0_12px_32px_rgba(59,130,246,0.15)]"},
   ];
 
   return (
@@ -63,7 +83,7 @@ export function ProjectsShowcase() {
             La Suite <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-blue-600 to-emerald-500">mAI</span>
           </h2>
           <p className="text-slate-500 text-sm sm:text-base font-light mt-1 max-w-xl">
-            Quatre produits dédiés conçus pour booster votre productivité, votre créativité et vos workflows avec l&apos;IA.
+            Cinq produits dédiés conçus pour booster votre productivité, votre créativité et vos workflows avec l&apos;IA.
           </p>
         </div>
 
@@ -96,11 +116,10 @@ export function ProjectsShowcase() {
             <div className="relative z-10">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-slate-900 text-white shadow-md p-2 group-hover:scale-105 transition-transform duration-200">
-                  <Terminal className="w-6 h-6 text-purple-400" />
+                  <project.icon className={`w-6 h-6 ${project.iconColor}`} />
                 </div>
                 <span className={`text-[10px] px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider border ${
-                  project.label === 'Alpha' ? 'bg-amber-500/10 border-amber-500/30 text-amber-600' :
-                  project.label === 'Bêta' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-600' :
+                  project.label === 'Bêta' ? 'bg-rose-500/10 border-rose-500/30 text-rose-600' :
                   'bg-blue-500/10 border-blue-500/30 text-blue-600'
                 }`}>
                   {project.label}

@@ -1563,60 +1563,98 @@ async function ensureNotificationTables() {
   }
 }
 
+export type NotificationKind = 'news' | 'system' | 'promo' | 'maintenance';
+
+const NOTIFICATION_KINDS: Record<NotificationKind, { label: string; icon: string }> = {
+  news: { label: "Actualités produit", icon: "📰" },
+  system: { label: "Information système", icon: "⚙️" },
+  promo: { label: "Offre promotionnelle", icon: "🎁" },
+  maintenance: { label: "Maintenance programmée", icon: "🚧" },
+};
+
 export async function sendNewsNotificationToEligibleUsers(
   title: string,
   body: string | null,
-  link: string | null
+  link: string | null,
+  options: { kind?: NotificationKind; targetAllUsers?: boolean } = {}
 ) {
   await ensureNotificationTables();
-  // Récupère les utilisateurs ayant activé les notifications + news
-  const eligible = (await sql`
-    SELECT "userId" FROM "user_notification_prefs"
-    WHERE "enabled" = true AND "news" = true
-  `) as unknown as { userId: string }[];
-  if (eligible.length === 0) {
-    console.log(`  ${c.yellow}⚠ Aucun utilisateur éligible (enabled=true & news=true).${c.reset}`);
-    // Fallback: si aucun prefs, essayer users avec notify_limits? Non, on informe
+  const kind: NotificationKind = options.kind && options.kind in NOTIFICATION_KINDS ? options.kind : 'news';
+  const kindInfo = NOTIFICATION_KINDS[kind];
+
+  let targets: { userId: string }[];
+  if (options.targetAllUsers) {
+    targets = (await sql`SELECT id::text AS "userId" FROM users`) as unknown as { userId: string }[];
+  } else {
+    targets = (await sql`
+      SELECT "userId" FROM "user_notification_prefs"
+      WHERE "enabled" = true AND "news" = true
+    `) as unknown as { userId: string }[];
+  }
+
+  if (targets.length === 0) {
+    console.log(`  ${c.yellow}⚠ Aucun utilisateur cible${options.targetAllUsers ? '' : ' (enabled=true & news=true)'}.${c.reset}`);
     return { sent: 0, eligible: 0 };
   }
-  console.log(`  ${c.cyan}➔ Envoi à ${eligible.length} utilisateur(s) éligible(s)...${c.reset}`);
+  console.log(`  ${c.cyan}➔ Envoi de la notification ${kindInfo.icon} [${kindInfo.label}] à ${targets.length} utilisateur(s)...${c.reset}`);
   let sent = 0;
-  for (let i = 0; i < eligible.length; i += 500) {
-    const chunk = eligible.slice(i, i + 500);
-    const _values = chunk.map((u) => ({ userId: u.userId }));
-    // Insert par batch via sql template
-    for (const u of chunk) {
-      try {
-        await sql`
-          INSERT INTO "Notification" ("userId", "type", "title", "body", "link")
-          VALUES (${u.userId}, 'news', ${title}, ${body}, ${link})
-        `;
-        sent++;
-      } catch (err: any) {
-        console.error(`  ${c.red}✖ Erreur pour ${u.userId}: ${err.message}${c.reset}`);
-      }
+  for (const u of targets) {
+    try {
+      await sql`
+        INSERT INTO "Notification" ("userId", "type", "title", "body", "link")
+        VALUES (${u.userId}, ${kind}, ${title}, ${body}, ${link})
+      `;
+      sent++;
+    } catch (err: any) {
+      console.error(`  ${c.red}✖ Erreur pour ${u.userId}: ${err.message}${c.reset}`);
     }
   }
-  console.log(`  ${c.brightGreen}✔ ${sent} notification(s) "Actualités" créée(s) en BDD !${c.reset}`);
-  return { sent, eligible: eligible.length };
+  console.log(`  ${c.brightGreen}✔ ${sent} notification(s) "${kindInfo.label}" créée(s) en BDD !${c.reset}`);
+  return { sent, eligible: targets.length };
 }
 
 async function handleSendNewsInteractive(rl: readline.Interface) {
-  console.log(`\n${c.bold}--- 📢 ENVOI NOTIFICATION ACTUALITÉS mAI ---${c.reset}`);
-  console.log(`${c.dim}Cette notification sera enregistrée en BDD pour chaque utilisateur ayant activé Notifications > Actualités d'mAI (activé par défaut à l'acceptation).${c.reset}`);
-  const title = (await rl.question("👉 Titre de la notification (ex: Nouveautés mAI - Juin 2026) : ")).trim();
+  console.log(`\n${c.bold}--- 📢 DIFFUSION D'UNE NOTIFICATION IN-APP mAI ---${c.reset}`);
+
+  console.log(`\n${c.bold}1. Type de notification :${c.reset}`);
+  const kindKeys: NotificationKind[] = ['news', 'system', 'promo', 'maintenance'];
+  kindKeys.forEach((k, i) => {
+    console.log(`  ${c.brightCyan}[${i + 1}]${c.reset} ${NOTIFICATION_KINDS[k].icon} ${NOTIFICATION_KINDS[k].label} ${c.dim}(${k})${c.reset}`);
+  });
+  const kindChoice = (await rl.question(`  ${c.brightYellow}➔ Choix [1-4] (défaut 1) : ${c.reset}`)).trim() || '1';
+  const kind = kindKeys[parseInt(kindChoice, 10) - 1] || 'news';
+  const kindInfo = NOTIFICATION_KINDS[kind];
+
+  console.log(`\n${c.bold}2. Destinataires :${c.reset}`);
+  console.log(`  ${c.brightCyan}[1]${c.reset} 🎯 Utilisateurs ayant activé Notifications > Actualités (recommandé)`);
+  console.log(`  ${c.brightCyan}[2]${c.reset} 🌐 Tous les comptes de la plateforme (ignore les préférences)`);
+  const targetChoice = (await rl.question(`  ${c.brightYellow}➔ Choix [1-2] (défaut 1) : ${c.reset}`)).trim() || '1';
+
+  console.log(`\n${c.bold}3. Contenu :${c.reset}`);
+  const title = (await rl.question("  👉 Titre de la notification (ex: Nouveautés mAI - Septembre 2026) : ")).trim();
   if (!title) {
     console.log("❌ Titre requis.");
     return;
   }
-  const body = (await rl.question("👉 Corps (facultatif, max 500c) : ")).trim();
-  const link = (await rl.question("👉 Lien (facultatif, ex: /settings ou https://mai-devs.vercel.app) : ")).trim();
-  const confirm = (await rl.question(`\n⚠️ Confirmer l'envoi "${title}" ? (o/N) : `)).trim().toLowerCase();
+  const body = (await rl.question("  👉 Corps (facultatif, max 500c) : ")).trim();
+  const link = (await rl.question("  👉 Lien (facultatif, ex: /settings ou https://mai.val.run) : ")).trim();
+
+  console.log(`\n${c.dim}┌────────────────────────────────────────────────────────────────┐${c.reset}`);
+  console.log(`${c.dim}│${c.reset} ${c.bold}🔔 APERÇU${c.reset} ${c.dim}— ${kindInfo.icon} ${kindInfo.label}${targetChoice === '2' ? ' • Tous les comptes' : ' • Abonnés notifiés'}${c.reset}`);
+  console.log(`${c.dim}│${c.reset} ${c.bold}${kindInfo.icon} ${title}${c.reset}`);
+  if (body) console.log(`${c.dim}│${c.reset} ${c.dim}${body.length > 100 ? body.slice(0, 100) + '…' : body}${c.reset}`);
+  if (link) console.log(`${c.dim}│${c.reset} ${c.brightCyan}${link}${c.reset}`);
+  console.log(`${c.dim}└────────────────────────────────────────────────────────────────┘${c.reset}`);
+
+  const confirm = (await rl.question(`\n  ${c.brightYellow}➔ Confirmer l'envoi ? (o/N) : ${c.reset}`)).trim().toLowerCase();
   if (confirm !== "o" && confirm !== "oui" && confirm !== "y" && confirm !== "yes") {
     console.log("Annulé.");
     return;
   }
-  await sendNewsNotificationToEligibleUsers(title, body || null, link || null);
+  await sendNewsNotificationToEligibleUsers(title, body || null, link || null, {
+    kind,
+    targetAllUsers: targetChoice === '2',
+  });
 }
 
 async function handleListRecentNotifications(rl: readline.Interface) {
@@ -1762,7 +1800,7 @@ export async function runAdminCli() {
   console.log(`${c.bgPurple}${c.bold}${c.brightWhite}  ╚══════════════════════════════════════════════════════════════════════╝  ${c.reset}`);
   console.log("");
 
-  const rl = readline.createInterface({ input, output });
+  let rl = readline.createInterface({ input, output });
   let running = true;
 
   while (running) {
@@ -1804,19 +1842,23 @@ export async function runAdminCli() {
       case '7':
         rl.close();
         await runSubscriptionCodeManager();
-        return;
+        rl = readline.createInterface({ input, output });
+        break;
       case '8':
         rl.close();
         await runNewsletterStudio();
-        return;
+        rl = readline.createInterface({ input, output });
+        break;
       case '9':
         rl.close();
         await runCustomerAccountManager();
-        return;
+        rl = readline.createInterface({ input, output });
+        break;
       case '10':
         rl.close();
         await runNotificationManager();
-        return;
+        rl = readline.createInterface({ input, output });
+        break;
       case '0':
       case 'exit':
       case 'quit':

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { ExternalLink, Terminal, Globe, Cpu, FileText, Archive, Search, Layers, Gamepad2, Code2 } from "lucide-react";
+import { ExternalLink, Terminal, Globe, Cpu, FileText, Archive, Search, Layers, Gamepad2, Code2, Users } from "lucide-react";
 import Link from "next/link";
 import { GithubRepoStats } from "@/components/github-repo-stats";
 import Image from "next/image";
@@ -12,8 +12,8 @@ export default function ProjectsPage() {
       id: "web",
       number: "01",
       name: "Web",
-      label: "Bêta",
-      labelColor: "bg-emerald-500/10 border-emerald-500/30 text-emerald-600",
+      label: "Release Candidate",
+      labelColor: "bg-blue-500/10 border-blue-500/30 text-blue-600",
       icon: Globe,
       iconColor: "text-amber-400",
       tagline: "Application d'IA en ligne web directe et intuitive.",
@@ -21,14 +21,29 @@ export default function ProjectsPage() {
       link: "/projects/web",
       repo: "mDevsLabs/Web",
       platforms: ["Web", "Multi-plateforme"],
-      borderHover: "hover:border-emerald-500/30 hover:shadow-[0_8px_32px_0_rgba(160,185,129,0.15)]",
+      borderHover: "hover:border-blue-500/30 hover:shadow-[0_8px_32px_0_rgba(59,130,246,0.15)]",
+    },
+    {
+      id: "vibe",
+      number: "02",
+      name: "Vibe",
+      label: "Bêta",
+      labelColor: "bg-rose-500/10 border-rose-500/30 text-rose-600",
+      icon: Users,
+      iconColor: "text-rose-400",
+      tagline: "Le réseau social avec l'IA mAI intégrée.",
+      description: "Réseau social open source où l'IA mAI est intégrée nativement : feed social, conversations et création de contenu assistée.",
+      link: "/projects/vibe",
+      repo: "mDevsLabs/Vibe",
+      platforms: ["Web", "Open Source"],
+      borderHover: "hover:border-rose-500/30 hover:shadow-[0_8px_32px_0_rgba(244,63,94,0.15)]",
     },
     {
       id: "pulse",
-      number: "02",
+      number: "03",
       name: "Pulse",
-      label: "Bêta",
-      labelColor: "bg-emerald-500/10 border-emerald-500/30 text-emerald-600",
+      label: "Release Candidate",
+      labelColor: "bg-blue-500/10 border-blue-500/30 text-blue-600",
       icon: Cpu,
       iconColor: "text-emerald-400",
       tagline: "L'IA intégrée directement dans vos outils du quotidien.",
@@ -36,11 +51,11 @@ export default function ProjectsPage() {
       link: "/projects/pulse",
       repo: "mDevsLabs/Pulse",
       platforms: ["Navigateur", "VS Code", "Extensions"],
-      borderHover: "hover:border-emerald-500/30 hover:shadow-[0_8px_32px_0_rgba(160,185,129,0.15)]",
+      borderHover: "hover:border-blue-500/30 hover:shadow-[0_8px_32px_0_rgba(59,130,246,0.15)]",
     },
     {
       id: "cli",
-      number: "03",
+      number: "04",
       name: "CLI",
       label: "Release Candidate",
       labelColor: "bg-blue-500/10 border-blue-500/30 text-blue-600",
@@ -55,10 +70,10 @@ export default function ProjectsPage() {
     },
     {
       id: "coder",
-      number: "04",
+      number: "05",
       name: "Coder",
-      label: "Bêta",
-      labelColor: "bg-emerald-500/10 border-emerald-500/30 text-emerald-600",
+      label: "Release Candidate",
+      labelColor: "bg-blue-500/10 border-blue-500/30 text-blue-600",
       icon: Code2,
       iconColor: "text-purple-400",
       tagline: "L'IDE IA pensé pour les agents autonomes et les outils MCP.",
@@ -66,7 +81,7 @@ export default function ProjectsPage() {
       link: "/projects/coder",
       repo: "mDevsLabs/Coder",
       platforms: ["macOS", "Windows", "Linux"],
-      borderHover: "hover:border-emerald-500/30 hover:shadow-[0_8px_32px_0_rgba(160,185,129,0.15)]",
+      borderHover: "hover:border-blue-500/30 hover:shadow-[0_8px_32px_0_rgba(59,130,246,0.15)]",
     },
   ];
 
@@ -249,7 +264,7 @@ export default function ProjectsPage() {
           transition={{ delay: 0.1 }}
           className="text-slate-500 text-base md:text-lg font-light mt-2 md:mt-4 max-w-2xl"
         >
-          Découvrez la suite officielle des 4 projets mAI développés par mDevsLabs pour révolutionner votre façon de travailler avec l&apos;intelligence artificielle.
+          Découvrez la suite officielle des 5 projets mAI développés par mDevsLabs pour révolutionner votre façon de travailler avec l&apos;intelligence artificielle.
         </motion.p>
       </div>
 

@@ -39,6 +39,7 @@ const navLinks: NavItem[] = [
     subitems: [
       { name: "Tous les projets", href: "/projects" },
       { name: "Web", href: "/projects/web" },
+      { name: "Vibe", href: "/projects/vibe" },
       { name: "Pulse", href: "/projects/pulse" },
       { name: "CLI", href: "/projects/cli" },
       { name: "Coder", href: "/projects/coder" },

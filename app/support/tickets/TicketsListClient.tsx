@@ -257,6 +257,7 @@ export default function TicketsListClient() {
             <select value={projectFilter} onChange={(e) => setProjectFilter(e.target.value)} className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700 focus:bg-white focus:border-purple-500 outline-none font-medium cursor-pointer">
               <option value="all">Tous les projets</option>
               <option value="mAI Web">mAI Web</option>
+              <option value="Vibe">Vibe</option>
               <option value="mAI Pulse">mAI Pulse</option>
               <option value="mAI CLI">mAI CLI</option>
               <option value="mAI Coder">mAI Coder</option>

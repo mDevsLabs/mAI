@@ -87,29 +87,36 @@ export function CommandMenu({
                     onSelect={() => runCommand(() => router.push("/projects/web"))}
                     className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer aria-selected:bg-black/5 aria-selected:text-slate-900 transition-colors"
                   >
-                    <Folder className="w-4 h-4 text-purple-500" />
-                    <span>Web (Alpha) - Application d'IA en ligne</span>
+                    <Folder className="w-4 h-4 text-amber-500" />
+                    <span>Web (Release Candidate) - Application d'IA en ligne</span>
+                  </Command.Item>
+                  <Command.Item
+                    onSelect={() => runCommand(() => router.push("/projects/vibe"))}
+                    className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer aria-selected:bg-black/5 aria-selected:text-slate-900 transition-colors"
+                  >
+                    <Folder className="w-4 h-4 text-rose-500" />
+                    <span>Vibe (Bêta) - Réseau social avec IA intégrée</span>
                   </Command.Item>
                   <Command.Item
                     onSelect={() => runCommand(() => router.push("/projects/pulse"))}
                     className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer aria-selected:bg-black/5 aria-selected:text-slate-900 transition-colors"
                   >
                     <Folder className="w-4 h-4 text-indigo-500" />
-                    <span>Pulse (Bêta) - Extensions mAI</span>
+                    <span>Pulse (Release Candidate) - Extensions mAI</span>
                   </Command.Item>
                   <Command.Item
                     onSelect={() => runCommand(() => router.push("/projects/cli"))}
                     className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer aria-selected:bg-black/5 aria-selected:text-slate-900 transition-colors"
                   >
                     <Folder className="w-4 h-4 text-emerald-500" />
-                    <span>CLI (Bêta) - Discussions & Code Terminal</span>
+                    <span>CLI (Release Candidate) - Discussions & Code Terminal</span>
                   </Command.Item>
                   <Command.Item
                     onSelect={() => runCommand(() => router.push("/projects/coder"))}
                     className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer aria-selected:bg-black/5 aria-selected:text-slate-900 transition-colors"
                   >
                     <Folder className="w-4 h-4 text-purple-500" />
-                    <span>Coder (Alpha) - IDE IA & Agents MCP</span>
+                    <span>Coder (Release Candidate) - IDE IA & Agents MCP</span>
                   </Command.Item>
                 </Command.Group>
 

@@ -13,10 +13,11 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     return NextResponse.json(data, { status: res.status });
   } catch {
     const staticProjects: Record<string, any> = {
-      web: { project_id: "web", name: "Web", description: "Application d'IA en ligne web directement et simplement pour discuter avec l'IA mAI.", status: "beta", label: "Bêta", category: "Web Application", is_public: true },
-      pulse: { project_id: "pulse", name: "Pulse", description: "Ensemble d'extensions pour diverses applications pour discuter avec mAI directement.", status: "beta", label: "Bêta", category: "Extensions", is_public: true },
+      web: { project_id: "web", name: "Web", description: "Application d'IA en ligne web directement et simplement pour discuter avec l'IA mAI.", status: "rc", label: "Release Candidate", category: "Web Application", is_public: true },
+      vibe: { project_id: "vibe", name: "Vibe", description: "Réseau social open source où l'IA mAI est intégrée nativement : feed social, conversations et création de contenu assistée.", status: "beta", label: "Bêta", category: "Social Network", is_public: true },
+      pulse: { project_id: "pulse", name: "Pulse", description: "Ensemble d'extensions pour diverses applications pour discuter avec mAI directement.", status: "rc", label: "Release Candidate", category: "Extensions", is_public: true },
       cli: { project_id: "cli", name: "CLI", description: "Discussions et séances de codage dans le terminal CLI via mAI.", status: "rc", label: "Release Candidate", category: "Developer Tools", is_public: true },
-      coder: { project_id: "coder", name: "Coder", description: "IDE IA de nouvelle génération avec agents IA autonomes, orchestration multi-modèles et support natif des outils MCP.", status: "beta", label: "Bêta", category: "Developer Tools", is_public: true },
+      coder: { project_id: "coder", name: "Coder", description: "IDE IA de nouvelle génération avec agents IA autonomes, orchestration multi-modèles et support natif des outils MCP.", status: "rc", label: "Release Candidate", category: "Developer Tools", is_public: true },
       office: { project_id: "office", name: "Office", description: "Création de documents et présentations avec mAI.", status: "archived", label: "Archivé", category: "Productivity", is_public: true },
       mai: { project_id: "mai", name: "mAI Web (Legacy)", description: "Ancienne interface web de mAI.", status: "archived", label: "Archivé", category: "AI Suite", is_public: true },
       msearch: { project_id: "msearch", name: "mSearch", description: "Moteur de recherche sémantique et d'indexation vectorielle.", status: "archived", label: "Archivé", category: "Search Engine", is_public: true },

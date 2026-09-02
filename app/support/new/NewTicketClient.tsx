@@ -28,6 +28,7 @@ import { SUPPORT_ATTACHMENT_LIMITS, isAllowedSupportMime, type SupportAttachment
 
 const PROJECT_OPTIONS = [
   "mAI Web",
+  "Vibe",
   "mAI Pulse",
   "mAI CLI",
   "mAI Coder",
