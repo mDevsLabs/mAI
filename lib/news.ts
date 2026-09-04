@@ -10,9 +10,24 @@ export type NewsArticle = {
   author: string;
   date: string;
   label?: string;
+  category?: string;
+  media?: string;
   image?: string;
+  isVideo?: boolean;
   content: string;
 };
+
+export function isVideoMedia(url?: string): boolean {
+  if (!url) return false;
+  const cleanUrl = url.split('?')[0].toLowerCase();
+  return (
+    cleanUrl.endsWith('.mp4') ||
+    cleanUrl.endsWith('.webm') ||
+    cleanUrl.endsWith('.ogg') ||
+    cleanUrl.endsWith('.mov') ||
+    cleanUrl.endsWith('.m4v')
+  );
+}
 
 const newsDirectory = path.join(process.cwd(), 'docs/news');
 
@@ -37,6 +52,7 @@ export function getNewsArticles(): NewsArticle[] {
       
       try {
         const metadata = JSON.parse(jsonContent);
+        const mediaSource = metadata.media || metadata.image || DEFAULT_IMAGE;
         articles.push({
           slug,
           title: metadata.title || 'Sans titre',
@@ -44,7 +60,10 @@ export function getNewsArticles(): NewsArticle[] {
           author: metadata.author || 'Inconnu',
           date: metadata.date || 'Date inconnue',
           label: metadata.label,
-          image: metadata.image || DEFAULT_IMAGE,
+          category: metadata.category || metadata.label || 'Produits',
+          media: mediaSource,
+          image: mediaSource,
+          isVideo: isVideoMedia(mediaSource),
           content: mdContent
         });
       } catch (e) {
@@ -68,6 +87,7 @@ export function getNewsArticle(slug: string): NewsArticle | null {
     
     try {
       const metadata = JSON.parse(jsonContent);
+      const mediaSource = metadata.media || metadata.image || DEFAULT_IMAGE;
       return {
         slug,
         title: metadata.title || 'Sans titre',
@@ -75,7 +95,10 @@ export function getNewsArticle(slug: string): NewsArticle | null {
         author: metadata.author || 'Inconnu',
         date: metadata.date || 'Date inconnue',
         label: metadata.label,
-        image: metadata.image || DEFAULT_IMAGE,
+        category: metadata.category || metadata.label || 'Produits',
+        media: mediaSource,
+        image: mediaSource,
+        isVideo: isVideoMedia(mediaSource),
         content: mdContent
       };
     } catch (e) {

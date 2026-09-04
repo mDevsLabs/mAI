@@ -235,9 +235,40 @@ export function registerModelRoutes(app: Hono) {
         );
       }
 
+      const lagunaIdx = filtered.findIndex((m) => m.id === "poolside/laguna-xs-2.1:free");
+      if (lagunaIdx > 0) {
+        const [laguna] = filtered.splice(lagunaIdx, 1);
+        filtered.unshift(laguna);
+      }
+
       return c.json({ data: filtered, object: "list" });
     } catch (_err) {
       let fallback = [
+        {
+          architecture: {
+            input_modalities: ["text"],
+            modality: "text->text",
+            output_modalities: ["text"],
+          },
+          created: 0,
+          description:
+            "Modèle IA Laguna XS 2.1 haute performance par Poolside",
+          id: "poolside/laguna-xs-2.1:free",
+          maxContext: 128_000,
+          maxOutput: 4096,
+          name: "Laguna XS 2.1",
+          object: "model",
+          owned_by: "poolside",
+          supported_parameters: [
+            "temperature",
+            "top_p",
+            "max_tokens",
+            "stream",
+            "stop",
+            "tools",
+            "response_format",
+          ],
+        },
         {
           architecture: {
             input_modalities: ["text", "image", "file"],

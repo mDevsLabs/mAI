@@ -2,10 +2,12 @@ import bcrypt from "npm:bcryptjs";
 import type { Hono } from "npm:hono@4";
 import {
   BCRYPT_ROUNDS,
+  clientIp,
   extractToken,
   generateVerificationCode,
   getDb,
   parseUserAgent,
+  rateLimit,
   signToken,
   sqlite,
   verifyToken,
@@ -17,6 +19,10 @@ export function registerAuthRoutes(app: Hono) {
   // POST /register
   app.post("/register", async (c) => {
     try {
+      // Anti-abus : 5 inscriptions / IP / 15 min
+      if (!rateLimit(`register:${clientIp(c)}`, 5, 15 * 60_000)) {
+        return c.json({ error: "Trop de tentatives. Réessayez plus tard." }, 429);
+      }
       const { email, username, password } = await c.req.json();
       if (!email || !username || !password) {
         return c.json({ error: "Champs manquants." }, 400);
@@ -97,6 +103,10 @@ export function registerAuthRoutes(app: Hono) {
   // POST /login
   app.post("/login", async (c) => {
     try {
+      // Anti brute-force : 10 tentatives / IP / 5 min
+      if (!rateLimit(`login:${clientIp(c)}`, 10, 5 * 60_000)) {
+        return c.json({ error: "Trop de tentatives. Réessayez plus tard." }, 429);
+      }
       const { email, password, identifier } = await c.req.json();
       const loginId = (identifier || email || "").trim();
       if (!loginId || !password) {
@@ -141,24 +151,25 @@ export function registerAuthRoutes(app: Hono) {
   // POST /verify-login
   app.post("/verify-login", async (c) => {
     try {
-      const { email, code } = await c.req.json();
-      if (!email || !code) {
+      const { email, code, identifier } = await c.req.json();
+      const loginId = (email || identifier || "").trim();
+      if (!loginId || !code) {
         return c.json({ error: "Champs manquants." }, 400);
-      }
-
-      const isValid = await verifyVerificationCode(email, code, "login");
-      if (!isValid) {
-        return c.json({ error: "Code invalide ou expiré." }, 400);
       }
 
       const sql = getDb();
       const users =
-        await sql`SELECT id, tier, is_blocked FROM users WHERE email = ${email} LIMIT 1`;
+        await sql`SELECT id, tier, is_blocked, email FROM users WHERE email = ${loginId} OR username = ${loginId} LIMIT 1`;
       if (users.length === 0) {
         return c.json({ error: "Utilisateur introuvable." }, 404);
       }
 
       const user = users[0];
+
+      const isValid = await verifyVerificationCode(user.email, code, "login");
+      if (!isValid) {
+        return c.json({ error: "Code invalide ou expiré." }, 400);
+      }
 
       // Compte bloqué par un administrateur : refus explicite (403)
       if (user.is_blocked) {
@@ -518,11 +529,17 @@ export function registerAuthRoutes(app: Hono) {
       }
 
       if (username && username.trim()) {
-        const cleanUsername = username.trim();
+        const cleanUsername = username.trim().toLowerCase().replace(/^@/, "").replace(/[^a-z0-9_]/g, "");
+        if (cleanUsername.length < 2) {
+          return c.json(
+            { error: "Le nom d'utilisateur doit contenir au moins 2 caractères (lettres, chiffres, _)." },
+            400
+          );
+        }
         const existing =
-          await sql`SELECT id FROM users WHERE username = ${cleanUsername} AND id::text != ${userId}::text LIMIT 1`;
+          await sql`SELECT id FROM users WHERE LOWER(username) = ${cleanUsername} AND id::text != ${userId}::text LIMIT 1`;
         if (existing.length > 0) {
-          return c.json({ error: "Ce nom d'utilisateur est déjà pris." }, 400);
+          return c.json({ error: "Ce nom d'utilisateur est déjà pris par un autre compte." }, 400);
         }
         await sql`UPDATE users SET username = ${cleanUsername} WHERE id::text = ${userId}::text`;
       }

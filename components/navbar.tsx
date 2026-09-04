@@ -289,7 +289,20 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
           </nav>
 
           {/* Actions */}
-          <div className="flex items-center gap-2 md:gap-4">
+          <div className="flex items-center gap-2 md:gap-3">
+            {/* Recherche globale (desktop) */}
+            <button
+              onClick={() => setIsCommandOpen(true)}
+              className="hidden md:flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-neutral-200 bg-neutral-100/70 hover:bg-neutral-200/70 hover:border-neutral-300 text-neutral-600 hover:text-neutral-900 transition-all text-xs font-medium cursor-pointer"
+              title="Recherche sur tout le site (Ctrl+K)"
+            >
+              <Search className="w-3.5 h-3.5 text-neutral-500" />
+              <span className="hidden xl:inline text-neutral-600">Recherche</span>
+              <kbd className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono rounded bg-white border border-neutral-200 text-neutral-500 shadow-2xs">
+                ⌘K
+              </kbd>
+            </button>
+
             {/* Compte (desktop) avec Dropdown interactif au survol / clic */}
             <div className="hidden md:block relative group/account py-2">
               <Link

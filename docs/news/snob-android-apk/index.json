@@ -1,8 +1,9 @@
 {
   "title": "Projet Snob sur Android",
-  "description": "Le projet Snob est dÃ©sormais accessible sur Android sous la forme d'un paquet d'installation APK.",
+  "description": "Le projet Snob est désormais accessible sur Android sous la forme d'un paquet d'installation APK.",
   "author": "Ãquipe mDevsLabs",
   "date": "2026-07-22",
   "label": "Mobile",
-  "image": "/snob.png"
+  "category": "Produits",
+  "media": "/snob.png"
 }

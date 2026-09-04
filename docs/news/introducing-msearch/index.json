@@ -1,7 +1,8 @@
 {
   "title": "Navigateur mSearch sécurisé",
-  "description": "Navigateur web axÃ© sur la confidentialitÃ© et l'efficacitÃ©, intÃ©grant nativement un bloqueur de traqueurs et l'assistant mAI en barre latÃ©rale.",
+  "description": "Navigateur web axÃ© sur la confidentialité et l'efficacitÃ©, intÃ©grant nativement un bloqueur de traqueurs et l'assistant mAI en barre latÃ©rale.",
   "author": "mDevsLabs",
   "date": "2026-07-11",
-  "image": "https://upload.fs.fr/AVXJoTByt1.png"
+  "category": "Produits",
+  "media": "https://upload.fs.fr/AVXJoTByt1.png"
 }

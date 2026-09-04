@@ -1,8 +1,9 @@
 {
   "title": "Lancement mAI sur Android",
-  "description": "L'assistant d'intelligence artificielle locale mAI est dÃ©sormais disponible sur Android, garantissant confidentialitÃ© et continuitÃ© d'usage.",
-  "author": "Ãquipe mAI",
+  "description": "L'assistant d'intelligence artificielle locale mAI est désormais disponible sur Android, garantissant confidentialité et continuité d'usage.",
+  "author": "Équipe mAI",
   "date": "2026-07-12",
   "label": "Mobile",
-  "image": "/news/android-app.jpg"
+  "category": "Produits",
+  "media": "/news/android-app.mp4"
 }

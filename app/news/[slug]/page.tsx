@@ -1,15 +1,22 @@
-import { getNewsArticle, getNewsArticles } from '@/lib/news';
-import Markdown from 'react-markdown';
-import Link from 'next/link';
-import { ArrowLeft, Calendar, User } from 'lucide-react';
-import { notFound } from 'next/navigation';
-import { ShareButtons, CommentSection } from './ArticleClient';
+import { getNewsArticle, getNewsArticles } from "@/lib/news";
+import Markdown from "react-markdown";
+import Link from "next/link";
+import { ArrowLeft, Calendar, User } from "lucide-react";
+import { notFound } from "next/navigation";
+import { ShareButtons, CommentSection } from "./ArticleClient";
+import { NewsMedia } from "@/components/news-media";
 
 const formatDate = (dateStr: any) => {
-  if (typeof dateStr !== 'string') return String(dateStr || '');
-  if (!dateStr || dateStr.split('-').length !== 3) return dateStr;
-  const [year, month, day] = dateStr.split('-');
-  return `${day}/${month}/${year}`;
+  if (typeof dateStr !== "string") return String(dateStr || "");
+  if (!dateStr || dateStr.split("-").length !== 3) return dateStr;
+  const [year, month, day] = dateStr.split("-");
+  const months = [
+    "janvier", "février", "mars", "avril", "mai", "juin",
+    "juillet", "août", "septembre", "octobre", "novembre", "décembre"
+  ];
+  const mIndex = parseInt(month, 10) - 1;
+  const monthName = months[mIndex] || month;
+  return `${parseInt(day, 10)} ${monthName} ${year}`;
 };
 
 export async function generateStaticParams() {
@@ -19,114 +26,119 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ArticlePage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const resolvedParams = await params;
   const article = getNewsArticle(resolvedParams.slug);
-  
+
   if (!article) {
     notFound();
   }
 
-  return (
-    <div className="max-w-3xl mx-auto">
-      <Link href="/news" className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/40 backdrop-blur-md border border-white/60 shadow-sm text-sm font-medium text-slate-700 hover:text-slate-900 hover:bg-white/60 transition-all duration-300 mb-8">
-        <ArrowLeft className="w-4 h-4" />
-        Retour aux actualités
-      </Link>
+  const categoryName = article.category || article.label || "Produits";
 
-      <div className="bg-white/40 backdrop-blur-md border border-white/60 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] rounded-3xl p-8 md:p-12 relative">
-        {article.label && (
-          <div className="mb-6">
-            <span className="px-3 py-1 rounded-full bg-white/40 backdrop-blur-md border border-white/60 shadow-sm text-slate-800 text-xs font-bold uppercase tracking-wider">
-              {article.label}
-            </span>
-          </div>
-        )}
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-black italic tracking-tighter leading-[0.9] md:leading-[0.85] uppercase text-slate-900 mb-6">
-          {article.title}
-        </h1>
-        
-        <div className="flex items-center gap-4 text-sm font-medium text-slate-500 mb-10 pb-10 border-b border-black/5">
-          <div className="flex items-center gap-1.5">
-            <User className="w-4 h-4" />
-            <span>{article.author}</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <Calendar className="w-4 h-4" />
+  return (
+    <article className="max-w-4xl mx-auto space-y-10 pb-20">
+      {/* Retour aux actualités */}
+      <div>
+        <Link
+          href="/news"
+          className="inline-flex items-center gap-2 text-xs font-medium text-neutral-500 hover:text-neutral-900 transition-colors py-1"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span>Toutes les actualités</span>
+        </Link>
+      </div>
+
+      {/* En-tête de l'article - Style OpenAI */}
+      <header className="space-y-6">
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="text-[11px] font-mono uppercase tracking-wider font-semibold text-neutral-900 bg-neutral-100 px-3 py-1 rounded-md">
+            {categoryName}
+          </span>
+          <span className="text-neutral-300">•</span>
+          <div className="flex items-center gap-1.5 text-xs text-neutral-500 font-medium">
+            <Calendar className="w-3.5 h-3.5 text-neutral-400" />
             <span>{formatDate(article.date)}</span>
+          </div>
+          <span className="text-neutral-300">•</span>
+          <div className="flex items-center gap-1.5 text-xs text-neutral-500 font-medium">
+            <User className="w-3.5 h-3.5 text-neutral-400" />
+            <span>{article.author}</span>
           </div>
         </div>
 
-        <div className="prose max-w-none text-slate-800 leading-relaxed font-sans">
+        <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-neutral-950 leading-[1.1]">
+          {article.title}
+        </h1>
+
+        {article.description && (
+          <p className="text-lg sm:text-xl text-neutral-600 font-normal leading-relaxed border-l-2 border-neutral-300 pl-4 py-1">
+            {article.description}
+          </p>
+        )}
+      </header>
+
+      {/* Média Héro (Lecteur Vidéo interactif ou Image) */}
+      {article.media && (
+        <div className="relative overflow-hidden rounded-2xl border border-neutral-200 shadow-sm bg-neutral-950">
+          <NewsMedia
+            src={article.media}
+            alt={article.title}
+            isArticlePage={true}
+          />
+        </div>
+      )}
+
+      {/* Corps de l'article éditorial */}
+      <div className="border-t border-neutral-200/80 pt-8">
+        <div className="prose prose-neutral max-w-none text-neutral-800 leading-relaxed font-sans prose-headings:font-bold prose-headings:tracking-tight prose-a:text-neutral-900 prose-a:underline hover:prose-a:text-neutral-600">
           <Markdown
             components={{
               h1: ({ node: _node, ...props }) => (
                 <h1
-                  className="text-2xl md:text-3xl font-black text-slate-900 mt-8 mb-4 border-b border-black/5 pb-2"
+                  className="text-2xl sm:text-3xl font-bold text-neutral-950 mt-10 mb-4 border-b border-neutral-100 pb-2"
                   {...props}
                 />
               ),
               h2: ({ node: _node, ...props }) => (
                 <h2
-                  className="text-xl md:text-2xl font-bold text-slate-900 mt-6 mb-3 border-b border-black/5 pb-1"
+                  className="text-xl sm:text-2xl font-bold text-neutral-950 mt-8 mb-3 border-b border-neutral-100 pb-1"
                   {...props}
                 />
               ),
               h3: ({ node: _node, ...props }) => (
                 <h3
-                  className="text-lg font-semibold text-slate-900 mt-5 mb-2"
-                  {...props}
-                />
-              ),
-              h4: ({ node: _node, ...props }) => (
-                <h4
-                  className="text-base font-semibold text-slate-900 mt-4 mb-2"
+                  className="text-lg font-bold text-neutral-900 mt-6 mb-2"
                   {...props}
                 />
               ),
               p: ({ node: _node, ...props }) => (
-                <p className="mb-4 text-slate-700 leading-relaxed" {...props} />
+                <p className="mb-4 text-neutral-700 leading-relaxed text-base" {...props} />
               ),
               ul: ({ node: _node, ...props }) => (
                 <ul
-                  className="list-disc list-inside space-y-2 mb-6 text-slate-700 pl-2"
+                  className="list-disc list-inside space-y-2 mb-6 text-neutral-700 pl-2"
                   {...props}
                 />
               ),
               ol: ({ node: _node, ...props }) => (
                 <ol
-                  className="list-decimal list-inside space-y-2 mb-6 text-slate-700 pl-2"
+                  className="list-decimal list-inside space-y-2 mb-6 text-neutral-700 pl-2"
                   {...props}
                 />
               ),
               li: ({ node: _node, ...props }) => (
-                <li className="mb-1 text-slate-700" {...props} />
-              ),
-              table: ({ node: _node, ...props }) => (
-                <div className="overflow-x-auto my-6 rounded-2xl border border-white/60 shadow-sm bg-white/30 backdrop-blur-md">
-                  <table
-                    className="w-full text-sm text-left text-slate-700 border-collapse"
-                    {...props}
-                  />
-                </div>
-              ),
-              th: ({ node: _node, ...props }) => (
-                <th
-                  className="px-4 py-3 font-bold text-slate-900 bg-slate-900/5 border-b border-black/10"
-                  {...props}
-                />
-              ),
-              td: ({ node: _node, ...props }) => (
-                <td
-                  className="px-4 py-3 border-b border-black/5 text-slate-700"
-                  {...props}
-                />
+                <li className="mb-1 text-neutral-700" {...props} />
               ),
               code: ({ node: _node, className, children, ...props }) => {
                 const isInline = !className;
                 return isInline ? (
                   <code
-                    className="bg-purple-100/60 text-purple-800 px-1.5 py-0.5 rounded text-xs font-mono font-semibold"
+                    className="bg-neutral-100 text-neutral-900 px-1.5 py-0.5 rounded text-xs font-mono font-medium border border-neutral-200"
                     {...props}
                   >
                     {children}
@@ -139,20 +151,20 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
               },
               pre: ({ node: _node, ...props }) => (
                 <pre
-                  className="bg-slate-950 text-slate-100 p-4 rounded-2xl overflow-x-auto my-6 font-mono text-xs border border-slate-800 shadow-md"
+                  className="bg-neutral-950 text-neutral-100 p-5 rounded-xl overflow-x-auto my-6 font-mono text-xs border border-neutral-800 shadow-md"
                   {...props}
                 />
               ),
               blockquote: ({ node: _node, ...props }) => (
                 <blockquote
-                  className="border-l-4 border-purple-500 bg-purple-50/50 italic p-4 rounded-r-2xl my-6 text-slate-700 shadow-sm"
+                  className="border-l-2 border-neutral-900 bg-neutral-50 italic p-4 rounded-r-xl my-6 text-neutral-700"
                   {...props}
                 />
               ),
               a: ({ node: _node, href, children, ...props }) => (
                 <a
                   href={href}
-                  className="text-purple-600 hover:text-purple-800 underline font-medium transition-colors"
+                  className="text-neutral-900 hover:text-neutral-600 underline font-semibold transition-colors"
                   target={href?.startsWith("http") ? "_blank" : "_self"}
                   rel={href?.startsWith("http") ? "noreferrer" : undefined}
                   {...props}
@@ -167,9 +179,11 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         </div>
       </div>
 
-      <ShareButtons title={article.title} description={article.description} />
-
-      <CommentSection articleSlug={resolvedParams.slug} />
-    </div>
+      {/* Partage & Commentaires */}
+      <div className="space-y-8 pt-6">
+        <ShareButtons title={article.title} description={article.description} />
+        <CommentSection articleSlug={resolvedParams.slug} />
+      </div>
+    </article>
   );
 }

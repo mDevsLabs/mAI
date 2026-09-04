@@ -22,8 +22,8 @@
 }
 
 body {
-  background-color: #fafafa;
-  color: #0f172a;
+  background-color: #ffffff;
+  color: #0a0a0a;
   overflow-x: hidden;
   /* Ressenti tactile natif : supprime le flash de surbrillance au tap */
   -webkit-tap-highlight-color: transparent;
@@ -32,8 +32,8 @@ body {
 }
 
 ::selection {
-  background-color: rgba(168, 85, 247, 0.2);
-  color: #000;
+  background-color: #000000;
+  color: #ffffff;
 }
 
 .prose p, .prose li {
@@ -86,6 +86,6 @@ body {
 /* Utilitaires globaux pour les menus déroulants (Glassmorphism) */
 @layer utilities {
   .glass-dropdown {
-    @apply bg-white/95 backdrop-blur-2xl border border-slate-200/80 shadow-[0_16px_40px_rgba(0,0,0,0.12)] rounded-3xl p-3;
+    @apply bg-white border border-neutral-200/90 shadow-xl rounded-2xl p-2.5;
   }
 }

@@ -43,6 +43,25 @@ export function registerMiddleware(app: Hono) {
     }
 
     const isPublicRoute =
+      path === "/" ||
+      path === "/api" ||
+      path === "/api/" ||
+      path === "/v1" ||
+      path === "/v1/" ||
+      path === "/vibe" ||
+      path === "/vibe/" ||
+      path === "/api/vibe" ||
+      path === "/api/vibe/" ||
+      path.startsWith("/v1/feed") ||
+      path.startsWith("/api/vibe/feed") ||
+      path.startsWith("/vibe/feed") ||
+      path === "/feed" ||
+      path.startsWith("/v1/posts") ||
+      path.startsWith("/api/vibe/posts") ||
+      path.startsWith("/v1/trends") ||
+      path.startsWith("/api/vibe/trends") ||
+      path.startsWith("/v1/profiles") ||
+      path.startsWith("/api/vibe/profiles") ||
       path === "/v1/models" ||
       path === "/models" ||
       path === "/v1beta/models" ||
@@ -108,6 +127,8 @@ export function registerMiddleware(app: Hono) {
     let currentUserId: string | null = null;
     const currentApiKey: string | null = apiKey;
     let matchedApiKey: string | null = apiKey;
+    // Authentification par clé API enregistrée (par opposition à un JWT de session ou à la clé système)
+    let isRegisteredApiKey = false;
 
     function timingSafeEqual(a: string, b: string): boolean {
       if (a.length !== b.length) {
@@ -148,6 +169,7 @@ export function registerMiddleware(app: Hono) {
           }
           currentUserId = apiKeyData.user_id;
           matchedApiKey = apiKeyData.api_key || apiKey;
+          isRegisteredApiKey = true;
         } else if (systemMaiApiKey && timingSafeEqual(apiKey, systemMaiApiKey)) {
           userPlan = "Plus";
           currentUserId = "system-mai";
@@ -230,7 +252,8 @@ export function registerMiddleware(app: Hono) {
     // Vérification préventive du quota de requêtes pour les clés API enregistrées.
     // Le solde est global au compte (cumul de toutes ses clés) et la période est hebdomadaire
     // (lundi 00:00 UTC), marquée par usage_period_start pour un reset idempotent.
-    if (apiKey && currentUserId && currentUserId !== "system-mai") {
+    // Un token JWT de session ne consomme pas ce quota : la requête est exécutée directement.
+    if (isRegisteredApiKey && currentUserId && currentUserId !== "system-mai") {
       const sql = getDb();
       const { nextResetIso, weekStartStr } = getWeekData();
       const apiBoost = await getUserQuotaBoost(sql, currentUserId, "api");
@@ -279,9 +302,12 @@ export function registerMiddleware(app: Hono) {
     const endpoint = c.req.path;
     const method = c.req.method;
 
-    // Logging & Décompte de 1 crédit API (pour toutes les requêtes avec clé API valide incluant audio, images, web search et chat)
+    // Log-usage & Décompte de 1 requête du quota API (chat, audio, images, web search, etc.).
+    // Uniquement pour les clés API enregistrées : +1 requête au solde hebdomadaire du
+    // propriétaire de la clé. Les requêtes authentifiées par JWT de session sont
+    // exécutées directement, sans log-usage ni débit ensuite.
     const isExcludedRoute = path.startsWith("/v1/devices") || path === "/v1/status" || path === "/status";
-    if (!isExcludedRoute && apiKey && apiKey !== systemMaiApiKey) {
+    if (!isExcludedRoute && isRegisteredApiKey) {
       try {
         const sql = getDb();
         const effectiveKeyToLog = matchedApiKey || apiKey;

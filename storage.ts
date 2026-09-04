@@ -480,7 +480,15 @@ export function registerStorageRoutes(app: Hono) {
       const publicUrl = uploadResult.publicUrl;
 
       const sql = getDb();
-      await sql`UPDATE users SET avatar_url = ${publicUrl} WHERE id = ${userId}`;
+      await sql`UPDATE users SET avatar_url = ${publicUrl} WHERE id = ${Number(userId)}`;
+      try {
+        await sql`
+          INSERT INTO profiles (user_id, avatar_url)
+          VALUES (${Number(userId)}, ${publicUrl})
+          ON CONFLICT (user_id)
+          DO UPDATE SET avatar_url = ${publicUrl}, updated_at = NOW()
+        `;
+      } catch {}
 
       return c.json({ avatarUrl: publicUrl, success: true });
     } catch (err: any) {
@@ -514,27 +522,17 @@ export function registerStorageRoutes(app: Hono) {
         return c.json({ error: "Fichier invalide ou non fourni." }, 400);
       }
 
-      const MAX_FILE_SIZE = 10 * 1024 * 1024;
+      const MAX_FILE_SIZE = 50 * 1024 * 1024;
       if (file.size > MAX_FILE_SIZE) {
-        return c.json({ error: "Fichier trop volumineux (max 10 MB)." }, 413);
+        return c.json({ error: "Fichier trop volumineux (max 50 MB)." }, 413);
       }
       if (file.size === 0) {
         return c.json({ error: "Fichier vide." }, 400);
       }
-      const ALLOWED = [
-        "image/jpeg",
-        "image/png",
-        "image/webp",
-        "image/gif",
-        "application/pdf",
-        "text/plain",
-        "text/markdown",
-        "text/csv",
-        "application/json",
-      ];
       const isAllowed =
-        ALLOWED.includes(file.type) ||
         file.type.startsWith("image/") ||
+        file.type.startsWith("video/") ||
+        file.type.startsWith("audio/") ||
         file.type.startsWith("text/") ||
         file.type === "application/pdf" ||
         file.type === "application/json";

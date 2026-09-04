@@ -12,6 +12,7 @@ import {
   Terminal,
   Cpu,
   Star,
+  Users,
 } from "lucide-react";
 import Image from "next/image";
 import { toast } from "react-hot-toast";
@@ -37,6 +38,21 @@ interface AppDownload {
 }
 
 const OFFICIAL_APPS: AppDownload[] = [
+  {
+    id: "vibe",
+    name: "Vibe",
+    tagline: "Le réseau social open source avec l'IA mAI intégrée nativement.",
+    description:
+      "Feed social, conversations, création de contenu assistée et modération intelligente. Disponible pour mobile Android et iOS.",
+    icon: Users,
+    iconColor: "text-rose-400",
+    borderHover: "hover:border-rose-500/30",
+    releaseUrl: "https://github.com/mDevsLabs/Vibe/releases/latest",
+    platforms: [
+      { label: "Android", url: "https://github.com/mDevsLabs/Vibe/releases/latest" },
+      { label: "iOS", url: "https://github.com/mDevsLabs/Vibe/releases/latest" },
+    ],
+  },
   {
     id: "desktop",
     name: "mAI Desktop",

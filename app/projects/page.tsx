@@ -35,7 +35,7 @@ export default function ProjectsPage() {
       description: "Réseau social open source où l'IA mAI est intégrée nativement : feed social, conversations et création de contenu assistée.",
       link: "/projects/vibe",
       repo: "mDevsLabs/Vibe",
-      platforms: ["Web", "Open Source"],
+      platforms: ["Web", "Android", "iOS", "Open Source"],
       borderHover: "hover:border-rose-500/30 hover:shadow-[0_8px_32px_0_rgba(244,63,94,0.15)]",
     },
     {

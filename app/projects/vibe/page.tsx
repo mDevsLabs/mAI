@@ -42,6 +42,12 @@ export default function VibeProjectPage() {
                   Réseau social
                 </span>
                 <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-white/60 border border-slate-200 text-slate-700 font-bold uppercase tracking-wider">
+                  Android
+                </span>
+                <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-white/60 border border-slate-200 text-slate-700 font-bold uppercase tracking-wider">
+                  iOS
+                </span>
+                <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-white/60 border border-slate-200 text-slate-700 font-bold uppercase tracking-wider">
                   IA mAI intégrée
                 </span>
                 <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-white/60 border border-slate-200 text-slate-700 font-bold uppercase tracking-wider">

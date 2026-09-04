@@ -4,5 +4,6 @@
   "author": "mDevsLabs",
   "date": "2026-08-30",
   "label": "Annonce",
-  "image": "/logo.png"
+  "category": "Entreprise",
+  "media": "/logo.png"
 }

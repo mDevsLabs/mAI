@@ -3,7 +3,22 @@
 import { useEffect } from "react";
 import { Command } from "cmdk";
 import { useRouter } from "next/navigation";
-import { Search, Folder, FileText, LifeBuoy, PlusCircle, BarChart3 } from "lucide-react";
+import {
+  Search,
+  Folder,
+  FileText,
+  LifeBuoy,
+  PlusCircle,
+  BarChart3,
+  Download,
+  Sparkles,
+  Cpu,
+  Layers,
+  ArrowRight,
+  BookOpen,
+  CreditCard,
+  X,
+} from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import type { ChangelogsByProject } from "@/lib/changelog";
 import type { NewsArticle } from "@/lib/news";
@@ -25,7 +40,7 @@ export function CommandMenu({
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
-        setOpen((open) => !open);
+        setOpen((prev) => !prev);
       }
     };
 
@@ -51,162 +66,250 @@ export function CommandMenu({
     <AnimatePresence>
       {open && (
         <div
-          className="fixed inset-0 z-[100] flex items-start justify-center p-4 pt-[20vh] bg-slate-900/20 backdrop-blur-sm"
+          className="fixed inset-0 z-[100] flex items-start justify-center p-4 pt-[15vh] bg-black/50 backdrop-blur-xs transition-opacity duration-200"
           onClick={() => setOpen(false)}
         >
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.1 }}
+            initial={{ opacity: 0, scale: 0.97, y: -10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.97, y: -10 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-xl bg-white/60 backdrop-blur-xl rounded-3xl shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] border border-white/60 overflow-hidden"
+            className="w-full max-w-2xl bg-white border border-neutral-200 rounded-2xl shadow-2xl overflow-hidden flex flex-col"
           >
             <Command
               className="flex flex-col w-full h-full"
-              label="Menu de commandes"
+              label="Recherche globale mAI"
             >
-              <div className="flex items-center px-4 border-b border-black/5 bg-white/40">
-                <Search className="w-5 h-5 text-slate-400 mr-2 shrink-0" />
+              <div className="flex items-center px-4 border-b border-neutral-100 bg-neutral-50/50">
+                <Search className="w-4 h-4 text-neutral-400 mr-3 shrink-0" />
                 <Command.Input
                   autoFocus
-                  placeholder="Rechercher des projets, notes de versions..."
-                  className="w-full h-14 bg-transparent outline-none text-slate-900 placeholder:text-slate-500"
+                  placeholder="Rechercher sur tout le site (projets, actualités, téléchargements, modèles...)"
+                  className="w-full h-13 bg-transparent outline-none text-neutral-900 text-sm placeholder:text-neutral-400 font-sans"
                 />
+                <button
+                  type="button"
+                  onClick={() => setOpen(false)}
+                  className="p-1 text-neutral-400 hover:text-neutral-700 rounded-md hover:bg-neutral-100 transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
               </div>
-              <Command.List className="max-h-[400px] overflow-y-auto p-2 scroll-py-2">
-                <Command.Empty className="py-6 text-center text-sm text-slate-500">
-                  Aucun résultat trouvé.
+
+              <Command.List className="max-h-[420px] overflow-y-auto p-2 scroll-py-2 divide-y divide-neutral-100/60">
+                <Command.Empty className="py-12 text-center text-sm text-neutral-400">
+                  Aucun résultat trouvé pour votre recherche.
                 </Command.Empty>
 
+                {/* Pages Principales */}
                 <Command.Group
-                  heading="Projets mAI"
-                  className="text-xs font-semibold text-slate-500 px-2 py-2"
+                  heading="Navigation rapide"
+                  className="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider px-2 py-2"
                 >
                   <Command.Item
-                    onSelect={() => runCommand(() => router.push("/projects/web"))}
-                    className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer aria-selected:bg-black/5 aria-selected:text-slate-900 transition-colors"
+                    onSelect={() => runCommand(() => router.push("/"))}
+                    className="flex items-center justify-between px-3 py-2 text-sm text-neutral-800 rounded-lg cursor-pointer aria-selected:bg-neutral-100 transition-colors"
                   >
-                    <Folder className="w-4 h-4 text-amber-500" />
-                    <span>Web (Release Candidate) - Application d'IA en ligne</span>
+                    <div className="flex items-center gap-2.5">
+                      <Layers className="w-4 h-4 text-neutral-500" />
+                      <span>Accueil</span>
+                    </div>
+                    <ArrowRight className="w-3.5 h-3.5 text-neutral-400" />
                   </Command.Item>
                   <Command.Item
-                    onSelect={() => runCommand(() => router.push("/projects/vibe"))}
-                    className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer aria-selected:bg-black/5 aria-selected:text-slate-900 transition-colors"
+                    onSelect={() => runCommand(() => router.push("/news"))}
+                    className="flex items-center justify-between px-3 py-2 text-sm text-neutral-800 rounded-lg cursor-pointer aria-selected:bg-neutral-100 transition-colors"
                   >
-                    <Folder className="w-4 h-4 text-rose-500" />
-                    <span>Vibe (Bêta) - Réseau social avec IA intégrée</span>
+                    <div className="flex items-center gap-2.5">
+                      <FileText className="w-4 h-4 text-neutral-500" />
+                      <span>Actualités & Nouveautés</span>
+                    </div>
+                    <ArrowRight className="w-3.5 h-3.5 text-neutral-400" />
+                  </Command.Item>
+                  <Command.Item
+                    onSelect={() => runCommand(() => router.push("/downloads"))}
+                    className="flex items-center justify-between px-3 py-2 text-sm text-neutral-800 rounded-lg cursor-pointer aria-selected:bg-neutral-100 transition-colors"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Download className="w-4 h-4 text-neutral-500" />
+                      <span>Téléchargements (Applications & Modèles)</span>
+                    </div>
+                    <ArrowRight className="w-3.5 h-3.5 text-neutral-400" />
+                  </Command.Item>
+                  <Command.Item
+                    onSelect={() => runCommand(() => router.push("/projects"))}
+                    className="flex items-center justify-between px-3 py-2 text-sm text-neutral-800 rounded-lg cursor-pointer aria-selected:bg-neutral-100 transition-colors"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Folder className="w-4 h-4 text-neutral-500" />
+                      <span>Tous les Projets</span>
+                    </div>
+                    <ArrowRight className="w-3.5 h-3.5 text-neutral-400" />
+                  </Command.Item>
+                  <Command.Item
+                    onSelect={() => runCommand(() => router.push("/models"))}
+                    className="flex items-center justify-between px-3 py-2 text-sm text-neutral-800 rounded-lg cursor-pointer aria-selected:bg-neutral-100 transition-colors"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Sparkles className="w-4 h-4 text-neutral-500" />
+                      <span>Modèles mAI</span>
+                    </div>
+                    <ArrowRight className="w-3.5 h-3.5 text-neutral-400" />
+                  </Command.Item>
+                  <Command.Item
+                    onSelect={() => runCommand(() => router.push("/pricing"))}
+                    className="flex items-center justify-between px-3 py-2 text-sm text-neutral-800 rounded-lg cursor-pointer aria-selected:bg-neutral-100 transition-colors"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <CreditCard className="w-4 h-4 text-neutral-500" />
+                      <span>Abonnements & Tarifs</span>
+                    </div>
+                    <ArrowRight className="w-3.5 h-3.5 text-neutral-400" />
+                  </Command.Item>
+                  <Command.Item
+                    onSelect={() => runCommand(() => router.push("/docs"))}
+                    className="flex items-center justify-between px-3 py-2 text-sm text-neutral-800 rounded-lg cursor-pointer aria-selected:bg-neutral-100 transition-colors"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <BookOpen className="w-4 h-4 text-neutral-500" />
+                      <span>Documentation</span>
+                    </div>
+                    <ArrowRight className="w-3.5 h-3.5 text-neutral-400" />
+                  </Command.Item>
+                </Command.Group>
+
+                {/* Projets mAI */}
+                <Command.Group
+                  heading="Projets mAI"
+                  className="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider px-2 py-2"
+                >
+                  <Command.Item
+                    onSelect={() => runCommand(() => router.push("/projects/vibe"))}
+                    className="flex items-center justify-between px-3 py-2 text-sm text-neutral-800 rounded-lg cursor-pointer aria-selected:bg-neutral-100 transition-colors"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Folder className="w-4 h-4 text-neutral-700" />
+                      <div>
+                        <div className="font-medium text-neutral-900">Vibe (Bêta)</div>
+                        <div className="text-xs text-neutral-500">Réseau social open source avec IA intégrée (Web, Android, iOS)</div>
+                      </div>
+                    </div>
+                    <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-600">Bêta</span>
+                  </Command.Item>
+                  <Command.Item
+                    onSelect={() => runCommand(() => router.push("/projects/web"))}
+                    className="flex items-center justify-between px-3 py-2 text-sm text-neutral-800 rounded-lg cursor-pointer aria-selected:bg-neutral-100 transition-colors"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Folder className="w-4 h-4 text-neutral-700" />
+                      <div>
+                        <div className="font-medium text-neutral-900">Web</div>
+                        <div className="text-xs text-neutral-500">Application d'IA en ligne web réactive et streaming direct</div>
+                      </div>
+                    </div>
+                    <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-600">RC</span>
                   </Command.Item>
                   <Command.Item
                     onSelect={() => runCommand(() => router.push("/projects/pulse"))}
-                    className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer aria-selected:bg-black/5 aria-selected:text-slate-900 transition-colors"
+                    className="flex items-center justify-between px-3 py-2 text-sm text-neutral-800 rounded-lg cursor-pointer aria-selected:bg-neutral-100 transition-colors"
                   >
-                    <Folder className="w-4 h-4 text-indigo-500" />
-                    <span>Pulse (Release Candidate) - Extensions mAI</span>
+                    <div className="flex items-center gap-2.5">
+                      <Folder className="w-4 h-4 text-neutral-700" />
+                      <div>
+                        <div className="font-medium text-neutral-900">Pulse</div>
+                        <div className="text-xs text-neutral-500">Extensions navigateurs et VS Code pour l'assistant mAI</div>
+                      </div>
+                    </div>
+                    <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-600">RC</span>
                   </Command.Item>
                   <Command.Item
                     onSelect={() => runCommand(() => router.push("/projects/cli"))}
-                    className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer aria-selected:bg-black/5 aria-selected:text-slate-900 transition-colors"
+                    className="flex items-center justify-between px-3 py-2 text-sm text-neutral-800 rounded-lg cursor-pointer aria-selected:bg-neutral-100 transition-colors"
                   >
-                    <Folder className="w-4 h-4 text-emerald-500" />
-                    <span>CLI (Release Candidate) - Discussions & Code Terminal</span>
+                    <div className="flex items-center gap-2.5">
+                      <Folder className="w-4 h-4 text-neutral-700" />
+                      <div>
+                        <div className="font-medium text-neutral-900">CLI</div>
+                        <div className="text-xs text-neutral-500">Terminal d'inférence locale et codage assisté</div>
+                      </div>
+                    </div>
+                    <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-600">RC</span>
                   </Command.Item>
                   <Command.Item
                     onSelect={() => runCommand(() => router.push("/projects/coder"))}
-                    className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer aria-selected:bg-black/5 aria-selected:text-slate-900 transition-colors"
+                    className="flex items-center justify-between px-3 py-2 text-sm text-neutral-800 rounded-lg cursor-pointer aria-selected:bg-neutral-100 transition-colors"
                   >
-                    <Folder className="w-4 h-4 text-purple-500" />
-                    <span>Coder (Release Candidate) - IDE IA & Agents MCP</span>
+                    <div className="flex items-center gap-2.5">
+                      <Folder className="w-4 h-4 text-neutral-700" />
+                      <div>
+                        <div className="font-medium text-neutral-900">Coder</div>
+                        <div className="text-xs text-neutral-500">IDE IA nouvelle génération et agents autonomes MCP</div>
+                      </div>
+                    </div>
+                    <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-600">RC</span>
                   </Command.Item>
                 </Command.Group>
 
+                {/* Téléchargements & Modèles */}
                 <Command.Group
-                  heading="Support & Assistance"
-                  className="text-xs font-semibold text-slate-500 px-2 pt-4 pb-2"
+                  heading="Téléchargements & Modèles"
+                  className="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider px-2 py-2"
                 >
                   <Command.Item
-                    onSelect={() => runCommand(() => router.push("/support"))}
-                    className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer aria-selected:bg-black/5 aria-selected:text-slate-900 transition-colors"
+                    onSelect={() => runCommand(() => router.push("/downloads"))}
+                    className="flex items-center justify-between px-3 py-2 text-sm text-neutral-800 rounded-lg cursor-pointer aria-selected:bg-neutral-100 transition-colors"
                   >
-                    <LifeBuoy className="w-4 h-4 text-purple-600" />
-                    <span>Centre de Support & Assistance</span>
+                    <div className="flex items-center gap-2.5">
+                      <Download className="w-4 h-4 text-neutral-700" />
+                      <div>
+                        <div className="font-medium text-neutral-900">Vibe Releases (Android & iOS)</div>
+                        <div className="text-xs text-neutral-500">Télécharger Vibe pour mobile via GitHub Releases</div>
+                      </div>
+                    </div>
                   </Command.Item>
                   <Command.Item
-                    onSelect={() => runCommand(() => router.push("/support/new"))}
-                    className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer aria-selected:bg-black/5 aria-selected:text-slate-900 transition-colors"
+                    onSelect={() => runCommand(() => router.push("/models/mai-1.5-light"))}
+                    className="flex items-center justify-between px-3 py-2 text-sm text-neutral-800 rounded-lg cursor-pointer aria-selected:bg-neutral-100 transition-colors"
                   >
-                    <PlusCircle className="w-4 h-4 text-emerald-600" />
-                    <span>Signaler un bug / Créer un ticket</span>
+                    <div className="flex items-center gap-2.5">
+                      <Cpu className="w-4 h-4 text-neutral-700" />
+                      <div>
+                        <div className="font-medium text-neutral-900">mAI-1.5-Light (4B)</div>
+                        <div className="text-xs text-neutral-500">Modèle local ultra-rapide avec vision et exécution d'outils</div>
+                      </div>
+                    </div>
                   </Command.Item>
                   <Command.Item
-                    onSelect={() => runCommand(() => router.push("/support/tickets"))}
-                    className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer aria-selected:bg-black/5 aria-selected:text-slate-900 transition-colors"
+                    onSelect={() => runCommand(() => router.push("/models/mai-1.5-apex"))}
+                    className="flex items-center justify-between px-3 py-2 text-sm text-neutral-800 rounded-lg cursor-pointer aria-selected:bg-neutral-100 transition-colors"
                   >
-                    <LifeBuoy className="w-4 h-4 text-blue-600" />
-                    <span>Mes tickets & Historique</span>
+                    <div className="flex items-center gap-2.5">
+                      <Cpu className="w-4 h-4 text-neutral-700" />
+                      <div>
+                        <div className="font-medium text-neutral-900">mAI-1.5-Apex (9B)</div>
+                        <div className="text-xs text-neutral-500">Modèle phare 100% local, raisonnement complexe et multimodal</div>
+                      </div>
+                    </div>
                   </Command.Item>
                   <Command.Item
-                    onSelect={() => runCommand(() => router.push("/support/stats"))}
-                    className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer aria-selected:bg-black/5 aria-selected:text-slate-900 transition-colors"
+                    onSelect={() => runCommand(() => router.push("/models/mai-1.5-opal"))}
+                    className="flex items-center justify-between px-3 py-2 text-sm text-neutral-800 rounded-lg cursor-pointer aria-selected:bg-neutral-100 transition-colors"
                   >
-                    <BarChart3 className="w-4 h-4 text-amber-600" />
-                    <span>Statistiques & Analyse du Support</span>
+                    <div className="flex items-center gap-2.5">
+                      <Cpu className="w-4 h-4 text-neutral-700" />
+                      <div>
+                        <div className="font-medium text-neutral-900">mAI-1.5-Opal (27B)</div>
+                        <div className="text-xs text-neutral-500">Haute intelligence et vélocité pour l'inférence locale</div>
+                      </div>
+                    </div>
                   </Command.Item>
                 </Command.Group>
 
+                {/* Actualités / Blog */}
                 <Command.Group
-                  heading="Changelog mAI"
-                  className="text-xs font-semibold text-slate-500 px-2 pt-4 pb-2"
-                >
-                  {changelogs?.mAI?.map((change) => (
-                    <Command.Item
-                      key={`mai-${change.version}`}
-                      onSelect={() =>
-                        runCommand(() => router.push("/changelog/mai"))
-                      }
-                      className="flex flex-col px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer aria-selected:bg-black/5 aria-selected:text-slate-900 transition-colors mb-1"
-                    >
-                      <div className="flex items-center gap-2 font-medium">
-                        <FileText className="w-4 h-4 text-purple-500" />
-                        <span>
-                          {change.version} - {change.title}
-                        </span>
-                      </div>
-                      <div className="pl-6 text-xs text-slate-500 line-clamp-1 mt-1">
-                        {change.description.replace(/\n/g, " ")}
-                      </div>
-                    </Command.Item>
-                  ))}
-                </Command.Group>
-
-                <Command.Group
-                  heading="Changelog mSearch"
-                  className="text-xs font-semibold text-slate-500 px-2 pt-4 pb-2"
-                >
-                  {changelogs?.mSearch?.map((change) => (
-                    <Command.Item
-                      key={`msearch-${change.version}`}
-                      onSelect={() =>
-                        runCommand(() => router.push("/changelog/msearch"))
-                      }
-                      className="flex flex-col px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer aria-selected:bg-black/5 aria-selected:text-slate-900 transition-colors mb-1"
-                    >
-                      <div className="flex items-center gap-2 font-medium">
-                        <FileText className="w-4 h-4 text-blue-500" />
-                        <span>
-                          {change.version} - {change.title}
-                        </span>
-                      </div>
-                      <div className="pl-6 text-xs text-slate-500 line-clamp-1 mt-1">
-                        {change.description.replace(/\n/g, " ")}
-                      </div>
-                    </Command.Item>
-                  ))}
-                </Command.Group>
-
-                <Command.Group
-                  heading="Actualités"
-                  className="text-xs font-semibold text-slate-500 px-2 pt-4 pb-2"
+                  heading="Articles & Actualités"
+                  className="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider px-2 py-2"
                 >
                   {news?.map((article) => (
                     <Command.Item
@@ -214,19 +317,62 @@ export function CommandMenu({
                       onSelect={() =>
                         runCommand(() => router.push(`/news/${article.slug}`))
                       }
-                      className="flex flex-col px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer aria-selected:bg-black/5 aria-selected:text-slate-900 transition-colors mb-1"
+                      className="flex items-start justify-between px-3 py-2 text-sm text-neutral-800 rounded-lg cursor-pointer aria-selected:bg-neutral-100 transition-colors"
                     >
-                      <div className="flex items-center gap-2 font-medium">
-                        <FileText className="w-4 h-4 text-orange-500" />
-                        <span>{article.title}</span>
+                      <div className="flex items-start gap-2.5">
+                        <FileText className="w-4 h-4 text-neutral-500 mt-0.5 shrink-0" />
+                        <div>
+                          <div className="font-medium text-neutral-900 line-clamp-1">{article.title}</div>
+                          <div className="text-xs text-neutral-500 line-clamp-1 mt-0.5">{article.description}</div>
+                        </div>
                       </div>
-                      <div className="pl-6 text-xs text-slate-500 line-clamp-1 mt-1">
-                        {article.description}
-                      </div>
+                      <span className="text-[10px] font-medium px-2 py-0.5 rounded-md bg-neutral-100 text-neutral-600 shrink-0 ml-2">
+                        {article.category || article.label || "Actualité"}
+                      </span>
                     </Command.Item>
                   ))}
                 </Command.Group>
+
+                {/* Support & Assistance */}
+                <Command.Group
+                  heading="Support & Assistance"
+                  className="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider px-2 py-2"
+                >
+                  <Command.Item
+                    onSelect={() => runCommand(() => router.push("/support"))}
+                    className="flex items-center gap-2.5 px-3 py-2 text-sm text-neutral-800 rounded-lg cursor-pointer aria-selected:bg-neutral-100 transition-colors"
+                  >
+                    <LifeBuoy className="w-4 h-4 text-neutral-500" />
+                    <span>Centre de Support & Signalement</span>
+                  </Command.Item>
+                  <Command.Item
+                    onSelect={() => runCommand(() => router.push("/support/new"))}
+                    className="flex items-center gap-2.5 px-3 py-2 text-sm text-neutral-800 rounded-lg cursor-pointer aria-selected:bg-neutral-100 transition-colors"
+                  >
+                    <PlusCircle className="w-4 h-4 text-neutral-500" />
+                    <span>Signaler un bug / Créer un ticket</span>
+                  </Command.Item>
+                  <Command.Item
+                    onSelect={() => runCommand(() => router.push("/support/tickets"))}
+                    className="flex items-center gap-2.5 px-3 py-2 text-sm text-neutral-800 rounded-lg cursor-pointer aria-selected:bg-neutral-100 transition-colors"
+                  >
+                    <LifeBuoy className="w-4 h-4 text-neutral-500" />
+                    <span>Mes tickets & Historique</span>
+                  </Command.Item>
+                  <Command.Item
+                    onSelect={() => runCommand(() => router.push("/support/stats"))}
+                    className="flex items-center gap-2.5 px-3 py-2 text-sm text-neutral-800 rounded-lg cursor-pointer aria-selected:bg-neutral-100 transition-colors"
+                  >
+                    <BarChart3 className="w-4 h-4 text-neutral-500" />
+                    <span>Statistiques & Analyse du Support</span>
+                  </Command.Item>
+                </Command.Group>
               </Command.List>
+
+              <div className="px-4 py-2 border-t border-neutral-100 bg-neutral-50 text-[11px] text-neutral-500 flex items-center justify-between">
+                <span>Appuyez sur <kbd className="font-mono bg-neutral-200/80 px-1 py-0.5 rounded text-neutral-700">↵</kbd> pour ouvrir</span>
+                <span>Fermer avec <kbd className="font-mono bg-neutral-200/80 px-1 py-0.5 rounded text-neutral-700">Échap</kbd></span>
+              </div>
             </Command>
           </motion.div>
         </div>
