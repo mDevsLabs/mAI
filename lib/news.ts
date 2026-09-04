@@ -29,6 +29,30 @@ export function isVideoMedia(url?: string): boolean {
   );
 }
 
+export function cleanNewsText(text?: string): string {
+  if (!text) return '';
+  return text
+    .replace(/Ã©/g, 'é')
+    .replace(/Ã¨/g, 'è')
+    .replace(/Ã /g, 'à')
+    .replace(/Ã¢/g, 'â')
+    .replace(/Ãª/g, 'ê')
+    .replace(/Ã®/g, 'î')
+    .replace(/Ã´/g, 'ô')
+    .replace(/Ã¹/g, 'ù')
+    .replace(/Ã»/g, 'û')
+    .replace(/Ã§/g, 'ç')
+    .replace(/Ã‰/g, 'É')
+    .replace(/Ã€/g, 'À')
+    .replace(/unifiéÃ©/g, 'unifié')
+    .replace(/unifiéé/g, 'unifié')
+    .replace(/Identitéé/g, 'Identité')
+    .replace(/àà/g, 'à')
+    .replace(/conÃ§us pourà/g, 'conçus pour')
+    .replace(/conçus pourà/g, 'conçus pour')
+    .trim();
+}
+
 const newsDirectory = path.join(process.cwd(), 'docs/news');
 
 export function getNewsArticles(): NewsArticle[] {
@@ -55,12 +79,12 @@ export function getNewsArticles(): NewsArticle[] {
         const mediaSource = metadata.media || metadata.image || DEFAULT_IMAGE;
         articles.push({
           slug,
-          title: metadata.title || 'Sans titre',
-          description: metadata.description || '',
-          author: metadata.author || 'Inconnu',
+          title: cleanNewsText(metadata.title) || 'Sans titre',
+          description: cleanNewsText(metadata.description) || '',
+          author: cleanNewsText(metadata.author) || 'Inconnu',
           date: metadata.date || 'Date inconnue',
-          label: metadata.label,
-          category: metadata.category || metadata.label || 'Produits',
+          label: metadata.label ? cleanNewsText(metadata.label) : undefined,
+          category: cleanNewsText(metadata.category || metadata.label) || 'Produits',
           media: mediaSource,
           image: mediaSource,
           isVideo: isVideoMedia(mediaSource),
@@ -90,12 +114,12 @@ export function getNewsArticle(slug: string): NewsArticle | null {
       const mediaSource = metadata.media || metadata.image || DEFAULT_IMAGE;
       return {
         slug,
-        title: metadata.title || 'Sans titre',
-        description: metadata.description || '',
-        author: metadata.author || 'Inconnu',
+        title: cleanNewsText(metadata.title) || 'Sans titre',
+        description: cleanNewsText(metadata.description) || '',
+        author: cleanNewsText(metadata.author) || 'Inconnu',
         date: metadata.date || 'Date inconnue',
-        label: metadata.label,
-        category: metadata.category || metadata.label || 'Produits',
+        label: metadata.label ? cleanNewsText(metadata.label) : undefined,
+        category: cleanNewsText(metadata.category || metadata.label) || 'Produits',
         media: mediaSource,
         image: mediaSource,
         isVideo: isVideoMedia(mediaSource),

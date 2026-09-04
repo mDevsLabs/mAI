@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight, Calendar, User } from "lucide-react";
 import { NewsMedia } from "@/components/news-media";
+import { FormattedText } from "@/components/formatted-text";
 import type { NewsArticle } from "@/lib/news";
 
 const CATEGORIES = [
@@ -123,7 +124,7 @@ export function NewsClient({ articles }: { articles: NewsArticle[] }) {
                       </h2>
 
                       <p className="text-neutral-600 text-sm sm:text-base leading-relaxed line-clamp-4 font-normal">
-                        {featuredArticle.description}
+                        <FormattedText text={featuredArticle.description} />
                       </p>
                     </div>
 
@@ -184,7 +185,7 @@ export function NewsClient({ articles }: { articles: NewsArticle[] }) {
                         </h3>
 
                         <p className="text-neutral-600 text-xs sm:text-sm leading-relaxed line-clamp-3 font-normal">
-                          {article.description}
+                          <FormattedText text={article.description} />
                         </p>
                       </div>
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { ExternalLink, Terminal, Globe, Cpu, FileText, Archive, Search, Layers, Gamepad2, Code2, Users } from "lucide-react";
+import { ExternalLink, Terminal, Globe, Cpu, Archive, Search, Gamepad2, Code2, Users } from "lucide-react";
 import Link from "next/link";
 import { GithubRepoStats } from "@/components/github-repo-stats";
 import Image from "next/image";
@@ -86,132 +86,6 @@ export default function ProjectsPage() {
   ];
 
   const archivedProjects = [
-    {
-      id: "site",
-      name: "Site",
-      icon: Globe,
-      description: "Site officiel et web mAI.",
-      link: "/projects/site",
-      repo: "mDevsLabs/Site",
-      platforms: ["Web"],
-    },
-    {
-      id: "web",
-      name: "Web",
-      icon: Globe,
-      description: "Application d'IA en ligne direct et intuitive.",
-      link: "/projects/web",
-      repo: "mDevsLabs/Web",
-      platforms: ["Web"],
-    },
-    {
-      id: "coder",
-      name: "Coder",
-      icon: Code2,
-      description: "IDE IA avec agents autonomes et outils MCP.",
-      link: "/projects/coder",
-      repo: "mDevsLabs/Coder",
-      platforms: ["Desktop"],
-    },
-    {
-      id: "cli",
-      name: "CLI",
-      icon: Terminal,
-      description: "Assistant terminal et séances de codage.",
-      link: "/projects/cli",
-      repo: "mDevsLabs/CLI",
-      platforms: ["CLI"],
-    },
-    {
-      id: "pulse-web",
-      name: "Pulse - Web",
-      icon: Cpu,
-      description: "Extension Pulse pour le navigateur web.",
-      link: "/projects/pulse",
-      repo: "mDevsLabs/Pulse",
-      platforms: ["Navigateur"],
-    },
-    {
-      id: "pulse-jetbrains",
-      name: "Pulse - JetBrains",
-      icon: Cpu,
-      description: "Extension Pulse pour l'IDE JetBrains.",
-      link: "/projects/pulse",
-      repo: "mDevsLabs/Pulse",
-      platforms: ["JetBrains"],
-    },
-    {
-      id: "pulse-vscode",
-      name: "Pulse - VS Code",
-      icon: Cpu,
-      description: "Extension Pulse pour VS Code.",
-      link: "/projects/pulse",
-      repo: "mDevsLabs/Pulse",
-      platforms: ["VS Code"],
-    },
-    {
-      id: "desktop",
-      name: "Desktop",
-      icon: Layers,
-      description: "Application desktop intégrée mAI.",
-      link: "/projects/desktop",
-      repo: "mDevsLabs/Desktop",
-      platforms: ["Desktop"],
-    },
-    {
-      id: "skills",
-      name: "Skills",
-      icon: FileText,
-      description: "Compétences et agents spécialisés mAI.",
-      link: "/projects/skills",
-      repo: "mDevsLabs/Skills",
-      platforms: ["Agents"],
-    },
-    {
-      id: "plugins",
-      name: "Plugins",
-      icon: FileText,
-      description: "Écosystème de plugins mAI.",
-      link: "/projects/plugins",
-      repo: "mDevsLabs/Plugins",
-      platforms: ["Plugins"],
-    },
-    {
-      id: "api",
-      name: "API",
-      icon: Layers,
-      description: "Hub API et agrégation de modèles LLM.",
-      link: "/projects/api",
-      repo: "mDevsLabs/API",
-      platforms: ["API"],
-    },
-    {
-      id: "autre",
-      name: "Autre",
-      icon: Archive,
-      description: "Autres projets et expérimentations.",
-      link: "/projects/autre",
-      repo: "",
-      platforms: ["Divers"],
-    },
-    {
-      id: "mai-legacy",
-      name: "mAI Web (Legacy)",
-      icon: Layers,
-      description: "Ancienne version web de mAI avec intégration locale et cloud.",
-      link: "/projects/mai",
-      repo: "mDevsLabs/mAI",
-      platforms: ["Web"],
-    },
-    {
-      id: "mai-cli-legacy",
-      name: "mAI CLI (Legacy)",
-      icon: Terminal,
-      description: "Première itération de l'assistant terminal et messageries.",
-      link: "/projects/mai-cli",
-      repo: "mDevsLabs/mAI-CLI",
-      platforms: ["CLI"],
-    },
     {
       id: "msearch",
       name: "mSearch",

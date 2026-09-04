@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { NewsMedia } from "@/components/news-media";
+import { FormattedText } from "@/components/formatted-text";
 import type { NewsArticle } from "@/lib/news";
 
 const formatDate = (dateStr: string) => {
@@ -91,7 +92,7 @@ export function NewsAndUpdates({ news }: { news: NewsArticle[] }) {
                     </h3>
 
                     <p className="text-neutral-600 text-xs sm:text-sm line-clamp-3 leading-relaxed font-normal">
-                      {article.description}
+                      <FormattedText text={article.description} />
                     </p>
                   </div>
 

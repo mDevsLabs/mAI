@@ -22,6 +22,7 @@ import {
 import { motion, AnimatePresence } from "motion/react";
 import type { ChangelogsByProject } from "@/lib/changelog";
 import type { NewsArticle } from "@/lib/news";
+import { stripMarkdown } from "@/components/formatted-text";
 
 export function CommandMenu({
   open,
@@ -323,7 +324,7 @@ export function CommandMenu({
                         <FileText className="w-4 h-4 text-neutral-500 mt-0.5 shrink-0" />
                         <div>
                           <div className="font-medium text-neutral-900 line-clamp-1">{article.title}</div>
-                          <div className="text-xs text-neutral-500 line-clamp-1 mt-0.5">{article.description}</div>
+                          <div className="text-xs text-neutral-500 line-clamp-1 mt-0.5">{stripMarkdown(article.description)}</div>
                         </div>
                       </div>
                       <span className="text-[10px] font-medium px-2 py-0.5 rounded-md bg-neutral-100 text-neutral-600 shrink-0 ml-2">

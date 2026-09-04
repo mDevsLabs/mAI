@@ -1,4 +1,4 @@
-"use client";
+import { FormattedText } from "./formatted-text";
 
 interface PrintContentProps {
   title: string;
@@ -23,7 +23,9 @@ export function PrintContent({ title, content, author, date, description }: Prin
           <span>{date}</span>
         </div>
         {description && (
-          <p className="mt-4 text-lg leading-relaxed">{description}</p>
+          <p className="mt-4 text-lg leading-relaxed">
+            <FormattedText text={description} />
+          </p>
         )}
       </div>
       

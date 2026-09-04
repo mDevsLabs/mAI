@@ -275,20 +275,6 @@ export const STATIC_PROJECTS_LIST = [
     status: "archived",
     version: "1.0.1",
   },
-  {
-    category: "AI Suite",
-    created_at: "2026-01-15T00:00:00.000Z",
-    description: "Ancienne interface web de mAI.",
-    features: ["Chat Completions", "Embeddings"],
-    id: "proj_mai_legacy",
-    is_public: true,
-    label: "Archivé",
-    name: "mAI Web (Legacy)",
-    project_id: "mai",
-    repository: "https://github.com/mDevsLabs/mAI",
-    status: "archived",
-    version: "2.4.0",
-  },
 ];
 
 export const STATIC_PROJECTS_MAP: Record<string, any> = {
@@ -327,29 +313,6 @@ export const STATIC_PROJECTS_MAP: Record<string, any> = {
     project_id: "coder",
     repository: "https://github.com/mDevsLabs/Coder",
     status: "alpha",
-  },
-  mai: {
-    category: "AI Suite",
-    created_at: "2026-01-15T00:00:00.000Z",
-    description: "Ancienne interface web de mAI.",
-    is_public: true,
-    label: "Archivé",
-    name: "mAI Web (Legacy)",
-    project_id: "mai",
-    repository: "https://github.com/mDevsLabs/mAI",
-    status: "archived",
-  },
-  maicli: {
-    category: "CLI Tool",
-    created_at: "2026-02-10T00:00:00.000Z",
-    description:
-      "Interface en ligne de commande professionnelle pour l'écosystème mAI.",
-    is_public: true,
-    label: "Archivé",
-    name: "mAI CLI (Legacy)",
-    project_id: "maicli",
-    repository: "https://github.com/mDevsLabs/mAI-CLI",
-    status: "archived",
   },
   msearch: {
     category: "Search Engine",

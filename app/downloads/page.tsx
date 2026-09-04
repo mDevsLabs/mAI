@@ -55,7 +55,7 @@ const OFFICIAL_APPS: AppDownload[] = [
   },
   {
     id: "desktop",
-    name: "mAI Desktop",
+    name: "Desktop",
     tagline: "L'application native pour votre poste de travail et appareils mobiles.",
     description:
       "Accédez à la puissance de mAI avec accélération matérielle locale, multi-fenêtres et synchronisation complète de vos sessions.",
@@ -73,7 +73,7 @@ const OFFICIAL_APPS: AppDownload[] = [
   },
   {
     id: "web",
-    name: "mAI Web",
+    name: "Web",
     tagline: "L'assistant IA Web direct, accessible depuis n'importe quel navigateur.",
     description:
       "Interface web réactive et progressive pour échanger avec vos modèles, générer du code et synchroniser vos projets dans le Cloud.",
@@ -91,7 +91,7 @@ const OFFICIAL_APPS: AppDownload[] = [
   },
   {
     id: "cli",
-    name: "mAI CLI",
+    name: "CLI",
     tagline: "Discussions et sessions de codage assistées directement dans votre terminal.",
     description:
       "Outil CLI professionnel ultra-rapide pour développeurs : analyse de code, scripts automatisés et pipelines CI/CD.",
@@ -100,14 +100,14 @@ const OFFICIAL_APPS: AppDownload[] = [
     borderHover: "hover:border-emerald-500/30",
     releaseUrl: "https://github.com/mDevsLabs/CLI/releases/latest",
     terminalCommand: {
-      label: "mAI CLI (Homebrew)",
+      label: "CLI (Homebrew)",
       command: "brew install mDevsLabs/mAI-CLI/mai",
       key: "cli-brew",
     },
   },
   {
     id: "pulse",
-    name: "mAI Pulse",
+    name: "Pulse",
     tagline: "L'IA intégrée directement dans vos outils du quotidien.",
     description:
       "Ensemble d'extensions pour navigateurs et éditeurs (VS Code) pour invoquer mAI instantanément dans votre contexte de travail.",

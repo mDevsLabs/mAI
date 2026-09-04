@@ -5,6 +5,7 @@ import { ArrowLeft, Calendar, User } from "lucide-react";
 import { notFound } from "next/navigation";
 import { ShareButtons, CommentSection } from "./ArticleClient";
 import { NewsMedia } from "@/components/news-media";
+import { FormattedText } from "@/components/formatted-text";
 
 const formatDate = (dateStr: any) => {
   if (typeof dateStr !== "string") return String(dateStr || "");
@@ -77,7 +78,7 @@ export default async function ArticlePage({
 
         {article.description && (
           <p className="text-lg sm:text-xl text-neutral-600 font-normal leading-relaxed border-l-2 border-neutral-300 pl-4 py-1">
-            {article.description}
+            <FormattedText text={article.description} />
           </p>
         )}
       </header>
