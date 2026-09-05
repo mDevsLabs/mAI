@@ -18,6 +18,31 @@ function getOpenRouterApiKey(userCustomKey?: string | null): string {
   return Deno.env.get("OPENROUTER_API_KEY") || "";
 }
 
+// Modèles mAI cloud (mAI-2) : identifiant public -> modèle OpenRouter sous-jacent
+// (les alias sans préfixe 'mai/' sont acceptés pour la compatibilité)
+const MAI_CLOUD_MODEL_MAP: Record<string, string> = {
+  "mai/mai-2": "minimax/minimax-m3",
+  "mai/mai-2-mini": "deepseek/deepseek-v4-flash-0731",
+  "mai-2": "minimax/minimax-m3",
+  "mai-2-mini": "deepseek/deepseek-v4-flash-0731",
+};
+
+const MAI_UPSTREAM_MODELS = new Set(Object.values(MAI_CLOUD_MODEL_MAP));
+
+function resolveMaiUpstreamModel(modelStr: string): string | null {
+  return MAI_CLOUD_MODEL_MAP[modelStr] || null;
+}
+
+function isMaiCloudModelId(modelStr: string): boolean {
+  return modelStr in MAI_CLOUD_MODEL_MAP;
+}
+
+function extractMaiErrorCode(status: number, body: unknown): string | number {
+  const err = (body as any)?.error;
+  const code = err?.code ?? err?.type ?? err?.status;
+  return code !== undefined && code !== null && code !== "" ? code : status;
+}
+
 export function registerModelRoutes(app: Hono) {
   // ─────────────────────────────────────────────
   // GET /v1/usage & /usage
@@ -189,6 +214,36 @@ export function registerModelRoutes(app: Hono) {
     const userPlan = c.get("userPlan");
     const shouldFilterFreeOnly = !isPaidTier(userPlan);
 
+    // Modèles mAI cloud (mAI-2 / mAI-2-Mini) : listés en tête et disponibles pour tous les plans
+    const maiCloudEntries = maiModelsList
+      .filter((m) => m.cloud)
+      .map((m) => ({
+        architecture: {
+          input_modalities: ["text", "image"],
+          modality: "text+image->text",
+          output_modalities: ["text"],
+        },
+        created:
+          Math.floor(new Date(m.releaseDate).getTime() / 1000) ||
+          Math.floor(Date.now() / 1000),
+        description: m.description,
+        id: m.id,
+        maxContext: m.contextWindow,
+        maxOutput: m.maxOutputTokens,
+        name: `mDevsLabs: ${m.name}`,
+        object: "model",
+        owned_by: "mDevsLabs",
+        supported_parameters: [
+          "temperature",
+          "top_p",
+          "max_tokens",
+          "stream",
+          "stop",
+          "tools",
+          "response_format",
+        ],
+      }));
+
     try {
       const res = await fetch("https://openrouter.ai/api/v1/models");
       if (!res.ok) {
@@ -241,7 +296,7 @@ export function registerModelRoutes(app: Hono) {
         filtered.unshift(laguna);
       }
 
-      return c.json({ data: filtered, object: "list" });
+      return c.json({ data: [...maiCloudEntries, ...filtered], object: "list" });
     } catch (_err) {
       let fallback = [
         {
@@ -373,7 +428,7 @@ export function registerModelRoutes(app: Hono) {
         );
       }
 
-      return c.json({ data: fallback, object: "list" });
+      return c.json({ data: [...maiCloudEntries, ...fallback], object: "list" });
     }
   };
 
@@ -387,25 +442,25 @@ export function registerModelRoutes(app: Hono) {
   const handleGetMaiModels = (c: any) => {
     const formatted = maiModelsList.map((m) => ({
       capabilities: m.capabilities,
+      cloud: m.cloud,
       context_length: m.contextWindow,
       created:
         Math.floor(new Date(m.releaseDate).getTime() / 1000) ||
         Math.floor(Date.now() / 1000),
       description: m.description,
-      huggingface_tag: m.huggingFaceTag,
+      huggingface_tag: m.huggingFaceTag ?? null,
       id: m.id,
       license: m.license,
       max_output_tokens: m.maxOutputTokens,
       name: m.name,
       object: "model",
-      ollama_tag: m.ollamaTag,
+      ollama_tag: m.ollamaTag ?? null,
       owned_by: "mDevsLabs",
-      parameters: m.parameters,
-      recommended_hardware: m.recommendedHardware,
+      parameters: m.parameters ?? null,
+      recommended_hardware: m.recommendedHardware ?? null,
       status: m.status,
       tagline: m.tagline,
-      usable_in_cloud_chat: false,
-      version: m.version,
+      usable_in_cloud_chat: m.cloud,
     }));
     return c.json({ data: formatted, object: "list" });
   };
@@ -470,13 +525,36 @@ export function registerModelRoutes(app: Hono) {
       }
       const modelStr = String(modelRequested).toLowerCase().trim();
 
-      // Vérifier si c'est un modèle mAI (local uniquement)
-      const isMaiLocal =
-        modelStr.startsWith("mai-") ||
-        modelStr.startsWith("mdevslabs/") ||
-        modelStr.includes("mai-1.") ||
+      // Modèles mAI cloud (mAI-2 / mAI-2-Mini) : seuls modèles mAI appelables via l'API
+      const isMaiCloud = isMaiCloudModelId(modelStr);
+
+      // Modèles mAI de première génération dépréciés : plus disponibles du tout
+      const isMaiDeprecated =
         modelStr === "mai-1" ||
-        modelStr === "mai-1-light";
+        modelStr === "mai-1-light" ||
+        modelStr === "mdevslabs/mai-1" ||
+        modelStr === "mdevslabs/mai-1-light";
+
+      if (isMaiDeprecated) {
+        return c.json(
+          {
+            error: {
+              code: "model_deprecated",
+              message: `Le modèle '${modelRequested}' est déprécié et n'est plus disponible. Utilisez mAI-2 ('mai/mai-2') ou mAI-2-Mini ('mai/mai-2-mini').`,
+              param: "model",
+              type: "invalid_request_error",
+            },
+          },
+          410
+        );
+      }
+
+      // Vérifier si c'est un modèle mAI local (générations 1.5 / 1.2)
+      const isMaiLocal =
+        !isMaiCloud &&
+        (modelStr.startsWith("mai-") ||
+          modelStr.startsWith("mdevslabs/") ||
+          modelStr.includes("mai-1."));
 
       if (isMaiLocal) {
         return c.json(
@@ -496,7 +574,8 @@ export function registerModelRoutes(app: Hono) {
       const isFreeModel = modelStr.includes(":free");
 
       // Bloquer avec 403 les requêtes pour les modèles payants avec une clé ou JWT free
-      if (isFreePlan && !isFreeModel) {
+      // (les modèles mAI cloud mai/mai-2 et mai/mai-2-mini sont disponibles pour tous les plans)
+      if (isFreePlan && !isFreeModel && !isMaiCloud) {
         return c.json(
           {
             error: {
@@ -559,6 +638,12 @@ export function registerModelRoutes(app: Hono) {
       const { api_key: _ck, authorization: _ca, Authorization: _cA, ...safeBody } =
         body as Record<string, any>;
 
+      // Redirection des modèles mAI cloud vers leur modèle OpenRouter sous-jacent
+      const maiUpstreamModel = resolveMaiUpstreamModel(modelStr);
+      if (maiUpstreamModel) {
+        safeBody.model = maiUpstreamModel;
+      }
+
       const openRouterRes = await fetch(
         "https://openrouter.ai/api/v1/chat/completions",
         {
@@ -572,6 +657,30 @@ export function registerModelRoutes(app: Hono) {
           method: "POST",
         }
       );
+
+      // Si un modèle mAI (ou son fournisseur sous-jacent) renvoie une erreur,
+      // on expose un message unique à l'utilisateur.
+      if (
+        MAI_UPSTREAM_MODELS.has(String(safeBody.model)) &&
+        openRouterRes.status !== 200
+      ) {
+        let upstreamBody: unknown = null;
+        try {
+          upstreamBody = await openRouterRes.json();
+        } catch {}
+        const code = extractMaiErrorCode(openRouterRes.status, upstreamBody);
+        return c.json(
+          {
+            error: {
+              code: "mai_unavailable",
+              message: `Code : ${code} - mAI est indisponible.`,
+              param: "model",
+              type: "api_error",
+            },
+          },
+          502
+        );
+      }
 
       if (openRouterRes.status === 200) {
         try {
@@ -636,8 +745,11 @@ export function registerModelRoutes(app: Hono) {
       const isFreePlan = !isPaidTier(userPlan);
       const isFreeModel = modelStr.includes(":free");
 
+      // Les modèles mAI cloud mai/mai-2 et mai/mai-2-mini sont disponibles pour tous les plans
+      const isMaiCloudMessages = isMaiCloudModelId(modelStr);
+
       // Bloquer avec 403 les requêtes pour les modèles payants avec une clé ou JWT free
-      if (isFreePlan && !isFreeModel) {
+      if (isFreePlan && !isFreeModel && !isMaiCloudMessages) {
         return c.json(
           {
             error: {
@@ -699,6 +811,12 @@ export function registerModelRoutes(app: Hono) {
       const { api_key: _ck, authorization: _ca, Authorization: _cA, ...safeBody } =
         body as Record<string, any>;
 
+      // Redirection des modèles mAI cloud vers leur modèle OpenRouter sous-jacent
+      const maiUpstreamModel = resolveMaiUpstreamModel(modelStr);
+      if (maiUpstreamModel) {
+        safeBody.model = maiUpstreamModel;
+      }
+
       const openRouterRes = await fetch(
         "https://openrouter.ai/api/v1/chat/completions",
         {
@@ -712,6 +830,30 @@ export function registerModelRoutes(app: Hono) {
           method: "POST",
         }
       );
+
+      // Si un modèle mAI (ou son fournisseur sous-jacent) renvoie une erreur,
+      // on expose un message unique à l'utilisateur.
+      if (
+        MAI_UPSTREAM_MODELS.has(String(safeBody.model)) &&
+        openRouterRes.status !== 200
+      ) {
+        let upstreamBody: unknown = null;
+        try {
+          upstreamBody = await openRouterRes.json();
+        } catch {}
+        const code = extractMaiErrorCode(openRouterRes.status, upstreamBody);
+        return c.json(
+          {
+            error: {
+              code: "mai_unavailable",
+              message: `Code : ${code} - mAI est indisponible.`,
+              param: "model",
+              type: "api_error",
+            },
+          },
+          502
+        );
+      }
 
       if (openRouterRes.status === 200) {
         try {
@@ -775,8 +917,11 @@ export function registerModelRoutes(app: Hono) {
       const isFreePlan = !isPaidTier(userPlan);
       const isFreeModel = modelStr.includes(":free");
 
+      // Les modèles mAI cloud mai/mai-2 et mai/mai-2-mini sont disponibles pour tous les plans
+      const isMaiCloudGemini = isMaiCloudModelId(modelStr);
+
       // Bloquer avec 403 les requêtes pour les modèles payants avec une clé ou JWT free
-      if (isFreePlan && !isFreeModel) {
+      if (isFreePlan && !isFreeModel && !isMaiCloudGemini) {
         return c.json(
           {
             error: {
@@ -837,9 +982,11 @@ export function registerModelRoutes(app: Hono) {
       const { api_key: _ck, authorization: _ca, Authorization: _cA, ...safeBody } =
         body as Record<string, any>;
 
+      // Redirection des modèles mAI cloud vers leur modèle OpenRouter sous-jacent
+      const maiUpstreamModel = resolveMaiUpstreamModel(modelStr);
       const openRouterPayload = {
         ...safeBody,
-        model: body.model || modelRequested,
+        model: maiUpstreamModel || body.model || modelRequested,
       };
 
       const openRouterRes = await fetch(
@@ -855,6 +1002,29 @@ export function registerModelRoutes(app: Hono) {
           method: "POST",
         }
       );
+
+      // Si un modèle mAI (ou son fournisseur sous-jacent) renvoie une erreur,
+      // on expose un message unique à l'utilisateur.
+      if (
+        MAI_UPSTREAM_MODELS.has(String(openRouterPayload.model)) &&
+        openRouterRes.status !== 200
+      ) {
+        let upstreamBody: unknown = null;
+        try {
+          upstreamBody = await openRouterRes.json();
+        } catch {}
+        const code = extractMaiErrorCode(openRouterRes.status, upstreamBody);
+        return c.json(
+          {
+            error: {
+              code: 502,
+              message: `Code : ${code} - mAI est indisponible.`,
+              status: "UNAVAILABLE",
+            },
+          },
+          502
+        );
+      }
 
       if (openRouterRes.status === 200) {
         try {

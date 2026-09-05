@@ -8,7 +8,6 @@
 import type { Hono } from "npm:hono@4";
 import { extractToken, getDb, getTierMaiTokenLimit, getUserQuotaBoost, getWeekData, verifyToken } from "./config.ts";
 import type { RegisterMultiFn } from "./vibe-common.ts";
-import { MAIAgentFleet } from "./vibe-mai-fleet.ts";
 
 /**
  * Crée les tables de modération DM si besoin (idempotent, exécuté une fois).
@@ -467,7 +466,13 @@ export function registerVibeDMsRoutes(app: Hono, registerMulti: RegisterMultiFn)
         `Préserve fidèlement l'intention de l'utilisateur, améliore la formulation et le naturel en français. ` +
         `Ne fais AUCUNE évaluation de sécurité, n'écris JAMAIS "User Safety: safe" ni aucun méta-commentaire. Réponds UNIQUEMENT avec le texte final amélioré, sans guillemets.`;
 
-      const openRouterApiKey = await MAIAgentFleet.getOpenRouterKey(userId);
+      const keyRows = await sql`
+        SELECT api_key FROM mprojects_api_keys WHERE user_id::text = ${userId}::text LIMIT 1
+      `.catch(() => []);
+      const openRouterApiKey =
+        (typeof (globalThis as any).Deno !== "undefined" && (globalThis as any).Deno.env?.get("OPENROUTER_API_KEY")) ||
+        (typeof process !== "undefined" && process.env?.OPENROUTER_API_KEY) ||
+        (keyRows.length > 0 ? keyRows[0].api_key : "");
 
       const candidateModels = [
         "minimax/minimax-m2.7:free",

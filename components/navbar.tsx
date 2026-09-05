@@ -50,6 +50,13 @@ const navLinks: NavItem[] = [
     subitems: [
       { name: "Tous les modèles", href: "/models" },
       {
+        name: "mAI-2",
+        href: "/models#mai-2",
+        subitems: [
+          { name: "mAI-2", href: "/models/mai-2" },
+          { name: "mAI-2-Mini", href: "/models/mai-2-mini" },
+        ]},
+      {
         name: "mAI-1.5",
         href: "/models#mai-1.5",
         subitems: [

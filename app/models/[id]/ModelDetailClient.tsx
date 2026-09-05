@@ -14,6 +14,8 @@ import {
   Sparkles,
   ArrowLeft,
   Share2,
+  Cloud,
+  KeyRound,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -34,8 +36,20 @@ export function ModelDetailClient({ model }: { model: ModelInfo }) {
 
   const mainCommand = `ollama run ${model.ollamaTag}`;
   const hfCommand = `hf download ${model.ollamaTag}`;
+  const apiModelId = `mai/${model.id}`;
+  const apiCurlCommand = `curl https://mai.val.run/v1/chat/completions \\
+  -H "Authorization: Bearer $MAI_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "model": "${apiModelId}",
+    "messages": [
+      { "role": "user", "content": "Bonjour !" }
+    ]
+  }'`;
 
-  const integrations: AppIntegration[] = [
+  const integrations: AppIntegration[] | null = model.cloud
+    ? null
+    : [
     {
       id: "claude",
       name: "Claude",
@@ -180,10 +194,14 @@ export function ModelDetailClient({ model }: { model: ModelInfo }) {
         <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4">
           <div className="p-4 rounded-2xl bg-white/50 backdrop-blur-md border border-white/70 shadow-sm flex flex-col gap-1">
             <div className="flex items-center gap-2 text-slate-500 text-xs font-medium">
-              <Cpu className="w-4 h-4 text-blue-500" />
-              Paramètres
+              {model.cloud ? (
+                <Cloud className="w-4 h-4 text-purple-500" />
+              ) : (
+                <Cpu className="w-4 h-4 text-blue-500" />
+              )}
+              {model.cloud ? "Accès" : "Paramètres"}
             </div>
-            <span className="text-xl font-black text-slate-900">{model.parameters}</span>
+            <span className="text-xl font-black text-slate-900">{model.cloud ? "API mAI" : model.parameters}</span>
           </div>
 
           <div className="p-4 rounded-2xl bg-white/50 backdrop-blur-md border border-white/70 shadow-sm flex flex-col gap-1">
@@ -218,7 +236,82 @@ export function ModelDetailClient({ model }: { model: ModelInfo }) {
         </div>
       </div>
 
-      {/* Section Commandes d'installation principale */}
+      {/* Section API (modèles cloud) ou Commandes d'installation (modèles locaux) */}
+      {model.cloud ? (
+        <div className="bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 text-white rounded-3xl p-6 md:p-8 shadow-xl relative overflow-hidden border border-slate-800">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="p-3 rounded-xl bg-purple-500/20 text-purple-300 border border-purple-500/30">
+              <Cloud className="w-5 h-5" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold">Disponible via l'API mAI uniquement</h2>
+              <p className="text-xs text-slate-400">
+                Ce modèle n'est pas disponible en exécution locale. Appelez-le via l'API mAI, compatible OpenAI, avec n'importe quel forfait.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-slate-900/90 border border-slate-700/80 rounded-2xl p-4 font-mono text-sm shadow-inner">
+              <div className="flex flex-col gap-1">
+                <span className="text-slate-500 text-[10px] uppercase font-bold tracking-wider flex items-center gap-1">
+                  <KeyRound className="w-3 h-3" /> Identifiant API
+                </span>
+                <code className="text-purple-300 font-bold select-all break-all">
+                  {apiModelId}
+                </code>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <button
+                  onClick={() => handleCopy(apiModelId, "api-id", "Identifiant API")}
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 active:bg-purple-700 text-white text-xs font-semibold transition-all shadow"
+                >
+                  {copiedKey === "api-id" ? (
+                    <>
+                      <Check className="w-4 h-4 text-emerald-300" />
+                      Copié !
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-4 h-4" />
+                      Copier
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <div className="bg-slate-900/90 border border-slate-700/80 rounded-2xl p-4 shadow-inner">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="flex flex-col gap-1">
+                  <span className="text-slate-500 text-[10px] uppercase font-bold tracking-wider">Exemple d'appel (compatible OpenAI)</span>
+                  <pre className="text-blue-300 font-mono text-xs whitespace-pre overflow-x-auto max-w-full">{apiCurlCommand}</pre>
+                </div>
+                <button
+                  onClick={() => handleCopy(apiCurlCommand, "api-curl", "cURL")}
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white text-xs font-semibold transition-all shadow shrink-0"
+                >
+                  {copiedKey === "api-curl" ? (
+                    <>
+                      <Check className="w-4 h-4 text-emerald-300" />
+                      Copié !
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-4 h-4" />
+                      Copier
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <p className="text-xs text-slate-400">
+              Endpoint : <code className="text-slate-300">https://mai.val.run/v1/chat/completions</code> — disponible pour tous les plans (Free, Plus, Pro, Max), dans la limite de vos quotas hebdomadaires.
+            </p>
+          </div>
+        </div>
+      ) : (
       <div className="bg-gradient-to-br from-slate-900 via-slate-950 to-blue-950 text-white rounded-3xl p-6 md:p-8 shadow-xl relative overflow-hidden border border-slate-800">
         <div className="flex items-center gap-3 mb-4">
           <div className="p-3 rounded-xl bg-blue-500/20 text-blue-400 border border-blue-500/30">
@@ -295,8 +388,10 @@ export function ModelDetailClient({ model }: { model: ModelInfo }) {
           </div>
         </div>
       </div>
+      )}
 
       {/* Section Intégrations & Commandes de Lancement des 6 Applications */}
+      {integrations && (
       <div className="bg-white/40 backdrop-blur-md border border-white/60 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] rounded-3xl p-6 md:p-8">
         <div className="mb-6">
           <h2 className="text-2xl font-black text-slate-900 mb-2">
@@ -352,6 +447,7 @@ export function ModelDetailClient({ model }: { model: ModelInfo }) {
           ))}
         </div>
       </div>
+      )}
 
       {/* Section Documentation README Markdown */}
       {model.readmeContent && (

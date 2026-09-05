@@ -55,7 +55,13 @@ export async function POST(req: NextRequest) {
     const isFreePlan = !isPaidPlan;
     const modelName = (body.model || '').toLowerCase();
 
-    if (isFreePlan && !modelName.includes('free')) {
+    // Les modèles mAI cloud (mai/mai-2, mai/mai-2-mini et alias) sont disponibles pour tous les plans
+    const isMaiCloudModel =
+      modelName.startsWith('mai/') ||
+      modelName === 'mai-2' ||
+      modelName === 'mai-2-mini';
+
+    if (isFreePlan && !modelName.includes('free') && !isMaiCloudModel) {
       return NextResponse.json<OpenAIErrorResponse>(
         {
           error: {
@@ -70,7 +76,10 @@ export async function POST(req: NextRequest) {
     }
 
     // 2. Vérifier si le modèle est local (mAI / Ollama) ou Cloud (OpenRouter / Val Town)
-    const isLocalModel = body.model.startsWith('mDevsLabs/') || body.model.startsWith('mai-') || body.model.includes('mAI');
+    // Les modèles cloud mAI (mai/mai-2, mai-2, mai-2-mini) ne passent jamais par Ollama.
+    const isLocalModel =
+      !isMaiCloudModel &&
+      (body.model.startsWith('mDevsLabs/') || body.model.startsWith('mai-') || body.model.includes('mAI'));
     const authHeader = req.headers.get('authorization') || req.headers.get('Authorization') || '';
 
     // Si c'est un modèle cloud (ou si l'utilisateur demande directement un modèle cloud), on délègue au proxy Val Town

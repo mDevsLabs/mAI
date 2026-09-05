@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { Github, Instagram, Youtube, ArrowRight } from "lucide-react";
 import { SiOllama, SiHuggingface } from "react-icons/si";
 import Link from "next/link";
+import Image from "next/image";
 
 export function CommunitySection() {
   const socials = [
@@ -68,10 +69,10 @@ export function CommunitySection() {
         transition={{ duration: 0.4, ease: "easeOut" }}
         className="text-center max-w-2xl mx-auto mb-8"
       >
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black italic tracking-tighter uppercase text-slate-900">
-          Rejoignez la <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600">Communauté</span>
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black italic tracking-tighter uppercase text-white">
+          Rejoignez la <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">Communauté</span>
         </h2>
-        <p className="text-slate-500 text-sm sm:text-base font-light mt-1">
+        <p className="text-slate-400 text-sm sm:text-base font-light mt-1">
           Posez vos questions, échangez avec les développeurs et suivez le développement en direct.
         </p>
       </motion.div>
@@ -90,7 +91,7 @@ export function CommunitySection() {
             whileHover={{ scale: 1.08, y: -2 }}
             whileTap={{ scale: 0.95 }}
             transition={{ delay: index * 0.05, duration: 0.25 }}
-            className={`group flex items-center gap-2.5 px-4 py-3 rounded-full shadow-xs transition-all border border-white/60 ${social.bg}`}
+            className={`group flex items-center gap-2.5 px-4 py-3 rounded-full shadow-lg transition-all border border-white/15 ${social.bg}`}
             title={social.name}
           >
             <div className="shrink-0">{social.icon}</div>
@@ -111,6 +112,14 @@ export function CommunitySection() {
       >
         <div className="absolute top-0 right-0 w-72 h-72 bg-purple-500/20 rounded-full blur-[80px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-72 h-72 bg-blue-500/20 rounded-full blur-[80px] pointer-events-none" />
+        <Image
+          src="/mai-2/mai-planets.png"
+          alt=""
+          width={220}
+          height={220}
+          aria-hidden="true"
+          className="absolute -right-6 -top-6 w-40 h-40 sm:w-52 sm:h-52 object-cover rounded-full opacity-25 sm:opacity-40 pointer-events-none select-none"
+        />
 
         <h3 className="text-2xl sm:text-3xl md:text-4xl font-black italic tracking-tighter uppercase mb-3 max-w-xl leading-tight">
           Prêt à propulser votre workflow avec <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">mAI</span> ?

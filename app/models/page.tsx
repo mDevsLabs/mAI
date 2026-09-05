@@ -1,9 +1,76 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Cpu, Eye, EyeOff, Layers, Calendar, ArrowRight, Sparkles, Zap } from "lucide-react";
+import { Cpu, Eye, EyeOff, Layers, Calendar, ArrowRight, Sparkles, Zap, Cloud } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+
+type CardModel = {
+  id: string;
+  name: string;
+  num: string;
+  badge: string;
+  description: string;
+  tagline: string;
+  parameters?: string;
+  vision: boolean;
+  context: string;
+  releaseDate: string;
+  bannerImage: string;
+  squareImage: string;
+  color: string;
+  shadowHover: string;
+  borderHover: string;
+  tags: string[];
+  serieColor: string;
+  serieBg: string;
+  cloud?: boolean;
+};
+
+const models2: CardModel[] = [
+  {
+    id: "mai-2",
+    name: "mAI-2",
+    num: "01",
+    badge: "Vision • Tools • 1M",
+    description:
+      "Notre meilleur modèle, pour tous. Le modèle principal de la génération mAI-2 : raisonnement profond, codage, création et analyse multimodale (texte + images), avec un contexte pouvant atteindre 1 million de tokens.",
+    tagline: "Notre meilleur modèle. Raisonnement, codage, multimodal, 1M tokens.",
+    vision: true,
+    context: "1M tokens",
+    releaseDate: "05/09/2026",
+    bannerImage: "/mai-2/16-9-cover.png",
+    squareImage: "/mai-2/mai-2.png",
+    color: "from-purple-500 to-indigo-600",
+    shadowHover: "hover:shadow-[0_8px_32px_0_rgba(139,92,246,0.25)]",
+    borderHover: "hover:border-purple-500/40",
+    tags: ["1M Contexte", "Multimodal Texte + Images", "Raisonnement", "API mAI"],
+    serieColor: "text-purple-600",
+    serieBg: "bg-purple-500/10 border-purple-500/20",
+    cloud: true,
+  },
+  {
+    id: "mai-2-mini",
+    name: "mAI-2-Mini",
+    num: "02",
+    badge: "Vision • Tools • 1M",
+    description:
+      "La nouvelle génération mAI en version efficace et accessible. Un modèle plus léger qui conserve les fondations essentielles de mAI-2 : multimodalité texte + images et contexte de 1 million de tokens.",
+    tagline: "Efficace et accessible. Multimodal, 1M tokens.",
+    vision: true,
+    context: "1M tokens",
+    releaseDate: "05/09/2026",
+    bannerImage: "/mai-2/16-9-cover.png",
+    squareImage: "/mai-2/mai-2-mini.png",
+    color: "from-blue-500 to-cyan-500",
+    shadowHover: "hover:shadow-[0_8px_32px_0_rgba(59,130,246,0.25)]",
+    borderHover: "hover:border-blue-500/40",
+    tags: ["1M Contexte", "Multimodal Texte + Images", "Efficace", "API mAI"],
+    serieColor: "text-blue-600",
+    serieBg: "bg-blue-500/10 border-blue-500/20",
+    cloud: true,
+  },
+];
 
 const models15 = [
   {
@@ -182,7 +249,7 @@ const models1 = [
   },
 ];
 
-function ModelCard({ model, index }: { model: typeof models12[0]; index: number }) {
+function ModelCard({ model, index }: { model: CardModel; index: number }) {
   return (
     <motion.div
       key={model.id}
@@ -243,8 +310,12 @@ function ModelCard({ model, index }: { model: typeof models12[0]; index: number 
         {/* Spécifications techniques */}
         <div className="grid grid-cols-2 gap-3 mb-6 p-4 rounded-2xl bg-white/30 backdrop-blur-sm border border-white/50">
           <div className="flex items-center gap-2 text-xs font-medium text-slate-700">
-            <Cpu className="w-4 h-4 text-purple-500 shrink-0" />
-            <span>Paramètres : <strong>{model.parameters}</strong></span>
+            {model.cloud ? (
+              <Cloud className="w-4 h-4 text-purple-500 shrink-0" />
+            ) : (
+              <Cpu className="w-4 h-4 text-purple-500 shrink-0" />
+            )}
+            <span>{model.cloud ? "Accès : " : "Paramètres : "}<strong>{model.cloud ? "API mAI" : model.parameters}</strong></span>
           </div>
           <div className="flex items-center gap-2 text-xs font-medium text-slate-700">
             {model.vision ? (
@@ -301,11 +372,47 @@ export default function ModelsPage() {
           transition={{ delay: 0.1 }}
           className="text-slate-500 text-base md:text-lg font-light mt-2 md:mt-4 max-w-2xl"
         >
-          Explorez nos modèles de langage open-weights exécutables localement via Ollama. Performance, confidentialité et autonomie.
+          Découvrez mAI-2, notre meilleure génération, disponible pour tous via l'API mAI — et explorez nos modèles open-weights exécutables localement via Ollama.
         </motion.p>
       </div>
 
-      {/* ─── Section mAI-1.5 (Nouvelle Génération 1.5) ───────────────────────── */}
+      {/* ─── Section mAI-2 (Nouvelle Génération cloud) ────────────────────────── */}
+      <motion.section
+        id="mai-2"
+        className="scroll-mt-24"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+      >
+        {/* Bandeau série */}
+        <div className="flex items-center gap-3 mb-6">
+          <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-purple-500/10 via-indigo-500/10 to-blue-500/10 border border-purple-500/20 text-slate-700 text-xs font-bold uppercase tracking-wider">
+            <Cloud className="w-4 h-4 text-purple-500" />
+            Introducing mAI-2
+          </div>
+          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-purple-500 text-white text-[10px] font-black uppercase tracking-widest shadow-sm">
+            <Sparkles className="w-3 h-3" /> NEW
+          </span>
+          <div className="flex-1 h-px bg-gradient-to-r from-purple-500/20 to-transparent" />
+        </div>
+
+        <div className="mb-3">
+          <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
+            Série <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-500">mAI-2</span>
+          </h2>
+          <p className="text-slate-500 text-sm font-light mt-1 max-w-2xl">
+            Notre meilleure génération, pour tous : multimodal texte + images, jusqu'à 1 million de tokens de contexte. Disponible exclusivement via l'API mAI, pour tous les plans selon vos quotas.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
+          {models2.map((model, index) => (
+            <ModelCard key={model.id} model={model} index={index} />
+          ))}
+        </div>
+      </motion.section>
+
+      {/* ─── Section mAI-1.5 (Génération 1.5) ───────────────────────── */}
       <motion.section
         id="mai-1.5"
         className="scroll-mt-24"
@@ -317,11 +424,8 @@ export default function ModelsPage() {
         <div className="flex items-center gap-3 mb-6">
           <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-cyan-500/10 via-amber-500/10 to-indigo-500/10 border border-cyan-500/20 text-slate-700 text-xs font-bold uppercase tracking-wider">
             <Zap className="w-4 h-4 text-cyan-500" />
-            Nouvelle Génération 1.5
+            Génération 1.5
           </div>
-          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-cyan-500 text-white text-[10px] font-black uppercase tracking-widest shadow-sm">
-            <Sparkles className="w-3 h-3" /> NEW
-          </span>
           <div className="flex-1 h-px bg-gradient-to-r from-cyan-500/20 to-transparent" />
         </div>
 
@@ -396,7 +500,7 @@ export default function ModelsPage() {
             Série <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-blue-500">mAI-1</span>
           </h2>
           <p className="text-slate-500 text-sm font-light mt-1 max-w-2xl">
-            La première génération de modèles locaux mDevsLabs. Robustes, éprouvés et toujours disponibles via Ollama.
+            La première génération de modèles locaux mDevsLabs. Ces modèles sont désormais dépréciés et ne sont plus disponibles.
           </p>
         </div>
 

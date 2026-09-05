@@ -40,6 +40,7 @@ interface MAIModelAPIItem {
   version?: string;
   parameters?: string;
   status?: "active" | "beta" | "deprecated";
+  cloud?: boolean;
   context_length: number;
   max_output_tokens?: number;
   capabilities?: {
@@ -146,11 +147,12 @@ export default function ApiMaiModelsPage() {
     setOpenModelId(openModelId === id ? null : id);
   };
 
-  // Liste des séries disponibles (mAI 1.5, mAI 1.2, mAI 1.0)
+  // Liste des séries disponibles (mAI 2, mAI 1.5, mAI 1.2, mAI 1.0)
   const availableSeries = useMemo(() => {
     const set = new Set<string>();
     models.forEach((m) => {
-      if (m.id.includes("1.5")) set.add("mAI 1.5");
+      if (m.id.startsWith("mai/") || m.cloud) set.add("mAI 2");
+      else if (m.id.includes("1.5")) set.add("mAI 1.5");
       else if (m.id.includes("1.2")) set.add("mAI 1.2");
       else if (m.id.includes("1.0") || m.id.endsWith("-1")) set.add("mAI 1.0");
       else if (m.version) set.add(`mAI ${m.version}`);

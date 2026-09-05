@@ -13,7 +13,7 @@ Les points de terminaison des modèles vous permettent d'inspecter par voie logi
 
 ## 1. Catalogue Global des Modèles d'IA
 
-Renvoie la liste des modèles de langage et d'analyse compatibles avec votre clé API.
+Renvoie la liste des modèles de langage et d'analyse compatibles avec votre clé API. Les modèles mAI cloud **`mai/mai-2`** et **`mai/mai-2-mini`** sont listés en tête et disponibles pour tous les plans.
 
 ```http
 GET https://mai.val.run/v1/models
@@ -43,18 +43,25 @@ GET https://mai.val.run/v1/models
 
 ---
 
-## 2. Catalogue des Modèles Souverains mAI (Locaux)
+## 2. Catalogue des Modèles mAI (Cloud & Locaux)
 
-Renvoie les spécifications complètes de la famille des modèles propriétaires **mAI** (conçus pour l'exécution locale via Ollama / GGUF ou inférence hébergée).
+Renvoie les spécifications complètes de la famille des modèles propriétaires **mAI**. Le champ `cloud` distingue les modèles appelables via l'API mAI (`cloud: true`) des modèles conçus pour l'exécution locale via Ollama / GGUF (`cloud: false`). Les modèles `status: "deprecated"` ne sont plus disponibles.
 
 ```http
 GET https://mai.val.run/v1/models/mai
 ```
 
-### Modèles Principaux de la Gamme
+### Génération cloud (API mAI uniquement)
+- **`mai/mai-2`** : notre meilleur modèle. Raisonnement, codage, création, multimodal texte + images, 1M tokens de contexte. Disponible pour tous les plans.
+- **`mai/mai-2-mini`** : la nouvelle génération en version efficace et accessible. Multimodal texte + images, 1M tokens de contexte. Disponible pour tous les plans.
+
+Ces modèles s'appellent directement via `/v1/chat/completions` avec leur identifiant API. Si le modèle est momentanément indisponible, l'API renvoie : `Code : {CODE} - mAI est indisponible.`
+
+### Générations locales (Ollama / GGUF)
 - **`mai-1.5-light`** (4B Multimodal) : Fenêtre de 262k tokens, vision native, thinking et appels d'outils.
 - **`mai-1.5-apex`** (9B Raisonnement) : Modèle d'élite pour la programmation et l'analyse logique avancée.
 - **`mai-1.5-opal`** (27B Expert) : L'équilibre parfait entre vélocité et puissance cognitive pour entreprises.
+- **`mai-1`, `mai-1-light`** : première génération, désormais **dépréciée** et plus disponible.
 
 ---
 

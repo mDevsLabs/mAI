@@ -6,17 +6,18 @@ export interface MAIModelDetail {
     jsonOutput: boolean;
     functionCalling: boolean;
   };
+  cloud: boolean;
   contextWindow: number;
   description: string;
-  huggingFaceTag: string;
+  huggingFaceTag?: string;
   id: string;
   license: string;
   maxOutputTokens: number;
   multimodal: boolean;
   name: string;
-  ollamaTag: string;
-  parameters: string;
-  recommendedHardware: {
+  ollamaTag?: string;
+  parameters?: string;
+  recommendedHardware?: {
     minVram: string;
     recommendedVram: string;
     ram: string;
@@ -24,7 +25,6 @@ export interface MAIModelDetail {
   releaseDate: string;
   status: "active" | "beta" | "deprecated";
   tagline: string;
-  version: string;
   vision: boolean;
 }
 
@@ -37,6 +37,53 @@ export const maiModelsList: MAIModelDetail[] = [
       reasoning: true,
       vision: true,
     },
+    cloud: true,
+    contextWindow: 1_048_576,
+    description:
+      "Modèle principal de la génération mAI-2, conçu pour les tâches les plus exigeantes : raisonnement profond, codage, création et analyse multimodale (texte et images), avec un contexte pouvant atteindre 1 million de tokens. Disponible exclusivement via l'API mAI.",
+    id: "mai/mai-2",
+    license: "Propriétaire",
+    maxOutputTokens: 65_536,
+    multimodal: true,
+    name: "mAI-2",
+    releaseDate: "2026-09-05",
+    status: "active",
+    tagline:
+      "Notre meilleur modèle, pour tous. Raisonnement, codage, création, multimodal texte + images et 1M tokens de contexte. API mAI uniquement.",
+    vision: true,
+  },
+  {
+    capabilities: {
+      coding: true,
+      functionCalling: true,
+      jsonOutput: true,
+      reasoning: true,
+      vision: true,
+    },
+    cloud: true,
+    contextWindow: 1_048_576,
+    description:
+      "Modèle léger de la génération mAI-2, pensé pour offrir une expérience rapide et accessible tout en conservant les fondations essentielles de la nouvelle génération : multimodalité texte et images et contexte pouvant atteindre 1 million de tokens. Disponible exclusivement via l'API mAI.",
+    id: "mai/mai-2-mini",
+    license: "Propriétaire",
+    maxOutputTokens: 32_768,
+    multimodal: true,
+    name: "mAI-2-Mini",
+    releaseDate: "2026-09-05",
+    status: "active",
+    tagline:
+      "La nouvelle génération mAI en version efficace et accessible. Multimodal texte + images, 1M tokens de contexte. API mAI uniquement.",
+    vision: true,
+  },
+  {
+    capabilities: {
+      coding: true,
+      functionCalling: true,
+      jsonOutput: true,
+      reasoning: true,
+      vision: true,
+    },
+    cloud: false,
     contextWindow: 262_144,
     description:
       "Modèle léger de 4 milliards de paramètres conçu pour une agilité maximale sur machines personnelles avec vision intégrée, capacité de raisonnement (thinking) et gestion avancée des appels d'outils (tools).",
@@ -57,7 +104,6 @@ export const maiModelsList: MAIModelDetail[] = [
     status: "active",
     tagline:
       "Assistant IA local ultra-rapide et multimodal. Vision intégrée, raisonnement (thinking) et appels d'outils (tools).",
-    version: "1.5.0",
     vision: true,
   },
   {
@@ -68,6 +114,7 @@ export const maiModelsList: MAIModelDetail[] = [
       reasoning: true,
       vision: true,
     },
+    cloud: false,
     contextWindow: 262_144,
     description:
       "Modèle d'élite de 9 milliards de paramètres offrant des performances d'analyse logique et de programmation exceptionnelles, avec support natif du raisonnement profond (thinking), de la vision et des appels d'outils.",
@@ -88,7 +135,6 @@ export const maiModelsList: MAIModelDetail[] = [
     status: "active",
     tagline:
       "Le haut de gamme absolu de la famille mAI. Puissance maximale, vision multimodale, raisonnement complexe et tools.",
-    version: "1.5.0",
     vision: true,
   },
   {
@@ -99,6 +145,7 @@ export const maiModelsList: MAIModelDetail[] = [
       reasoning: true,
       vision: true,
     },
+    cloud: false,
     contextWindow: 262_144,
     description:
       "Modèle 27B polyvalent et surpuissant pour postes de travail et serveurs locaux, réunissant vision multimodale, raisonnement étape par étape et intégration fluide des API et outils externes.",
@@ -119,7 +166,6 @@ export const maiModelsList: MAIModelDetail[] = [
     status: "active",
     tagline:
       "L'équilibre parfait entre haute intelligence et vélocité. Multimodal 27B avec vision, thinking et tools.",
-    version: "1.5.0",
     vision: true,
   },
   {
@@ -130,6 +176,7 @@ export const maiModelsList: MAIModelDetail[] = [
       reasoning: true,
       vision: true,
     },
+    cloud: false,
     contextWindow: 262_144,
     description:
       "Modèle léger de 3 milliards de paramètres conçu pour une exécution ultra-rapide sur laptops et machines personnelles avec accélération vision intégrée.",
@@ -150,7 +197,6 @@ export const maiModelsList: MAIModelDetail[] = [
     status: "active",
     tagline:
       "Assistant IA local ultra-rapide et multimodal. Légèreté maximale, vision intégrée.",
-    version: "1.2.0",
     vision: true,
   },
   {
@@ -161,6 +207,7 @@ export const maiModelsList: MAIModelDetail[] = [
       reasoning: true,
       vision: true,
     },
+    cloud: false,
     contextWindow: 262_144,
     description:
       "Modèle phare de 9 milliards de paramètres offrant un raisonnement logique complexe, des compétences en développement logiciel et une analyse d'images de haute précision.",
@@ -181,7 +228,6 @@ export const maiModelsList: MAIModelDetail[] = [
     status: "active",
     tagline:
       "Le top tier de la famille mAI-1.2. Performances maximales, vision et raisonnement avancé.",
-    version: "1.2.0",
     vision: true,
   },
   {
@@ -192,6 +238,7 @@ export const maiModelsList: MAIModelDetail[] = [
       reasoning: true,
       vision: false,
     },
+    cloud: false,
     contextWindow: 262_144,
     description:
       "Modèle 33B polyvalent pour serveurs locaux et postes de travail spécialisés, offrant un équilibre exceptionnel pour la rédaction, la programmation et l'analyse documentaire.",
@@ -212,7 +259,6 @@ export const maiModelsList: MAIModelDetail[] = [
     status: "active",
     tagline:
       "Le sweet spot parfait entre vitesse et intelligence élevée. Équilibré et fluide.",
-    version: "1.2.0",
     vision: false,
   },
   {
@@ -223,6 +269,7 @@ export const maiModelsList: MAIModelDetail[] = [
       reasoning: true,
       vision: true,
     },
+    cloud: false,
     contextWindow: 262_144,
     description:
       "Première génération du modèle mAI 12B avec support multimodal original et capacités avancées en résolution de problèmes.",
@@ -240,10 +287,9 @@ export const maiModelsList: MAIModelDetail[] = [
       recommendedVram: "12GB",
     },
     releaseDate: "2026-07-11",
-    status: "active",
+    status: "deprecated",
     tagline:
       "Assistant IA local multimodal puissant de 12B paramètres pour le raisonnement et le code.",
-    version: "1.0.0",
     vision: true,
   },
   {
@@ -254,6 +300,7 @@ export const maiModelsList: MAIModelDetail[] = [
       reasoning: true,
       vision: false,
     },
+    cloud: false,
     contextWindow: 131_072,
     description:
       "Version 3B texte de première génération optimisée pour une empreinte mémoire minimale.",
@@ -271,9 +318,8 @@ export const maiModelsList: MAIModelDetail[] = [
       recommendedVram: "4GB",
     },
     releaseDate: "2026-07-11",
-    status: "active",
+    status: "deprecated",
     tagline: "Assistant IA local ultraléger et rapide de 3B paramètres.",
-    version: "1.0.0",
     vision: false,
   },
 ];

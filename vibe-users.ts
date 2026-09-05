@@ -213,7 +213,10 @@ export function registerVibeUsersRoutes(app: Hono, registerMulti: RegisterMultiF
       try {
         posts = await sql`
           SELECT p.*, pr.display_name, pr.avatar_url, u.username, u.tier,
-                 (COALESCE(u.is_verified, FALSE) OR LOWER(COALESCE(u.tier, '')) IN ('plus', 'pro', 'max')) as is_verified
+                 (COALESCE(u.is_verified, FALSE) OR LOWER(COALESCE(u.tier, '')) IN ('plus', 'pro', 'max')) as is_verified,
+                 ${currentUserId ? sql`(SELECT COUNT(*) FROM post_interactions WHERE post_id = p.id AND user_id = ${currentUserId} AND interaction_type = 'like') > 0` : sql`FALSE`} as has_liked,
+                 ${currentUserId ? sql`(SELECT COUNT(*) FROM post_interactions WHERE post_id = p.id AND user_id = ${currentUserId} AND interaction_type = 'repost') > 0` : sql`FALSE`} as has_reposted,
+                 ${currentUserId ? sql`(SELECT COUNT(*) FROM bookmarks WHERE post_id = p.id AND user_id = ${currentUserId}) > 0` : sql`FALSE`} as has_bookmarked
           FROM posts p
           JOIN users u ON u.id = p.author_id
           LEFT JOIN profiles pr ON pr.user_id = u.id
@@ -269,6 +272,77 @@ export function registerVibeUsersRoutes(app: Hono, registerMulti: RegisterMultiF
   };
 
   registerMulti("get", ["/api/vibe/profiles/:username", "/vibe/profiles/:username", "/v1/profiles/:username", "/profiles/:username", "/profile/:username"], handleGetProfile);
+
+  // 4b. GET USER LIKED POSTS
+  const handleGetUserLikedPosts = async (c: any) => {
+    try {
+      const rawParam = c.req.param("username") || "";
+      const username = rawParam.toLowerCase().trim().replace(/^@/, "");
+      const sql = getDb();
+
+      let currentUserId: number | null = null;
+      const token = extractToken(c.req.raw);
+      if (token) {
+        try {
+          const payload = await verifyToken(token);
+          currentUserId = Number(payload.sub || (payload as any).id);
+        } catch {}
+      }
+
+      const userRows = await sql`
+        SELECT id FROM users WHERE LOWER(username) = ${username} LIMIT 1
+      `;
+      if (userRows.length === 0) {
+        return c.json({ error: "Utilisateur introuvable." }, 404);
+      }
+      const targetUserId = userRows[0].id;
+
+      const posts = await sql`
+        SELECT p.*, pr.display_name, pr.avatar_url, u.username, u.tier,
+               (COALESCE(u.is_verified, FALSE) OR LOWER(COALESCE(u.tier, '')) IN ('plus', 'pro', 'max')) as is_verified,
+               ${currentUserId ? sql`(SELECT COUNT(*) FROM post_interactions WHERE post_id = p.id AND user_id = ${currentUserId} AND interaction_type = 'like') > 0` : sql`FALSE`} as has_liked,
+               ${currentUserId ? sql`(SELECT COUNT(*) FROM post_interactions WHERE post_id = p.id AND user_id = ${currentUserId} AND interaction_type = 'repost') > 0` : sql`FALSE`} as has_reposted,
+               ${currentUserId ? sql`(SELECT COUNT(*) FROM bookmarks WHERE post_id = p.id AND user_id = ${currentUserId}) > 0` : sql`FALSE`} as has_bookmarked
+        FROM post_interactions pi
+        JOIN posts p ON p.id = pi.post_id
+        JOIN users u ON u.id = p.author_id
+        LEFT JOIN profiles pr ON pr.user_id = u.id
+        WHERE pi.user_id = ${targetUserId} AND pi.interaction_type = 'like' AND p.visibility = 'public'
+        ORDER BY pi.created_at DESC
+        LIMIT 40
+      `;
+
+      if (posts.length > 0) {
+        const postIds = posts.map((p) => p.id);
+        const allMedia = await sql`
+          SELECT post_id, url, media_type, alt_text
+          FROM media_assets
+          WHERE post_id = ANY(${postIds}::uuid[])
+        `;
+        const mediaByPost = new Map<string, any[]>();
+        for (const m of allMedia) {
+          const key = String(m.post_id);
+          if (!mediaByPost.has(key)) mediaByPost.set(key, []);
+          mediaByPost.get(key)!.push({ url: m.url, media_type: m.media_type, alt_text: m.alt_text });
+        }
+        for (const p of posts) {
+          p.media_assets = mediaByPost.get(String(p.id)) || [];
+        }
+      }
+
+      return c.json({ posts });
+    } catch (err: any) {
+      console.error("[Get User Liked Posts] Erreur:", err);
+      return c.json({ error: "Erreur récupération des likes." }, 500);
+    }
+  };
+
+  registerMulti("get", [
+    "/api/vibe/profiles/:username/likes",
+    "/vibe/profiles/:username/likes",
+    "/v1/profiles/:username/likes",
+    "/profiles/:username/likes",
+  ], handleGetUserLikedPosts);
 
   // 5. UPDATE PROFILE
   const handleUpdateProfile = async (c: any) => {

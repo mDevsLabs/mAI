@@ -14,10 +14,23 @@ import {
   verifyVerificationCode,
 } from "./config.ts";
 import { sendVerificationEmail } from "./email.ts";
+import { createRegisterMulti } from "./vibe-common.ts";
 
 export function registerAuthRoutes(app: Hono) {
+  const registerMulti = createRegisterMulti(app);
+
+  // GET /register info endpoint (évite 404 lors des tests au navigateur)
+  registerMulti("get", ["/register", "/v1/register", "/api/register", "/api/vibe/register"], (c) => {
+    return c.json({
+      service: "mAI Vibe Auth",
+      endpoint: "/register",
+      method: "POST",
+      description: "Pour créer un compte, envoyez une requête HTTP POST avec { email, username, password } en JSON.",
+    });
+  });
+
   // POST /register
-  app.post("/register", async (c) => {
+  registerMulti("post", ["/register", "/v1/register", "/api/register", "/api/vibe/register"], async (c) => {
     try {
       // Anti-abus : 5 inscriptions / IP / 15 min
       if (!rateLimit(`register:${clientIp(c)}`, 5, 15 * 60_000)) {
@@ -28,39 +41,45 @@ export function registerAuthRoutes(app: Hono) {
         return c.json({ error: "Champs manquants." }, 400);
       }
 
+      const cleanEmail = String(email).trim().toLowerCase();
+      const cleanUsername = String(username).trim().toLowerCase().replace(/^@/, "").replace(/[^a-z0-9_]/g, "");
+
       const sql = getDb();
       const existing =
-        await sql`SELECT id FROM users WHERE email = ${email} OR username = ${username} LIMIT 1`;
+        await sql`SELECT id FROM users WHERE LOWER(email) = ${cleanEmail} OR LOWER(username) = ${cleanUsername} LIMIT 1`;
       if (existing.length > 0) {
         return c.json({ error: "Email ou nom d'utilisateur déjà pris." }, 400);
       }
 
-      const code = await generateVerificationCode(email, "register");
-      await sendVerificationEmail(email, code, "register");
+      const code = await generateVerificationCode(cleanEmail, "register");
+      await sendVerificationEmail(cleanEmail, code, "register");
 
-      return c.json({ email, status: "verification_required", success: true });
+      return c.json({ email: cleanEmail, status: "verification_required", success: true });
     } catch (err: any) {
       console.error("Register Error:", err);
-      return c.json({ error: "Erreur serveur." }, 500);
+      return c.json({ error: err?.message || "Erreur serveur." }, 500);
     }
   });
 
   // POST /verify-register
-  app.post("/verify-register", async (c) => {
+  registerMulti("post", ["/verify-register", "/v1/verify-register", "/api/verify-register", "/api/vibe/verify-register"], async (c) => {
     try {
       const { email, username, password, code } = await c.req.json();
       if (!email || !username || !password || !code) {
         return c.json({ error: "Champs manquants." }, 400);
       }
 
-      const isValid = await verifyVerificationCode(email, code, "register");
+      const cleanEmail = String(email).trim().toLowerCase();
+      const cleanUsername = String(username).trim().toLowerCase().replace(/^@/, "").replace(/[^a-z0-9_]/g, "");
+
+      const isValid = await verifyVerificationCode(cleanEmail, code, "register");
       if (!isValid) {
         return c.json({ error: "Code invalide ou expiré." }, 400);
       }
 
       const sql = getDb();
       const existing =
-        await sql`SELECT id FROM users WHERE email = ${email} OR username = ${username} LIMIT 1`;
+        await sql`SELECT id FROM users WHERE LOWER(email) = ${cleanEmail} OR LOWER(username) = ${cleanUsername} LIMIT 1`;
       if (existing.length > 0) {
         return c.json({ error: "Email ou nom d'utilisateur déjà pris." }, 400);
       }
@@ -69,7 +88,7 @@ export function registerAuthRoutes(app: Hono) {
 
       const result = await sql`
         INSERT INTO users (email, username, password_hash, tier)
-        VALUES (${email}, ${username}, ${hash}, 'Free')
+        VALUES (${cleanEmail}, ${cleanUsername}, ${hash}, 'Free')
         RETURNING id, tier
       `;
 
@@ -96,34 +115,66 @@ export function registerAuthRoutes(app: Hono) {
       return c.json({ success: true, tier: user.tier, token });
     } catch (err: any) {
       console.error("Verify Register Error:", err);
-      return c.json({ error: "Erreur serveur." }, 500);
+      return c.json({ error: err?.message || "Erreur serveur." }, 500);
     }
   });
 
+  // GET /login info endpoint (évite 404 lors des tests au navigateur)
+  registerMulti("get", ["/login", "/v1/login", "/api/login", "/api/vibe/login"], (c) => {
+    return c.json({
+      service: "mAI Vibe Auth",
+      endpoint: "/login",
+      method: "POST",
+      description: "Pour vous connecter, envoyez une requête HTTP POST avec { identifier, password } en JSON.",
+    });
+  });
+
   // POST /login
-  app.post("/login", async (c) => {
+  registerMulti("post", ["/login", "/v1/login", "/api/login", "/api/vibe/login"], async (c) => {
+    let body;
+    try {
+      body = await c.req.json();
+    } catch (err: any) {
+      return c.json({ error: "Requête JSON invalide (vérifiez les guillemets double de votre payload)." }, 400);
+    }
     try {
       // Anti brute-force : 10 tentatives / IP / 5 min
       if (!rateLimit(`login:${clientIp(c)}`, 10, 5 * 60_000)) {
         return c.json({ error: "Trop de tentatives. Réessayez plus tard." }, 429);
       }
-      const { email, password, identifier } = await c.req.json();
+      const { email, password, identifier } = body;
       const loginId = (identifier || email || "").trim();
       if (!loginId || !password) {
         return c.json({ error: "Champs manquants." }, 400);
       }
 
+      const cleanId = loginId.toLowerCase();
+      const cleanUser = cleanId.replace(/^@/, "");
+
       const sql = getDb();
       const users =
-        await sql`SELECT id, email, password_hash, tier, is_blocked FROM users WHERE email = ${loginId} OR username = ${loginId} OR phone = ${loginId} LIMIT 1`;
+        await sql`
+          SELECT id, email, username, password_hash, tier, is_blocked 
+          FROM users 
+          WHERE LOWER(email) = ${cleanId} 
+             OR LOWER(username) = ${cleanUser} 
+             OR phone = ${loginId} 
+          LIMIT 1
+        `;
       if (users.length === 0) {
-        return c.json({ error: "Identifiants invalides." }, 401);
+        return c.json({ 
+          error: "Aucun compte n'a été trouvé avec cet identifiant ou cet e-mail. Avez-vous créé votre compte ?", 
+          accountNotFound: true 
+        }, 401);
       }
 
       const user = users[0];
       const match = await bcrypt.compare(password, user.password_hash);
       if (!match) {
-        return c.json({ error: "Identifiants invalides." }, 401);
+        return c.json({ 
+          error: "Mot de passe incorrect pour ce compte. Veuillez vérifier votre saisie.", 
+          invalidPassword: true 
+        }, 401);
       }
 
       // Compte bloqué par un administrateur : refus explicite (403)
@@ -143,23 +194,39 @@ export function registerAuthRoutes(app: Hono) {
         success: true,
       });
     } catch (err: any) {
-      console.error("Login Error:", err);
-      return c.json({ error: "Erreur serveur." }, 500);
+      console.error("Login Error:", err?.message || err, err?.stack);
+      return c.json({ error: err?.message || "Erreur serveur." }, 500);
     }
   });
 
   // POST /verify-login
-  app.post("/verify-login", async (c) => {
+  registerMulti("post", ["/verify-login", "/v1/verify-login", "/api/verify-login", "/api/vibe/verify-login"], async (c) => {
+    let body;
     try {
-      const { email, code, identifier } = await c.req.json();
+      body = await c.req.json();
+    } catch (err: any) {
+      return c.json({ error: "Requête JSON invalide (vérifiez les guillemets de votre payload)." }, 400);
+    }
+    
+    try {
+      const { email, code, identifier } = body;
       const loginId = (email || identifier || "").trim();
       if (!loginId || !code) {
         return c.json({ error: "Champs manquants." }, 400);
       }
 
+      const cleanId = loginId.toLowerCase();
+      const cleanUser = cleanId.replace(/^@/, "");
+
       const sql = getDb();
       const users =
-        await sql`SELECT id, tier, is_blocked, email FROM users WHERE email = ${loginId} OR username = ${loginId} LIMIT 1`;
+        await sql`
+          SELECT id, tier, is_blocked, email, username 
+          FROM users 
+          WHERE LOWER(email) = ${cleanId} 
+             OR LOWER(username) = ${cleanUser} 
+          LIMIT 1
+        `;
       if (users.length === 0) {
         return c.json({ error: "Utilisateur introuvable." }, 404);
       }
@@ -264,12 +331,12 @@ export function registerAuthRoutes(app: Hono) {
       return c.json({ success: true, tier: user.tier, token });
     } catch (err: any) {
       console.error("Verify Login Error:", err);
-      return c.json({ error: "Erreur serveur." }, 500);
+      return c.json({ error: err?.message || "Erreur serveur." }, 500);
     }
   });
 
   // POST /resend-code
-  app.post("/resend-code", async (c) => {
+  registerMulti("post", ["/resend-code", "/v1/resend-code", "/api/resend-code", "/api/vibe/resend-code"], async (c) => {
     try {
       const { email, action } = await c.req.json();
       if (!email || !action) {
@@ -301,7 +368,7 @@ export function registerAuthRoutes(app: Hono) {
       return c.json({ success: true });
     } catch (err: any) {
       console.error("Resend Code Error:", err);
-      return c.json({ error: "Erreur serveur." }, 500);
+      return c.json({ error: err?.message || "Erreur serveur." }, 500);
     }
   });
 
@@ -475,7 +542,7 @@ export function registerAuthRoutes(app: Hono) {
       });
     } catch (err: any) {
       console.error("Verify-Code error:", err);
-      return c.json({ error: "Erreur serveur." }, 500);
+      return c.json({ error: err?.message || "Erreur serveur." }, 500);
     }
   });
 
@@ -661,7 +728,7 @@ export function registerAuthRoutes(app: Hono) {
       return c.json({ email: email.trim(), success: true });
     } catch (err: any) {
       console.error("verify-new-email Error:", err);
-      return c.json({ error: "Erreur serveur." }, 500);
+      return c.json({ error: err?.message || "Erreur serveur." }, 500);
     }
   });
 
@@ -689,7 +756,7 @@ export function registerAuthRoutes(app: Hono) {
       return c.json({ email, success: true });
     } catch (err: any) {
       console.error("request-delete-account Error:", err);
-      return c.json({ error: "Erreur serveur." }, 500);
+      return c.json({ error: err?.message || "Erreur serveur." }, 500);
     }
   });
 
@@ -748,7 +815,7 @@ export function registerAuthRoutes(app: Hono) {
       return c.json({ success: true });
     } catch (err: any) {
       console.error("confirm-delete-account Error:", err);
-      return c.json({ error: "Erreur serveur." }, 500);
+      return c.json({ error: err?.message || "Erreur serveur." }, 500);
     }
   });
 
@@ -829,7 +896,7 @@ export function registerAuthRoutes(app: Hono) {
       return c.json({ keys, success: true });
     } catch (err: any) {
       console.error("Erreur API Keys:", err);
-      return c.json({ error: "Erreur serveur." }, 500);
+      return c.json({ error: err?.message || "Erreur serveur." }, 500);
     }
   });
 }

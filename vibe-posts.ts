@@ -124,23 +124,13 @@ export function registerVibePostsRoutes(app: Hono, registerMulti: RegisterMultiF
             WHERE (
               p.author_id = ${currentUserId}
               OR p.author_id IN (SELECT following_id FROM follows WHERE follower_id = ${currentUserId})
-              OR p.visibility = 'public'
             ) ${cursorFilter(currentUserId)}
             ORDER BY p.published_at DESC, p.id DESC
             LIMIT ${PAGE_SIZE}
           `;
         } else {
-          posts = await sql`
-            SELECT p.*, pr.display_name, pr.avatar_url, u.username, u.tier,
-                   (COALESCE(u.is_verified, FALSE) OR LOWER(COALESCE(u.tier, '')) IN ('plus', 'pro', 'max')) as is_verified,
-                   FALSE as has_liked, FALSE as has_reposted, FALSE as has_bookmarked
-            FROM posts p
-            JOIN users u ON u.id = p.author_id
-            LEFT JOIN profiles pr ON pr.user_id = u.id
-            WHERE p.visibility = 'public' ${cursorFilter(currentUserId)}
-            ORDER BY p.published_at DESC, p.id DESC
-            LIMIT ${PAGE_SIZE}
-          `;
+          // Visiteur non connecté : aucun abonnement
+          posts = [];
         }
 
         await fetchMedia(posts);
@@ -477,6 +467,26 @@ export function registerVibePostsRoutes(app: Hono, registerMulti: RegisterMultiF
 
       await sql`UPDATE profiles SET posts_count = posts_count + 1 WHERE user_id = ${userId}`;
 
+      // Détection et notification des mentions @username dans les publications
+      try {
+        const mentionMatches = Array.from(new Set(content.match(/@([a-zA-Z0-9_]{1,30})/g) || [])).map((m: string) => m.slice(1).toLowerCase());
+        if (mentionMatches.length > 0) {
+          const mentionedUsers = await sql`
+            SELECT id, username FROM users
+            WHERE LOWER(username) = ANY(${mentionMatches}) AND id <> ${userId}
+          `;
+          const snippet = content.length > 45 ? `${content.slice(0, 45)}…` : content;
+          for (const u of mentionedUsers) {
+            await sql`
+              INSERT INTO notifications (recipient_id, actor_id, type, post_id, message)
+              VALUES (${u.id}, ${userId}, 'mention', ${newPost.id}::uuid, ${`vous a mentionné dans une publication : « ${snippet} »`})
+            `.catch(() => {});
+          }
+        }
+      } catch (mentionErr) {
+        console.warn("[Vibe API] Erreur notification mention post:", mentionErr);
+      }
+
       const userRow = await sql`SELECT username FROM users WHERE id = ${userId} LIMIT 1`;
       const profileRow = await sql`SELECT display_name, avatar_url FROM profiles WHERE user_id = ${userId} LIMIT 1`;
 
@@ -598,16 +608,18 @@ export function registerVibePostsRoutes(app: Hono, registerMulti: RegisterMultiF
         const postAuthor = await sql`SELECT author_id, content FROM posts WHERE id = ${postId}::uuid LIMIT 1`;
         if (postAuthor.length > 0) {
           const recipientId = Number(postAuthor[0].author_id);
-          const rawContent = (postAuthor[0].content || "").trim();
-          const snippet = rawContent ? ` : « ${rawContent.slice(0, 45)}${rawContent.length > 45 ? '…' : ''} »` : '';
-          const msg = recipientId === userId ? `Vous avez aimé votre publication${snippet}` : `a aimé votre publication${snippet}`;
-          try {
-            await sql`
-              INSERT INTO notifications (recipient_id, actor_id, type, post_id, message)
-              VALUES (${recipientId}, ${userId}, 'like', ${postId}::uuid, ${msg})
-            `;
-          } catch (err) {
-            console.error("[Like Notification Error]:", err);
+          if (recipientId !== userId) {
+            const rawContent = (postAuthor[0].content || "").trim();
+            const snippet = rawContent ? ` : « ${rawContent.slice(0, 45)}${rawContent.length > 45 ? '…' : ''} »` : '';
+            const msg = `a aimé votre publication${snippet}`;
+            try {
+              await sql`
+                INSERT INTO notifications (recipient_id, actor_id, type, post_id, message)
+                VALUES (${recipientId}, ${userId}, 'like', ${postId}::uuid, ${msg})
+              `;
+            } catch (err) {
+              console.error("[Like Notification Error]:", err);
+            }
           }
         }
 
@@ -656,16 +668,18 @@ export function registerVibePostsRoutes(app: Hono, registerMulti: RegisterMultiF
         const postAuthor = await sql`SELECT author_id, content FROM posts WHERE id = ${postId}::uuid LIMIT 1`;
         if (postAuthor.length > 0) {
           const recipientId = Number(postAuthor[0].author_id);
-          const rawContent = (postAuthor[0].content || "").trim();
-          const snippet = rawContent ? ` : « ${rawContent.slice(0, 45)}${rawContent.length > 45 ? '…' : ''} »` : '';
-          const msg = recipientId === userId ? `Vous avez republié votre publication${snippet}` : `a republié votre publication${snippet}`;
-          try {
-            await sql`
-              INSERT INTO notifications (recipient_id, actor_id, type, post_id, message)
-              VALUES (${recipientId}, ${userId}, 'repost', ${postId}::uuid, ${msg})
-            `;
-          } catch (err) {
-            console.error("[Repost Notification Error]:", err);
+          if (recipientId !== userId) {
+            const rawContent = (postAuthor[0].content || "").trim();
+            const snippet = rawContent ? ` : « ${rawContent.slice(0, 45)}${rawContent.length > 45 ? '…' : ''} »` : '';
+            const msg = `a republié votre publication${snippet}`;
+            try {
+              await sql`
+                INSERT INTO notifications (recipient_id, actor_id, type, post_id, message)
+                VALUES (${recipientId}, ${userId}, 'repost', ${postId}::uuid, ${msg})
+              `;
+            } catch (err) {
+              console.error("[Repost Notification Error]:", err);
+            }
           }
         }
 
@@ -840,9 +854,31 @@ export function registerVibePostsRoutes(app: Hono, registerMulti: RegisterMultiF
         }
         if (notifyId && notifyId !== userId) {
           await sql`
-            INSERT INTO notifications (recipient_id, actor_id, type, message)
-            VALUES (${notifyId}, ${userId}, 'reply', ${notifMsg})
+            INSERT INTO notifications (recipient_id, actor_id, type, post_id, comment_id, message)
+            VALUES (${notifyId}, ${userId}, 'reply', ${postId}::uuid, ${inserted[0]?.id}::uuid, ${notifMsg})
           `;
+        }
+
+        // Détection et notification des mentions @username dans les commentaires
+        try {
+          const mentionMatches = Array.from(new Set(content.match(/@([a-zA-Z0-9_]{1,30})/g) || [])).map((m: string) => m.slice(1).toLowerCase());
+          if (mentionMatches.length > 0) {
+            const mentionedUsers = await sql`
+              SELECT id, username FROM users
+              WHERE LOWER(username) = ANY(${mentionMatches}) AND id <> ${userId}
+            `;
+            const snippet = content.length > 45 ? `${content.slice(0, 45)}…` : content;
+            for (const u of mentionedUsers) {
+              if (Number(u.id) !== notifyId) {
+                await sql`
+                  INSERT INTO notifications (recipient_id, actor_id, type, post_id, comment_id, message)
+                  VALUES (${u.id}, ${userId}, 'mention', ${postId}::uuid, ${inserted[0]?.id}::uuid, ${`vous a mentionné dans un commentaire : « ${snippet} »`})
+                `.catch(() => {});
+              }
+            }
+          }
+        } catch (mentionErr) {
+          console.warn("[Vibe API] Erreur notification mention commentaire:", mentionErr);
         }
       } catch {}
 
@@ -911,8 +947,8 @@ export function registerVibePostsRoutes(app: Hono, registerMulti: RegisterMultiF
           const authorId = Number(cm[0]?.author_id);
           if (authorId && authorId !== userId) {
             await sql`
-              INSERT INTO notifications (recipient_id, actor_id, type, message)
-              VALUES (${authorId}, ${userId}, 'like', 'a aimé votre commentaire')
+              INSERT INTO notifications (recipient_id, actor_id, type, post_id, comment_id, message)
+              VALUES (${authorId}, ${userId}, 'like', ${cm[0]?.post_id}::uuid, ${commentId}::uuid, 'a aimé votre commentaire')
             `;
           }
         } catch {}
@@ -926,4 +962,64 @@ export function registerVibePostsRoutes(app: Hono, registerMulti: RegisterMultiF
   };
 
   registerMulti("post", ["/api/vibe/posts/:id/comments/:commentId/like", "/vibe/posts/:id/comments/:commentId/like", "/v1/posts/:id/comments/:commentId/like"], handleLikeComment);
+
+  // 7. SEARCH POSTS
+  const handleSearchPosts = async (c: any) => {
+    try {
+      const q = (c.req.query("q") || c.req.query("query") || "").trim();
+      if (!q) {
+        return c.json({ posts: [], count: 0 });
+      }
+      const token = extractToken(c.req.raw);
+      let currentUserId: number | null = null;
+      if (token) {
+        try {
+          const payload = await verifyToken(token);
+          currentUserId = Number(payload.sub || (payload as any).id);
+        } catch {}
+      }
+
+      const sql = getDb();
+      const limit = Math.min(50, Math.max(1, Number(c.req.query("limit") || 20)));
+      const offset = Math.max(0, Number(c.req.query("offset") || 0));
+
+      const cleanQ = q.startsWith("#") ? q.slice(1) : q;
+      const posts = await sql`
+        SELECT p.*, pr.display_name, pr.avatar_url, u.username, u.tier,
+               (COALESCE(u.is_verified, FALSE) OR LOWER(COALESCE(u.tier, '')) IN ('plus', 'pro', 'max')) as is_verified,
+               ${currentUserId ? sql`(SELECT COUNT(*) FROM post_interactions WHERE post_id = p.id AND user_id = ${currentUserId} AND interaction_type = 'like') > 0` : sql`FALSE`} as has_liked,
+               ${currentUserId ? sql`(SELECT COUNT(*) FROM post_interactions WHERE post_id = p.id AND user_id = ${currentUserId} AND interaction_type = 'repost') > 0` : sql`FALSE`} as has_reposted,
+               ${currentUserId ? sql`(SELECT COUNT(*) FROM bookmarks WHERE post_id = p.id AND user_id = ${currentUserId}) > 0` : sql`FALSE`} as has_bookmarked
+        FROM posts p
+        JOIN users u ON u.id = p.author_id
+        LEFT JOIN profiles pr ON pr.user_id = u.id
+        WHERE p.visibility = 'public'
+          AND (
+            p.content ILIKE ('%' || ${cleanQ} || '%')
+            OR u.username ILIKE ('%' || ${cleanQ} || '%')
+            OR pr.display_name ILIKE ('%' || ${cleanQ} || '%')
+          )
+        ORDER BY p.published_at DESC
+        LIMIT ${limit} OFFSET ${offset}
+      `;
+
+      await fetchMedia(posts);
+
+      return c.json({
+        query: q,
+        count: posts.length,
+        posts,
+      });
+    } catch (err: any) {
+      console.error("[Search Posts Error]:", err);
+      return c.json({ error: "Erreur recherche publications." }, 500);
+    }
+  };
+
+  registerMulti("get", [
+    "/api/vibe/search/posts",
+    "/vibe/search/posts",
+    "/v1/search/posts",
+    "/search/posts",
+  ], handleSearchPosts);
 }

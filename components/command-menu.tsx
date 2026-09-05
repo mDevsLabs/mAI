@@ -270,6 +270,30 @@ export function CommandMenu({
                     </div>
                   </Command.Item>
                   <Command.Item
+                    onSelect={() => runCommand(() => router.push("/models/mai-2"))}
+                    className="flex items-center justify-between px-3 py-2 text-sm text-neutral-800 rounded-lg cursor-pointer aria-selected:bg-neutral-100 transition-colors"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Sparkles className="w-4 h-4 text-purple-600" />
+                      <div>
+                        <div className="font-medium text-neutral-900">mAI-2</div>
+                        <div className="text-xs text-neutral-500">Notre meilleur modèle : multimodal, 1M tokens de contexte, via l'API mAI</div>
+                      </div>
+                    </div>
+                  </Command.Item>
+                  <Command.Item
+                    onSelect={() => runCommand(() => router.push("/models/mai-2-mini"))}
+                    className="flex items-center justify-between px-3 py-2 text-sm text-neutral-800 rounded-lg cursor-pointer aria-selected:bg-neutral-100 transition-colors"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Sparkles className="w-4 h-4 text-blue-600" />
+                      <div>
+                        <div className="font-medium text-neutral-900">mAI-2-Mini</div>
+                        <div className="text-xs text-neutral-500">La nouvelle génération en version efficace et accessible, via l'API mAI</div>
+                      </div>
+                    </div>
+                  </Command.Item>
+                  <Command.Item
                     onSelect={() => runCommand(() => router.push("/models/mai-1.5-light"))}
                     className="flex items-center justify-between px-3 py-2 text-sm text-neutral-800 rounded-lg cursor-pointer aria-selected:bg-neutral-100 transition-colors"
                   >

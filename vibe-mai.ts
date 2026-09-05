@@ -208,8 +208,13 @@ export function registerVibeMAIRoutes(app: Hono, registerMulti: RegisterMultiFn)
       let reply = `Bonjour @${username} ! Je suis mAI (modèle ${model}). Comment puis-je vous aider ?`;
 
       if (!toolToRun) {
-        // Appel direct au endpoint OpenRouter avec le modèle sélectionné
-        const openRouterApiKey = await MAIAgentFleet.getOpenRouterKey(userId);
+        const keyRows = await sql`
+          SELECT api_key FROM mprojects_api_keys WHERE user_id::text = ${userId}::text LIMIT 1
+        `.catch(() => []);
+        const openRouterApiKey =
+          (typeof (globalThis as any).Deno !== "undefined" && (globalThis as any).Deno.env?.get("OPENROUTER_API_KEY")) ||
+          (typeof process !== "undefined" && process.env?.OPENROUTER_API_KEY) ||
+          (keyRows.length > 0 ? keyRows[0].api_key : "");
 
         const resolveModel = (m: string) => {
           if (!m || m === "default" || m === "mai-1.5-light") return "openrouter/free";

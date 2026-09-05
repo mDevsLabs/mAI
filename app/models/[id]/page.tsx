@@ -17,9 +17,12 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
       title: "Modèle Introuvable | mAI",
     };
   }
+  // Icône dédiée pour la génération mAI-2
+  const icons = model.id.startsWith("mai-2") ? { icon: "/mai-2/icon.png" } : undefined;
   return {
     title: `${model.name} - Modèle IA | mAI`,
     description: model.tagline,
+    icons,
   };
 }
 

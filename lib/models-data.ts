@@ -3,17 +3,43 @@ export type ModelInfo = {
   name: string;
   tagline: string;
   badge: string;
-  parameters: string;
+  parameters?: string;
   vision: boolean;
   context: string;
   releaseDate: string;
   bannerImage: string;
   squareImage: string;
-  ollamaTag: string;
+  ollamaTag?: string;
+  cloud?: boolean;
   readmeContent: string;
 };
 
 export const modelsData: Omit<ModelInfo, 'readmeContent'>[] = [
+  // ─── Série mAI-2 (nouvelle génération cloud, API mAI uniquement) ──────────
+  {
+    id: 'mai-2',
+    name: 'mAI-2',
+    tagline: 'Notre meilleur modèle, pour tous. Raisonnement, codage, création, multimodal texte + images et 1M tokens de contexte.',
+    badge: 'Vision • Tools • 1M',
+    vision: true,
+    context: '1M',
+    releaseDate: '05/09/2026',
+    bannerImage: '/mai-2/16-9-cover.png',
+    squareImage: '/mai-2/mai-2.png',
+    cloud: true,
+  },
+  {
+    id: 'mai-2-mini',
+    name: 'mAI-2-Mini',
+    tagline: 'La nouvelle génération mAI en version efficace et accessible. Multimodal texte + images et 1M tokens de contexte.',
+    badge: 'Vision • Tools • 1M',
+    vision: true,
+    context: '1M',
+    releaseDate: '05/09/2026',
+    bannerImage: '/mai-2/16-9-cover.png',
+    squareImage: '/mai-2/mai-2-mini.png',
+    cloud: true,
+  },
   // ─── Série mAI-1.5 (nouvelle génération 1.5) ───────────────────────────────
   {
     id: 'mai-1.5-light',
@@ -27,6 +53,7 @@ export const modelsData: Omit<ModelInfo, 'readmeContent'>[] = [
     bannerImage: '/mai-1.5-light/mAI-1.5-Light.png',
     squareImage: '/mai-1.5-light/mAI-1.5-Light.png',
     ollamaTag: 'mDevsLabs/mAI-1.5-Light',
+    cloud: false,
   },
   {
     id: 'mai-1.5-apex',
@@ -40,6 +67,7 @@ export const modelsData: Omit<ModelInfo, 'readmeContent'>[] = [
     bannerImage: '/mai-1.5-apex/mAI-1.5-Apex.png',
     squareImage: '/mai-1.5-apex/mAI-1.5-Apex.png',
     ollamaTag: 'mDevsLabs/mAI-1.5-Apex',
+    cloud: false,
   },
   {
     id: 'mai-1.5-opal',
@@ -53,6 +81,7 @@ export const modelsData: Omit<ModelInfo, 'readmeContent'>[] = [
     bannerImage: '/mai-1.5-opal/mAI-1.5-Opal.png',
     squareImage: '/mai-1.5-opal/mAI-1.5-Opal.png',
     ollamaTag: 'mDevsLabs/mAI-1.5-Opal',
+    cloud: false,
   },
   // ─── Série mAI-1.2 (génération 1.2) ───────────────────────────────────
   {
@@ -67,6 +96,7 @@ export const modelsData: Omit<ModelInfo, 'readmeContent'>[] = [
     bannerImage: '/mai-1.2-light/mai-1.2-light.png',
     squareImage: '/mai-1.2-light/mai-1.2-light.png',
     ollamaTag: 'mDevsLabs/mAI-1.2-Light',
+    cloud: false,
   },
   {
     id: 'mai-1.2-apex',
@@ -80,6 +110,7 @@ export const modelsData: Omit<ModelInfo, 'readmeContent'>[] = [
     bannerImage: '/mai-1.2-apex/mai-1.2-apex.png',
     squareImage: '/mai-1.2-apex/mai-1.2-apex.png',
     ollamaTag: 'mDevsLabs/mAI-1.2-Apex',
+    cloud: false,
   },
   {
     id: 'mai-1.2-opal',
@@ -93,8 +124,9 @@ export const modelsData: Omit<ModelInfo, 'readmeContent'>[] = [
     bannerImage: '/mai-1.2-opal/mai-1.2-opal.png',
     squareImage: '/mai-1.2-opal/mai-1.2-opal.png',
     ollamaTag: 'mDevsLabs/mAI-1.2-Opal',
+    cloud: false,
   },
-  // ─── Série mAI-1 (première génération) ────────────────────────────────────
+  // ─── Série mAI-1 (première génération, dépréciée) ─────────────────────────
   {
     id: 'mai-1',
     name: 'mAI-1',
@@ -107,6 +139,7 @@ export const modelsData: Omit<ModelInfo, 'readmeContent'>[] = [
     bannerImage: '/mai-1/mai-1.png',
     squareImage: '/mai-1/mai-1-carre.png',
     ollamaTag: 'mDevsLabs/mAI-1',
+    cloud: false,
   },
   {
     id: 'mai-1-light',
@@ -120,5 +153,6 @@ export const modelsData: Omit<ModelInfo, 'readmeContent'>[] = [
     bannerImage: '/mai-1-light/mai-1-light.png',
     squareImage: '/mai-1-light/mai-1-light-carre.png',
     ollamaTag: 'mDevsLabs/mAI-1-Light',
+    cloud: false,
   },
 ];

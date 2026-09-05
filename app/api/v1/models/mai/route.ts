@@ -14,25 +14,26 @@ export async function GET(_req: NextRequest) {
       owned_by: "mDevsLabs",
       context_length: m.contextWindow,
       max_output_tokens: m.maxOutputTokens,
-      parameters: m.parameters,
-      version: m.version,
+      parameters: m.parameters ?? null,
       status: m.status,
       tagline: m.tagline,
       capabilities: m.capabilities,
-      recommended_hardware: m.recommendedHardware,
-      ollama_tag: m.ollamaTag,
-      huggingface_tag: m.huggingFaceTag,
+      recommended_hardware: m.recommendedHardware ?? null,
+      ollama_tag: m.ollamaTag ?? null,
+      huggingface_tag: m.huggingFaceTag ?? null,
       license: m.license,
-      // Indication explicite de modèle local
-      usable_in_cloud_chat: false,
-      execution_mode: "local_ollama_gguf",
+      cloud: m.cloud,
+      // mAI-2 / mAI-2-Mini : appelables via l'API mAI (cloud) ;
+      // générations locales (1 / 1.2 / 1.5) : exécution locale uniquement.
+      usable_in_cloud_chat: m.cloud,
+      execution_mode: m.cloud ? "cloud_api" : "local_ollama_gguf",
     }));
 
     return NextResponse.json({
       object: "list",
       data: formattedModels,
       count: formattedModels.length,
-      note: "Ces modèles sont destinés à une exécution locale (Ollama / HuggingFace) et ne sont pas directement appelables via les requêtes /v1/chat/completions en ligne.",
+      note: "Les modèles cloud: true (mAI-2, mAI-2-Mini) sont appelables via /v1/chat/completions avec leur identifiant API (ex: 'mai/mai-2'). Les autres modèles mAI sont destinés à une exécution locale (Ollama / HuggingFace). Les modèles status 'deprecated' ne sont plus disponibles.",
     });
   } catch (err: any) {
     return NextResponse.json(

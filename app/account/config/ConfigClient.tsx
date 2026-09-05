@@ -50,7 +50,7 @@ export default function ConfigClient() {
               maxOutput: m.maxOutput || 4096,
             }));
             const cloudOnly = apiModels.filter(
-              (m) => !maiModelsList.some((mai) => mai.ollamaTag === m.id || mai.id === m.id)
+              (m) => !maiModelsList.some((mai) => mai.cloud === false && (mai.ollamaTag === m.id || mai.id === m.id))
             );
             if (cloudOnly.length > 0) {
               setCloudModelsList(cloudOnly);
@@ -90,9 +90,9 @@ export default function ConfigClient() {
 
   const allowedCloudModels = cloudModelsList;
 
-  // Modèles combinés
+  // Modèles combinés (les modèles mAI cloud comme mai/mai-2 arrivent via la liste cloud)
   const allModels = [
-    ...maiModelsList.map(m => ({ id: m.ollamaTag, name: `${m.name} (mAI Local)`, type: 'mai' })),
+    ...maiModelsList.filter(m => !m.cloud).map(m => ({ id: m.ollamaTag as string, name: `${m.name} (mAI Local)`, type: 'mai' })),
     ...allowedCloudModels.map(m => ({ id: m.id, name: `${m.name} (${m.id})`, type: 'cloud' }))
   ];
 
