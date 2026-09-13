@@ -351,7 +351,7 @@ const ROUTE_DEFINITIONS: RouteDefinition[] = [
 ];
 
 export default function RequestsClient() {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   
   // Clés API de l'utilisateur avec conservation de la clé complète
   const [createdKeys, setCreatedKeys] = useState<{ id: string; name: string; prefix: string; apiKey?: string }[]>([]);
@@ -383,10 +383,10 @@ export default function RequestsClient() {
   // Charger les clés API de l'utilisateur
   useEffect(() => {
     async function loadCreatedKeys() {
+      if (!token) return;
       try {
-        const userId = encodeURIComponent(user?.username || user?.email || 'dev_user');
         const res = await fetch('/api/dev-keys', {
-          headers: { 'x-user-id': userId }
+          headers: { Authorization: `Bearer ${token}` }
         });
         if (res.ok) {
           const data = await res.json();
@@ -404,7 +404,7 @@ export default function RequestsClient() {
       }
     }
     loadCreatedKeys();
-  }, [user]);
+  }, [token]);
 
   // Réinitialiser les champs d'édition lors du changement de route
   useEffect(() => {

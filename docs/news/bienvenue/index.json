@@ -1,7 +1,9 @@
 {
   "title": "Portail mAI : présentation",
-  "description": "DÃ©couvrez notre portail unifiÃ© regroupant l'ensemble de nos projets logiciels, actualitÃ©s et notes de version.",
-  "author": "Ãquipe mDevsLabs",
+  "description": "Découvrez notre portail unifié regroupant l'ensemble de nos projets logiciels, actualités et notes de version.",
+  "author": "Équipe mDevsLabs",
   "date": "2026-07-11",
+  "category": "Annonce",
+  "visibility": "standard",
   "image": "https://upload.fs.fr/XEogmpBJi9.png"
 }

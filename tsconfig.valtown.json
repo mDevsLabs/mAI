@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["esnext", "dom", "deno.ns"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "allowJs": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "types": ["deno"]
+  },
+  "include": [
+    "main.ts",
+    "main-projects.ts",
+    "api-middleware.ts",
+    "auth.ts",
+    "audio.ts",
+    "config.ts",
+    "devices.ts",
+    "email.ts",
+    "models.ts",
+    "projects.ts",
+    "storage.ts",
+    "maiModels.ts",
+    "aiModels.ts",
+    "images.ts",
+    "web.ts",
+    "realtime.ts",
+    "translate.ts",
+    "vibe.ts",
+    "vibe-*.ts"
+  ],
+  "exclude": ["node_modules", ".next", "app", "components", "lib"]
+}

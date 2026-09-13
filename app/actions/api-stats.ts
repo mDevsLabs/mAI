@@ -1,13 +1,26 @@
 "use server";
 
 import { neon } from "@neondatabase/serverless";
+import { getSessionIdentity } from "@/lib/session-auth";
 
-export async function getDashboardStats(userId: string) {
+function colorFor(name: string): string {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = (hash * 31 + name.charCodeAt(i)) | 0;
+  return `hsl(${Math.abs(hash) % 360} 65% 55%)`;
+}
+
+export async function getDashboardStats() {
   try {
     const databaseUrl = process.env.DATABASE_URL;
     if (!databaseUrl) {
       throw new Error("La variable d'environnement DATABASE_URL est manquante.");
     }
+
+    const identity = await getSessionIdentity();
+    if (!identity) {
+      return { success: false, error: "Authentification requise." };
+    }
+    const userId = identity.userId;
     
     const sql = neon(databaseUrl);
     
@@ -55,7 +68,7 @@ export async function getDashboardStats(userId: string) {
     const endpointsData = endpointsResult.map(r => ({
       name: r.name,
       value: parseInt(r.value, 10),
-      color: "#" + Math.floor(Math.random()*16777215).toString(16)
+      color: colorFor(String(r.name || ""))
     }));
 
     // Données sur les 30 derniers jours (graphique principal)

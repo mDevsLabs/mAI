@@ -1,8 +1,10 @@
-import { getNewsArticle, getNewsArticles } from '@/lib/news';
+import { getAllNewsArticles, getNewsArticle } from '@/lib/news';
 import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import Link from 'next/link';
-import { ArrowLeft, Calendar, User } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, User } from 'lucide-react';
 import { notFound } from 'next/navigation';
+import { NewsMedia } from '@/components/ui/media';
 import { ShareButtons, CommentSection } from './ArticleClient';
 
 const formatDate = (dateStr: any) => {
@@ -13,7 +15,7 @@ const formatDate = (dateStr: any) => {
 };
 
 export async function generateStaticParams() {
-  const articles = getNewsArticles();
+  const articles = getAllNewsArticles();
   return articles.map((article) => ({
     slug: article.slug,
   }));
@@ -22,10 +24,14 @@ export async function generateStaticParams() {
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = await params;
   const article = getNewsArticle(resolvedParams.slug);
-  
+
   if (!article) {
     notFound();
   }
+
+  const words = article.content.split(/\s+/).filter(Boolean).length;
+  const readingMinutes = Math.max(1, Math.round(words / 200));
+  const category = article.category || article.label;
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -34,31 +40,56 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         Retour aux actualités
       </Link>
 
-      <div className="bg-white/40 backdrop-blur-md border border-white/60 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] rounded-3xl p-8 md:p-12 relative">
-        {article.label && (
+      <article className="bg-white/40 backdrop-blur-md border border-white/60 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] rounded-3xl p-8 md:p-12 relative">
+        {category && (
           <div className="mb-6">
             <span className="px-3 py-1 rounded-full bg-white/40 backdrop-blur-md border border-white/60 shadow-sm text-slate-800 text-xs font-bold uppercase tracking-wider">
-              {article.label}
+              {category}
             </span>
           </div>
         )}
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-black italic tracking-tighter leading-[0.9] md:leading-[0.85] uppercase text-slate-900 mb-6">
+
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-black italic tracking-tighter leading-[0.9] md:leading-[0.85] uppercase text-slate-900 mb-5">
           {article.title}
         </h1>
-        
-        <div className="flex items-center gap-4 text-sm font-medium text-slate-500 mb-10 pb-10 border-b border-black/5">
-          <div className="flex items-center gap-1.5">
+
+        {article.description && (
+          <p className="text-lg md:text-xl text-slate-600 font-light leading-relaxed mb-8">
+            {article.description}
+          </p>
+        )}
+
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm font-medium text-slate-500 mb-10 pb-10 border-b border-black/5">
+          <span className="flex items-center gap-1.5">
             <User className="w-4 h-4" />
-            <span>{article.author}</span>
-          </div>
-          <div className="flex items-center gap-1.5">
+            {article.author}
+          </span>
+          <span className="flex items-center gap-1.5">
             <Calendar className="w-4 h-4" />
-            <span>{formatDate(article.date)}</span>
-          </div>
+            {formatDate(article.date)}
+          </span>
+          <span className="flex items-center gap-1.5">
+            <Clock className="w-4 h-4" />
+            {readingMinutes} min de lecture
+          </span>
         </div>
+
+        {article.image && (
+          <div className="relative mb-10 h-56 sm:h-72 md:h-80 rounded-2xl overflow-hidden bg-slate-100">
+            <NewsMedia
+              src={article.image}
+              kind={article.imageType}
+              alt={article.title}
+              fill
+              sound
+              priority
+            />
+          </div>
+        )}
 
         <div className="prose max-w-none text-slate-800 leading-relaxed font-sans">
           <Markdown
+            remarkPlugins={[remarkGfm]}
             components={{
               h1: ({ node: _node, ...props }) => (
                 <h1
@@ -85,7 +116,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                 />
               ),
               p: ({ node: _node, ...props }) => (
-                <p className="mb-4 text-slate-700 leading-relaxed" {...props} />
+                <p className="mb-5 text-slate-700 leading-relaxed" {...props} />
               ),
               ul: ({ node: _node, ...props }) => (
                 <ul
@@ -149,6 +180,16 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                   {...props}
                 />
               ),
+              img: ({ node: _node, src, alt }) =>
+                src ? (
+                  <span className="block my-6 rounded-2xl overflow-hidden border border-white/60 shadow-md bg-slate-100">
+                    <NewsMedia
+                      src={String(src)}
+                      alt={alt || 'Illustration'}
+                      className="w-full h-auto"
+                    />
+                  </span>
+                ) : null,
               a: ({ node: _node, href, children, ...props }) => (
                 <a
                   href={href}
@@ -165,7 +206,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             {article.content}
           </Markdown>
         </div>
-      </div>
+      </article>
 
       <ShareButtons title={article.title} description={article.description} />
 

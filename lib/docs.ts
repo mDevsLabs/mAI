@@ -38,17 +38,22 @@ export function getAllDocs(): DocMetadata[] {
 
     const slug = fileName.replace(/\.md$/, '');
     const fullPath = path.join(docsDirectory, fileName);
-    const fileContents = fs.readFileSync(fullPath, 'utf8');
 
-    const { data, content } = matter(fileContents);
+    try {
+      const fileContents = fs.readFileSync(fullPath, 'utf8');
+      const { data, content } = matter(fileContents);
 
-    docs.push({
-      slug,
-      title: data.title || slug,
-      description: data.description || '',
-      category: data.category || 'Général',
-      order: typeof data.order === 'number' ? data.order : 999,
-      content});
+      docs.push({
+        slug,
+        title: data.title || slug,
+        description: data.description || '',
+        category: data.category || 'Général',
+        order: typeof data.order === 'number' ? data.order : 999,
+        content});
+    } catch (e) {
+      // Un fichier mal formé (front-matter YAML invalide) ne doit pas casser tout l'index
+      console.error(`[docs] Fichier ignoré (lecture/parsing impossible) : ${fileName}`, e);
+    }
   }
 
   // Ordre canonique des catégories
@@ -89,6 +94,10 @@ export function getDocBySlug(slug: string): DocMetadata | null {
     return cachedMatch;
   }
 
+  if (!slug || slug.includes('/') || slug.includes('\\') || slug.includes('..')) {
+    return null;
+  }
+
   const docsDirectory = path.join(process.cwd(), 'docs/documentation');
   const fullPath = path.join(docsDirectory, `${slug}.md`);
 
@@ -96,16 +105,21 @@ export function getDocBySlug(slug: string): DocMetadata | null {
     return null;
   }
 
-  const fileContents = fs.readFileSync(fullPath, 'utf8');
-  const { data, content } = matter(fileContents);
+  try {
+    const fileContents = fs.readFileSync(fullPath, 'utf8');
+    const { data, content } = matter(fileContents);
 
-  return {
-    slug,
-    title: data.title || slug,
-    description: data.description || '',
-    category: data.category || 'Général',
-    order: typeof data.order === 'number' ? data.order : 999,
-    content};
+    return {
+      slug,
+      title: data.title || slug,
+      description: data.description || '',
+      category: data.category || 'Général',
+      order: typeof data.order === 'number' ? data.order : 999,
+      content};
+  } catch (e) {
+    console.error(`[docs] getDocBySlug(${slug}) : fichier illisible`, e);
+    return null;
+  }
 }
 
 /**
@@ -152,27 +166,32 @@ export function walkDocs(dir: string, baseDir: string): DocMetadata[] {
       docs = docs.concat(walkDocs(path.join(dir, entry.name), baseDir));
     } else if (entry.isFile() && entry.name.endsWith('.md')) {
       const fullPath = path.join(dir, entry.name);
-      const fileContents = fs.readFileSync(fullPath, 'utf8');
-      const { data, content } = matter(fileContents);
 
-      const relativePath = path.relative(baseDir, fullPath);
-      let category = data.category;
-      if (!category) {
-        const dirname = path.dirname(relativePath);
-        if (dirname === '.') {
-          category = 'Général';
-        } else {
-          category = dirname.replace(/\\/g, '/').split('/').map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' - ');
+      try {
+        const fileContents = fs.readFileSync(fullPath, 'utf8');
+        const { data, content } = matter(fileContents);
+
+        const relativePath = path.relative(baseDir, fullPath);
+        let category = data.category;
+        if (!category) {
+          const dirname = path.dirname(relativePath);
+          if (dirname === '.') {
+            category = 'Général';
+          } else {
+            category = dirname.replace(/\\/g, '/').split('/').map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' - ');
+          }
         }
-      }
 
-      docs.push({
-        slug: relativePath.replace(/\\/g, '/').replace(/\.md$/, ''),
-        title: data.title || entry.name.replace(/\.md$/, ''),
-        description: data.description || '',
-        category,
-        order: typeof data.order === 'number' ? data.order : 999,
-        content});
+        docs.push({
+          slug: relativePath.replace(/\\/g, '/').replace(/\.md$/, ''),
+          title: data.title || entry.name.replace(/\.md$/, ''),
+          description: data.description || '',
+          category,
+          order: typeof data.order === 'number' ? data.order : 999,
+          content});
+      } catch (e) {
+        console.error(`[docs] Fichier ignoré (lecture/parsing impossible) : ${fullPath}`, e);
+      }
     }
   }
   return docs;

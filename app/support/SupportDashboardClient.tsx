@@ -56,18 +56,10 @@ export default function SupportDashboardClient() {
       setLoading(true);
       try {
         const [ticketsRes, historyRes, statsRes] = await Promise.all([
-          getTicketsList({
-            userId: String(user.id || user.email),
-            userEmail: user.email,
-            status: "all",
-          }),
+          getTicketsList({ status: "all" }),
           // Historique : tous les tickets triés par updated_at (même appel mais on garde séparé pour futur filtre)
-          getTicketsList({
-            userId: String(user.id || user.email),
-            userEmail: user.email,
-            status: "all",
-          }),
-          getSupportStats(String(user.id || user.email), user.email),
+          getTicketsList({ status: "all" }),
+          getSupportStats(),
         ]);
 
         if (ticketsRes.success && ticketsRes.tickets) {

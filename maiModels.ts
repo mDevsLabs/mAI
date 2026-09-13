@@ -8,15 +8,17 @@ export interface MAIModelDetail {
   };
   contextWindow: number;
   description: string;
-  huggingFaceTag: string;
+  /** Tag Hugging Face (modèles locaux uniquement). */
+  huggingFaceTag?: string;
   id: string;
   license: string;
   maxOutputTokens: number;
   multimodal: boolean;
   name: string;
-  ollamaTag: string;
-  parameters: string;
-  recommendedHardware: {
+  /** Tag Ollama (modèles locaux uniquement). */
+  ollamaTag?: string;
+  parameters?: string;
+  recommendedHardware?: {
     minVram: string;
     recommendedVram: string;
     ram: string;
@@ -26,9 +28,65 @@ export interface MAIModelDetail {
   tagline: string;
   version: string;
   vision: boolean;
+  /** Modèle servi dans le cloud via l'API mAI (pas de distribution locale). */
+  cloud?: boolean;
+  /** Alias d'appel de l'API mAI (ex: "mai-2"). */
+  apiAlias?: string;
+  /** Modèle fournisseur sous-jacent (routage API, non affiché). */
+  backingModel?: string;
 }
 
 export const maiModelsList: MAIModelDetail[] = [
+  {
+    apiAlias: "mai-2",
+    backingModel: "deepseek/deepseek-v4.1-flash",
+    capabilities: {
+      coding: true,
+      functionCalling: true,
+      jsonOutput: true,
+      reasoning: true,
+      vision: true,
+    },
+    cloud: true,
+    contextWindow: 1_000_000,
+    description:
+      "Modèle phare de la génération mAI-2, servi dans le cloud via l'API mAI : raisonnement, codage, création et vitesse, avec un contexte pouvant atteindre 1 million de tokens et une prise en charge native du texte et des images.",
+    id: "mai-2",
+    license: "MIT",
+    maxOutputTokens: 384_000,
+    multimodal: true,
+    name: "mAI-2",
+    releaseDate: "2026-10-25",
+    status: "active",
+    tagline: "Our flagship model, for the best price.",
+    version: "2.0.0",
+    vision: true,
+  },
+  {
+    apiAlias: "mai-2-mini",
+    backingModel: "minimax/minimax-m3",
+    capabilities: {
+      coding: true,
+      functionCalling: true,
+      jsonOutput: true,
+      reasoning: true,
+      vision: true,
+    },
+    cloud: true,
+    contextWindow: 1_000_000,
+    description:
+      "Modèle équilibré de la génération mAI-2 : une expérience plus légère et accessible qui conserve les fondations essentielles de la génération — raisonnement, codage et multimodalité texte + images — dans le cloud via l'API mAI.",
+    id: "mai-2-mini",
+    license: "MIT",
+    maxOutputTokens: 128_000,
+    multimodal: true,
+    name: "mAI-2-Mini",
+    releaseDate: "2026-10-25",
+    status: "active",
+    tagline: "Our balanced model, for increased price.",
+    version: "2.0.0",
+    vision: true,
+  },
   {
     capabilities: {
       coding: true,

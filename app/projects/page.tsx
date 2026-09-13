@@ -1,19 +1,52 @@
 "use client";
 
 import { motion } from "motion/react";
-import { ExternalLink, Terminal, Globe, Cpu, FileText, Archive, Search, Layers, Gamepad2, Code2 } from "lucide-react";
+import { ExternalLink, Terminal, Globe, Cpu, FileText, Archive, Search, Layers, Gamepad2, Code2, Users } from "lucide-react";
 import Link from "next/link";
 import { GithubRepoStats } from "@/components/github-repo-stats";
+import { PLATFORM_DEVICE_ICONS } from "@/lib/projects-data";
+import { PageSearch } from "@/components/ui/search-bar";
 import Image from "next/image";
 
+type ActiveProjectCard = {
+  id: string;
+  number: string;
+  name: string;
+  label: string;
+  labelColor: string;
+  icon: any;
+  iconColor: string;
+  tagline: string;
+  description: string;
+  link: string;
+  repo: string;
+  platforms: string[];
+  borderHover: string;
+};
+
 export default function ProjectsPage() {
-  const activeProjects = [
+  const activeProjects: ActiveProjectCard[] = [
+    {
+      id: "vibe",
+      number: "01",
+      name: "Vibe",
+      label: "Release Candidate",
+      labelColor: "bg-blue-500/10 border-blue-500/30 text-blue-600",
+      icon: Users,
+      iconColor: "text-purple-400",
+      tagline: "Le réseau social où l'IA fait partie de la conversation.",
+      description: "Réseau social nouvelle génération avec IA intégrée : publiez, discutez et créez avec mAI nativement — fil personnalisé, messages privés, cercles et collections.",
+      link: "/projects/vibe",
+      repo: "mDevsLabs/Vibe",
+      platforms: ["Web", "Android", "iOS"],
+      borderHover: "hover:border-purple-500/30 hover:shadow-[0_8px_32px_0_rgba(168,85,247,0.15)]",
+    },
     {
       id: "web",
-      number: "01",
+      number: "02",
       name: "Web",
-      label: "Bêta",
-      labelColor: "bg-emerald-500/10 border-emerald-500/30 text-emerald-600",
+      label: "Release Candidate",
+      labelColor: "bg-blue-500/10 border-blue-500/30 text-blue-600",
       icon: Globe,
       iconColor: "text-amber-400",
       tagline: "Application d'IA en ligne web directe et intuitive.",
@@ -25,10 +58,10 @@ export default function ProjectsPage() {
     },
     {
       id: "pulse",
-      number: "02",
+      number: "03",
       name: "Pulse",
-      label: "Bêta",
-      labelColor: "bg-emerald-500/10 border-emerald-500/30 text-emerald-600",
+      label: "Release Candidate",
+      labelColor: "bg-blue-500/10 border-blue-500/30 text-blue-600",
       icon: Cpu,
       iconColor: "text-emerald-400",
       tagline: "L'IA intégrée directement dans vos outils du quotidien.",
@@ -40,7 +73,7 @@ export default function ProjectsPage() {
     },
     {
       id: "cli",
-      number: "03",
+      number: "04",
       name: "CLI",
       label: "Release Candidate",
       labelColor: "bg-blue-500/10 border-blue-500/30 text-blue-600",
@@ -55,10 +88,10 @@ export default function ProjectsPage() {
     },
     {
       id: "coder",
-      number: "04",
+      number: "05",
       name: "Coder",
-      label: "Bêta",
-      labelColor: "bg-emerald-500/10 border-emerald-500/30 text-emerald-600",
+      label: "Release Candidate",
+      labelColor: "bg-blue-500/10 border-blue-500/30 text-blue-600",
       icon: Code2,
       iconColor: "text-purple-400",
       tagline: "L'IDE IA pensé pour les agents autonomes et les outils MCP.",
@@ -76,7 +109,6 @@ export default function ProjectsPage() {
       name: "Site",
       icon: Globe,
       description: "Site officiel et web mAI.",
-      link: "/projects/site",
       repo: "mDevsLabs/Site",
       platforms: ["Web"],
     },
@@ -139,7 +171,6 @@ export default function ProjectsPage() {
       name: "Desktop",
       icon: Layers,
       description: "Application desktop intégrée mAI.",
-      link: "/projects/desktop",
       repo: "mDevsLabs/Desktop",
       platforms: ["Desktop"],
     },
@@ -148,7 +179,6 @@ export default function ProjectsPage() {
       name: "Skills",
       icon: FileText,
       description: "Compétences et agents spécialisés mAI.",
-      link: "/projects/skills",
       repo: "mDevsLabs/Skills",
       platforms: ["Agents"],
     },
@@ -157,7 +187,6 @@ export default function ProjectsPage() {
       name: "Plugins",
       icon: FileText,
       description: "Écosystème de plugins mAI.",
-      link: "/projects/plugins",
       repo: "mDevsLabs/Plugins",
       platforms: ["Plugins"],
     },
@@ -166,7 +195,6 @@ export default function ProjectsPage() {
       name: "API",
       icon: Layers,
       description: "Hub API et agrégation de modèles LLM.",
-      link: "/projects/api",
       repo: "mDevsLabs/API",
       platforms: ["API"],
     },
@@ -175,7 +203,6 @@ export default function ProjectsPage() {
       name: "Autre",
       icon: Archive,
       description: "Autres projets et expérimentations.",
-      link: "/projects/autre",
       repo: "",
       platforms: ["Divers"],
     },
@@ -249,8 +276,17 @@ export default function ProjectsPage() {
           transition={{ delay: 0.1 }}
           className="text-slate-500 text-base md:text-lg font-light mt-2 md:mt-4 max-w-2xl"
         >
-          Découvrez la suite officielle des 4 projets mAI développés par mDevsLabs pour révolutionner votre façon de travailler avec l&apos;intelligence artificielle.
+          Découvrez la suite officielle des {activeProjects.length} projets mAI développés par mDevsLabs pour révolutionner votre façon de travailler avec l&apos;intelligence artificielle.
         </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.15 }}
+          className="pt-3"
+        >
+          <PageSearch type="project" placeholder="Rechercher un projet…" />
+        </motion.div>
       </div>
 
       {/* Grille des 4 Nouveaux Projets Actifs */}
@@ -286,14 +322,26 @@ export default function ProjectsPage() {
                 </h2>
 
                 <div className="flex flex-wrap gap-1.5 mb-3">
-                  {project.platforms.map((plat) => (
-                    <span
-                      key={plat}
-                      className="text-[10px] px-2 py-0.5 rounded-full bg-white/50 backdrop-blur-md border border-white/60 shadow-xs text-slate-800 uppercase font-bold tracking-wider"
-                    >
-                      {plat}
-                    </span>
-                  ))}
+                  {project.platforms.map((plat) => {
+                    const device = PLATFORM_DEVICE_ICONS[plat];
+                    return (
+                      <span
+                        key={plat}
+                        className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-white/50 backdrop-blur-md border border-white/60 shadow-xs text-slate-800 uppercase font-bold tracking-wider"
+                      >
+                        {device && (
+                          <Image
+                            src={device.src}
+                            alt={device.alt}
+                            width={12}
+                            height={12}
+                            className="w-3 h-3 object-contain"
+                          />
+                        )}
+                        {plat}
+                      </span>
+                    );
+                  })}
                 </div>
 
                 <p className="text-purple-600 font-medium text-xs sm:text-sm mb-3 italic">
@@ -387,13 +435,19 @@ export default function ProjectsPage() {
               </div>
 
               <div className="pt-3 border-t border-slate-200/60 flex items-center justify-between gap-2 flex-wrap">
-                <Link
-                  href={project.link}
-                  className="text-xs font-semibold text-slate-700 hover:text-purple-600 flex items-center gap-1 transition-colors"
-                >
-                  Voir l&apos;archive
-                  <ExternalLink className="w-3 h-3" />
-                </Link>
+                {project.link ? (
+                  <Link
+                    href={project.link}
+                    className="text-xs font-semibold text-slate-700 hover:text-purple-600 flex items-center gap-1 transition-colors"
+                  >
+                    Voir l&apos;archive
+                    <ExternalLink className="w-3 h-3" />
+                  </Link>
+                ) : (
+                  <span className="text-xs font-semibold text-slate-400 italic">
+                    Archive non publiée
+                  </span>
+                )}
                 {project.repo && <GithubRepoStats repo={project.repo} />}
               </div>
             </div>

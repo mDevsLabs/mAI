@@ -1,8 +1,8 @@
-import { getNewsArticle, getNewsArticles } from '@/lib/news';
+import { getAllNewsArticles, getNewsArticle } from '@/lib/news';
 import PrintArticleClient from './PrintArticleClient';
 
 export async function generateStaticParams() {
-  const articles = getNewsArticles();
+  const articles = getAllNewsArticles();
   return articles.map((article) => ({
     slug: article.slug,
   }));

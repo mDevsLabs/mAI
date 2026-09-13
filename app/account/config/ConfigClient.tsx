@@ -13,7 +13,7 @@ import Link from 'next/link';
 type TabType = 'openai' | 'python' | 'google' | 'anthropic' | 'curl';
 
 export default function ConfigClient() {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   
   // States
   const [selectedModel, setSelectedModel] = useState<string>('mDevsLabs/mAI-1.2-Apex');
@@ -67,11 +67,11 @@ export default function ConfigClient() {
   // Charger les clés API de l'utilisateur
   useEffect(() => {
     async function loadKeys() {
-      if (!user) return;
+      if (!token) return;
       try {
         const res = await fetch('/api/dev-keys', {
           headers: {
-            'x-user-id': encodeURIComponent(user.username || user.email || 'dev_user'),
+            Authorization: `Bearer ${token}`,
           },
         });
         const data = await res.json();
@@ -86,13 +86,15 @@ export default function ConfigClient() {
       }
     }
     loadKeys();
-  }, [user]);
+  }, [token]);
 
   const allowedCloudModels = cloudModelsList;
 
-  // Modèles combinés
+  // Modèles combinés (les modèles cloud mAI-2 n'ont pas de tag Ollama : ignorés ici)
   const allModels = [
-    ...maiModelsList.map(m => ({ id: m.ollamaTag, name: `${m.name} (mAI Local)`, type: 'mai' })),
+    ...maiModelsList
+      .filter(m => m.ollamaTag)
+      .map(m => ({ id: m.ollamaTag as string, name: `${m.name} (mAI Local)`, type: 'mai' })),
     ...allowedCloudModels.map(m => ({ id: m.id, name: `${m.name} (${m.id})`, type: 'cloud' }))
   ];
 

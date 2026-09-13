@@ -18,6 +18,15 @@ function getOpenRouterApiKey(userCustomKey?: string | null): string {
   return Deno.env.get("OPENROUTER_API_KEY") || "";
 }
 
+/**
+ * Alias cloud de la génération mAI-2 : ces identifiants publics sont routés
+ * vers le modèle fournisseur sous-jacent servi par OpenRouter.
+ */
+const MAI_CLOUD_ALIASES: Record<string, string> = {
+  "mai-2": "deepseek/deepseek-v4.1-flash",
+  "mai-2-mini": "minimax/minimax-m3",
+};
+
 export function registerModelRoutes(app: Hono) {
   // ─────────────────────────────────────────────
   // GET /v1/usage & /usage
@@ -355,25 +364,28 @@ export function registerModelRoutes(app: Hono) {
   // ─────────────────────────────────────────────
   const handleGetMaiModels = (c: any) => {
     const formatted = maiModelsList.map((m) => ({
+      api_alias: m.apiAlias ?? null,
       capabilities: m.capabilities,
       context_length: m.contextWindow,
       created:
         Math.floor(new Date(m.releaseDate).getTime() / 1000) ||
         Math.floor(Date.now() / 1000),
       description: m.description,
-      huggingface_tag: m.huggingFaceTag,
+      execution_mode: m.cloud ? "cloud_api" : "local_ollama_gguf",
+      huggingface_tag: m.huggingFaceTag ?? null,
       id: m.id,
       license: m.license,
       max_output_tokens: m.maxOutputTokens,
       name: m.name,
       object: "model",
-      ollama_tag: m.ollamaTag,
+      ollama_tag: m.ollamaTag ?? null,
       owned_by: "mDevsLabs",
-      parameters: m.parameters,
-      recommended_hardware: m.recommendedHardware,
+      parameters: m.parameters ?? null,
+      recommended_hardware: m.recommendedHardware ?? null,
       status: m.status,
       tagline: m.tagline,
-      usable_in_cloud_chat: false,
+      // Les modèles de la génération mAI-2 sont appelables en chat cloud via leur alias.
+      usable_in_cloud_chat: Boolean(m.cloud),
       version: m.version,
     }));
     return c.json({ data: formatted, object: "list" });
@@ -439,13 +451,18 @@ export function registerModelRoutes(app: Hono) {
       }
       const modelStr = String(modelRequested).toLowerCase().trim();
 
+      // Alias cloud de la génération mAI-2 : acceptés et remappés vers le
+      // modèle fournisseur sous-jacent (ex: mai-2 -> deepseek/deepseek-v4.1-flash).
+      const cloudAlias = MAI_CLOUD_ALIASES[modelStr];
+
       // Vérifier si c'est un modèle mAI (local uniquement)
       const isMaiLocal =
-        modelStr.startsWith("mai-") ||
-        modelStr.startsWith("mdevslabs/") ||
-        modelStr.includes("mai-1.") ||
-        modelStr === "mai-1" ||
-        modelStr === "mai-1-light";
+        !cloudAlias &&
+        (modelStr.startsWith("mai-") ||
+          modelStr.startsWith("mdevslabs/") ||
+          modelStr.includes("mai-1.") ||
+          modelStr === "mai-1" ||
+          modelStr === "mai-1-light");
 
       if (isMaiLocal) {
         return c.json(
@@ -462,7 +479,8 @@ export function registerModelRoutes(app: Hono) {
       }
 
       const isFreePlan = !isPaidTier(userPlan);
-      const isFreeModel = modelStr.includes(":free");
+      // Les alias cloud mAI-2 restent accessibles à tous les forfaits (quota hebdomadaire appliqué).
+      const isFreeModel = modelStr.includes(":free") || Boolean(cloudAlias);
 
       // Bloquer avec 403 les requêtes pour les modèles payants avec une clé ou JWT free
       if (isFreePlan && !isFreeModel) {
@@ -527,6 +545,12 @@ export function registerModelRoutes(app: Hono) {
       // pour empêcher tout contournement de la clé serveur.
       const { api_key: _ck, authorization: _ca, Authorization: _cA, ...safeBody } =
         body as Record<string, any>;
+
+      // Alias cloud : réécriture du modèle vers le fournisseur sous-jacent
+      // avant l'appel OpenRouter (mai-2 -> deepseek/deepseek-v4.1-flash).
+      if (cloudAlias) {
+        safeBody.model = cloudAlias;
+      }
 
       const openRouterRes = await fetch(
         "https://openrouter.ai/api/v1/chat/completions",
@@ -602,8 +626,11 @@ export function registerModelRoutes(app: Hono) {
       const modelRequested = body.model;
       const modelStr = String(modelRequested || "").toLowerCase().trim();
 
+      // Alias cloud mAI-2 (mai-2 / mai-2-mini) : remappés vers le modèle fournisseur.
+      const cloudAlias = MAI_CLOUD_ALIASES[modelStr];
+
       const isFreePlan = !isPaidTier(userPlan);
-      const isFreeModel = modelStr.includes(":free");
+      const isFreeModel = modelStr.includes(":free") || Boolean(cloudAlias);
 
       // Bloquer avec 403 les requêtes pour les modèles payants avec une clé ou JWT free
       if (isFreePlan && !isFreeModel) {
@@ -667,6 +694,11 @@ export function registerModelRoutes(app: Hono) {
       // Nettoyer le body : retirer tout champ `api_key` ou `Authorization` injecté par le client
       const { api_key: _ck, authorization: _ca, Authorization: _cA, ...safeBody } =
         body as Record<string, any>;
+
+      // Alias cloud : réécriture du modèle vers le fournisseur sous-jacent.
+      if (cloudAlias) {
+        safeBody.model = cloudAlias;
+      }
 
       const openRouterRes = await fetch(
         "https://openrouter.ai/api/v1/chat/completions",

@@ -38,8 +38,12 @@ function cleanModelName(name: string): string {
 export async function GET(req: NextRequest) {
   const authHeader = req.headers.get("authorization") || req.headers.get("Authorization");
 
+  // Liste publique : si une clé est fournie, elle doit être valide ; sinon accès libre
   if (authHeader && authHeader.startsWith("Bearer ")) {
-    await authenticateOpenAIRequest(req);
+    const authResult = await authenticateOpenAIRequest(req);
+    if (!authResult.valid) {
+      return authResult.response;
+    }
   }
 
   try {

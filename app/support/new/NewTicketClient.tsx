@@ -144,10 +144,7 @@ export default function NewTicketClient() {
       }
       const form = new FormData();
       form.append("file", file);
-      // pas de ticketId en création => pending
-      form.append("uploaderId", String(user.id || user.email));
-      form.append("uploaderEmail", user.email);
-      form.append("uploaderName", user.username || user.email.split("@")[0]);
+      // pas de ticketId en création => pending. Identité dérivée de la session côté serveur.
       try {
         const res = await fetch("/api/support/upload", { method: "POST", body: form });
         const data = await res.json();
@@ -206,10 +203,6 @@ export default function NewTicketClient() {
       if (includeDiagnostics) metadata.diagnostics = envInfo;
 
       const res = await createSupportTicket({
-        userId: String(user.id || user.email),
-        userEmail: user.email,
-        userName: user.username || user.email.split("@")[0],
-        userTier: user.tier || "Free",
         title: title.trim(),
         description: description.trim(),
         category,

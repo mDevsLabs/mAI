@@ -98,7 +98,7 @@ export default function ApiImageModelsPage() {
       const userId = user.username || user.email || String(user.id || "dev_user");
 
       // 1. Clés API
-      const keysRes = await getUserApiUsage(userId);
+      const keysRes = await getUserApiUsage();
       let chosenKey: string | null = null;
 
       if (keysRes.success && keysRes.keys && keysRes.keys.length > 0) {

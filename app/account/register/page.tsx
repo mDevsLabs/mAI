@@ -12,7 +12,9 @@ function RegisterForm() {
   const { register, verifyRegister, isAuthenticated, loading: authLoading } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const next = searchParams.get("next") || "/account";
+  const rawNext = searchParams.get("next") || "/account";
+  // Anti open-redirect : uniquement des chemins internes (refuse //evil.com et /\evil.com)
+  const next = rawNext.startsWith("/") && !rawNext.startsWith("//") && !rawNext.startsWith("/\\") ? rawNext : "/account";
 
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -27,7 +29,7 @@ function RegisterForm() {
 
   useEffect(() => {
     if (!authLoading && isAuthenticated) {
-      router.replace(next.startsWith("/") ? next : "/account");
+      router.replace(next);
     }
   }, [authLoading, isAuthenticated, next, router]);
 
@@ -66,7 +68,7 @@ function RegisterForm() {
         toast.success("Code de vérification envoyé à votre adresse e-mail.");
       } else {
         toast.success("Compte créé avec succès");
-        router.push(next.startsWith("/") ? next : "/account");
+        router.push(next);
       }
     } catch (err) {
       const message =
@@ -93,7 +95,7 @@ function RegisterForm() {
     try {
       await verifyRegister(email.trim(), username.trim(), password, verificationCode.trim());
       toast.success("Compte vérifié et créé avec succès");
-      router.push(next.startsWith("/") ? next : "/account");
+      router.push(next);
     } catch (err) {
       const message =
         err instanceof MaiApiError

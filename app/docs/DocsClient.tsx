@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { normalizeText, type DocMetadata } from "@/lib/text-utils";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import {
   Search,
   FileText,
@@ -113,23 +114,30 @@ export function DocsClient({ initialDocs, titleSpan }: DocsClientProps) {
     return filteredDocs.length > 0 ? filteredDocs[0] : null;
   }, [filteredDocs, selectedSlug]);
 
-  const handleCopyContent = (text: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedKey("content");
-    toast.success("Contenu du document copié dans le presse-papier !");
-    setTimeout(() => setCopiedKey(null), 2000);
+  const handleCopyContent = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedKey("content");
+      toast.success("Contenu du document copié dans le presse-papier !");
+      setTimeout(() => setCopiedKey(null), 2000);
+    } catch {
+      toast.error("Impossible de copier le contenu.");
+    }
   };
 
   const handleShareDoc = (doc: DocMetadata) => {
+    // Toujours partager l'URL du document ciblé (pas la page courante)
+    const url = `${window.location.origin}/docs?doc=${encodeURIComponent(doc.slug)}`;
     if (navigator.share) {
       navigator.share({
         title: doc.title,
         text: doc.description,
-        url: window.location.href,
-      });
+        url,
+      }).catch(() => {});
     } else {
-      navigator.clipboard.writeText(window.location.href);
-      toast.success("Lien du document copié !");
+      navigator.clipboard.writeText(url)
+        .then(() => toast.success("Lien du document copié !"))
+        .catch(() => toast.error("Impossible de copier le lien."));
     }
   };
 
@@ -321,6 +329,7 @@ export function DocsClient({ initialDocs, titleSpan }: DocsClientProps) {
               {/* Corps Markdown Rendu */}
               <div className="prose max-w-none text-slate-800 leading-relaxed font-sans">
                 <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
                   components={{
                     h1: ({ node: _node, ...props }) => (
                       <h1

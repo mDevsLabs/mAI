@@ -1,5 +1,8 @@
 "use client";
 
+import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+
 interface PrintContentProps {
   title: string;
   content: string;
@@ -14,7 +17,6 @@ export function PrintContent({ title, content, author, date, description }: Prin
     <div 
       id="print-content"
       className={`max-w-4xl mx-auto p-8 font-sans text-slate-900 bg-white`}
-      style={{ whiteSpace: 'pre-wrap' }}
     >
       <div className="mb-8">
         <h1 className="text-4xl font-bold mb-4">{title}</h1>
@@ -34,8 +36,9 @@ export function PrintContent({ title, content, author, date, description }: Prin
           prose-a:text-orange-600
           prose-strong:text-slate-900
           prose-em:text-slate-700"
-        dangerouslySetInnerHTML={{ __html: content.replace(/\n/g, '<br>') }}
-      />
+      >
+        <Markdown remarkPlugins={[remarkGfm]}>{content}</Markdown>
+      </div>
     </div>
   );
 }

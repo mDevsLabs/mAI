@@ -10,7 +10,7 @@ export function ProjectsShowcase() {
     {
       id: "web",
       title: "Web",
-      label: "Alpha",
+      label: "Release Candidate",
       tagline: "L'application d'IA en ligne directe et intuitive.",
       description: "Application d'IA en ligne web directement et simplement pour discuter avec l'IA mAI.",
       link: "/projects/web",
@@ -20,7 +20,7 @@ export function ProjectsShowcase() {
     {
       id: "pulse",
       title: "Pulse",
-      label: "Bêta",
+      label: "Release Candidate",
       tagline: "L'IA partout dans vos outils favoris.",
       description: "Ensemble d'extensions pour diverses applications pour discuter avec mAI directement (navigateur, VS Code...).",
       link: "/projects/pulse",
@@ -30,7 +30,7 @@ export function ProjectsShowcase() {
     {
       id: "cli",
       title: "CLI",
-      label: "Bêta",
+      label: "Release Candidate",
       tagline: "Discussions et séances de codage dans votre terminal.",
       description: "Discussions et séances de codage dans le terminal CLI via mAI.",
       link: "/projects/cli",
@@ -40,7 +40,7 @@ export function ProjectsShowcase() {
     {
       id: "coder",
       title: "Coder",
-      label: "Alpha",
+      label: "Release Candidate",
       tagline: "L'IDE IA pensé pour les agents autonomes et les outils MCP.",
       description: "IDE IA de nouvelle génération avec agents IA autonomes, orchestration multi-modèles et support natif des outils MCP.",
       link: "/projects/coder",

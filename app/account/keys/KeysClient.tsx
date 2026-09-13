@@ -12,7 +12,7 @@ import toast from 'react-hot-toast';
 import { useAuth } from '@/components/auth-provider';
 
 export default function KeysClient() {
-  const { user, isAuthenticated, loading: authLoading } = useAuth();
+  const { token, isAuthenticated, loading: authLoading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -49,11 +49,12 @@ export default function KeysClient() {
   const [revoking, setRevoking] = useState(false);
 
   const fetchKeys = async () => {
+    if (!token) return;
     setLoading(true);
     try {
       const res = await fetch('/api/dev-keys', {
         headers: {
-          'x-user-id': encodeURIComponent(String(user?.id || user?.username || user?.email || 'dev_user')),
+          Authorization: `Bearer ${token}`,
         },
       });
       const data = await res.json();
@@ -70,7 +71,7 @@ export default function KeysClient() {
 
   useEffect(() => {
     fetchKeys();
-  }, [user]);
+  }, [token]);
 
   // Deep-link onboarding : auto-ouvrir la création après tuto (sans useSearchParams pour éviter Suspense)
   useEffect(() => {
@@ -94,7 +95,7 @@ export default function KeysClient() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-user-id': encodeURIComponent(String(user?.id || user?.username || user?.email || 'dev_user')),
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ name: newKeyName.trim(), maxLimit: newKeyLimit }),
       });
@@ -128,7 +129,7 @@ export default function KeysClient() {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'x-user-id': encodeURIComponent(String(user?.id || user?.username || user?.email || 'dev_user')),
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ 
           maxLimit: editLimit,
@@ -173,7 +174,7 @@ export default function KeysClient() {
       const res = await fetch(`/api/dev-keys/${encodeURIComponent(targetId)}`, {
         method: 'DELETE',
         headers: {
-          'x-user-id': encodeURIComponent(String(user?.id || user?.username || user?.email || 'dev_user')),
+          Authorization: `Bearer ${token}`,
         },
       });
 

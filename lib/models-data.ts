@@ -3,17 +3,56 @@ export type ModelInfo = {
   name: string;
   tagline: string;
   badge: string;
-  parameters: string;
+  parameters?: string;
   vision: boolean;
   context: string;
   releaseDate: string;
   bannerImage: string;
   squareImage: string;
-  ollamaTag: string;
-  readmeContent: string;
+  ollamaTag?: string;
+  /** Modèle servi dans le cloud via l'API mAI (pas d'exécution locale). */
+  cloud?: boolean;
+  /** Alias d'appel de l'API mAI (ex: "mai-2"). */
+  apiAlias?: string;
+  /** Modèle fournisseur sous-jacent (routage API, non affiché). */
+  backingModel?: string;
+  /** Sortie maximale de tokens (modèles cloud). */
+  maxOutput?: string;
+  readmeContent?: string;
 };
 
 export const modelsData: Omit<ModelInfo, 'readmeContent'>[] = [
+  // ─── Série mAI-2 (génération cloud) ────────────────────────────────────────
+  {
+    id: 'mai-2',
+    name: 'mAI-2',
+    tagline: 'Our flagship model, for the best price.',
+    badge: 'Cloud • Texte + images • 1M',
+    vision: true,
+    context: '1M',
+    releaseDate: '25/10/2026',
+    bannerImage: '/mai-2/mai-2-169.PNG',
+    squareImage: '/mai-2/icon.PNG',
+    cloud: true,
+    apiAlias: 'mai-2',
+    backingModel: 'deepseek/deepseek-v4.1-flash',
+    maxOutput: '384K',
+  },
+  {
+    id: 'mai-2-mini',
+    name: 'mAI-2-Mini',
+    tagline: 'Our balanced model, for increased price.',
+    badge: 'Cloud • Texte + images • 1M',
+    vision: true,
+    context: '1M',
+    releaseDate: '25/10/2026',
+    bannerImage: '/mai-2/mai-2-169.PNG',
+    squareImage: '/mai-2/mai-galaxy.PNG',
+    cloud: true,
+    apiAlias: 'mai-2-mini',
+    backingModel: 'minimax/minimax-m3',
+    maxOutput: '128K',
+  },
   // ─── Série mAI-1.5 (nouvelle génération 1.5) ───────────────────────────────
   {
     id: 'mai-1.5-light',

@@ -78,20 +78,15 @@ export const SUPPORT_ATTACHMENT_LIMITS = {
 } as const;
 
 export function isAllowedSupportMime(mime: string, fileName?: string): boolean {
-  if (!mime) {
-    // fallback sur extension
+  const normalized = (mime || "").trim().toLowerCase();
+  const allowedMimes = SUPPORT_ATTACHMENT_LIMITS.ALLOWED_MIMES as readonly string[];
+  if (allowedMimes.includes(normalized)) return true;
+  // Certains navigateurs envoient application/octet-stream (ou rien) pour du texte : vérifier l'extension
+  if (!normalized || normalized === "application/octet-stream") {
     if (fileName) {
       const ext = "." + (fileName.split(".").pop() || "").toLowerCase();
       return (SUPPORT_ATTACHMENT_LIMITS.ALLOWED_EXTS as readonly string[]).includes(ext);
     }
-    return false;
-  }
-  if (mime.startsWith("image/")) return true;
-  if (mime === "text/plain" || mime === "text/markdown" || mime === "text/csv") return true;
-  // .md parfois détecté comme text/plain ou octet-stream → autoriser via extension
-  if (fileName) {
-    const lower = fileName.toLowerCase();
-    if (lower.endsWith(".md") || lower.endsWith(".txt")) return true;
   }
   return false;
 }

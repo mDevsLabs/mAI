@@ -1,6 +1,7 @@
 "use server";
 
 import { neon } from "@neondatabase/serverless";
+import { getSessionIdentity } from "@/lib/session-auth";
 
 export interface AvailableResetItem {
   id: number;
@@ -9,7 +10,28 @@ export interface AvailableResetItem {
   createdAt: string;
 }
 
-export async function getUserAvailableResets(userId: string): Promise<{
+/** Résout l'identité serveur puis les identifiants alternatifs (id, username, email) associés. */
+async function resolveTargetUserIds(sql: any): Promise<string[] | null> {
+  const identity = await getSessionIdentity();
+  if (!identity) return null;
+  const userId = identity.userId;
+  const uRows = await sql`
+    SELECT id, username, email 
+    FROM users 
+    WHERE id::text = ${userId}::text OR username = ${userId}::text OR email = ${userId}::text 
+    LIMIT 1
+  `.catch(() => []);
+
+  const targetUserIds = [userId];
+  if (uRows.length > 0) {
+    if (uRows[0].id) targetUserIds.push(String(uRows[0].id));
+    if (uRows[0].username) targetUserIds.push(String(uRows[0].username));
+    if (uRows[0].email) targetUserIds.push(String(uRows[0].email));
+  }
+  return targetUserIds;
+}
+
+export async function getUserAvailableResets(): Promise<{
   success: boolean;
   resets: AvailableResetItem[];
   error?: string;
@@ -35,19 +57,9 @@ export async function getUserAvailableResets(userId: string): Promise<{
       );
     `.catch(() => {});
 
-    // Récupérer les identifiants alternatifs (id, username, email)
-    const uRows = await sql`
-      SELECT id, username, email 
-      FROM users 
-      WHERE id::text = ${userId}::text OR username = ${userId}::text OR email = ${userId}::text 
-      LIMIT 1
-    `.catch(() => []);
-
-    const targetUserIds = [userId];
-    if (uRows.length > 0) {
-      if (uRows[0].id) targetUserIds.push(String(uRows[0].id));
-      if (uRows[0].username) targetUserIds.push(String(uRows[0].username));
-      if (uRows[0].email) targetUserIds.push(String(uRows[0].email));
+    const targetUserIds = await resolveTargetUserIds(sql);
+    if (!targetUserIds) {
+      return { success: false, resets: [], error: "Authentification requise." };
     }
 
     const rows = await sql`
@@ -78,7 +90,7 @@ export async function getUserAvailableResets(userId: string): Promise<{
   }
 }
 
-export async function claimUserReset(userId: string, resetId: number): Promise<{
+export async function claimUserReset(resetId: number): Promise<{
   success: boolean;
   message?: string;
   error?: string;
@@ -92,19 +104,9 @@ export async function claimUserReset(userId: string, resetId: number): Promise<{
 
     const sql = neon(databaseUrl);
 
-    // Vérifier l'utilisateur
-    const uRows = await sql`
-      SELECT id, username, email 
-      FROM users 
-      WHERE id::text = ${userId}::text OR username = ${userId}::text OR email = ${userId}::text 
-      LIMIT 1
-    `;
-
-    const targetUserIds = [userId];
-    if (uRows.length > 0) {
-      if (uRows[0].id) targetUserIds.push(String(uRows[0].id));
-      if (uRows[0].username) targetUserIds.push(String(uRows[0].username));
-      if (uRows[0].email) targetUserIds.push(String(uRows[0].email));
+    const targetUserIds = await resolveTargetUserIds(sql);
+    if (!targetUserIds) {
+      return { success: false, error: "Authentification requise." };
     }
 
     // Récupérer la réinitialisation
@@ -121,13 +123,20 @@ export async function claimUserReset(userId: string, resetId: number): Promise<{
     }
 
     const reset = resetRows[0];
-    if (reset.status !== "available") {
-      return { success: false, error: "Cette réinitialisation a déjà été utilisée." };
+    if (reset.expires_at && new Date(reset.expires_at) < new Date()) {
+      await sql`UPDATE user_pending_resets SET status = 'expired' WHERE id = ${resetId} AND status = 'available'`;
+      return { success: false, error: "Cette réinitialisation a expiré." };
     }
 
-    if (reset.expires_at && new Date(reset.expires_at) < new Date()) {
-      await sql`UPDATE user_pending_resets SET status = 'expired' WHERE id = ${resetId}`;
-      return { success: false, error: "Cette réinitialisation a expiré." };
+    // Réclamation atomique : un seul appelant peut passer 'available' → 'used'
+    const claimed = await sql`
+      UPDATE user_pending_resets
+      SET status = 'used', used_at = NOW()
+      WHERE id = ${resetId} AND status = 'available'
+      RETURNING id
+    `;
+    if (claimed.length === 0) {
+      return { success: false, error: "Cette réinitialisation a déjà été utilisée." };
     }
 
     const resetType = reset.reset_type;
@@ -165,13 +174,6 @@ export async function claimUserReset(userId: string, resetId: number): Promise<{
         WHERE user_id = ANY(${targetUserIds})
       `;
     }
-
-    // Marquer la réinitialisation comme consommée
-    await sql`
-      UPDATE user_pending_resets
-      SET status = 'used', used_at = NOW()
-      WHERE id = ${resetId}
-    `;
 
     const labels: Record<string, string> = {
       all: "L'ensemble de vos quotas",

@@ -39,10 +39,20 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       headers: { 'Content-Type': 'application/json', Authorization: authHeader },
       body: JSON.stringify(body),
     });
-    const data = await res.json();
+    const data = await res.json().catch(() => null);
+    if (data === null) {
+      return NextResponse.json(
+        { error: { code: 'upstream_error', message: 'Réponse invalide du service projets.' } },
+        { status: 502 }
+      );
+    }
     return NextResponse.json(data, { status: res.status });
   } catch {
-    return NextResponse.json({ success: true, project_id: id, message: 'Mis à jour' });
+    // Ne jamais simuler un succès : la mise à jour n'a pas été appliquée
+    return NextResponse.json(
+      { error: { code: 'upstream_unavailable', message: 'Service projets indisponible.' } },
+      { status: 502 }
+    );
   }
 }
 
@@ -54,9 +64,19 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
       method: 'DELETE',
       headers: { Authorization: authHeader },
     });
-    const data = await res.json();
+    const data = await res.json().catch(() => null);
+    if (data === null) {
+      return NextResponse.json(
+        { error: { code: 'upstream_error', message: 'Réponse invalide du service projets.' } },
+        { status: 502 }
+      );
+    }
     return NextResponse.json(data, { status: res.status });
   } catch {
-    return NextResponse.json({ success: true, message: 'Projet supprimé' });
+    // Ne jamais simuler un succès : la suppression n'a pas été appliquée
+    return NextResponse.json(
+      { error: { code: 'upstream_unavailable', message: 'Service projets indisponible.' } },
+      { status: 502 }
+    );
   }
 }

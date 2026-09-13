@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Sparkles, Gauge, KeyRound, Zap, ArrowRight, ShieldCheck, Cloud, Image as ImageIcon, Volume2, Bot, Wrench } from "lucide-react";
+import { Sparkles, Gauge, KeyRound, Zap, ArrowRight, ShieldCheck, Cloud, Image as ImageIcon, Volume2, Bot, Users, Wrench } from "lucide-react";
 import { useAuth } from "@/components/auth-provider";
 
 interface PlanItem {
@@ -16,8 +16,9 @@ interface PlanItem {
   cloudStorage: string;
   dailyImages: string;
   audioTokens: string;
-  skillsMCP?: string;
+  pluginsMCP?: string;
   agentsWeb?: string;
+  vibe?: string;
 }
 
 const PLANS: PlanItem[] = [
@@ -40,8 +41,9 @@ const PLANS: PlanItem[] = [
     cloudStorage: "20 GB Cloud",
     dailyImages: "10 images / jour",
     audioTokens: "75 000 000 tokens / semaine",
-    skillsMCP: "Skills & MCP",
+    pluginsMCP: "Plugins & MCP",
     agentsWeb: "10 Agents dans mAI Web",
+    vibe: "Expérience améliorée dans Vibe",
   },
   {
     id: "pro",
@@ -54,8 +56,9 @@ const PLANS: PlanItem[] = [
     cloudStorage: "40 GB Cloud",
     dailyImages: "20 images / jour",
     audioTokens: "150 000 000 tokens / semaine",
-    skillsMCP: "Skills & MCP",
+    pluginsMCP: "Plugins & MCP",
     agentsWeb: "10 Agents dans mAI Web",
+    vibe: "Expérience améliorée dans Vibe",
   },
   {
     id: "max",
@@ -66,8 +69,9 @@ const PLANS: PlanItem[] = [
     cloudStorage: "60 GB Cloud",
     dailyImages: "35 images / jour",
     audioTokens: "300 000 000 tokens / semaine",
-    skillsMCP: "Skills & MCP",
+    pluginsMCP: "Plugins & MCP",
     agentsWeb: "10 Agents dans mAI Web",
+    vibe: "Expérience améliorée dans Vibe",
   },
 ];
 
@@ -210,14 +214,14 @@ export default function PricingPage() {
                     </div>
                   </div>
 
-                  {plan.skillsMCP && (
+                  {plan.pluginsMCP && (
                     <div className="flex items-start gap-2.5">
                       <div className="p-1 rounded-lg bg-amber-100 text-amber-600 mt-0.5">
                         <Wrench className="w-3.5 h-3.5" />
                       </div>
                       <div>
-                        <p className="text-xs font-bold text-slate-900">Compétences</p>
-                        <p className="text-xs text-slate-600 font-medium">{plan.skillsMCP}</p>
+                        <p className="text-xs font-bold text-slate-900">Plugins &amp; MCP</p>
+                        <p className="text-xs text-slate-600 font-medium">{plan.pluginsMCP}</p>
                       </div>
                     </div>
                   )}
@@ -230,6 +234,18 @@ export default function PricingPage() {
                       <div>
                         <p className="text-xs font-bold text-slate-900">Agents</p>
                         <p className="text-xs text-slate-600 font-medium">{plan.agentsWeb}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {plan.vibe && (
+                    <div className="flex items-start gap-2.5">
+                      <div className="p-1 rounded-lg bg-violet-100 text-violet-600 mt-0.5">
+                        <Users className="w-3.5 h-3.5" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-slate-900">Vibe</p>
+                        <p className="text-xs text-slate-600 font-medium">{plan.vibe}</p>
                       </div>
                     </div>
                   )}

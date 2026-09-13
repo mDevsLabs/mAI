@@ -256,6 +256,7 @@ export async function executeWebSearch(query: string, count: number = 5): Promis
               query: trimmedQuery,
               count,
             }),
+            signal: AbortSignal.timeout(8000),
           });
 
           if (res.ok) {
@@ -303,9 +304,11 @@ export async function executeWebSearch(query: string, count: number = 5): Promis
             }
           }
 
-          const status = res.status;
-          const errBody = await res.text().catch(() => "");
-          lastError = new Error(`HTTP ${status}: ${errBody}`);
+          if (!res.ok) {
+            // Corps lisible uniquement en cas d'erreur (sinon déjà consommé par json())
+            const errBody = await res.text().catch(() => "");
+            lastError = new Error(`HTTP ${res.status}: ${errBody.slice(0, 300)}`);
+          }
         } catch (err: any) {
           lastError = err;
         }

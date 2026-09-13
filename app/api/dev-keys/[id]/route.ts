@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revokeApiKey, updateApiKey } from '@/lib/api-key-manager';
+import { authenticateSession } from '@/lib/session-auth';
 
 export const runtime = 'nodejs';
 
@@ -10,11 +11,9 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    const raw = req.headers.get('x-user-id');
-    if (!raw) return NextResponse.json({ error: { code: 'unauthorized', message: 'Auth requise.' } }, { status: 401 });
-    let userId: string;
-    try { userId = decodeURIComponent(raw); } catch { return NextResponse.json({ error: { code: 'bad_request', message: 'x-user-id invalide.' } }, { status: 400 }); }
-    if (!userId || userId === 'dev_user') return NextResponse.json({ error: { code: 'unauthorized', message: 'Auth requise.' } }, { status: 401 });
+    const auth = await authenticateSession(req);
+    if (!auth.ok) return auth.response;
+    const userId = auth.identity.userId;
 
     if (!id) {
       return NextResponse.json(
@@ -52,11 +51,10 @@ export async function PUT(
 ) {
   try {
     const { id } = await params;
-    const raw = req.headers.get('x-user-id');
-    if (!raw) return NextResponse.json({ error: { code: 'unauthorized', message: 'Auth requise.' } }, { status: 401 });
-    let userId: string;
-    try { userId = decodeURIComponent(raw); } catch { return NextResponse.json({ error: { code: 'bad_request', message: 'x-user-id invalide.' } }, { status: 400 }); }
-    if (!userId || userId === 'dev_user') return NextResponse.json({ error: { code: 'unauthorized', message: 'Auth requise.' } }, { status: 401 });
+    const auth = await authenticateSession(req);
+    if (!auth.ok) return auth.response;
+    const userId = auth.identity.userId;
+
     const body = await req.json().catch(() => ({}));
 
     if (!id) {
@@ -66,9 +64,10 @@ export async function PUT(
       );
     }
 
+    const parsedLimit = body.maxLimit !== undefined ? (body.maxLimit === "" ? null : parseInt(body.maxLimit, 10)) : undefined;
     const updates = {
       name: body.name,
-      maxLimit: body.maxLimit !== undefined ? (body.maxLimit === "" ? null : parseInt(body.maxLimit, 10)) : undefined,
+      maxLimit: parsedLimit !== undefined && !Number.isFinite(parsedLimit as number) ? undefined : parsedLimit,
       isActive: body.isActive !== undefined ? Boolean(body.isActive) : undefined,
     };
 

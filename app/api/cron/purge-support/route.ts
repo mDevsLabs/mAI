@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { timingSafeEqual } from "node:crypto";
 import { neon } from "@neondatabase/serverless";
 import { AwsClient } from "aws4fetch";
 
@@ -69,19 +70,22 @@ function findNodeForKey(fileKey: string, fileUrl?: string): { node: StorageNode;
   return null;
 }
 
+function safeEqual(a: string, b: string) {
+  const bufA = Buffer.from(a);
+  const bufB = Buffer.from(b);
+  if (bufA.length !== bufB.length) return false;
+  return timingSafeEqual(bufA, bufB);
+}
+
 export async function GET(req: NextRequest) {
-  // Vérif secret cron (Vercel) ou header interne
+  // Fail-closed : sans CRON_SECRET configuré, l'endpoint refuse tout appel.
+  // Secret accepté uniquement en en-tête (Authorization: Bearer ou x-cron-secret), jamais en query string (loggée par les proxies).
   const cronSecret = process.env.CRON_SECRET;
   const authHeader = req.headers.get("authorization") || req.headers.get("x-cron-secret") || "";
-  const urlSecret = req.nextUrl.searchParams.get("secret") || "";
-  const provided = authHeader.replace(/^Bearer\s+/i, "").trim() || urlSecret.trim();
+  const provided = authHeader.replace(/^Bearer\s+/i, "").trim();
 
-  if (cronSecret && provided !== cronSecret) {
-    // Autoriser aussi les appels internes sans secret en dev si pas de CRON_SECRET configuré? Non, bloquer si secret défini
-    // En dev, si pas de secret, on autorise
-    if (cronSecret) {
-      return NextResponse.json({ success: false, error: "Non autorisé (CRON_SECRET invalide)." }, { status: 401 });
-    }
+  if (!cronSecret || !provided || !safeEqual(provided, cronSecret)) {
+    return NextResponse.json({ success: false, error: "Non autorisé." }, { status: 401 });
   }
 
   try {
@@ -148,7 +152,7 @@ export async function GET(req: NextRequest) {
     });
   } catch (err: any) {
     console.error("purge-support error", err);
-    return NextResponse.json({ success: false, error: err?.message || "Erreur purge" }, { status: 500 });
+    return NextResponse.json({ success: false, error: "Erreur purge" }, { status: 500 });
   }
 }
 

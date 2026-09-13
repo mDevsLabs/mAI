@@ -13,10 +13,10 @@ import {
   type SupportMessage,
   type SupportAttachment,
   type SupportTicketStatus,
-  isTerminalStatus,
   getAllowedStatusTransitions,
   SUPPORT_ATTACHMENT_LIMITS,
 } from "@/app/actions/support-utils";
+import { getSessionIdentity } from "@/lib/session-auth";
 
 function getSql() {
   const databaseUrl = process.env.DATABASE_URL;
@@ -94,14 +94,47 @@ function mapAttachmentRow(a: any): SupportAttachment {
   };
 }
 
+type SupportSessionUser = {
+  id: string;
+  email: string;
+  name: string;
+  tier: string;
+  isAdmin: boolean;
+};
+
+const AUTH_REQUIRED = { success: false as const, error: "Authentification requise." };
+
+/**
+ * Identité serveur : dérivée du JWT de session signé, jamais des paramètres fournis par le client.
+ */
+async function getRequiredSupportUser(sql: any): Promise<SupportSessionUser | null> {
+  const identity = await getSessionIdentity();
+  if (!identity) return null;
+  const rows = await sql`
+    SELECT id, email, username, tier FROM users WHERE id::text = ${identity.userId}::text LIMIT 1
+  `;
+  if (rows.length === 0) return null;
+  const r = rows[0];
+  const email = String(r.email || "").trim().toLowerCase();
+  return {
+    id: String(r.id),
+    email,
+    name: String(r.username || email || "Utilisateur"),
+    tier: String(r.tier || "Free"),
+    isAdmin: isAdminUser(email),
+  };
+}
+
+function isTicketOwner(ticket: { user_id?: any; user_email?: any }, me: SupportSessionUser): boolean {
+  const storedId = String(ticket.user_id || "");
+  const storedEmail = String(ticket.user_email || "").trim().toLowerCase();
+  return storedId === me.id || storedId === me.email || storedEmail === me.email;
+}
+
 /**
  * Crée un nouveau ticket de support et alerte l'administrateur
  */
 export async function createSupportTicket(data: {
-  userId: string;
-  userEmail: string;
-  userName: string;
-  userTier?: string;
   title: string;
   description: string;
   category: string;
@@ -112,6 +145,8 @@ export async function createSupportTicket(data: {
 }) {
   try {
     const sql = getSql();
+    const me = await getRequiredSupportUser(sql);
+    if (!me) return AUTH_REQUIRED;
 
     if (!data.title?.trim() || !data.description?.trim()) {
       return { success: false, error: "Le titre et la description sont requis." };
@@ -119,8 +154,6 @@ export async function createSupportTicket(data: {
     if (data.title.trim().length < 3 || data.title.trim().length > 120) {
       return { success: false, error: "Le titre doit contenir entre 3 et 120 caractères." };
     }
-
-    const tier = data.userTier || "Free";
 
     // 1. Insertion du ticket
     const result = await sql`
@@ -137,10 +170,10 @@ export async function createSupportTicket(data: {
         status,
         metadata
       ) VALUES (
-        ${data.userId},
-        ${data.userEmail},
-        ${data.userName},
-        ${tier},
+        ${me.id},
+        ${me.email},
+        ${me.name},
+        ${me.tier},
         ${data.title.trim()},
         ${data.description.trim()},
         ${data.category || "Autre"},
@@ -166,9 +199,9 @@ export async function createSupportTicket(data: {
         action_type
       ) VALUES (
         ${ticket.id},
-        ${data.userId},
-        ${data.userEmail},
-        ${data.userName},
+        ${me.id},
+        ${me.email},
+        ${me.name},
         'user',
         ${data.description.trim()},
         'created'
@@ -185,12 +218,14 @@ export async function createSupportTicket(data: {
             UPDATE support_ticket_attachments
             SET message_id = ${createdMsgId}::uuid
             WHERE id = ${attId}::uuid AND ticket_id IS NULL
+              AND (uploader_id = ${me.id} OR uploader_id = ${me.email} OR uploader_email = ${me.email})
           `;
           // fallback si ticket_id était déjà set en attente (upload via /api/support/upload sans ticket)
           await sql`
             UPDATE support_ticket_attachments
             SET ticket_id = ${ticket.id}::uuid, message_id = ${createdMsgId}::uuid
             WHERE id = ${attId}::uuid AND (ticket_id = ${ticket.id}::uuid OR ticket_id IS NULL)
+              AND (uploader_id = ${me.id} OR uploader_id = ${me.email} OR uploader_email = ${me.email})
           `;
         } catch {}
       }
@@ -242,31 +277,26 @@ export async function createSupportTicket(data: {
  * - is_archived filtré par défaut (archived masqué sauf status=archived)
  */
 export async function getTicketsList({
-  userId,
-  userEmail,
   status,
   project,
   priority,
   search,
-  includeArchived,
 }: {
-  userId: string;
-  userEmail?: string;
   status?: string;
   project?: string;
   priority?: string;
   search?: string;
-  includeArchived?: boolean;
 }) {
   try {
     const sql = getSql();
-    const isAdmin = isAdminUser(userEmail);
+    const me = await getRequiredSupportUser(sql);
+    if (!me) return { ...AUTH_REQUIRED, tickets: [] };
+    const isAdmin = me.isAdmin;
 
     let rows: any[] = [];
 
     // Normaliser status : 'all' = tout sauf archived par défaut
     const effectiveStatus = status || "all";
-    const showArchived = includeArchived || effectiveStatus === "archived";
 
     if (isAdmin) {
       if (effectiveStatus === "archived") {
@@ -345,7 +375,7 @@ export async function getTicketsList({
             t.*,
             (SELECT COUNT(*) FROM support_ticket_messages m WHERE m.ticket_id = t.id) as message_count
           FROM support_tickets t
-          WHERE (t.user_id = ${userId} OR t.user_email = ${userEmail || ''})
+          WHERE (t.user_id = ${me.id} OR t.user_id = ${me.email} OR t.user_email = ${me.email})
           AND t.is_archived = TRUE
           AND (
             ${!project || project === 'all'} OR t.project = ${project || ''}
@@ -366,7 +396,7 @@ export async function getTicketsList({
             t.*,
             (SELECT COUNT(*) FROM support_ticket_messages m WHERE m.ticket_id = t.id) as message_count
           FROM support_tickets t
-          WHERE (t.user_id = ${userId} OR t.user_email = ${userEmail || ''})
+          WHERE (t.user_id = ${me.id} OR t.user_id = ${me.email} OR t.user_email = ${me.email})
           AND t.is_archived = FALSE
           AND (
             ${!project || project === 'all'} OR t.project = ${project || ''}
@@ -387,7 +417,7 @@ export async function getTicketsList({
             t.*,
             (SELECT COUNT(*) FROM support_ticket_messages m WHERE m.ticket_id = t.id) as message_count
           FROM support_tickets t
-          WHERE (t.user_id = ${userId} OR t.user_email = ${userEmail || ''})
+          WHERE (t.user_id = ${me.id} OR t.user_id = ${me.email} OR t.user_email = ${me.email})
           AND t.status = ${effectiveStatus}
           AND t.is_archived = FALSE
           AND (
@@ -426,10 +456,12 @@ export async function getTicketsList({
 /**
  * Récupère le détail d'un ticket, messages et pièces jointes
  */
-export async function getTicketDetails(ticketId: string, userEmail?: string, userId?: string) {
+export async function getTicketDetails(ticketId: string) {
   try {
     const sql = getSql();
-    const isAdmin = isAdminUser(userEmail);
+    const me = await getRequiredSupportUser(sql);
+    if (!me) return AUTH_REQUIRED;
+    const isAdmin = me.isAdmin;
 
     const ticketRows = await sql`
       SELECT * FROM support_tickets WHERE id = ${ticketId}::uuid LIMIT 1
@@ -441,8 +473,8 @@ export async function getTicketDetails(ticketId: string, userEmail?: string, use
 
     const r = ticketRows[0];
 
-    // Vérif sécurité : seul admin ou owner
-    if (!isAdmin && userId && r.user_id !== userId && userEmail && r.user_email !== userEmail) {
+    // Vérif sécurité : seul admin ou owner (fail-closed)
+    if (!isAdmin && !isTicketOwner(r, me)) {
       return { success: false, error: "Vous n'avez pas l'autorisation d'accéder à ce ticket." };
     }
 
@@ -505,18 +537,12 @@ export async function getTicketDetails(ticketId: string, userEmail?: string, use
  */
 export async function addTicketResponse({
   ticketId,
-  senderId,
-  senderEmail,
-  senderName,
   message,
   newStatus,
   isAiGenerated,
   attachmentIds,
 }: {
   ticketId: string;
-  senderId: string;
-  senderEmail: string;
-  senderName: string;
   message: string;
   newStatus?: SupportTicketStatus;
   isAiGenerated?: boolean;
@@ -524,8 +550,13 @@ export async function addTicketResponse({
 }) {
   try {
     const sql = getSql();
-    const isAdmin = isAdminUser(senderEmail);
+    const me = await getRequiredSupportUser(sql);
+    if (!me) return AUTH_REQUIRED;
+    const isAdmin = me.isAdmin;
     const role = isAdmin ? "admin" : "user";
+    const senderId = me.id;
+    const senderEmail = me.email;
+    const senderName = me.name;
 
     // 1. Récupérer ticket actuel
     const ticketRows = await sql`
@@ -536,6 +567,11 @@ export async function addTicketResponse({
     }
     const ticket = ticketRows[0] as SupportTicket;
     const currentStatus = ticket.status as SupportTicketStatus;
+
+    // Vérif sécurité : seul admin ou owner (fail-closed)
+    if (!isAdmin && !isTicketOwner(ticket, me)) {
+      return { success: false, error: "Vous n'avez pas l'autorisation d'intervenir sur ce ticket." };
+    }
 
     const trimmedMsg = message.trim();
     const hasAttachments = !!(attachmentIds && attachmentIds.length > 0);
@@ -614,6 +650,7 @@ export async function addTicketResponse({
               UPDATE support_ticket_attachments
               SET message_id = ${newMessageId}::uuid, ticket_id = ${ticketId}::uuid
               WHERE id = ${attId}::uuid
+                AND (uploader_id = ${me.id} OR uploader_id = ${me.email} OR uploader_email = ${me.email})
             `;
           } catch {}
         }
@@ -769,16 +806,14 @@ export async function addTicketResponse({
 export async function updateTicketTitle({
   ticketId,
   newTitle,
-  requesterEmail,
-  requesterId,
 }: {
   ticketId: string;
   newTitle: string;
-  requesterEmail: string;
-  requesterId: string;
 }) {
   try {
     const sql = getSql();
+    const me = await getRequiredSupportUser(sql);
+    if (!me) return AUTH_REQUIRED;
     const trimmed = newTitle.trim();
     if (trimmed.length < 3 || trimmed.length > 120) {
       return { success: false, error: "Le titre doit contenir entre 3 et 120 caractères." };
@@ -786,17 +821,16 @@ export async function updateTicketTitle({
     const rows = await sql`SELECT * FROM support_tickets WHERE id = ${ticketId}::uuid LIMIT 1`;
     if (rows.length === 0) return { success: false, error: "Ticket introuvable." };
     const ticket = rows[0];
-    const isAdmin = isAdminUser(requesterEmail);
-    if (!isAdmin && ticket.user_id !== requesterId && ticket.user_email !== requesterEmail) {
+    const isAdmin = me.isAdmin;
+    if (!isAdmin && !isTicketOwner(ticket, me)) {
       return { success: false, error: "Non autorisé à renommer ce ticket." };
     }
     if (ticket.title === trimmed) return { success: true };
 
     await sql`UPDATE support_tickets SET title = ${trimmed}, updated_at = NOW() WHERE id = ${ticketId}::uuid`;
-    const requesterName = requesterEmail.split("@")[0];
     await sql`
       INSERT INTO support_ticket_messages (ticket_id, sender_id, sender_email, sender_name, sender_role, message, action_type)
-      VALUES (${ticketId}::uuid, ${requesterId}, ${requesterEmail}, ${requesterName}, ${isAdmin ? "admin" : "user"}, ${`Titre renommé : "${trimmed}"`}, 'title_change')
+      VALUES (${ticketId}::uuid, ${me.id}, ${me.email}, ${me.name}, ${isAdmin ? "admin" : "user"}, ${`Titre renommé : "${trimmed}"`}, 'title_change')
     `;
     return { success: true };
   } catch (error: any) {
@@ -810,22 +844,20 @@ export async function updateTicketTitle({
  */
 export async function archiveTicket({
   ticketId,
-  requesterEmail,
-  requesterId,
   archive,
 }: {
   ticketId: string;
-  requesterEmail: string;
-  requesterId: string;
   archive: boolean;
 }) {
   try {
     const sql = getSql();
+    const me = await getRequiredSupportUser(sql);
+    if (!me) return AUTH_REQUIRED;
     const rows = await sql`SELECT * FROM support_tickets WHERE id = ${ticketId}::uuid LIMIT 1`;
     if (rows.length === 0) return { success: false, error: "Ticket introuvable." };
     const ticket = rows[0];
-    const isAdmin = isAdminUser(requesterEmail);
-    if (!isAdmin && ticket.user_id !== requesterId && ticket.user_email !== requesterEmail) {
+    const isAdmin = me.isAdmin;
+    if (!isAdmin && !isTicketOwner(ticket, me)) {
       return { success: false, error: "Non autorisé à archiver ce ticket." };
     }
 
@@ -837,7 +869,7 @@ export async function archiveTicket({
       `;
       await sql`
         INSERT INTO support_ticket_messages (ticket_id, sender_id, sender_email, sender_name, sender_role, message, action_type)
-        VALUES (${ticketId}::uuid, ${requesterId}, ${requesterEmail}, ${requesterEmail.split("@")[0]}, ${isAdmin ? "admin" : "user"}, 'Ticket archivé', 'archived')
+        VALUES (${ticketId}::uuid, ${me.id}, ${me.email}, ${me.name}, ${isAdmin ? "admin" : "user"}, 'Ticket archivé', 'archived')
       `;
     } else {
       await sql`
@@ -847,7 +879,7 @@ export async function archiveTicket({
       `;
       await sql`
         INSERT INTO support_ticket_messages (ticket_id, sender_id, sender_email, sender_name, sender_role, message, action_type)
-        VALUES (${ticketId}::uuid, ${requesterId}, ${requesterEmail}, ${requesterEmail.split("@")[0]}, ${isAdmin ? "admin" : "user"}, 'Ticket désarchivé', 'unarchived')
+        VALUES (${ticketId}::uuid, ${me.id}, ${me.email}, ${me.name}, ${isAdmin ? "admin" : "user"}, 'Ticket désarchivé', 'unarchived')
       `;
     }
     return { success: true };
@@ -863,20 +895,18 @@ export async function archiveTicket({
  */
 export async function deleteTicket({
   ticketId,
-  requesterEmail,
-  requesterId,
 }: {
   ticketId: string;
-  requesterEmail: string;
-  requesterId: string;
 }) {
   try {
     const sql = getSql();
+    const me = await getRequiredSupportUser(sql);
+    if (!me) return AUTH_REQUIRED;
     const rows = await sql`SELECT * FROM support_tickets WHERE id = ${ticketId}::uuid LIMIT 1`;
     if (rows.length === 0) return { success: false, error: "Ticket introuvable." };
     const ticket = rows[0];
-    const isAdmin = isAdminUser(requesterEmail);
-    if (!isAdmin && ticket.user_id !== requesterId && ticket.user_email !== requesterEmail) {
+    const isAdmin = me.isAdmin;
+    if (!isAdmin && !isTicketOwner(ticket, me)) {
       return { success: false, error: "Non autorisé à supprimer ce ticket." };
     }
 
@@ -903,16 +933,6 @@ export async function deleteTicket({
 export async function purgeInactiveTickets(): Promise<{ success: boolean; deletedCount?: number; error?: string }> {
   try {
     const sql = getSql();
-    // Récup d'abord les file_keys pour purge Z1 avant DELETE
-    let fileKeys: string[] = [];
-    try {
-      const toPurge = await sql`
-        SELECT a.file_key FROM support_ticket_attachments a
-        JOIN support_tickets t ON t.id = a.ticket_id
-        WHERE t.updated_at < NOW() - INTERVAL '365 days'
-      `;
-      fileKeys = toPurge.map((r: any) => r.file_key).filter(Boolean);
-    } catch {}
     const res = await sql`SELECT purge_inactive_support_tickets() as deleted`;
     const deletedCount = parseInt(res[0]?.deleted || "0", 10);
     return { success: true, deletedCount };
@@ -925,25 +945,31 @@ export async function purgeInactiveTickets(): Promise<{ success: boolean; delete
 /**
  * Récupère les statistiques complètes de support pour le dashboard
  */
-export async function getSupportStats(userId?: string, userEmail?: string) {
+export async function getSupportStats() {
   try {
     const sql = getSql();
-    const isAdmin = isAdminUser(userEmail);
+    const me = await getRequiredSupportUser(sql);
+    if (!me) return AUTH_REQUIRED;
+    const isAdmin = me.isAdmin;
 
     // Si admin -> stats globales (hors archivés pour les KPIs actifs). Si utilisateur -> ses stats propres
-    const filterUser = !isAdmin && userId ? sql`WHERE user_id = ${userId} AND is_archived = FALSE` : sql`WHERE is_archived = FALSE`;
-    const filterUserAll = !isAdmin && userId ? sql`WHERE user_id = ${userId}` : sql``;
+    const filterUser = isAdmin
+      ? sql`WHERE is_archived = FALSE`
+      : sql`WHERE (user_id = ${me.id} OR user_id = ${me.email} OR user_email = ${me.email}) AND is_archived = FALSE`;
+    const filterUserAll = isAdmin
+      ? sql``
+      : sql`WHERE (user_id = ${me.id} OR user_id = ${me.email} OR user_email = ${me.email})`;
 
     // 1. Comptages globaux (filtrés archivés exclus pour total actif, mais total inclut archivés via second query)
     const totalRow = await sql`SELECT COUNT(*) as count FROM support_tickets ${filterUser}`;
     const totalWithArchivedRow = await sql`SELECT COUNT(*) as count FROM support_tickets ${filterUserAll}`;
-    const openRow = await sql`SELECT COUNT(*) as count FROM support_tickets WHERE status = 'open' ${!isAdmin && userId ? sql`AND user_id = ${userId} AND is_archived = FALSE` : sql`AND is_archived = FALSE`}`;
-    const inProgressRow = await sql`SELECT COUNT(*) as count FROM support_tickets WHERE status = 'in_progress' ${!isAdmin && userId ? sql`AND user_id = ${userId} AND is_archived = FALSE` : sql`AND is_archived = FALSE`}`;
-    const reopenedRow = await sql`SELECT COUNT(*) as count FROM support_tickets WHERE status = 'reopened' ${!isAdmin && userId ? sql`AND user_id = ${userId} AND is_archived = FALSE` : sql`AND is_archived = FALSE`}`;
-    const waitingRow = await sql`SELECT COUNT(*) as count FROM support_tickets WHERE status = 'waiting_user' ${!isAdmin && userId ? sql`AND user_id = ${userId} AND is_archived = FALSE` : sql`AND is_archived = FALSE`}`;
-    const resolvedRow = await sql`SELECT COUNT(*) as count FROM support_tickets WHERE status = 'resolved' ${!isAdmin && userId ? sql`AND user_id = ${userId} AND is_archived = FALSE` : sql`AND is_archived = FALSE`}`;
-    const closedRow = await sql`SELECT COUNT(*) as count FROM support_tickets WHERE status = 'closed' ${!isAdmin && userId ? sql`AND user_id = ${userId} AND is_archived = FALSE` : sql`AND is_archived = FALSE`}`;
-    const archivedRow = await sql`SELECT COUNT(*) as count FROM support_tickets WHERE is_archived = TRUE ${!isAdmin && userId ? sql`AND user_id = ${userId}` : sql``}`;
+    const openRow = await sql`SELECT COUNT(*) as count FROM support_tickets WHERE status = 'open' ${isAdmin ? sql`AND is_archived = FALSE` : sql`AND (user_id = ${me.id} OR user_id = ${me.email} OR user_email = ${me.email}) AND is_archived = FALSE`}`;
+    const inProgressRow = await sql`SELECT COUNT(*) as count FROM support_tickets WHERE status = 'in_progress' ${isAdmin ? sql`AND is_archived = FALSE` : sql`AND (user_id = ${me.id} OR user_id = ${me.email} OR user_email = ${me.email}) AND is_archived = FALSE`}`;
+    const reopenedRow = await sql`SELECT COUNT(*) as count FROM support_tickets WHERE status = 'reopened' ${isAdmin ? sql`AND is_archived = FALSE` : sql`AND (user_id = ${me.id} OR user_id = ${me.email} OR user_email = ${me.email}) AND is_archived = FALSE`}`;
+    const waitingRow = await sql`SELECT COUNT(*) as count FROM support_tickets WHERE status = 'waiting_user' ${isAdmin ? sql`AND is_archived = FALSE` : sql`AND (user_id = ${me.id} OR user_id = ${me.email} OR user_email = ${me.email}) AND is_archived = FALSE`}`;
+    const resolvedRow = await sql`SELECT COUNT(*) as count FROM support_tickets WHERE status = 'resolved' ${isAdmin ? sql`AND is_archived = FALSE` : sql`AND (user_id = ${me.id} OR user_id = ${me.email} OR user_email = ${me.email}) AND is_archived = FALSE`}`;
+    const closedRow = await sql`SELECT COUNT(*) as count FROM support_tickets WHERE status = 'closed' ${isAdmin ? sql`AND is_archived = FALSE` : sql`AND (user_id = ${me.id} OR user_id = ${me.email} OR user_email = ${me.email}) AND is_archived = FALSE`}`;
+    const archivedRow = await sql`SELECT COUNT(*) as count FROM support_tickets WHERE is_archived = TRUE ${isAdmin ? sql`` : sql`AND (user_id = ${me.id} OR user_id = ${me.email} OR user_email = ${me.email})`}`;
 
     const total = parseInt(totalRow[0]?.count || "0", 10);
     const totalWithArchived = parseInt(totalWithArchivedRow[0]?.count || "0", 10);
@@ -961,7 +987,7 @@ export async function getSupportStats(userId?: string, userEmail?: string) {
     const avgTimeRow = await sql`
       SELECT AVG(EXTRACT(EPOCH FROM (resolved_at - created_at)) / 3600) as avg_hours
       FROM support_tickets
-      WHERE resolved_at IS NOT NULL ${!isAdmin && userId ? sql`AND user_id = ${userId}` : sql``}
+      WHERE resolved_at IS NOT NULL ${isAdmin ? sql`` : sql`AND (user_id = ${me.id} OR user_id = ${me.email} OR user_email = ${me.email})`}
     `;
     const avgResolutionHours = avgTimeRow[0]?.avg_hours 
       ? Math.round(parseFloat(avgTimeRow[0].avg_hours) * 10) / 10 
@@ -1026,7 +1052,7 @@ export async function getSupportStats(userId?: string, userEmail?: string) {
         COUNT(*) as total_created,
         COUNT(CASE WHEN status IN ('resolved', 'closed') THEN 1 END) as total_resolved
       FROM support_tickets
-      WHERE created_at >= NOW() - INTERVAL '14 days' ${!isAdmin && userId ? sql`AND user_id = ${userId}` : sql``}
+      WHERE created_at >= NOW() - INTERVAL '14 days' ${isAdmin ? sql`` : sql`AND (user_id = ${me.id} OR user_id = ${me.email} OR user_email = ${me.email})`}
       GROUP BY DATE(created_at), TO_CHAR(DATE(created_at), 'DD/MM')
       ORDER BY DATE(created_at) ASC
     `;
@@ -1073,6 +1099,13 @@ export async function getSupportStats(userId?: string, userEmail?: string) {
 export async function getTicketAttachments(ticketId: string) {
   try {
     const sql = getSql();
+    const me = await getRequiredSupportUser(sql);
+    if (!me) return { ...AUTH_REQUIRED, attachments: [] };
+    const ticketRows = await sql`SELECT user_id, user_email FROM support_tickets WHERE id = ${ticketId}::uuid LIMIT 1`;
+    if (ticketRows.length === 0) return { success: false, error: "Ticket introuvable.", attachments: [] };
+    if (!me.isAdmin && !isTicketOwner(ticketRows[0], me)) {
+      return { success: false, error: "Non autorisé.", attachments: [] };
+    }
     const rows = await sql`SELECT * FROM support_ticket_attachments WHERE ticket_id = ${ticketId}::uuid ORDER BY created_at ASC`;
     return { success: true, attachments: rows.map(mapAttachmentRow) };
   } catch (e: any) {

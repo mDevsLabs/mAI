@@ -7,6 +7,8 @@ import {
   Download,
   Terminal,
   Cpu,
+  Cloud,
+  KeyRound,
   Eye,
   EyeOff,
   Layers,
@@ -18,6 +20,7 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { toast } from "react-hot-toast";
 import type { ModelInfo } from "@/lib/models";
 
@@ -32,58 +35,83 @@ interface AppIntegration {
 export function ModelDetailClient({ model }: { model: ModelInfo }) {
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
-  const mainCommand = `ollama run ${model.ollamaTag}`;
-  const hfCommand = `hf download ${model.ollamaTag}`;
+  const isCloud = !!model.cloud;
+  const mainCommand = model.ollamaTag ? `ollama run ${model.ollamaTag}` : "";
+  const hfCommand = model.ollamaTag ? `hf download ${model.ollamaTag}` : "";
 
-  const integrations: AppIntegration[] = [
-    {
-      id: "claude",
-      name: "Claude",
-      command: `ollama launch claude --model ${model.ollamaTag}`,
-      filename: `launch-claude-${model.id}.sh`,
-      description: "Lancez l'interface Claude connectée à votre modèle local.",
-    },
-    {
-      id: "codex-app",
-      name: "Codex App",
-      command: `ollama launch codex-app --model ${model.ollamaTag}`,
-      filename: `launch-codex-app-${model.id}.sh`,
-      description: "Exécutez Codex App avec la puissance de ce modèle.",
-    },
-    {
-      id: "codex-cli",
-      name: "Codex CLI",
-      command: `ollama launch codex --model ${model.ollamaTag}`,
-      filename: `launch-codex-cli-${model.id}.sh`,
-      description: "Utilisez Codex en ligne de commande avec ce modèle.",
-    },
-    {
-      id: "hermes",
-      name: "Hermes Agent",
-      command: `ollama launch hermes --model ${model.ollamaTag}`,
-      filename: `launch-hermes-${model.id}.sh`,
-      description: "Invoquez l'agent autonome Hermes avec votre modèle.",
-    },
-    {
-      id: "openclaw",
-      name: "OpenClaw",
-      command: `ollama launch openclaw --model ${model.ollamaTag}`,
-      filename: `launch-openclaw-${model.id}.sh`,
-      description: "Connectez OpenClaw à votre environnement local.",
-    },
-    {
-      id: "opencode",
-      name: "OpenCode",
-      command: `ollama launch opencode --model ${model.ollamaTag}`,
-      filename: `launch-opencode-${model.id}.sh`,
-      description: "Associez OpenCode à votre modèle pour le développement.",
-    },
-  ];
+  const curlCommand = `curl https://mai.val.run/v1/chat/completions \\
+  -H "Authorization: Bearer $MAI_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "model": "${model.apiAlias}",
+    "messages": [{ "role": "user", "content": "Bonjour mAI" }]
+  }'`;
+
+  const pythonSnippet = `from openai import OpenAI
+import os
+
+client = OpenAI(
+    base_url="https://mai.val.run/v1",
+    api_key=os.environ["MAI_API_KEY"],
+)
+
+response = client.chat.completions.create(
+    model="${model.apiAlias}",
+    messages=[{"role": "user", "content": "Bonjour mAI"}],
+)
+print(response.choices[0].message.content)`;
+
+  const integrations: AppIntegration[] = model.ollamaTag
+    ? [
+        {
+          id: "claude",
+          name: "Claude",
+          command: `ollama launch claude --model ${model.ollamaTag}`,
+          filename: `launch-claude-${model.id}.sh`,
+          description: "Lancez l'interface Claude connectée à votre modèle local.",
+        },
+        {
+          id: "codex-app",
+          name: "Codex App",
+          command: `ollama launch codex-app --model ${model.ollamaTag}`,
+          filename: `launch-codex-app-${model.id}.sh`,
+          description: "Exécutez Codex App avec la puissance de ce modèle.",
+        },
+        {
+          id: "codex-cli",
+          name: "Codex CLI",
+          command: `ollama launch codex --model ${model.ollamaTag}`,
+          filename: `launch-codex-cli-${model.id}.sh`,
+          description: "Utilisez Codex en ligne de commande avec ce modèle.",
+        },
+        {
+          id: "hermes",
+          name: "Hermes Agent",
+          command: `ollama launch hermes --model ${model.ollamaTag}`,
+          filename: `launch-hermes-${model.id}.sh`,
+          description: "Invoquez l'agent autonome Hermes avec votre modèle.",
+        },
+        {
+          id: "openclaw",
+          name: "OpenClaw",
+          command: `ollama launch openclaw --model ${model.ollamaTag}`,
+          filename: `launch-openclaw-${model.id}.sh`,
+          description: "Connectez OpenClaw à votre environnement local.",
+        },
+        {
+          id: "opencode",
+          name: "OpenCode",
+          command: `ollama launch opencode --model ${model.ollamaTag}`,
+          filename: `launch-opencode-${model.id}.sh`,
+          description: "Associez OpenCode à votre modèle pour le développement.",
+        },
+      ]
+    : [];
 
   const handleCopy = (text: string, key: string, label: string) => {
     navigator.clipboard.writeText(text);
     setCopiedKey(key);
-    toast.success(`Commande ${label} copiée !`);
+    toast.success(`${label} copié !`);
     setTimeout(() => {
       setCopiedKey(null);
     }, 2000);
@@ -102,6 +130,25 @@ export function ModelDetailClient({ model }: { model: ModelInfo }) {
     URL.revokeObjectURL(url);
     toast.success(`Script ${filename} téléchargé !`);
   };
+
+  const renderCopyButton = (text: string, key: string, label: string, className = "") => (
+    <button
+      onClick={() => handleCopy(text, key, label)}
+      className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all shadow ${className}`}
+    >
+      {copiedKey === key ? (
+        <>
+          <Check className="w-4 h-4" />
+          Copié !
+        </>
+      ) : (
+        <>
+          <Copy className="w-4 h-4" />
+          Copier
+        </>
+      )}
+    </button>
+  );
 
   return (
     <div className="flex flex-col gap-8 md:gap-12 max-w-5xl mx-auto">
@@ -132,7 +179,7 @@ export function ModelDetailClient({ model }: { model: ModelInfo }) {
             </div>
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-700 text-xs font-bold uppercase tracking-wider mb-2">
-                <Sparkles className="w-4 h-4" />
+                {isCloud ? <Cloud className="w-4 h-4" /> : <Sparkles className="w-4 h-4" />}
                 {model.badge}
               </div>
               <h1 className="text-4xl md:text-5xl font-black italic tracking-tighter uppercase text-slate-900">
@@ -141,6 +188,11 @@ export function ModelDetailClient({ model }: { model: ModelInfo }) {
               <p className="text-slate-600 text-base mt-2 max-w-xl">
                 {model.tagline}
               </p>
+              {isCloud && (
+                <p className="text-slate-500 text-xs mt-1.5">
+                  Sortie prévue le {model.releaseDate} · Exécution cloud via l&apos;API mAI
+                </p>
+              )}
             </div>
           </div>
 
@@ -180,10 +232,16 @@ export function ModelDetailClient({ model }: { model: ModelInfo }) {
         <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4">
           <div className="p-4 rounded-2xl bg-white/50 backdrop-blur-md border border-white/70 shadow-sm flex flex-col gap-1">
             <div className="flex items-center gap-2 text-slate-500 text-xs font-medium">
-              <Cpu className="w-4 h-4 text-blue-500" />
-              Paramètres
+              {isCloud ? (
+                <Cloud className="w-4 h-4 text-sky-500" />
+              ) : (
+                <Cpu className="w-4 h-4 text-blue-500" />
+              )}
+              {isCloud ? "Exécution" : "Paramètres"}
             </div>
-            <span className="text-xl font-black text-slate-900">{model.parameters}</span>
+            <span className="text-xl font-black text-slate-900">
+              {isCloud ? "Cloud (API mAI)" : model.parameters}
+            </span>
           </div>
 
           <div className="p-4 rounded-2xl bg-white/50 backdrop-blur-md border border-white/70 shadow-sm flex flex-col gap-1">
@@ -211,147 +269,171 @@ export function ModelDetailClient({ model }: { model: ModelInfo }) {
           <div className="p-4 rounded-2xl bg-white/50 backdrop-blur-md border border-white/70 shadow-sm flex flex-col gap-1">
             <div className="flex items-center gap-2 text-slate-500 text-xs font-medium">
               <Calendar className="w-4 h-4 text-amber-500" />
-              Date de Sortie
+              {isCloud ? "Sortie maximale" : "Date de Sortie"}
             </div>
-            <span className="text-xl font-black text-slate-900">{model.releaseDate}</span>
+            <span className="text-xl font-black text-slate-900">
+              {isCloud ? model.maxOutput : model.releaseDate}
+            </span>
           </div>
         </div>
       </div>
 
-      {/* Section Commandes d'installation principale */}
-      <div className="bg-gradient-to-br from-slate-900 via-slate-950 to-blue-950 text-white rounded-3xl p-6 md:p-8 shadow-xl relative overflow-hidden border border-slate-800">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-3 rounded-xl bg-blue-500/20 text-blue-400 border border-blue-500/30">
-            <Terminal className="w-5 h-5" />
-          </div>
-          <div>
-            <h2 className="text-xl font-bold">Installation & Lancement Direct</h2>
-            <p className="text-xs text-slate-400">
-              Téléchargez et exécutez le modèle directement dans votre terminal.
-            </p>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-slate-900/90 border border-slate-700/80 rounded-2xl p-4 font-mono text-sm shadow-inner">
-            <div className="flex flex-col gap-1">
-              <span className="text-slate-500 text-[10px] uppercase font-bold tracking-wider">Ollama</span>
-              <code className="text-blue-300 font-bold select-all break-all">
-                {mainCommand}
-              </code>
+      {/* ─── Modèles cloud : utilisation via l'API mAI ─────────────────────── */}
+      {isCloud && (
+        <div className="bg-gradient-to-br from-slate-900 via-slate-950 to-blue-950 text-white rounded-3xl p-6 md:p-8 shadow-xl relative overflow-hidden border border-slate-800">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="p-3 rounded-xl bg-blue-500/20 text-blue-400 border border-blue-500/30">
+              <Terminal className="w-5 h-5" />
             </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <button
-                onClick={() => handleCopy(mainCommand, "main", "Ollama")}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white text-xs font-semibold transition-all shadow"
-              >
-                {copiedKey === "main" ? (
-                  <>
-                    <Check className="w-4 h-4 text-emerald-300" />
-                    Copié !
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-4 h-4" />
-                    Copier
-                  </>
-                )}
-              </button>
-              <button
-                onClick={() => handleDownload(mainCommand, `run-${model.id}.sh`)}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition-all border border-slate-700 shadow"
-              >
-                <Download className="w-4 h-4" />
-                Script
-              </button>
+            <div>
+              <h2 className="text-xl font-bold">Utilisation via l&apos;API mAI</h2>
+              <p className="text-xs text-slate-400">
+                API compatible OpenAI — aucune installation locale requise.
+              </p>
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-slate-900/90 border border-slate-700/80 rounded-2xl p-4 font-mono text-sm shadow-inner">
-            <div className="flex flex-col gap-1">
-              <span className="text-slate-500 text-[10px] uppercase font-bold tracking-wider">Hugging Face CLI</span>
-              <code className="text-[#FFD21E] font-bold select-all break-all">
-                {hfCommand}
-              </code>
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2 bg-slate-900/90 border border-slate-700/80 rounded-2xl p-4 font-mono text-sm shadow-inner">
+              <div className="flex items-center justify-between">
+                <span className="text-slate-500 text-[10px] uppercase font-bold tracking-wider">cURL</span>
+                {renderCopyButton(curlCommand, "curl", "Commande cURL", "bg-blue-600 hover:bg-blue-500 text-white")}
+              </div>
+              <pre className="text-blue-300 font-bold overflow-x-auto whitespace-pre">{curlCommand}</pre>
             </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <button
-                onClick={() => handleCopy(hfCommand, "hf", "Hugging Face")}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#FFD21E] hover:bg-yellow-400 active:bg-yellow-500 text-slate-900 text-xs font-semibold transition-all shadow"
-              >
-                {copiedKey === "hf" ? (
-                  <>
-                    <Check className="w-4 h-4 text-emerald-700" />
-                    Copié !
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-4 h-4" />
-                    Copier
-                  </>
-                )}
-              </button>
+
+            <div className="flex flex-col gap-2 bg-slate-900/90 border border-slate-700/80 rounded-2xl p-4 font-mono text-sm shadow-inner">
+              <div className="flex items-center justify-between">
+                <span className="text-slate-500 text-[10px] uppercase font-bold tracking-wider">
+                  Python · SDK OpenAI
+                </span>
+                {renderCopyButton(pythonSnippet, "python", "Extrait Python", "bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700")}
+              </div>
+              <pre className="text-emerald-300 font-bold overflow-x-auto whitespace-pre">{pythonSnippet}</pre>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* Section Intégrations & Commandes de Lancement des 6 Applications */}
-      <div className="bg-white/40 backdrop-blur-md border border-white/60 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] rounded-3xl p-6 md:p-8">
-        <div className="mb-6">
-          <h2 className="text-2xl font-black text-slate-900 mb-2">
-            Commandes de lancement par Application (6 Apps)
-          </h2>
-          <p className="text-slate-600 text-sm">
-            Lancez automatiquement {model.name} dans vos outils et applications préférés.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {integrations.map((app) => (
-            <div
-              key={app.id}
-              className="p-5 rounded-2xl bg-white/50 backdrop-blur-md border border-white/70 shadow-sm hover:shadow-md transition-all flex flex-col justify-between gap-4"
+          <div className="mt-5 flex flex-wrap items-center gap-3 text-xs text-slate-400">
+            <span>Créez votre clé API depuis votre compte, puis remplacez $MAI_API_KEY.</span>
+            <Link
+              href="/account/keys"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold transition-all"
             >
+              <KeyRound className="w-3.5 h-3.5" />
+              Gérer mes clés API
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {/* ─── Modèles locaux : installation & intégrations ─────────────────── */}
+      {!isCloud && (
+        <>
+          <div className="bg-gradient-to-br from-slate-900 via-slate-950 to-blue-950 text-white rounded-3xl p-6 md:p-8 shadow-xl relative overflow-hidden border border-slate-800">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-3 rounded-xl bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                <Terminal className="w-5 h-5" />
+              </div>
               <div>
-                <div className="flex items-center justify-between mb-1">
-                  <h3 className="font-bold text-slate-900 text-base">{app.name}</h3>
+                <h2 className="text-xl font-bold">Installation & Lancement Direct</h2>
+                <p className="text-xs text-slate-400">
+                  Téléchargez et exécutez le modèle directement dans votre terminal.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-slate-900/90 border border-slate-700/80 rounded-2xl p-4 font-mono text-sm shadow-inner">
+                <div className="flex flex-col gap-1">
+                  <span className="text-slate-500 text-[10px] uppercase font-bold tracking-wider">Ollama</span>
+                  <code className="text-blue-300 font-bold select-all break-all">
+                    {mainCommand}
+                  </code>
                 </div>
-                <p className="text-xs text-slate-500 mb-3">{app.description}</p>
-                <div className="p-3 rounded-xl bg-slate-950 text-slate-100 font-mono text-xs overflow-x-auto border border-slate-800">
-                  <code>{app.command}</code>
+                <div className="flex items-center gap-2 shrink-0">
+                  {renderCopyButton(mainCommand, "main", "Commande Ollama", "bg-blue-600 hover:bg-blue-500 text-white")}
+                  <button
+                    onClick={() => handleDownload(mainCommand, `run-${model.id}.sh`)}
+                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition-all border border-slate-700 shadow"
+                  >
+                    <Download className="w-4 h-4" />
+                    Script
+                  </button>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 pt-2 border-t border-black/5">
-                <button
-                  onClick={() => handleCopy(app.command, app.id, app.name)}
-                  className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-white/80 border border-slate-300 hover:bg-white text-slate-800 text-xs font-semibold transition-all shadow-sm"
-                >
-                  {copiedKey === app.id ? (
-                    <>
-                      <Check className="w-4 h-4 text-emerald-600" />
-                      Copié !
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-4 h-4 text-slate-600" />
-                      Copier
-                    </>
-                  )}
-                </button>
-                <button
-                  onClick={() => handleDownload(app.command, app.filename)}
-                  className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 text-white hover:bg-slate-800 text-xs font-semibold transition-all shadow-sm"
-                >
-                  <Download className="w-4 h-4" />
-                  Télécharger
-                </button>
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-slate-900/90 border border-slate-700/80 rounded-2xl p-4 font-mono text-sm shadow-inner">
+                <div className="flex flex-col gap-1">
+                  <span className="text-slate-500 text-[10px] uppercase font-bold tracking-wider">Hugging Face CLI</span>
+                  <code className="text-[#FFD21E] font-bold select-all break-all">
+                    {hfCommand}
+                  </code>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  {renderCopyButton(hfCommand, "hf", "Commande Hugging Face", "bg-[#FFD21E] hover:bg-yellow-400 text-slate-900")}
+                </div>
               </div>
             </div>
-          ))}
-        </div>
-      </div>
+          </div>
+
+          {/* Section Intégrations & Commandes de Lancement des 6 Applications */}
+          <div className="bg-white/40 backdrop-blur-md border border-white/60 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] rounded-3xl p-6 md:p-8">
+            <div className="mb-6">
+              <h2 className="text-2xl font-black text-slate-900 mb-2">
+                Commandes de lancement par Application (6 Apps)
+              </h2>
+              <p className="text-slate-600 text-sm">
+                Lancez automatiquement {model.name} dans vos outils et applications préférés.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {integrations.map((app) => (
+                <div
+                  key={app.id}
+                  className="p-5 rounded-2xl bg-white/50 backdrop-blur-md border border-white/70 shadow-sm hover:shadow-md transition-all flex flex-col justify-between gap-4"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <h3 className="font-bold text-slate-900 text-base">{app.name}</h3>
+                    </div>
+                    <p className="text-xs text-slate-500 mb-3">{app.description}</p>
+                    <div className="p-3 rounded-xl bg-slate-950 text-slate-100 font-mono text-xs overflow-x-auto border border-slate-800">
+                      <code>{app.command}</code>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 pt-2 border-t border-black/5">
+                    <button
+                      onClick={() => handleCopy(app.command, app.id, app.name)}
+                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-white/80 border border-slate-300 hover:bg-white text-slate-800 text-xs font-semibold transition-all shadow-sm"
+                    >
+                      {copiedKey === app.id ? (
+                        <>
+                          <Check className="w-4 h-4 text-emerald-600" />
+                          Copié !
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-4 h-4 text-slate-600" />
+                          Copier
+                        </>
+                      )}
+                    </button>
+                    <button
+                      onClick={() => handleDownload(app.command, app.filename)}
+                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 text-white hover:bg-slate-800 text-xs font-semibold transition-all shadow-sm"
+                    >
+                      <Download className="w-4 h-4" />
+                      Télécharger
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Section Documentation README Markdown */}
       {model.readmeContent && (
@@ -363,6 +445,7 @@ export function ModelDetailClient({ model }: { model: ModelInfo }) {
 
           <div className="prose max-w-none prose-headings:text-slate-900 prose-a:text-blue-600 prose-p:text-slate-700 prose-p:leading-relaxed prose-li:text-slate-700">
             <Markdown
+              remarkPlugins={[remarkGfm]}
               components={{
                 h1: ({ node: _node, ...props }) => (
                   <h1 className="text-3xl font-black text-slate-900 mt-6 mb-4" {...props} />
@@ -410,6 +493,17 @@ export function ModelDetailClient({ model }: { model: ModelInfo }) {
                 ),
                 blockquote: ({ node: _node, ...props }) => (
                   <blockquote className="border-l-4 border-blue-500 bg-blue-50/50 italic p-4 rounded-r-2xl my-6 text-slate-700 shadow-sm" {...props} />
+                ),
+                a: ({ node: _node, href, children, ...props }) => (
+                  <a
+                    href={href}
+                    className="text-blue-600 hover:text-blue-800 underline font-medium transition-colors"
+                    target={href?.startsWith("http") ? "_blank" : "_self"}
+                    rel={href?.startsWith("http") ? "noreferrer" : undefined}
+                    {...props}
+                  >
+                    {children}
+                  </a>
                 ),
                 img: ({ node: _node, src, alt, ...props }) => (
                   <img

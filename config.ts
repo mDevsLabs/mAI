@@ -172,6 +172,9 @@ export function getJwtSecret(): Uint8Array {
   if (!secret) {
     throw new Error("MAI_JWT_SECRET not set");
   }
+  if (secret.length < 32) {
+    throw new Error("MAI_JWT_SECRET trop court (min 32 caractères)");
+  }
   return new TextEncoder().encode(secret);
 }
 
@@ -191,7 +194,6 @@ export async function signToken(
 export async function verifyToken(
   token: string
 ): Promise<Record<string, unknown>> {
-  // Vérif SQLite (legacy Val Town) + Postgres (nouveau)
   const sqliteResult = await sqlite.execute({
     args: [token],
     sql: "SELECT 1 FROM token_blacklist WHERE token = ?",
@@ -199,7 +201,6 @@ export async function verifyToken(
   if (sqliteResult.rows.length > 0) {
     throw new Error("Token révoqué.");
   }
-  // Vérif Postgres token_blacklist avec TTL 14j
   try {
     const sql = getDb();
     const pgResult =
@@ -208,10 +209,10 @@ export async function verifyToken(
       throw new Error("Token révoqué.");
     }
   } catch (e: any) {
-    if (e?.message === "Token révoqué.") {
-      throw e;
-    }
-    // ignore DB errors (table not yet exists)
+    if (e?.message === "Token révoqué.") throw e;
+    const msg = String(e?.message || "");
+    const isMissingTable = msg.includes("does not exist") || msg.includes("42P01") || msg.includes("no such table");
+    if (!isMissingTable) throw e;
   }
   const { payload } = await jwtVerify(token, getJwtSecret());
   return payload as Record<string, unknown>;
@@ -221,34 +222,31 @@ export async function blacklistToken(token: string) {
   const expiresAt = new Date(
     Date.now() + 14 * 24 * 60 * 60 * 1000
   ).toISOString();
-  try {
-    await sqlite.execute({
+  await Promise.allSettled([
+    sqlite.execute({
       args: [token],
       sql: "INSERT OR IGNORE INTO token_blacklist (token) VALUES (?)",
-    });
-  } catch {}
-  try {
-    const sql = getDb();
-    await sql`INSERT INTO token_blacklist (token, revoked_at, expires_at) VALUES (${token}, NOW(), ${expiresAt}::timestamp) ON CONFLICT (token) DO NOTHING`;
-  } catch {}
-  // Nettoyage opportuniste des vieux tokens
-  try {
-    const sql = getDb();
-    await sql`DELETE FROM token_blacklist WHERE expires_at < NOW() OR revoked_at < NOW() - INTERVAL '14 days'`;
-  } catch {}
-  try {
-    await sqlite.execute({
-      sql: "DELETE FROM token_blacklist WHERE revoked_at < datetime('now', '-14 days')",
-    });
-  } catch {}
+    }).catch(()=>{}),
+    (async () => {
+      try {
+        const sql = getDb();
+        await sql`INSERT INTO token_blacklist (token, revoked_at, expires_at) VALUES (${token}, NOW(), ${expiresAt}::timestamp) ON CONFLICT (token) DO NOTHING`;
+      } catch {}
+    })(),
+  ]);
+  // Nettoyage opportuniste des vieux tokens (non bloquant)
+  Promise.allSettled([
+    (async () => { try { const sql=getDb(); await sql`DELETE FROM token_blacklist WHERE expires_at < NOW() OR revoked_at < NOW() - INTERVAL '14 days'`; } catch {} })(),
+    sqlite.execute({ sql: "DELETE FROM token_blacklist WHERE revoked_at < datetime('now', '-14 days')" }).catch(()=>{}),
+  ]);
 }
 
 export function extractToken(req: Request): string | null {
-  const auth = req.headers.get("Authorization");
-  if (!auth?.startsWith("Bearer ")) {
-    return null;
-  }
-  return auth.slice(7);
+  const raw = req.headers.get("Authorization") || req.headers.get("authorization");
+  if (!raw) return null;
+  const trimmed = raw.trim();
+  if (!/^Bearer\s+/i.test(trimmed)) return null;
+  return trimmed.replace(/^Bearer\s+/i, "").trim() || null;
 }
 
 export function parseUserAgent(ua: string) {
@@ -295,7 +293,7 @@ export function parseUserAgent(ua: string) {
   if (uaLower.includes("mai-cli") || uaLower.includes("mai cli")) {
     model = "mAI CLI";
     version = "Terminal";
-  } else if (uaLower.includes("pulse-extension") || uaLower.includes("pulse")) {
+  } else if (uaLower.includes("pulse-extension")) {
     model = "Pulse Extension";
     version = "Extension";
   } else if (uaLower.includes("edg/")) {
@@ -395,13 +393,10 @@ export async function generateVerificationCode(
   const length = isDeletion ? 8 : 6;
   const min = 10 ** (length - 1);
   const max = 10 ** length - 1;
-  // Crypto PRNG (corrige Math.random prévisible)
-  const range = max - min;
-  const randomValue =
-    crypto.getRandomValues(new Uint32Array(1))[0] / 0xff_ff_ff_ff;
-  const code = Math.floor(min + randomValue * range)
-    .toString()
-    .padStart(length, "0");
+  const range = max - min + 1;
+  const rnd = crypto.getRandomValues(new Uint32Array(1))[0];
+  const codeNum = min + (rnd % range);
+  const code = codeNum.toString().padStart(length, "0");
   const expiresAt = new Date(Date.now() + 10 * 60_000).toISOString(); // 10 minutes
 
   await sqlite.execute({
@@ -410,6 +405,13 @@ export async function generateVerificationCode(
   });
 
   return code;
+}
+
+function timingSafeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
 }
 
 export async function verifyVerificationCode(
@@ -421,14 +423,9 @@ export async function verifyVerificationCode(
     args: [email, action],
     sql: "SELECT code, expires_at FROM verification_codes WHERE email = ? AND action = ?",
   });
-
-  if (result.rows.length === 0) {
-    return false;
-  }
-
+  if (result.rows.length === 0) return false;
   const storedCode = result.rows[0][0] as string;
   const expiresAt = new Date(result.rows[0][1] as string);
-
   if (expiresAt < new Date()) {
     await sqlite.execute({
       args: [email, action],
@@ -436,15 +433,13 @@ export async function verifyVerificationCode(
     });
     return false;
   }
-
-  if (storedCode === code) {
+  if (timingSafeEqual(storedCode, code)) {
     await sqlite.execute({
       args: [email, action],
       sql: "DELETE FROM verification_codes WHERE email = ? AND action = ?",
     });
     return true;
   }
-
   return false;
 }
 

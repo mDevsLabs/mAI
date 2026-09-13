@@ -50,7 +50,8 @@ export function StatusWidget() {
     <Link
       href="https://mai.instatus.com/"
       target="_blank"
-      className="fixed bottom-4 left-4 z-50 flex items-center gap-2 max-w-[calc(100vw-2rem)] bg-white/90 backdrop-blur-md border border-slate-200/60 shadow-lg rounded-full px-3 py-1.5 hover:scale-105 transition-transform duration-200"
+      rel="noopener noreferrer"
+      className="fixed safe-bottom-4 left-4 z-50 flex items-center gap-2 max-w-[calc(100vw-2rem)] bg-white/90 backdrop-blur-md border border-slate-200/60 shadow-lg rounded-full px-3 py-1.5 hover:scale-105 transition-transform duration-200"
     >
       <span className={`shrink-0 w-2 h-2 rounded-full ${color} animate-pulse`}></span>
       <span className="text-xs font-bold text-slate-700 truncate">{text}</span>

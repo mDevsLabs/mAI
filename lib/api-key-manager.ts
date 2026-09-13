@@ -7,6 +7,7 @@ export interface ApiKeyMetadata {
   name: string;
   prefix: string; // Les premiers caractères visibles (ex: mai-pro-7TK9W)
   apiKey?: string; // Clé complète pour exécution dans le studio
+  ownerId?: string; // Identifiant réel du propriétaire (users.id) quand connu
   createdAt: string;
   lastUsedAt: string | null;
   usageCount: number;
@@ -46,6 +47,27 @@ export function getDb() {
 // Calcule le hash SHA-256 d'un secret en clair
 export function hashSecretKey(secretKey: string): string {
   return crypto.createHash('sha256').update(secretKey).digest('hex');
+}
+
+/**
+ * Résout tous les identifiants possibles d'un utilisateur (id, username, email)
+ * pour retrouver ses clés quel que soit l'identifiant utilisé à la création.
+ */
+async function getUserIdentifiers(db: any, userId: string): Promise<string[]> {
+  const ids = [userId];
+  try {
+    const rows = await db`
+      SELECT id, username, email FROM users
+      WHERE id::text = ${userId}::text OR username = ${userId}::text OR email = ${userId}::text
+      LIMIT 1
+    `;
+    if (rows[0]) {
+      if (rows[0].id) ids.push(String(rows[0].id));
+      if (rows[0].username) ids.push(String(rows[0].username));
+      if (rows[0].email) ids.push(String(rows[0].email));
+    }
+  } catch {}
+  return [...new Set(ids)];
 }
 
 function generateRandomChars(length: number, charset: string): string {
@@ -153,7 +175,7 @@ export async function listApiKeys(userId: string): Promise<ApiKeyMetadata[]> {
   if (db) {
     try {
       const rows = await db`
-        SELECT k.api_key, k.plan, k.request_count, k.created_at, k.last_used_at, k.max_limit, k.is_active
+        SELECT k.user_id, k.api_key, k.plan, k.request_count, k.created_at, k.last_used_at, k.max_limit, k.is_active
         FROM mprojects_api_keys k
         LEFT JOIN users u ON k.user_id = u.id::text OR k.user_id = u.username OR k.user_id = u.email
         WHERE k.user_id = ${userId}::text
@@ -185,6 +207,7 @@ export async function listApiKeys(userId: string): Promise<ApiKeyMetadata[]> {
             name: row.plan || 'Clé API',
             prefix: `${prefix}_••••••••`,
             apiKey: keyVal,
+            ownerId: row.user_id ? String(row.user_id) : undefined,
             createdAt: row.created_at ? new Date(row.created_at).toISOString() : new Date().toISOString(),
             lastUsedAt: row.last_used_at ? new Date(row.last_used_at).toISOString() : null,
             usageCount: row.request_count || 0,
@@ -250,12 +273,14 @@ export async function revokeApiKey(userId: string, keyId: string): Promise<boole
       const cleanPrefix = cleanId.replace(/_•+$/, '').trim();
       // Nombre minimal de caractères pour éviter suppression massive par préfixe trop court
       if (cleanPrefix.length < 8) throw new Error('Préfixe trop court');
-      await db`
+      const identifiers = await getUserIdentifiers(db, userId);
+      const deleted = await db`
         DELETE FROM mprojects_api_keys
-        WHERE user_id = ${userId} 
+        WHERE user_id = ANY(${identifiers})
           AND api_key LIKE ${cleanPrefix + '%'}
+        RETURNING id
       `;
-      success = true;
+      if (deleted.length > 0) success = true;
     } catch (err) {
       console.error('Erreur lors de la révocation DB:', err);
     }
@@ -294,16 +319,18 @@ export async function updateApiKey(userId: string, keyId: string, updates: { nam
       const cleanPrefix = cleanId.replace(/_•+$/, '').trim();
       if (cleanPrefix.length < 8) throw new Error('Préfixe trop court');
       if (updates.name !== undefined || updates.maxLimit !== undefined || updates.isActive !== undefined) {
-        await db`
+        const identifiers = await getUserIdentifiers(db, userId);
+        const updated = await db`
           UPDATE mprojects_api_keys
           SET 
             plan = COALESCE(${updates.name !== undefined ? updates.name : null}, plan),
-            max_limit = ${updates.maxLimit !== undefined ? updates.maxLimit : null},
+            max_limit = CASE WHEN ${updates.maxLimit !== undefined} THEN ${updates.maxLimit ?? null}::integer ELSE max_limit END,
             is_active = COALESCE(${updates.isActive !== undefined ? updates.isActive : null}, is_active)
-          WHERE user_id = ${userId} 
+          WHERE user_id = ANY(${identifiers})
             AND api_key LIKE ${cleanPrefix + '%'}
+          RETURNING id
         `;
-        success = true;
+        if (updated.length > 0) success = true;
       }
     } catch (err) {
       console.error('Erreur lors de la mise à jour DB:', err);
@@ -428,7 +455,8 @@ export async function checkAndTrackUserUsage(params: {
     };
   } catch (err) {
     console.error('Erreur checkAndTrackUserUsage:', err);
-    return { allowed: true };
+    // Fail-closed : une erreur de vérification ne doit pas ouvrir le quota
+    return { allowed: false, error: 'Erreur de vérification du quota. Réessayez dans un instant.' };
   }
 }
 
@@ -487,6 +515,7 @@ export async function validateApiKey(secretKey: string): Promise<{ valid: boolea
           id: record.id,
           name: record.name,
           prefix: `${record.prefix}_••••••••`,
+          ownerId: record.userId,
           createdAt: record.createdAt,
           lastUsedAt: record.lastUsedAt,
           usageCount: record.usageCount,
@@ -524,15 +553,18 @@ export async function validateApiKey(secretKey: string): Promise<{ valid: boolea
         }
 
         // Détection prioritaire du forfait depuis la clé (mai-TIER_USER-XXXXX-XXXXX)
+        // Le nom de la clé (colonne plan) n'est JAMAIS utilisé comme forfait (il est librement modifiable).
         const detectedTier = extractTierFromApiKey(cleanedKey);
-        const userTier = detectedTier || row.user_tier || row.plan || 'Free';
+        const userTier = detectedTier || row.user_tier || 'Free';
         const apiBoost = await getUserQuotaBoost(db, row.user_id, 'api');
         const tierLimit = getTierQuotaLimit(userTier) + apiBoost;
 
+        // Agréger TOUTES les clés de l'utilisateur (quel que soit l'identifiant stocké)
+        const ownerIdentifiers = await getUserIdentifiers(db, String(row.user_id));
         const countRows = await db`
           SELECT SUM(request_count) as total_requests
           FROM mprojects_api_keys
-          WHERE user_id = ${row.user_id}::text
+          WHERE user_id = ANY(${ownerIdentifiers})
         `;
         const globalRequestCount = parseInt(countRows[0]?.total_requests || '0', 10);
 
@@ -550,7 +582,7 @@ export async function validateApiKey(secretKey: string): Promise<{ valid: boolea
           WHERE api_key = ${row.api_key}
         `;
 
-        const resolvedPlan = detectedTier || row.plan || row.user_tier || 'Free';
+        const resolvedPlan = detectedTier || row.user_tier || 'Free';
         // Extraire le préfixe visible : pour mai-TIER-XXXXX-*, on coupe au 3ème tiret
         const keyParts = cleanedKey.startsWith('mai-') ? cleanedKey.split('-') : [];
         const displayPrefix = keyParts.length >= 3
@@ -563,6 +595,7 @@ export async function validateApiKey(secretKey: string): Promise<{ valid: boolea
             id: `db_key_${resolvedPlan}`,
             name: resolvedPlan,
             prefix: `${displayPrefix}-••••••••`,
+            ownerId: row.user_id ? String(row.user_id) : undefined,
             createdAt: row.created_at ? new Date(row.created_at).toISOString() : now,
             lastUsedAt: now,
             usageCount: (row.request_count || 0) + 1,

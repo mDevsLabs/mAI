@@ -1,11 +1,82 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Cpu, Eye, EyeOff, Layers, Calendar, ArrowRight, Sparkles, Zap } from "lucide-react";
+import { Cloud, Cpu, Eye, EyeOff, Layers, Calendar, ArrowRight, Sparkles, Zap } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { PageSearch } from "@/components/ui/search-bar";
 
-const models15 = [
+type ModelCardData = {
+  id: string;
+  name: string;
+  num: string;
+  badge: string;
+  description: string;
+  tagline: string;
+  parameters?: string;
+  cloud?: boolean;
+  maxOutput?: string;
+  vision: boolean;
+  context: string;
+  releaseDate: string;
+  bannerImage: string;
+  squareImage: string;
+  color: string;
+  shadowHover: string;
+  borderHover: string;
+  tags: string[];
+  serieColor: string;
+  serieBg: string;
+};
+
+const models2: ModelCardData[] = [
+  {
+    id: "mai-2",
+    name: "mAI-2",
+    num: "01",
+    badge: "Cloud • 1M • Texte + images",
+    description:
+      "Le modèle principal de la génération mAI-2. Raisonnement, codage, vitesse et création, avec un contexte pouvant atteindre 1 million de tokens. S'exécute dans le cloud via l'API mAI — aucune installation locale.",
+    tagline: "Our flagship model, for the best price.",
+    cloud: true,
+    maxOutput: "384K tokens",
+    vision: true,
+    context: "1M tokens",
+    releaseDate: "25/10/2026",
+    bannerImage: "/mai-2/mai-2-169.PNG",
+    squareImage: "/mai-2/icon.PNG",
+    color: "from-sky-500 to-indigo-600",
+    shadowHover: "hover:shadow-[0_8px_32px_0_rgba(14,165,233,0.25)]",
+    borderHover: "hover:border-sky-500/40",
+    tags: ["Cloud (API mAI)", "Contexte 1M", "Texte + images", "Flagship"],
+    serieColor: "text-sky-600",
+    serieBg: "bg-sky-500/10 border-sky-500/20",
+  },
+  {
+    id: "mai-2-mini",
+    name: "mAI-2-Mini",
+    num: "02",
+    badge: "Cloud • 1M • Texte + images",
+    description:
+      "Le modèle équilibré de la génération mAI-2 : une expérience plus légère et accessible, qui conserve les fondations essentielles — raisonnement, codage et multimodalité texte + images.",
+    tagline: "Our balanced model, for increased price.",
+    cloud: true,
+    maxOutput: "128K tokens",
+    vision: true,
+    context: "1M tokens",
+    releaseDate: "25/10/2026",
+    bannerImage: "/mai-2/mai-2-169.PNG",
+    squareImage: "/mai-2/mai-galaxy.PNG",
+    color: "from-teal-400 to-sky-600",
+    shadowHover: "hover:shadow-[0_8px_32px_0_rgba(45,212,191,0.25)]",
+    borderHover: "hover:border-teal-400/40",
+    tags: ["Cloud (API mAI)", "Contexte 1M", "Texte + images", "Équilibré"],
+    serieColor: "text-teal-600",
+    serieBg: "bg-teal-500/10 border-teal-500/20",
+  },
+];
+
+const models15: ModelCardData[] = [
   {
     id: "mai-1.5-light",
     name: "mAI-1.5-Light",
@@ -71,7 +142,7 @@ const models15 = [
   },
 ];
 
-const models12 = [
+const models12: ModelCardData[] = [
   {
     id: "mai-1.2-light",
     name: "mAI-1.2-Light",
@@ -137,7 +208,7 @@ const models12 = [
   },
 ];
 
-const models1 = [
+const models1: ModelCardData[] = [
   {
     id: "mai-1",
     name: "mAI-1",
@@ -182,7 +253,7 @@ const models1 = [
   },
 ];
 
-function ModelCard({ model, index }: { model: typeof models12[0]; index: number }) {
+function ModelCard({ model, index }: { model: ModelCardData; index: number }) {
   return (
     <motion.div
       key={model.id}
@@ -243,8 +314,15 @@ function ModelCard({ model, index }: { model: typeof models12[0]; index: number 
         {/* Spécifications techniques */}
         <div className="grid grid-cols-2 gap-3 mb-6 p-4 rounded-2xl bg-white/30 backdrop-blur-sm border border-white/50">
           <div className="flex items-center gap-2 text-xs font-medium text-slate-700">
-            <Cpu className="w-4 h-4 text-purple-500 shrink-0" />
-            <span>Paramètres : <strong>{model.parameters}</strong></span>
+            {model.cloud ? (
+              <Cloud className="w-4 h-4 text-sky-500 shrink-0" />
+            ) : (
+              <Cpu className="w-4 h-4 text-purple-500 shrink-0" />
+            )}
+            <span>
+              {model.cloud ? "Exécution" : "Paramètres"} :{" "}
+              <strong>{model.cloud ? "Cloud (API mAI)" : model.parameters}</strong>
+            </span>
           </div>
           <div className="flex items-center gap-2 text-xs font-medium text-slate-700">
             {model.vision ? (
@@ -260,7 +338,10 @@ function ModelCard({ model, index }: { model: typeof models12[0]; index: number 
           </div>
           <div className="flex items-center gap-2 text-xs font-medium text-slate-700">
             <Calendar className="w-4 h-4 text-amber-500 shrink-0" />
-            <span>Sortie : <strong>{model.releaseDate}</strong></span>
+            <span>
+              {model.cloud ? "Sortie max" : "Sortie"} :{" "}
+              <strong>{model.cloud ? model.maxOutput : model.releaseDate}</strong>
+            </span>
           </div>
         </div>
       </div>
@@ -301,9 +382,54 @@ export default function ModelsPage() {
           transition={{ delay: 0.1 }}
           className="text-slate-500 text-base md:text-lg font-light mt-2 md:mt-4 max-w-2xl"
         >
-          Explorez nos modèles de langage open-weights exécutables localement via Ollama. Performance, confidentialité et autonomie.
+          Explorez la gamme de modèles mAI : la génération cloud mAI-2 via l&apos;API mAI, et les modèles open-weights exécutables localement via Ollama.
         </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.15 }}
+          className="pt-3"
+        >
+          <PageSearch type="model" placeholder="Rechercher un modèle…" />
+        </motion.div>
       </div>
+
+      {/* ─── Section mAI-2 (Génération cloud) ───────────────────────── */}
+      <motion.section
+        id="mai-2"
+        className="scroll-mt-24"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.15 }}
+      >
+        {/* Bandeau série */}
+        <div className="flex items-center gap-3 mb-6">
+          <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-sky-500/10 via-indigo-500/10 to-teal-500/10 border border-sky-500/20 text-slate-700 text-xs font-bold uppercase tracking-wider">
+            <Cloud className="w-4 h-4 text-sky-500" />
+            Génération Cloud
+          </div>
+          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-sky-500 text-white text-[10px] font-black uppercase tracking-widest shadow-sm">
+            <Sparkles className="w-3 h-3" /> NEW
+          </span>
+          <div className="flex-1 h-px bg-gradient-to-r from-sky-500/20 to-transparent" />
+        </div>
+
+        <div className="mb-3">
+          <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
+            Série <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 via-indigo-500 to-teal-500">mAI-2</span>
+          </h2>
+          <p className="text-slate-500 text-sm font-light mt-1 max-w-2xl">
+            La nouvelle génération de mAI, exécutée dans le cloud via l&apos;API mAI : contexte jusqu&apos;à 1 million de tokens, texte + images, disponible pour tous les forfaits.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
+          {models2.map((model, index) => (
+            <ModelCard key={model.id} model={model} index={index} />
+          ))}
+        </div>
+      </motion.section>
 
       {/* ─── Section mAI-1.5 (Nouvelle Génération 1.5) ───────────────────────── */}
       <motion.section
@@ -319,9 +445,6 @@ export default function ModelsPage() {
             <Zap className="w-4 h-4 text-cyan-500" />
             Nouvelle Génération 1.5
           </div>
-          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-cyan-500 text-white text-[10px] font-black uppercase tracking-widest shadow-sm">
-            <Sparkles className="w-3 h-3" /> NEW
-          </span>
           <div className="flex-1 h-px bg-gradient-to-r from-cyan-500/20 to-transparent" />
         </div>
 

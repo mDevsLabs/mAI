@@ -80,8 +80,6 @@ export default function TicketsListClient() {
     setLoading(true);
     try {
       const res = await getTicketsList({
-        userId: String(user.id || user.email),
-        userEmail: user.email,
         status: statusFilter,
         project: projectFilter,
         priority: priorityFilter,
@@ -117,8 +115,6 @@ export default function TicketsListClient() {
       const res = await updateTicketTitle({
         ticketId,
         newTitle: trimmed,
-        requesterEmail: user.email,
-        requesterId: String(user.id || user.email),
       });
       if (res.success) {
         toast.success("Titre renommé !");
@@ -140,8 +136,6 @@ export default function TicketsListClient() {
     try {
       const res = await archiveTicket({
         ticketId: ticket.id,
-        requesterEmail: user.email,
-        requesterId: String(user.id || user.email),
         archive: shouldArchive,
       });
       if (res.success) {
@@ -165,8 +159,6 @@ export default function TicketsListClient() {
     try {
       const res = await deleteTicket({
         ticketId: ticket.id,
-        requesterEmail: user.email,
-        requesterId: String(user.id || user.email),
       });
       if (res.success) {
         toast.success("Ticket supprimé définitivement. Les fichiers Z1 seront purgés automatiquement.");

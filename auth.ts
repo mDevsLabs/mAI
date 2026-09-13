@@ -17,10 +17,16 @@ export function registerAuthRoutes(app: Hono) {
   // POST /register
   app.post("/register", async (c) => {
     try {
-      const { email, username, password } = await c.req.json();
+      const raw = await c.req.json();
+      const email = String(raw.email || "").trim().toLowerCase();
+      const username = String(raw.username || "").trim();
+      const password = String(raw.password || "");
       if (!email || !username || !password) {
         return c.json({ error: "Champs manquants." }, 400);
       }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return c.json({ error: "Email invalide." }, 400);
+      if (username.length < 3 || username.length > 32) return c.json({ error: "Nom d'utilisateur 3-32 caractères." }, 400);
+      if (password.length < 8 || password.length > 128) return c.json({ error: "Mot de passe 8-128 caractères." }, 400);
 
       const sql = getDb();
       const existing =
@@ -42,10 +48,15 @@ export function registerAuthRoutes(app: Hono) {
   // POST /verify-register
   app.post("/verify-register", async (c) => {
     try {
-      const { email, username, password, code } = await c.req.json();
+      const raw = await c.req.json();
+      const email = String(raw.email || "").trim().toLowerCase();
+      const username = String(raw.username || "").trim();
+      const password = String(raw.password || "");
+      const code = String(raw.code || "").trim();
       if (!email || !username || !password || !code) {
         return c.json({ error: "Champs manquants." }, 400);
       }
+      if (password.length < 8 || password.length > 128) return c.json({ error: "Mot de passe 8-128 caractères." }, 400);
 
       const isValid = await verifyVerificationCode(email, code, "register");
       if (!isValid) {
@@ -171,17 +182,14 @@ export function registerAuthRoutes(app: Hono) {
       const token = await signToken({ sub: user.id, tier: user.tier });
 
       const userAgent = c.req.header("user-agent") || "";
-      // Pour les tests en dev, on utilise une IP par défaut
       let ip =
         c.req.header("cf-connecting-ip") ||
         c.req.header("x-forwarded-for") ||
         c.req.header("x-real-ip") ||
         "";
-      if (!ip || ip === "::1" || ip === "127.0.0.1") {
-        ip = "8.8.8.8"; // IP Google par défaut pour ne pas planter l'API
-      } else {
-        // Extraire la première IP si on a une liste
-        ip = ip.split(",")[0].trim();
+      ip = ip.split(",")[0].trim().replace(/^\[|\]$/g, "");
+      if (!ip || ip === "::1" || ip === "127.0.0.1" || ip === "::ffff:127.0.0.1") {
+        ip = "8.8.8.8";
       }
       const { os, device_model, device_version, device_name } =
         parseUserAgent(userAgent);
@@ -191,7 +199,11 @@ export function registerAuthRoutes(app: Hono) {
       try {
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 3000);
-        const geoRes = await fetch(`https://ip-api.com/json/${ip}`, {
+        if (!/^[\d.:a-fA-F]+$/.test(ip) || ip.startsWith("10.") || ip.startsWith("192.168.") || ip.startsWith("172.")) {
+          clearTimeout(timeout);
+          throw new Error("IP privée ignorée");
+        }
+        const geoRes = await fetch(`https://ip-api.com/json/${encodeURIComponent(ip)}`, {
           headers: { "User-Agent": "mAI/1.0" },
           signal: controller.signal,
         });
@@ -207,7 +219,6 @@ export function registerAuthRoutes(app: Hono) {
         console.error("Erreur de géolocalisation:", e);
       }
 
-      // Vérifier si c'est un nouvel appareil ou un nouveau pays
       let isNewDeviceOrLocation = true;
       try {
         const pastDevices = await sql`
@@ -215,19 +226,9 @@ export function registerAuthRoutes(app: Hono) {
           WHERE user_id = ${user.id}::text
         `;
         if (pastDevices.length > 0) {
-          // C'est pas sa toute première connexion
-          const knownDevice = pastDevices.some(
-            (d) => d.device_name === device_name
-          );
-          const knownLocation = pastDevices.some(
-            (d) => d.location && d.location.includes(countryStr)
-          );
-          if (knownDevice && knownLocation) {
-            isNewDeviceOrLocation = false;
-          }
-        } else {
-          // Première connexion jamais (donc nouvelle par defaut, ou pas besoin d'alerte? on envoie quand meme)
-          isNewDeviceOrLocation = true;
+          const knownDevice = pastDevices.some((d) => d.device_name === device_name);
+          const knownLocation = pastDevices.some((d) => d.location && countryStr !== "Pays inconnu" && d.location.includes(countryStr));
+          if (knownDevice && knownLocation) isNewDeviceOrLocation = false;
         }
       } catch (e) {
         console.error(e);
@@ -580,8 +581,10 @@ export function registerAuthRoutes(app: Hono) {
 
       if (auto_logout_minutes !== undefined) {
         const mins = Number.parseInt(auto_logout_minutes, 10);
-        if (!isNaN(mins)) {
+        if (!isNaN(mins) && mins >= 0 && mins <= 1440) {
           await sql`UPDATE users SET auto_logout_minutes = ${mins} WHERE id::text = ${userId}::text`;
+        } else if (!isNaN(mins)) {
+          return c.json({ error: "auto_logout_minutes doit être entre 0 et 1440." }, 400);
         }
       }
 
@@ -719,10 +722,11 @@ export function registerAuthRoutes(app: Hono) {
         return c.json({ error: "Code invalide ou expiré." }, 400);
       }
 
-      // Suppression (ou anonymisation)
       await sql`DELETE FROM users WHERE id::text = ${userId}::text`;
-
-      // Révoquer le token pour déconnecter immédiatement
+      try {
+        const sqlDb = getDb();
+        await sqlDb`INSERT INTO token_blacklist (token, revoked_at, expires_at) VALUES (${token}, NOW(), NOW() + INTERVAL '14 days') ON CONFLICT (token) DO NOTHING`;
+      } catch {}
       await sqlite.execute({
         args: [token],
         sql: "INSERT OR IGNORE INTO token_blacklist (token) VALUES (?)",
@@ -793,11 +797,8 @@ export function registerAuthRoutes(app: Hono) {
         const rawPlan = String(k.plan || "").trim();
         const planLower = rawPlan.toLowerCase();
         const isPlanTier = validTiers.includes(planLower);
-
-        // Nom personnalisé de la clé
         const keyName = k.name || (isPlanTier ? `Clé ${rawPlan}` : rawPlan) || "Clé API Principale";
-        // Le forfait est strictement le forfait d'abonnement du compte (free, plus, pro, max)
-        const effectivePlan = k.user_tier || userTier || (isPlanTier ? rawPlan : "Plus");
+        const effectivePlan = k.user_tier || userTier || (isPlanTier ? rawPlan : "Free");
 
         return {
           api_key: k.api_key,

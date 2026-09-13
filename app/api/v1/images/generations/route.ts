@@ -7,6 +7,11 @@ import { recordApiLog } from "@/lib/api-key-manager";
 
 export const runtime = "nodejs";
 
+function parseDimension(value: unknown): number | null {
+  const n = typeof value === "number" ? value : typeof value === "string" ? parseInt(value, 10) : NaN;
+  return Number.isFinite(n) && n >= 64 && n <= 4096 ? n : null;
+}
+
 export async function POST(req: NextRequest) {
   const startTime = performance.now();
   // 1. Authentification
@@ -19,8 +24,9 @@ export async function POST(req: NextRequest) {
     const body = await req.json().catch(() => ({}));
     const prompt = body.prompt;
     const model = body.model || "black-forest-labs/flux-1-schnell";
-    const width = body.width || (body.size ? parseInt(body.size.split("x")[0], 10) : 1024);
-    const height = body.height || (body.size ? parseInt(body.size.split("x")[1], 10) : 1024);
+    const sizeParts = typeof body.size === "string" && body.size.includes("x") ? body.size.split("x") : [];
+    const width = parseDimension(body.width ?? sizeParts[0] ?? 1024);
+    const height = parseDimension(body.height ?? sizeParts[1] ?? 1024);
     const negativePrompt = body.negative_prompt || "";
 
     if (!prompt || typeof prompt !== "string") {
@@ -37,6 +43,20 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    if (width === null || height === null) {
+      return NextResponse.json(
+        {
+          error: {
+            message: "Paramètre 'size' invalide. Format attendu : largeurxhauteur (ex: 1024x1024), valeurs entre 64 et 4096.",
+            type: "invalid_request_error",
+            param: "size",
+            code: "invalid_parameter",
+          },
+        },
+        { status: 400 }
+      );
+    }
+
     const databaseUrl = process.env.DATABASE_URL;
     if (!databaseUrl) {
       return NextResponse.json(
@@ -46,7 +66,7 @@ export async function POST(req: NextRequest) {
     }
 
     const sql = neon(databaseUrl);
-    const userId = auth.apiKeyId || "api_user";
+    const userId = auth.ownerId || auth.apiKeyId || "api_user";
     const userPlan = auth.plan || "Free";
 
     // 2. Vérification des droits selon le forfait
@@ -67,19 +87,29 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 3. Vérification des quotas journaliers (Plus: 10/j, Pro: 20/j, Max: 35/j)
+    // 3. Réservation atomique du quota journalier (Plus: 10/j, Pro: 20/j, Max: 35/j)
     const dailyLimit = getTierDailyImageLimit(userPlan);
     const requestCost = getTierImageRequestCost(userPlan);
 
-    const usageRows = await sql`
-      SELECT images_generated 
-      FROM mprojects_daily_image_usage 
-      WHERE user_id = ${userId}::text AND usage_date = CURRENT_DATE 
-      LIMIT 1
+    const reserved = await sql`
+      INSERT INTO mprojects_daily_image_usage (user_id, usage_date, images_generated, updated_at)
+      VALUES (${userId}::text, CURRENT_DATE, 1, NOW())
+      ON CONFLICT (user_id, usage_date)
+      DO UPDATE SET 
+        images_generated = mprojects_daily_image_usage.images_generated + 1,
+        updated_at = NOW()
+      WHERE mprojects_daily_image_usage.images_generated < ${dailyLimit}
+      RETURNING images_generated
     `;
-    const currentDailyUsage = usageRows[0]?.images_generated || 0;
 
-    if (currentDailyUsage >= dailyLimit) {
+    if (reserved.length === 0) {
+      const usageRows = await sql`
+        SELECT images_generated 
+        FROM mprojects_daily_image_usage 
+        WHERE user_id = ${userId}::text AND usage_date = CURRENT_DATE 
+        LIMIT 1
+      `;
+      const currentDailyUsage = usageRows[0]?.images_generated || dailyLimit;
       return NextResponse.json(
         {
           error: {
@@ -93,6 +123,20 @@ export async function POST(req: NextRequest) {
         { status: 429 }
       );
     }
+    const newDailyUsage = parseInt(reserved[0].images_generated, 10);
+
+    // Libère la place réservée si la génération échoue
+    const releaseQuota = async () => {
+      try {
+        await sql`
+          UPDATE mprojects_daily_image_usage
+          SET images_generated = GREATEST(images_generated - 1, 0), updated_at = NOW()
+          WHERE user_id = ${userId}::text AND usage_date = CURRENT_DATE
+        `;
+      } catch (e) {
+        console.error("Erreur libération quota image:", e);
+      }
+    };
 
     // 4. Appel à Comet API
     const cometApiKey = getCometApiKey();
@@ -100,28 +144,45 @@ export async function POST(req: NextRequest) {
     let cometResultData: any[] = [];
 
     if (cometApiKey) {
-      const cometRes = await fetch("https://api.cometapi.com/v1/images/generations", {
-        body: JSON.stringify({
-          model,
-          n: 1,
-          prompt,
-          response_format: body.response_format || "url",
-          size: `${width}x${height}`,
-        }),
-        headers: {
-          Authorization: `Bearer ${cometApiKey}`,
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-      });
+      let cometRes: Response;
+      try {
+        cometRes = await fetch("https://api.cometapi.com/v1/images/generations", {
+          body: JSON.stringify({
+            model,
+            n: 1,
+            prompt,
+            response_format: body.response_format || "url",
+            size: `${width}x${height}`,
+          }),
+          headers: {
+            Authorization: `Bearer ${cometApiKey}`,
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+        });
+      } catch (e) {
+        console.error("Erreur réseau Comet API:", e);
+        await releaseQuota();
+        return NextResponse.json(
+          {
+            error: {
+              code: "provider_unreachable",
+              message: "Le fournisseur de génération d'images est injoignable.",
+              type: "api_error",
+            },
+          },
+          { status: 502 }
+        );
+      }
 
       if (!cometRes.ok) {
         const errText = await cometRes.text().catch(() => "");
+        console.error(`Comet API error ${cometRes.status}:`, errText);
+        await releaseQuota();
         return NextResponse.json(
           {
             error: {
               code: "comet_api_error",
-              details: errText,
               message: "Erreur retournée par le fournisseur Comet API.",
               type: "api_error",
             },
@@ -141,16 +202,21 @@ export async function POST(req: NextRequest) {
       cometResultData = [{ url: generatedImageUrl }];
     }
 
-    // 5. Mise à jour de la base de données (Quota & Historique)
-    await sql`
-      INSERT INTO mprojects_daily_image_usage (user_id, usage_date, images_generated, updated_at)
-      VALUES (${userId}::text, CURRENT_DATE, 1, NOW())
-      ON CONFLICT (user_id, usage_date)
-      DO UPDATE SET 
-        images_generated = mprojects_daily_image_usage.images_generated + 1,
-        updated_at = NOW()
-    `;
+    if (!generatedImageUrl) {
+      await releaseQuota();
+      return NextResponse.json(
+        {
+          error: {
+            code: "empty_generation",
+            message: "Le fournisseur n'a retourné aucune image.",
+            type: "api_error",
+          },
+        },
+        { status: 502 }
+      );
+    }
 
+    // 5. Historique de génération
     await sql`
       INSERT INTO mprojects_image_generations (
         user_id, api_key, model, prompt, negative_prompt, width, height, image_url, status
@@ -191,7 +257,7 @@ export async function POST(req: NextRequest) {
       data: cometResultData,
       usage: {
         daily_limit: dailyLimit,
-        daily_used: currentDailyUsage + 1,
+        daily_used: newDailyUsage,
         plan: userPlan,
         request_cost: requestCost,
       },
@@ -202,7 +268,7 @@ export async function POST(req: NextRequest) {
       {
         error: {
           code: "internal_error",
-          message: err.message || "Erreur interne lors de la génération d'images.",
+          message: "Erreur interne lors de la génération d'images.",
           type: "api_error",
         },
       },

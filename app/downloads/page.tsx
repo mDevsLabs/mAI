@@ -11,10 +11,12 @@ import {
   Globe,
   Terminal,
   Cpu,
-  Star,
+  Users,
 } from "lucide-react";
 import Image from "next/image";
 import { toast } from "react-hot-toast";
+import { PageSearch } from "@/components/ui/search-bar";
+import { PLATFORM_DEVICE_ICONS } from "@/lib/projects-data";
 
 interface AppDownload {
   id: string;
@@ -36,7 +38,24 @@ interface AppDownload {
   };
 }
 
+const VIBE_RELEASE_URL = "https://github.com/mDevsLabs/Vibe/releases/latest";
+
 const OFFICIAL_APPS: AppDownload[] = [
+  {
+    id: "vibe",
+    name: "mAI Vibe",
+    tagline: "Le réseau social mAI, sur le web, Android et iOS.",
+    description:
+      "Réseau social avec IA intégrée : publiez, échangez en messages privés et créez avec mAI nativement. Installez l'application mobile pour rester connecté à vos cercles et à vos collections.",
+    icon: Users,
+    iconColor: "text-purple-400",
+    borderHover: "hover:border-purple-500/30",
+    releaseUrl: VIBE_RELEASE_URL,
+    platforms: [
+      { label: "Android", url: VIBE_RELEASE_URL },
+      { label: "iOS", url: VIBE_RELEASE_URL },
+    ],
+  },
   {
     id: "desktop",
     name: "mAI Desktop",
@@ -84,9 +103,9 @@ const OFFICIAL_APPS: AppDownload[] = [
     borderHover: "hover:border-emerald-500/30",
     releaseUrl: "https://github.com/mDevsLabs/CLI/releases/latest",
     terminalCommand: {
-      label: "mAI CLI (Homebrew)",
-      command: "brew install mDevsLabs/mAI-CLI/mai",
-      key: "cli-brew",
+      label: "mAI CLI (npm)",
+      command: "npm install -g @mdevs/mai-cli",
+      key: "cli-npm",
     },
   },
   {
@@ -139,6 +158,15 @@ export default function DownloadPage() {
         >
           Retrouvez les liens de téléchargement officiels pour nos applications et les commandes d&apos;installation de nos modèles d&apos;IA.
         </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.15 }}
+          className="pt-3"
+        >
+          <PageSearch type="download" placeholder="Rechercher une application, un modèle…" />
+        </motion.div>
       </div>
 
       <div className="grid grid-cols-1 gap-12">
@@ -220,19 +248,34 @@ export default function DownloadPage() {
                     {/* Boutons par plateforme avec lien releases/latest */}
                     {app.platforms && app.platforms.length > 0 && (
                       <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto mt-2 lg:mt-0">
-                        {app.platforms.map((plat) => (
-                          <a
-                            key={plat.label}
-                            href={plat.url}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-2xl bg-white text-slate-900 border border-slate-200 hover:bg-slate-900 hover:text-white font-bold transition-all shadow-xs text-xs"
-                          >
-                            <Download className="w-3.5 h-3.5 opacity-70" />
-                            <span>{plat.label}</span>
-                            <ExternalLink className="w-3 h-3 opacity-50" />
-                          </a>
-                        ))}
+                        {app.platforms.map((plat) => {
+                          const device = PLATFORM_DEVICE_ICONS[plat.label];
+                          return (
+                            <a
+                              key={plat.label}
+                              href={plat.url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-2xl bg-white text-slate-900 border border-slate-200 hover:bg-slate-900 hover:text-white font-bold transition-all shadow-xs text-xs"
+                            >
+                              {device ? (
+                                <span className="inline-flex items-center justify-center w-5 h-5 rounded-md bg-white border border-slate-200/70 shrink-0">
+                                  <Image
+                                    src={device.src}
+                                    alt=""
+                                    width={14}
+                                    height={14}
+                                    className="w-3.5 h-3.5 object-contain"
+                                  />
+                                </span>
+                              ) : (
+                                <Download className="w-3.5 h-3.5 opacity-70" />
+                              )}
+                              <span>{plat.label}</span>
+                              <ExternalLink className="w-3 h-3 opacity-50" />
+                            </a>
+                          );
+                        })}
                       </div>
                     )}
                   </div>
@@ -261,9 +304,6 @@ export default function DownloadPage() {
             animate={{ opacity: 1, y: 0 }}
             className="group bg-white/40 backdrop-blur-md border border-white/60 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] rounded-3xl p-6 md:p-8 hover:border-cyan-500/30 transition-all duration-300 relative overflow-hidden"
           >
-            <div className="absolute top-4 right-4 flex items-center gap-1 px-2.5 py-1 rounded-full bg-cyan-500 text-white text-[10px] font-black uppercase tracking-widest shadow">
-              <Star className="inline w-4 h-4 align-middle" /> NEW
-            </div>
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
               <div className="flex items-start md:items-center gap-5">
                 <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-white/50 backdrop-blur-md border border-white/80 shadow-[0_8px_32px_0_rgba(31,38,135,0.08)] flex items-center justify-center p-1 shrink-0 overflow-hidden">
@@ -325,9 +365,6 @@ export default function DownloadPage() {
             animate={{ opacity: 1, y: 0 }}
             className="group bg-white/40 backdrop-blur-md border border-white/60 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] rounded-3xl p-6 md:p-8 hover:border-amber-500/30 transition-all duration-300 relative overflow-hidden"
           >
-            <div className="absolute top-4 right-4 flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-500 text-white text-[10px] font-black uppercase tracking-widest shadow">
-              <Star className="inline w-4 h-4 align-middle" /> NEW
-            </div>
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
               <div className="flex items-start md:items-center gap-5">
                 <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-white/50 backdrop-blur-md border border-white/80 shadow-[0_8px_32px_0_rgba(31,38,135,0.08)] flex items-center justify-center p-1 shrink-0 overflow-hidden">
@@ -389,9 +426,6 @@ export default function DownloadPage() {
             animate={{ opacity: 1, y: 0 }}
             className="group bg-white/40 backdrop-blur-md border border-white/60 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] rounded-3xl p-6 md:p-8 hover:border-indigo-500/30 transition-all duration-300 relative overflow-hidden"
           >
-            <div className="absolute top-4 right-4 flex items-center gap-1 px-2.5 py-1 rounded-full bg-indigo-500 text-white text-[10px] font-black uppercase tracking-widest shadow">
-              <Star className="inline w-4 h-4 align-middle" /> NEW
-            </div>
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
               <div className="flex items-start md:items-center gap-5">
                 <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-white/50 backdrop-blur-md border border-white/80 shadow-[0_8px_32px_0_rgba(31,38,135,0.08)] flex items-center justify-center p-1 shrink-0 overflow-hidden">

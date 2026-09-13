@@ -1,8 +1,9 @@
 "use client";
 
-import { Github, Menu, X, ChevronDown, UserRound, LogOut, Gauge, Activity, Cloud, Image as ImageIcon, Volume2, Search } from "lucide-react";
+import { Github, Menu, X, ChevronDown, UserRound, LogOut, Gauge, Activity, Cloud, Image as ImageIcon, Volume2, Search, Download } from "lucide-react";
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
+import { motion } from "motion/react";
 import toast from "react-hot-toast";
 
 const CommandMenu = dynamic(
@@ -16,6 +17,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Sheet } from "@/components/sheet";
 import { useAuth } from "@/components/auth-provider";
+import { PageSearch } from "@/components/ui/search-bar";
 
 interface NavSubItem {
   name: string;
@@ -30,24 +32,19 @@ interface NavItem {
 }
 
 const navLinks: NavItem[] = [
-  { name: "Accueil", href: "/" },
-  { name: "L'équipe", href: "/about" },
   { name: "Actualités", href: "/news" },
-  {
-    name: "Projets",
-    href: "/projects",
-    subitems: [
-      { name: "Tous les projets", href: "/projects" },
-      { name: "Web", href: "/projects/web" },
-      { name: "Pulse", href: "/projects/pulse" },
-      { name: "CLI", href: "/projects/cli" },
-      { name: "Coder", href: "/projects/coder" },
-    ]},
   {
     name: "Modèles",
     href: "/models",
     subitems: [
       { name: "Tous les modèles", href: "/models" },
+      {
+        name: "mAI-2",
+        href: "/models#mai-2",
+        subitems: [
+          { name: "mAI-2", href: "/models/mai-2" },
+          { name: "mAI-2-Mini", href: "/models/mai-2-mini" },
+        ]},
       {
         name: "mAI-1.5",
         href: "/models#mai-1.5",
@@ -73,6 +70,17 @@ const navLinks: NavItem[] = [
         ]},
     ]},
   {
+    name: "Projets",
+    href: "/projects",
+    subitems: [
+      { name: "Tous les projets", href: "/projects" },
+      { name: "Vibe", href: "/projects/vibe" },
+      { name: "Web", href: "/projects/web" },
+      { name: "Pulse", href: "/projects/pulse" },
+      { name: "CLI", href: "/projects/cli" },
+      { name: "Coder", href: "/projects/coder" },
+    ]},
+  {
     name: "API",
     href: "/account/keys",
     subitems: [
@@ -91,16 +99,15 @@ const navLinks: NavItem[] = [
       { name: "Usage", href: "/account/usage" },
       { name: "Configuration", href: "/account/config" },
     ]},
-  { name: "Abonnements", href: "/pricing" },
+  { name: "Tarifs", href: "/pricing" },
   {
     name: "Plus",
     href: "#",
     subitems: [
+      { name: "L'équipe", href: "/about" },
       { name: "Support", href: "/support" },
-      { name: "Télécharger", href: "/downloads" },
-      { 
-        name: "Documentation", 
-        href: "/docs"},
+      { name: "Documentation", href: "/docs" },
+      { name: "Téléchargements", href: "/downloads" },
     ]},
 ];
 
@@ -114,6 +121,19 @@ function checkLinkActive(link: NavItem, pathname: string): boolean {
   if (link.href !== "#" && pathname === link.href) return true;
   if (link.subitems && link.subitems.some((sub) => checkSubActive(sub, pathname))) return true;
   return false;
+}
+
+/* Indicateur de lien actif : pill en verre qui glisse d'un onglet à l'autre */
+function NavPill() {
+  return (
+    <motion.span
+      layoutId="nav-active-pill"
+      aria-hidden="true"
+      className="pointer-events-none absolute -inset-x-2 -inset-y-1 rounded-full glass-pill"
+      style={{ borderRadius: 999 }}
+      transition={{ type: "spring", stiffness: 380, damping: 32 }}
+    />
+  );
 }
 
 export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject; news?: NewsArticle[] }) {
@@ -167,10 +187,8 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
   return (
     <>
       <header
-        className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 w-[96%] max-w-6xl xl:max-w-7xl rounded-3xl md:rounded-full border px-4 md:px-8 py-2 md:py-3 ${
-          scrolled
-            ? "bg-white/70 backdrop-blur-2xl border-black/10 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)]"
-            : "bg-white/30 backdrop-blur-md border-black/10 shadow-sm"
+        className={`fixed safe-top-4 left-1/2 -translate-x-1/2 z-50 w-[96%] max-w-6xl xl:max-w-7xl rounded-3xl md:rounded-full px-4 md:px-8 py-2 md:py-3 glass transition-[background-color,box-shadow] duration-300 ease-ios ${
+          scrolled ? "glass-elev" : ""
         }`}
       >
         <div className="w-full max-w-7xl mx-auto flex items-center justify-between">
@@ -197,18 +215,19 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
                   <div key={link.name} className="relative group py-2">
                     <Link
                       href={link.href}
-                      className={`relative transition-colors flex items-center gap-1 ${
+                      className={`relative flex items-center gap-1 transition-opacity ${
                         isActive
-                          ? "text-slate-900 border-b-2 border-purple-500 pb-1"
-                          : "hover:text-slate-900"
+                          ? "text-slate-900"
+                          : "hover:text-slate-900 active:opacity-70"
                       }`}
                     >
+                      {isActive && <NavPill />}
                       <span className="relative z-10">{link.name}</span>
-                      <ChevronDown className="w-4 h-4 opacity-60 group-hover:rotate-180 transition-transform duration-200" />
+                      <ChevronDown className="relative z-10 w-4 h-4 opacity-60 group-hover:rotate-180 transition-transform duration-200" />
                     </Link>
 
                     {/* Premier niveau de Dropdown */}
-                    <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 opacity-0 translate-y-2 invisible group-hover:opacity-100 group-hover:translate-y-0 group-hover:visible transition-all duration-200 z-50">
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 origin-top opacity-0 translate-y-2 scale-[0.98] invisible group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-100 group-hover:visible transition-[opacity,transform] duration-200 z-50">
                       <div className="glass-dropdown min-w-[170px] flex flex-col gap-1">
                         {link.subitems.map((subitem) => {
                           const isSubActive = checkSubActive(subitem, pathname);
@@ -230,7 +249,7 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
                                 </Link>
 
                                 {/* Sous-menu flyout à droite */}
-                                <div className="absolute left-full top-0 ml-2 opacity-0 translate-x-1 invisible group-hover/nested:opacity-100 group-hover/nested:translate-x-0 group-hover/nested:visible transition-all duration-200 z-50">
+                                <div className="absolute left-full top-0 ml-2 origin-left opacity-0 translate-x-1 scale-[0.98] invisible group-hover/nested:opacity-100 group-hover/nested:translate-x-0 group-hover/nested:scale-100 group-hover/nested:visible transition-[opacity,transform] duration-200 z-50">
                                   <div className="glass-dropdown min-w-[150px] flex flex-col gap-1">
                                     {subitem.subitems?.map((nested) => (
                                       <Link
@@ -275,12 +294,13 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
                 <Link
                   key={link.name}
                   href={link.href}
-                  className={`relative transition-colors ${
+                  className={`relative transition-opacity ${
                     isActive
-                      ? "text-slate-900 border-b-2 border-purple-500 pb-1"
-                      : "hover:text-slate-900"
+                      ? "text-slate-900"
+                      : "hover:text-slate-900 active:opacity-70"
                   }`}
                 >
+                  {isActive && <NavPill />}
                   <span className="relative z-10">{link.name}</span>
                 </Link>
               );
@@ -288,12 +308,22 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
           </nav>
 
           {/* Actions */}
-          <div className="flex items-center gap-2 md:gap-4">
+          <div className="flex items-center gap-2 md:gap-3 lg:gap-4">
+            {/* Recherche globale du site (desktop) */}
+            <div className="hidden lg:block">
+              <PageSearch
+                type="all"
+                variant="navbar"
+                placeholder="Rechercher…"
+                className="w-44 xl:w-60"
+              />
+            </div>
+
             {/* Compte (desktop) avec Dropdown interactif au survol / clic */}
             <div className="hidden md:block relative group/account py-2">
               <Link
                 href={accountHref}
-                className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-sm font-semibold transition-all duration-200 ${
+                className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-sm font-semibold transition-[background-color,border-color,color,transform] duration-200 active:scale-[0.97] ${
                   pathname.startsWith("/account")
                     ? "border-purple-300 bg-purple-50 text-purple-700 shadow-2xs"
                     : "border-black/10 bg-black/5 text-slate-700 hover:bg-black/10 hover:scale-105"
@@ -316,7 +346,7 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
               </Link>
 
               {/* Menu déroulant Compte */}
-              <div className="absolute right-0 top-full pt-2 opacity-0 translate-y-2 invisible group-hover/account:opacity-100 group-hover/account:translate-y-0 group-hover/account:visible transition-all duration-200 z-50">
+              <div className="absolute right-0 top-full pt-2 origin-top opacity-0 translate-y-2 scale-[0.98] invisible group-hover/account:opacity-100 group-hover/account:translate-y-0 group-hover/account:scale-100 group-hover/account:visible transition-[opacity,transform] duration-200 z-50">
                 <div className="glass-dropdown w-64 space-y-1">
                   {isAuthenticated ? (
                     <>
@@ -430,12 +460,12 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
             </div>
 
             {/* Socials */}
-            <div className="hidden md:flex gap-2">
+            <div className="hidden xl:flex gap-2">
               <a
                 href="https://github.com/mDevsLabs"
                 target="_blank"
                 rel="noreferrer"
-                className="group relative p-2 rounded-full border border-black/10 bg-black/5 hover:bg-black/10 hover:scale-110 hover:shadow-lg transition-all duration-200 text-slate-700"
+                className="group relative p-2 rounded-full border border-black/10 bg-black/5 hover:bg-black/10 hover:scale-110 active:scale-95 hover:shadow-lg transition-[background-color,transform,box-shadow] duration-200 text-slate-700"
               >
                 <Github className="w-5 h-5" />
                 <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none px-2 py-1 bg-slate-900 text-white text-[10px] font-medium rounded shadow-lg whitespace-nowrap z-50">
@@ -446,7 +476,7 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
                 href="https://discord.gg/invite/fV7zwdGPpY"
                 target="_blank"
                 rel="noreferrer"
-                className="group relative p-2 rounded-full border border-indigo-500 bg-indigo-600 hover:bg-indigo-500 hover:scale-110 hover:shadow-lg transition-all duration-200 text-white"
+                className="group relative p-2 rounded-full border border-indigo-500 bg-indigo-600 hover:bg-indigo-500 hover:scale-110 active:scale-95 hover:shadow-lg transition-[background-color,transform,box-shadow] duration-200 text-white"
               >
                 <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
                   <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z" />
@@ -457,9 +487,18 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
               </a>
             </div>
 
-            {/* Recherche (mobile) */}
+            {/* CTA Télécharger (desktop) */}
+            <Link
+              href="/downloads"
+              className="hidden lg:inline-flex items-center gap-1.5 rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-[background-color,transform] duration-200 hover:bg-slate-800 active:scale-[0.97]"
+            >
+              <Download className="w-4 h-4" />
+              Télécharger
+            </Link>
+
+            {/* Recherche (mobile & tablette, jusqu'à l'affichage de la barre dédiée) */}
             <button
-              className="md:hidden p-2 rounded-full text-slate-600 hover:bg-black/5 transition-colors"
+              className="lg:hidden flex h-11 w-11 items-center justify-center rounded-full text-slate-600 transition-[background-color,transform] duration-150 hover:bg-black/5 active:scale-95"
               onClick={() => {
                 setIsMobileMenuOpen(false);
                 setIsCommandOpen(true);
@@ -472,7 +511,7 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
             {/* Compte (mobile icon) */}
             <Link
               href={accountHref}
-              className={`md:hidden p-2 rounded-full border transition-colors ${
+              className={`md:hidden flex h-11 w-11 items-center justify-center rounded-full border transition-[background-color,transform] duration-150 active:scale-95 ${
                 pathname.startsWith("/account")
                   ? "border-purple-300 bg-purple-50 text-purple-700"
                   : "border-black/10 bg-black/5 text-slate-600 hover:bg-black/10"
@@ -491,7 +530,7 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
 
             {/* Mobile Menu Toggle */}
             <button
-              className="md:hidden p-2 rounded-full text-slate-600 hover:bg-black/5 transition-colors"
+              className="md:hidden flex h-11 w-11 items-center justify-center rounded-full text-slate-600 transition-[background-color,transform] duration-150 hover:bg-black/5 active:scale-95"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
               {isMobileMenuOpen ? (
@@ -502,20 +541,14 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
             </button>
           </div>
         </div>
+      </header>
 
-        {/* Mobile Menu Sheet */}
-        <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-          <nav className="flex flex-col gap-2 p-4">
-            <button
-              onClick={() => {
-                setIsMobileMenuOpen(false);
-                setIsCommandOpen(true);
-              }}
-              className="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold text-slate-700 bg-black/[0.03] hover:bg-black/5 transition-colors"
-            >
-              <Search className="w-4 h-4 text-purple-600" />
-              Rechercher…
-            </button>
+      {/* Mobile Menu Sheet — rendu hors du header pour un empilement au-dessus de tout */}
+      <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen} label="Navigation">
+        <nav className="flex flex-col gap-2 p-4">
+            <div className="px-1 pb-1">
+              <PageSearch type="all" placeholder="Rechercher dans tout le site…" />
+            </div>
 
             {navLinks.map((link) => {
               const hasSubitems = !!link.subitems;
@@ -611,6 +644,16 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
                 </div>
               );
             })}
+
+            {/* CTA Télécharger (mobile) */}
+            <Link
+              href="/downloads"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="mt-2 flex items-center justify-center gap-2 rounded-2xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition-transform active:scale-[0.98]"
+            >
+              <Download className="w-4 h-4" />
+              Télécharger
+            </Link>
 
             <Link
               href={accountHref}
@@ -730,9 +773,8 @@ export function Navbar({ changelogs, news }: { changelogs?: ChangelogsByProject;
                 </svg>
               </a>
             </div>
-          </nav>
-        </Sheet>
-      </header>
+        </nav>
+      </Sheet>
       <CommandMenu
         open={isCommandOpen}
         setOpen={setIsCommandOpen}

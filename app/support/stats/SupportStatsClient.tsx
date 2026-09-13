@@ -54,10 +54,7 @@ export default function SupportStatsClient() {
     if (!user) return;
     setLoading(true);
     try {
-      const res = await getSupportStats(
-        String(user.id || user.email),
-        user.email
-      );
+      const res = await getSupportStats();
       if (res.success && res.stats) {
         setStats(res.stats);
       }

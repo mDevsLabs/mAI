@@ -1,7 +1,8 @@
 import crypto from "node:crypto";
 
-const API_BASE = "https://mdevslabs--01a039924d3771569d4cc6b63181d1f4.web.val.run";
-const JWT_SECRET = process.env.MAI_JWT_SECRET || "4a8f9c2d1e3b5a7f9e0c2b4d6a8f1c3e5b7a9f0e2d4c6b8a1f3e5d7c9b0a2f4e";
+const API_BASE = process.env.API_BASE || "https://mdevslabs--01a039924d3771569d4cc6b63181d1f4.web.val.run";
+const JWT_SECRET = process.env.MAI_JWT_SECRET;
+if (!JWT_SECRET) throw new Error("MAI_JWT_SECRET manquant — définissez la variable d'environnement");
 
 function base64Url(str) {
   return Buffer.from(str).toString("base64url");

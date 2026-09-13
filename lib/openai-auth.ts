@@ -8,6 +8,7 @@ export interface AuthenticatedOpenAIContext {
   apiKeyId: string;
   apiKeyToken: string;
   plan: string;
+  ownerId?: string;
 }
 
 export interface InvalidOpenAIContext {
@@ -97,5 +98,6 @@ export async function authenticateOpenAIRequest(
     apiKeyId: validation.keyInfo.id,
     apiKeyToken: token,
     plan: validation.keyInfo.name || 'Free',
+    ownerId: validation.keyInfo.ownerId,
   };
 }

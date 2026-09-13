@@ -54,10 +54,11 @@ interface MAIModelAPIItem {
     recommendedVram?: string;
     ram?: string;
   };
-  ollama_tag?: string;
-  huggingface_tag?: string;
+  ollama_tag?: string | null;
+  huggingface_tag?: string | null;
   license?: string;
   usable_in_cloud_chat?: boolean;
+  execution_mode?: string;
 }
 
 type SortOption = "default" | "name-asc" | "name-desc" | "params-desc" | "context-desc";
@@ -114,9 +115,14 @@ export default function ApiMaiModelsPage() {
       const data = await res.json();
 
       if (data && Array.isArray(data.data)) {
-        setModels(data.data);
-        if (data.data.length > 0) {
-          setOpenModelId(data.data[0].id);
+        // Cette page liste les modèles locaux (Ollama / HuggingFace) ;
+        // les modèles cloud (génération mAI-2) sont présentés sur /models.
+        const localModels = data.data.filter(
+          (m: MAIModelAPIItem) => m.execution_mode !== "cloud_api"
+        );
+        setModels(localModels);
+        if (localModels.length > 0) {
+          setOpenModelId(localModels[0].id);
         }
       } else {
         toast.error("Impossible de récupérer les modèles mAI.");

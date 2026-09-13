@@ -101,7 +101,7 @@ export default function TicketDetailClient({ ticketId }: { ticketId: string }) {
   const loadTicket = async () => {
     if (!user) return;
     try {
-      const res: any = await getTicketDetails(ticketId, user.email, String(user.id || user.email));
+      const res: any = await getTicketDetails(ticketId);
       if (res.success && res.ticket) {
         setTicket(res.ticket);
         setMessages(res.messages || []);
@@ -226,9 +226,6 @@ export default function TicketDetailClient({ ticketId }: { ticketId: string }) {
       const newStatusParam = selectedStatus !== ticket.status ? (selectedStatus as any) : undefined;
       const res = await addTicketResponse({
         ticketId: ticket.id,
-        senderId: String(user.id || user.email),
-        senderEmail: user.email,
-        senderName: user.username || user.email.split("@")[0],
         message: replyText.trim(),
         newStatus: newStatusParam,
         isAiGenerated: isAdmin ? isAiGenerated : false,
@@ -257,9 +254,6 @@ export default function TicketDetailClient({ ticketId }: { ticketId: string }) {
     try {
       const res = await addTicketResponse({
         ticketId: ticket.id,
-        senderId: String(user.id || user.email),
-        senderEmail: user.email,
-        senderName: user.username || user.email.split("@")[0],
         message: "",
         newStatus: status as any,
       });
@@ -287,7 +281,7 @@ export default function TicketDetailClient({ ticketId }: { ticketId: string }) {
     }
     setSubmitting(true);
     try {
-      const res = await updateTicketTitle({ ticketId: ticket.id, newTitle: trimmed, requesterEmail: user.email, requesterId: String(user.id || user.email) });
+      const res = await updateTicketTitle({ ticketId: ticket.id, newTitle: trimmed });
       if (res.success) {
         toast.success("Titre renommé !");
         setEditingTitle(false);
@@ -306,7 +300,7 @@ export default function TicketDetailClient({ ticketId }: { ticketId: string }) {
     if (!confirm(shouldArchive ? "Archiver ce ticket ?" : "Désarchiver ce ticket ?")) return;
     setSubmitting(true);
     try {
-      const res = await archiveTicket({ ticketId: ticket.id, requesterEmail: user.email, requesterId: String(user.id || user.email), archive: shouldArchive });
+      const res = await archiveTicket({ ticketId: ticket.id, archive: shouldArchive });
       if (res.success) {
         toast.success(shouldArchive ? "Ticket archivé." : "Ticket désarchivé.");
         await loadTicket();
@@ -324,7 +318,7 @@ export default function TicketDetailClient({ ticketId }: { ticketId: string }) {
     if (!confirm("Confirmation finale : supprimer ?")) return;
     setSubmitting(true);
     try {
-      const res = await deleteTicket({ ticketId: ticket.id, requesterEmail: user.email, requesterId: String(user.id || user.email) });
+      const res = await deleteTicket({ ticketId: ticket.id });
       if (res.success) {
         toast.success("Ticket supprimé.");
         router.push("/support/tickets");
@@ -364,7 +358,6 @@ export default function TicketDetailClient({ ticketId }: { ticketId: string }) {
   const StatusIcon = statusCfg.icon;
   const priorityCfg = PRIORITY_BADGES[ticket.priority] || PRIORITY_BADGES.medium;
   const dateCreated = new Date(ticket.created_at).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" });
-  const allowedStatuses = getAllowedStatusTransitions(ticket.status as any);
   const isTerminal = ticket.status === "resolved" || ticket.status === "closed";
 
   return (
@@ -443,7 +436,7 @@ export default function TicketDetailClient({ ticketId }: { ticketId: string }) {
               <span className="text-purple-700 font-mono">({ticket.user_email})</span>
               <span className="px-2 py-0.5 rounded-full bg-purple-600 text-white font-bold text-[10px]">{ticket.user_tier}</span>
             </div>
-            <a href={`mailto:${ticket.user_email}?subject=Re: [Support mAI #TICK-${ticket.ticket_number}] ${encodeURIComponent(ticket.title)}`} className="font-bold text-purple-700 hover:underline inline-flex items-center gap-1">Écrire par e-mail <ExternalLink className="w-3 h-3" /></a>
+            <a href={`mailto:${encodeURIComponent(ticket.user_email || "")}?subject=${encodeURIComponent(`Re: [Support mAI #TICK-${ticket.ticket_number}] ${ticket.title}`)}`} className="font-bold text-purple-700 hover:underline inline-flex items-center gap-1">Écrire par e-mail <ExternalLink className="w-3 h-3" /></a>
           </div>
         )}
 

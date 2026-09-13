@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revokeApiKey } from '@/lib/api-key-manager';
+import { authenticateSession } from '@/lib/session-auth';
 
 export const runtime = 'nodejs';
 
@@ -10,7 +11,9 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    const userId = req.headers.get('x-user-id') || 'dev_user';
+    const auth = await authenticateSession(req);
+    if (!auth.ok) return auth.response;
+    const userId = auth.identity.userId;
 
     if (!id) {
       return NextResponse.json(

@@ -2,8 +2,13 @@
 @plugin "@tailwindcss/typography";
 
 :root {
-  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-space-grotesk: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* Police Inter (next/font, self-hostée) avec repli système. */
+  --font-sans: var(--font-inter, system-ui), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-space-grotesk: var(--font-sans);
+
+  /* Ombres "verre" multi-couches (douces et diffuses, signature Apple) */
+  --shadow-glass-sm: 0 1px 2px rgba(15, 23, 42, 0.04), 0 10px 30px -12px rgba(15, 23, 42, 0.12);
+  --shadow-glass-lg: 0 2px 10px rgba(15, 23, 42, 0.05), 0 18px 44px -18px rgba(15, 23, 42, 0.2);
 }
 
 @theme {
@@ -11,6 +16,47 @@
   --color-foreground: #000000;
   --font-sans: var(--font-sans);
   --font-space-grotesk: var(--font-space-grotesk);
+
+  /* Courbe signature iOS (départ rapide, arrivée très douce) */
+  --ease-ios: cubic-bezier(0.32, 0.72, 0, 1);
+  --radius-sheet: 28px;
+
+  --animate-fade-up: fade-up 0.45s var(--ease-ios) both;
+  --animate-fade-in: fade-in 0.35s ease-out both;
+  --animate-scale-in: scale-in 0.3s var(--ease-ios) both;
+  --animate-orb-a: orb-a 64s ease-in-out infinite;
+  --animate-orb-b: orb-b 88s ease-in-out infinite;
+  --animate-orb-c: orb-c 76s ease-in-out infinite;
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translate3d(0, 14px, 0); }
+    to { opacity: 1; transform: translate3d(0, 0, 0); }
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes scale-in {
+    from { opacity: 0; transform: scale(0.97); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes orb-a {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+    50% { transform: translate3d(5vw, 4vh, 0) scale(1.08); }
+  }
+
+  @keyframes orb-b {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1.05); }
+    50% { transform: translate3d(-4vw, 6vh, 0) scale(1); }
+  }
+
+  @keyframes orb-c {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+    50% { transform: translate3d(3vw, -5vh, 0) scale(1.1); }
+  }
 }
 
 .inter-variable {
@@ -19,6 +65,19 @@
 
 .space-grotesk-variable {
   font-family: var(--font-space-grotesk);
+}
+
+@layer base {
+  /* Tailwind v4 n'applique plus cursor:pointer aux boutons */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+
+  /* Supprime le délai de double-tap zoom : ressenti natif au toucher */
+  a, button, [role="button"], summary, label {
+    touch-action: manipulation;
+  }
 }
 
 body {
@@ -83,9 +142,126 @@ body {
   animation: gradient 8s ease infinite;
 }
 
+/* ---------------------------------------------------------------------------
+   Surfaces "verre" (glassmorphism clair, style Apple/iOS)
+   `.glass` lit des variables CSS : les déclinaisons (glass-elev, etc.) ne font
+   que redéfinir ces variables, ce qui évite tout conflit de cascade et permet
+   de transitionner background-color sans jamais animer le backdrop-filter.
+--------------------------------------------------------------------------- */
+
+@utility glass {
+  background-color: var(--glass-bg, rgba(255, 255, 255, 0.5));
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.12));
+  -webkit-backdrop-filter: blur(var(--glass-blur, 20px)) saturate(180%);
+  backdrop-filter: blur(var(--glass-blur, 20px)) saturate(180%);
+  border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.6));
+  box-shadow: var(--glass-shadow, var(--shadow-glass-sm)), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* État "scrolled" : ne change que la teinte et l'ombre (blur identique) */
+@utility glass-elev {
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-shadow: var(--shadow-glass-lg);
+}
+
+@utility glass-strong {
+  background-color: rgba(255, 255, 255, 0.78);
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.2));
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  backdrop-filter: blur(32px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: var(--shadow-glass-lg), inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
+@utility glass-card {
+  background-color: rgba(255, 255, 255, 0.7);
+  -webkit-backdrop-filter: blur(24px) saturate(170%);
+  backdrop-filter: blur(24px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: var(--shadow-glass-sm), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+@utility glass-tile {
+  background-color: rgba(255, 255, 255, 0.55);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  backdrop-filter: blur(12px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Indicateur de lien actif (pill) : verre teinté violet, signature mAI */
+@utility glass-pill {
+  background-color: rgba(168, 85, 247, 0.12);
+  -webkit-backdrop-filter: blur(10px) saturate(170%);
+  backdrop-filter: blur(10px) saturate(170%);
+  border: 1px solid rgba(216, 180, 254, 0.5);
+  box-shadow: 0 2px 10px -4px rgba(147, 51, 234, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* ---------------------------------------------------------------------------
+   Safe-areas iOS (actives via viewportFit: "cover")
+--------------------------------------------------------------------------- */
+
+@utility safe-top-4 {
+  top: calc(env(safe-area-inset-top, 0px) + 1rem);
+}
+
+@utility safe-bottom-4 {
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 1rem);
+}
+
+@utility pt-safe-header {
+  padding-top: calc(env(safe-area-inset-top, 0px) + 6rem);
+}
+
+@utility pb-safe-sheet {
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.5rem);
+}
+
 /* Utilitaires globaux pour les menus déroulants (Glassmorphism) */
 @layer utilities {
   .glass-dropdown {
-    @apply bg-white/95 backdrop-blur-2xl border border-slate-200/80 shadow-[0_16px_40px_rgba(0,0,0,0.12)] rounded-3xl p-3;
+    @apply rounded-3xl p-3;
+    background-color: rgba(255, 255, 255, 0.72);
+    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.2));
+    -webkit-backdrop-filter: blur(32px) saturate(180%);
+    backdrop-filter: blur(32px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    box-shadow: 0 20px 45px -18px rgba(15, 23, 42, 0.22), 0 2px 6px rgba(15, 23, 42, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  }
+}
+
+/* Repli sans backdrop-filter (navigateurs anciens) : surfaces quasi-opaques */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass,
+  .glass-card,
+  .glass-tile,
+  .glass-pill,
+  .glass-strong,
+  .glass-dropdown {
+    background-image: none;
+  }
+  .glass,
+  .glass-card,
+  .glass-tile {
+    background-color: rgba(255, 255, 255, 0.94);
+  }
+  .glass-pill {
+    background-color: rgba(243, 232, 255, 0.97);
+  }
+  .glass-strong,
+  .glass-dropdown {
+    background-color: rgba(255, 255, 255, 0.97);
+  }
+}
+
+/* Accessibilité : neutralise les animations si l'utilisateur le demande */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

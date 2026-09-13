@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { authenticateOpenAIRequest } from "@/lib/openai-auth";
-import { getUserImageUsage } from "@/app/actions/image-usage";
+import { getUserImageUsageForUser } from "@/lib/image-usage";
 
 export const runtime = "nodejs";
 
@@ -10,8 +10,9 @@ export async function GET(req: NextRequest) {
     return auth.response;
   }
 
-  const userId = auth.apiKeyId || req.headers.get("x-user-id") || "dev_user";
-  const result = await getUserImageUsage(userId);
+  // Identité réelle du propriétaire de la clé (jamais le libellé de forfait ni un en-tête client)
+  const userId = auth.ownerId || auth.apiKeyId || "dev_user";
+  const result = await getUserImageUsageForUser(userId);
 
   if (!result.success) {
     return NextResponse.json({ error: result.error }, { status: 500 });

@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
+    "typecheck:valtown": "tsc --project tsconfig.valtown.json --noEmit",
     "setup": "npm install",
     "reset:api": "bun run scripts/admin.ts --reset-api",
     "reset:mai": "bun run scripts/admin.ts --reset-mai",
@@ -39,6 +40,7 @@
     "react-markdown": "^10.1.0",
     "react-use": "^17.6.1",
     "recharts": "^3.10.1",
+    "remark-gfm": "^4.0.1",
     "sharp": "^0.35.3",
     "tailwind-merge": "^3.6.0",
     "tailwindcss-animate": "^1.0.7"
@@ -46,7 +48,7 @@
   "devDependencies": {
     "@eslint/js": "^9.19.0",
     "@tailwindcss/postcss": "^4.3.2",
-    "@types/node": "^26",
+    "@types/node": "^22",
     "@types/nodemailer": "^8.0.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -57,6 +59,9 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "postcss": "^8",
     "tailwindcss": "^4.3.2",
-    "typescript": "^6"
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

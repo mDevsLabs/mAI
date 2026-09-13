@@ -50,11 +50,10 @@ export default function ApiUsagePage() {
   useEffect(() => {
     async function fetchStats() {
       if (!user) return;
-      const userId = user.username || user.email || "anonymous";
       try {
         const [statsRes, keysRes] = await Promise.all([
-          getDashboardStats(userId),
-          getUserApiUsage(userId)
+          getDashboardStats(),
+          getUserApiUsage()
         ]);
 
         if (statsRes.success && statsRes.stats) {
@@ -137,8 +136,7 @@ export default function ApiUsagePage() {
           <button
             onClick={() => {
               setLoadingStats(true);
-              const userId = user?.username || user?.email || "anonymous";
-              getDashboardStats(userId).then(res => {
+              getDashboardStats().then(res => {
                 if (res.success && res.stats) setStats(res.stats);
                 setLoadingStats(false);
               });

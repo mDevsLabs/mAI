@@ -12,7 +12,10 @@ function LoginForm() {
   const { login, verifyLogin, isAuthenticated, loading: authLoading } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const next = searchParams.get("next") || "/account";  const [email, setEmail] = useState("");
+  const rawNext = searchParams.get("next") || "/account";
+  // Anti open-redirect : uniquement des chemins internes (refuse //evil.com et /\evil.com)
+  const next = rawNext.startsWith("/") && !rawNext.startsWith("//") && !rawNext.startsWith("/\\") ? rawNext : "/account";
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -24,7 +27,7 @@ function LoginForm() {
 
   useEffect(() => {
     if (!authLoading && isAuthenticated) {
-      router.replace(next.startsWith("/") ? next : "/account");
+      router.replace(next);
     }
   }, [authLoading, isAuthenticated, next, router]);
 
@@ -46,7 +49,7 @@ function LoginForm() {
       } else {
         // Fallback pour les anciens comptes
         toast.success("Connexion réussie");
-        router.push(next.startsWith("/") ? next : "/account");
+        router.push(next);
       }
     } catch (err) {
       const message =
@@ -78,7 +81,7 @@ function LoginForm() {
     try {
       await verifyLogin(targetEmail, verificationCode.trim());
       toast.success("Connexion réussie");
-      router.push(next.startsWith("/") ? next : "/account");
+      router.push(next);
     } catch (err) {
       const message =
         err instanceof MaiApiError

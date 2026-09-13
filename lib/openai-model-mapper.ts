@@ -41,14 +41,16 @@ export function resolveOllamaModel(requestedModel: string): string {
   }
 
   // 2. Chercher dans notre catalogue de modèles par id ou ollamaTag
+  // (seuls les modèles locaux possèdent un tag Ollama ; les modèles cloud sont ignorés)
   const found = modelsData.find(
-    (m: { id: string; name: string; ollamaTag: string }) =>
-      m.id.toLowerCase() === cleanRequested ||
-      m.name.toLowerCase() === cleanRequested ||
-      m.ollamaTag.toLowerCase() === cleanRequested
+    (m) =>
+      m.ollamaTag &&
+      (m.id.toLowerCase() === cleanRequested ||
+        m.name.toLowerCase() === cleanRequested ||
+        m.ollamaTag.toLowerCase() === cleanRequested)
   );
 
-  if (found) {
+  if (found?.ollamaTag) {
     return found.ollamaTag;
   }
 

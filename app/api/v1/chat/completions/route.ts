@@ -53,9 +53,13 @@ export async function POST(req: NextRequest) {
     const planStr = (auth.plan || 'Free').toLowerCase().trim();
     const isPaidPlan = ['plus', 'pro', 'max'].includes(planStr);
     const isFreePlan = !isPaidPlan;
-    const modelName = (body.model || '').toLowerCase();
+    const modelName = (body.model || '').toLowerCase().trim();
 
-    if (isFreePlan && !modelName.includes('free')) {
+    // Les alias cloud de la génération mAI-2 sont ouverts à tous les forfaits
+    // (le quota hebdomadaire de tokens s'applique côté API mAI).
+    const isMaiCloudAlias = modelName === 'mai-2' || modelName === 'mai-2-mini';
+
+    if (isFreePlan && !modelName.includes('free') && !isMaiCloudAlias) {
       return NextResponse.json<OpenAIErrorResponse>(
         {
           error: {
@@ -69,8 +73,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 2. Vérifier si le modèle est local (mAI / Ollama) ou Cloud (OpenRouter / Val Town)
-    const isLocalModel = body.model.startsWith('mDevsLabs/') || body.model.startsWith('mai-') || body.model.includes('mAI');
+    // 2. Vérifier si le modèle est local (mAI / Ollama) ou Cloud (OpenRouter / Val Town).
+    // Les alias mai-2 / mai-2-mini sont des modèles cloud : ils ne passent pas par Ollama.
+    const isLocalModel = !isMaiCloudAlias && (
+      body.model.startsWith('mDevsLabs/') || body.model.startsWith('mai-') || body.model.includes('mAI')
+    );
     const authHeader = req.headers.get('authorization') || req.headers.get('Authorization') || '';
 
     // Si c'est un modèle cloud (ou si l'utilisateur demande directement un modèle cloud), on délègue au proxy Val Town
@@ -151,6 +158,7 @@ export async function POST(req: NextRequest) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(ollamaPayload),
+        signal: req.signal,
       });
     } catch (err: any) {
       console.error('Ollama connection error:', err);
@@ -296,6 +304,10 @@ export async function POST(req: NextRequest) {
               latencyMs: Math.round(performance.now() - startTime),
             }).catch(() => {});
           }
+        },
+        cancel() {
+          // Client déconnecté : annuler la lecture en amont pour arrêter la génération Ollama
+          reader.cancel().catch(() => {});
         },
       });
 

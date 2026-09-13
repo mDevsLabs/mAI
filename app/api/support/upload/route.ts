@@ -6,9 +6,12 @@ import {
   isAllowedSupportMime,
   isAdminUser,
 } from "@/app/actions/support-utils";
+import { authenticateSession } from "@/lib/session-auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 function getSql() {
   const url = process.env.DATABASE_URL;
@@ -233,19 +236,28 @@ async function uploadWithFallback(primaryNode: StorageNode, filePath: string, bo
 
 export async function POST(req: NextRequest) {
   try {
+    // Garde anti-DoS : refuse avant de bufferiser le body (le plafond file.size seul arrive trop tard)
+    const contentLength = parseInt(req.headers.get("content-length") || "0", 10);
+    const maxRequestSize = SUPPORT_ATTACHMENT_LIMITS.MAX_FILE_SIZE + 1024 * 1024; // marge multipart
+    if (Number.isFinite(contentLength) && contentLength > maxRequestSize) {
+      return NextResponse.json({ success: false, error: "Fichier trop volumineux (max 8 Mo)." }, { status: 413 });
+    }
+
+    // Identité vérifiée côté serveur (session signée) — jamais depuis le formulaire
+    const auth = await authenticateSession(req);
+    if (!auth.ok) return auth.response;
+
     const form = await req.formData();
     const file = form.get("file") as File | null;
-    const ticketId = (form.get("ticketId") as string | null)?.trim() || null;
-    const uploaderId = (form.get("uploaderId") as string | null)?.trim();
-    const uploaderEmail = (form.get("uploaderEmail") as string | null)?.trim();
-    const uploaderName = (form.get("uploaderName") as string | null)?.trim();
+    const ticketIdRaw = (form.get("ticketId") as string | null)?.trim() || null;
 
     if (!(file instanceof File)) {
       return NextResponse.json({ success: false, error: "Fichier manquant." }, { status: 400 });
     }
-    if (!uploaderId || !uploaderEmail) {
-      return NextResponse.json({ success: false, error: "Authentification requise (uploaderId/email)." }, { status: 401 });
+    if (ticketIdRaw && !UUID_RE.test(ticketIdRaw)) {
+      return NextResponse.json({ success: false, error: "ticketId invalide." }, { status: 400 });
     }
+    const ticketId = ticketIdRaw;
 
     // Validation taille
     if (file.size === 0) return NextResponse.json({ success: false, error: "Fichier vide." }, { status: 400 });
@@ -253,16 +265,25 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, error: `Fichier trop volumineux (max 8 Mo). Taille reçue : ${(file.size / 1024 / 1024).toFixed(2)} Mo` }, { status: 413 });
     }
 
-    // Validation MIME / extension
+    // Validation MIME / extension (allowlist stricte, SVG/HTML refusés)
     const mime = file.type || "";
     if (!isAllowedSupportMime(mime, file.name)) {
       return NextResponse.json({ success: false, error: `Type de fichier non autorisé (${mime || "inconnu"}). Autorisés : images, .txt, .md uniquement.` }, { status: 400 });
     }
 
+    const sql = getSql();
+
+    // Identité et rôle dérivés de la session + DB (pas du formulaire)
+    const userRows = await sql`
+      SELECT email, username FROM users WHERE id::text = ${auth.identity.userId}::text LIMIT 1
+    `;
+    const uploaderEmail = String(userRows[0]?.email || "").trim().toLowerCase();
+    if (!uploaderEmail) {
+      return NextResponse.json({ success: false, error: "Compte introuvable. Reconnectez-vous." }, { status: 403 });
+    }
+    const uploaderId = auth.identity.userId;
     const isAdmin = isAdminUser(uploaderEmail);
     const uploaderRole = isAdmin ? "admin" : "user";
-
-    const sql = getSql();
 
     // Compteur 5 par rôle par ticket (si ticketId fourni)
     if (ticketId) {
@@ -271,7 +292,7 @@ export async function POST(req: NextRequest) {
         const tRows = await sql`SELECT id, user_id, user_email FROM support_tickets WHERE id = ${ticketId}::uuid LIMIT 1`;
         if (tRows.length === 0) return NextResponse.json({ success: false, error: "Ticket introuvable." }, { status: 404 });
         // Vérif accès : admin ou owner
-        const ownerOk = isAdmin || tRows[0].user_id === uploaderId || tRows[0].user_email === uploaderEmail;
+        const ownerOk = isAdmin || String(tRows[0].user_id) === uploaderId || String(tRows[0].user_email || "").toLowerCase() === uploaderEmail;
         if (!ownerOk) return NextResponse.json({ success: false, error: "Non autorisé sur ce ticket." }, { status: 403 });
 
         const cntRows = await sql`SELECT COUNT(*) as cnt FROM support_ticket_attachments WHERE ticket_id = ${ticketId}::uuid AND uploader_role = ${uploaderRole}`;
@@ -280,14 +301,12 @@ export async function POST(req: NextRequest) {
           return NextResponse.json({ success: false, error: `Limite atteinte : ${SUPPORT_ATTACHMENT_LIMITS.MAX_FILES_PER_ROLE_PER_TICKET} fichiers maximum pour ${uploaderRole === "admin" ? "l'administrateur" : "l'utilisateur"} sur cette conversation (déjà ${cnt}).` }, { status: 413 });
         }
       } catch (e: any) {
-        // si table n'existe pas encore, ignorer compteur (migration pas encore jouée)
+        // Table pas encore migrée : toléré. Toute autre erreur DB doit échouer (fail-closed).
         if (!String(e?.message || "").includes("does not exist")) {
           console.error("count error", e);
+          throw e;
         }
       }
-    } else {
-      // Sans ticketId (création) : limiter à 5 par upload batch, pas de vérif DB
-      // Le client doit limiter à 5 max
     }
 
     // Nom fichier nettoyage + clé Z1
@@ -302,7 +321,8 @@ export async function POST(req: NextRequest) {
 
     const uploadRes = await uploadWithFallback(primaryNode, fileKey, arrayBuffer, mime || "application/octet-stream");
     if (!uploadRes.success) {
-      return NextResponse.json({ success: false, error: `Échec upload Z1 Storage : ${uploadRes.error}` }, { status: 500 });
+      console.error("Z1 upload failed", uploadRes.error);
+      return NextResponse.json({ success: false, error: "Échec de l'upload vers le stockage. Réessayez plus tard." }, { status: 500 });
     }
 
     const storedKey = `node-${uploadRes.node.id}:${uploadRes.node.bucket}:${fileKey}`;
@@ -340,27 +360,15 @@ export async function POST(req: NextRequest) {
         fileKey: storedKey,
       });
     } catch (dbErr: any) {
-      // Si table n'existe pas (migration non jouée), retourner quand même URL pour que le front affiche l'image
-      // Le ticket creation liera plus tard via metadata fallback
-      console.error("DB insert attachment failed (migration pending?)", dbErr);
-      return NextResponse.json({
-        success: true,
-        warning: "Upload Z1 réussi mais base non migrée (exécutez support_v2_upgrade.sql).",
-        url: publicUrl,
-        fileKey: storedKey,
-        attachment: {
-          id: uuid,
-          ticket_id: ticketId,
-          file_url: publicUrl,
-          file_key: storedKey,
-          file_name: cleanOriginal,
-          file_size: file.size,
-          mime_type: mime,
-        },
-      });
+      // Rattachage impossible : le fichier ne doit pas rester orphelin en prétendant un succès
+      console.error("DB insert attachment failed", dbErr);
+      return NextResponse.json(
+        { success: false, error: "Upload stocké mais rattachement impossible. Réessayez ou contactez le support." },
+        { status: 500 }
+      );
     }
   } catch (err: any) {
     console.error("Support upload error", err);
-    return NextResponse.json({ success: false, error: err?.message || "Erreur serveur upload." }, { status: 500 });
+    return NextResponse.json({ success: false, error: "Erreur serveur upload." }, { status: 500 });
   }
 }

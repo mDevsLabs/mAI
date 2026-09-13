@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { validateApiKey, checkAndTrackUserUsage, recordApiLog } from '@/lib/api-key-manager';
+import { authenticateSession } from '@/lib/session-auth';
 
 export type Role = 'user' | 'assistant' | 'system';
 
@@ -16,12 +17,6 @@ export const runtime = 'nodejs';
 export async function POST(req: NextRequest) {
   const startTime = performance.now();
   try {
-    const rawUserId = req.headers.get('x-user-id');
-    let userId: string | null = null;
-    if (rawUserId) {
-      try { userId = decodeURIComponent(rawUserId); } catch { userId = null; }
-      if (userId === 'dev_user') userId = null;
-    }
     const authHeader = req.headers.get('authorization') || req.headers.get('Authorization') || '';
 
     const body = await req.json();
@@ -51,10 +46,14 @@ export async function POST(req: NextRequest) {
         );
       }
       effectiveKey = customKey;
-    } else if (userId) {
-      // Auth via x-user-id requiert trace, mais on limite l'auto-création : checkAndTrack fait déjà quota
+    } else {
+      // Identité vérifiée côté serveur (session signée) — l'en-tête x-user-id n'est plus accepté
+      const session = await authenticateSession(req);
+      if (!session.ok) {
+        return NextResponse.json({ error: 'Auth requise : fournissez une clé API (Bearer) ou connectez-vous.' }, { status: 401 });
+      }
       const usageCheck = await checkAndTrackUserUsage({
-        userId,
+        userId: session.identity.userId,
         endpoint: '/api/ollama/chat',
         method: 'POST',
       });
@@ -66,8 +65,6 @@ export async function POST(req: NextRequest) {
         );
       }
       effectiveKey = usageCheck.apiKey || '';
-    } else {
-      return NextResponse.json({ error: 'Auth requise : fournissez une clé API (Bearer) ou un identifiant utilisateur.' }, { status: 401 });
     }
 
     const ollamaHost = process.env.OLLAMA_BASE_URL || 'http://localhost:11434';
@@ -120,14 +117,15 @@ export async function POST(req: NextRequest) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(ollamaPayload),
+        signal: req.signal,
       });
     } catch (err: any) {
       console.error('Erreur de connexion à Ollama:', err);
       return NextResponse.json(
         {
           error:
-            `Ollama n'est pas démarré ou n'est pas accessible sur ${ollamaHost}.\n` +
-            `Veuillez démarrer Ollama localement avec la commande "ollama serve" puis réessayer.`,
+            'Ollama local n\'est pas accessible.\n' +
+            'Veuillez démarrer Ollama avec la commande "ollama serve" puis réessayer.',
         },
         { status: 503 }
       );
@@ -135,8 +133,9 @@ export async function POST(req: NextRequest) {
 
     if (!response.ok) {
       const errorText = await response.text().catch(() => 'Erreur inconnue');
+      console.error(`Ollama error ${response.status}:`, errorText);
       return NextResponse.json(
-        { error: `Ollama a répondu avec une erreur (${response.status}) : ${errorText}` },
+        { error: `Ollama a répondu avec une erreur (${response.status}).` },
         { status: response.status }
       );
     }
@@ -204,6 +203,10 @@ export async function POST(req: NextRequest) {
           controller.error('Streaming error');
         }
       },
+      cancel() {
+        // Client déconnecté : annuler la lecture en amont pour arrêter la génération Ollama
+        reader.cancel().catch(() => {});
+      },
     });
 
     return new Response(stream, {
@@ -215,6 +218,6 @@ export async function POST(req: NextRequest) {
     });
   } catch (err: any) {
     console.error('Erreur dans route Ollama:', err);
-    return NextResponse.json({ error: err.message || 'Erreur interne du serveur' }, { status: 500 });
+    return NextResponse.json({ error: 'Erreur interne du serveur' }, { status: 500 });
   }
 }

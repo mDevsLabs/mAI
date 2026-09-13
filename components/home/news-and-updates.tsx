@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import { ArrowRight, Calendar } from "lucide-react";
 import Link from "next/link";
+import { NewsMedia } from "@/components/ui/media";
 import type { NewsArticle } from "@/lib/news";
 
 export function NewsAndUpdates({ news }: { news: NewsArticle[] }) {
@@ -52,9 +53,21 @@ export function NewsAndUpdates({ news }: { news: NewsArticle[] }) {
                 className="group flex flex-col justify-between h-full bg-white/60 backdrop-blur-md border border-white/80 rounded-3xl p-5 sm:p-6 hover:border-emerald-300 transition-colors duration-200 shadow-xs"
               >
                 <div>
+                  {article.image && (
+                    <div className="relative h-36 sm:h-40 mb-4 rounded-2xl overflow-hidden bg-slate-100">
+                      <NewsMedia
+                        src={article.image}
+                        kind={article.imageType}
+                        alt={article.title}
+                        fill
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    </div>
+                  )}
+
                   <div className="flex items-center justify-between gap-2 mb-3">
                     <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700">
-                      {article.label || "Article"}
+                      {article.category || article.label || "Article"}
                     </span>
                     <span className="text-xs text-slate-400 font-medium flex items-center gap-1">
                       <Calendar className="w-3.5 h-3.5" />

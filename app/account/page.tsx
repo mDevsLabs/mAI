@@ -202,8 +202,7 @@ export default function AccountPage() {
 
   const loadApiUsage = async () => {
     if (!user) return;
-    const userId = user.username || user.email || "anonymous";
-    const res = await getUserApiUsage(userId);
+    const res = await getUserApiUsage();
     if (res.success) {
       if ((res as any).apiBoost !== undefined) {
         setApiBoost((res as any).apiBoost);
@@ -221,18 +220,17 @@ export default function AccountPage() {
 
   const loadImagesUsage = async () => {
     if (!user) return;
-    const userId = user.username || user.email || String(user.id || "dev_user");
-    const res = await getUserImageUsage(userId);
+    const res = await getUserImageUsage();
     if (res.success && res.data) {
       setImageUsage(res.data);
     }
   };
 
   const loadResets = async () => {
-    if (!user?.id) return;
+    if (!user) return;
     setLoadingResets(true);
     try {
-      const res = await getUserAvailableResets(String(user.id));
+      const res = await getUserAvailableResets();
       if (res.success) {
         setAvailableResets(res.resets);
       }
@@ -244,10 +242,10 @@ export default function AccountPage() {
   };
 
   const handleClaimReset = async (resetId: number) => {
-    if (!user?.id) return;
+    if (!user) return;
     setClaimingResetId(resetId);
     try {
-      const res = await claimUserReset(String(user.id), resetId);
+      const res = await claimUserReset(resetId);
       if (res.success) {
         toast.success(res.message || "Quota réinitialisé avec succès !");
         // Suppression immédiate de la ligne du tableau

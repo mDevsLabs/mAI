@@ -1,69 +1,26 @@
 "use server";
 
 import { neon } from "@neondatabase/serverless";
-import crypto from "crypto";
 
-import { getTierQuotaLimit, getUserQuotaBoost } from "@/lib/tiers";
+import { getUserQuotaBoost } from "@/lib/tiers";
+import { getSessionIdentity } from "@/lib/session-auth";
 
-// Fonction pour générer une clé API sécurisée au format : mai-TIER-XXXXX-XXXXXXXX
-// 5 caractères majuscules/chiffres (partie 1), puis 8 caractères alphanumériques (partie 2).
-// Rétrocompatibilité assurée : les anciennes clés mp-* et mai-TIER-XXXXX-XXXXX restent valides.
-function generateApiKeyString(tier: string = "free"): string {
-  const normalizedTier = ["free", "plus", "pro", "max"].includes(tier.toLowerCase().trim())
-    ? tier.toLowerCase().trim()
-    : "free";
-
-  const part1Charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  const part2Charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-  let part1 = "";
-  let part2 = "";
-  const b1 = crypto.randomBytes(5);
-  const b2 = crypto.randomBytes(8);
-  for (let i = 0; i < 5; i++) part1 += part1Charset[b1[i] % part1Charset.length];
-  for (let i = 0; i < 8; i++) part2 += part2Charset[b2[i] % part2Charset.length];
-
-  return `mai-${normalizedTier}-${part1}-${part2}`;
-}
-
-export async function generateAndSaveApiKey(userId: string, plan: string = "Free") {
+export async function getUserApiUsage() {
   try {
     const databaseUrl = process.env.DATABASE_URL;
     
     if (!databaseUrl) {
       throw new Error("La variable d'environnement DATABASE_URL est manquante.");
     }
-    
-    const sql = neon(databaseUrl);
-    const apiKey = generateApiKeyString(plan);
-    
-    // Sauvegarder la clé dans Neon
-    await sql`
-      INSERT INTO mprojects_api_keys (user_id, api_key, plan, request_count)
-      VALUES (${userId}, ${apiKey}, ${plan}, 0)
-    `;
 
-    return {
-      success: true,
-      apiKey,
-      message: "Clé générée avec succès"
-    };
-  } catch (error) {
-    console.error("Erreur lors de la génération de la clé:", error);
-    return {
-      success: false,
-      error: "Erreur lors de la création de la clé API"
-    };
-  }
-}
-
-export async function getUserApiUsage(userId: string) {
-  try {
-    const databaseUrl = process.env.DATABASE_URL;
-    
-    if (!databaseUrl) {
-      throw new Error("La variable d'environnement DATABASE_URL est manquante.");
+    const identity = await getSessionIdentity();
+    if (!identity) {
+      return {
+        success: false,
+        error: "Authentification requise."
+      };
     }
+    const userId = identity.userId;
     
     const sql = neon(databaseUrl);
     
