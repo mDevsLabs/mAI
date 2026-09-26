@@ -96,6 +96,8 @@ export default function TicketsListClient() {
   useEffect(() => {
     if (!authLoading && isAuthenticated) fetchTickets();
     else if (!authLoading && !isAuthenticated) setLoading(false);
+    // La recherche est volontairement soumise manuellement, pas à chaque frappe.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authLoading, isAuthenticated, user, statusFilter, projectFilter, priorityFilter]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {

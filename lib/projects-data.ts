@@ -32,7 +32,6 @@ export const activeProjects: Project[] = [
     id: "vibe",
     name: "Vibe",
     number: "01",
-    label: "Bêta",
     iconKey: "messages-square",
     tagline: "Le réseau social où l'IA fait partie de la conversation.",
     description:
@@ -46,7 +45,6 @@ export const activeProjects: Project[] = [
     id: "web",
     name: "Web",
     number: "02",
-    label: "Bêta",
     iconKey: "globe",
     tagline: "Application d'IA en ligne web directe et intuitive.",
     description:
@@ -59,7 +57,6 @@ export const activeProjects: Project[] = [
     id: "pulse",
     name: "Pulse",
     number: "03",
-    label: "Bêta",
     iconKey: "cpu",
     tagline: "L'IA intégrée directement dans vos outils du quotidien.",
     description:
@@ -72,7 +69,6 @@ export const activeProjects: Project[] = [
     id: "cli",
     name: "CLI",
     number: "04",
-    label: "Release Candidate",
     iconKey: "terminal",
     tagline: "L'assistant de développement qui vit dans votre terminal.",
     description: "Discussions et séances de codage dans le terminal CLI via mAI.",
@@ -84,7 +80,6 @@ export const activeProjects: Project[] = [
     id: "coder",
     name: "Coder",
     number: "05",
-    label: "Bêta",
     iconKey: "code",
     tagline: "L'IDE IA pensé pour les agents autonomes et les outils MCP.",
     description:
@@ -184,6 +179,7 @@ export const archivedProjects: Project[] = [
   {
     id: "msearch",
     name: "mSearch",
+    label: "Archivé",
     iconKey: "search",
     image: "/msearch.PNG",
     description: "Moteur de recherche sémantique et d'indexation vectorielle unifié.",
@@ -194,6 +190,7 @@ export const archivedProjects: Project[] = [
   {
     id: "openprovider",
     name: "OpenProvider",
+    label: "Archivé",
     iconKey: "layers",
     image: "/openprovider.png",
     description: "Proxy universel de routage de modèles LLM et compatibilité Codex.",
@@ -204,6 +201,7 @@ export const archivedProjects: Project[] = [
   {
     id: "snob",
     name: "Snob",
+    label: "Archivé",
     iconKey: "gamepad",
     image: "/snob.png",
     description: "Jeu de réflexion et puzzle inspiré de Block Blast.",
@@ -219,6 +217,18 @@ export const archivedProjects: Project[] = [
     platforms: ["Divers"],
   },
 ];
+
+/**
+ * Archives publiées sur la page /projects.
+ *
+ * Les autres archives restent dans `archivedProjects` (et donc dans
+ * `allProjects`) pour préserver l'historique et les usages API.
+ */
+const publicArchivedProjectIds = new Set(["msearch", "openprovider", "snob"]);
+
+export const publicArchivedProjects: Project[] = archivedProjects.filter(({ id }) =>
+  publicArchivedProjectIds.has(id),
+);
 
 /** Tous les projets, actifs puis archivés. */
 export const allProjects: Project[] = [...activeProjects, ...archivedProjects];

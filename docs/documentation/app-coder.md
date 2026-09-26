@@ -1,15 +1,14 @@
 ---
-title: "Coder (Alpha)"
+title: "Coder"
 description: "IDE IA de nouvelle génération avec agents IA autonomes et outils MCP."
 category: "Applications"
-order: 4
+order: 5
 ---
 
-# mAI Coder - IDE IA & Agents MCP 
+# mAI Coder - IDE IA & Agents MCP
 
 **mAI Coder** est l'environnement de développement intégré (IDE) nouvelle génération propulsé par l'intelligence artificielle. Il réunit des capacités d'édition de code modernes avec des agents autonomes capables d'analyser vos projets, de concevoir des architectures, de modifier des fichiers en rafale et d'exécuter des actions sécurisées via le standard ouvert **Model Context Protocol (MCP)**.
 
-- **Statut** : **Alpha**
 - **Plateformes** : macOS, Windows, Linux
 - **Dépôt GitHub** : [https://github.com/mDevsLabs/Coder](https://github.com/mDevsLabs/Coder)
 

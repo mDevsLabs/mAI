@@ -31,10 +31,10 @@ export async function DELETE(
       );
     }
 
-    return NextResponse.json({
-      success: true,
-      message: "Clé API révoquée avec succès.",
-    });
+    return NextResponse.json(
+      { success: true, message: "Clé API révoquée avec succès." },
+      { headers: { 'Cache-Control': 'private, no-store' } },
+    );
   } catch (err: any) {
     console.error('Erreur DELETE /api/dev-keys/[id]:', err);
     return NextResponse.json(
@@ -55,7 +55,7 @@ export async function PUT(
     if (!auth.ok) return auth.response;
     const userId = auth.identity.userId;
 
-    const body = await req.json().catch(() => ({}));
+    const body = await req.json().catch(() => ({})) as Record<string, unknown>;
 
     if (!id) {
       return NextResponse.json(
@@ -64,11 +64,52 @@ export async function PUT(
       );
     }
 
-    const parsedLimit = body.maxLimit !== undefined ? (body.maxLimit === "" ? null : parseInt(body.maxLimit, 10)) : undefined;
+    const name = body.name === undefined
+      ? undefined
+      : (typeof body.name === 'string' ? body.name.trim() : null);
+    if (name === null || (name !== undefined && (!name || name.length > 80))) {
+      return NextResponse.json(
+        { error: { code: 'bad_request', message: 'Nom de clé invalide (80 caractères maximum).' } },
+        { status: 400 }
+      );
+    }
+
+    let maxLimit: number | null | undefined;
+    if (body.maxLimit !== undefined) {
+      if (
+        body.maxLimit !== null &&
+        body.maxLimit !== '' &&
+        typeof body.maxLimit !== 'number' &&
+        typeof body.maxLimit !== 'string'
+      ) {
+        return NextResponse.json(
+          { error: { code: 'bad_request', message: 'La limite doit être un entier positif.' } },
+          { status: 400 }
+        );
+      }
+      if (body.maxLimit === null || body.maxLimit === '') {
+        maxLimit = null;
+      } else {
+        const parsed = Number(body.maxLimit);
+        if (!Number.isInteger(parsed) || parsed <= 0) {
+          return NextResponse.json(
+            { error: { code: 'bad_request', message: 'La limite doit être un entier positif.' } },
+            { status: 400 }
+          );
+        }
+        maxLimit = parsed;
+      }
+    }
+    if (body.isActive !== undefined && typeof body.isActive !== 'boolean') {
+      return NextResponse.json(
+        { error: { code: 'bad_request', message: 'isActive doit être un booléen.' } },
+        { status: 400 }
+      );
+    }
     const updates = {
-      name: body.name,
-      maxLimit: parsedLimit !== undefined && !Number.isFinite(parsedLimit as number) ? undefined : parsedLimit,
-      isActive: body.isActive !== undefined ? Boolean(body.isActive) : undefined,
+      name,
+      maxLimit,
+      isActive: body.isActive as boolean | undefined,
     };
 
     const success = await updateApiKey(userId, id, updates);
@@ -80,10 +121,10 @@ export async function PUT(
       );
     }
 
-    return NextResponse.json({
-      success: true,
-      message: "Clé API mise à jour avec succès.",
-    });
+    return NextResponse.json(
+      { success: true, message: "Clé API mise à jour avec succès." },
+      { headers: { 'Cache-Control': 'private, no-store' } },
+    );
   } catch (err: any) {
     console.error('Erreur PUT /api/dev-keys/[id]:', err);
     return NextResponse.json(

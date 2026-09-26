@@ -13,12 +13,14 @@ L'accès à l'API mAI nécessite une authentification sécurisée basée sur des
 
 ## 1. Structure & Format des Clés
 
-Toutes les clés d'API délivrées par la plateforme mAI répondent au format suivant :
+Les nouvelles clés d’API utilisent le format suivant :
 
 ```text
-mp-[48 caractères hexadécimaux]
-Exemple : mp-a1b2c3d4e5f678901234567890abcdef1234567890abcdef
+mai-{forfait}-{5 caractères publics}-{8 caractères secrets}
+Exemple : mai-pro-A1B2C-DEF45678
 ```
+
+Les anciens préfixes `mp-*`, `mai_live*` et `sk_mp_*` restent acceptés afin de préserver les intégrations existantes.
 
 > [!IMPORTANT]
 > Les clés complètes doivent être transmises dans leur intégralité. L'utilisation d'un préfixe tronqué (ex: les 8 premiers caractères) entraîne un refus immédiat de la requête (`401 Unauthorized`).
@@ -29,10 +31,12 @@ Exemple : mp-a1b2c3d4e5f678901234567890abcdef1234567890abcdef
 
 1. Accédez au tableau de bord dans la section [Clés API](/account/keys).
 2. Sélectionnez **Créer une clé API**, attribuez-lui un nom explicite (ex: `Backend Production`, `Bot Discord`) et définissez une limite maximale optionnelle.
-3. La clé est générée automatiquement par le système. Elle n'est exposée en clair qu'une unique fois, au moment de sa création. Pour des raisons de sécurité cryptographique, **seul le hachage SHA-256 est conservé dans nos bases de données situées dans l'Union européenne**. Même le personnel technique n'y a pas accès.
+3. La clé est générée automatiquement par le système. Son secret n’est exposé en clair qu’une unique fois, au moment de sa création. Après cela, **seul son préfixe public est renvoyé à l’interface** ; les opérations autorisées résolvent la clé côté serveur à partir de la session du propriétaire.
 
 > [!NOTE]
-> La génération de la clé s'effectue automatiquement par le système avant son chiffrement en base. Aucune copie interne du secret n'est conservée.
+> La plateforme conserve le secret côté serveur pour permettre les appels API ultérieurs. Elle ne le renvoie pas dans les endpoints de liste, d’usage ou de configuration.
+
+Dans la console mAI, une clé existante est représentée par une **référence publique** (`keyRef`) contenant uniquement son préfixe. Les pages same-origin envoient cette référence avec la session ; le serveur vérifie le propriétaire et l’état de la clé avant d’injecter le secret dans la requête sortante.
 
 ---
 

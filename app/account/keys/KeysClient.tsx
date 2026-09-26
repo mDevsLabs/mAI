@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useCallback, useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import {
-  KeyRound, Plus, Copy, Check, Trash2, AlertTriangle, ShieldAlert,
-  Loader2, Activity, X, Lock, CheckSquare, Edit, Download
+  KeyRound, Plus, Trash2, ShieldAlert,
+  Loader2, Activity, CheckSquare, Edit, Download
 } from 'lucide-react';
-import { ApiKeyMetadata, CreatedApiKeyResult } from '@/lib/api-key-manager';
+import type { ApiKeyMetadata, CreatedApiKeyResult } from '@/lib/api-key-types';
+import { KeyModals } from './KeyModals';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { useAuth } from '@/components/auth-provider';
@@ -17,7 +18,7 @@ export default function KeysClient() {
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
-      router.replace('/account/login?next=%2Fapi%2Fkeys');
+      router.replace('/account/login?next=%2Faccount%2Fkeys');
     }
   }, [authLoading, isAuthenticated, router]);
 
@@ -48,11 +49,12 @@ export default function KeysClient() {
   const [keyToRevoke, setKeyToRevoke] = useState<ApiKeyMetadata | null>(null);
   const [revoking, setRevoking] = useState(false);
 
-  const fetchKeys = async () => {
+  const fetchKeys = useCallback(async () => {
     if (!token) return;
     setLoading(true);
     try {
       const res = await fetch('/api/dev-keys', {
+        cache: 'no-store',
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -67,11 +69,11 @@ export default function KeysClient() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
-    fetchKeys();
-  }, [token]);
+    void fetchKeys();
+  }, [token, fetchKeys]);
 
   // Deep-link onboarding : auto-ouvrir la création après tuto (sans useSearchParams pour éviter Suspense)
   useEffect(() => {
@@ -125,7 +127,7 @@ export default function KeysClient() {
     setEditing(true);
 
     try {
-      const res = await fetch(`/api/dev-keys/${encodeURIComponent(keyToEdit.id)}`, {
+      const res = await fetch(`/api/dev-keys/${encodeURIComponent(keyToEdit.keyRef)}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -167,7 +169,7 @@ export default function KeysClient() {
   };
 
   const handleConfirmRevoke = async (idToRevoke?: string) => {
-    const targetId = idToRevoke || (keyToRevoke ? keyToRevoke.id : null);
+    const targetId = idToRevoke || (keyToRevoke ? keyToRevoke.keyRef : null);
     if (!targetId || revoking) return;
     setRevoking(true);
     try {
@@ -213,7 +215,7 @@ export default function KeysClient() {
     let content = "Clés API mAI\n==================\n\n";
     toExport.forEach(k => {
       content += `Nom : ${k.name}\n`;
-      content += `Prefixe (Public) : ${k.prefix}\n`;
+      content += `Préfixe public : ${k.keyRef}\n`;
       content += `Limite de requêtes : ${k.maxLimit || 'Illimité'}\n`;
       content += `Créée le : ${formatDate(k.createdAt)}\n`;
       content += `Status : ${k.isActive ? 'Active' : 'Désactivée'}\n`;
@@ -228,7 +230,7 @@ export default function KeysClient() {
     if (toExport.length === 0) return;
     let content = "# mAI API Keys\n";
     toExport.forEach((k, idx) => {
-      content += `# Key: ${k.name} (Prefix: ${k.prefix})\n`;
+      content += `# Key: ${k.name} (keyRef: ${k.keyRef})\n`;
       content += `MAI_API_KEY_${idx + 1}="mai_live_..."\n\n`;
     });
     downloadFile(content, 'mai_api_keys.env');
@@ -287,78 +289,37 @@ export default function KeysClient() {
             Consignes de Sécurité Développeur
           </h3>
           <p className="text-slate-700 leading-relaxed text-xs">
-            Vos clés API mAI confèrent un accès direct aux modèles d&apos;IA. Ne partagez jamais vos clés secrètes dans des dépôts publics GitHub ou dans du code frontend exécuté côté client. Seul le hash SHA-256 de vos clés est conservé dans nos bases.
+            Vos clés API mAI confèrent un accès direct aux modèles d&apos;IA. Ne partagez jamais une clé secrète dans un dépôt public ou du code frontend. Le service conserve la valeur d&apos;authentification côté serveur pour valider les appels et le keyRef public dans les listes ; le secret complet n&apos;est renvoyé qu&apos;une seule fois à la création.
           </p>
         </div>
       </div>
 
-      {/* ─── ALERTE SECRET CRÉÉ (AFFICHAGE UNIQUE) ───────────────────────── */}
-      <AnimatePresence>
-        {createdSecret && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: -10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="p-6 rounded-3xl bg-gradient-to-br from-amber-500/20 via-amber-400/10 to-orange-500/10 border-2 border-amber-400/50 shadow-xl space-y-4 relative"
-          >
-            <button
-              onClick={() => setCreatedSecret(null)}
-              className="absolute top-4 right-4 p-1.5 rounded-full text-slate-400 hover:bg-black/5 hover:text-slate-700 transition-colors"
-            >
-              <X className="w-4 h-4" />
-            </button>
-
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center font-bold">
-                <Lock className="w-4 h-4" />
-              </div>
-              <div>
-                <h4 className="font-extrabold text-slate-900 text-base">
-                  Clé API générée pour &quot;{createdSecret.name}&quot;
-                </h4>
-                <p className="text-xs text-amber-700 font-bold">
-                  <AlertTriangle className="inline w-4 h-4 align-middle" />️ Sauvegardez cette clé immédiatement. Cette valeur ne sera plus jamais affichée !
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2 bg-slate-950 p-3.5 rounded-2xl border border-slate-800 shadow-inner">
-              <code className="flex-1 font-mono text-xs sm:text-sm text-emerald-400 break-all select-all tracking-wider">
-                {createdSecret.secretKey}
-              </code>
-              <motion.button
-                whileTap={{ scale: 0.9 }}
-                onClick={handleCopySecret}
-                className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition-all flex items-center gap-2 cursor-pointer shadow-md shrink-0"
-              >
-                <AnimatePresence mode="wait" initial={false}>
-                  {copied ? (
-                    <motion.span
-                      key="check"
-                      initial={{ opacity: 0, scale: 0.5 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="flex items-center gap-1.5"
-                    >
-                      <Check className="w-4 h-4 text-slate-950 stroke-[3]" /> Copié !
-                    </motion.span>
-                  ) : (
-                    <motion.span
-                      key="copy"
-                      initial={{ opacity: 0, scale: 0.5 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="flex items-center gap-1.5"
-                    >
-                      <Copy className="w-4 h-4" /> Copier le secret
-                    </motion.span>
-                  )}
-                </AnimatePresence>
-              </motion.button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <KeyModals
+        copied={copied}
+        createdSecret={createdSecret}
+        creating={creating}
+        editIsActive={editIsActive}
+        editLimit={editLimit}
+        editing={editing}
+        isCreateOpen={isCreateOpen}
+        keyToEdit={isEditOpen ? keyToEdit : null}
+        keyToRevoke={keyToRevoke}
+        newKeyLimit={newKeyLimit}
+        newKeyName={newKeyName}
+        onConfirmRevoke={() => void handleConfirmRevoke()}
+        onCopySecret={() => void handleCopySecret()}
+        onCreate={(event) => void handleCreate(event)}
+        onDismissCreated={() => setCreatedSecret(null)}
+        onDismissEdit={() => { setIsEditOpen(false); setKeyToEdit(null); }}
+        onDismissRevoke={() => setKeyToRevoke(null)}
+        onEditSubmit={(event) => void handleEditSubmit(event)}
+        revoking={revoking}
+        setEditIsActive={setEditIsActive}
+        setEditLimit={setEditLimit}
+        setIsCreateOpen={setIsCreateOpen}
+        setNewKeyLimit={setNewKeyLimit}
+        setNewKeyName={setNewKeyName}
+      />
 
       {/* ─── ENTÊTE SECTION & BOUTON NOUVELLE CLÉ ────────────────────────── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white/60 backdrop-blur-xl border border-white/80 rounded-3xl p-6 shadow-sm">
@@ -457,7 +418,7 @@ export default function KeysClient() {
               </thead>
               <tbody className="divide-y divide-slate-100 text-sm">
                 {keys.map((k) => (
-                  <tr key={k.id} className="hover:bg-purple-50/30 transition-colors">
+                  <tr key={k.keyRef} className="hover:bg-purple-50/30 transition-colors">
                     <td className="py-4 px-6 text-center">
                       <input 
                         type="checkbox"
@@ -477,7 +438,7 @@ export default function KeysClient() {
                     </td>
                     <td className="py-4 px-2">
                       <code className="bg-slate-100 px-2.5 py-1 rounded-lg text-slate-800 font-mono text-xs font-semibold border border-slate-200">
-                        {k.prefix}
+                        {k.keyRef}
                       </code>
                     </td>
                     <td className="py-4 px-2 text-xs text-slate-500">
@@ -522,203 +483,7 @@ export default function KeysClient() {
 
 
 
-      {/* ─── MODAL DIALOG : CRÉATION DE CLÉ ──────────────────────────────── */}
-      <AnimatePresence>
-        {isCreateOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-slate-100 space-y-6 relative"
-            >
-              <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-                <h3 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
-                  <Plus className="w-5 h-5 text-purple-600" />
-                  Créer une nouvelle clé API
-                </h3>
-                <button
-                  onClick={() => setIsCreateOpen(false)}
-                  className="p-1 rounded-full hover:bg-slate-100 text-slate-400"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
 
-              <form onSubmit={handleCreate} className="space-y-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                    Nom de l&apos;application / Clé
-                  </label>
-                  <input
-                    type="text"
-                    value={newKeyName}
-                    onChange={(e) => setNewKeyName(e.target.value)}
-                    placeholder="Ex: Serveur Backend Prod, Bot Discord..."
-                    required
-                    autoFocus
-                    className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-500/30"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                    Limite max. requêtes (optionnel)
-                  </label>
-                  <input
-                    type="number"
-                    value={newKeyLimit}
-                    onChange={(e) => setNewKeyLimit(e.target.value)}
-                    placeholder="Laissez vide pour aucune limite"
-                    className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-500/30"
-                  />
-                </div>
-
-                <div className="flex justify-end gap-3 pt-4">
-                  <button
-                    type="button"
-                    onClick={() => setIsCreateOpen(false)}
-                    className="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold text-sm hover:bg-slate-50 transition-colors"
-                  >
-                    Annuler
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={creating || !newKeyName.trim()}
-                    className="px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-extrabold text-sm transition-all flex items-center gap-2 disabled:opacity-50"
-                  >
-                    {creating ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-                    Générer la clé
-                  </button>
-                </div>
-              </form>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-
-      {/* ─── MODAL DIALOG : ÉDITION DE CLÉ ──────────────────────────────── */}
-      <AnimatePresence>
-        {isEditOpen && keyToEdit && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-slate-100 space-y-6 relative"
-            >
-              <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-                <h3 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
-                  <Edit className="w-5 h-5 text-purple-600" />
-                  Configurer la clé API
-                </h3>
-                <button
-                  onClick={() => setIsEditOpen(false)}
-                  className="p-1 rounded-full hover:bg-slate-100 text-slate-400"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              <form onSubmit={handleEditSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                    Limite max. requêtes (optionnel)
-                  </label>
-                  <input
-                    type="number"
-                    value={editLimit}
-                    onChange={(e) => setEditLimit(e.target.value)}
-                    placeholder="Laissez vide pour aucune limite"
-                    className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-500/30"
-                  />
-                  <p className="text-xs text-slate-500 mt-2">Actuellement: {keyToEdit.usageCount} requêtes effectuées.</p>
-                </div>
-                
-                <div className="flex items-center gap-3 pt-2">
-                  <input
-                    type="checkbox"
-                    id="isActiveCheck"
-                    checked={editIsActive}
-                    onChange={(e) => setEditIsActive(e.target.checked)}
-                    className="w-5 h-5 text-purple-600 rounded border-slate-300 focus:ring-purple-500"
-                  />
-                  <label htmlFor="isActiveCheck" className="text-sm font-bold text-slate-700 cursor-pointer">
-                    Clé API active
-                  </label>
-                </div>
-
-                <div className="flex justify-end gap-3 pt-4">
-                  <button
-                    type="button"
-                    onClick={() => setIsEditOpen(false)}
-                    className="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold text-sm hover:bg-slate-50 transition-colors"
-                  >
-                    Annuler
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={editing}
-                    className="px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-extrabold text-sm transition-all flex items-center gap-2 disabled:opacity-50"
-                  >
-                    {editing ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-                    Enregistrer
-                  </button>
-                </div>
-              </form>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-
-      {/* ─── MODAL DIALOG : CONFIRMATION RÉVOCATION ──────────────────────── */}
-      <AnimatePresence>
-        {keyToRevoke && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-slate-100 space-y-6 relative"
-            >
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center shrink-0">
-                  <AlertTriangle className="w-5 h-5" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-extrabold text-slate-900">
-                    Révoquer la clé API &quot;{keyToRevoke.name}&quot; ?
-                  </h3>
-                  <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                    Cette action est définitive. Toutes les applications utilisant le préfixe{' '}
-                    <code className="font-mono text-slate-700 bg-slate-100 px-1 rounded">
-                      {keyToRevoke.prefix}
-                    </code>{' '}
-                    perdront immédiatement l&apos;accès à l&apos;API.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex justify-end gap-3 pt-2 border-t border-slate-100">
-                <button
-                  onClick={() => setKeyToRevoke(null)}
-                  disabled={revoking}
-                  className="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold text-sm hover:bg-slate-50 transition-colors"
-                >
-                  Annuler
-                </button>
-                <button
-                  onClick={() => handleConfirmRevoke()}
-                  disabled={revoking}
-                  className="px-6 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-extrabold text-sm transition-all flex items-center gap-2 disabled:opacity-50"
-                >
-                  {revoking ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-                  Confirmer la révocation
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }

@@ -24,7 +24,7 @@ export const MAIN_STEPS: StepDef[] = [
     title: "Ta clé API",
     titleAccent: "le système",
     description:
-      "Une clé = un secret unique mp-... affiché une seule fois, stocké côté serveur en hash SHA-256. Seul le préfixe reste visible. Révoque ou régénère à tout moment.",
+      "Une clé = un secret unique affiché une seule fois. Il reste côté serveur et seul son préfixe public est renvoyé à l'interface. Révoque ou régénère la clé à tout moment.",
     icon: KeyRound,
     // Pas d'exemple de clé, explication système uniquement
   },

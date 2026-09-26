@@ -48,6 +48,12 @@ jobs:
       - name: 📥 Installation des dépendances
         run: npm install
 
+      - name: ✅ Valider tests, lint et types
+        run: |
+          npm run test
+          npm run lint
+          npm run typecheck
+
       - name: 🌍 Pull Vercel Environment Information
         run: |
           if [ "${{ github.ref }}" = "refs/heads/main" ]; then

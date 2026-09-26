@@ -1,93 +1,147 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
-  Clock,
-  CheckCircle2,
   AlertCircle,
+  CheckCircle2,
   ChevronRight,
-  TrendingUp,
-  ShieldCheck,
-  Zap,
-  Loader2,
   FileQuestion,
+  Loader2,
   MessageSquare,
-  RotateCcw,
-  Archive,
   PlusCircle,
+  ShieldCheck,
+  TrendingUp,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/components/auth-provider";
-import { getTicketsList, getSupportStats } from "@/app/actions/support";
+import { getSupportStats, getTicketsList } from "@/app/actions/support";
 import { isAdminUser, type SupportTicket } from "@/app/actions/support-utils";
+import { PRIORITY_BADGES, STATUS_CONFIG } from "@/components/support/support-config";
+import { SupportDocumentationSearch } from "@/components/support/SupportDocumentationSearch";
+import { SupportKnowledgeBase } from "@/components/support/SupportKnowledgeBase";
+import { SupportServiceStatus } from "@/components/support/SupportServiceStatus";
 
-const STATUS_CONFIG: Record<string, { label: string; bg: string; icon: any }> = {
-  open: { label: "Ouvert", bg: "bg-blue-50 text-blue-700 border-blue-200", icon: Clock },
-  in_progress: { label: "En cours", bg: "bg-amber-50 text-amber-700 border-amber-200", icon: Zap },
-  waiting_user: { label: "En attente", bg: "bg-purple-50 text-purple-700 border-purple-200", icon: AlertCircle },
-  resolved: { label: "Résolu", bg: "bg-emerald-50 text-emerald-700 border-emerald-200", icon: CheckCircle2 },
-  closed: { label: "Fermé", bg: "bg-slate-100 text-slate-700 border-slate-200", icon: CheckCircle2 },
-  reopened: { label: "Réouvert", bg: "bg-orange-50 text-orange-700 border-orange-200", icon: RotateCcw },
-  archived: { label: "Archivé", bg: "bg-slate-100 text-slate-600 border-slate-200", icon: Archive },
+const ACTIVE_TICKET_STATUSES = new Set<SupportTicket["status"]>([
+  "open",
+  "in_progress",
+  "waiting_user",
+  "reopened",
+]);
+
+type DashboardStats = {
+  total?: number;
+  totalWithArchived?: number;
+  open?: number;
+  inProgress?: number;
+  reopened?: number;
+  waiting?: number;
+  resolved?: number;
+  closed?: number;
+  resolutionRate?: number | null;
+  avgResolutionHours?: number | null;
 };
 
-const PRIORITY_BADGES: Record<string, { label: string; bg: string }> = {
-  urgent: { label: "Critique", bg: "bg-red-100 text-red-700 border-red-200" },
-  high: { label: "Haute", bg: "bg-orange-100 text-orange-700 border-orange-200" },
-  medium: { label: "Normale", bg: "bg-emerald-100 text-emerald-700 border-emerald-200" },
-  low: { label: "Faible", bg: "bg-blue-100 text-blue-700 border-blue-200" },
-};
+function formatCount(value: number | null | undefined): string {
+  return typeof value === "number" && Number.isFinite(value) ? String(value) : "—";
+}
+
+function formatHours(value: number | null | undefined): string {
+  if (typeof value !== "number" || !Number.isFinite(value)) return "—";
+  return `${Number.isInteger(value) ? value : value.toFixed(1)}h`;
+}
 
 export default function SupportDashboardClient() {
   const { user, isAuthenticated, loading: authLoading } = useAuth();
   const [tickets, setTickets] = useState<SupportTicket[]>([]);
+  const [activeCount, setActiveCount] = useState(0);
   const [historyTickets, setHistoryTickets] = useState<SupportTicket[]>([]);
-  const [stats, setStats] = useState<any>(null);
+  const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [dashboardError, setDashboardError] = useState<string | null>(null);
 
   const isAdmin = isAdminUser(user?.email);
 
   useEffect(() => {
+    let cancelled = false;
+
     async function loadData() {
       if (!isAuthenticated || !user) {
-        setLoading(false);
+        if (!cancelled) {
+          setTickets([]);
+          setActiveCount(0);
+          setHistoryTickets([]);
+          setStats(null);
+          setDashboardError(null);
+          setLoading(false);
+        }
         return;
       }
+
       setLoading(true);
+      setDashboardError(null);
       try {
-        const [ticketsRes, historyRes, statsRes] = await Promise.all([
-          getTicketsList({ status: "all" }),
-          // Historique : tous les tickets triés par updated_at (même appel mais on garde séparé pour futur filtre)
+        // Un seul appel fournit la source commune aux vues actives et historique.
+        const [ticketsRes, statsRes] = await Promise.all([
           getTicketsList({ status: "all" }),
           getSupportStats(),
         ]);
+        if (cancelled) return;
 
-        if (ticketsRes.success && ticketsRes.tickets) {
-          // Tickets actifs = open/in_progress/waiting_user/reopened
-          const active = ticketsRes.tickets.filter((t) => ["open", "in_progress", "waiting_user", "reopened"].includes(t.status));
-          setTickets(active.slice(0, 6));
-          setHistoryTickets((historyRes.tickets || ticketsRes.tickets || []).slice(0, 8));
+        const allTickets = ticketsRes.success && Array.isArray(ticketsRes.tickets) ? ticketsRes.tickets : [];
+        const activeTickets = allTickets.filter((ticket) => ACTIVE_TICKET_STATUSES.has(ticket.status));
+        const completedTickets = allTickets.filter((ticket) => !ACTIVE_TICKET_STATUSES.has(ticket.status));
+
+        setActiveCount(activeTickets.length);
+        setTickets(activeTickets.slice(0, 6));
+        setHistoryTickets(completedTickets.slice(0, 8));
+        setStats(statsRes.success && statsRes.stats ? (statsRes.stats as DashboardStats) : null);
+
+        if (!ticketsRes.success) {
+          setDashboardError(ticketsRes.error || "Impossible de charger les tickets.");
+        } else if (!statsRes.success) {
+          setDashboardError(statsRes.error || "Les statistiques sont indisponibles.");
         }
-        if (statsRes.success && statsRes.stats) {
-          setStats(statsRes.stats);
-        }
-      } catch (err) {
-        console.error("Erreur chargement dashboard support:", err);
+      } catch (error: unknown) {
+        if (cancelled) return;
+        console.error("Erreur chargement dashboard support:", error);
+        setDashboardError("Impossible de charger le centre de support pour le moment.");
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
-    if (!authLoading) loadData();
+
+    if (!authLoading) void loadData();
+    return () => {
+      cancelled = true;
+    };
   }, [authLoading, isAuthenticated, user]);
+
+  const activeStat =
+    stats &&
+    [stats.open, stats.inProgress, stats.reopened, stats.waiting].reduce<number>(
+      (sum, value) => sum + (typeof value === "number" ? value : 0),
+      0,
+    );
+  // Une base sans dossier n'a pas de taux ni de durée réels à afficher.
+  const resolutionRateValue = stats?.resolutionRate ?? null;
+  const resolutionRate =
+    stats && (stats.total ?? 0) > 0 && typeof resolutionRateValue === "number" && Number.isFinite(resolutionRateValue)
+      ? resolutionRateValue
+      : null;
+  const resolvedCount = (stats?.resolved ?? 0) + (stats?.closed ?? 0);
+  const avgResolutionHoursValue = stats?.avgResolutionHours ?? null;
+  const avgResolutionHours =
+    stats && resolvedCount > 0 && typeof avgResolutionHoursValue === "number" && Number.isFinite(avgResolutionHoursValue)
+      ? avgResolutionHoursValue
+      : null;
 
   return (
     <div className="space-y-8">
-      {/* Admin banner compact */}
-      {isAdmin && (
-        <div className="p-4 rounded-2xl bg-gradient-to-r from-purple-500/10 via-indigo-500/10 to-blue-500/10 border border-purple-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      {isAdmin ? (
+        <div className="flex flex-col items-start justify-between gap-4 rounded-2xl border border-purple-200 bg-gradient-to-r from-purple-500/10 via-indigo-500/10 to-blue-500/10 p-4 sm:flex-row sm:items-center">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-purple-600 text-white shadow-sm">
-              <ShieldCheck className="w-5 h-5" />
+            <div className="rounded-xl bg-purple-600 p-2 text-white shadow-sm">
+              <ShieldCheck className="h-5 w-5" aria-hidden="true" />
             </div>
             <div>
               <p className="text-sm font-bold text-slate-900">Mode Administrateur Support Actif</p>
@@ -98,127 +152,131 @@ export default function SupportDashboardClient() {
           </div>
           <Link
             href="/support/tickets"
-            className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition-all shadow-sm shrink-0"
+            className="shrink-0 rounded-xl bg-purple-600 px-4 py-2 text-xs font-bold text-white shadow-sm transition-all hover:bg-purple-500"
           >
-            Gérer tous les tickets ({stats?.totalWithArchived ?? stats?.total ?? 0})
+            Gérer tous les tickets ({formatCount(stats?.totalWithArchived ?? stats?.total)})
           </Link>
         </div>
-      )}
+      ) : null}
 
-      {/* Statistiques directement sous le header (spécification) */}
+      {dashboardError && isAuthenticated ? (
+        <div className="flex items-start gap-2 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-800" role="status">
+          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+          <span>{dashboardError}</span>
+        </div>
+      ) : null}
+
       {stats ? (
-        <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="p-5 rounded-2xl bg-white border border-black/5 shadow-2xs">
-            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Tickets actifs</p>
-            <p className="text-3xl font-black text-slate-900 mt-1">{(stats.open || 0) + (stats.inProgress || 0) + (stats.reopened || 0) + (stats.waiting || 0)}</p>
-            <p className="text-[11px] text-amber-600 font-medium mt-1">En cours de prise en charge</p>
+        <section className="grid grid-cols-2 gap-4 lg:grid-cols-4" aria-label="Statistiques du support">
+          <div className="rounded-2xl border border-black/5 bg-white p-5 shadow-2xs">
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Tickets actifs</p>
+            <p className="mt-1 text-3xl font-black text-slate-900">{formatCount(activeStat)}</p>
+            <p className="mt-1 text-[11px] font-medium text-amber-600">En cours de prise en charge</p>
           </div>
-          <div className="p-5 rounded-2xl bg-white border border-black/5 shadow-2xs">
-            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Résolus</p>
-            <p className="text-3xl font-black text-emerald-600 mt-1">{stats.resolved || 0}</p>
-            <p className="text-[11px] text-emerald-600 font-medium mt-1">Dossiers traités</p>
+          <div className="rounded-2xl border border-black/5 bg-white p-5 shadow-2xs">
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Résolus</p>
+            <p className="mt-1 text-3xl font-black text-emerald-600">{formatCount(stats.resolved)}</p>
+            <p className="mt-1 text-[11px] font-medium text-emerald-600">Dossiers traités</p>
           </div>
-          <div className="p-5 rounded-2xl bg-white border border-black/5 shadow-2xs">
-            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Taux de résolution</p>
-            <p className="text-3xl font-black text-purple-600 mt-1">{stats.resolutionRate || 100}%</p>
-            <p className="text-[11px] text-purple-600 font-medium mt-1">Efficacité</p>
+          <div className="rounded-2xl border border-black/5 bg-white p-5 shadow-2xs">
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Taux de résolution</p>
+            <p className="mt-1 text-3xl font-black text-purple-600">{resolutionRate === null ? "—" : `${resolutionRate}%`}</p>
+            <p className="mt-1 text-[11px] font-medium text-purple-600">
+              {resolutionRate === null ? "Donnée non calculée" : "Efficacité"}
+            </p>
           </div>
-          <div className="p-5 rounded-2xl bg-white border border-black/5 shadow-2xs">
-            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Temps moyen</p>
-            <p className="text-3xl font-black text-blue-600 mt-1">{stats.avgResolutionHours || 2.4}h</p>
-            <p className="text-[11px] text-blue-600 font-medium mt-1">Délai estimé</p>
+          <div className="rounded-2xl border border-black/5 bg-white p-5 shadow-2xs">
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Temps moyen</p>
+            <p className="mt-1 text-3xl font-black text-blue-600">{formatHours(avgResolutionHours)}</p>
+            <p className="mt-1 text-[11px] font-medium text-blue-600">
+              {avgResolutionHours === null ? "Donnée non calculée" : "Délai observé"}
+            </p>
           </div>
         </section>
-      ) : (
-        !loading && (
-          <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="p-5 rounded-2xl bg-white border border-black/5 animate-pulse h-24" />
-            ))}
-          </section>
-        )
-      )}
+      ) : null}
 
-      {/* Grille principale : Tickets actifs (2/3) + Historique sidebar (1/3) */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Tickets actifs */}
-        <section className="lg:col-span-2 space-y-4">
-          <div className="flex items-center justify-between">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <section className="space-y-4 lg:col-span-2" aria-labelledby="active-tickets-title">
+          <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-2">
-              <h2 className="text-lg font-extrabold text-slate-900">{isAdmin ? "Tickets actifs" : "Vos tickets actifs"}</h2>
-              <span className="px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-700 text-xs font-bold">{tickets.length}</span>
+              <h2 id="active-tickets-title" className="text-lg font-extrabold text-slate-900">
+                {isAdmin ? "Tickets actifs" : "Vos tickets actifs"}
+              </h2>
+              <span className="rounded-full bg-purple-50 px-2.5 py-0.5 text-xs font-bold text-purple-700">{activeCount}</span>
             </div>
-            <Link href="/support/tickets" className="text-xs font-bold text-purple-600 hover:text-purple-700 flex items-center gap-1 hover:underline">
-              Voir tous <ChevronRight className="w-3.5 h-3.5" />
+            <Link href="/support/tickets" className="flex items-center gap-1 text-xs font-bold text-purple-600 hover:text-purple-700 hover:underline">
+              Voir tous <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
             </Link>
           </div>
 
           {loading ? (
-            <div className="flex justify-center items-center py-12 bg-white rounded-3xl border border-black/5">
-              <div className="flex items-center gap-3 text-slate-500 text-sm font-medium">
-                <Loader2 className="w-5 h-5 animate-spin text-purple-600" />
-                <span>Chargement…</span>
-              </div>
+            <div className="flex items-center justify-center gap-3 rounded-3xl border border-black/5 bg-white py-12 text-sm font-medium text-slate-500">
+              <Loader2 className="h-5 w-5 animate-spin text-purple-600" aria-hidden="true" />
+              <span>Chargement…</span>
             </div>
           ) : !isAuthenticated ? (
-            <div className="p-8 rounded-3xl bg-white border border-black/5 text-center space-y-3">
-              <FileQuestion className="w-10 h-10 mx-auto text-slate-400" />
+            <div className="space-y-3 rounded-3xl border border-black/5 bg-white p-8 text-center">
+              <FileQuestion className="mx-auto h-10 w-10 text-slate-400" aria-hidden="true" />
               <h3 className="text-base font-bold text-slate-800">Connectez-vous pour suivre vos demandes</h3>
-              <p className="text-xs text-slate-500 max-w-md mx-auto">
+              <p className="mx-auto max-w-md text-xs text-slate-500">
                 Le suivi nécessite une authentification pour garantir la traçabilité.
               </p>
               <Link
                 href="/account/login?next=/support"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-purple-600 text-white font-bold text-xs hover:bg-purple-500 transition-colors shadow-sm"
+                className="inline-flex items-center gap-2 rounded-xl bg-purple-600 px-5 py-2.5 text-xs font-bold text-white shadow-sm transition-colors hover:bg-purple-500"
               >
                 Se connecter
               </Link>
             </div>
           ) : tickets.length === 0 ? (
-            <div className="p-8 rounded-3xl bg-white border border-black/5 text-center space-y-3">
-              <CheckCircle2 className="w-10 h-10 mx-auto text-emerald-500/80" />
+            <div className="space-y-3 rounded-3xl border border-black/5 bg-white p-8 text-center">
+              <CheckCircle2 className="mx-auto h-10 w-10 text-emerald-500/80" aria-hidden="true" />
               <h3 className="text-base font-bold text-slate-800">Aucun ticket actif</h3>
-              <p className="text-xs text-slate-500 max-w-md mx-auto">Tous les dossiers sont résolus ou archivés. Créez une nouvelle demande si besoin.</p>
+              <p className="mx-auto max-w-md text-xs text-slate-500">
+                Tous les dossiers sont résolus ou archivés. Créez une nouvelle demande si besoin.
+              </p>
               <Link
                 href="/support/new"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-900 text-white font-bold text-xs hover:bg-slate-800 transition-colors shadow-sm"
+                className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-2.5 text-xs font-bold text-white shadow-sm transition-colors hover:bg-slate-800"
               >
-                <PlusCircle className="w-4 h-4" /> Créer une demande
+                <PlusCircle className="h-4 w-4" aria-hidden="true" /> Créer une demande
               </Link>
             </div>
           ) : (
             <div className="space-y-3">
-              {tickets.map((t) => {
-                const statusCfg = STATUS_CONFIG[t.status] || STATUS_CONFIG.open;
-                const StatusIcon = statusCfg.icon;
-                const priorityCfg = PRIORITY_BADGES[t.priority] || PRIORITY_BADGES.medium;
+              {tickets.map((ticket) => {
+                const statusConfig = STATUS_CONFIG[ticket.status] ?? STATUS_CONFIG.open;
+                const StatusIcon = statusConfig.icon;
+                const priorityConfig = PRIORITY_BADGES[ticket.priority] ?? PRIORITY_BADGES.medium;
                 return (
                   <Link
-                    key={t.id}
-                    href={`/support/tickets/${t.id}`}
-                    className="block p-4 sm:p-5 rounded-2xl bg-white border border-black/5 hover:border-purple-200 hover:shadow-md transition-all group"
+                    key={ticket.id}
+                    href={`/support/tickets/${ticket.id}`}
+                    className="group block rounded-2xl border border-black/5 bg-white p-4 transition-all hover:border-purple-200 hover:shadow-md sm:p-5"
                   >
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                      <div className="space-y-1.5 min-w-0">
+                    <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+                      <div className="min-w-0 space-y-1.5">
                         <div className="flex flex-wrap items-center gap-2">
-                          <span className="text-xs font-mono font-bold text-purple-700">#TICK-{t.ticket_number || t.id.slice(0, 6)}</span>
-                          <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[11px] font-semibold">{t.project}</span>
-                          <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px]">{t.category}</span>
-                          <span className={`px-2 py-0.5 rounded-md border text-[11px] font-bold ${priorityCfg.bg}`}>{priorityCfg.label}</span>
+                          <span className="font-mono text-xs font-bold text-purple-700">
+                            #TICK-{ticket.ticket_number || ticket.id.slice(0, 6)}
+                          </span>
+                          <span className="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-700">{ticket.project}</span>
+                          <span className="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] text-slate-600">{ticket.category}</span>
+                          <span className={`rounded-md border px-2 py-0.5 text-[11px] font-bold ${priorityConfig.bg}`}>{priorityConfig.label}</span>
                         </div>
-                        <h3 className="text-sm sm:text-base font-bold text-slate-900 group-hover:text-purple-600 transition-colors truncate">{t.title}</h3>
-                        {isAdmin && (
-                          <p className="text-xs text-slate-500 font-medium">
-                            Demandeur : <span className="text-slate-800 font-semibold">{t.user_name}</span> ({t.user_email})
+                        <h3 className="truncate text-sm font-bold text-slate-900 transition-colors group-hover:text-purple-600 sm:text-base">{ticket.title}</h3>
+                        {isAdmin ? (
+                          <p className="text-xs font-medium text-slate-500">
+                            Demandeur : <span className="font-semibold text-slate-800">{ticket.user_name}</span> ({ticket.user_email})
                           </p>
-                        )}
+                        ) : null}
                       </div>
-                      <div className="flex items-center gap-3 shrink-0">
-                        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold ${statusCfg.bg}`}>
-                          <StatusIcon className="w-3.5 h-3.5" />
-                          {statusCfg.label}
+                      <div className="flex shrink-0 items-center gap-3">
+                        <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold ${statusConfig.bg}`}>
+                          <StatusIcon className="h-3.5 w-3.5" aria-hidden="true" />
+                          {statusConfig.label}
                         </span>
-                        <ChevronRight className="w-4 h-4 text-slate-400 group-hover:translate-x-1 group-hover:text-purple-600 transition-all" />
+                        <ChevronRight className="h-4 w-4 text-slate-400 transition-all group-hover:translate-x-1 group-hover:text-purple-600" aria-hidden="true" />
                       </div>
                     </div>
                   </Link>
@@ -228,11 +286,10 @@ export default function SupportDashboardClient() {
           )}
         </section>
 
-        {/* Barre latérale Historique */}
-        <aside className="lg:col-span-1 space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold uppercase tracking-wider text-slate-500 flex items-center gap-2">
-              <MessageSquare className="w-4 h-4" />
+        <aside className="space-y-4 lg:col-span-1" aria-labelledby="ticket-history-title">
+          <div className="flex items-center justify-between gap-3">
+            <h2 id="ticket-history-title" className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-slate-500">
+              <MessageSquare className="h-4 w-4" aria-hidden="true" />
               Historique
             </h2>
             <Link href="/support/tickets" className="text-[11px] font-bold text-slate-500 hover:text-slate-700">
@@ -240,59 +297,55 @@ export default function SupportDashboardClient() {
             </Link>
           </div>
 
-          <div className="p-4 rounded-3xl bg-white border border-black/5 shadow-sm space-y-3">
+          <div className="space-y-3 rounded-3xl border border-black/5 bg-white p-4 shadow-sm">
             {loading ? (
               <div className="flex items-center justify-center py-8">
-                <Loader2 className="w-4 h-4 animate-spin text-purple-600" />
+                <Loader2 className="h-4 w-4 animate-spin text-purple-600" aria-label="Chargement de l'historique" />
               </div>
             ) : historyTickets.length === 0 ? (
-              <div className="text-center py-8 space-y-2">
-                <FileQuestion className="w-8 h-8 mx-auto text-slate-300" />
+              <div className="space-y-2 py-8 text-center">
+                <FileQuestion className="mx-auto h-8 w-8 text-slate-300" aria-hidden="true" />
                 <p className="text-xs text-slate-500">Aucun historique pour l&apos;instant.</p>
               </div>
             ) : (
               <div className="space-y-2.5">
-                {historyTickets.map((t) => {
-                  const sc = STATUS_CONFIG[t.status] || STATUS_CONFIG.open;
+                {historyTickets.map((ticket) => {
+                  const statusConfig = STATUS_CONFIG[ticket.status] ?? STATUS_CONFIG.open;
                   return (
                     <Link
-                      key={t.id}
-                      href={`/support/tickets/${t.id}`}
-                      className="block p-3 rounded-2xl bg-slate-50 hover:bg-white border border-slate-100 hover:border-purple-200 hover:shadow-2xs transition-all group"
+                      key={ticket.id}
+                      href={`/support/tickets/${ticket.id}`}
+                      className="group block rounded-2xl border border-slate-100 bg-slate-50 p-3 transition-all hover:border-purple-200 hover:bg-white hover:shadow-2xs"
                     >
                       <div className="flex items-start justify-between gap-2">
                         <div className="min-w-0 space-y-1">
                           <div className="flex items-center gap-1.5">
-                            <span className="text-[11px] font-mono font-bold text-purple-700">#{t.ticket_number || t.id.slice(0, 4)}</span>
-                            <span className={`px-1.5 py-0.5 rounded-md border text-[10px] font-bold ${sc.bg}`}>{sc.label}</span>
+                            <span className="font-mono text-[11px] font-bold text-purple-700">#{ticket.ticket_number || ticket.id.slice(0, 4)}</span>
+                            <span className={`rounded-md border px-1.5 py-0.5 text-[10px] font-bold ${statusConfig.bg}`}>{statusConfig.label}</span>
                           </div>
-                          <p className="text-xs font-bold text-slate-800 truncate group-hover:text-purple-700">{t.title}</p>
+                          <p className="truncate text-xs font-bold text-slate-800 group-hover:text-purple-700">{ticket.title}</p>
                           <p className="text-[11px] text-slate-400">
-                            {new Date(t.updated_at).toLocaleDateString("fr-FR", { day: "2-digit", month: "short" })} • {t.project}
+                            {new Date(ticket.updated_at).toLocaleDateString("fr-FR", { day: "2-digit", month: "short" })} • {ticket.project}
                           </p>
                         </div>
-                        <ChevronRight className="w-3.5 h-3.5 text-slate-300 group-hover:text-purple-600 shrink-0 mt-1" />
+                        <ChevronRight className="mt-1 h-3.5 w-3.5 shrink-0 text-slate-300 group-hover:text-purple-600" aria-hidden="true" />
                       </div>
                     </Link>
                   );
                 })}
-                <Link
-                  href="/support/tickets"
-                  className="block text-center text-xs font-bold text-purple-600 hover:text-purple-700 py-2 hover:underline"
-                >
+                <Link href="/support/tickets" className="block py-2 text-center text-xs font-bold text-purple-600 hover:text-purple-700 hover:underline">
                   Ouvrir l&apos;historique complet
                 </Link>
               </div>
             )}
           </div>
 
-          {/* Conseil rapide */}
-          <div className="p-5 rounded-3xl bg-slate-50 border border-black/5 space-y-3">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-purple-600" />
+          <div className="space-y-3 rounded-3xl border border-black/5 bg-slate-50 p-5">
+            <h3 className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-700">
+              <TrendingUp className="h-4 w-4 text-purple-600" aria-hidden="true" />
               Conseils
             </h3>
-            <ul className="text-xs text-slate-600 leading-relaxed space-y-2 list-disc list-inside">
+            <ul className="list-inside list-disc space-y-2 text-xs leading-relaxed text-slate-600">
               <li>Joignez captures (.png/.webp) ou logs (.txt/.md) — 8 Mo max, 5 fichiers / personne / conversation.</li>
               <li>Les tickets inactifs sont purgés après 365 jours (fichiers Z1 inclus).</li>
               <li>Un ticket fermé ne peut qu&apos;être <strong>Réouvert</strong> (autres statuts grisés).</li>
@@ -300,6 +353,13 @@ export default function SupportDashboardClient() {
           </div>
         </aside>
       </div>
+
+      <div className="grid grid-cols-1 gap-8 xl:grid-cols-2">
+        <SupportServiceStatus />
+        <SupportDocumentationSearch />
+      </div>
+
+      <SupportKnowledgeBase />
     </div>
   );
 }

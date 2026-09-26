@@ -1,24 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import {
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  AreaChart,
-  Area
-} from "recharts";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
+import { motion } from "motion/react";
 import {
   Activity,
   ArrowDownToLine,
   Clock,
   Database,
-  Layers,
   Network,
   Zap,
   CheckCircle2,
@@ -30,70 +19,111 @@ import { getDashboardStats } from "@/app/actions/api-stats";
 import { getUserApiUsage } from "@/app/actions/api-keys";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import type { UsageChartPoint } from "@/components/account/usage/api-usage-charts";
+import { ApiKeysUsageTable } from "@/components/account/usage/api-keys-usage-table";
+import { UsageMetricCard } from "@/components/account/usage/usage-metric-card";
+
+const ApiUsageCharts = dynamic(() => import("@/components/account/usage/api-usage-charts"), {
+  ssr: false,
+  loading: () => <div className="h-[300px] w-full animate-pulse rounded-2xl bg-slate-100" />,
+});
+
+type TimeRange = "24h" | "7d" | "30d" | "all";
+
+interface UsageKey {
+  keyRef?: string;
+  prefix?: string;
+  name?: string;
+  plan?: string;
+  requestCount?: number;
+  maxLimit?: number | null;
+  lastUsedAt?: string | null;
+}
+
+interface DashboardStats {
+  totalRequests?: number;
+  avgLatency?: number;
+  successRate?: number;
+  endpointsData?: Array<{ name: string; value: number; color: string }>;
+  monthlyData?: UsageChartPoint[];
+  hourlyData?: UsageChartPoint[];
+}
 
 export default function ApiUsagePage() {
   const { user, isAuthenticated, loading } = useAuth();
   const router = useRouter();
+  const userId = user?.id || user?.email || user?.username || null;
 
-  useEffect(() => {
-    if (!loading && !isAuthenticated) {
-      router.replace("/account/login?next=%2Fapi%2Fusage");
-    }
-  }, [loading, isAuthenticated, router]);
-  const [timeRange, setTimeRange] = useState("7d");
+  const [timeRange, setTimeRange] = useState<TimeRange>("7d");
   const [isExporting, setIsExporting] = useState(false);
-  
-  const [stats, setStats] = useState<any>(null);
-  const [keysUsage, setKeysUsage] = useState<any[]>([]);
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [keysUsage, setKeysUsage] = useState<UsageKey[]>([]);
   const [loadingStats, setLoadingStats] = useState(true);
 
   useEffect(() => {
-    async function fetchStats() {
-      if (!user) return;
-      try {
-        const [statsRes, keysRes] = await Promise.all([
-          getDashboardStats(),
-          getUserApiUsage()
-        ]);
+    if (!loading && !isAuthenticated) {
+      router.replace("/account/login?next=%2Faccount%2Fusage");
+    }
+  }, [loading, isAuthenticated, router]);
 
-        if (statsRes.success && statsRes.stats) {
-          setStats(statsRes.stats);
-        } else {
-          toast.error("Impossible de récupérer les statistiques globales.");
-        }
+  const loadStats = useCallback(async () => {
+    if (!isAuthenticated || !userId) return;
+    setLoadingStats(true);
+    try {
+      const [statsResult, keysResult] = await Promise.all([
+        getDashboardStats(),
+        getUserApiUsage(),
+      ]);
 
-        if (keysRes.success && keysRes.keys) {
-          setKeysUsage(keysRes.keys);
-        }
-      } catch {
-        toast.error("Erreur serveur lors de la récupération.");
-      } finally {
-        setLoadingStats(false);
+      if (statsResult.success && statsResult.stats) {
+        setStats(statsResult.stats as DashboardStats);
+      } else {
+        toast.error("Impossible de récupérer les statistiques globales.");
       }
+
+      if (keysResult.success && keysResult.keys) {
+        setKeysUsage(keysResult.keys as UsageKey[]);
+      }
+    } catch {
+      toast.error("Erreur serveur lors de la récupération.");
+    } finally {
+      setLoadingStats(false);
     }
-    if (user && isAuthenticated) {
-      fetchStats();
-    }
-  }, [user, isAuthenticated]);
+  }, [isAuthenticated, userId]);
+
+  useEffect(() => {
+    void loadStats();
+  }, [loadStats]);
+
+  const requestsData = useMemo(() => {
+    const rows = stats?.monthlyData || [];
+    const limits: Record<TimeRange, number> = {
+      "24h": 1,
+      "7d": 7,
+      "30d": 30,
+      all: rows.length,
+    };
+    return rows.slice(-Math.max(1, limits[timeRange]));
+  }, [stats?.monthlyData, timeRange]);
+
+  const latencyData = stats?.hourlyData || [];
 
   const handleExport = () => {
     setIsExporting(true);
-    setTimeout(() => {
+    window.setTimeout(() => {
       setIsExporting(false);
-      if (!stats) return;
-      
-      let csvContent = "date,requests,errors\n";
-      stats.monthlyData.forEach((row: any) => {
-        csvContent += `${row.date},${row.requests},${row.errors}\n`;
-      });
-      
-      const blob = new Blob([csvContent], { type: "text/csv" });
+      const header = "date,requests,errors\n";
+      const rows = requestsData
+        .map((row) => `${row.date || ""},${row.requests || 0},${row.errors || 0}`)
+        .join("\n");
+      const blob = new Blob([`${header}${rows}\n`], { type: "text/csv;charset=utf-8" });
       const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "mai_api_usage.csv";
-      a.click();
-    }, 1500);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = "mai_api_usage.csv";
+      anchor.click();
+      window.URL.revokeObjectURL(url);
+    }, 400);
   };
 
   if (loadingStats || !user) {
@@ -104,7 +134,9 @@ export default function ApiUsagePage() {
     );
   }
 
-  const { totalRequests, avgLatency, successRate, endpointsData, monthlyData, hourlyData } = stats || {};
+  const { totalRequests, avgLatency, successRate, endpointsData } = stats || {};
+  const safeEndpoints = endpointsData || [];
+  const errorRate = successRate === undefined ? null : Math.max(0, 100 - successRate);
 
   return (
     <div className="flex flex-col gap-10 pb-12">
@@ -134,13 +166,7 @@ export default function ApiUsagePage() {
         {/* Boutons d'actions */}
         <div className="flex items-center gap-3">
           <button
-            onClick={() => {
-              setLoadingStats(true);
-              getDashboardStats().then(res => {
-                if (res.success && res.stats) setStats(res.stats);
-                setLoadingStats(false);
-              });
-            }}
+            onClick={() => void loadStats()}
             className="p-2.5 rounded-xl bg-white/40 backdrop-blur-md border border-slate-200 hover:bg-white/80 text-slate-600 transition-colors cursor-pointer shadow-sm"
             title="Actualiser les données"
           >
@@ -149,7 +175,7 @@ export default function ApiUsagePage() {
 
           <select
             value={timeRange}
-            onChange={(e) => setTimeRange(e.target.value)}
+            onChange={(event) => setTimeRange(event.target.value as TimeRange)}
             className="px-4 py-2.5 rounded-xl bg-white/40 backdrop-blur-md border border-slate-200 text-sm font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 shadow-sm"
           >
             <option value="24h">Dernières 24h</option>
@@ -175,49 +201,41 @@ export default function ApiUsagePage() {
 
       {/* Métriques Clés */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-        <div className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)]">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-600">
-              <Database className="w-5 h-5" />
-            </div>
-            <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md">+14.5%</span>
-          </div>
-          <p className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">Requêtes Totales</p>
-          <h3 className="text-3xl font-black text-slate-900">{totalRequests?.toLocaleString()}</h3>
-        </div>
-
-        <div className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)]">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-600">
-              <Zap className="w-5 h-5" />
-            </div>
-            <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md">-12ms</span>
-          </div>
-          <p className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">Latence Moyenne</p>
-          <h3 className="text-3xl font-black text-slate-900">{avgLatency}<span className="text-lg text-slate-500 ml-1">ms</span></h3>
-        </div>
-
-        <div className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)]">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-600">
-              <CheckCircle2 className="w-5 h-5" />
-            </div>
-            <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md">+0.1%</span>
-          </div>
-          <p className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">Taux de Succès</p>
-          <h3 className="text-3xl font-black text-slate-900">{successRate}<span className="text-lg text-slate-500 ml-1">%</span></h3>
-        </div>
-
-        <div className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)]">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-600">
-              <AlertTriangle className="w-5 h-5" />
-            </div>
-            <span className="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded-md">24 erreurs</span>
-          </div>
-          <p className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">Taux d'Erreur (4xx/5xx)</p>
-          <h3 className="text-3xl font-black text-slate-900">{(100 - (successRate || 100)).toFixed(1)}<span className="text-lg text-slate-500 ml-1">%</span></h3>
-        </div>
+        <UsageMetricCard
+          icon={Database}
+          iconClassName="bg-purple-500/10 text-purple-600"
+          label="Requêtes Totales"
+          value={totalRequests?.toLocaleString("fr-FR") ?? "—"}
+          badge="Actif"
+          badgeClassName="text-emerald-600 bg-emerald-50"
+        />
+        <UsageMetricCard
+          icon={Zap}
+          iconClassName="bg-blue-500/10 text-blue-600"
+          label="Latence Moyenne"
+          value={avgLatency ?? "—"}
+          suffix="ms"
+          badge="Actif"
+          badgeClassName="text-emerald-600 bg-emerald-50"
+        />
+        <UsageMetricCard
+          icon={CheckCircle2}
+          iconClassName="bg-emerald-500/10 text-emerald-600"
+          label="Taux de Succès"
+          value={successRate ?? "—"}
+          suffix="%"
+          badge="Actif"
+          badgeClassName="text-emerald-600 bg-emerald-50"
+        />
+        <UsageMetricCard
+          icon={AlertTriangle}
+          iconClassName="bg-amber-500/10 text-amber-600"
+          label="Taux d'Erreur (4xx/5xx)"
+          value={errorRate === null ? "—" : errorRate.toFixed(1)}
+          suffix="%"
+          badge="Calculé"
+          badgeClassName="text-amber-600 bg-amber-50"
+        />
       </div>
 
       {/* Graphiques Principaux */}
@@ -235,30 +253,7 @@ export default function ApiUsagePage() {
             </div>
           </div>
           
-          <div className="h-[300px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={monthlyData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="colorRequests" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
-                  </linearGradient>
-                  <linearGradient id="colorErrors" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} dy={10} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} />
-                <Tooltip 
-                  contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)', fontWeight: 'bold' }}
-                />
-                <Area type="monotone" dataKey="requests" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorRequests)" name="Requêtes" />
-                <Area type="monotone" dataKey="errors" stroke="#ef4444" strokeWidth={3} fillOpacity={1} fill="url(#colorErrors)" name="Erreurs" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
+          <ApiUsageCharts variant="requests" data={requestsData} />
         </div>
 
         {/* Répartition par Route */}
@@ -274,9 +269,9 @@ export default function ApiUsagePage() {
           </div>
           
             <div className="flex-1 flex flex-col justify-center gap-6">
-              {endpointsData?.length > 0 ? (
-                endpointsData.map((ep: any, i: number) => {
-                  const total = endpointsData.reduce((acc: number, curr: any) => acc + curr.value, 0);
+              {safeEndpoints.length > 0 ? (
+                safeEndpoints.map((ep, i) => {
+                  const total = safeEndpoints.reduce((acc, curr) => acc + curr.value, 0);
                   const percent = Math.round((ep.value / (total || 1)) * 100);
                   
                   return (
@@ -320,90 +315,10 @@ export default function ApiUsagePage() {
           </div>
         </div>
         
-        <div className="h-[250px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={hourlyData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-              <XAxis dataKey="time" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} dy={10} minTickGap={20} />
-              <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} />
-              <Tooltip 
-                contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)', fontWeight: 'bold' }}
-              />
-              <Line type="monotone" dataKey="latency" stroke="#10b981" strokeWidth={3} dot={false} activeDot={{ r: 6, fill: '#10b981', stroke: '#fff', strokeWidth: 2 }} name="Latence (ms)" />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
+        <ApiUsageCharts variant="latency" data={latencyData} />
       </div>
       
-      {/* Consommation par Clé */}
-      <div className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] mt-6">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h3 className="text-lg font-bold text-slate-900">Consommation par Clé API</h3>
-            <p className="text-sm text-slate-500">Détail de l'utilisation par clé individuelle</p>
-          </div>
-          <div className="p-2 bg-slate-100 rounded-xl">
-            <Layers className="w-5 h-5 text-slate-600" />
-          </div>
-        </div>
-        
-        {keysUsage.length > 0 ? (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead>
-                <tr className="border-b border-slate-200">
-                  <th className="pb-4 font-bold text-slate-500 text-xs uppercase tracking-wider">Clé API</th>
-                  <th className="pb-4 font-bold text-slate-500 text-xs uppercase tracking-wider">Requêtes Consommées</th>
-                  <th className="pb-4 font-bold text-slate-500 text-xs uppercase tracking-wider">Limite Max</th>
-                  <th className="pb-4 font-bold text-slate-500 text-xs uppercase tracking-wider">Dernière Utilisation</th>
-                </tr>
-              </thead>
-              <tbody>
-                {keysUsage.map((k, i) => {
-                  const percentUsed = k.maxLimit ? Math.round((k.requestCount / k.maxLimit) * 100) : 0;
-                  return (
-                    <tr key={i} className="border-b border-slate-100 last:border-0 hover:bg-slate-50/50 transition-colors">
-                      <td className="py-4">
-                        <div className="flex items-center gap-2">
-                          <code className="text-xs bg-slate-100 text-slate-700 px-2 py-1 rounded-md font-mono">
-                            {k.key.substring(0, 12)}...
-                          </code>
-                          <span className="text-[10px] uppercase font-bold bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full">{k.plan}</span>
-                        </div>
-                      </td>
-                      <td className="py-4 font-bold text-slate-900">{k.requestCount.toLocaleString()}</td>
-                      <td className="py-4">
-                        {k.maxLimit ? (
-                          <div className="flex items-center gap-3">
-                            <span className="text-sm font-bold text-slate-700">{k.maxLimit.toLocaleString()}</span>
-                            <div className="flex-1 max-w-[100px] h-1.5 bg-slate-200 rounded-full overflow-hidden">
-                              <div 
-                                className={`h-full rounded-full ${percentUsed > 90 ? 'bg-red-500' : percentUsed > 75 ? 'bg-amber-500' : 'bg-emerald-500'}`}
-                                style={{ width: `${Math.min(percentUsed, 100)}%` }}
-                              />
-                            </div>
-                            <span className="text-xs text-slate-500">{percentUsed}%</span>
-                          </div>
-                        ) : (
-                          <span className="text-sm text-slate-500 italic">Illimité (Quota global)</span>
-                        )}
-                      </td>
-                      <td className="py-4 text-sm text-slate-500">
-                        {k.lastUsedAt ? new Date(k.lastUsedAt).toLocaleString('fr-FR', {
-                          day: '2-digit', month: '2-digit', year: 'numeric',
-                          hour: '2-digit', minute: '2-digit'
-                        }) : 'Jamais'}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <p className="text-center py-8 text-slate-500 italic">Aucune clé API trouvée.</p>
-        )}
-      </div>
+      <ApiKeysUsageTable keys={keysUsage} />
 
     </div>
   );

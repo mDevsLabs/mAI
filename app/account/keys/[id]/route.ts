@@ -4,7 +4,7 @@ import { authenticateSession } from '@/lib/session-auth';
 
 export const runtime = 'nodejs';
 
-// DELETE /api/keys/[id] - Révoquer une clé API
+// DELETE /account/keys/[id] - Révoquer une clé API
 export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -35,8 +35,8 @@ export async function DELETE(
       success: true,
       message: "Clé API révoquée avec succès.",
     });
-  } catch (err: any) {
-    console.error('Erreur DELETE /api/keys/[id]:', err);
+  } catch (err: unknown) {
+    console.error('Erreur DELETE /account/keys/[id]:', err);
     return NextResponse.json(
       { error: { code: 'internal_error', message: "Erreur lors de la révocation de la clé." } },
       { status: 500 }

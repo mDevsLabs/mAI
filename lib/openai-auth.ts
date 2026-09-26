@@ -6,6 +6,7 @@ import { OpenAIErrorResponse } from './openai-types';
 export interface AuthenticatedOpenAIContext {
   valid: true;
   apiKeyId: string;
+  keyRef: string;
   apiKeyToken: string;
   plan: string;
   ownerId?: string;
@@ -44,7 +45,7 @@ export async function authenticateOpenAIRequest(
   const validation = await validateApiKey(token);
 
   if (!validation.valid || !validation.keyInfo) {
-    const errorMsg = validation.error || 'Incorrect API key provided. You can find your API key at /api/keys.';
+    const errorMsg = validation.error || 'Incorrect API key provided. You can find or create your API key at /account/keys.';
     const isQuotaError = errorMsg.toLowerCase().includes('limit') || errorMsg.toLowerCase().includes('quota');
     const isDeactivated = errorMsg.toLowerCase().includes('désactiv');
     const statusCode = isQuotaError ? 429 : isDeactivated ? 403 : 401;
@@ -96,8 +97,9 @@ export async function authenticateOpenAIRequest(
   return {
     valid: true,
     apiKeyId: validation.keyInfo.id,
+    keyRef: validation.keyInfo.keyRef,
     apiKeyToken: token,
-    plan: validation.keyInfo.name || 'Free',
+    plan: validation.keyInfo.plan || 'Free',
     ownerId: validation.keyInfo.ownerId,
   };
 }

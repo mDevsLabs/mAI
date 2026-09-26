@@ -29,17 +29,17 @@ Les générations d'images sont soumises à un quota quotidien réinitialisé ch
 Renvoie la liste des modèles d'images autorisés selon votre forfait. Pour les utilisateurs *Free*, seuls les modèles avec la feature `text-to-image` et contenant `flux` sont affichés.
 
 **Endpoint**
-\`\`\`http
+```http
 GET /v1/models/images
-\`\`\`
+```
 
 **En-têtes**
-\`\`\`http
+```http
 Authorization: Bearer VOTRE_CLE_API
-\`\`\`
+```
 
 **Exemple de réponse**
-\`\`\`json
+```json
 {
   "object": "list",
   "data": [
@@ -63,7 +63,7 @@ Authorization: Bearer VOTRE_CLE_API
     }
   ]
 }
-\`\`\`
+```
 
 ---
 
@@ -72,15 +72,15 @@ Authorization: Bearer VOTRE_CLE_API
 Génère une image à partir d'une description textuelle (Prompt).
 
 **Endpoint**
-\`\`\`http
+```http
 POST /v1/images/generations
-\`\`\`
+```
 
 **En-têtes**
-\`\`\`http
+```http
 Authorization: Bearer VOTRE_CLE_API
 Content-Type: application/json
-\`\`\`
+```
 
 **Paramètres du corps de requête (JSON)**
 * `prompt` *(string, obligatoire)* : Description textuelle de l'image souhaitée.
@@ -90,20 +90,20 @@ Content-Type: application/json
 * `response_format` *(string, optionnel)* : `"url"` (par défaut) ou `"b64_json"`.
 
 **Exemple de requête cURL**
-\`\`\`bash
+```bash
 curl -X POST https://mai.val.run/v1/images/generations \
   -H "Authorization: Bearer VOTRE_CLE_API" \
   -H "Content-Type: application/json" \
   -d '{
     "model": "black-forest-labs/flux-1-schnell",
-    "prompt": "Un portrait cinématographique d'\''un astronaute observant une nébuleuse lumineuse, 8k, photoréaliste",
+    "prompt": "Un portrait cinématographique : un astronaute observant une nébuleuse lumineuse, 8k, photoréaliste",
     "size": "1024x1024",
     "response_format": "url"
   }'
-\`\`\`
+```
 
 **Exemple de réponse**
-\`\`\`json
+```json
 {
   "created": 1740398400,
   "data": [
@@ -117,18 +117,18 @@ curl -X POST https://mai.val.run/v1/images/generations \
     "plan": "Free"
   }
 }
-\`\`\`
+```
 
 ---
 
 ## 3. Consulter son Quota et son Historique
 
 **Endpoint Usage**
-\`\`\`http
+```http
 GET /v1/images/usage
-\`\`\`
+```
 
 **Endpoint Historique**
-\`\`\`http
+```http
 GET /v1/images/history
-\`\`\`
+```

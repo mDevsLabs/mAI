@@ -32,9 +32,6 @@ export default function WebProjectPage() {
                 <h1 className="text-4xl sm:text-5xl md:text-7xl font-black italic tracking-tighter leading-[0.9] md:leading-[0.85] uppercase text-slate-900">
                   Web
                 </h1>
-                <span className="text-xs font-bold px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 uppercase tracking-widest">
-                  Bêta
-                </span>
               </div>
               <p className="text-purple-600 font-medium text-lg italic mt-2">
                 &quot;L&apos;application d&apos;IA en ligne directe, accessible et intuitive.&quot;

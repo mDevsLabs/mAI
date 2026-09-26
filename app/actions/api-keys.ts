@@ -1,59 +1,65 @@
 "use server";
 
-import { neon } from "@neondatabase/serverless";
-
 import { getUserQuotaBoost } from "@/lib/tiers";
 import { getSessionIdentity } from "@/lib/session-auth";
+import { getDb, listApiKeys } from "@/lib/api-key-manager";
 
-export async function getUserApiUsage() {
-  try {
-    const databaseUrl = process.env.DATABASE_URL;
-    
-    if (!databaseUrl) {
-      throw new Error("La variable d'environnement DATABASE_URL est manquante.");
+/**
+ * Métadonnées d'usage API sûres pour les écrans compte.
+ *
+ * Contrat stable pour le coordinateur et les écrans compte :
+ * - `keyRef` est le préfixe public exact servant à la sélection serveur ;
+ * - aucun champ `key`, `apiKey`, `secretKey` ou segment secret n'est sérialisé.
+ */
+export interface UserApiKeyUsage {
+  keyRef: string;
+  name: string;
+  plan: string;
+  requestCount: number;
+  createdAt: string;
+  lastUsedAt: string | null;
+  maxLimit: number | null;
+  isActive: boolean;
+}
+
+export type GetUserApiUsageResult =
+  | {
+      success: true;
+      apiBoost: number;
+      keys: UserApiKeyUsage[];
     }
+  | {
+      success: false;
+      error: string;
+    };
 
+export async function getUserApiUsage(): Promise<GetUserApiUsageResult> {
+  try {
     const identity = await getSessionIdentity();
     if (!identity) {
-      return {
-        success: false,
-        error: "Authentification requise."
-      };
+      return { success: false, error: "Authentification requise." };
     }
-    const userId = identity.userId;
-    
-    const sql = neon(databaseUrl);
-    
-    const keys = await sql`
-      SELECT k.api_key, k.plan, k.request_count, k.created_at, k.last_used_at, k.max_limit
-      FROM mprojects_api_keys k
-      LEFT JOIN users u ON k.user_id = u.id::text OR k.user_id = u.username OR k.user_id = u.email
-      WHERE k.user_id = ${userId}::text
-         OR u.id::text = ${userId}::text
-         OR u.username = ${userId}::text
-         OR u.email = ${userId}::text
-      ORDER BY k.created_at DESC
-    `;
 
-    const apiBoost = await getUserQuotaBoost(sql, userId, "api");
+    const keys = await listApiKeys(identity.userId);
+    const database = getDb();
+    const apiBoost = database ? await getUserQuotaBoost(database, identity.userId, "api") : 0;
 
     return {
       success: true,
       apiBoost,
-      keys: keys.map(k => ({
-        key: k.api_key,
-        plan: k.plan,
-        requestCount: k.request_count,
-        createdAt: k.created_at,
-        lastUsedAt: k.last_used_at,
-        maxLimit: k.max_limit
-      }))
+      keys: keys.map((key) => ({
+        keyRef: key.keyRef,
+        name: key.name,
+        plan: key.plan,
+        requestCount: key.usageCount,
+        createdAt: key.createdAt,
+        lastUsedAt: key.lastUsedAt,
+        maxLimit: key.maxLimit,
+        isActive: key.isActive,
+      })),
     };
   } catch (error) {
     console.error("Erreur lors de la récupération de l'usage API:", error);
-    return {
-      success: false,
-      error: "Impossible de récupérer l'usage API"
-    };
+    return { success: false, error: "Impossible de récupérer l'usage API" };
   }
 }

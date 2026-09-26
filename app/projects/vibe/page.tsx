@@ -72,9 +72,6 @@ export default function VibeProjectPage() {
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-black italic tracking-tighter uppercase text-slate-900">
             Vibe
           </h1>
-          <span className="text-[11px] px-3 py-1 rounded-full border font-bold uppercase tracking-wider bg-purple-500/10 border-purple-500/30 text-purple-600">
-            Bêta
-          </span>
         </div>
 
         <p className="text-slate-500 text-base md:text-lg font-light max-w-2xl">

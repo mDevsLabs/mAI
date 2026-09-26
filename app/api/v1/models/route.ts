@@ -1,64 +1,73 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateOpenAIRequest } from '@/lib/openai-auth';
-import { OpenAIModelListResponse } from '@/lib/openai-types';
-import { openRouterModels } from '@/lib/ai-models';
+import { OpenAIErrorResponse, OpenAIModelListResponse } from '@/lib/openai-types';
+import { authenticateCatalogRequest } from '@/lib/api-key-session';
+import { redactApiSecretJson } from '@/lib/api-key-redaction';
 
 export const runtime = 'nodejs';
 
-export async function GET(req: NextRequest) {
-  const authHeader = req.headers.get('authorization') || req.headers.get('Authorization');
-  const userId = req.headers.get('x-user-id');
+function isPublicModel(model: any): boolean {
+  const id = String(model?.id || '').toLowerCase();
+  return id === 'mai-2' || id === 'mai-2-mini' || id.includes(':free');
+}
 
-  // Authentification facultative pour v1/models (consultation publique de la liste complète)
-  if (authHeader && authHeader.startsWith('Bearer ')) {
-    const authResult = await authenticateOpenAIRequest(req);
-    if (!authResult.valid) {
-      return authResult.response;
-    }
-  }
+function catalogUnavailable(): NextResponse<OpenAIErrorResponse> {
+  return NextResponse.json<OpenAIErrorResponse>(
+    {
+      error: {
+        message: 'Le catalogue de modèles est temporairement indisponible.',
+        type: 'api_error',
+        param: null,
+        code: 'catalog_unavailable',
+      },
+    },
+    { status: 502, headers: { 'Cache-Control': 'private, no-store' } },
+  );
+}
+
+export async function GET(req: NextRequest) {
+  const authResult = await authenticateCatalogRequest(req);
+  if (!authResult.ok) return authResult.response;
+
+  const auth = authResult.auth;
+  const isPublic = auth.mode === 'public';
+  const cacheControl = isPublic
+    ? 'public, s-maxage=300, stale-while-revalidate=60'
+    : 'private, no-store';
 
   try {
-    const forwardHeaders: Record<string, string> = {};
-    if (authHeader) forwardHeaders['Authorization'] = authHeader;
-    if (userId) forwardHeaders['x-user-id'] = userId;
-
-    // Fetch OpenRouter models depuis Val Town
-    const maiRes = await fetch('https://mai.val.run/v1/models', { headers: forwardHeaders }).catch(() => null);
-
-    let cloudModels: any[] = [];
-    if (maiRes && maiRes.ok) {
-      const data = await maiRes.json();
-      cloudModels = data.data || [];
-    } else {
-      // Fallback local: Tous les modèles OpenRouter
-      cloudModels = openRouterModels.map(m => ({
-        id: m.id,
-        object: 'model',
-        created: Math.floor(Date.now() / 1000),
-        owned_by: m.provider || 'openrouter'
-      }));
+    const headers: Record<string, string> = { Accept: 'application/json' };
+    if (auth.mode === 'bearer') {
+      headers.Authorization = `Bearer ${auth.token}`;
+    } else if (auth.mode === 'session') {
+      // Le secret est injecté uniquement dans cette requête serveur-sortie.
+      headers.Authorization = `Bearer ${auth.secretKey}`;
     }
 
-    const response: OpenAIModelListResponse = {
-      object: 'list',
-      data: cloudModels,
-    };
+    // L'API distante reçoit seulement la clé Bearer réellement validée, jamais
+    // une identité affirmée par le client.
+    const maiResponse = await fetch('https://mai.val.run/v1/models', {
+      headers,
+      ...(isPublic
+        ? { next: { revalidate: 300 } }
+        : { cache: 'no-store' as const }),
+    });
 
-    return NextResponse.json(response);
+    if (maiResponse.ok) {
+      const payload = redactApiSecretJson(
+        await maiResponse.json(),
+        auth.mode === 'bearer' ? auth.token : auth.mode === 'session' ? auth.secretKey : null,
+      );
+      const upstream = Array.isArray(payload?.data) ? payload.data : [];
+      // Relais transparent : aucun modèle n'est ajouté ni retiré côté Next.js.
+      const data = isPublic ? upstream.filter(isPublicModel) : upstream;
+      const response: OpenAIModelListResponse = { object: 'list', data };
+      return NextResponse.json(response, { headers: { 'Cache-Control': cacheControl } });
+    }
   } catch {
-    const fallbackList = [
-      ...openRouterModels.map(m => ({
-        created: 0,
-        description: `${m.name} via ${m.provider || 'OpenRouter'}`,
-        id: m.id,
-        maxContext: m.maxContext,
-        maxOutput: m.maxOutput,
-        name: m.name,
-        object: 'model',
-        owned_by: m.provider || 'openrouter',
-        supported_parameters: ['temperature', 'top_p', 'max_tokens', 'stream', 'tools']
-      }))
-    ];
-    return NextResponse.json({ object: 'list', data: fallbackList });
+    // Erreur réseau ou réponse illisible : traité comme un catalogue indisponible.
   }
+
+  // Aucun catalogue de secours local n'est exposé : le client affiche une
+  // liste vide et propose de réessayer, plutôt que des modèles fictifs.
+  return catalogUnavailable();
 }

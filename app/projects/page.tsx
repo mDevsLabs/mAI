@@ -1,260 +1,93 @@
 "use client";
 
 import { motion } from "motion/react";
-import { ExternalLink, Terminal, Globe, Cpu, FileText, Archive, Search, Layers, Gamepad2, Code2, Users } from "lucide-react";
+import {
+  Archive,
+  Code2,
+  Cpu,
+  ExternalLink,
+  Gamepad2,
+  Globe,
+  Layers,
+  Search,
+  Terminal,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { GithubRepoStats } from "@/components/github-repo-stats";
-import { PLATFORM_DEVICE_ICONS } from "@/lib/projects-data";
 import { PageSearch } from "@/components/ui/search-bar";
-import Image from "next/image";
+import {
+  PLATFORM_DEVICE_ICONS,
+  activeProjects,
+  publicArchivedProjects,
+  type Project,
+} from "@/lib/projects-data";
 
-type ActiveProjectCard = {
-  id: string;
+type ActiveProjectCard = Project & {
   number: string;
-  name: string;
-  label: string;
-  labelColor: string;
-  icon: any;
-  iconColor: string;
-  tagline: string;
-  description: string;
   link: string;
   repo: string;
-  platforms: string[];
+  icon: LucideIcon;
+  iconColor: string;
   borderHover: string;
 };
 
+type ActiveProjectPresentation = Pick<ActiveProjectCard, "icon" | "iconColor" | "borderHover">;
+
+const activeProjectPresentations: Record<string, ActiveProjectPresentation> = {
+  vibe: {
+    icon: Users,
+    iconColor: "text-purple-400",
+    borderHover: "hover:border-purple-500/30 hover:shadow-[0_8px_32px_0_rgba(168,85,247,0.15)]",
+  },
+  web: {
+    icon: Globe,
+    iconColor: "text-amber-400",
+    borderHover: "hover:border-emerald-500/30 hover:shadow-[0_8px_32px_0_rgba(160,185,129,0.15)]",
+  },
+  pulse: {
+    icon: Cpu,
+    iconColor: "text-emerald-400",
+    borderHover: "hover:border-emerald-500/30 hover:shadow-[0_8px_32px_0_rgba(160,185,129,0.15)]",
+  },
+  cli: {
+    icon: Terminal,
+    iconColor: "text-purple-400",
+    borderHover: "hover:border-blue-500/30 hover:shadow-[0_8px_32px_0_rgba(59,130,246,0.15)]",
+  },
+  coder: {
+    icon: Code2,
+    iconColor: "text-purple-400",
+    borderHover: "hover:border-emerald-500/30 hover:shadow-[0_8px_32px_0_rgba(160,185,129,0.15)]",
+  },
+};
+
+const activeProjectCards: ActiveProjectCard[] = activeProjects.map((project) => ({
+  ...project,
+  number: project.number ?? "",
+  link: project.link ?? `/projects/${project.id}`,
+  repo: project.repo ?? "",
+  ...(activeProjectPresentations[project.id] ?? {
+    icon: Archive,
+    iconColor: "text-slate-600",
+    borderHover: "hover:border-slate-300/30",
+  }),
+}));
+
+const archivedProjectIcons: Record<string, LucideIcon> = {
+  msearch: Search,
+  openprovider: Layers,
+  snob: Gamepad2,
+};
+
+const archivedProjectCards = publicArchivedProjects.map((project) => ({
+  ...project,
+  icon: archivedProjectIcons[project.id] ?? Archive,
+}));
+
 export default function ProjectsPage() {
-  const activeProjects: ActiveProjectCard[] = [
-    {
-      id: "vibe",
-      number: "01",
-      name: "Vibe",
-      label: "Release Candidate",
-      labelColor: "bg-blue-500/10 border-blue-500/30 text-blue-600",
-      icon: Users,
-      iconColor: "text-purple-400",
-      tagline: "Le réseau social où l'IA fait partie de la conversation.",
-      description: "Réseau social nouvelle génération avec IA intégrée : publiez, discutez et créez avec mAI nativement — fil personnalisé, messages privés, cercles et collections.",
-      link: "/projects/vibe",
-      repo: "mDevsLabs/Vibe",
-      platforms: ["Web", "Android", "iOS"],
-      borderHover: "hover:border-purple-500/30 hover:shadow-[0_8px_32px_0_rgba(168,85,247,0.15)]",
-    },
-    {
-      id: "web",
-      number: "02",
-      name: "Web",
-      label: "Release Candidate",
-      labelColor: "bg-blue-500/10 border-blue-500/30 text-blue-600",
-      icon: Globe,
-      iconColor: "text-amber-400",
-      tagline: "Application d'IA en ligne web directe et intuitive.",
-      description: "Application d'IA en ligne web directement et simplement pour discuter avec l'IA mAI.",
-      link: "/projects/web",
-      repo: "mDevsLabs/Web",
-      platforms: ["Web", "Multi-plateforme"],
-      borderHover: "hover:border-emerald-500/30 hover:shadow-[0_8px_32px_0_rgba(160,185,129,0.15)]",
-    },
-    {
-      id: "pulse",
-      number: "03",
-      name: "Pulse",
-      label: "Release Candidate",
-      labelColor: "bg-blue-500/10 border-blue-500/30 text-blue-600",
-      icon: Cpu,
-      iconColor: "text-emerald-400",
-      tagline: "L'IA intégrée directement dans vos outils du quotidien.",
-      description: "Ensemble d'extensions pour diverses applications pour discuter avec mAI directement (navigateur, VS Code...).",
-      link: "/projects/pulse",
-      repo: "mDevsLabs/Pulse",
-      platforms: ["Navigateur", "VS Code", "Extensions"],
-      borderHover: "hover:border-emerald-500/30 hover:shadow-[0_8px_32px_0_rgba(160,185,129,0.15)]",
-    },
-    {
-      id: "cli",
-      number: "04",
-      name: "CLI",
-      label: "Release Candidate",
-      labelColor: "bg-blue-500/10 border-blue-500/30 text-blue-600",
-      icon: Terminal,
-      iconColor: "text-purple-400",
-      tagline: "L'assistant de développement qui vit dans votre terminal.",
-      description: "Discussions et séances de codage dans le terminal CLI via mAI.",
-      link: "/projects/cli",
-      repo: "mDevsLabs/CLI",
-      platforms: ["macOS", "Linux", "Windows"],
-      borderHover: "hover:border-blue-500/30 hover:shadow-[0_8px_32px_0_rgba(59,130,246,0.15)]",
-    },
-    {
-      id: "coder",
-      number: "05",
-      name: "Coder",
-      label: "Release Candidate",
-      labelColor: "bg-blue-500/10 border-blue-500/30 text-blue-600",
-      icon: Code2,
-      iconColor: "text-purple-400",
-      tagline: "L'IDE IA pensé pour les agents autonomes et les outils MCP.",
-      description: "IDE IA de nouvelle génération avec agents IA autonomes, orchestration multi-modèles et support natif des outils MCP.",
-      link: "/projects/coder",
-      repo: "mDevsLabs/Coder",
-      platforms: ["macOS", "Windows", "Linux"],
-      borderHover: "hover:border-emerald-500/30 hover:shadow-[0_8px_32px_0_rgba(160,185,129,0.15)]",
-    },
-  ];
-
-  const archivedProjects = [
-    {
-      id: "site",
-      name: "Site",
-      icon: Globe,
-      description: "Site officiel et web mAI.",
-      repo: "mDevsLabs/Site",
-      platforms: ["Web"],
-    },
-    {
-      id: "web",
-      name: "Web",
-      icon: Globe,
-      description: "Application d'IA en ligne direct et intuitive.",
-      link: "/projects/web",
-      repo: "mDevsLabs/Web",
-      platforms: ["Web"],
-    },
-    {
-      id: "coder",
-      name: "Coder",
-      icon: Code2,
-      description: "IDE IA avec agents autonomes et outils MCP.",
-      link: "/projects/coder",
-      repo: "mDevsLabs/Coder",
-      platforms: ["Desktop"],
-    },
-    {
-      id: "cli",
-      name: "CLI",
-      icon: Terminal,
-      description: "Assistant terminal et séances de codage.",
-      link: "/projects/cli",
-      repo: "mDevsLabs/CLI",
-      platforms: ["CLI"],
-    },
-    {
-      id: "pulse-web",
-      name: "Pulse - Web",
-      icon: Cpu,
-      description: "Extension Pulse pour le navigateur web.",
-      link: "/projects/pulse",
-      repo: "mDevsLabs/Pulse",
-      platforms: ["Navigateur"],
-    },
-    {
-      id: "pulse-jetbrains",
-      name: "Pulse - JetBrains",
-      icon: Cpu,
-      description: "Extension Pulse pour l'IDE JetBrains.",
-      link: "/projects/pulse",
-      repo: "mDevsLabs/Pulse",
-      platforms: ["JetBrains"],
-    },
-    {
-      id: "pulse-vscode",
-      name: "Pulse - VS Code",
-      icon: Cpu,
-      description: "Extension Pulse pour VS Code.",
-      link: "/projects/pulse",
-      repo: "mDevsLabs/Pulse",
-      platforms: ["VS Code"],
-    },
-    {
-      id: "desktop",
-      name: "Desktop",
-      icon: Layers,
-      description: "Application desktop intégrée mAI.",
-      repo: "mDevsLabs/Desktop",
-      platforms: ["Desktop"],
-    },
-    {
-      id: "skills",
-      name: "Skills",
-      icon: FileText,
-      description: "Compétences et agents spécialisés mAI.",
-      repo: "mDevsLabs/Skills",
-      platforms: ["Agents"],
-    },
-    {
-      id: "plugins",
-      name: "Plugins",
-      icon: FileText,
-      description: "Écosystème de plugins mAI.",
-      repo: "mDevsLabs/Plugins",
-      platforms: ["Plugins"],
-    },
-    {
-      id: "api",
-      name: "API",
-      icon: Layers,
-      description: "Hub API et agrégation de modèles LLM.",
-      repo: "mDevsLabs/API",
-      platforms: ["API"],
-    },
-    {
-      id: "autre",
-      name: "Autre",
-      icon: Archive,
-      description: "Autres projets et expérimentations.",
-      repo: "",
-      platforms: ["Divers"],
-    },
-    {
-      id: "mai-legacy",
-      name: "mAI Web (Legacy)",
-      icon: Layers,
-      description: "Ancienne version web de mAI avec intégration locale et cloud.",
-      link: "/projects/mai",
-      repo: "mDevsLabs/mAI",
-      platforms: ["Web"],
-    },
-    {
-      id: "mai-cli-legacy",
-      name: "mAI CLI (Legacy)",
-      icon: Terminal,
-      description: "Première itération de l'assistant terminal et messageries.",
-      link: "/projects/mai-cli",
-      repo: "mDevsLabs/mAI-CLI",
-      platforms: ["CLI"],
-    },
-    {
-      id: "msearch",
-      name: "mSearch",
-      icon: Search,
-      image: "/msearch.PNG",
-      description: "Moteur de recherche sémantique et d'indexation vectorielle unifié.",
-      link: "/projects/msearch",
-      repo: "mDevsLabs/mSearch",
-      platforms: ["Windows", "macOS", "Linux"],
-    },
-    {
-      id: "openprovider",
-      name: "OpenProvider",
-      image: "/openprovider.png",
-      description: "Proxy universel de routage de modèles LLM et compatibilité Codex.",
-      link: "/projects/openprovider",
-      repo: "mDevsLabs/OpenProvider",
-      platforms: ["CLI", "Proxy"],
-    },
-    {
-      id: "snob",
-      name: "Snob",
-      icon: Gamepad2,
-      image: "/snob.png",
-      description: "Jeu de réflexion et puzzle inspiré de Block Blast.",
-      link: "/projects/snob",
-      repo: "mDevsLabs/Snob",
-      platforms: ["Web", "Android"],
-    },
-  ];
-
   return (
     <div className="flex flex-col gap-10 md:gap-16">
       {/* En-tête de la page */}
@@ -276,7 +109,7 @@ export default function ProjectsPage() {
           transition={{ delay: 0.1 }}
           className="text-slate-500 text-base md:text-lg font-light mt-2 md:mt-4 max-w-2xl"
         >
-          Découvrez la suite officielle des {activeProjects.length} projets mAI développés par mDevsLabs pour révolutionner votre façon de travailler avec l&apos;intelligence artificielle.
+          Découvrez la suite officielle des 5 projets mAI développés par mDevsLabs pour révolutionner votre façon de travailler avec l'intelligence artificielle.
         </motion.p>
 
         <motion.div
@@ -289,9 +122,9 @@ export default function ProjectsPage() {
         </motion.div>
       </div>
 
-      {/* Grille des 4 Nouveaux Projets Actifs */}
+      {/* Grille des 5 projets actifs */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {activeProjects.map((project, idx) => {
+        {activeProjectCards.map((project, idx) => {
           const IconComponent = project.icon;
           return (
             <motion.div
@@ -308,13 +141,10 @@ export default function ProjectsPage() {
               </div>
 
               <div className="flex flex-col relative z-10">
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center mb-4">
                   <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-slate-900 shadow-md">
                     <IconComponent className={`w-8 h-8 ${project.iconColor}`} />
                   </div>
-                  <span className={`text-[11px] px-3 py-1 rounded-full border font-bold uppercase tracking-wider ${project.labelColor}`}>
-                    {project.label}
-                  </span>
                 </div>
 
                 <h2 className="text-3xl font-black mb-1 text-slate-900 flex items-center gap-2">
@@ -345,7 +175,7 @@ export default function ProjectsPage() {
                 </div>
 
                 <p className="text-purple-600 font-medium text-xs sm:text-sm mb-3 italic">
-                  &quot;{project.tagline}&quot;
+                  &quot;{project.tagline ?? project.description}&quot;
                 </p>
 
                 <p className="text-slate-600 text-sm leading-relaxed mb-6">
@@ -384,7 +214,7 @@ export default function ProjectsPage() {
         <div className="text-left space-y-2 mb-8">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-red-600 text-xs font-bold uppercase tracking-wider">
             <Archive className="w-3.5 h-3.5" />
-            Historique & Archives
+            Historique &amp; Archives
           </div>
           <h2 className="text-3xl font-black italic tracking-tighter uppercase text-slate-900">
             Projets <span className="text-slate-500">Archivés</span>
@@ -395,63 +225,64 @@ export default function ProjectsPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {archivedProjects.map((project) => (
-            <div
-              key={project.id}
-              className="bg-white/30 backdrop-blur-sm border border-slate-200/80 rounded-2xl p-5 flex flex-col justify-between opacity-80 hover:opacity-100 hover:border-slate-300 transition-all"
-            >
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center p-2 border border-slate-200">
-                    {project.image ? (
-                      <Image
-                        src={project.image}
-                        alt={project.name}
-                        width={32}
-                        height={32}
-                        className="w-full h-full object-contain rounded-lg"
-                      />
-                    ) : project.icon ? (
-                      <project.icon className="w-5 h-5 text-slate-600" />
-                    ) : (
-                      <Archive className="w-5 h-5 text-slate-600" />
-                    )}
-                  </div>
-                  <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-red-500/10 border border-red-500/30 text-red-600 font-bold uppercase tracking-widest">
-                    Archivé
-                  </span>
-                </div>
-
-                <h3 className="text-xl font-bold text-slate-900 mb-1">{project.name}</h3>
-                <p className="text-slate-600 text-xs leading-relaxed mb-4">{project.description}</p>
-
-                <div className="flex flex-wrap gap-1 mb-4">
-                  {project.platforms.map((p) => (
-                    <span key={p} className="text-[9px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-medium">
-                      {p}
+          {archivedProjectCards.map((project) => {
+            const IconComponent = project.icon;
+            return (
+              <div
+                key={project.id}
+                className="bg-white/30 backdrop-blur-sm border border-slate-200/80 rounded-2xl p-5 flex flex-col justify-between opacity-80 hover:opacity-100 hover:border-slate-300 transition-all"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center p-2 border border-slate-200">
+                      {project.image ? (
+                        <Image
+                          src={project.image}
+                          alt={project.name}
+                          width={32}
+                          height={32}
+                          className="w-full h-full object-contain rounded-lg"
+                        />
+                      ) : (
+                        <IconComponent className="w-5 h-5 text-slate-600" />
+                      )}
+                    </div>
+                    <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-red-500/10 border border-red-500/30 text-red-600 font-bold uppercase tracking-widest">
+                      {project.label ?? "Archivé"}
                     </span>
-                  ))}
+                  </div>
+
+                  <h3 className="text-xl font-bold text-slate-900 mb-1">{project.name}</h3>
+                  <p className="text-slate-600 text-xs leading-relaxed mb-4">{project.description}</p>
+
+                  <div className="flex flex-wrap gap-1 mb-4">
+                    {project.platforms.map((p) => (
+                      <span key={p} className="text-[9px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-medium">
+                        {p}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="pt-3 border-t border-slate-200/60 flex items-center justify-between gap-2 flex-wrap">
+                  {project.link ? (
+                    <Link
+                      href={project.link}
+                      className="text-xs font-semibold text-slate-700 hover:text-purple-600 flex items-center gap-1 transition-colors"
+                    >
+                      Voir l&apos;archive
+                      <ExternalLink className="w-3 h-3" />
+                    </Link>
+                  ) : (
+                    <span className="text-xs font-semibold text-slate-400 italic">
+                      Archive non publiée
+                    </span>
+                  )}
+                  {project.repo && <GithubRepoStats repo={project.repo} />}
                 </div>
               </div>
-
-              <div className="pt-3 border-t border-slate-200/60 flex items-center justify-between gap-2 flex-wrap">
-                {project.link ? (
-                  <Link
-                    href={project.link}
-                    className="text-xs font-semibold text-slate-700 hover:text-purple-600 flex items-center gap-1 transition-colors"
-                  >
-                    Voir l&apos;archive
-                    <ExternalLink className="w-3 h-3" />
-                  </Link>
-                ) : (
-                  <span className="text-xs font-semibold text-slate-400 italic">
-                    Archive non publiée
-                  </span>
-                )}
-                {project.repo && <GithubRepoStats repo={project.repo} />}
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

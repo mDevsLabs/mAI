@@ -4,7 +4,7 @@ Nous annonçons la disponibilité générale de **mAI API v2**, conçue pour off
 
 ## Nouveautés majeures de la version 2
 
-### 1. Clés API Développeurs et hachage SHA-256
+### 1. Clés API Développeurs et exposition unique du secret
 Chaque développeur a désormais la possibilité de générer des clés API personnalisées (`mai-[free|plus|pro|max]-XXXXX-XXXXXXXX`). Pour garantir un niveau de sécurité optimal :
 - La clé complète en clair n'est exposée qu'une **seule et unique fois**, au moment de sa génération automatique.
 - Seule l'empreinte **SHA-256** est conservée dans nos bases de données (UE), et non sur les serveurs d'application.
@@ -23,6 +23,6 @@ L'API v2 intègre un contrôle de débit par adresse IP et par compte afin d'ass
 - **Pro** : 3 000 requêtes / semaine
 - **Max** : 7 500 requêtes / semaine
 
-Consultez la rubrique [Gestion des Clés API](/api/keys) de la console pour initier vos intégrations.
+Consultez la rubrique [Gestion des Clés API](/account/keys) de la console pour initier vos intégrations.
 
 

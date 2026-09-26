@@ -1,281 +1,115 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Copy, Check, Terminal, Code2, Cpu, Key, Sparkles, RefreshCcw, Layers, Settings2, Sliders
 } from 'lucide-react';
-import { maiModelsList } from '@/maiModels';
-import { AIModel, openRouterModels } from '@/lib/ai-models';
-import { useAuth } from '@/components/auth-provider';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
+import { buildConfigSnippet, getConfigBaseUrl, type ConfigTab } from './config-data';
+import { useConfigCatalog } from './useConfigCatalog';
 
-type TabType = 'openai' | 'python' | 'google' | 'anthropic' | 'curl';
+type TabType = ConfigTab;
 
 export default function ConfigClient() {
-  const { user, token } = useAuth();
-  
-  // States
-  const [selectedModel, setSelectedModel] = useState<string>('mDevsLabs/mAI-1.2-Apex');
-  const [hostTarget, setHostTarget] = useState<'cloud' | 'ollama' | 'local'>('cloud');
-  const [userKeys, setUserKeys] = useState<any[]>([]);
-  const [selectedApiKey, setSelectedApiKey] = useState<string>('mai_live_votre_cle_api_ici');
-  const [activeTab, setActiveTab] = useState<TabType>('openai');
+  const {
+    allModels,
+    cloudModels,
+    hostTarget,
+    isAuthenticated,
+    keysError,
+    keysLoading,
+    modelsError,
+    modelsLoading,
+    selectedKeyRef,
+    selectedModel,
+    setHostTarget,
+    setModelsRetry,
+    setSelectedKeyRef,
+    setSelectedModel,
+    token,
+    userKeys,
+  } = useConfigCatalog();
+
+  const [activeTab, setActiveTab] = useState<TabType>("openai");
   const [copied, setCopied] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
   const [temperature, setTemperature] = useState(0.7);
   const [maxTokens, setMaxTokens] = useState(2048);
-  const [cloudModelsList, setCloudModelsList] = useState<AIModel[]>(openRouterModels);
+  const baseUrl = getConfigBaseUrl(hostTarget);
 
-  // Charger les modèles depuis l'API v1/models
-  useEffect(() => {
-    async function loadModels() {
-      try {
-        let res = await fetch('/api/v1/models', {
-          headers: user?.username || user?.email ? { 'x-user-id': encodeURIComponent(user.username || user.email) } : {},
-        }).catch(() => null);
-
-        if (!res || !res.ok) {
-          res = await fetch('https://mai.val.run/v1/models').catch(() => null);
-        }
-
-        if (res && res.ok) {
-          const data = await res.json();
-          if (data.data && Array.isArray(data.data)) {
-            const apiModels: AIModel[] = data.data.map((m: any) => ({
-              id: m.id,
-              name: m.id,
-              provider: m.owned_by || 'mAI',
-              maxContext: m.maxContext || 128000,
-              maxOutput: m.maxOutput || 4096,
-            }));
-            const cloudOnly = apiModels.filter(
-              (m) => !maiModelsList.some((mai) => mai.ollamaTag === m.id || mai.id === m.id)
-            );
-            if (cloudOnly.length > 0) {
-              setCloudModelsList(cloudOnly);
-            }
-          }
-        }
-      } catch (err) {
-        console.error('Erreur lors du chargement des modèles v1/models:', err);
-      }
-    }
-    loadModels();
-  }, [user]);
-
-  // Charger les clés API de l'utilisateur
-  useEffect(() => {
-    async function loadKeys() {
-      if (!token) return;
-      try {
-        const res = await fetch('/api/dev-keys', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const data = await res.json();
-        if (data.success && data.keys && data.keys.length > 0) {
-          setUserKeys(data.keys);
-          const firstKey = data.keys[0];
-          const firstKeyVal = firstKey.apiKey || firstKey.secretKey || `${firstKey.prefix || 'mai_live'}_...`;
-          setSelectedApiKey(firstKeyVal);
-        }
-      } catch (err) {
-        console.error('Erreur chargement des clés:', err);
-      }
-    }
-    loadKeys();
-  }, [token]);
-
-  const allowedCloudModels = cloudModelsList;
-
-  // Modèles combinés (les modèles cloud mAI-2 n'ont pas de tag Ollama : ignorés ici)
-  const allModels = [
-    ...maiModelsList
-      .filter(m => m.ollamaTag)
-      .map(m => ({ id: m.ollamaTag as string, name: `${m.name} (mAI Local)`, type: 'mai' })),
-    ...allowedCloudModels.map(m => ({ id: m.id, name: `${m.name} (${m.id})`, type: 'cloud' }))
-  ];
-
-  const getBaseUrl = () => {
-    switch (hostTarget) {
-      case 'ollama':
-        return 'http://localhost:11434';
-      case 'local':
-        return 'http://localhost:3000/api';
-      case 'cloud':
-      default:
-        return 'https://mai.val.run';
-    }
-  };
-
-  const baseUrl = getBaseUrl();
-
-  // Génération dynamique des snippets de code
-  const getCodeSnippet = (tab: TabType) => {
-    switch (tab) {
-      case 'openai':
-        return `import OpenAI from "openai";
-
-const openai = new OpenAI({
-  baseURL: "${baseUrl}/v1",
-  apiKey: "${selectedApiKey}",
-});
-
-async function main() {
-  const completion = await openai.chat.completions.create({
-    model: "${selectedModel}",
-    messages: [
-      { role: "system", content: "Tu es un assistant IA très performant." },
-      { role: "user", content: "Bonjour ! Rédige une brève présentation." }
-    ],
-    temperature: ${temperature},
-    max_tokens: ${maxTokens},
+  const codeSnippet = buildConfigSnippet({
+    activeTab,
+    baseUrl,
+    maxTokens,
+    selectedModel,
+    temperature,
   });
-
-  console.log(completion.choices[0].message.content);
-}
-
-main();`;
-
-      case 'python':
-        return `from openai import OpenAI
-
-client = OpenAI(
-    base_url="${baseUrl}/v1",
-    api_key="${selectedApiKey}"
-)
-
-response = client.chat.completions.create(
-    model="${selectedModel}",
-    messages=[
-        {"role": "system", "content": "Tu es un assistant IA très performant."},
-        {"role": "user", "content": "Bonjour ! Rédige une brève présentation."}
-    ],
-    temperature=${temperature},
-    max_tokens=${maxTokens}
-)
-
-print(response.choices[0].message.content)`;
-
-      case 'google':
-        return `// Configuration via SDK Google / OpenAI Compatibility
-import { GoogleGenerativeAI } from "@google/generative-ai";
-// Alternative directe via endpoint de compatibilité OpenAI
-import OpenAI from "openai";
-
-const client = new OpenAI({
-  baseURL: "${baseUrl}/v1",
-  apiKey: "${selectedApiKey}",
-});
-
-async function runGemini() {
-  const response = await client.chat.completions.create({
-    model: "${selectedModel}",
-    messages: [{ role: "user", content: "Explique l'IA en une phrase." }],
-    temperature: ${temperature},
-  });
-  console.log(response.choices[0].message.content);
-}
-
-runGemini();`;
-
-      case 'anthropic':
-        return `import Anthropic from "@anthropic-ai/sdk";
-
-const anthropic = new Anthropic({
-  baseURL: "${baseUrl}",
-  apiKey: "${selectedApiKey}",
-});
-
-async function runAnthropic() {
-  const message = await anthropic.messages.create({
-    model: "${selectedModel}",
-    max_tokens: ${maxTokens},
-    messages: [
-      { role: "user", content: "Bonjour Anthropic / mAI !" }
-    ],
-  });
-
-  console.log(message.content[0].text);
-}
-
-runAnthropic();`;
-
-      case 'curl':
-        return `curl ${baseUrl}/v1/chat/completions \\
-  -H "Authorization: Bearer ${selectedApiKey}" \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "model": "${selectedModel}",
-    "messages": [
-      {
-        "role": "user",
-        "content": "Hello, world!"
-      }
-    ],
-    "temperature": ${temperature},
-    "max_tokens": ${maxTokens}
-  }'`;
-    }
-  };
-
   const handleCopy = () => {
-    navigator.clipboard.writeText(getCodeSnippet(activeTab));
+    navigator.clipboard.writeText(codeSnippet);
     setCopied(true);
-    toast.success("Snippet copié dans le presse-papier ! Copier");
+    toast.success("Snippet copié dans le presse-papier !");
     setTimeout(() => setCopied(false), 2000);
   };
 
   const handleVerifyConnection = async () => {
+    if (!token) {
+      toast.error('Connectez-vous pour utiliser une clé API.');
+      return;
+    }
+    if (!selectedModel) {
+      toast.error('Aucun modèle disponible : rechargez le catalogue v1/models.');
+      return;
+    }
+    if (hostTarget !== 'ollama' && !selectedKeyRef) {
+      toast.error('Sélectionnez une clé API active ou créez-en une.');
+      return;
+    }
+
     setIsVerifying(true);
     try {
-      const url = hostTarget === 'ollama' ? 'http://localhost:11434/api/generate' : (hostTarget === 'cloud' ? 'https://mai.val.run/v1/chat/completions' : '/api/v1/chat/completions');
-      
-      const payload = hostTarget === 'ollama' ? {
+
+      const payload = {
         model: selectedModel,
-        prompt: "Hello",
-        stream: false
-      } : {
-        model: selectedModel,
-        messages: [{ role: "user", content: "Hello" }],
-        stream: false
+        messages: [{ role: 'user', content: 'Hello' }],
+        temperature,
+        max_tokens: maxTokens,
+        stream: false,
       };
 
-      const headers: any = {
-        'Content-Type': 'application/json',
-      };
-
-      if (hostTarget !== 'ollama') {
-        if (!selectedApiKey) {
-          toast.error("Veuillez configurer et sélectionner une clé API.");
-          setIsVerifying(false);
-          return;
-        }
-        headers['Authorization'] = `Bearer ${selectedApiKey}`;
-      }
-
-      const res = await fetch(url, {
+      const res = await fetch('/api/account/api-executor', {
         method: 'POST',
-        headers,
-        body: JSON.stringify(payload)
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          target: hostTarget === 'ollama' ? 'ollama' : 'mai',
+          method: 'POST',
+          path: 'v1/chat/completions',
+          keyRef: hostTarget === 'ollama' ? undefined : selectedKeyRef,
+          body: payload,
+        }),
       });
 
       if (!res.ok) {
-        let errStr = "Erreur inconnue";
+        let message = 'Erreur inconnue';
         try {
-          const errData = await res.json();
-          errStr = errData.error || errData.message || JSON.stringify(errData);
+          const errorData = await res.json();
+          const upstreamError = errorData.error;
+          message = typeof upstreamError === 'string'
+            ? upstreamError
+            : upstreamError?.message || errorData.message || JSON.stringify(errorData);
         } catch {
-          errStr = await res.text();
+          message = await res.text();
         }
-        toast.error(`Échec: ${errStr.substring(0, 100)}`);
+        toast.error(`Échec : ${message.substring(0, 120)}`);
       } else {
         toast.success(`Connexion réussie au modèle ${selectedModel} !`);
       }
-    } catch (e: any) {
-      toast.error(`Erreur: ${e.message}`);
+    } catch (error) {
+      toast.error(error instanceof Error ? `Erreur : ${error.message}` : 'Erreur de vérification.');
     } finally {
       setIsVerifying(false);
     }
@@ -361,8 +195,14 @@ runAnthropic();`;
               <select
                 value={selectedModel}
                 onChange={(e) => setSelectedModel(e.target.value)}
-                className="w-full bg-white border border-slate-200 text-slate-900 text-xs sm:text-sm rounded-2xl px-4 py-3 appearance-none font-bold focus:outline-none focus:ring-2 focus:ring-purple-500/20 cursor-pointer shadow-2xs"
+                disabled={modelsLoading || (hostTarget === 'cloud' && cloudModels.length === 0)}
+                className="w-full bg-white border border-slate-200 text-slate-900 text-xs sm:text-sm rounded-2xl px-4 py-3 appearance-none font-bold focus:outline-none focus:ring-2 focus:ring-purple-500/20 cursor-pointer shadow-2xs disabled:opacity-60"
               >
+                {!selectedModel && (
+                  <option value="">
+                    {modelsLoading ? 'Chargement du catalogue…' : 'Aucun modèle disponible'}
+                  </option>
+                )}
                 <optgroup label="Modèles mAI Locaux (Gratuits)">
                   {allModels.filter(m => m.type === 'mai').map(m => (
                     <option key={m.id} value={m.id}>{m.name}</option>
@@ -374,6 +214,27 @@ runAnthropic();`;
                   ))}
                 </optgroup>
               </select>
+              {modelsLoading && (
+                <p className="text-[11px] font-semibold text-slate-500">Chargement du catalogue…</p>
+              )}
+              {!modelsLoading && hostTarget === 'cloud' && cloudModels.length === 0 && (
+                <p className="text-[11px] font-semibold text-amber-700">
+                  Le catalogue v1/models ne renvoie aucun modèle Cloud. Le groupe local reste
+                  disponible via les cibles « Local Ollama » et « Local App ».
+                </p>
+              )}
+              {modelsError && (
+                <div className="rounded-xl border border-amber-200 bg-amber-50 p-2.5 text-[11px] text-amber-800 space-y-1.5">
+                  <p>{modelsError} Aucun modèle Cloud ne peut être sélectionné tant que le catalogue est indisponible.</p>
+                  <button
+                    type="button"
+                    onClick={() => setModelsRetry((value) => value + 1)}
+                    className="font-extrabold underline hover:text-amber-950"
+                  >
+                    Réessayer
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Sélecteur de Clé API */}
@@ -382,28 +243,29 @@ runAnthropic();`;
                 <Key className="w-4 h-4 text-purple-600" />
                 Clé API Utilisateur
               </label>
-              {userKeys.length > 0 ? (
+              {keysLoading ? (
+                <p className="text-xs font-semibold text-slate-500">Chargement des clés…</p>
+              ) : userKeys.length > 0 ? (
                 <select
-                  value={selectedApiKey}
-                  onChange={(e) => setSelectedApiKey(e.target.value)}
+                  value={selectedKeyRef}
+                  onChange={(e) => setSelectedKeyRef(e.target.value)}
                   className="w-full bg-white border border-slate-200 text-slate-900 text-xs sm:text-sm rounded-2xl px-4 py-3 appearance-none font-bold focus:outline-none focus:ring-2 focus:ring-purple-500/20 cursor-pointer shadow-2xs"
                 >
-                  {userKeys.map((k, index) => {
-                    const keyVal = k.apiKey || k.secretKey || `${k.prefix || 'mai_live'}_...`;
-                    const keyLabel = (keyVal || '').substring(0, 14);
-                    return (
-                      <option key={k.id || index} value={keyVal}>
-                        {k.name || 'Clé API'} ({keyLabel}...)
-                      </option>
-                    );
-                  })}
+                  {userKeys.map((key) => (
+                    <option key={key.keyRef} value={key.keyRef}>
+                      {key.name} ({key.keyRef})
+                    </option>
+                  ))}
                 </select>
               ) : (
                 <div className="p-3 bg-purple-50 rounded-2xl border border-purple-100 text-xs text-purple-800 space-y-1">
-                  <p className="font-bold">Aucune clé détectée</p>
-                  <p>Une clé fictive d&apos;exemple est générée dans le snippet.</p>
-                  <Link href="/account/keys" className="text-purple-600 underline font-extrabold block mt-1">
-                    + Générer une clé API
+                  <p className="font-bold">
+                    {isAuthenticated ? 'Aucune clé active détectée' : 'Mode catalogue public'}
+                  </p>
+                  <p>Les snippets utilisent le placeholder VOTRE_CLE_API, jamais une clé stockée.</p>
+                  {keysError && <p className="text-amber-700">{keysError}</p>}
+                  <Link href={isAuthenticated ? '/account/keys' : '/account/login'} className="text-purple-600 underline font-extrabold block mt-1">
+                    {isAuthenticated ? '+ Générer une clé API' : 'Se connecter pour sélectionner une clé'}
                   </Link>
                 </div>
               )}
@@ -511,7 +373,7 @@ runAnthropic();`;
             </div>
 
             <pre className="p-6 text-xs sm:text-sm font-mono text-purple-200/90 overflow-x-auto leading-relaxed max-h-[500px]">
-              <code>{getCodeSnippet(activeTab)}</code>
+              <code>{codeSnippet}</code>
             </pre>
           </div>
 

@@ -1,27 +1,12 @@
+import 'server-only';
+
 import crypto from 'crypto';
 import { neon } from '@neondatabase/serverless';
-import { TIER_REQUEST_LIMITS, getTierQuotaLimit, extractTierFromApiKey, getUserQuotaBoost } from './tiers';
+import { TIER_REQUEST_LIMITS, getTierQuotaLimit, getUserQuotaBoost } from './tiers';
 
-export interface ApiKeyMetadata {
-  id: string;
-  name: string;
-  prefix: string; // Les premiers caractères visibles (ex: mai-pro-7TK9W)
-  apiKey?: string; // Clé complète pour exécution dans le studio
-  ownerId?: string; // Identifiant réel du propriétaire (users.id) quand connu
-  createdAt: string;
-  lastUsedAt: string | null;
-  usageCount: number;
-  maxLimit: number | null;
-  isActive: boolean;
-}
+import type { ApiKeyMetadata, CreatedApiKeyResult } from './api-key-types';
 
-export interface CreatedApiKeyResult {
-  id: string;
-  name: string;
-  prefix: string;
-  secretKey: string; // Retourné une seule et unique fois à la création
-  createdAt: string;
-}
+export type { ApiKeyMetadata, CreatedApiKeyResult } from './api-key-types';
 
 // Memory fallback store (au cas où la DB locale/distant n'est pas encore connectée)
 const memoryKeysStore: Map<string, {
@@ -36,6 +21,7 @@ const memoryKeysStore: Map<string, {
   usageCount: number;
   maxLimit: number | null;
   isActive: boolean;
+  plan: string;
 }> = new Map();
 
 export function getDb() {
@@ -47,6 +33,39 @@ export function getDb() {
 // Calcule le hash SHA-256 d'un secret en clair
 export function hashSecretKey(secretKey: string): string {
   return crypto.createHash('sha256').update(secretKey).digest('hex');
+}
+
+/**
+ * Extrait le préfixe public exact d'une clé. Cette fonction ne doit jamais
+ * retourner une clé courte entière : les formats historiques exposent au
+ * maximum leurs 11 premiers caractères.
+ */
+export function getApiKeyRef(secretKey: string | null | undefined): string | null {
+  if (!secretKey || typeof secretKey !== 'string') return null;
+  const value = secretKey.trim();
+  if (!value || /^[a-f0-9]{64}$/i.test(value)) return null;
+
+  const maiMatch = value.match(/^(mai-(?:free|plus|pro|max)-[A-Z0-9]{5})-/i);
+  if (maiMatch) return maiMatch[1];
+
+  if (/^mai_live[A-Za-z0-9_-]{8,}$/.test(value)) return value.slice(0, 11);
+  if (/^mp-[A-Za-z0-9_-]{12,}$/.test(value)) return value.slice(0, 11);
+  if (/^sk_mp_[A-Za-z0-9_-]{8,}$/.test(value)) return value.slice(0, 11);
+  return null;
+}
+
+/** Valide une référence sans caractère générique ni espace. */
+export function isValidApiKeyRef(keyRef: string | null | undefined): keyRef is string {
+  if (!keyRef || keyRef.length > 64 || keyRef !== keyRef.trim()) return false;
+  if (/^mai-(?:free|plus|pro|max)-[A-Z0-9]{5}$/i.test(keyRef)) return true;
+  if (/^mai_live[A-Za-z0-9_-]{3}$/.test(keyRef)) return true;
+  if (/^mp-[A-Za-z0-9_-]{8}$/.test(keyRef)) return true;
+  if (/^sk_mp_[A-Za-z0-9_-]{5}$/.test(keyRef)) return true;
+  return false;
+}
+
+function escapeLikePrefix(value: string): string {
+  return value.replace(/[\\%_]/g, (character) => `\\${character}`);
 }
 
 /**
@@ -68,6 +87,20 @@ async function getUserIdentifiers(db: any, userId: string): Promise<string[]> {
     }
   } catch {}
   return [...new Set(ids)];
+}
+
+function normalizeValidatedPlan(plan: unknown): string {
+  const value = String(plan || '').trim().toLowerCase();
+  if (value === 'plus' || value === 'pro' || value === 'max') {
+    return value.charAt(0).toUpperCase() + value.slice(1);
+  }
+  return 'Free';
+}
+
+function toIsoDate(value: unknown, fallback: string): string {
+  if (!value) return fallback;
+  const date = new Date(String(value));
+  return Number.isNaN(date.getTime()) ? fallback : date.toISOString();
 }
 
 function generateRandomChars(length: number, charset: string): string {
@@ -124,6 +157,7 @@ export async function createApiKey(userId: string, name: string, maxLimit: numbe
   const { secretKey, prefix } = generateSecretKey(userTier || 'free');
   const hash = hashSecretKey(secretKey);
   const now = new Date().toISOString();
+  const plan = normalizeValidatedPlan(userTier);
   let storedInDb = false;
 
   if (db) {
@@ -152,135 +186,225 @@ export async function createApiKey(userId: string, name: string, maxLimit: numbe
       usageCount: 0,
       maxLimit,
       isActive: true,
+      plan,
     });
   }
 
   return {
-    id: keyId,
+    id: prefix,
+    keyRef: prefix,
     name,
-    prefix: `${prefix}-•••••`,
+    prefix,
     secretKey,
     createdAt: now,
   };
 }
 
 /**
- * Lister les clés API d'un utilisateur (dédupliqué pour éviter le doublon DB + Mémoire).
+ * Lister les clés API d'un utilisateur. Le résultat ne contient jamais le
+ * segment secret : uniquement un keyRef et des métadonnées.
  */
 export async function listApiKeys(userId: string): Promise<ApiKeyMetadata[]> {
   const db = getDb();
   const results: ApiKeyMetadata[] = [];
-  const seenPrefixes = new Set<string>();
+  const seenRefs = new Set<string>();
 
   if (db) {
     try {
+      const identifiers = await getUserIdentifiers(db, userId);
       const rows = await db`
-        SELECT k.user_id, k.api_key, k.plan, k.request_count, k.created_at, k.last_used_at, k.max_limit, k.is_active
+        SELECT k.api_key, k.plan, k.request_count, k.created_at, k.last_used_at,
+               k.max_limit, k.is_active, u.tier as user_tier
         FROM mprojects_api_keys k
-        LEFT JOIN users u ON k.user_id = u.id::text OR k.user_id = u.username OR k.user_id = u.email
-        WHERE k.user_id = ${userId}::text
-           OR u.id::text = ${userId}::text
-           OR u.username = ${userId}::text
-           OR u.email = ${userId}::text
+        LEFT JOIN users u
+          ON k.user_id = u.id::text OR k.user_id = u.username OR k.user_id = u.email
+        WHERE k.user_id = ANY(${identifiers})
         ORDER BY k.created_at DESC
       `;
 
-      rows.forEach((row: any, idx: number) => {
-        const keyVal = row.api_key || 'mp-key';
-        // Extraire le préfixe visible : pour les clés mai-TIER-XXXXX-*, on coupe après le 3ème tiret
-        // (ex: "mai-free-A1B2C" pour l'ancien et le nouveau format)
-        let prefix: string;
-        if (keyVal.startsWith('mai-')) {
-          const parts = keyVal.split('-');
-          // parts[0]=mai, parts[1]=tier, parts[2]=part1 → prefix = "mai-TIER-XXXXX"
-          prefix = parts.length >= 3 ? `${parts[0]}-${parts[1]}-${parts[2]}` : keyVal.substring(0, 15);
-        } else if (keyVal.startsWith('mp-') || keyVal.startsWith('mai_live')) {
-          prefix = keyVal.substring(0, 11);
-        } else {
-          prefix = keyVal.substring(0, 8);
-        }
-
-        if (!seenPrefixes.has(prefix)) {
-          seenPrefixes.add(prefix);
-          results.push({
-            id: `db_key_${idx}_${prefix}`,
-            name: row.plan || 'Clé API',
-            prefix: `${prefix}_••••••••`,
-            apiKey: keyVal,
-            ownerId: row.user_id ? String(row.user_id) : undefined,
-            createdAt: row.created_at ? new Date(row.created_at).toISOString() : new Date().toISOString(),
-            lastUsedAt: row.last_used_at ? new Date(row.last_used_at).toISOString() : null,
-            usageCount: row.request_count || 0,
-            maxLimit: row.max_limit !== undefined ? row.max_limit : null,
-            isActive: row.is_active !== undefined ? row.is_active : true,
-          });
-        }
-      });
+      for (const row of rows) {
+        const keyRef = getApiKeyRef(row.api_key);
+        // Une entrée ne peut être affichée/utilisée sans référence publique
+        // non ambiguë. Aucun hash n'est exposé à ce niveau.
+        if (!keyRef || seenRefs.has(keyRef)) continue;
+        seenRefs.add(keyRef);
+        results.push({
+          id: keyRef,
+          keyRef,
+          name: row.plan || 'Clé API',
+          prefix: keyRef,
+          createdAt: toIsoDate(row.created_at, new Date().toISOString()),
+          lastUsedAt: row.last_used_at ? toIsoDate(row.last_used_at, new Date().toISOString()) : null,
+          usageCount: Number(row.request_count || 0),
+          maxLimit: row.max_limit !== undefined && row.max_limit !== null ? Number(row.max_limit) : null,
+          isActive: row.is_active !== false,
+          plan: normalizeValidatedPlan(row.user_tier),
+        });
+      }
     } catch (err) {
-      console.warn('Erreur de lecture DB, bascule en mémoire:', err);
+      console.warn('Erreur de lecture DB des clés API:', err);
     }
   }
 
-  // Ajouter les clés mémoire uniquement si elles ne sont pas déjà en DB
-  memoryKeysStore.forEach((k) => {
-    if (k.userId === userId) {
-      if (!seenPrefixes.has(k.prefix)) {
-        seenPrefixes.add(k.prefix);
-        results.push({
-          id: k.id,
-          name: k.name,
-          prefix: `${k.prefix}_••••••••`,
-          apiKey: k.secretKey,
-          createdAt: k.createdAt,
-          lastUsedAt: k.lastUsedAt,
-          usageCount: k.usageCount,
-          maxLimit: k.maxLimit,
-          isActive: k.isActive,
-        });
-      }
+  memoryKeysStore.forEach((record) => {
+    if (record.userId === userId && !seenRefs.has(record.prefix)) {
+      seenRefs.add(record.prefix);
+      results.push({
+        id: record.prefix,
+        keyRef: record.prefix,
+        name: record.name,
+        prefix: record.prefix,
+        createdAt: record.createdAt,
+        lastUsedAt: record.lastUsedAt,
+        usageCount: record.usageCount,
+        maxLimit: record.maxLimit,
+        isActive: record.isActive,
+        plan: record.plan,
+      });
     }
   });
 
   return results;
 }
 
+export interface ResolvedUserApiKey {
+  secretKey: string;
+  keyRef: string;
+  metadata: ApiKeyMetadata;
+  plan: string;
+}
+
+/**
+ * Résout un keyRef public pour le propriétaire indiqué. La propriété et
+ * l'activité sont vérifiées avant tout usage ; une collision de préfixe est
+ * rejetée plutôt que résolue arbitrairement.
+ */
+export async function resolveUserApiKeyByRef(
+  userId: string,
+  keyRef: string,
+): Promise<ResolvedUserApiKey | null> {
+  if (!isValidApiKeyRef(keyRef)) return null;
+
+  const matchingMemory = [...memoryKeysStore.values()].filter(
+    (record) => record.userId === userId && record.prefix === keyRef && record.isActive,
+  );
+  if (matchingMemory.length > 1) return null;
+  const resolveFromMemory = () => {
+    if (matchingMemory.length !== 1) return null;
+    const record = matchingMemory[0];
+    if (record.maxLimit !== null && record.usageCount >= record.maxLimit) return null;
+    return {
+      secretKey: record.secretKey,
+      keyRef: record.prefix,
+      metadata: {
+        id: record.prefix,
+        keyRef: record.prefix,
+        name: record.name,
+        prefix: record.prefix,
+        createdAt: record.createdAt,
+        lastUsedAt: record.lastUsedAt,
+        usageCount: record.usageCount,
+        maxLimit: record.maxLimit,
+        isActive: true,
+        plan: record.plan,
+      },
+      plan: record.plan,
+    } satisfies ResolvedUserApiKey;
+  };
+
+  const db = getDb();
+  if (!db) return resolveFromMemory();
+
+  try {
+    const identifiers = await getUserIdentifiers(db, userId);
+    const rows = await db`
+      SELECT k.user_id, k.api_key, k.plan, k.request_count, k.created_at,
+             k.last_used_at, k.max_limit, k.is_active, u.tier as user_tier
+      FROM mprojects_api_keys k
+      LEFT JOIN users u
+        ON k.user_id = u.id::text OR k.user_id = u.username OR k.user_id = u.email
+      WHERE k.user_id = ANY(${identifiers})
+        AND k.is_active IS DISTINCT FROM FALSE
+        AND k.api_key LIKE ${escapeLikePrefix(keyRef) + '%'} ESCAPE E'\\\\'
+      ORDER BY k.created_at DESC
+      LIMIT 2
+    `;
+
+    const exactRows = rows.filter((row: any) => getApiKeyRef(row.api_key) === keyRef);
+    if (exactRows.length > 1) return null;
+    if (exactRows.length === 0) return resolveFromMemory();
+    // La même référence en mémoire et en base est une collision : ne jamais
+    // choisir arbitrairement un secret, même pour le même propriétaire.
+    if (matchingMemory.length === 1) return null;
+    const row = exactRows[0];
+    if (row.max_limit !== null && row.max_limit !== undefined && Number(row.request_count || 0) >= Number(row.max_limit)) {
+      return null;
+    }
+
+    const metadata: ApiKeyMetadata = {
+      id: keyRef,
+      keyRef,
+      name: row.plan || 'Clé API',
+      prefix: keyRef,
+      createdAt: toIsoDate(row.created_at, new Date().toISOString()),
+      lastUsedAt: row.last_used_at ? toIsoDate(row.last_used_at, new Date().toISOString()) : null,
+      usageCount: Number(row.request_count || 0),
+      maxLimit: row.max_limit !== null && row.max_limit !== undefined ? Number(row.max_limit) : null,
+      isActive: true,
+      plan: normalizeValidatedPlan(row.user_tier),
+    };
+
+    return {
+      secretKey: String(row.api_key),
+      keyRef,
+      metadata,
+      plan: metadata.plan,
+    };
+  } catch (error) {
+    console.error('Erreur lors de la résolution sécurisée du keyRef:', error);
+    return null;
+  }
+}
+
 /**
  * Révoquer (supprimer) une clé API.
  */
 export async function revokeApiKey(userId: string, keyId: string): Promise<boolean> {
+  const keyRef = keyId.trim();
+  if (!isValidApiKeyRef(keyRef)) return false;
   let success = false;
-  
-  let cleanId = keyId;
-  if (keyId.startsWith('db_key_')) {
-    const match = keyId.match(/db_key_\d+_(.*)/);
-    if (match) {
-      cleanId = match[1];
-    }
-  }
 
-  // 1. Révoquer de la mémoire — match exact uniquement
-  for (const [mId, record] of memoryKeysStore.entries()) {
-    if (record.userId === userId && (mId === keyId || mId === cleanId || record.prefix === cleanId)) {
-      memoryKeysStore.delete(mId);
+  // 1. Mémoire — correspondance exacte sur la clé ET le propriétaire.
+  for (const [memoryId, record] of memoryKeysStore.entries()) {
+    if (record.userId === userId && (memoryId === keyRef || record.prefix === keyRef)) {
+      memoryKeysStore.delete(memoryId);
       success = true;
     }
   }
 
-  // 2. Révoquer de la DB — prefix exact (pas de LIKE inversé)
+  // 2. DB — le préfixe est résolu sous contrainte de propriétaire, puis la
+  // suppression cible le secret exact. Une collision de keyRef échoue.
   const db = getDb();
   if (db) {
     try {
-      const cleanPrefix = cleanId.replace(/_•+$/, '').trim();
-      // Nombre minimal de caractères pour éviter suppression massive par préfixe trop court
-      if (cleanPrefix.length < 8) throw new Error('Préfixe trop court');
       const identifiers = await getUserIdentifiers(db, userId);
-      const deleted = await db`
-        DELETE FROM mprojects_api_keys
+      const candidates = await db`
+        SELECT api_key
+        FROM mprojects_api_keys
         WHERE user_id = ANY(${identifiers})
-          AND api_key LIKE ${cleanPrefix + '%'}
-        RETURNING id
+          AND api_key LIKE ${escapeLikePrefix(keyRef) + '%'} ESCAPE E'\\\\'
+        LIMIT 2
       `;
-      if (deleted.length > 0) success = true;
+      const exact = candidates.filter((row: any) => getApiKeyRef(row.api_key) === keyRef);
+      if (exact.length === 1) {
+        const deleted = await db`
+          DELETE FROM mprojects_api_keys
+          WHERE user_id = ANY(${identifiers})
+            AND api_key = ${exact[0].api_key}
+          RETURNING api_key
+        `;
+        if (deleted.length === 1) success = true;
+      }
     } catch (err) {
       console.error('Erreur lors de la révocation DB:', err);
     }
@@ -289,23 +413,14 @@ export async function revokeApiKey(userId: string, keyId: string): Promise<boole
   return success;
 }
 
-/**
- * Mettre à jour les propriétés d'une clé API.
- */
+/** Mettre à jour les propriétés d'une clé API. */
 export async function updateApiKey(userId: string, keyId: string, updates: { name?: string, maxLimit?: number | null, isActive?: boolean }): Promise<boolean> {
+  const keyRef = keyId.trim();
+  if (!isValidApiKeyRef(keyRef)) return false;
   let success = false;
 
-  let cleanId = keyId;
-  if (keyId.startsWith('db_key_')) {
-    const match = keyId.match(/db_key_\d+_(.*)/);
-    if (match) {
-      cleanId = match[1];
-    }
-  }
-
-  // Mémoire — match exact
-  for (const [mId, record] of memoryKeysStore.entries()) {
-    if (record.userId === userId && (mId === keyId || mId === cleanId || record.prefix === cleanId)) {
+  for (const [memoryId, record] of memoryKeysStore.entries()) {
+    if (record.userId === userId && (memoryId === keyRef || record.prefix === keyRef)) {
       if (updates.name !== undefined) record.name = updates.name;
       if (updates.maxLimit !== undefined) record.maxLimit = updates.maxLimit;
       if (updates.isActive !== undefined) record.isActive = updates.isActive;
@@ -314,23 +429,29 @@ export async function updateApiKey(userId: string, keyId: string, updates: { nam
   }
 
   const db = getDb();
-  if (db) {
+  if (db && (updates.name !== undefined || updates.maxLimit !== undefined || updates.isActive !== undefined)) {
     try {
-      const cleanPrefix = cleanId.replace(/_•+$/, '').trim();
-      if (cleanPrefix.length < 8) throw new Error('Préfixe trop court');
-      if (updates.name !== undefined || updates.maxLimit !== undefined || updates.isActive !== undefined) {
-        const identifiers = await getUserIdentifiers(db, userId);
+      const identifiers = await getUserIdentifiers(db, userId);
+      const candidates = await db`
+        SELECT api_key
+        FROM mprojects_api_keys
+        WHERE user_id = ANY(${identifiers})
+          AND api_key LIKE ${escapeLikePrefix(keyRef) + '%'} ESCAPE E'\\\\'
+        LIMIT 2
+      `;
+      const exact = candidates.filter((row: any) => getApiKeyRef(row.api_key) === keyRef);
+      if (exact.length === 1) {
         const updated = await db`
           UPDATE mprojects_api_keys
-          SET 
+          SET
             plan = COALESCE(${updates.name !== undefined ? updates.name : null}, plan),
             max_limit = CASE WHEN ${updates.maxLimit !== undefined} THEN ${updates.maxLimit ?? null}::integer ELSE max_limit END,
             is_active = COALESCE(${updates.isActive !== undefined ? updates.isActive : null}, is_active)
           WHERE user_id = ANY(${identifiers})
-            AND api_key LIKE ${cleanPrefix + '%'}
-          RETURNING id
+            AND api_key = ${exact[0].api_key}
+          RETURNING api_key
         `;
-        if (updated.length > 0) success = true;
+        if (updated.length === 1) success = true;
       }
     } catch (err) {
       console.error('Erreur lors de la mise à jour DB:', err);
@@ -471,71 +592,78 @@ export async function validateApiKey(secretKey: string): Promise<{ valid: boolea
 
   const cleanedKey = secretKey.trim();
 
-  // Support de MAI_API_KEY en environnement
+  // Support de MAI_API_KEY en environnement. Cette validation est une
+  // égalité serveur-side exacte ; aucune valeur d'environnement n'est exposée.
   const systemMaiApiKey = process.env.MAI_API_KEY;
   if (systemMaiApiKey && cleanedKey === systemMaiApiKey) {
+    const now = new Date().toISOString();
     return {
       valid: true,
       keyInfo: {
-        id: 'system_mai_key',
+        id: 'mp-system',
+        keyRef: 'mp-system',
         name: 'Clé Système MAI',
         prefix: 'mp-system',
-        createdAt: new Date().toISOString(),
-        lastUsedAt: new Date().toISOString(),
+        createdAt: now,
+        lastUsedAt: now,
         usageCount: 0,
         maxLimit: null,
-        isActive: true
-      }
+        isActive: true,
+        plan: 'Free',
+      },
     };
   }
 
-  // Valider les formats mp-*, mai_live*, mai-* et sk_mp_*
-  const isValidFormat = cleanedKey.startsWith('mp-') || 
-                        cleanedKey.startsWith('mai_live') || 
-                        cleanedKey.startsWith('mai-') ||
-                        cleanedKey.startsWith('sk_mp_');
-
+  const isValidFormat = cleanedKey.startsWith('mp-') ||
+    cleanedKey.startsWith('mai_live') ||
+    cleanedKey.startsWith('mai-') ||
+    cleanedKey.startsWith('sk_mp_');
   if (!isValidFormat) {
     return { valid: false, error: 'Format de clé API invalide (doit commencer par mp- ou mai-).' };
   }
 
   const hash = hashSecretKey(cleanedKey);
 
-  // 1. Vérifier en mémoire — match exact sur hash uniquement
+  // 1. Vérification mémoire : hash exact, propriétaire implicite à l'entrée créée.
   for (const record of memoryKeysStore.values()) {
-    if (record.hash === hash) {
-      if (!record.isActive) return { valid: false, error: 'Clé API désactivée.' };
-      if (record.maxLimit !== null && record.usageCount >= record.maxLimit) return { valid: false, error: 'Limite de la clé API atteinte.' };
-
-      record.usageCount += 1;
-      record.lastUsedAt = new Date().toISOString();
-      return {
-        valid: true,
-        keyInfo: {
-          id: record.id,
-          name: record.name,
-          prefix: `${record.prefix}_••••••••`,
-          ownerId: record.userId,
-          createdAt: record.createdAt,
-          lastUsedAt: record.lastUsedAt,
-          usageCount: record.usageCount,
-          maxLimit: record.maxLimit,
-          isActive: record.isActive,
-        },
-      };
+    if (record.hash !== hash) continue;
+    if (!record.isActive) return { valid: false, error: 'Clé API désactivée.' };
+    if (record.maxLimit !== null && record.usageCount >= record.maxLimit) {
+      return { valid: false, error: 'Limite de la clé API atteinte.' };
     }
+
+    record.usageCount += 1;
+    record.lastUsedAt = new Date().toISOString();
+    return {
+      valid: true,
+      keyInfo: {
+        id: record.prefix,
+        keyRef: record.prefix,
+        name: record.name,
+        prefix: record.prefix,
+        ownerId: record.userId,
+        createdAt: record.createdAt,
+        lastUsedAt: record.lastUsedAt,
+        usageCount: record.usageCount,
+        maxLimit: record.maxLimit,
+        isActive: true,
+        plan: record.plan,
+      },
+    };
   }
 
-  // 2. Vérifier en DB — comparaison exacte uniquement (pas de LIKE fuzzy)
+  // 2. Vérification DB : secret exact ou hash exact, jamais de correspondance floue.
   const db = getDb();
   if (db) {
     try {
       const rows = await db`
-        SELECT k.user_id, k.api_key, k.plan, k.request_count, k.created_at, k.last_used_at, k.max_limit, k.is_active, u.tier as user_tier
+        SELECT k.user_id, k.api_key, k.plan, k.request_count, k.created_at,
+               k.last_used_at, k.max_limit, k.is_active, u.tier as user_tier
         FROM mprojects_api_keys k
-        LEFT JOIN users u ON k.user_id = u.id::text OR k.user_id = u.username OR k.user_id = u.email
-        WHERE k.api_key = ${hash} 
-           OR k.api_key = ${cleanedKey} 
+        LEFT JOIN users u
+          ON k.user_id = u.id::text OR k.user_id = u.username OR k.user_id = u.email
+        WHERE k.api_key = ${hash}
+           OR k.api_key = ${cleanedKey}
         LIMIT 1
       `;
 
@@ -544,63 +672,58 @@ export async function validateApiKey(secretKey: string): Promise<{ valid: boolea
         const now = new Date().toISOString();
 
         if (row.is_active === false) {
-           return { valid: false, error: 'Clé API désactivée.' };
+          return { valid: false, error: 'Clé API désactivée.' };
+        }
+        if (row.max_limit !== null && Number(row.request_count || 0) >= Number(row.max_limit)) {
+          return { valid: false, error: 'Limite de la clé API atteinte.' };
         }
 
-        // Vérification de la limite individuelle de la clé
-        if (row.max_limit !== null && row.request_count >= row.max_limit) {
-           return { valid: false, error: 'Limite de la clé API atteinte.' };
-        }
-
-        // Détection prioritaire du forfait depuis la clé (mai-TIER_USER-XXXXX-XXXXX)
-        // Le nom de la clé (colonne plan) n'est JAMAIS utilisé comme forfait (il est librement modifiable).
-        const detectedTier = extractTierFromApiKey(cleanedKey);
-        const userTier = detectedTier || row.user_tier || 'Free';
+        // Le forfait provient de l'utilisateur lié à la clé après validation
+        // exacte en base. Le format encodé dans une clé non vérifiée n'élève
+        // jamais le compte, et le nom libre de la clé n'est pas une autorité.
+        const validatedPlan = normalizeValidatedPlan(row.user_tier);
         const apiBoost = await getUserQuotaBoost(db, row.user_id, 'api');
-        const tierLimit = getTierQuotaLimit(userTier) + apiBoost;
-
-        // Agréger TOUTES les clés de l'utilisateur (quel que soit l'identifiant stocké)
+        const tierLimit = getTierQuotaLimit(validatedPlan) + apiBoost;
         const ownerIdentifiers = await getUserIdentifiers(db, String(row.user_id));
         const countRows = await db`
           SELECT SUM(request_count) as total_requests
           FROM mprojects_api_keys
           WHERE user_id = ANY(${ownerIdentifiers})
         `;
-        const globalRequestCount = parseInt(countRows[0]?.total_requests || '0', 10);
+        const globalRequestCount = Number(countRows[0]?.total_requests || 0);
 
         if (globalRequestCount >= tierLimit) {
           return {
             valid: false,
-            error: `Limite globale de requêtes API atteinte pour votre compte (${userTier} : ${tierLimit} requêtes max/mois). Veuillez mettre à niveau votre forfait.`
+            error: `Limite globale de requêtes API atteinte pour votre compte (${validatedPlan} : ${tierLimit} requêtes max/mois). Veuillez mettre à niveau votre forfait.`,
           };
         }
 
-        // Incrémenter le compteur de requêtes sur la clé identifiée — exact match
         await db`
           UPDATE mprojects_api_keys
           SET request_count = request_count + 1, last_used_at = NOW()
           WHERE api_key = ${row.api_key}
         `;
 
-        const resolvedPlan = detectedTier || row.user_tier || 'Free';
-        // Extraire le préfixe visible : pour mai-TIER-XXXXX-*, on coupe au 3ème tiret
-        const keyParts = cleanedKey.startsWith('mai-') ? cleanedKey.split('-') : [];
-        const displayPrefix = keyParts.length >= 3
-          ? `${keyParts[0]}-${keyParts[1]}-${keyParts[2]}`
-          : cleanedKey.substring(0, 11);
+        const keyRef = getApiKeyRef(cleanedKey);
+        if (!keyRef) {
+          return { valid: false, error: 'Référence de clé API invalide.' };
+        }
 
         return {
           valid: true,
           keyInfo: {
-            id: `db_key_${resolvedPlan}`,
-            name: resolvedPlan,
-            prefix: `${displayPrefix}-••••••••`,
+            id: keyRef,
+            keyRef,
+            name: row.plan || 'Clé API',
+            prefix: keyRef,
             ownerId: row.user_id ? String(row.user_id) : undefined,
-            createdAt: row.created_at ? new Date(row.created_at).toISOString() : now,
+            createdAt: toIsoDate(row.created_at, now),
             lastUsedAt: now,
-            usageCount: (row.request_count || 0) + 1,
-            maxLimit: row.max_limit !== undefined ? row.max_limit : null,
-            isActive: row.is_active !== undefined ? row.is_active : true,
+            usageCount: Number(row.request_count || 0) + 1,
+            maxLimit: row.max_limit !== undefined && row.max_limit !== null ? Number(row.max_limit) : null,
+            isActive: true,
+            plan: validatedPlan,
           },
         };
       }
@@ -609,7 +732,6 @@ export async function validateApiKey(secretKey: string): Promise<{ valid: boolea
     }
   }
 
-  // Clé introuvable dans la base de données
   return {
     valid: false,
     error: 'Clé API invalide ou introuvable. Veuillez vérifier vos clés dans la section Compte.',

@@ -34,15 +34,27 @@ Le modèle est également accessible depuis **mAI Web** et le reste de la suite 
 
 mAI-2-Mini a été évalué sur une sélection plus compacte de benchmarks orientés développement, efficacité et utilisation d'outils :
 
-| Benchmark | mAI-2 Mini | Claude Opus 5 | Claude Sonnet 5 | Claude Haiku 4.5 | Gemini 3.5 Flash-Lite | Gemini 3.1 Pro |
+| Benchmark | mAI-2 Mini | Claude Sonnet 5 | Claude Haiku 4.5 | Gemini 3.5 Flash-Lite | Gemini 3.8 Flash | GPT-6 Luna |
 |:---|---:|---:|---:|---:|---:|---:|
-| **SWE-Bench Pro** | **59,0 %** | 79,2 % | 63,2 % | 39,5 % | 54,2 % | 54,2 % |
-| **Terminal-Bench 2.1** | **66,0 %** | 89,1 % | 80,4 % | 44,2 % | 54,0 % | — |
+| **SWE-Bench Pro** | **59,0 %** | 63,2 % | 39,5 % | 54,2 % | — | — |
+| **Terminal-Bench 2.1** | **66,0 %** | 80,4 % | 44,2 % | 54,0 % | 89,4 % | — |
 | **SWE-fficiency** | **34,8 %** | — | — | — | — | — |
-| **KernelBench Hard** | **28,8 %** | 21,8 % | — | — | — | — |
-| **MCP Atlas** | **74,2 %** | 85,8 % | — | — | — | 78,2 % |
+| **KernelBench Hard** | **28,8 %** | — | — | — | — | — |
+| **MCP Atlas** | **74,2 %** | — | — | — | — | — |
 
-mAI-2-Mini conserve ainsi une orientation claire : proposer un modèle plus léger tout en restant compétitif sur plusieurs tâches de développement et d'utilisation d'outils.
+### Notes de méthode
+
+- Les scores de mAI-2 Mini proviennent de notre campagne d'évaluation ; les autres scores ne sont retenus que lorsqu'une version de benchmark et un protocole suffisamment comparables sont disponibles.
+- Un tiret cadratin (`—`) indique qu'aucun résultat public suffisamment comparable n'a été retenu. Il ne représente pas un score nul.
+- Gemini 3.8 Flash est reporté uniquement pour Terminal-Bench 2.1, où son score comparable est de 89,4 %. GPT-6 Luna reste sans score comparable sur les cinq lignes de ce tableau.
+- Une version différente d'un benchmark n'est jamais utilisée comme substitut.
+
+### Sources officielles
+
+- [Anthropic — Claude Sonnet 5 et Haiku 4.5](https://www.anthropic.com/claude-opus-5-5)
+- [Google DeepMind — Gemini 3.8 Flash](https://deepmind.google/models/model-cards/gemini-3-8-flash/)
+- [Z.ai — GLM 5.3 Flash](https://docs.z.ai/guides/vlm/glm-5.3-flash)
+- [OpenAI — GPT-6 Sol et Luna](https://openai.com/index/introducing-gpt-6-sol-and-luna/)
 
 ## Disponibilité
 

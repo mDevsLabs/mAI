@@ -1,15 +1,14 @@
 ---
-title: "Pulse (Bêta)"
+title: "Pulse"
 description: "Ensemble d'extensions pour diverses applications pour discuter avec mAI directement (navigateur, VS Code...)."
 category: "Applications"
-order: 2
+order: 3
 ---
 
-# Pulse - Extensions Universelles mAI 
+# Pulse - Extensions Universelles mAI
 
 **Pulse** est un ensemble d'extensions modulaires conçues pour apporter la puissance de **mAI** directement dans vos outils quotidiens, sans jamais briser votre flux de travail.
 
-- **Statut** : **Bêta**
 - **Dépôt GitHub** : [https://github.com/mDevsLabs/Pulse](https://github.com/mDevsLabs/Pulse)
 
 ---

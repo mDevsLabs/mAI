@@ -1,15 +1,14 @@
 ---
-title: "CLI (Bêta)"
+title: "CLI"
 description: "Discussions et séances de codage dans le terminal CLI via mAI."
 category: "Applications"
-order: 3
+order: 4
 ---
 
-# CLI - Discussions & Codage dans le Terminal 
+# CLI - Discussions & Codage dans le Terminal
 
 **CLI** est l'assistant en ligne de commande de l'écosystème **mAI**. Conçu pour les développeurs, DevOps et administrateurs système, il apporte un copilote d'intelligence artificielle au cœur de votre shell.
 
-- **Statut** : **Bêta**
 - **Dépôt GitHub** : [https://github.com/mDevsLabs/CLI](https://github.com/mDevsLabs/CLI)
 
 ---

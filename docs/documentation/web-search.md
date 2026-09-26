@@ -1,62 +1,62 @@
 ---
 title: "Outil de Recherche Web (You.com)"
-description: "Documentation de l'outil web_search et de l'endpoint de recherche en temps rÃ©el via You.com avec triple fallback."
+description: "Documentation de l'outil web_search et de l'endpoint de recherche en temps réel via You.com avec triple fallback."
 category: "API"
 order: 6
 ---
 
-# Outil de Recherche Web (You.com) ð
+# Outil de Recherche Web (You.com) 🌐
 
-L'API mAI intÃ¨gre un outil de recherche Web en temps rÃ©el propulsÃ© par **You.com Search API**. Cet outil permet aux modÃ¨les de langage (LLM) d'accÃ©der aux informations fraÃ®ches, aux actualitÃ©s rÃ©centes et aux sources Internet en direct.
-
----
-
-## ð Architecture RÃ©siliente : Triple Fallback
-
-Pour garantir une disponibilitÃ© continue sans interruption de service, la recherche Web utilise une stratÃ©gie de **triple fallback sÃ©quentiel** de clÃ©s API :
-1. `YOU_API_KEY` (ClÃ© Primaire)
-2. `YOU_API_KEY_2` (ClÃ© Secondaire)
-3. `YOU_API_KEY_3` (ClÃ© Tertiaire)
-
-Si la clÃ© principale atteint sa limite de requÃªtes (HTTP 429) ou rencontre une erreur, le systÃ¨me bascule instantanÃ©ment et de faÃ§on transparente sur la clÃ© suivante.
+L'API mAI intègre un outil de recherche Web en temps réel propulsé par **You.com Search API**. Cet outil permet aux modèles de langage (LLM) d'accéder aux informations fraîches, aux actualités récentes et aux sources Internet en direct.
 
 ---
 
-## ð ï¸ Utilisation comme Tool Calling (OpenAI Standard)
+## 🔑 Architecture Résiliente : Triple Fallback
 
-L'outil `web_search` est automatiquement injectÃ© pour les modÃ¨les supportant les `tools` (`Black Forest Labs`, `Google Gemini`, `Meta Llama`, `mAI Apex/Opal`, etc.).
+Pour garantir une disponibilité continue sans interruption de service, la recherche Web utilise une stratégie de **triple fallback séquentiel** de clés API :
+1. `YOU_API_KEY` (Clé Primaire)
+2. `YOU_API_KEY_2` (Clé Secondaire)
+3. `YOU_API_KEY_3` (Clé Tertiaire)
 
-### DÃ©finition de l'outil
-\`\`\`json
+Si la clé principale atteint sa limite de requêtes (HTTP 429) ou rencontre une erreur, le système bascule instantanément et de façon transparente sur la clé suivante.
+
+---
+
+## 🛠️ Utilisation comme Tool Calling (OpenAI Standard)
+
+L'outil `web_search` est automatiquement injecté pour les modèles supportant les `tools` (`Black Forest Labs`, `Google Gemini`, `Meta Llama`, `mAI Apex/Opal`, etc.).
+
+### Définition de l'outil
+```json
 {
   "type": "function",
   "function": {
     "name": "web_search",
-    "description": "Recherche sur le Web des informations rÃ©centes et actualisÃ©es en temps rÃ©el via You.com.",
+    "description": "Recherche sur le Web des informations récentes et actualisées en temps réel via You.com.",
     "parameters": {
       "type": "object",
       "properties": {
         "query": {
           "type": "string",
-          "description": "La requÃªte de recherche textuelle claire et prÃ©cise."
+          "description": "La requête de recherche textuelle claire et précise."
         }
       },
       "required": ["query"]
     }
   }
 }
-\`\`\`
+```
 
 ---
 
-## ð Comment dÃ©sactiver la Recherche Web ?
+## 🛑 Comment désactiver la Recherche Web ?
 
-La recherche Web est **activÃ©e par dÃ©faut** pour enrichir automatiquement les rÃ©ponses de vos assistants. Il est possible de la dÃ©sactiver de **3 maniÃ¨res simples** :
+La recherche Web est **activée par défaut** pour enrichir automatiquement les réponses de vos assistants. Il est possible de la désactiver de **3 manières simples** :
 
-### MÃ©thode 1 : Dans le corps de la requÃªte JSON (RecommandÃ©)
+### Méthode 1 : Dans le corps de la requête JSON (Recommandé)
 Ajoutez `"web_search": false` (ou `"enable_web_search": false`) dans votre payload :
 
-\`\`\`json
+```json
 {
   "model": "meta-llama/llama-3.3-70b-instruct:free",
   "messages": [
@@ -64,12 +64,12 @@ Ajoutez `"web_search": false` (ou `"enable_web_search": false`) dans votre paylo
   ],
   "web_search": false
 }
-\`\`\`
+```
 
-### MÃ©thode 2 : Via un en-tÃªte HTTP
-Ajoutez l'en-tÃªte `X-Web-Search: false` ou `X-Disable-Web-Search: true` Ã  votre requÃªte :
+### Méthode 2 : Via un en-tête HTTP
+Ajoutez l'en-tête `X-Web-Search: false` ou `X-Disable-Web-Search: true` à votre requête :
 
-\`\`\`bash
+```bash
 curl -X POST https://mai.val.run/v1/chat/completions \
   -H "Authorization: Bearer VOTRE_CLE_API" \
   -H "X-Web-Search: false" \
@@ -78,42 +78,42 @@ curl -X POST https://mai.val.run/v1/chat/completions \
     "model": "google/gemini-2.5-flash:free",
     "messages": [{"role": "user", "content": "Bonjour"}]
   }'
-\`\`\`
+```
 
-### MÃ©thode 3 : SpÃ©cification manuelle de `tools`
-Si vous passez votre propre tableau de `tools` dans la requÃªte et qu'il ne contient pas `web_search`, l'outil ne sera pas injectÃ©.
+### Méthode 3 : Spécification manuelle de `tools`
+Si vous passez votre propre tableau de `tools` dans la requête et qu'il ne contient pas `web_search`, l'outil ne sera pas injecté.
 
 ---
 
-## ð¡ Endpoint DÃ©diÃ© : Recherche Directe
+## 📡 Endpoint Dédié : Recherche Directe
 
-Il est possible de Ã©galement interroger directement le moteur de recherche You.com sans passer par une complÃ©tion de chat.
+Il est possible de également interroger directement le moteur de recherche You.com sans passer par une complétion de chat.
 
 **Endpoint**
-\`\`\`http
+```http
 POST /v1/web/search
-\`\`\`
+```
 
-**Corps de requÃªte**
-\`\`\`json
+**Corps de requête**
+```json
 {
-  "query": "derniÃ¨res actualitÃ©s intelligence artificielle 2026",
+  "query": "dernières actualités intelligence artificielle 2026",
   "count": 5
 }
-\`\`\`
+```
 
-**Exemple de rÃ©ponse**
-\`\`\`json
+**Exemple de réponse**
+```json
 {
   "success": true,
-  "query": "derniÃ¨res actualitÃ©s intelligence artificielle 2026",
+  "query": "dernières actualités intelligence artificielle 2026",
   "provider": "you.com",
   "results": [
     {
-      "title": "mAI annonce la version 1.5 de ses modÃ¨les",
+      "title": "mAI annonce la version 1.5 de ses modèles",
       "url": "https://m-ai.fr/news",
-      "snippet": "mDevsLabs dÃ©voile sa nouvelle suite de modÃ¨les multimodaux mAI 1.5 avec support de vision et recherche Web intÃ©grÃ©e..."
+      "snippet": "mDevsLabs dévoile sa nouvelle suite de modèles multimodaux mAI 1.5 avec support de vision et recherche Web intégrée..."
     }
   ]
 }
-\`\`\`
+```

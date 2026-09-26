@@ -43,19 +43,31 @@ Le modèle est également accessible depuis **mAI Web** et l'ensemble des applic
 
 mAI-2 obtient les résultats suivants sur la campagne d'évaluation mAI-2 :
 
-| Benchmark | mAI-2 | Claude Opus 5 | Claude Sonnet 5 | GPT-6 Astra | Gemini 3.8 Flash | Gemini 3.1 Pro |
+| Benchmark | mAI-2 | Claude Opus 5.5 | Claude Sonnet 5 | GPT-6 Astra | Gemini 3.8 Flash | GLM 5.3 Flash |
 |:---|---:|---:|---:|---:|---:|---:|
-| **Terminal-Bench 2.1** | **90,6 %** | 89,1 % | 80,4 % | — | 89,4 % | — |
-| **DeepSWE v1.1** | **74,2 %** | 74,0 % | 54,0 % | 74,1 % | 73,7 % | — |
-| **NL2Repo-Bench** | **64,0 %** | 75,3 % | — | — | — | — |
+| **Terminal-Bench 2.1** | **90,6 %** | — | 80,4 % | — | 89,4 % | 84,3 % |
+| **DeepSWE v1.1** | **74,2 %** | — | 54,0 % | 74,1 % | 73,7 % | 63,4 % |
+| **NL2Repo-Bench** | **64,0 %** | — | — | — | — | — |
 | **CyberGym** | **88,1 %** | — | — | — | — | — |
-| **AutomationBench** | **54,8 %** | 50,3 % | — | — | — | — |
-| **Agents' Last Exam** | **31,8 %** | 28,6 % | — | 59,3 % | — | — |
-| **Humanity's Last Exam — avec outils** | **63,9 %** | 63,6 % | 57,4 % | 57,2 % | — | — |
+| **AutomationBench** | **54,8 %** | 40,0 % | — | — | — | 48,8 % |
+| **Agents' Last Exam** | **31,8 %** | — | — | 59,3 % | — | 26,3 % |
+| **Humanity's Last Exam — avec outils** | **63,9 %** | 67,7 % | 57,4 % | 57,2 % | — | 55,3 % |
 | **SEC-Bench Pro** | **62,8 %** | — | — | 85,4 % | — | — |
-| **ProgramBench** | **20,3 %** | 37,0 % | — | — | — | — |
+| **ProgramBench** | **20,3 %** | — | — | — | — | — |
 
-Ces résultats utilisent notre campagne d'évaluation mAI-2 et les résultats publics les plus récents disponibles pour les autres modèles. Les scores peuvent varier selon le harness, les paramètres de raisonnement et les conditions exactes d'évaluation ; nous privilégions donc les comparaisons utilisant la même version du benchmark.
+### Notes de méthode
+
+- Les scores de mAI-2 proviennent de notre campagne d'évaluation mAI-2 ; les autres scores ne sont retenus que lorsqu'une version de benchmark et un protocole suffisamment comparables sont disponibles.
+- Un tiret cadratin (`—`) indique qu'aucun résultat public suffisamment comparable n'a été retenu. Il ne représente pas un score nul.
+- Les variantes de Humanity's Last Exam qui ne partagent pas le protocole « avec outils » ne sont pas utilisées pour cette ligne.
+- Une version différente d'un benchmark n'est jamais utilisée comme substitut, et les scores ne sont pas comparés au-delà des conditions décrites ci-dessus.
+
+### Sources officielles
+
+- [Anthropic — Claude Opus 5.5](https://www.anthropic.com/claude-opus-5-5)
+- [Google DeepMind — Gemini 3.8 Flash](https://deepmind.google/models/model-cards/gemini-3-8-flash/)
+- [Z.ai — GLM 5.3 Flash](https://docs.z.ai/guides/vlm/glm-5.3-flash)
+- [OpenAI — GPT-6 Sol et Luna](https://openai.com/index/introducing-gpt-6-sol-and-luna/)
 
 ## Disponibilité
 

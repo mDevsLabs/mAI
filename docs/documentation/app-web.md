@@ -1,15 +1,14 @@
 ---
-title: "Web (Alpha)"
+title: "Web"
 description: "Application d'IA en ligne web directement et simplement pour discuter avec l'IA mAI."
 category: "Applications"
-order: 1
+order: 2
 ---
 
-# Web - Application d'IA en ligne 
+# Web - Application d'IA en ligne
 
 **Web** est l'application d'IA en ligne officielle de l'écosystème **mAI**. Conçue pour offrir une interface utilisateur directe, épurée et sans configuration superflue, elle permet d'interagir immédiatement avec l'intelligence artificielle mAI et l'ensemble de nos modèles.
 
-- **Statut** : **Alpha**
 - **Dépôt GitHub** : [https://github.com/mDevsLabs/Web](https://github.com/mDevsLabs/Web)
 
 ---

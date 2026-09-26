@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import Link from "next/link";
 import { Sparkles, Gauge, KeyRound, Zap, ArrowRight, ShieldCheck, Cloud, Image as ImageIcon, Volume2, Bot, Users, Wrench } from "lucide-react";
 import { useAuth } from "@/components/auth-provider";
@@ -19,6 +19,7 @@ interface PlanItem {
   pluginsMCP?: string;
   agentsWeb?: string;
   vibe?: string;
+  priorityFeatures?: string;
 }
 
 const PLANS: PlanItem[] = [
@@ -72,6 +73,7 @@ const PLANS: PlanItem[] = [
     pluginsMCP: "Plugins & MCP",
     agentsWeb: "10 Agents dans mAI Web",
     vibe: "Expérience améliorée dans Vibe",
+    priorityFeatures: "Accès prioritaire aux nouvelles fonctionnalités",
   },
 ];
 
@@ -246,6 +248,18 @@ export default function PricingPage() {
                       <div>
                         <p className="text-xs font-bold text-slate-900">Vibe</p>
                         <p className="text-xs text-slate-600 font-medium">{plan.vibe}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {plan.priorityFeatures && (
+                    <div className="flex items-start gap-2.5">
+                      <div className="p-1 rounded-lg bg-orange-100 text-orange-600 mt-0.5">
+                        <Sparkles className="w-3.5 h-3.5" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-slate-900">Nouveautés prioritaires</p>
+                        <p className="text-xs text-slate-600 font-medium">{plan.priorityFeatures}</p>
                       </div>
                     </div>
                   )}

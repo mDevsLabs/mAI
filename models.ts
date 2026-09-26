@@ -27,6 +27,53 @@ const MAI_CLOUD_ALIASES: Record<string, string> = {
   "mai-2-mini": "minimax/minimax-m3",
 };
 
+interface MaiCloudCatalogModel {
+  architecture: {
+    input_modalities: string[];
+    modality: string;
+    output_modalities: string[];
+  };
+  created: number;
+  description: string;
+  id: string;
+  maxContext: number;
+  maxOutput: number;
+  name: string;
+  object: "model";
+  owned_by: string;
+  supported_parameters: string[];
+}
+
+function getMaiCloudCatalogModels(): MaiCloudCatalogModel[] {
+  return maiModelsList.flatMap((model) => {
+    if (!model.cloud || !model.apiAlias) return [];
+    return [{
+      architecture: {
+        input_modalities: ["text", "image", "file"],
+        modality: "text+image+file->text",
+        output_modalities: ["text"],
+      },
+      created: Math.floor(new Date(model.releaseDate).getTime() / 1000) || 0,
+      description: model.description,
+      id: model.apiAlias,
+      maxContext: model.contextWindow,
+      maxOutput: model.maxOutputTokens,
+      name: model.name,
+      object: "model" as const,
+      owned_by: "mDevsLabs",
+      supported_parameters: [
+        "temperature",
+        "top_p",
+        "max_tokens",
+        "stream",
+        "stop",
+        "tools",
+        "response_format",
+      ],
+    }];
+  });
+}
+
 export function registerModelRoutes(app: Hono) {
   // ─────────────────────────────────────────────
   // GET /v1/usage & /usage
@@ -238,9 +285,19 @@ export function registerModelRoutes(app: Hono) {
           ],
         }));
 
+      // Les alias cloud mAI-2 sont publics et restent visibles quel que soit
+      // le tier, avec les métadonnées de contexte de la génération mAI-2.
+      for (const cloudModel of getMaiCloudCatalogModels()) {
+        if (!filtered.some((model) => model.id === cloudModel.id)) {
+          filtered.push(cloudModel);
+        }
+      }
+
       if (shouldFilterFreeOnly) {
         filtered = filtered.filter((m) =>
-          (m.id || "").toLowerCase().includes(":free")
+          (m.id || "").toLowerCase().includes(":free") ||
+          (m.id || "").toLowerCase() === "mai-2" ||
+          (m.id || "").toLowerCase() === "mai-2-mini"
         );
       }
 
@@ -345,9 +402,13 @@ export function registerModelRoutes(app: Hono) {
         },
       ];
 
+      fallback.push(...getMaiCloudCatalogModels());
+
       if (shouldFilterFreeOnly) {
         fallback = fallback.filter((m) =>
-          (m.id || "").toLowerCase().includes(":free")
+          (m.id || "").toLowerCase().includes(":free") ||
+          (m.id || "").toLowerCase() === "mai-2" ||
+          (m.id || "").toLowerCase() === "mai-2-mini"
         );
       }
 

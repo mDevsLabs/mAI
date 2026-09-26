@@ -63,7 +63,7 @@ Toutes les clés d'API délivrées par mAI adoptent le format cryptographique su
 `mp-[48 caractères hexadécimaux]` *(ex: `mp-a1b2c3d4e5f678901234567890abcdef1234567890abcdef`)*.
 
 ### Règles de Gestion des Clés
-- **Stockage Cryptographique** : Les clés sont stockées sous forme de hachage SHA-256 en base de données.
+- **Gestion des secrets API** : le secret complet est renvoyé uniquement lors de la création. Les consultations ultérieures n’exposent que le préfixe public ; les opérations autorisées résolvent la clé côté serveur après vérification de la session et de son propriétaire.
 - **Révocation Instantanée** : Tout identifiant compromis peut être révoqué et régénéré en un clic depuis la console `/account/keys`.
 - **Limitation de Débit & Quotas** : Protection proactive contre les abus par limitation granulaire de requêtes et surveillance des latences.
 

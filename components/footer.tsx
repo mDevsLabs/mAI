@@ -38,7 +38,6 @@ const footerColumns: { title: string; links: { name: string; href: string }[] }[
   {
     title: "Entreprise",
     links: [
-      { name: "L'équipe", href: "/about" },
       { name: "Abonnements", href: "/pricing" },
       { name: "Support", href: "/support" },
       { name: "Mon compte", href: "/account" },

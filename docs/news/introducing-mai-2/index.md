@@ -40,13 +40,13 @@ mAI-2 n’est donc pas simplement une évolution de mAI-1.5.
 
 mAI-2 est disponible en deux modèles :
 
-### mAI-2
+### Le modèle mAI-2
 
 ![mAI-2 — Modèle](https://upload.fs.fr/ryMzKpRQF2.png)
 
 Notre modèle principal, conçu pour les tâches les plus exigeantes et les usages nécessitant le meilleur niveau de capacités de l’écosystème mAI.
 
-### mAI-2 Mini
+### Le modèle mAI-2 Mini
 
 ![mAI-2 Mini — Modèle](https://upload.fs.fr/SZiyGt8gik.png)
 
@@ -162,19 +162,31 @@ Afin de conserver une comparaison honnête, nous affichons uniquement les scores
 
 mAI-2 obtient les résultats suivants sur notre batterie d’évaluation :
 
-| Benchmark | mAI-2 | Claude Opus 5 | Claude Sonnet 5 | GPT-6 Astra | Gemini 3.8 Flash | Gemini 3.1 Pro |
+| Benchmark | mAI-2 | Claude Opus 5.5 | Claude Sonnet 5 | GPT-6 Astra | Gemini 3.8 Flash | GLM 5.3 Flash |
 |:---|---:|---:|---:|---:|---:|---:|
-| **Terminal-Bench 2.1** | **90,6 %** | 89,1 % | 80,4 % | — | 89,4 % | — |
-| **DeepSWE v1.1** | **74,2 %** | 74,0 % | 54,0 % | 74,1 % | 73,7 % | — |
-| **NL2Repo-Bench** | **64,0 %** | 75,3 % | — | — | — | — |
+| **Terminal-Bench 2.1** | **90,6 %** | — | 80,4 % | — | 89,4 % | 84,3 % |
+| **DeepSWE v1.1** | **74,2 %** | — | 54,0 % | 74,1 % | 73,7 % | 63,4 % |
+| **NL2Repo-Bench** | **64,0 %** | — | — | — | — | — |
 | **CyberGym** | **88,1 %** | — | — | — | — | — |
-| **AutomationBench** | **54,8 %** | 50,3 % | — | — | — | — |
-| **Agents' Last Exam** | **31,8 %** | 28,6 % | — | 59,3 % | — | — |
-| **Humanity's Last Exam — avec outils** | **63,9 %** | 63,6 % | 57,4 % | 57,2 % | — | — |
+| **AutomationBench** | **54,8 %** | 40,0 % | — | — | — | 48,8 % |
+| **Agents' Last Exam** | **31,8 %** | — | — | 59,3 % | — | 26,3 % |
+| **Humanity's Last Exam — avec outils** | **63,9 %** | 67,7 % | 57,4 % | 57,2 % | — | 55,3 % |
 | **SEC-Bench Pro** | **62,8 %** | — | — | 85,4 % | — | — |
-| **ProgramBench** | **20,3 %** | 37,0 % | — | — | — | — |
+| **ProgramBench** | **20,3 %** | — | — | — | — | — |
 
-Ces résultats utilisent notre campagne d’évaluation mAI-2 et les résultats publics les plus récents disponibles pour les autres modèles. Les résultats peuvent varier selon le harness, les paramètres de raisonnement et les conditions exactes d’évaluation ; nous privilégions donc les comparaisons utilisant la même version du benchmark.
+### Notes de méthode
+
+- Les scores de mAI-2 proviennent de notre campagne d’évaluation mAI-2 ; les autres scores ne sont retenus que lorsqu’une version de benchmark et un protocole suffisamment comparables sont disponibles.
+- Un tiret cadratin (`—`) indique qu’aucun résultat public suffisamment comparable n’a été retenu. Il ne représente pas un score nul.
+- Les variantes de Humanity's Last Exam qui ne partagent pas le protocole « avec outils » ne sont pas utilisées pour cette ligne.
+- Une version différente d’un benchmark n’est jamais utilisée comme substitut ; les scores ne sont pas comparés au-delà des conditions décrites ci-dessus.
+
+### Sources officielles
+
+- [Anthropic — Claude Opus 5.5](https://www.anthropic.com/claude-opus-5-5)
+- [Google DeepMind — Gemini 3.8 Flash](https://deepmind.google/models/model-cards/gemini-3-8-flash/)
+- [Z.ai — GLM 5.3 Flash](https://docs.z.ai/guides/vlm/glm-5.3-flash)
+- [OpenAI — GPT-6 Sol et Luna](https://openai.com/index/introducing-gpt-6-sol-and-luna/)
 
 mAI-2 atteint notamment **90,6 % sur Terminal-Bench 2.1**, **74,2 % sur DeepSWE v1.1**, **88,1 % sur CyberGym**, **54,8 % sur AutomationBench** et **31,8 % sur Agents’ Last Exam**.
 
@@ -182,27 +194,37 @@ mAI-2 atteint notamment **90,6 % sur Terminal-Bench 2.1**, **74,2 % sur DeepSWE 
 
 mAI-2 Mini a été évalué sur une sélection plus compacte de benchmarks orientés développement, efficacité et utilisation d’outils.
 
-| Benchmark | mAI-2 Mini | Claude Opus 5 | Claude Sonnet 5 | Claude Haiku 4.5 | Gemini 3.5 Flash-Lite | Gemini 3.1 Pro |
+| Benchmark | mAI-2 Mini | Claude Sonnet 5 | Claude Haiku 4.5 | Gemini 3.5 Flash-Lite | Gemini 3.8 Flash | GPT-6 Luna |
 |:---|---:|---:|---:|---:|---:|---:|
-| **SWE-Bench Pro** | **59,0 %** | 79,2 % | 63,2 % | 39,5 % | 54,2 % | 54,2 % |
-| **Terminal-Bench 2.1** | **66,0 %** | 89,1 % | 80,4 % | 44,2 % | 54,0 % | — |
+| **SWE-Bench Pro** | **59,0 %** | 63,2 % | 39,5 % | 54,2 % | — | — |
+| **Terminal-Bench 2.1** | **66,0 %** | 80,4 % | 44,2 % | 54,0 % | 89,4 % | — |
 | **SWE-fficiency** | **34,8 %** | — | — | — | — | — |
-| **KernelBench Hard** | **28,8 %** | 21,8 % | — | — | — | — |
-| **MCP Atlas** | **74,2 %** | 85,8 % | — | — | — | 78,2 % |
+| **KernelBench Hard** | **28,8 %** | — | — | — | — | — |
+| **MCP Atlas** | **74,2 %** | — | — | — | — | — |
 
-mAI-2 Mini conserve ainsi une orientation claire : proposer un modèle plus léger tout en restant compétitif sur plusieurs tâches de développement et d’utilisation d’outils.
+### Notes de méthode
+
+- Les scores de mAI-2 Mini proviennent de notre campagne d’évaluation ; les autres scores ne sont retenus que lorsqu’une version de benchmark et un protocole suffisamment comparables sont disponibles.
+- Un tiret cadratin (`—`) indique qu’aucun résultat public suffisamment comparable n’a été retenu. Il ne représente pas un score nul.
+- Gemini 3.8 Flash est reporté uniquement pour Terminal-Bench 2.1, où son score comparable est de 89,4 %. GPT-6 Luna reste sans score comparable sur les cinq lignes de ce tableau.
+- Une version différente d’un benchmark n’est jamais utilisée comme substitut.
+
+### Sources officielles
+
+- [Anthropic — Claude Sonnet 5 et Haiku 4.5](https://www.anthropic.com/claude-opus-5-5)
+- [Google DeepMind — Gemini 3.8 Flash](https://deepmind.google/models/model-cards/gemini-3-8-flash/)
+- [Z.ai — GLM 5.3 Flash](https://docs.z.ai/guides/vlm/glm-5.3-flash)
+- [OpenAI — GPT-6 Sol et Luna](https://openai.com/index/introducing-gpt-6-sol-and-luna/)
+
+mAI-2 Mini conserve ainsi une orientation claire : proposer un modèle plus léger tout en restant compétitif sur plusieurs tâches de développement et d'utilisation d'outils.
 
 ## Des résultats qui situent mAI-2 parmi les modèles frontier
 
-Les résultats obtenus sont particulièrement intéressants sur les tâches agentiques et de software engineering.
+Les résultats obtenus sont particulièrement intéressants sur les tâches agentiques et de software engineering. Les tableaux privilégient les scores issus de protocoles compatibles et laissent les cases non comparables à `—`.
 
-Sur **Terminal-Bench 2.1**, mAI-2 atteint **90,6 %**, devant les scores publics de **Claude Opus 5 à 89,1 %**, **Gemini 3.8 Flash à 89,4 %** et **Claude Sonnet 5 à 80,4 %**.
+Sur **Terminal-Bench 2.1**, mAI-2 affiche **90,6 %**, aux côtés de **89,4 % pour Gemini 3.8 Flash** et **84,3 % pour GLM 5.3 Flash**. Sur **DeepSWE v1.1**, mAI-2 affiche **74,2 %**, avec **74,1 % pour GPT-6 Astra**, **73,7 % pour Gemini 3.8 Flash** et **63,4 % pour GLM 5.3 Flash**. Sur **AutomationBench**, les valeurs reportées sont **54,8 % pour mAI-2**, **40,0 % pour Claude Opus 5.5** et **48,8 % pour GLM 5.3 Flash**.
 
-Sur **DeepSWE v1.1**, mAI-2 atteint **74,2 %**, un niveau comparable aux meilleurs scores publiés : **74,1 % pour GPT-6 Astra**, **74,0 % pour Claude Opus 5** et **73,7 % pour Gemini 3.8 Flash**.
-
-Sur **AutomationBench**, mAI-2 atteint **54,8 %**, devant le score public de **50,3 % de Claude Opus 5**.
-
-Ces résultats ne signifient pas que mAI-2 domine chaque benchmark. Certains modèles restent devant sur plusieurs évaluations, notamment sur des tâches de raisonnement général, de programmation spécialisée ou sur des benchmarks plus récents.
+Ces chiffres situent les résultats dans leur contexte d’évaluation. Ils ne signifient pas que mAI-2 domine chaque benchmark et ne doivent pas être étendus à des versions ou à des protocoles différents.
 
 L’objectif est différent :
 

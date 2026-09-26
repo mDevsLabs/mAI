@@ -25,7 +25,7 @@ Conformément aux mécanismes implémentés dans le middleware global (`api-midd
 
 ### 2.2. Chiffrement de Bout en Bout
 
-Toutes les communications entre le client et l'API sont protégées par le protocole **TLS 1.3** et le chiffrement **HTTPS**. Les données au repos sont sécurisées par un chiffrement de niveau bancaire (**AES-256**). Les clés d'API (`mp-...`) sont stockées avec un hachage **SHA-256** irréversible dans des partitions isolées, assurant la séparation stricte entre les données d'identification et les données de contenu.
+Toutes les communications entre le client et l'API sont protégées par **TLS 1.3** via HTTPS. Les infrastructures de stockage objet chiffrent les données au repos. Les secrets d’API sont réservés aux opérations serveur autorisées : leur valeur complète n’est renvoyée qu’à la création, tandis que les interfaces utilisent uniquement une référence publique et un contrôle strict du propriétaire.
 
 ### 2.3. Anonymisation Dynamique des Données Personnelles (PII)
 
@@ -47,7 +47,7 @@ Cette répartition s'applique de manière uniforme à l'ensemble des catégories
 
 ### 3.1. Données Structurées et Bases Relationnelles
 
-Les comptes utilisateurs, les profils de tier, les hachages de mots de passe (`bcrypt`, 12 tours), les clés d'API et les métriques d'usage sont conservés dans des infrastructures de base de données relationnelles (PostgreSQL et SQLite) dont les serveurs principaux sont localisés aux **États-Unis** et en **Afrique du Sud**. L'accès est restreint par des mécanismes de partitionnement isolé et de contrôle d'accès au niveau de la ligne (`SELECT ... LIMIT 1` avec hachage de comparaison).
+Les comptes utilisateurs, les profils de tier, les hachages de mots de passe (`bcrypt`, 12 tours), les secrets d’API et les métriques d'usage sont conservés dans des infrastructures de base de données relationnelles (PostgreSQL et SQLite) dont les serveurs principaux sont localisés aux **États-Unis** et en **Afrique du Sud**. L’accès aux secrets est restreint par le contrôle d’accès à la base et par une vérification serveur de la session et du propriétaire de la clé.
 
 ### 3.2. Fichiers et Objets de Stockage Cloud
 

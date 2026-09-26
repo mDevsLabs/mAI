@@ -19,12 +19,12 @@ mai-[free|plus|pro|max]-XXXXX-XXXXXXXX
 
 ---
 
-## 2. Génération automatique et chiffrement
+## 2. Génération automatique et exposition unique
 
 - La clé est générée **automatiquement** par le système au moment de la création dans la console.
 - Elle est **exposée en clair une unique fois** à l\'utilisateur, au moment de sa génération.
-- **Seul le hachage SHA-256** est conservé dans les bases de données situées dans l\'Union européenne.
-- **Aucune copie interne du secret** n\'est conservée, même par le personnel technique.
+- Le secret complet est **exposé une seule fois** ; les listes et consoles d’usage ne reçoivent ensuite que son préfixe public.
+- Les opérations autorisées résolvent la clé **côté serveur** après vérification de la session, du propriétaire et de l’état de la clé.
 
 ---
 

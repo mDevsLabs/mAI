@@ -13,7 +13,7 @@ import { getAllDocs } from './docs';
 import { getChangelogs } from './changelog';
 import { getNewsArticles } from './news';
 import { modelsData } from './models-data';
-import { allProjects } from './projects-data';
+import { activeProjects, publicArchivedProjects } from './projects-data';
 import { OFFICIAL_APPS } from './downloads-data';
 import { normalizeText } from './text-utils';
 
@@ -80,12 +80,6 @@ const STATIC_PAGES: SearchEntry[] = [
   },
   {
     type: 'page',
-    title: 'L\'équipe',
-    description: 'À propos de mDevsLabs et de ses projets.',
-    href: '/about',
-  },
-  {
-    type: 'page',
     title: 'Clés API',
     description: 'Créez et gérez vos clés d\'accès à l\'API mAI.',
     href: '/account/keys',
@@ -146,8 +140,8 @@ export function getSearchIndex(): SearchEntry[] {
     });
   }
 
-  // Projets
-  for (const project of allProjects) {
+  // Projets : uniquement la suite active et les trois archives publiques.
+  for (const project of [...activeProjects, ...publicArchivedProjects]) {
     // Les archives sans page publiée n'ont pas de lien : inutile de les indexer
     if (!project.link) continue;
     entries.push({

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { authenticateOpenAIRequest } from "@/lib/openai-auth";
+import { authenticateCatalogRequest } from "@/lib/api-key-session";
+import { redactApiSecretJson } from "@/lib/api-key-redaction";
 
 export const runtime = "nodejs";
 
@@ -35,54 +36,78 @@ function cleanModelName(name: string): string {
     .trim();
 }
 
-export async function GET(req: NextRequest) {
-  const authHeader = req.headers.get("authorization") || req.headers.get("Authorization");
+function catalogResponse(body: unknown, isPublic: boolean, init?: ResponseInit) {
+  const headers = new Headers(init?.headers);
+  headers.set(
+    "Cache-Control",
+    isPublic
+      ? "public, s-maxage=300, stale-while-revalidate=60"
+      : "private, no-store",
+  );
+  return NextResponse.json(body, { ...init, headers });
+}
 
-  // Liste publique : si une clé est fournie, elle doit être valide ; sinon accès libre
-  if (authHeader && authHeader.startsWith("Bearer ")) {
-    const authResult = await authenticateOpenAIRequest(req);
-    if (!authResult.valid) {
-      return authResult.response;
-    }
+export async function GET(req: NextRequest) {
+  const authResult = await authenticateCatalogRequest(req);
+  if (!authResult.ok) return authResult.response;
+
+  const auth = authResult.auth;
+  const isPublic = auth.mode === "public";
+  const headers: Record<string, string> = { Accept: "application/json" };
+  if (auth.mode === "bearer") {
+    headers.Authorization = `Bearer ${auth.token}`;
+  } else if (auth.mode === "session") {
+    headers.Authorization = `Bearer ${auth.secretKey}`;
   }
 
   try {
     const backendUrl = process.env.NEXT_PUBLIC_MAI_API_URL?.replace(/\/$/, "") || "https://mai.val.run";
     const res = await fetch(`${backendUrl}/v1/models/speech`, {
-      headers: {
-        "Accept": "application/json",
-      },
-      next: { revalidate: 300 }
+      headers,
+      ...(isPublic ? { next: { revalidate: 300 } } : { cache: "no-store" }),
     });
 
     if (res.ok) {
-      const data = await res.json();
+      const data = redactApiSecretJson(
+        await res.json(),
+        auth.mode === "bearer" ? auth.token : auth.mode === "session" ? auth.secretKey : null,
+      );
       if (data && Array.isArray(data.data) && data.data.length > 0) {
-        return NextResponse.json(data);
+        return catalogResponse(data, isPublic);
       }
     }
 
-    // Requête directe OpenRouter si disponible
-    const orRes = await fetch("https://openrouter.ai/api/v1/models?output_modalities=speech");
+    if (!isPublic) {
+      return catalogResponse(
+        { error: { code: "catalog_unavailable", message: "Le catalogue audio est temporairement indisponible." } },
+        false,
+        { status: 502 },
+      );
+    }
+
+    // Fallback public uniquement.
+    const orRes = await fetch("https://openrouter.ai/api/v1/models?output_modalities=speech", {
+      next: { revalidate: 300 },
+    });
     if (orRes.ok) {
       const orJson = await orRes.json();
-      const rawList = orJson.data || [];
+      const rawList = Array.isArray(orJson.data) ? orJson.data : [];
       const freeSpeechModels = rawList
-        .filter((m: any) => m && m.id && m.id.toLowerCase().includes(":free"))
-        .map((m: any) => ({
-          architecture: m.architecture || {
+        .filter((model: any) => model && model.id && model.id.toLowerCase().includes(":free"))
+        .map((model: any) => ({
+          architecture: model.architecture || {
             input_modalities: ["text"],
             modality: "text->speech",
             output_modalities: ["speech"],
           },
-          created: m.created || Math.floor(Date.now() / 1000),
-          description: m.description || `Modèle de synthèse vocale (TTS) ${cleanModelName(m.name || m.id)}.`,
-          id: m.id,
-          name: cleanModelName(m.name || m.id),
+          created: model.created || Math.floor(Date.now() / 1000),
+          description: model.description || `Modèle de synthèse vocale (TTS) ${cleanModelName(model.name || model.id)}.`,
+          id: model.id,
+          name: cleanModelName(model.name || model.id),
           object: "model",
-          owned_by: (m.id || "").split("/")[0] || "openrouter",
-          supported_parameters: m.supported_parameters || ["voice", "speed", "response_format"],
-          voices: m.voices || [
+          owned_by: (model.id || "").split("/")[0] || "openrouter",
+          supported_parameters: model.supported_parameters || ["voice", "speed", "response_format"],
+          voices: model.voices || [
             "flux-alexis-en",
             "flux-michael-en",
             "flux-stacy-en",
@@ -93,12 +118,19 @@ export async function GET(req: NextRequest) {
         }));
 
       if (freeSpeechModels.length > 0) {
-        return NextResponse.json({ data: freeSpeechModels, object: "list" });
+        return catalogResponse({ data: freeSpeechModels, object: "list" }, true);
       }
     }
 
-    return NextResponse.json({ data: FALLBACK_AUDIO_MODELS, object: "list" });
-  } catch (_err: any) {
-    return NextResponse.json({ data: FALLBACK_AUDIO_MODELS, object: "list" });
+    return catalogResponse({ data: FALLBACK_AUDIO_MODELS, object: "list" }, true);
+  } catch {
+    if (!isPublic) {
+      return catalogResponse(
+        { error: { code: "catalog_unavailable", message: "Le catalogue audio est temporairement indisponible." } },
+        false,
+        { status: 502 },
+      );
+    }
+    return catalogResponse({ data: FALLBACK_AUDIO_MODELS, object: "list" }, true);
   }
 }

@@ -40,12 +40,12 @@ export default function ApiKeysPage() {
               </span>
             </h1>
             <p className="text-slate-500 text-sm md:text-base font-light max-w-xl">
-              Gérez vos jetons d&apos;accès sécurisés pour intégrer les modèles mAI dans vos applications. Authentification par Bearer token et hachage SHA-256.
+              Gérez vos jetons d&apos;accès sécurisés pour intégrer les modèles mAI dans vos applications. Les secrets ne sont affichés qu&apos;une seule fois, lors de leur création.
             </p>
           </div>
         </div>
 
-        {/* Composant de gestion des clés API avec SHA-256 et modal de création */}
+        {/* Composant de gestion des clés API : secret affiché une seule fois */}
         <KeysClient />
       </div>
     </main>

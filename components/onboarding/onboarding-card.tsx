@@ -56,7 +56,7 @@ function KeysSystemVisual() {
   const steps = [
     { n: "1", t: "Génération mp-…", d: "Secret aléatoire 48 hex, préfixe mp-", c: "bg-purple-600" },
     { n: "2", t: "Affichage unique", d: "Visible une seule fois, à copier aussitôt", c: "bg-amber-500" },
-    { n: "3", t: "Hash SHA-256", d: "Seul le hash est stocké côté serveur", c: "bg-blue-600" },
+    { n: "3", t: "Usage confidentiel", d: "Le secret reste côté serveur et n’est renvoyé qu’à la création", c: "bg-blue-600" },
     { n: "4", t: "Préfixe visible", d: "mp-•••••••• pour identifier, révocable", c: "bg-emerald-600" },
   ];
   return (

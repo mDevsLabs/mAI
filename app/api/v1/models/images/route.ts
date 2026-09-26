@@ -1,28 +1,34 @@
 import { NextRequest, NextResponse } from "next/server";
-import { authenticateOpenAIRequest } from "@/lib/openai-auth";
+import { authenticateCatalogRequest } from "@/lib/api-key-session";
 import { getCometApiKey, FALLBACK_IMAGE_MODELS } from "@/lib/comet";
 
 export const runtime = "nodejs";
 
+function publicResponse(body: unknown, init?: ResponseInit) {
+  const headers = new Headers(init?.headers);
+  headers.set("Cache-Control", "public, s-maxage=300, stale-while-revalidate=60");
+  return NextResponse.json(body, { ...init, headers });
+}
+
+function privateResponse(body: unknown, init?: ResponseInit) {
+  const headers = new Headers(init?.headers);
+  headers.set("Cache-Control", "private, no-store");
+  return NextResponse.json(body, { ...init, headers });
+}
+
 export async function GET(req: NextRequest) {
-  const authHeader = req.headers.get("authorization") || req.headers.get("Authorization");
-  let userPlan = "Free";
+  const authResult = await authenticateCatalogRequest(req);
+  if (!authResult.ok) return authResult.response;
 
-  if (authHeader && authHeader.startsWith("Bearer ")) {
-    const authResult = await authenticateOpenAIRequest(req);
-    if (authResult.valid) {
-      userPlan = authResult.plan || "Free";
-    }
-  }
-
+  const auth = authResult.auth;
+  const isPublic = auth.mode === 'public';
+  const userPlan = isPublic ? "Free" : auth.plan;
   const planStr = String(userPlan || "Free").toLowerCase().trim();
-  const isPaidPlan = ["plus", "pro", "max"].includes(planStr);
-  const shouldFilterFreeOnly = !isPaidPlan;
-
-  const cometApiKey = getCometApiKey();
+  const shouldFilterFreeOnly = !["plus", "pro", "max"].includes(planStr);
 
   try {
     let rawModels: any[] = [];
+    const cometApiKey = getCometApiKey();
 
     if (cometApiKey) {
       const cometRes = await fetch("https://api.cometapi.com/v1/models", {
@@ -30,6 +36,7 @@ export async function GET(req: NextRequest) {
           Authorization: `Bearer ${cometApiKey}`,
           "Content-Type": "application/json",
         },
+        ...(isPublic ? { next: { revalidate: 300 } } : { cache: "no-store" }),
       });
 
       if (cometRes.ok) {
@@ -42,52 +49,53 @@ export async function GET(req: NextRequest) {
       rawModels = FALLBACK_IMAGE_MODELS;
     }
 
-    // 1. Premier filtre : model_type: 'image'
-    let imageModels = rawModels.filter((m) => {
-      const mType = (m.model_type || m.type || m.architecture?.modality || "").toLowerCase();
-      const features = (m.features || m.supported_features || []).map((f: string) => f.toLowerCase());
-      const isImg =
-        mType.includes("image") ||
+    let imageModels = rawModels.filter((model) => {
+      const modelType = (model.model_type || model.type || model.architecture?.modality || "").toLowerCase();
+      const features = (model.features || model.supported_features || []).map((feature: string) => feature.toLowerCase());
+      return modelType.includes("image") ||
         features.includes("text-to-image") ||
         features.includes("image-to-image") ||
-        m.id.toLowerCase().includes("flux") ||
-        m.id.toLowerCase().includes("diffusion") ||
-        m.id.toLowerCase().includes("dall-e") ||
-        m.id.toLowerCase().includes("midjourney");
-      return isImg;
+        model.id.toLowerCase().includes("flux") ||
+        model.id.toLowerCase().includes("diffusion") ||
+        model.id.toLowerCase().includes("dall-e") ||
+        model.id.toLowerCase().includes("midjourney");
     });
 
-    // 2. Si Free : feature text-to-image ET ID contenant 'flux'
     if (shouldFilterFreeOnly) {
-      imageModels = imageModels.filter((m) => {
-        const idLower = (m.id || "").toLowerCase();
-        const features = (m.features || m.supported_features || ["text-to-image"]).map((f: string) => f.toLowerCase());
-        const hasTextToImage = features.includes("text-to-image") || !m.features;
-        const containsFlux = idLower.includes("flux");
-        return hasTextToImage && containsFlux;
+      imageModels = imageModels.filter((model) => {
+        const idLower = (model.id || "").toLowerCase();
+        const features = (model.features || model.supported_features || ["text-to-image"]).map((feature: string) => feature.toLowerCase());
+        return (features.includes("text-to-image") || !model.features) && idLower.includes("flux");
       });
     }
 
-    // 3. Renvoyer les données : id, description, name et created
-    const formatted = imageModels.map((m) => ({
-      created: m.created || Math.floor(Date.now() / 1000),
-      description: m.description || `Modèle de génération d'images ${m.name || m.id}.`,
-      id: m.id,
-      name: m.name || m.id,
+    const formatted = imageModels.map((model) => ({
+      created: model.created || Math.floor(Date.now() / 1000),
+      description: model.description || `Modèle de génération d'images ${model.name || model.id}.`,
+      id: model.id,
+      name: model.name || model.id,
     }));
 
-    return NextResponse.json({ data: formatted, object: "list" });
+    return isPublic
+      ? publicResponse({ data: formatted, object: "list" })
+      : privateResponse({ data: formatted, object: "list" });
   } catch {
-    let fallback = FALLBACK_IMAGE_MODELS;
-    if (shouldFilterFreeOnly) {
-      fallback = fallback.filter((m) => m.id.toLowerCase().includes("flux"));
+    if (!isPublic) {
+      return privateResponse(
+        { error: { code: "catalog_unavailable", message: "Le catalogue d'images est temporairement indisponible." } },
+        { status: 502 },
+      );
     }
-    const formatted = fallback.map((m) => ({
-      created: m.created,
-      description: m.description,
-      id: m.id,
-      name: m.name,
+
+    const fallback = FALLBACK_IMAGE_MODELS.filter(
+      (model) => !shouldFilterFreeOnly || model.id.toLowerCase().includes("flux"),
+    );
+    const formatted = fallback.map((model) => ({
+      created: model.created,
+      description: model.description,
+      id: model.id,
+      name: model.name,
     }));
-    return NextResponse.json({ data: formatted, object: "list" });
+    return publicResponse({ data: formatted, object: "list" });
   }
 }

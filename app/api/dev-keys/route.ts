@@ -12,7 +12,10 @@ export async function GET(req: NextRequest) {
     const userId = auth.identity.userId;
 
     const keys = await listApiKeys(userId);
-    return NextResponse.json({ success: true, keys });
+    return NextResponse.json(
+      { success: true, keys },
+      { headers: { 'Cache-Control': 'private, no-store' } },
+    );
   } catch (err: any) {
     console.error('Erreur GET /api/dev-keys:', err);
     return NextResponse.json(
@@ -29,23 +32,48 @@ export async function POST(req: NextRequest) {
     if (!auth.ok) return auth.response;
     const userId = auth.identity.userId;
 
-    const body = await req.json().catch(() => ({}));
-    const name = (body.name || 'Clé sans nom').trim();
-    const maxLimit = body.maxLimit ? parseInt(body.maxLimit, 10) : null;
-
-    if (!name) {
+    const body = await req.json().catch(() => ({})) as Record<string, unknown>;
+    const name = body.name === undefined
+      ? 'Clé sans nom'
+      : (typeof body.name === 'string' ? body.name.trim() : '');
+    const rawLimit = body.maxLimit;
+    if (rawLimit !== undefined && rawLimit !== null && rawLimit !== '' && typeof rawLimit !== 'number' && typeof rawLimit !== 'string') {
       return NextResponse.json(
-        { error: { code: 'bad_request', message: 'Le nom de la clé API est requis.' } },
+        { error: { code: 'bad_request', message: 'La limite doit être un entier positif.' } },
+        { status: 400 }
+      );
+    }
+    const parsedLimit = rawLimit === undefined || rawLimit === null || rawLimit === ''
+      ? null
+      : Number(rawLimit);
+    const maxLimit = parsedLimit !== null && Number.isInteger(parsedLimit) && parsedLimit > 0
+      ? parsedLimit
+      : null;
+
+    if (!name || name.length > 80) {
+      return NextResponse.json(
+        { error: { code: 'bad_request', message: 'Le nom de la clé API est requis (80 caractères maximum).' } },
+        { status: 400 }
+      );
+    }
+    if (parsedLimit !== null && (!Number.isInteger(parsedLimit) || parsedLimit <= 0)) {
+      return NextResponse.json(
+        { error: { code: 'bad_request', message: 'La limite doit être un entier positif.' } },
         { status: 400 }
       );
     }
 
-    const createdKey = await createApiKey(userId, name, Number.isFinite(maxLimit as number) ? maxLimit : null);
+    const createdKey = await createApiKey(userId, name, maxLimit);
 
-    return NextResponse.json({
-      success: true,
-      key: createdKey,
-    });
+    // Unique endpoint autorisant un secret en réponse : il n'est renvoyé
+    // qu'immédiatement après la création et ne sera plus listé ensuite.
+    return NextResponse.json(
+      {
+        success: true,
+        key: createdKey,
+      },
+      { headers: { 'Cache-Control': 'private, no-store' } },
+    );
   } catch (err: any) {
     console.error('Erreur POST /api/dev-keys:', err);
     return NextResponse.json(

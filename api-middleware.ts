@@ -1,5 +1,12 @@
 import type { Hono } from "npm:hono@4";
-import { extractTierFromApiKey, getDb, getTierRequestLimit, getUserQuotaBoost, getWeekData, verifyToken } from "./config.ts";
+import {
+  getDb,
+  getTierRequestLimit,
+  getUserQuotaBoost,
+  getWeekData,
+  normalizeTier,
+  verifyToken,
+} from "./config.ts";
 
 export function registerMiddleware(app: Hono) {
   // Middleware global pour Auth, Rate limiting & Logging sur toutes les routes d'API
@@ -99,15 +106,15 @@ export function registerMiddleware(app: Hono) {
     }
 
     const apiKey = rawApiKey;
-    const reqUserId = c.req.header("x-user-id") || c.req.header("X-User-Id");
     const startTime = Date.now();
-
     const systemMaiApiKey = Deno.env.get("MAI_API_KEY");
 
     let userPlan = "Free";
     let currentUserId: string | null = null;
     const currentApiKey: string | null = apiKey;
-    let matchedApiKey: string | null = apiKey;
+    let matchedApiKey: string | null = null;
+    let hasValidAuth = false;
+    let isSystemKey = false;
 
     function timingSafeEqual(a: string, b: string): boolean {
       if (a.length !== b.length) {
@@ -120,117 +127,97 @@ export function registerMiddleware(app: Hono) {
       return diff === 0;
     }
 
-    // Résolution de l'authentification : Clé API utilisateur enregistrée, Clé système, ou Token JWT
+    // Aucun en-tête d'identité ni valeur fournie par le client n'est lu comme
+    // une autorité. Une identité de session provient uniquement d'un JWT vérifié,
+    // et un tier de clé uniquement de la ligne validée puis de son utilisateur.
     if (apiKey) {
-      // Détection prioritaire du forfait directement encodé dans la clé (mai-TIER_USER-XXXXX-XXXXX)
-      const keyTier = extractTierFromApiKey(apiKey);
-      if (keyTier) {
-        userPlan = keyTier;
-      }
+      if (systemMaiApiKey && timingSafeEqual(apiKey, systemMaiApiKey)) {
+        hasValidAuth = true;
+        isSystemKey = true;
+        userPlan = "Plus";
+        currentUserId = "system-mai";
+      } else {
+        const sql = getDb();
+        let databaseKeyValidated = false;
+        if (sql) {
+          try {
+            const rows = await sql`
+              SELECT k.user_id, k.api_key, u.tier as user_tier
+              FROM mprojects_api_keys k
+              LEFT JOIN users u
+                ON k.user_id = u.id::text OR k.user_id = u.username OR k.user_id = u.email
+              WHERE k.api_key = ${apiKey}::text
+                AND k.is_active IS DISTINCT FROM FALSE
+              LIMIT 1
+            `;
 
-      const sql = getDb();
-      try {
-        const rows = await sql`
-          SELECT k.*, u.tier as user_tier, u.id as u_id
-          FROM mprojects_api_keys k
-          LEFT JOIN users u ON k.user_id = u.id::text OR k.user_id = u.username OR k.user_id = u.email
-          WHERE k.api_key = ${apiKey}::text
-          LIMIT 1
-        `;
-
-        if (rows.length > 0) {
-          const apiKeyData = rows[0];
-          // Si le TIER_USER a été extrait de la clé fournie, il fait foi en priorité
-          if (!keyTier) {
-            const rawPlan = String(apiKeyData.plan || "").trim().toLowerCase();
-            const validTiers = ["free", "plus", "pro", "max"];
-            userPlan = apiKeyData.user_tier || (validTiers.includes(rawPlan) ? apiKeyData.plan : "Plus");
+            if (rows.length > 0) {
+              const apiKeyData = rows[0];
+              databaseKeyValidated = true;
+              hasValidAuth = true;
+              currentUserId = apiKeyData.user_id ? String(apiKeyData.user_id) : null;
+              matchedApiKey = apiKeyData.api_key || apiKey;
+              // Le nom `plan` de la clé est libre et le TIER encodé n'est pas
+              // une autorité. Seul le forfait de la ligne utilisateur liée est
+              // accepté, après validation exacte de la clé en base.
+              userPlan = normalizeTier(apiKeyData.user_tier);
+            }
+          } catch (dbErr) {
+            console.error("Auth DB Error in middleware:", dbErr);
           }
-          currentUserId = apiKeyData.user_id;
-          matchedApiKey = apiKeyData.api_key || apiKey;
-        } else if (systemMaiApiKey && timingSafeEqual(apiKey, systemMaiApiKey)) {
-          userPlan = "Plus";
-          currentUserId = "system-mai";
-        } else {
-          // Tenter de valider le token comme un JWT de session
+        }
+
+        if (!databaseKeyValidated) {
           try {
             const payload = await verifyToken(apiKey);
-            currentUserId = String(payload.sub || "");
-            userPlan = String(payload.tier || "Free");
+            const verifiedUserId = String(payload.sub || "").trim();
+            if (verifiedUserId) {
+              hasValidAuth = true;
+              currentUserId = verifiedUserId;
+              userPlan = normalizeTier(payload.tier as string);
 
-            // Vérifier dans la table users si le forfait a changé
-            if (currentUserId) {
-              const uRows = await sql`
-                SELECT tier FROM users
-                WHERE id::text = ${currentUserId}::text OR username = ${currentUserId}::text OR email = ${currentUserId}::text
-                LIMIT 1
-              `;
-              if (uRows.length > 0 && uRows[0].tier) {
-                userPlan = uRows[0].tier;
+              const sql = getDb();
+              if (sql) {
+                const userRows = await sql`
+                  SELECT tier FROM users
+                  WHERE id::text = ${verifiedUserId}::text
+                     OR username = ${verifiedUserId}::text
+                     OR email = ${verifiedUserId}::text
+                  LIMIT 1
+                `;
+                if (userRows.length > 0) {
+                  userPlan = normalizeTier(userRows[0].tier);
+                }
               }
             }
           } catch {
-            if (!isPublicRoute) {
-              return c.json({ error: "Invalid API Key." }, 403);
-            }
+            // Une valeur non reconnue reste sans autorité. Les catalogues
+            // publics continuent en Free, les routes privées sont refusées.
           }
         }
-      } catch (dbErr) {
-        console.error("Auth DB Error in middleware:", dbErr);
       }
     }
 
-    // 3. En-tête x-user-id (requêtes web app / internes) : uniquement si déjà authentifié ou fallback route publique
-    if (reqUserId && reqUserId !== "system-mai") {
-      if (currentUserId) {
-        // Déjà authentifié via clé API ou JWT : x-user-id doit correspondre, sinon on l'ignore
-        if (reqUserId !== currentUserId) {
-          console.warn(
-            `[Auth] x-user-id mismatch: header=${reqUserId} vs auth=${currentUserId} — header ignoré`
-          );
-        }
-      } else if (apiKey) {
-        // apiKey présent mais non reconnu (route publique) : ne pas promouvoir via x-user-id seul
-      } else {
-        // Aucune auth vérifiée
-        try {
-          const sql = getDb();
-          const uRows = await sql`
-            SELECT tier FROM users 
-            WHERE id::text = ${reqUserId}::text OR username = ${reqUserId}::text OR email = ${reqUserId}::text 
-            LIMIT 1
-          `;
-          if (uRows.length > 0) {
-            if (uRows[0].tier) {
-              userPlan = uRows[0].tier;
-            }
-            if (isPublicRoute) {
-              currentUserId = reqUserId;
-            } else {
-              console.warn(
-                `[Auth] x-user-id sans JWT sur route privée ${path} — ignoré`
-              );
-            }
-          }
-        } catch {}
-      }
+    if (!hasValidAuth && !isPublicRoute) {
+      return c.json(
+        apiKey
+          ? { error: "Invalid API Key." }
+          : { error: "Service Unavailable. API Key missing." },
+        apiKey ? 403 : 401,
+      );
     }
 
-    // 4. Aucun identifiant et route privée
-    if (!apiKey && !currentUserId && !isPublicRoute) {
-      return c.json({ error: "Service Unavailable. API Key missing." }, 401);
-    }
-
-    // Enregistrer le plan et les infos de contexte
-    c.set("userPlan", userPlan);
-    c.set("userId", currentUserId);
-    c.set("apiKey", currentApiKey);
-    c.set("matchedApiKey", matchedApiKey);
+    // Enregistrer le contexte vérifié uniquement.
+    const context = c as unknown as { set: (key: string, value: unknown) => void };
+    context.set("userPlan", userPlan);
+    context.set("userId", currentUserId);
+    context.set("apiKey", currentApiKey);
+    context.set("matchedApiKey", matchedApiKey);
 
     // Vérification préventive du quota de requêtes pour les clés API enregistrées.
     // Le solde est global au compte (cumul de toutes ses clés) et la période est hebdomadaire
     // (lundi 00:00 UTC), marquée par usage_period_start pour un reset idempotent.
-    if (apiKey && currentUserId && currentUserId !== "system-mai") {
+    if (matchedApiKey && currentUserId && currentUserId !== "system-mai") {
       const sql = getDb();
       const { nextResetIso, weekStartStr } = getWeekData();
       const apiBoost = await getUserQuotaBoost(sql, currentUserId, "api");
@@ -281,10 +268,10 @@ export function registerMiddleware(app: Hono) {
 
     // Logging & Décompte de 1 crédit API (pour toutes les requêtes avec clé API valide incluant audio, images, web search et chat)
     const isExcludedRoute = path.startsWith("/v1/devices") || path === "/v1/status" || path === "/status";
-    if (!isExcludedRoute && apiKey && apiKey !== systemMaiApiKey) {
+    if (!isExcludedRoute && matchedApiKey && !isSystemKey) {
       try {
         const sql = getDb();
-        const effectiveKeyToLog = matchedApiKey || apiKey;
+        const effectiveKeyToLog = matchedApiKey;
 
         await sql`
           INSERT INTO mprojects_api_logs (api_key, endpoint, method, status_code, latency_ms)
